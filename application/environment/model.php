@@ -43,7 +43,7 @@ class model_environment{
 				if(db::pdo()->query($sql)->rowCount() !== 1)
 					return false;
 				$record = db::pdo()->query($sql)->fetch();
-				$user = new user_object();
+				$user = new data_user();
 				$user->firstname = $record['firstname'];
 				$user->lastname = $record['lastname'];
 				$_SESSION['user'] = $user;
