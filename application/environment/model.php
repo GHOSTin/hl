@@ -2,12 +2,17 @@
 class model_environment{
 
 	public static function get_page_content(){
-		$component = 'controller_'.http_router::get_component_name();
-		$method = http_router::get_method_name();
-		# гружу header
-		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			model_template::load_template('default_page.build_header', []);
 
+		require_once ROOT.'/libs/Twig/Autoloader.php';
+		Twig_Autoloader::register();
+		$c = http_router::get_component_name();
+		$component = 'controller_'.$c;
+		$method = http_router::get_method_name();
+		
+		# header
+		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+			model_template::load_template('default_page.build_header', ['component' => $c]);
+		# основной контент
 		if(self::get_auth_status()){
 			if($component === 'controller_auth' AND $method === 'login'){
 				header('Location:/');
@@ -24,8 +29,9 @@ class model_environment{
 				view_auth::get_login_page();
 			}
 		}
+		# bottom
 		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			model_template::load_template('default_page.build_bottom', []);
+			model_template::load_template('default_page.build_bottom', ['component' => $c]);
 	}
 
 	private static function get_auth_status(){
