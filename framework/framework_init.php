@@ -29,24 +29,6 @@ function framework_autoload($class_name){
 }
 spl_autoload_register('framework_autoload');
 
-function load_template111($path, $args = null){
-	list($component, $template_file) = explode('.', $path);
-	$file_path = ROOT.'/'.framework_configuration::application_folder.'/'.$component.'/templates/'.$template_file.'.tpl';
-	if(file_exists($file_path)){
-
-		#require_once($file_path);
-		$loader = new Twig_Loader_String();
-		$twig = new Twig_Environment($loader);
-
-		$template = $twig->loadTemplate($file_path);
-		$template->display(array());
-		
-		exit();
-
-	}else{
-		die('Template not be load!');
-	}
-}
 /*
 function gh(){
 
