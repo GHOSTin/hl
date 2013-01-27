@@ -4,8 +4,10 @@ class model_environment{
 	public static function get_page_content(){
 		$component = 'controller_'.http_router::get_component_name();
 		$method = http_router::get_method_name();
+		# гружу header
 		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			include ROOT.'/site/templates/default/header.php';
+			model_template::load_template('default_page.build_header', []);
+
 		if(self::get_auth_status()){
 			if($component === 'controller_auth' AND $method === 'login'){
 				header('Location:/');
@@ -23,7 +25,7 @@ class model_environment{
 			}
 		}
 		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			include ROOT.'/site/templates/default/bottom.php';
+			model_template::load_template('default_page.build_bottom', []);
 	}
 
 	private static function get_auth_status(){

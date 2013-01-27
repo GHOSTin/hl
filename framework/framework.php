@@ -16,5 +16,3 @@ require_once 'data_object.php';
 require_once 'xdb_mysql.class.php';
 # init
 require_once 'framework_init.php';
-# временно
-require_once 'data.php';
