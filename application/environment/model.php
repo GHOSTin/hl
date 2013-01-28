@@ -9,8 +9,7 @@ class model_environment{
 		$controller = 'controller_'.$c;
 		$method = http_router::get_method_name();
 		# header
-		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			print load_template('default_page.build_header', ['component' => $c]);
+		
 		# основной контент
 		if(self::get_auth_status()){
 			if($controller === 'controller_auth' AND $method === 'login'){
@@ -18,19 +17,22 @@ class model_environment{
 				exit();
 			}
 			self::get_user_info();
-			print view_menu::build_horizontal_menu();
+			$data = view_menu::build_horizontal_menu();
 			$method = 'private_'.$method;
-			print $controller::$method();
+			$data .= $controller::$method();
 		}else{
 			if($controller === 'controller_auth' AND $method === 'login'){
-				print controller_auth::login();
+				$data = controller_auth::login();
 			}else{
-				print view_auth::get_login_page();
+				$data = view_auth::get_login_page();
 			}
 		}
 		# bottom
+		$h = ['component' => $c, 'data' => $data];
 		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			print load_template('default_page.build_bottom', ['component' => $c]);
+			print load_template('default_page.main_page', $h);
+		#if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+		#	print load_template('default_page.build_bottom', ['component' => $c]);
 	}
 
 	private static function get_auth_status(){
