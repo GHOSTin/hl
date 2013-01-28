@@ -5,7 +5,7 @@ class controller_query{
 		$queries = model_query::get_queries($args);
 		if($queries !== false){
 			$args['queries'] = $queries;
-			view_query::private_show_default_page($args);
+			return view_query::private_show_default_page($args);
 		}
 	}
 }

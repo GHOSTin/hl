@@ -5,7 +5,7 @@ class model_query{
 
 		$sql = "SELECT *
 				FROM `queries`
-				WHERE `opentime` > ".(time() - 86400);
+				WHERE `opentime` > ".(time() - 86400*20);
 		try{
 			$stm = db::pdo()->query($sql);
 			
@@ -26,6 +26,8 @@ class model_query{
 		$query->payment_status = (string) $args['payment-status'];
 		$query->warning_status = (string) $args['warning-type'];
 		$query->department_id = (string) $args['department_id'];
+		$query->house_id = (string) $args['house_id'];
+		$query->close_reason_id = (string) $args['close_reason_id'];
 
 		$query->description = (string) $args['description-open'];
 		$query->number = (string) $args['querynumber'];

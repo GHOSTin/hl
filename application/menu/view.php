@@ -8,6 +8,6 @@ class view_menu{
 					       	['href' => 'query', 'text' => 'Заявки'],
 					        ['href' => 'number','text' => 'Жилой фонд'],
 					        ['href' => 'company','text' => 'Компания']];
-		model_template::load_template('menu.build_horizontal_menu', $args);
+		return load_template('menu.build_horizontal_menu', $args);
 	}
 }
