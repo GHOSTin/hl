@@ -8,9 +8,6 @@ class model_environment{
 		$c = http_router::get_component_name();
 		$controller = 'controller_'.$c;
 		$method = http_router::get_method_name();
-		# header
-		
-		# основной контент
 		if(self::get_auth_status()){
 			if($controller === 'controller_auth' AND $method === 'login'){
 				header('Location:/');
@@ -27,12 +24,10 @@ class model_environment{
 				$data = view_auth::get_login_page();
 			}
 		}
-		# bottom
 		$h = ['component' => $c, 'data' => $data];
 		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
 			print load_template('default_page.main_page', $h);
-		#if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-		#	print load_template('default_page.build_bottom', ['component' => $c]);
+			print $data;
 	}
 
 	private static function get_auth_status(){

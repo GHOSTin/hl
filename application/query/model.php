@@ -1,22 +1,6 @@
 <?php
 class model_query{
 
-	public static function get_queries($args){
-
-		$sql = "SELECT *
-				FROM `queries`
-				WHERE `opentime` > ".(time() - 86400*20);
-		try{
-			$stm = db::pdo()->query($sql);
-			
-			while($row = $stm->fetch())
-				$result[$row['id']] = model_query::build_query_object($row);
-			return $result;
-		}catch(PDOException $e){
-			return false;
-		}
-	}
-
 	public static function build_query_object($args){
 		#print_r($args);
 		$query = new data_query();
@@ -35,5 +19,39 @@ class model_query{
 		return $query;
 		var_dump($query);
 		exit();
+	}	
+
+	public static function get_query($args){
+		$query_id = $args['query_id'];
+		if(empty($query_id))
+			return false;
+		$sql = "SELECT *
+				FROM `queries`
+				WHERE `id` = ".$query_id;
+		try{
+			$stm = db::pdo()->query($sql);
+			$row = $stm->fetch();
+			if($row !== false)
+				return model_query::build_query_object($row);
+				return false;
+		}catch(PDOException $e){
+			return false;
+		}
 	}
+
+	public static function get_queries($args){
+
+		$sql = "SELECT *
+				FROM `queries`
+				WHERE `opentime` > ".(time() - 86400*20);
+		try{
+			$stm = db::pdo()->query($sql);
+			
+			while($row = $stm->fetch())
+				$result[$row['id']] = model_query::build_query_object($row);
+			return $result;
+		}catch(PDOException $e){
+			return false;
+		}
+	}	
 }

@@ -1,6 +1,6 @@
 {% if queries != false %}
 	{% for query in queries %}
-		<div class="query">
+		<div class="query get_query_content" query_id="{{query.id}}">
 			<div>
 				{% if query.initiator == 'number' %}
 					<img src="templates/default/images/icons/xfn-friend.png" />
