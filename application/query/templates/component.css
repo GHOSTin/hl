@@ -4,3 +4,8 @@
 	margin: 2px;
 	padding: 0px 5px;
 }
+
+.query_status_open {border-left:4px solid #ff0000;}
+.query_status_close {border-left:4px solid #cccccc;}
+.query_status_reopen {border-left:4px solid blue;}
+.query_status_working {border-left:4px solid black;}

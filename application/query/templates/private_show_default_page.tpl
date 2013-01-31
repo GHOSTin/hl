@@ -7,16 +7,6 @@
 
             
 <div class="filters" style="display:inline-block; vertical-align:top;">
-    <!-- begin filter date -->
-    <div class="filter">
-        <div class="filter-name">по дате</div>
-        <div class="filter-content">
-            <label class="view-input"><label for="input-begin">с</label>
-            <input type="text" id="input-begin" class="filter-content-input-begin" size="8" value="" /></label>
-            <label class="view-input"><label for="input-end">по</label>
-            <input type="text" id="input-end" class="filter-content-input-end" size="8" value="" /></label>
-        </div>
-    </div>
     <!-- end filter date -->
     <!-- begin filter status -->
     <div class="filter">
@@ -88,10 +78,16 @@
     </div>
     <!-- end filter users -->
 </div>
-<div style="display:inline-block; vertical-align:top;">
+<div class="queries" style="display:inline-block; vertical-align:top;">
 {% if queries != false %}
 	{% for query in queries %}
-		<div class="query get_query_content" query_id="{{query.id}}">
+		<div class="query get_query_content
+		{% if query.status in ['working','open', 'close', 'reopen']%}
+			query_status_{{query.status}}
+		{% else %}
+			query_status_default
+		{% endif %}
+		" query_id="{{query.id}}">
 			<div>
 				{% if query.initiator == 'number' %}
 					<img src="templates/default/images/icons/xfn-friend.png" />
