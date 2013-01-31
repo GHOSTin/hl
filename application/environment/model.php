@@ -14,7 +14,9 @@ class model_environment{
 				exit();
 			}
 			self::get_user_info();
-			$data = view_menu::build_horizontal_menu();
+			$data = (empty($_SERVER['HTTP_X_REQUESTED_WITH']))?
+				view_menu::build_horizontal_menu():
+				'';
 			$method = 'private_'.$method;
 			$data .= $controller::$method();
 		}else{
@@ -25,8 +27,8 @@ class model_environment{
 			}
 		}
 		$h = ['component' => $c, 'data' => $data];
-		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			print load_template('default_page.main_page', $h);
+		(empty($_SERVER['HTTP_X_REQUESTED_WITH']))?
+			print load_template('default_page.main_page', $h):
 			print $data;
 	}
 

@@ -14,4 +14,10 @@ class controller_query{
 		$query = model_query::get_query($args);
 		return view_query::private_get_query_content($query);
 	}
+
+	public static function private_get_query_title(){
+		$args = ['query_id' => $_GET['id']];
+		$query = model_query::get_query($args);
+		return view_query::private_get_query_title($query);
+	}
 }

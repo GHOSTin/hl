@@ -19,4 +19,6 @@ final class data_query extends data_object{
 	public $close_reason;
 	public $number;
 	public $inspection;
+	public $house_number;
+	public $street_name;
 }
