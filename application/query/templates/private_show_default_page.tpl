@@ -100,5 +100,7 @@
 			{{query.description}}
 		</div>
 	{% endfor %}
+{% else %}
+    Нет заявок
 {% endif %}
 </div>
