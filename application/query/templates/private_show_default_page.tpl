@@ -4,8 +4,6 @@
 	<span class="view-toggle-filters cm">Фильтры</span>
 	<span class="clear_filters absolute_hide">сбросить</span>
 </div>
-
-            
 <div class="filters" style="display:inline-block; vertical-align:top;">
     <!-- end filter date -->
     <!-- begin filter status -->

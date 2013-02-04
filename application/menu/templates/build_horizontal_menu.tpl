@@ -2,11 +2,6 @@
     <div class="navbar-inner">
         <div class="container-fluid">
 			<ul class="nav pull-right">
-                <li>
-                    <a href="#" class="example" rel="popover_notifications">
-                        <span class="label label-important">0</span>
-                    </a>
-                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <span class="icon-user icon-white"></span>{{user_name}}<b class="caret"></b>
