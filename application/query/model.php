@@ -29,9 +29,25 @@ class model_query{
 		$query_id = $args['query_id'];
 		if(empty($query_id))
 			return false;
-		$sql = "SELECT *
-				FROM `queries`
-				WHERE `id` = ".$query_id;
+
+		$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
+				`queries`.`status`, `queries`.`initiator-type`,
+				`queries`.`payment-status`, `queries`.`warning-type`,
+				`queries`.`department_id`, `queries`.`house_id`,
+				`queries`.`query_close_reason_id`,
+				`queries`.`query_worktype_id`, `queries`.`opentime`,
+				`queries`.`worktime`, `queries`.`closetime`,
+				`queries`.`addinfo-name`, `queries`.`addinfo-telephone`,
+				`queries`.`addinfo-cellphone`, `queries`.`description-open`,
+				`queries`.`description-close`, `queries`.`querynumber`,
+				`queries`.`query_inspection`, 
+				`houses`.`housenumber` as `house_number`,
+				`streets`.`name` as `street_name`
+				FROM `queries`, `houses`, `streets`
+				WHERE `queries`.`house_id` = `houses`.`id`
+				AND `houses`.`street_id` = `streets`.`id`
+				AND `queries`.`id` = ".$query_id;
+
 		try{
 			$stm = db::pdo()->query($sql);
 			$row = $stm->fetch();
