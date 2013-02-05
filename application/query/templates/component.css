@@ -9,3 +9,11 @@
 .query_status_close {border-left:4px solid #cccccc;}
 .query_status_reopen {border-left:4px solid blue;}
 .query_status_working {border-left:4px solid black;}
+
+.timeline-day {
+    cursor: pointer;
+    width:20px;
+    padding: .2em 0;
+    font-size:.9em;
+    margin-right: .17em;
+}

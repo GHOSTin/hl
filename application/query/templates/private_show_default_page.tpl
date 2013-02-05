@@ -1,4 +1,8 @@
-<nav class="timeline">Линия календаря</nav>
+<nav class="timeline">
+    {% for i in 1..31 %}
+        <span class="timeline-day">{{i}}</span>
+    {% endfor %}
+</nav>
 <div class="get_search cm">Поиск</div>
 <div class="cm">
 	<span class="view-toggle-filters cm">Фильтры</span>
