@@ -61,7 +61,7 @@ class model_query{
 				FROM `queries`, `houses`, `streets`
 				WHERE `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
-				AND `opentime` > ".(time() - 86400*10);
+				AND `opentime` > ".(time() - 86400*19);
 		try{
 			$stm = db::pdo()->query($sql);
 			if($stm === false) return false;
