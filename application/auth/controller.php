@@ -8,7 +8,7 @@ class controller_auth{
 			header('Location:/');
 			exit();
 		}else{
-			view_auth::get_login_page();	
+			return view_auth::get_login_page();	
 		}
 	}
 }

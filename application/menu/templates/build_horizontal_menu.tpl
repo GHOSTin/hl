@@ -5,7 +5,8 @@
 			<ul class="nav pull-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                       <i class="icon-envelope" id="notification-center-icon"></i>{{user_name}}
+                       <i class="icon-envelope icon-white notification-center-icon"></i>
+                       {{user_name}}
                        <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -32,6 +33,6 @@
                 </ul>
             </div>
             <!-- end menu -->
-        </div>
+         </div>
     </div>
 </nav>
