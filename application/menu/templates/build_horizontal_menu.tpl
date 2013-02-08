@@ -1,12 +1,13 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
+            <!-- begin user -->
 			<ul class="nav pull-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <span class="icon-user icon-white"></span>{{user_name}}<b class="caret"></b>
+                       <i class="icon-envelope" id="notification-center-icon"></i>{{user_name}}
+                       <b class="caret"></b>
                     </a>
-                    <!-- Link or button to toggle dropdown -->
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                         <li><a tabindex="-1" href="#">Профиль</a></li>
                         <li class="divider"></li>
@@ -14,19 +15,13 @@
                     </ul>
                 </li>
             </ul>
-            <a class="btn btn-navbar pull-left" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
+            <!-- end user, begin menu -->
             <div class="nav-collapse">
                 <ul class="nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                           Меню
-                            <b class="caret"></b>
+                           Меню <b class="caret"></b>
                         </a>
-                        <!-- Link or button to toggle dropdown -->
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             {% for link in menu %}
                                 <li><a tabindex="-1" href="/?p={{link.href}}">{{link.text}}</a></li>
@@ -36,6 +31,7 @@
                     <li><a href="/?p=task">Задачи</a></li>
                 </ul>
             </div>
+            <!-- end menu -->
         </div>
     </div>
 </nav>
