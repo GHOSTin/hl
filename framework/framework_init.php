@@ -73,22 +73,18 @@ function load_template($name, $args = []){
 	return twig::get_instance()->load_template($name, $args);
 }
 /*
-public static function load_template($path, $args= []){
-		list($component, $template_file) = explode('.', $path);
-		$file_path = ROOT.'/'.framework_configuration::application_folder.'/'.$component.'/templates/'.$template_file.'.tpl';
-		if(file_exists($file_path)){
-			
-			$file_string = file_get_contents($file_path);
-			print self::$twig->render($file_string, $args);
-		}else{
-			die('Template '.$path.' not be load!');
-		}
-	}
-*/
-/*
-function gh(){
+function catch_fatal_error()
+{
+  // Getting Last Error
+  $last_error =  error_get_last();
+  
+  // Check if Last error is of type FATAL
+  if(isset($last_error['type']) &amp;&amp; $last_error['type']==E_ERROR)
+  {  
+    // Fatal Error Occurs
+    // Do whatever you want for FATAL Errors
+  }
 
-	die('ERROR!');
 }
-set_error_handler(gh());
+register_shutdown_function('catch_fatal_error');
 */
