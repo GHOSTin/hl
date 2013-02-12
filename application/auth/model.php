@@ -12,8 +12,8 @@ class model_auth{
 					FROM `users`
 					WHERE `username` = :login AND `password` = :hash";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindParam(':login', $login);
-			$stm->bindParam(':hash', $hash);
+			$stm->bindParam(':login', $login, PDO::PARAM_STR, 255);
+			$stm->bindParam(':hash', $hash , PDO::PARAM_STR, 255);
 			$stm->execute();
 			if($stm->rowCount() !== 1)
 				throw new exception('user not exists');

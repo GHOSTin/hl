@@ -1,29 +1,38 @@
 <?php
 class model_user{
-
+	/**
+	* Возвращает информацию о пользователе
+	* @return false or data_user
+	*/
 	public static function get_user($args){
-		$user_id = $args['user_id'];
-		if(empty($user_id))
-			return false;
-		$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
-				`users`.`username`, `users`.`firtsname`, `users`.`lastname`,
-				`users`.`midlename`, `users`.`password`, `users`.`telephone`,
-				`users`.`cellphone`
-				FROM `users`
-				WHERE `users`.`id` = ".$user_id;
-
 		try{
-			$stm = db::pdo()->query($sql);
-			$stm->prepare($sql)->execute();
-			/*
-			$row = $stm->fetch();
-			if($row !== false)
-				return model_query::build_query_object($row);
-				return false;*/
-		}catch(PDOException $e){
-			die($e);
+			$user_id = $args['user_id'];
+			if(empty($user_id))
+				throw new exception('Wrong parametrs');
+			$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
+					`users`.`username`, `users`.`firstname`, `users`.`lastname`,
+					`users`.`midlename`, `users`.`password`, `users`.`telephone`,
+					`users`.`cellphone`
+					FROM `users`
+					WHERE `users`.`id` = :user_id";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindParam(':user_id', $user_id, PDO::PARAM_INT);
+			$stm->execute();
+			return self::build_user_object($stm->fetch());
+		}catch(exception $e){
 			return false;
 		}
-		
+	}
+	/**
+	* Строит объект пользователя
+	* @param array $record
+	* @return object data_user
+	*/
+	public static function build_user_object($record){
+		$user = new data_user();
+		$user->id = $record['id'];
+		$user->firstname = $record['firstname'];
+		$user->lastname = $record['lastname'];
+		return $user;
 	}
 }

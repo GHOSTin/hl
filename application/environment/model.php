@@ -1,37 +1,39 @@
 <?php
 class model_environment{
-
+	/**
+	* Инициализирует соединение с базой данных
+	* @return void
+	*/
 	public static function create_batabase_connection(){
 		try{
 			db::connect(application_configuration::database_host,
 						application_configuration::database_name,
 						application_configuration::database_user,
-						application_configuration::database_password,
-						[PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'utf8'"]);
+						application_configuration::database_password);
 		}catch(exception $e){
  			die('Fail database connection'); 
 		}
-		# устанавливаем свойства соединения
+		// устанавливаем параметры по умолчанию
 		try{
+			db::get_handler()->exec("SET NAMES utf8");
 			db::get_handler()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			db::get_handler()->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		}catch(exception $e){
 			die('Fail set database properties'); 
 		}
 	}
-
 	public static function get_page_content(){
-		# twig include
+		// twig include
 		require_once ROOT.'/libs/Twig/Autoloader.php';
 		Twig_Autoloader::register();
-		# build router for controller
+		// build router for controller
 		$c = http_router::get_component_name();
 		$controller = 'controller_'.$c;
 		$method = http_router::get_method_name();
-		# создаем соединение к базе данных
+		// создаем соединение к базе данных
 		self::create_batabase_connection();
-		# check status session
-		# и какието проверки
+		// check status session
+		// и какието проверки
 		if(self::get_auth_status()){
 			if($controller === 'controller_auth' AND $method === 'login'){
 				header('Location:/');
@@ -75,15 +77,11 @@ class model_environment{
 					FROM `users`
 					WHERE `id` = :user_id";
 				$stm = db::get_handler()->prepare($sql);
-				$stm->bindParam(':user_id', $user_id);
+				$stm->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 				$stm->execute();
 				if($stm->rowCount() !== 1)
 					throw new exception('user not exists');
-				$record = $stm->fetch();
-				$user = new data_user();
-				$user->id = $record['id'];
-				$user->firstname = $record['firstname'];
-				$user->lastname = $record['lastname'];
+				$user = model_user::build_user_objec($stm->fetch());
 				$_SESSION['user'] = $user;
 	 		}catch(exception $e){
 	 			die('Fail user auth');
