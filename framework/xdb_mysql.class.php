@@ -16,7 +16,7 @@
     }
     public static function connect($host, $database, $user, $password){
     	if(is_null(self::$connection))
-			self::$connection = new PDO('mysql:host='.$host.';dbname='.$database, $user, $password);
+			self::$connection = new PDO('mysql:host='.$host.';dbname='.$database, $user, $password, $options = []);
     }
 }
 ?>
