@@ -69,7 +69,7 @@ class model_environment{
 	* @return void
 	*/
 	private static function get_user_info(){
-		if(!isset($_SESSION['user'])){
+		if(!isset($_SESSION['use2r'])){
 			try{
 				$user_id = (int) $_SESSION['user_id'];
 				$sql = "SELECT `id`,`company_id`, `status`, `username`,
@@ -81,7 +81,9 @@ class model_environment{
 				$stm->execute();
 				if($stm->rowCount() !== 1)
 					throw new exception('user not exists');
-				$user = model_user::build_user_objec($stm->fetch());
+				$record = $stm->fetch();
+				$stm->closeCursor();
+				$user = model_user::build_user_object($record);
 				$_SESSION['user'] = $user;
 	 		}catch(exception $e){
 	 			die('Fail user auth');

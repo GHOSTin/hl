@@ -17,7 +17,9 @@ class model_auth{
 			$stm->execute();
 			if($stm->rowCount() !== 1)
 				throw new exception('user not exists');
-			return $stm->fetch()['id'];
+			$user_id = $stm->fetch()['id'];
+			$stm->closeCursor();
+			return $user_id;
  		}catch(exception $e){
  			return false;
  		}

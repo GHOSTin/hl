@@ -18,7 +18,9 @@ class model_user{
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':user_id', $user_id, PDO::PARAM_INT);
 			$stm->execute();
-			return self::build_user_object($stm->fetch());
+			$record = $stm->fetch();
+			$stm->closeCursor();
+			return self::build_user_object($record);
 		}catch(exception $e){
 			return false;
 		}
@@ -31,8 +33,14 @@ class model_user{
 	public static function build_user_object($record){
 		$user = new data_user();
 		$user->id = $record['id'];
+		$user->company_id = $record['company_id'];
+		$user->status = $record['status'];
+		$user->login = $record['username'];
 		$user->firstname = $record['firstname'];
 		$user->lastname = $record['lastname'];
+		$user->middlename = $record['midlename'];
+		$user->telephone = $record['telephone'];
+		$user->cellphone = $record['cellphone'];
 		return $user;
 	}
 }

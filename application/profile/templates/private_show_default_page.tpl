@@ -1,8 +1,14 @@
 {% if user != false %}
 <div>
-	{{user.firstname}} {{user.lastname}}
+	ФИО: {{user.lastname}} {{user.firstname}} {{user.middlename}}
 </div>
 <div>
-	{{user.id}}
+	Идентификатор: {{user.id}}
+</div>
+<div>
+	Телефон: {{user.telephone}}
+</div>
+<div>
+	Сотовый: {{user.cellphone}}
 </div>
 {% endif %}
