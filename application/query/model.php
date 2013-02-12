@@ -1,90 +1,87 @@
 <?php
 class model_query{
-
-	public static function build_query_object($args){
-		#print_r($args);
-		$query = new data_query();
-		$query->id = (int) $args['id'];
-		$query->status = (string) $args['status'];
-		$query->initiator = (string) $args['initiator-type'];
-		$query->payment_status = (string) $args['payment-status'];
-		$query->warning_status = (string) $args['warning-type'];
-		$query->department_id = (string) $args['department_id'];
-		$query->house_id = (string) $args['house_id'];
-		$query->close_reason_id = (string) $args['close_reason_id'];
-
-		$query->time_open = (string) $args['opentime'];
-
-		$query->description = (string) $args['description-open'];
-		$query->number = (string) $args['querynumber'];
-		$query->house_number = (string) $args['house_number'];
-		$query->street_name = (string) $args['street_name'];
-
-		return $query;
-		var_dump($query);
-		exit();
-	}	
-
+	/**
+	* Возвращает заявку
+	* @return false or data_query
+	*/
 	public static function get_query($args){
-		$query_id = $args['query_id'];
-		if(empty($query_id))
-			return false;
-
-		$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
-				`queries`.`status`, `queries`.`initiator-type`,
-				`queries`.`payment-status`, `queries`.`warning-type`,
+		try{
+			$query_id = $args['query_id'];
+			if(empty($query_id))
+				throw new exception('Wrong parametr');
+			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
+				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
+				`queries`.`payment-status` as `payment_status`,
+				`queries`.`warning-type` as `warning_status`,
 				`queries`.`department_id`, `queries`.`house_id`,
-				`queries`.`query_close_reason_id`,
-				`queries`.`query_worktype_id`, `queries`.`opentime`,
-				`queries`.`worktime`, `queries`.`closetime`,
-				`queries`.`addinfo-name`, `queries`.`addinfo-telephone`,
-				`queries`.`addinfo-cellphone`, `queries`.`description-open`,
-				`queries`.`description-close`, `queries`.`querynumber`,
-				`queries`.`query_inspection`, 
+				`queries`.`query_close_reason_id` as `close_reason_id`,
+				`queries`.`query_worktype_id` as `worktype_id`,
+				`queries`.`opentime` as `time_open`,
+				`queries`.`worktime` as `time_work`,
+				`queries`.`closetime` as `time_close`,
+				`queries`.`addinfo-name` as `contact_fio`,
+				`queries`.`addinfo-telephone` as `contact_telephone`,
+				`queries`.`addinfo-cellphone` as `contact_cellphone`,
+				`queries`.`description-open` as `description`,
+				`queries`.`description-close` as `close_reason`,
+				`queries`.`querynumber` as `number`,
+				`queries`.`query_inspection` as `inspection`, 
 				`houses`.`housenumber` as `house_number`,
 				`streets`.`name` as `street_name`
 				FROM `queries`, `houses`, `streets`
 				WHERE `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
-				AND `queries`.`id` = ".$query_id;
-
-		try{
-			$stm = db::pdo()->query($sql);
-			$row = $stm->fetch();
-			if($row !== false)
-				return model_query::build_query_object($row);
-				return false;
-		}catch(PDOException $e){
+				AND `queries`.`id` = :query_id";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindParam(':query_id', $query_id, PDO::PARAM_INT);
+			$stm->execute();
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
+			$query = $stm->fetch();
+			$stm->closeCursor();
+			return $query;
+		}catch(exception $e){
 			return false;
 		}
 	}
-
+	/**
+	* Возвращает заявки
+	* @return false or array
+	*/
 	public static function get_queries($args){
-
-		$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
-				`queries`.`status`, `queries`.`initiator-type`,
-				`queries`.`payment-status`, `queries`.`warning-type`,
+		try{
+			$time_open = (time() - 86400*19);
+			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
+				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
+				`queries`.`payment-status` as `payment_status`,
+				`queries`.`warning-type` as `warning_status`,
 				`queries`.`department_id`, `queries`.`house_id`,
-				`queries`.`query_close_reason_id`,
-				`queries`.`query_worktype_id`, `queries`.`opentime`,
-				`queries`.`worktime`, `queries`.`closetime`,
-				`queries`.`addinfo-name`, `queries`.`addinfo-telephone`,
-				`queries`.`addinfo-cellphone`, `queries`.`description-open`,
-				`queries`.`description-close`, `queries`.`querynumber`,
-				`queries`.`query_inspection`, 
+				`queries`.`query_close_reason_id` as `close_reason_id`,
+				`queries`.`query_worktype_id` as `worktype_id`,
+				`queries`.`opentime` as `time_open`,
+				`queries`.`worktime` as `time_work`,
+				`queries`.`closetime` as `time_close`,
+				`queries`.`addinfo-name` as `contact_fio`,
+				`queries`.`addinfo-telephone` as `contact_telephone`,
+				`queries`.`addinfo-cellphone` as `contact_cellphone`,
+				`queries`.`description-open` as `description`,
+				`queries`.`description-close` as `close_reason`,
+				`queries`.`querynumber` as `number`,
+				`queries`.`query_inspection` as `inspection`, 
 				`houses`.`housenumber` as `house_number`,
 				`streets`.`name` as `street_name`
 				FROM `queries`, `houses`, `streets`
 				WHERE `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
-				AND `opentime` > ".(time() - 86400*19);
-		try{
-			$stm = db::pdo()->query($sql);
-			if($stm === false) return false;
-			while($row = $stm->fetch())
-				$result[$row['id']] = model_query::build_query_object($row);
+				AND `opentime` > :time_open";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
+			$stm->execute();
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
+			while($query = $stm->fetch())
+				$result[$query->id] = $query;
+			$stm->closeCursor();
 			return $result;
-		}catch(PDOException $e){
+		}catch(exception $e){
 			return false;
 		}
 	}	

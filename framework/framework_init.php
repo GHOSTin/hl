@@ -49,7 +49,7 @@ class twig{
 
     public function load_twig(){
 		$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
-		self::$twig = new Twig_Environment($loader);
+		self::$twig = new Twig_Environment($loader, ['cache' => ROOT.'/cache']);
     }
 
     public function get_twig(){
@@ -87,4 +87,5 @@ function catch_fatal_error()
 
 }
 register_shutdown_function('catch_fatal_error');
+file_put_contents('PDOErrors.txt', $e->getMessage(), FILE_APPEND);  
 */

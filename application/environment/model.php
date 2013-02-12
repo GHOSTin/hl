@@ -72,8 +72,8 @@ class model_environment{
 		if(!isset($_SESSION['use2r'])){
 			try{
 				$user_id = (int) $_SESSION['user_id'];
-				$sql = "SELECT `id`,`company_id`, `status`, `username`,
-					`firstname`, `lastname`, `midlename`, `telephone`,`cellphone`
+				$sql = "SELECT `id`,`company_id`, `status`, `username` as `login`,
+					`firstname`, `lastname`, `midlename` as `middlename`, `telephone`,`cellphone`
 					FROM `users`
 					WHERE `id` = :user_id";
 				$stm = db::get_handler()->prepare($sql);
@@ -81,9 +81,9 @@ class model_environment{
 				$stm->execute();
 				if($stm->rowCount() !== 1)
 					throw new exception('user not exists');
-				$record = $stm->fetch();
+				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
+				$user = $stm->fetch();
 				$stm->closeCursor();
-				$user = model_user::build_user_object($record);
 				$_SESSION['user'] = $user;
 	 		}catch(exception $e){
 	 			die('Fail user auth');

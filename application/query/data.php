@@ -21,4 +21,5 @@ final class data_query extends data_object{
 	public $inspection;
 	public $house_number;
 	public $street_name;
+	public $company_id;
 }

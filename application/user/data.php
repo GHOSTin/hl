@@ -11,4 +11,9 @@ final class data_user extends data_object{
 	public $company_id;
 	public $telephone;
 	public $cellphone;
+	public $password;
+
+	public function __construct(){
+		unset($this->password);
+	}
 }
