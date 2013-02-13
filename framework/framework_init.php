@@ -46,10 +46,10 @@ class twig{
         }
         return self::$instance;
     }
-
+    //['cache' => ROOT.'/cache']
     public function load_twig(){
 		$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
-		self::$twig = new Twig_Environment($loader, ['cache' => ROOT.'/cache']);
+		self::$twig = new Twig_Environment($loader);
     }
 
     public function get_twig(){

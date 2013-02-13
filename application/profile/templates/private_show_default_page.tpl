@@ -6,9 +6,9 @@
 	Идентификатор: {{user.id}}
 </div>
 <div>
-	Телефон: {{user.telephone}}
+	Телефон: {{user.telephone}} <span class="cm">изменить</span>
 </div>
 <div>
-	Сотовый: {{user.cellphone}}
+	Сотовый: {{user.cellphone}} <span class="cm">изменить</span>
 </div>
 {% endif %}
