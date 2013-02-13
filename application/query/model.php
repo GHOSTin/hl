@@ -48,8 +48,8 @@ class model_query{
 	* @return false or array
 	*/
 	public static function get_queries($args){
+		$_SESSION['filters']['query'] = $args = self::build_query_filter($args);
 		try{
-			$time_open = (time() - 86400*19);
 			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
 				`queries`.`payment-status` as `payment_status`,
@@ -73,6 +73,9 @@ class model_query{
 				WHERE `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `opentime` > :time_open";
+
+			$time_open = $args['time_interval']['begin'];	
+						
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
 			$stm->execute();
@@ -85,4 +88,26 @@ class model_query{
 			return false;
 		}
 	}	
+	/*
+	* Проверяет правильность параметров
+	* Скармиливаем массив получаем правильный набор параметров
+	*/
+	public static function build_query_filter($in_args){
+		// если передан номер заявки то незачем проверять другие параметры
+		if(!empty($in_args['number'])){
+			return ['number' => (int) $in_args['number']];
+		}
+		// проверка интервала времени
+		if(empty($in_args['time_interval']['begin']) OR empty($in_args['time_interval']['end'])){
+			$time = getdate();
+			$out_args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+			$out_args['time_interval']['end'] = $out_args['time_interval']['begin'] + 86399;
+		}else{
+			$out_args['time_interval']['begin'] = $in_args['time_interval']['begin'];
+			$out_args['time_interval']['end'] = $in_args['time_interval']['end'];
+		}
+		return $out_args;
+		var_dump($out_args);
+		exit();
+	}
 }
