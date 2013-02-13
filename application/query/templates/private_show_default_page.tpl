@@ -78,10 +78,10 @@
 <div style="display:inline-block; vertical-align:top;">
     <!-- begin timeline -->
     <nav class="timeline">
-        <div>{{timeline.month}}</div>
-        {% set day = timeline.first_day %}
-        {% for i in range(1, timeline.days) %}
-            <span class="timeline-day" time="{{day}}">{{i}}</span>
+        <div>{{timeline|date('F')}} {{timeline|date('Y')}}</div>
+        {% set day = timeline %}
+        {% for i in range(1, timeline|date('t')) %}
+            <div class="timeline-day" time="{{day}}">{{i}}</div>
             {% set day = day + 86400 %}
         {% endfor %}
     </nav>

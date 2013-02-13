@@ -49,6 +49,9 @@ class model_query{
 	*/
 	public static function get_queries($args){
 		$_SESSION['filters']['query'] = $args = self::build_query_filter($args);
+
+		//var_dump($args);
+		//exit();
 		try{
 			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -72,12 +75,15 @@ class model_query{
 				FROM `queries`, `houses`, `streets`
 				WHERE `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
-				AND `opentime` > :time_open";
+				AND `opentime` > :time_open
+				AND `opentime` <= :time_close";
 
 			$time_open = $args['time_interval']['begin'];	
+			$time_close = $args['time_interval']['end'];
 						
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
+			$stm->bindParam(':time_close', $time_close, PDO::PARAM_INT, 10);
 			$stm->execute();
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
 			while($query = $stm->fetch())
@@ -93,10 +99,16 @@ class model_query{
 	* Скармиливаем массив получаем правильный набор параметров
 	*/
 	public static function build_query_filter($in_args){
-		// если передан номер заявки то незачем проверять другие параметры
+		/*
+		* Если нет в in_args то не записываем и в out_args
+		*/
 		if(!empty($in_args['number'])){
-			return ['number' => (int) $in_args['number']];
+			$out_args['number'] = (int) $in_args['number'];
 		}
+		/*
+		* Если нет в in_args проверяем в сессии и берем оттуда параметры.
+		* Если нет в сессии генерируем по умолчанию
+		*/
 		// проверка интервала времени
 		if(empty($in_args['time_interval']['begin']) OR empty($in_args['time_interval']['end'])){
 			$time = getdate();
