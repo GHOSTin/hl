@@ -104,9 +104,7 @@ class model_query{
 					AND `opentime` <= :time_close
 					ORDER BY `opentime` DESC";
 			}
-			$time_open = $args['time_interval']['begin'];	
-			$time_close = $args['time_interval']['end'];
-			$number = $args['number'];
+
 			$stm = db::get_handler()->prepare($sql);
 			if(!empty($args['number'])){
 				$stm->bindParam(':number', $number, PDO::PARAM_INT, 10);
@@ -114,6 +112,9 @@ class model_query{
 				$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
 				$stm->bindParam(':time_close', $time_close, PDO::PARAM_INT, 10);
 			}
+			$time_open = $args['time_interval']['begin'];	
+			$time_close = $args['time_interval']['end'];
+			$number = $args['number'];
 			$stm->execute();
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
 			while($query = $stm->fetch())
@@ -129,6 +130,7 @@ class model_query{
 	* Скармиливаем массив получаем правильный набор параметров
 	*/
 	public static function build_query_filter($in_args){
+		$s_args = $_SESSION['filters']['query'];
 		/*
 		* Если нет в in_args то не записываем и в out_args
 		*/
@@ -141,9 +143,14 @@ class model_query{
 		*/
 		// проверка интервала времени
 		if(empty($in_args['time_interval']['begin']) OR empty($in_args['time_interval']['end'])){
-			$time = getdate();
-			$out_args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-			$out_args['time_interval']['end'] = $out_args['time_interval']['begin'] + 86399;
+			if(empty($s_args['time_interval']['begin']) OR empty($s_args['time_interval']['end'])){
+				$time = getdate();
+				$out_args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+				$out_args['time_interval']['end'] = $out_args['time_interval']['begin'] + 86399;
+			}else{
+				$out_args['time_interval']['begin'] = $s_args['time_interval']['begin'];
+				$out_args['time_interval']['end'] = $s_args['time_interval']['end'];
+			}
 		}else{
 			$out_args['time_interval']['begin'] = $in_args['time_interval']['begin'];
 			$out_args['time_interval']['end'] = $in_args['time_interval']['end'];

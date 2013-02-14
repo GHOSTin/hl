@@ -29,7 +29,7 @@ class controller_query{
 		return view_query::private_get_day($args);
 	}
 	public static function private_show_default_page(){
-		$queries = model_query::get_queries($_SESSION['filters']['query']);
+		$queries = model_query::get_queries([]);
 		$args['queries'] = $queries;
 		return view_query::private_show_default_page($args);
 	}
