@@ -1,5 +1,13 @@
 <?php
 class controller_query{
+	public static function private_clear_filters(){
+		$time = getdate();
+		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$args['time_interval']['end'] = $args['time_interval']['begin'] + 86399;
+		$queries = model_query::get_queries($args);
+		$args['queries'] = $queries;
+		return view_query::private_get_day($args);
+	}		
 	public static function private_get_day(){
 		$time = getdate($_GET['time']);
 		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);

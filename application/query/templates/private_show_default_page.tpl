@@ -1,9 +1,9 @@
 <!-- begin left block -->
 <div style="display:inline-block; vertical-align:top;">
     <div class="get_search cm">Поиск</div>
-    <div class="cm">
-        <span class="view-toggle-filters cm">Фильтры</span>
-        <span class="clear_filters absolute_hide">сбросить</span>
+    <div>
+        <span class="view-toggle-filters">Фильтры</span>
+        <span class="cm clear_filters absolute_hide">сбросить</span>
     </div> 
     <!-- begin filters -->
     <div class="filters">  
