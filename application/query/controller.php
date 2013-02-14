@@ -21,7 +21,9 @@ class controller_query{
 		$query = model_query::get_query($args);
 		return view_query::private_get_query_title($query);
 	}	
-
+	public static function private_get_search(){
+		return view_query::private_get_search();
+	}
 	public static function private_show_default_page(){
 		$queries = model_query::get_queries($_SESSION['filters']['query']);
 		$args['queries'] = $queries;

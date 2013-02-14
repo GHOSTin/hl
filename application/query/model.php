@@ -76,7 +76,8 @@ class model_query{
 				WHERE `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `opentime` > :time_open
-				AND `opentime` <= :time_close";
+				AND `opentime` <= :time_close
+				ORDER BY `opentime` DESC";
 
 			$time_open = $args['time_interval']['begin'];	
 			$time_close = $args['time_interval']['end'];

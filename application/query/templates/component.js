@@ -31,6 +31,19 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});		
+	$('body').on('click', '.get_search', function(){
+		$.get('index.php',{p: 'query.get_search'
+			},function(r){
+				$('.queries').html(r);
+			});
+	});
+	$('body').on('click', '.get_search_result', function(){
+		$.get('index.php',{p: 'query.get_search_result',
+			param: $('.search_parameters').val()
+			},function(r){
+				$('.queries').html(r);
+			});
+	});
 });
 
 function get_query_id(obj){
