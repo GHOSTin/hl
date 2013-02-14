@@ -49,42 +49,71 @@ class model_query{
 	*/
 	public static function get_queries($args){
 		$_SESSION['filters']['query'] = $args = self::build_query_filter($args);
-
-		//var_dump($args);
-		//exit();
 		try{
-			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
-				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
-				`queries`.`payment-status` as `payment_status`,
-				`queries`.`warning-type` as `warning_status`,
-				`queries`.`department_id`, `queries`.`house_id`,
-				`queries`.`query_close_reason_id` as `close_reason_id`,
-				`queries`.`query_worktype_id` as `worktype_id`,
-				`queries`.`opentime` as `time_open`,
-				`queries`.`worktime` as `time_work`,
-				`queries`.`closetime` as `time_close`,
-				`queries`.`addinfo-name` as `contact_fio`,
-				`queries`.`addinfo-telephone` as `contact_telephone`,
-				`queries`.`addinfo-cellphone` as `contact_cellphone`,
-				`queries`.`description-open` as `description`,
-				`queries`.`description-close` as `close_reason`,
-				`queries`.`querynumber` as `number`,
-				`queries`.`query_inspection` as `inspection`, 
-				`houses`.`housenumber` as `house_number`,
-				`streets`.`name` as `street_name`
-				FROM `queries`, `houses`, `streets`
-				WHERE `queries`.`house_id` = `houses`.`id`
-				AND `houses`.`street_id` = `streets`.`id`
-				AND `opentime` > :time_open
-				AND `opentime` <= :time_close
-				ORDER BY `opentime` DESC";
+			if(!empty($args['number'])){
 
+				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
+					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
+					`queries`.`payment-status` as `payment_status`,
+					`queries`.`warning-type` as `warning_status`,
+					`queries`.`department_id`, `queries`.`house_id`,
+					`queries`.`query_close_reason_id` as `close_reason_id`,
+					`queries`.`query_worktype_id` as `worktype_id`,
+					`queries`.`opentime` as `time_open`,
+					`queries`.`worktime` as `time_work`,
+					`queries`.`closetime` as `time_close`,
+					`queries`.`addinfo-name` as `contact_fio`,
+					`queries`.`addinfo-telephone` as `contact_telephone`,
+					`queries`.`addinfo-cellphone` as `contact_cellphone`,
+					`queries`.`description-open` as `description`,
+					`queries`.`description-close` as `close_reason`,
+					`queries`.`querynumber` as `number`,
+					`queries`.`query_inspection` as `inspection`, 
+					`houses`.`housenumber` as `house_number`,
+					`streets`.`name` as `street_name`
+					FROM `queries`, `houses`, `streets`
+					WHERE `queries`.`house_id` = `houses`.`id`
+					AND `houses`.`street_id` = `streets`.`id`
+					AND `querynumber` = :number
+					ORDER BY `opentime` DESC";				
+
+			}else{
+				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
+					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
+					`queries`.`payment-status` as `payment_status`,
+					`queries`.`warning-type` as `warning_status`,
+					`queries`.`department_id`, `queries`.`house_id`,
+					`queries`.`query_close_reason_id` as `close_reason_id`,
+					`queries`.`query_worktype_id` as `worktype_id`,
+					`queries`.`opentime` as `time_open`,
+					`queries`.`worktime` as `time_work`,
+					`queries`.`closetime` as `time_close`,
+					`queries`.`addinfo-name` as `contact_fio`,
+					`queries`.`addinfo-telephone` as `contact_telephone`,
+					`queries`.`addinfo-cellphone` as `contact_cellphone`,
+					`queries`.`description-open` as `description`,
+					`queries`.`description-close` as `close_reason`,
+					`queries`.`querynumber` as `number`,
+					`queries`.`query_inspection` as `inspection`, 
+					`houses`.`housenumber` as `house_number`,
+					`streets`.`name` as `street_name`
+					FROM `queries`, `houses`, `streets`
+					WHERE `queries`.`house_id` = `houses`.`id`
+					AND `houses`.`street_id` = `streets`.`id`
+					AND `opentime` > :time_open
+					AND `opentime` <= :time_close
+					ORDER BY `opentime` DESC";
+			}
 			$time_open = $args['time_interval']['begin'];	
 			$time_close = $args['time_interval']['end'];
-						
+			$number = $args['number'];
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
-			$stm->bindParam(':time_close', $time_close, PDO::PARAM_INT, 10);
+			if(!empty($args['number'])){
+				$stm->bindParam(':number', $number, PDO::PARAM_INT, 10);
+			}else{
+				$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
+				$stm->bindParam(':time_close', $time_close, PDO::PARAM_INT, 10);
+			}
 			$stm->execute();
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
 			while($query = $stm->fetch())
