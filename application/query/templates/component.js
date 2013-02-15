@@ -46,6 +46,13 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});	
+	$('.filter-content-select-status').change(function(){
+		$.get('index.php',{p: 'query.set_status',
+			value: $('.filter-content-select-status :selected').val()
+			},function(r){
+				$('.queries').html(r);
+			});
+	});	
 });
 function get_query_id(obj){
 	return obj.closest('.query').attr('query_id');

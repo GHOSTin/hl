@@ -49,6 +49,7 @@ class model_query{
 	*/
 	public static function get_queries($args){
 		$_SESSION['filters']['query'] = $args = self::build_query_filter($args);
+		//var_dump($args);exit();
 		try{
 			if(!empty($args['number'])){
 
@@ -102,6 +103,7 @@ class model_query{
 					AND `houses`.`street_id` = `streets`.`id`
 					AND `opentime` > :time_open
 					AND `opentime` <= :time_close
+					AND `queries`.`status` IN(:status)
 					ORDER BY `opentime` DESC";
 			}
 
@@ -111,10 +113,19 @@ class model_query{
 			}else{
 				$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
 				$stm->bindParam(':time_close', $time_close, PDO::PARAM_INT, 10);
+				$stm->bindParam(':status', $statuses, PDO::PARAM_STR);
 			}
 			$time_open = $args['time_interval']['begin'];	
 			$time_close = $args['time_interval']['end'];
 			$number = $args['number'];
+			if(!empty($args['statuses']) AND is_array($args['statuses'])){
+				$statuses = '';
+				foreach ($args['statuses'] as $status) {
+					$statuses .= $status.',';
+				}
+				$statuses = substr($statuses, 0, -1);
+				//var_dump($statuses);exit();
+			}
 			$stm->execute();
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
 			while($query = $stm->fetch())
@@ -122,6 +133,7 @@ class model_query{
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
+			die($e->getMessage());
 			return false;
 		}
 	}	
@@ -155,6 +167,26 @@ class model_query{
 			$out_args['time_interval']['begin'] = $in_args['time_interval']['begin'];
 			$out_args['time_interval']['end'] = $in_args['time_interval']['end'];
 		}
+		// проверяет статус
+		$statuses = ['open', 'working', 'close', 'reopen', 'open+working'];
+		if(empty($in_args['statuses'])){
+			if(!empty($s_args['statuses'])){
+				$out_args['statuses'] = $s_args['statuses'];
+			}
+		}else{
+			if(is_array($in_args['statuses'])){
+				foreach ($in_args['statuses'] as $status){
+					if(array_search($status, $statuses, true) !== false){
+						if($status === 'open+working'){
+							$out_args['statuses'][] = 'open';
+							$out_args['statuses'][] = 'working';
+						}else
+							$out_args['statuses'][] = $status;
+					}
+				}
+			}
+		}
+
 		return $out_args;
 		var_dump($out_args);
 		exit();
