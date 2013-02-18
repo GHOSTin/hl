@@ -4,6 +4,7 @@ class controller_query{
 		$time = getdate();
 		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$args['time_interval']['end'] = $args['time_interval']['begin'] + 86399;
+		$args['statuses'] = [];
 		$queries = model_query::get_queries($args);
 		$args['queries'] = $queries;
 		return view_query::private_get_day($args);
@@ -44,6 +45,7 @@ class controller_query{
 	public static function private_show_default_page(){
 		$queries = model_query::get_queries([]);
 		$args['queries'] = $queries;
+		$args['filters'] = $_SESSION['filters']['query'];
 		return view_query::private_show_default_page($args);
 	}
 }

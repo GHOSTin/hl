@@ -102,9 +102,11 @@ class model_query{
 					WHERE `queries`.`house_id` = `houses`.`id`
 					AND `houses`.`street_id` = `streets`.`id`
 					AND `opentime` > :time_open
-					AND `opentime` <= :time_close
-					AND `queries`.`status` IN(:status)
-					ORDER BY `opentime` DESC";
+					AND `opentime` <= :time_close";
+					if(!empty($args['statuses']) AND is_array($args['statuses'])){
+						$sql .= " AND `queries`.`status` IN(:status)";
+					}
+					$sql .= " ORDER BY `opentime` DESC";
 			}
 
 			$stm = db::get_handler()->prepare($sql);
@@ -113,18 +115,12 @@ class model_query{
 			}else{
 				$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
 				$stm->bindParam(':time_close', $time_close, PDO::PARAM_INT, 10);
-				$stm->bindParam(':status', $statuses, PDO::PARAM_STR);
 			}
 			$time_open = $args['time_interval']['begin'];	
 			$time_close = $args['time_interval']['end'];
 			$number = $args['number'];
 			if(!empty($args['statuses']) AND is_array($args['statuses'])){
-				$statuses = '';
-				foreach ($args['statuses'] as $status) {
-					$statuses .= $status.',';
-				}
-				$statuses = substr($statuses, 0, -1);
-				//var_dump($statuses);exit();
+				$stm->bindValue(':status', $args['statuses'][0], PDO::PARAM_STR);
 			}
 			$stm->execute();
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
@@ -186,7 +182,6 @@ class model_query{
 				}
 			}
 		}
-
 		return $out_args;
 		var_dump($out_args);
 		exit();

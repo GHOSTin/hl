@@ -1,5 +1,19 @@
 <?php
 class model_environment{
+	/*
+	* 
+	*/
+	public static function build_router(){
+		try{
+			if(self::get_auth_status()){
+				return ['controller_'.http_router::get_component_name(),
+				'private_'.http_router::get_method_name()];
+			}else
+				return ['controller_auth', 'public_login'];
+		}catch(exception $e){
+			die('Fail build router');
+		}
+	}
 	/**
 	* Инициализирует соединение с базой данных
 	* @return void
@@ -22,20 +36,17 @@ class model_environment{
 			die('Fail set database properties'); 
 		}
 	}
+
+
+
 	public static function get_page_content(){
-		// twig include
-		require_once ROOT.'/libs/Twig/Autoloader.php';
-		Twig_Autoloader::register();
-		// build router for controller
-		$c = http_router::get_component_name();
-		$controller = 'controller_'.$c;
-		$method = http_router::get_method_name();
-		// создаем соединение к базе данных
 		self::create_batabase_connection();
-		// check status session
-		// и какието проверки
+		list($controller, $method) = self::build_router();
+		var_dump($controller::$rules);
+		
+/*
 		if(self::get_auth_status()){
-			if($controller === 'controller_auth' AND $method === 'login'){
+			if($component_name === 'controller_auth' AND $method === 'login'){
 				header('Location:/');
 				exit();
 			}
@@ -50,7 +61,16 @@ class model_environment{
 				$data = controller_auth::login();
 				$data = view_auth::get_login_page();
 		}
-		$h = ['component' => $c, 'data' => $data];
+*/
+		// проверяю если ли права доступа
+		// получаю данные от контроллера
+		self::load_twig();
+		// пихаю их в пердставление
+		exit();
+
+
+
+		$h = ['component' => $component_name, 'data' => $data];
 		(empty($_SERVER['HTTP_X_REQUESTED_WITH']))?
 			print load_template('default_page.main_page', $h):
 			print $data;
@@ -90,4 +110,15 @@ class model_environment{
 	 		}
 	 	}
 	}
+	/*
+	* Регистрирует шаблонизатор
+	*/
+	public static function load_twig(){
+		try{
+			require_once ROOT.'/libs/Twig/Autoloader.php';
+			Twig_Autoloader::register();
+		}catch(exception $e){
+			die('Fail load template machine');
+		}
+	}	
 }

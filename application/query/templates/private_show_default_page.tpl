@@ -15,7 +15,6 @@
                 <select class="filter-content-select-status">
                     <option value="all">Все заявки</option>
                     <option value="open">Открытые заявки</option>
-                    <option value="open+working">Открытые + в работе</option>
                     <option value="close">Закрытые заявки</option>
                     <option value="reopen">Переоткрытые заявки</option>
                     <option value="working">В работе</option>
