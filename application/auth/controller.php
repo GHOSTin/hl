@@ -1,8 +1,9 @@
 <?php
 class controller_auth{
-	//static $rules = ['general_access'];
 	public static function public_login(){
-		return true;
+		if(!($_SESSION['user'] instanceof data_user)){
+			return model_auth::get_login();
+		}
 	}
 	public static function private_login(){
 		header('Location:/');

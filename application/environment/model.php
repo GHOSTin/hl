@@ -14,7 +14,7 @@ class model_environment{
 	public static function build_router(){
 		try{
 			session_start();
-			if(!empty($_SESSION['user_id'])){
+			if($_SESSION['user'] instanceof data_user){
 				return [http_router::get_component_name(),
 				'private_'.http_router::get_method_name()];
 			}else
