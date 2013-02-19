@@ -1,7 +1,6 @@
 <?php
 class view_auth{
-
-	public static function get_login_page(){
+	public static function public_login(){
 		return load_template('auth.get_login_page');
 	}
 }

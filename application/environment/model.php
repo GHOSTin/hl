@@ -1,15 +1,24 @@
 <?php
 class model_environment{
+	public static function build_page($data){
+				/*$data = (empty($_SERVER['HTTP_X_REQUESTED_WITH']))?
+					view_menu::build_horizontal_menu():
+					'';*/
+		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+			return load_template('default_page.main_page', $data);
+			return $data['view'];
+	}
 	/*
-	* 
+	* Строит роутер
 	*/
 	public static function build_router(){
 		try{
-			if(self::get_auth_status()){
-				return ['controller_'.http_router::get_component_name(),
+			session_start();
+			if(!empty($_SESSION['user_id'])){
+				return [http_router::get_component_name(),
 				'private_'.http_router::get_method_name()];
 			}else
-				return ['controller_auth', 'public_login'];
+				return ['auth', 'public_login'];
 		}catch(exception $e){
 			die('Fail build router');
 		}
@@ -36,53 +45,64 @@ class model_environment{
 			die('Fail set database properties'); 
 		}
 	}
-
-
-
+	/*
+	* Функция возвращает
+	*/
 	public static function get_page_content(){
-		self::create_batabase_connection();
-		list($controller, $method) = self::build_router();
-		var_dump($controller::$rules);
-		
-/*
-		if(self::get_auth_status()){
-			if($component_name === 'controller_auth' AND $method === 'login'){
-				header('Location:/');
-				exit();
+		try{
+			self::create_batabase_connection();
+			list($component, $method) = self::build_router();
+			$controller = 'controller_'.$component;
+			$view = 'view_'.$component;
+			self::load_twig();
+			//self::get_user_profiles($controller);
+			// проверяю если ли права доступа
+			if(true){
+				$c_data = $controller::$method();
+				$data = ['component' => $component, 'view' => $view::$method($c_data)];
+			}else{
+				$data = ['component' => 'error', 'view' => 'Access Denied'];
 			}
-			self::get_user_info();
-			$data = (empty($_SERVER['HTTP_X_REQUESTED_WITH']))?
-					view_menu::build_horizontal_menu():
-					'';
-			$method = 'private_'.$method;
-			$data .= $controller::$method();
-		}else{
-			if($controller === 'controller_auth' AND $method === 'login')
-				$data = controller_auth::login();
-				$data = view_auth::get_login_page();
+			return self::build_page($data);
+		}catch(exception $e){
+			return 'Error!';
 		}
-*/
-		// проверяю если ли права доступа
-		// получаю данные от контроллера
-		self::load_twig();
-		// пихаю их в пердставление
-		exit();
-
-
-
-		$h = ['component' => $component_name, 'data' => $data];
-		(empty($_SERVER['HTTP_X_REQUESTED_WITH']))?
-			print load_template('default_page.main_page', $h):
-			print $data;
 	}
 	/**
 	* Проверяет залогинен ли пользователь
 	* @return bolean
 	*/
-	private static function get_auth_status(){
-		session_start();
-		$user_id = (int) $_SESSION['user_id'];
-		return (empty($user_id))? false: true;
+	private static function get_user_profiles($controller){
+		// потом проверяем соответсвет ли блок профиля с настройками по умолчанию
+		//  если соответсвует то даем выполнятся запросу
+		// иначе выводим ACCESS DENIED
+		// нужно сделать запрос к базе данных
+		// 	получить все профили
+		// засунуть в сессию
+		// Если не существет rules то проверку не делаем
+		try{
+			if(property_exists($controller, 'rules') AND ($_SESSION['user'] instanceof data_user)){
+				$sql = "SELECT `company_id`, `user_id`, `profile`,
+					`rules`, `restrictions`, `settings`
+					FROM `profiles`
+					WHERE  `user_id` = :user_id
+					AND `company_id` = :company_id";
+				$stm = db::get_handler()->prepare($sql);
+				$stm->bindValue(':user_id',$_SESSION['user']->id , PDO::PARAM_INT);
+				$stm->bindValue(':company_id',$_SESSION['user']->company_id , PDO::PARAM_INT);
+				$stm->execute();
+				//$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
+				$query = $stm->fetch();
+				var_dump($query);
+				die('Profile');
+				$stm->closeCursor();
+				return $query;
+			}
+			//var_dump($controller::$rules);
+		}catch(exception $e){
+			die($e->getMessage());
+			return false;
+		}
 	}
 	/**
 	* Запрашивает информацию о пользователе

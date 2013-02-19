@@ -9,7 +9,7 @@
 </head>
 <body>
 	<div class="container-fluid"><section class="main">
-		{% autoescape false %}{{data}}{% endautoescape %}</div>
+		{% autoescape false %}{{view}}{% endautoescape %}</div>
 </body>
 <script src="/templates/default/js/libs.js"></script>
     <script src="/templates/default/js/jcanvas.min.js"></script>
