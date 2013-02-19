@@ -59,7 +59,8 @@ class model_environment{
 			// проверяю если ли права доступа
 			if(true){
 				$c_data = $controller::$method();
-				$data = ['component' => $component, 'view' => $view::$method($c_data)];
+				$data = ['component' => $component, 'view' => $view::$method($c_data),
+						'menu' => view_menu::build_horizontal_menu()];
 			}else{
 				$data = ['component' => 'error', 'view' => 'Access Denied'];
 			}
