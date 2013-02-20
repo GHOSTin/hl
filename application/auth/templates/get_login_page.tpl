@@ -1,11 +1,24 @@
-<form action="/?p=auth.login" style="margin:20px" method="post">
-	<div>
-		<div>Пользователь</div>
-		<div><input type="text" name="login"  size="10" /></div>
-	</div>
-	<div style="padding: 5px 0px 0px 0px;">
-		<div>Пароль</div>
-		<div><input type="password" name="password" size="10" /></div>
-	</div>
-	<input type="submit" value="Войти" />
-</form>	
+<div class="row-fluid">
+    <div class="span6">
+        <form action="/?p=auth.login" method="post" class="form-horizontal">
+            <legend>Вход в систему</legend>
+            <fieldset>
+                <div class="control-group">
+                    <label class="control-label" for="login">Пользователь</label>
+                    <div class="controls">
+                        <input class="input span9" type="text" id="login" name="login" placeholder="Логин"/>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="password">Пароль</label>
+                    <div class="controls">
+                        <input class="input span9" type="password" id="password" name="password" placeholder="Пароль"/>
+                    </div>
+                </div>
+                <div>
+                    <input type="submit" class="btn btn-primary offset8" value="Войти" />
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>

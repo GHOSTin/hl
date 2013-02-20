@@ -8,18 +8,32 @@
 	<link rel="stylesheet" href="/?css=component.css&p={{component}}" >
 </head>
 <body>
-	<div class="container-fluid"><section class="main">
-		{% autoescape false %}
-            {{menu}}
-            {{view}}
-        {% endautoescape %}</div>
+    <div id="wrap">
+        <header>
+        {% autoescape false %}
+                {{menu}}
+        {% endautoescape %}
+        </header>
+    	<div class="container-fluid"><section class="main">
+    		{% autoescape false %}
+                {{view}}
+            {% endautoescape %}</div>
+    </div>
+    <footer>
+        <div class="container-fluid">
+            <p class="muted credit">
+                Разработка компании <a href="http://mlsco.ru">mlsco</a>
+            </p>
+        </div>
+    </footer>        
 </body>
 <script src="/templates/default/js/libs.js"></script>
     <script src="/templates/default/js/jcanvas.min.js"></script>
     <script src="/templates/default/js/ajaxupload.js"></script>
+    <script src="/templates/default/js/socket.io.js"></script>
+    <script src="/templates/default/js/notification-center.js"></script>
     <script src="/templates/default/js/default.js"></script>
     {% if component %}
  	   <script src="/?js=component.js&p={{component}}"></script>
     {% endif %}
-    </body>
 </html>
