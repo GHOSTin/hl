@@ -3,6 +3,15 @@ class view_query{
 	public static function private_get_day($args){
 		return load_template('query.private_get_day', $args);
 	}	
+	public static function private_clear_filters($args){
+		return load_template('query.private_get_day', $args);
+	}
+	public static function private_get_search_result($args){
+		return load_template('query.private_get_day', $args);
+	}
+	public static function private_set_status($args){
+		return load_template('query.private_get_day', $args);
+	}
 	public static function private_show_default_page($args){
 		$time = getdate($_SESSION['filters']['query']['time_interval']['begin']);
 		$args['timeline'] = mktime(12, 0, 0, $time['mon'], 1, $time['year']);

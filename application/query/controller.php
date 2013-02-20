@@ -7,7 +7,7 @@ class controller_query{
 		$args['statuses'] = [];
 		$queries = model_query::get_queries($args);
 		$args['queries'] = $queries;
-		return view_query::private_get_day($args);
+		return $args;
 	}		
 	public static function private_get_day(){
 		$time = getdate($_GET['time']);
@@ -15,17 +15,17 @@ class controller_query{
 		$args['time_interval']['end'] = $args['time_interval']['begin'] + 86399;
 		$queries = model_query::get_queries($args);
 		$args['queries'] = $queries;
-		return view_query::private_get_day($args);
+		return $args;
 	}	
 	public static function private_get_query_content(){
 		$args = ['query_id' => $_GET['id']];
 		$query = model_query::get_query($args);
-		return view_query::private_get_query_content($query);
+		return $args;
 	}
 	public static function private_get_query_title(){
 		$args = ['query_id' => $_GET['id']];
 		$query = model_query::get_query($args);
-		return view_query::private_get_query_title($query);
+		return $args;
 	}
 	public static function private_get_search(){
 		return view_query::private_get_search();
@@ -35,17 +35,17 @@ class controller_query{
 		$args['queries'] = ($args['number'] === 0)?
 			false:
 			model_query::get_queries($args);
-		return view_query::private_get_day($args);
+		return $args;
 	}
 	public static function private_set_status(){
 		$args['statuses'] = [(string) $_GET['value']];
 		$args['queries'] = model_query::get_queries($args);
-		return view_query::private_get_day($args);
+		return $args;
 	}
 	public static function private_show_default_page(){
 		$queries = model_query::get_queries([]);
 		$args['queries'] = $queries;
 		$args['filters'] = $_SESSION['filters']['query'];
-		return view_query::private_show_default_page($args);
+		return $args;
 	}
 }
