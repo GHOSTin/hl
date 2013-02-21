@@ -3,7 +3,8 @@
 <head>
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, maximum-scale = 1, minimum-scale = 1">
-	<link rel="stylesheet" href="/templates/default/css/libs.css" >
+	<link rel="stylesheet" href="/templates/default/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css" >
     <link rel="stylesheet" href="/templates/default/css/default.css" >
 	<link rel="stylesheet" href="/?css=component.css&p={{component}}" >
 </head>
@@ -27,7 +28,8 @@
         </div>
     </footer>        
 </body>
-<script src="/templates/default/js/libs.js"></script>
+    <script src="/templates/default/js/jquery.min.js"></script>
+    <script src="/templates/default/js/bootstrap.min.js"></script>
     <script src="/templates/default/js/jcanvas.min.js"></script>
     <script src="/templates/default/js/ajaxupload.js"></script>
     <script src="/templates/default/js/socket.io.js"></script>
