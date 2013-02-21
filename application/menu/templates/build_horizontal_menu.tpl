@@ -3,13 +3,14 @@
         <div class="container-fluid">
             <!-- begin user -->
 			<ul class="nav pull-right">
+                <li><button class="light">...</button></li>
                 <li>
                     <a href="#">
                         <i class="icon-envelope icon notification-center-icon"></i>
                     </a>
                 </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <a href="#" class="dropdown-toggle current_user" user_id="{{user_id}}" data-toggle="dropdown">
                        {{user_name}}
                        <b class="caret"></b>
                     </a>

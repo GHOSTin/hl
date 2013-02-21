@@ -19,8 +19,7 @@ class controller_query{
 	}	
 	public static function private_get_query_content(){
 		$args = ['query_id' => $_GET['id']];
-		$query = model_query::get_query($args);
-		return $args;
+		return model_query::get_query($args);
 	}
 	public static function private_get_query_title(){
 		$args = ['query_id' => $_GET['id']];

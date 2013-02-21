@@ -10,7 +10,7 @@ var tryReconnect = function(){
 var intervalID = setInterval(tryReconnect, 60000);
 
 notify.on('connect', function(){
-    notify.json.send({"type":"test", "data":""});
+    //notify.json.send({"type":"test", "data":""});
     clearInterval(intervalID);
 });
 
@@ -18,9 +18,7 @@ notify.on('message', function(event){
     var message = event.data;
     switch (message.type) {
         case 'toggle_semaphore':
-            setTimeout(function(){
-                $('.notification-center-icon').removeClass('icon').addClass('icon-white');
-            }, 5000);
+               $('.notification-center-icon').removeClass('icon').addClass('icon-white');
             break;
         default:
             console.log('received unknown message:');
@@ -31,7 +29,8 @@ notify.on('message', function(event){
 notify.on('disconnect', function(){
     intervalID = setInterval(tryReconnect, 60000);
 });
-
+    $('.light').on('click', function(){
+        notify.json.send({"type":"test", "data":""});
+    });
 
 $('.notification-center-icon').on('click', function(){$(this).addClass('icon').removeClass('icon-white');})
-
