@@ -1,4 +1,4 @@
-<?php
+ <?php
 class controller_auth{
 	public static function public_login(){
 		if(!($_SESSION['user'] instanceof data_user)){

@@ -26,4 +26,27 @@ class model_user{
 			return false;
 		}
 	}
+	/**
+	* Возвращает информацию о пользователе
+	* @return false or data_user
+	*/
+	public static function get_users($args){
+		try{
+			$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
+					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
+					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
+					`users`.`cellphone`
+					FROM `users`";
+					
+			$stm = db::get_handler()->prepare($sql);
+			$stm->execute();
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
+			while($user = $stm->fetch())
+				$result[] = $user;
+			$stm->closeCursor();
+			return $result;
+		}catch(exception $e){
+			return false;
+		}
+	}	
 }

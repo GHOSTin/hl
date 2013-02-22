@@ -5,6 +5,6 @@ class controller_profile{
 		return model_user::get_user($args);
 	}
 	public static function private_get_notification_center_content(){
-		return 'Привет';
+		return model_user::get_users($args);
 	}
 }

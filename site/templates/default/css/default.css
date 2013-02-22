@@ -24,3 +24,16 @@ footer{
 @media (max-width: 979px){
  .main {margin: 60px 0px 0px 0px;}
 }
+
+
+#_hidden_notification_center{
+
+	position:absolute;
+	top:50px;
+	right:0px;
+	z-index:101;
+	width:600px;
+	height:600px;
+	background:white;
+	border: 1px solid black;
+}

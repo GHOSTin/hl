@@ -4,7 +4,7 @@
             <!-- begin user -->
 			<ul class="nav pull-right">
                 <li><button class="light">...</button></li>
-                <li>
+                <li id="center">
                     <a href="#">
                         <i class="icon-envelope icon notification-center-icon"></i>
                     </a>

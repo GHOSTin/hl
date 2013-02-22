@@ -33,7 +33,15 @@ $('.notification-center-icon').on('click', function(){
     var self = $(this);
     $.get('index.php',{p: 'profile.get_notification_center_content'
             },function(r){
-               self.removeClass('icon-white');
+                show_notification_center(r);
+                self.removeClass('icon-white');
             });
+    //$('.notification-center-icon').parent().popover({title: '123', placement:'bottom', content: 'sdf', html:true});
 });
-$('.notification-center-icon').parent().popover({title: '123', placement:'bottom'});
+
+function show_notification_center(r){
+    $('#_hidden_notification_center').remove();
+    $('#center').append('<div id="_hidden_notification_center" style="display:none">' + r + '</div>');
+    $('#_hidden_notification_center').show();
+    //_content();
+}
