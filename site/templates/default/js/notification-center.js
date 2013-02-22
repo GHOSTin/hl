@@ -10,7 +10,6 @@ notify.on('connect', function(){
     //notify.json.send({"type":"test", "data":""});
     clearInterval(intervalID);
 });
-
 notify.on('message', function(event){
     var message = event.data;
     switch (message.type) {
@@ -28,20 +27,16 @@ notify.on('disconnect', function(){
 $('.light').on('click', function(){
     notify.json.send({"type":"test", "data":""});
 });
-
-$('.notification-center-icon').on('click', function(){
+$('#nt-center').on('click', function(){
     var self = $(this);
     $.get('index.php',{p: 'profile.get_notification_center_content'
-            },function(r){
-                show_notification_center(r);
-                self.removeClass('icon-white');
-            });
-    //$('.notification-center-icon').parent().popover({title: '123', placement:'bottom', content: 'sdf', html:true});
+        },function(r){
+            show_notification_center(r);
+            $('.notification-center-icon').removeClass('icon-white');
+        });
 });
-
 function show_notification_center(r){
     $('#_hidden_notification_center').remove();
-    $('#center').append('<div id="_hidden_notification_center" style="display:none">' + r + '</div>');
+    $('#nt-center').append('<div id="_hidden_notification_center" style="display:none">' + r + '</div>');
     $('#_hidden_notification_center').show();
-    //_content();
 }
