@@ -1,5 +1,6 @@
 <!-- begin left block -->
 <div style="display:inline-block; vertical-align:top;">
+    <div class="get_dialog_create_query cm">Создать заявку</div>
     <div class="get_search cm">Поиск</div>
     <div>
         <span class="view-toggle-filters">Фильтры</span>

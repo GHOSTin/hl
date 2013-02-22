@@ -3,6 +3,9 @@ class view_query{
 	public static function private_get_day($args){
 		return load_template('query.private_get_day', $args);
 	}	
+	public static function private_get_dialog_create_query(){
+		return load_template('query.private_get_dialog_create_query', []);
+	}			
 	public static function private_clear_filters($args){
 		return load_template('query.private_get_day', $args);
 	}

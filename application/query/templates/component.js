@@ -53,6 +53,12 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});	
+	$('body').on('click', '.get_dialog_create_query', function(){
+		$.get('index.php',{p: 'query.get_dialog_create_query'
+			},function(r){
+				show_content(r);
+			});
+	});		
 });
 function get_query_id(obj){
 	return obj.closest('.query').attr('query_id');

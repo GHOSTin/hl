@@ -17,6 +17,9 @@ class controller_query{
 		$args['queries'] = $queries;
 		return $args;
 	}	
+	public static function private_get_dialog_create_query(){
+		return true;
+	}		
 	public static function private_get_query_content(){
 		$args = ['query_id' => $_GET['id']];
 		return model_query::get_query($args);
