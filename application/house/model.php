@@ -5,10 +5,13 @@ class model_house{
 			$house_id = $args['house_id'];
 			if(empty($house_id))
 				throw new exception('Wrong parametrs');
-			$sql = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
-			 		`department_id`, `status`, `housenumber` as `number`
-					FROM `houses`
-					WHERE `id` = :house_id";
+			$sql = "SELECT `houses`.`id`, `houses`.`company_id`, `houses`.`city_id`,
+					`houses`.`street_id`, `houses`.`department_id`, `houses`.`status`, 
+					`houses`.`housenumber` as `number`,
+					`streets`.`name` as `street_name`
+					FROM `houses`, `streets`
+					WHERE `houses`.`id` = :house_id
+					AND `houses`.`street_id` = `streets`.`id`";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':house_id', $house_id, PDO::PARAM_INT);
 			$stm->execute();

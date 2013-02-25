@@ -13,7 +13,7 @@
 				$.get('index.php',{p: 'query.get_house_initiator',
 					id: $('.dialog-select-house :selected').val()
 				},function(r){
-					//$('.dialog-select-house').html(r).attr('disabled', false);
+					$('.modal-body').html(r);
 				});
 			});	
 		{% endif %}

@@ -27,9 +27,7 @@ class controller_query{
 	}
 	public static function private_get_house_initiator(){
 		$args['house_id'] = $_GET['id'];
-		var_dump(model_house::get_house($args));
-		exit();
-		return model_street::get_houses($args);
+		return model_house::get_house($args);
 	}		
 	public static function private_get_houses(){
 		$args['street_id'] = $_GET['id'];
