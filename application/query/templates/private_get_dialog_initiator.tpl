@@ -16,6 +16,22 @@
 					$('.modal-body').html(r);
 				});
 			});	
+		{% else %}
+			$('.dialog-select-house').change(function(){
+				$.get('index.php',{p: 'query.get_numbers',
+					id: $('.dialog-select-house :selected').val()
+				},function(r){
+					$('.dialog-select-number').html(r).attr('disabled', false);
+				});
+			});
+			$('.dialog-select-number').change(function(){
+				$.get('index.php',{p: 'query.get_initiator',
+					initiator: 'number',
+					id: $('.dialog-select-number :selected').val()
+				},function(r){
+					//$('.modal-body').html(r);
+				});
+			});	
 		{% endif %}
 	}
 </script>
@@ -29,7 +45,7 @@
 		<option value="0">Ожидание...</option>
 	</select>
 	{% if initiator == 'number' %}
-		<select style="display:block" disabled="disabled">
+		<select class="dialog-select-number" style="display:block" disabled="disabled">
 			<option value="0">Ожидание...</option>
 		</select>
 	{% endif %}

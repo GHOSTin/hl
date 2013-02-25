@@ -25,14 +25,30 @@ class controller_query{
 		$args['initiator'] = $_GET['value'];
 		return $args;
 	}
-	public static function private_get_house_initiator(){
-		$args['house_id'] = $_GET['id'];
-		return model_house::get_house($args);
+	public static function private_get_initiator(){
+		switch($_GET['initiator']){
+			case 'number':
+				$args['number_id'] = $_GET['id'];
+				return ['initiator' => 'number',
+						'number' => model_number::get_number($args)];
+			break;
+			case 'house':
+				$args['house_id'] = $_GET['id'];
+				return ['initiator' => 'house',
+						'house' => model_house::get_house($args)];
+			break;
+			default:
+				return false;		
+		}
 	}		
 	public static function private_get_houses(){
 		$args['street_id'] = $_GET['id'];
 		return model_street::get_houses($args);
 	}	
+	public static function private_get_numbers(){
+		$args['house_id'] = $_GET['id'];
+		return model_house::get_numbers($args);
+	}		
 	public static function private_get_query_content(){
 		$args = ['query_id' => $_GET['id']];
 		return model_query::get_query($args);

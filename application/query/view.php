@@ -9,8 +9,8 @@ class view_query{
 	public static function private_get_dialog_initiator($args){
 		return load_template('query.private_get_dialog_initiator', $args);
 	}	
-	public static function private_get_house_initiator($args){
-		return load_template('query.private_get_house_initiator', ['house' => $args]);
+	public static function private_get_initiator($args){
+		return load_template('query.private_get_initiator', $args);
 	}		
 	public static function private_clear_filters($args){
 		return load_template('query.private_get_day', $args);
@@ -18,7 +18,11 @@ class view_query{
 	public static function private_get_houses($args){
 		$args['houses'] = $args;
 		return load_template('query.private_get_houses', $args);
-	}	
+	}
+	public static function private_get_numbers($args){
+		$args['numbers'] = $args;
+		return load_template('query.private_get_numbers', $args);
+	}		
 	public static function private_get_search_result($args){
 		return load_template('query.private_get_day', $args);
 	}
