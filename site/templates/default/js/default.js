@@ -8,8 +8,10 @@ function show_content(result){
     $('#_hidden_content').remove();
     $('body').append('<div id="_hidden_content" >' + result + '</div>');
     _content();
-    //alert('sdfsdf');
     $('#_hidden_content').remove();
+}
+function get_hidden_content(){
+    return $('#_hidden_content').html();
 }
 function get_temp_html(){
     return $('#_hidden_content').html();
