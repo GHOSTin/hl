@@ -5,7 +5,9 @@ final class http_router{
 	static private $method_name;
 
 	static public function build_route(){
-		$route = htmlspecialchars($_GET[framework_configuration::route_string]);
+		if(isset($_GET[framework_configuration::route_string])){
+			$route = htmlspecialchars($_GET[framework_configuration::route_string]);
+		}
 		if(empty($route)){
 			self::set_default_component_name();
 			self::set_default_method_name();
