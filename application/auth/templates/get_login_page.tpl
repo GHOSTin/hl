@@ -6,7 +6,7 @@
                 <div class="control-group">
                     <label class="control-label" for="login">Пользователь</label>
                     <div class="controls">
-                        <input class="input span9" type="text" id="login" name="login" placeholder="Логин"/>
+                        <input class="input span9" type="text" id="login" name="login" placeholder="Логин" autofocus/>
                     </div>
                 </div>
                 <div class="control-group">

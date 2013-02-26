@@ -6,7 +6,7 @@
                 <li><button class="light">...</button></li>
                 <li id="nt-center">
                     <a href="#">
-                        <i class="icon-envelope icon notification-center-icon"></i>
+                        <i class="icon-envelope notification-center-icon"></i>
                     </a>
                 </li>
                 <li class="dropdown">

@@ -15,10 +15,14 @@
                 {{menu}}
         {% endautoescape %}
         </header>
-    	<div class="container-fluid"><section class="main">
+    	<div class="container-fluid">
+            <section class="main">
     		{% autoescape false %}
                 {{view}}
-            {% endautoescape %}</div>
+            {% endautoescape %}
+            </section>
+            <section id="push"></section>
+        </div>
     </div>
     <footer>
         <div class="container-fluid">
@@ -35,6 +39,9 @@
     <script src="/templates/default/js/socket.io.js"></script>
     <script src="/templates/default/js/notification-center.js"></script>
     <script src="/templates/default/js/default.js"></script>
+    <script src="/templates/default/js/baron.js"></script>
+    <script src="/templates/default/js/chat.js"></script>
+    
     {% if component %}
  	   <script src="/?js=component.js&p={{component}}"></script>
     {% endif %}
