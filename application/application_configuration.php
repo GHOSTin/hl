@@ -3,10 +3,10 @@ class application_configuration{
 	
 	const templateName = 'default';
 	// database option
-	const database_name 		= 'hellsystem';
+	const database_name 		= 'mshc2_test';
 	const database_host 		= 'localhost';
-	const database_user 		= 'hellsystem';
-	const database_password 	= '{htyfntym';
+	const database_user 		= 'mshc2_test';
+	const database_password 	= 'mshc2_test';
 	// auth option
 	const authSalt 			= 'GbpltwGjkysqFYtGfhjkm';	
 
