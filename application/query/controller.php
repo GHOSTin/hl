@@ -26,16 +26,19 @@ class controller_query{
 		return $args;
 	}
 	public static function private_get_initiator(){
+		$types = model_query_work_type::get_query_work_types();
 		switch($_GET['initiator']){
 			case 'number':
 				$args['number_id'] = $_GET['id'];
 				return ['initiator' => 'number',
-						'number' => model_number::get_number($args)];
+						'number' => model_number::get_number($args),
+						'query_work_types' => $types];
 			break;
 			case 'house':
 				$args['house_id'] = $_GET['id'];
 				return ['initiator' => 'house',
-						'house' => model_house::get_house($args)];
+						'house' => model_house::get_house($args),
+						'query_work_types' => $types];
 			break;
 			default:
 				return false;		

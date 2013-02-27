@@ -10,7 +10,8 @@
 		});		
 		{% if initiator == 'house' %}
 			$('.dialog-select-house').change(function(){
-				$.get('index.php',{p: 'query.get_house_initiator',
+				$.get('index.php',{p: 'query.get_initiator',
+					initiator: 'house',
 					id: $('.dialog-select-house :selected').val()
 				},function(r){
 					$('.modal-body').html(r);
@@ -29,7 +30,7 @@
 					initiator: 'number',
 					id: $('.dialog-select-number :selected').val()
 				},function(r){
-					//$('.modal-body').html(r);
+					$('.modal-body').html(r);
 				});
 			});	
 		{% endif %}
