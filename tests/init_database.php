@@ -14,15 +14,37 @@ function create_tables(){
 * Создает фейковых юзеров
 */
 function create_users(){
+	$users = [
+		[1, 1, true, 'NekrasovEV', 'Евгений', 'Некрасов', 'Валерьевич', '{htyfntym',
+		'647957', '89222944742'],
+		[2, 1, true, 'test', 'Firstname', 'Lastname', 'Middlename', 'test',
+		'123456', '8123456789']
+	];
 	$sql = "INSERT INTO `users` (
-				`id`, `company_id`,`status`, `username`, `firstname`, `lastname`,
+				`id`, `company_id`, `status`, `username`, `firstname`, `lastname`,
 				`midlename`, `password`, `telephone`, `cellphone`
 			) VALUES (
-				1, 1, true, 'NekrasovEV', 'Евгений', 'Некрасов', 'Валерьевич', 
-				'".get_password_hash('{htyfntym')."', 647957, '+7 922 294 47 42'
+				:user_id, :company_id, :status, :login, :firstname, :lastname, 
+				:middlename, :password, :telephone, :cellphone
 			);";
 	$stm = db::get_handler()->prepare($sql);
-	$stm->execute();
+	$stm->bindParam(':user_id', $user_id);
+	$stm->bindParam(':company_id', $company_id);
+	$stm->bindParam(':status', $status);
+	$stm->bindParam(':login', $login);
+	$stm->bindParam(':firstname', $firstname);
+	$stm->bindParam(':lastname', $lastname);
+	$stm->bindParam(':middlename', $middlename);
+	$stm->bindParam(':password', $password);
+	$stm->bindParam(':telephone', $telephone);
+	$stm->bindParam(':cellphone', $cellphone);
+	foreach($users as $user){
+		list($user_id, $company_id, $status, $login, $firstname, $lastname,
+			$middlename, $password, $telephone, $cellphone) = $user;
+		$password = get_password_hash($password);
+		$stm->execute();
+		$stm->closeCursor();
+	}
 }
 /*
 * Стираем все таблицы в базе данных
