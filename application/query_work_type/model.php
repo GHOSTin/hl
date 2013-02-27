@@ -1,7 +1,6 @@
 <?php
 class model_query_work_type{
 	public static function get_query_work_types(){
-
 		try{
 			$sql = "SELECT `id`,`company_id`, `status`, `name`
 					FROM `query_worktypes`
