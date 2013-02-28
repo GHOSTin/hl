@@ -11,6 +11,130 @@ function create_tables(){
 	$stm = db::get_handler()->exec(file_get_contents(ROOT."/specifications/database_structure.sql"));
 }
 /*
+* Создает города
+*/
+function create_cities(){
+	$cities = [
+		[1, 1, true, 'Первоуральск'],
+		[2, 1, true, 'Ревда']
+	];
+	$sql = "INSERT INTO `cities` (
+				`id`, `company_id`, `status`, `name`
+			) VALUES (
+				:city_id, :company_id, :status, :name 
+			);";
+	$stm = db::get_handler()->prepare($sql);
+	$stm->bindParam(':city_id', $city_id);
+	$stm->bindParam(':company_id', $company_id);
+	$stm->bindParam(':status', $status);
+	$stm->bindParam(':name', $name);
+	foreach($cities as $city){
+		list($city_id, $company_id, $status, $name) = $city;
+		$stm->execute();
+		$stm->closeCursor();
+	}
+}
+/*
+* Создает участки
+*/
+// CREATE TABLE IF NOT EXISTS `departments` (
+//   `id` TINYINT(3) UNSIGNED NOT NULL,
+//   `company_id` TINYINT(3) UNSIGNED NOT NULL,
+//   `status` ENUM('active','deactive') NOT NULL DEFAULT 'active',
+//   `name` VARCHAR(255) NOT NULL,
+//   KEY `id` (`company_id`,`id`),
+//   KEY `name` (`name`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+function create_departments(){
+	$departments = [
+		[1, 1, true, 'Центральный'],
+		[2, 1, true, 'Первый'],
+		[2, 1, true, 'Второй']
+	];
+	$sql = "INSERT INTO `departments` (
+				`id`, `company_id`, `status`, `name`
+			) VALUES (
+				:department_id, :company_id, :status, :name 
+			);";
+	$stm = db::get_handler()->prepare($sql);
+	$stm->bindParam(':department_id', $department_id);
+	$stm->bindParam(':company_id', $company_id);
+	$stm->bindParam(':status', $status);
+	$stm->bindParam(':name', $name);
+	foreach($departments as $department){
+		list($department_id, $company_id, $status, $name) = $department;
+		$stm->execute();
+		$stm->closeCursor();
+	}
+}
+/*
+* Создает улицы
+*/
+function create_houses(){
+	$houses = [
+		[1, 1, 1, 1, 1, true, '32б'],
+		[2, 1, 1, 1, 1, true, '49'],
+		[3, 1, 1, 1, 1, true, '52'],
+		[4, 1, 1, 1, 1, true, '16'],
+		[5, 1, 1, 1, 1, true, '17'],
+		[6, 1, 1, 1, 1, true, '18'],
+		[7, 1, 1, 2, 2, true, '18'],
+		[8, 1, 1, 2, 2, true, '21'],
+		[9, 1, 1, 3, 3, true, '37'],
+		[10, 1, 1, 4, 3, true, '78'],
+		[11, 1, 1, 5, 3, true, '11']
+	];
+	$sql = "INSERT INTO `houses` (
+				`id`, `company_id`, `city_id`, `street_id`, `department_id`,
+				`status`, `housenumber`
+			) VALUES (
+				:house_id, :company_id, :city_id, :street_id, :department_id,
+				:status, :number
+			);";
+	$stm = db::get_handler()->prepare($sql);
+	$stm->bindParam(':house_id', $house_id);
+	$stm->bindParam(':company_id', $company_id);
+	$stm->bindParam(':city_id', $city_id);
+	$stm->bindParam(':street_id', $street_id);
+	$stm->bindParam(':department_id', $department_id);
+	$stm->bindParam(':status', $status);
+	$stm->bindParam(':number', $number);
+	foreach($houses as $house){
+		list($house_id, $company_id, $city_id, $street_id, $department_id,
+			$status, $number) = $house;
+		$stm->execute();
+		$stm->closeCursor();
+	}
+}
+/*
+* Создает улицы
+*/
+function create_streets(){
+	$streets = [
+		[1, 1, 1, true, 'Ватутина ул'],
+		[2, 1, 1, true, 'Емлина ул'],
+		[3, 1, 1, true, 'Строителей ул'],
+		[4, 1, 1, true, 'Ленина ул'],
+		[5, 1, 1, true, 'Чекистов ул']
+	];
+	$sql = "INSERT INTO `streets` (
+				`id`, `company_id`, `city_id`, `status`, `name`
+			) VALUES (
+				:street_id, :company_id, :city_id, :status, :name 
+			);";
+	$stm = db::get_handler()->prepare($sql);
+	$stm->bindParam(':street_id', $street_id);
+	$stm->bindParam(':company_id', $company_id);
+	$stm->bindParam(':city_id', $city_id);
+	$stm->bindParam(':status', $status);
+	$stm->bindParam(':name', $name);
+	foreach($streets as $street){
+		list($street_id, $company_id, $city_id, $status, $name) = $street;
+		$stm->execute();
+		$stm->closeCursor();
+	}
+}
+/*
 * Создает фейковых юзеров
 */
 function create_users(){
@@ -69,6 +193,10 @@ try{
 	drop_tables();
 	create_tables();
 	create_users();
+	create_cities();
+	create_streets();
+	create_houses();
+	create_departments();
 }catch(exception $e){
 	die($e->getMessage());
 }
