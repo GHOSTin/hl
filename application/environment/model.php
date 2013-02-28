@@ -1,9 +1,6 @@
 <?php
 class model_environment{
 	public static function build_page($data){
-				/*$data = (empty($_SERVER['HTTP_X_REQUESTED_WITH']))?
-					view_menu::build_horizontal_menu():
-					'';*/
 		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
 			return load_template('default_page.main_page', $data);
 			return $data['view'];
@@ -15,12 +12,13 @@ class model_environment{
 		try{
 			session_start();
 			if($_SESSION['user'] instanceof data_user){
-				return [http_router::get_component_name(),
+				$route = [http_router::get_component_name(),
 				'private_'.http_router::get_method_name()];
 			}else
-				return ['auth', 'public_login'];
+				$route = ['auth', 'public_login'];
+			return [true, $route];
 		}catch(exception $e){
-			die('Fail build router');
+			return [false, 'Fail build router'];
 		}
 	}
 	/**
@@ -47,14 +45,17 @@ class model_environment{
 		return [true];
 	}
 	/*
-	* Функция возвращает
+	* Функция возвращает содержимое страницы
 	*/
 	public static function get_page_content(){
 		try{
 			list($error, $code) = self::create_batabase_connection();
 			if($error !== true)
 				throw new exception($code);
-			list($component, $method) = self::build_router();
+			list($error, $code) = self::build_router();
+			if($error !== true)
+				throw new exception($code);
+				list($component, $method) = $code;
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			list($error, $code) = self::load_twig();
@@ -112,32 +113,6 @@ class model_environment{
 			die($e->getMessage());
 			return false;
 		}
-	}
-	/**
-	* Запрашивает информацию о пользователе
-	* @return void
-	*/
-	private static function get_user_info(){
-		if(!isset($_SESSION['use2r'])){
-			try{
-				$user_id = (int) $_SESSION['user_id'];
-				$sql = "SELECT `id`,`company_id`, `status`, `username` as `login`,
-					`firstname`, `lastname`, `midlename` as `middlename`, `telephone`,`cellphone`
-					FROM `users`
-					WHERE `id` = :user_id";
-				$stm = db::get_handler()->prepare($sql);
-				$stm->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-				$stm->execute();
-				if($stm->rowCount() !== 1)
-					throw new exception('user not exists');
-				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
-				$user = $stm->fetch();
-				$stm->closeCursor();
-				$_SESSION['user'] = $user;
-	 		}catch(exception $e){
-	 			die('Fail user auth');
-	 		}
-	 	}
 	}
 	/*
 	* Регистрирует шаблонизатор
