@@ -37,19 +37,11 @@ function create_cities(){
 /*
 * Создает участки
 */
-// CREATE TABLE IF NOT EXISTS `departments` (
-//   `id` TINYINT(3) UNSIGNED NOT NULL,
-//   `company_id` TINYINT(3) UNSIGNED NOT NULL,
-//   `status` ENUM('active','deactive') NOT NULL DEFAULT 'active',
-//   `name` VARCHAR(255) NOT NULL,
-//   KEY `id` (`company_id`,`id`),
-//   KEY `name` (`name`)
-// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 function create_departments(){
 	$departments = [
 		[1, 1, true, 'Центральный'],
 		[2, 1, true, 'Первый'],
-		[2, 1, true, 'Второй']
+		[3, 1, true, 'Второй']
 	];
 	$sql = "INSERT INTO `departments` (
 				`id`, `company_id`, `status`, `name`
@@ -63,6 +55,39 @@ function create_departments(){
 	$stm->bindParam(':name', $name);
 	foreach($departments as $department){
 		list($department_id, $company_id, $status, $name) = $department;
+		$stm->execute();
+		$stm->closeCursor();
+	}
+}
+/*
+* Создает квартиры
+*/
+function create_flats(){
+	$flats = [
+		[1, 1, 1, true, 1],
+		[2, 1, 1, true, 2],
+		[3, 1, 1, true, 3],
+		[4, 1, 1, true, 4],
+		[5, 1, 1, true, 5],
+		[6, 1, 1, true, 6],
+		[7, 1, 1, true, 7],
+		[8, 1, 1, true, 8],
+		[9, 1, 1, true, 9],
+		[10, 1, 1, true, 10]
+	];
+	$sql = "INSERT INTO `flats` (
+				`id`, `company_id`, `house_id`, `status`, `flatnumber`
+			) VALUES (
+				:flat_id, :company_id, :house_id, :status, :number 
+			);";
+	$stm = db::get_handler()->prepare($sql);
+	$stm->bindParam(':flat_id', $flat_id);
+	$stm->bindParam(':company_id', $company_id);
+	$stm->bindParam(':house_id', $house_id);
+	$stm->bindParam(':status', $status);
+	$stm->bindParam(':number', $number);
+	foreach($flats as $flat){
+		list($flat_id, $company_id, $house_id, $status, $number) = $flat;
 		$stm->execute();
 		$stm->closeCursor();
 	}
@@ -102,6 +127,75 @@ function create_houses(){
 	foreach($houses as $house){
 		list($house_id, $company_id, $city_id, $street_id, $department_id,
 			$status, $number) = $house;
+		$stm->execute();
+		$stm->closeCursor();
+	}
+}
+/*
+* Создает лицевые счета
+*/
+// CREATE TABLE IF NOT EXISTS `numbers` (
+//   `id` MEDIUMINT(8) UNSIGNED NOT NULL,
+//   `company_id` TINYINT(3) UNSIGNED NOT NULL,
+//   `city_id` SMALLINT(5) UNSIGNED NOT NULL,
+//   `house_id` SMALLINT(5) UNSIGNED NOT NULL,
+//   `flat_id` MEDIUMINT(8) UNSIGNED NOT NULL,
+//   `number` VARCHAR(20) NOT NULL,
+//   `type` ENUM('human','organization','house') NOT NULL,
+//   `status` ENUM('true','false') NOT NULL DEFAULT 'true',
+//   `fio` VARCHAR(255) DEFAULT NULL,
+//   `telephone` VARCHAR(11) DEFAULT NULL,
+//   `cellphone` VARCHAR(11) DEFAULT NULL,
+//   `password` VARCHAR(255) NOT NULL,
+//   `contact-fio` VARCHAR(255) DEFAULT NULL,
+//   `contact-telephone` VARCHAR(11) DEFAULT NULL,
+//   `contact-cellphone` VARCHAR(11) DEFAULT NULL,
+//   PRIMARY KEY (`id`),
+//   KEY `number` (`number`),
+//   KEY `password` (`password`),
+//   KEY `company_id` (`company_id`),
+//   KEY `flat_id` (`flat_id`),
+//   KEY `type` (`type`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+function create_numbers(){
+	$numbers = [
+		[1, 1, 1, 1, 1, 546789, 'human', true, 'Некрасов Евгений Валерьевич',
+		'647957', '89222944742', 'password', 'contact_fio', 'con_telephone', 'con_cellphone'],
+		[2, 1, 1, 1, 1, 546790, 'human', true, 'Некрасов Евгений Валерьевич',
+		'647957', '89222944742', 'password', 'contact_fio', 'con_telephone', 'con_cellphone'],
+		[3, 1, 1, 1, 2, 546689, 'human', true, 'Некрасов Евгений Валерьевич',
+		'647957', '89222944742', 'password', 'contact_fio', 'con_telephone', 'con_cellphone']
+	];
+	$sql = "INSERT INTO `numbers` (
+				`id`, `company_id`, `city_id`, `house_id`, `flat_id`, `number`, `type`, `status`,
+				`fio`, `telephone`, `cellphone`, `password`, `contact-fio`, `contact-telephone`,
+				`contact-cellphone`
+			) VALUES (
+				:number_id, :company_id, :city_id, :house_id, :flat_id, :number, :type, :status,
+				:fio, :telephone, :cellphone, :password, :contact_fio, :contact_telephone,
+				:contact_cellphone
+			);";
+	$stm = db::get_handler()->prepare($sql);
+	$stm->bindParam(':number_id', $number_id);
+	$stm->bindParam(':company_id', $company_id);
+	$stm->bindParam(':city_id', $city_id);
+	$stm->bindParam(':house_id', $house_id);
+	$stm->bindParam(':flat_id', $flat_id);
+	$stm->bindParam(':number', $number);
+	$stm->bindParam(':type', $type);
+	$stm->bindParam(':status', $status);
+	$stm->bindParam(':fio', $fio);
+	$stm->bindParam(':telephone', $telephone);
+	$stm->bindParam(':cellphone', $cellphone);
+	$stm->bindParam(':password', $password);
+	$stm->bindParam(':contact_fio', $contact_fio);
+	$stm->bindParam(':contact_telephone', $contact_telephone);
+	$stm->bindParam(':contact_cellphone', $contact_cellphone);
+	foreach($numbers as $numberData){
+		// var_dump($number);exit();
+		list($number_id, $company_id, $city_id, $house_id, $flat_id, $number,
+			$type, $status, $fio, $telephone, $cellphone, $password, 
+			$contact_fio, $contact_telephone, $contact_cellphone) = $numberData;
 		$stm->execute();
 		$stm->closeCursor();
 	}
@@ -197,6 +291,8 @@ try{
 	create_streets();
 	create_houses();
 	create_departments();
+	create_flats();
+	create_numbers();
 }catch(exception $e){
 	die($e->getMessage());
 }
