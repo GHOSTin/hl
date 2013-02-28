@@ -5,6 +5,13 @@ $dir = dirname(__FILE__);
 define('ROOT' , substr($dir, 0, (strlen($dir) - strlen('/test'))));
 require_once(ROOT."/framework/framework.php");
 /*
+* Парсинг xml
+*/
+function parse_xml(){
+	$json = simplexml_load_file(ROOT.'/specifications/data.xml');
+	if($json === false) die('XML ошибка!');
+}
+/*
 * Создает таблицы
 */
 function create_tables(){
@@ -283,6 +290,7 @@ function get_password_hash($passwd){
 * Запуск
 */
 try{
+	parse_xml();
 	model_environment::create_batabase_connection();
 	drop_tables();
 	create_tables();

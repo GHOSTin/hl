@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<data>
+	<companies>
+			<company name="Уралагрострой" id="1" />
+			<company name="Наш город" id="2" />
+	</companies>
+	<cities>
+		<city name="Первоуральск" id="1" status="true" company_id="1">
+			<streets>
+				<street name="Ватутина ул" id="1" company_id="1" status="true">
+				</street>
+				<street name="Емлина ул" id="2" company_id="1" status="true" />
+				<street name="Строителей ул" id="3" company_id="1" status="true" />
+				<street name="Ленина ул" id="4" company_id="1" status="true" />
+				<street name="Чекистов ул" id="5" company_id="1" status="true" />
+			</streets>
+		</city>
+		<city name="Ревда" id="2" status="true" company_id="1"></city>
+	</cities>
+	<users>
+		<user id="1" company_id="1" status="true" login="NekrasovEV" firstname="Евгений" lastname="Некрасов" middlename="Валерьевич" password="{htyfntym" telephone="647957" cellphone="89222944742" />
+		<user id="2" company_id="1" status="true" login="test" firstname="testFirstname" lastname="testLastname" middlename="testMiddlename" password="test" telephone="647957" cellphone="89222944742" />
+	</users>
+</data>
