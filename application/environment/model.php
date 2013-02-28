@@ -34,7 +34,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
- 			die('Fail database connection'); 
+ 			return [false, 'Fail database connection']; 
 		}
 		// устанавливаем параметры по умолчанию
 		try{
@@ -42,19 +42,24 @@ class model_environment{
 			db::get_handler()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			db::get_handler()->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		}catch(exception $e){
-			die('Fail set database properties'); 
+			return [false, 'Fail set database properties']; 
 		}
+		return [true];
 	}
 	/*
 	* Функция возвращает
 	*/
 	public static function get_page_content(){
 		try{
-			self::create_batabase_connection();
+			list($error, $code) = self::create_batabase_connection();
+			if($error !== true)
+				throw new exception($code);
 			list($component, $method) = self::build_router();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
-			self::load_twig();
+			list($error, $code) = self::load_twig();
+			if($error !== true)
+				throw new exception($code);
 			//self::get_user_profiles($controller);
 			// проверяю если ли права доступа
 			if(true){
@@ -69,7 +74,7 @@ class model_environment{
 			}
 			return self::build_page($data);
 		}catch(exception $e){
-			return 'Error!';
+			die($e->getMessage());
 		}
 	}
 	/**
@@ -142,7 +147,8 @@ class model_environment{
 			require_once ROOT.'/libs/Twig/Autoloader.php';
 			Twig_Autoloader::register();
 		}catch(exception $e){
-			die('Fail load template machine');
+			return [false, 'Fail load template machine'];
 		}
+		return [true];
 	}	
 }

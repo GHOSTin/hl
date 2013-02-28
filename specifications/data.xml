@@ -12,6 +12,7 @@
 						<number number="233243" fio="Некрасов Евгений Валерьевич" status="true" telephone="647957" cellphone="89222944742" password="password" contact_fio="fio" contact_telephone="123456" contact_cellphone="1234567890" />
 					</flat>
 					<flat number="20" status="true">
+						<number number="233244" fio="Котькорло Валентина" status="true" telephone="647954" cellphone="8922342944742" password="password" contact_fio="fio" contact_telephone="123456" contact_cellphone="1234567890" />
 					</flat>
 				</house>
 				<house number="52б" department_id="2" status="true" />
