@@ -63,8 +63,12 @@ class model_environment{
 				$menu = view_menu::build_horizontal_menu();
 			}
 			$c_data = $controller::$method();
-			$data = ['component' => $component, 'view' => $view::$method($c_data),
-					'menu' => $menu];
+			try{
+				$data = ['component' => $component, 'view' => $view::$method($c_data),
+						'menu' => $menu];
+			}catch(exception $e){
+				// throw new exception('Проблема на этапе представления информации компонента.');
+			}
 			return self::build_page($data);
 		}catch(exception $e){
 			return $e->getMessage();

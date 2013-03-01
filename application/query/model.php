@@ -35,12 +35,15 @@ class model_query{
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':query_id', $query_id, PDO::PARAM_INT);
 			$stm->execute();
-			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
-			$query = $stm->fetch();
+			if($stm->rowCount() > 0){
+				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
+				return $stm->fetch();
+			}else{
+				return false;
+			}
 			$stm->closeCursor();
-			return $query;
 		}catch(exception $e){
-			return false;
+			throw new exception('Ошибка при запросе заявки.');
 		}
 	}
 	/**
@@ -125,11 +128,11 @@ class model_query{
 				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
 				while($query = $stm->fetch())
 					$result[$query->id] = $query;
+				return $result;
 			}else{
-				$result = false;
+				return false;
 			}
 			$stm->closeCursor();
-			return $result;
 		}catch(exception $e){
 			throw new exception('Ошибка при выборке заявок.');
 		}
@@ -139,52 +142,56 @@ class model_query{
 	* Скармиливаем массив получаем правильный набор параметров
 	*/
 	public static function build_query_filter($in_args){
-		$s_args = $_SESSION['filters']['query'];
-		/*
-		* Если нет в in_args то не записываем и в out_args
-		*/
-		if(!empty($in_args['number'])){
-			$out_args['number'] = (int) $in_args['number'];
-		}
-		/*
-		* Если нет в in_args проверяем в сессии и берем оттуда параметры.
-		* Если нет в сессии генерируем по умолчанию
-		*/
-		// проверка интервала времени
-		if(empty($in_args['time_interval']['begin']) OR empty($in_args['time_interval']['end'])){
-			if(empty($s_args['time_interval']['begin']) OR empty($s_args['time_interval']['end'])){
-				$time = getdate();
-				$out_args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-				$out_args['time_interval']['end'] = $out_args['time_interval']['begin'] + 86399;
+		try{
+			$s_args = $_SESSION['filters']['query'];
+			/*
+			* Если нет в in_args то не записываем и в out_args
+			*/
+			if(!empty($in_args['number'])){
+				$out_args['number'] = (int) $in_args['number'];
+			}
+			/*
+			* Если нет в in_args проверяем в сессии и берем оттуда параметры.
+			* Если нет в сессии генерируем по умолчанию
+			*/
+			// проверка интервала времени
+			if(empty($in_args['time_interval']['begin']) OR empty($in_args['time_interval']['end'])){
+				if(empty($s_args['time_interval']['begin']) OR empty($s_args['time_interval']['end'])){
+					$time = getdate();
+					$out_args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+					$out_args['time_interval']['end'] = $out_args['time_interval']['begin'] + 86399;
+				}else{
+					$out_args['time_interval']['begin'] = $s_args['time_interval']['begin'];
+					$out_args['time_interval']['end'] = $s_args['time_interval']['end'];
+				}
 			}else{
-				$out_args['time_interval']['begin'] = $s_args['time_interval']['begin'];
-				$out_args['time_interval']['end'] = $s_args['time_interval']['end'];
+				$out_args['time_interval']['begin'] = $in_args['time_interval']['begin'];
+				$out_args['time_interval']['end'] = $in_args['time_interval']['end'];
 			}
-		}else{
-			$out_args['time_interval']['begin'] = $in_args['time_interval']['begin'];
-			$out_args['time_interval']['end'] = $in_args['time_interval']['end'];
-		}
-		// проверяет статус
-		$statuses = ['open', 'working', 'close', 'reopen', 'open+working'];
-		if(empty($in_args['statuses'])){
-			if(!empty($s_args['statuses'])){
-				$out_args['statuses'] = $s_args['statuses'];
-			}
-		}else{
-			if(is_array($in_args['statuses'])){
-				foreach ($in_args['statuses'] as $status){
-					if(array_search($status, $statuses, true) !== false){
-						if($status === 'open+working'){
-							$out_args['statuses'][] = 'open';
-							$out_args['statuses'][] = 'working';
-						}else
-							$out_args['statuses'][] = $status;
+			// проверяет статус
+			$statuses = ['open', 'working', 'close', 'reopen', 'open+working'];
+			if(empty($in_args['statuses'])){
+				if(!empty($s_args['statuses'])){
+					$out_args['statuses'] = $s_args['statuses'];
+				}
+			}else{
+				if(is_array($in_args['statuses'])){
+					foreach ($in_args['statuses'] as $status){
+						if(array_search($status, $statuses, true) !== false){
+							if($status === 'open+working'){
+								$out_args['statuses'][] = 'open';
+								$out_args['statuses'][] = 'working';
+							}else
+								$out_args['statuses'][] = $status;
+						}
 					}
 				}
 			}
+			return $out_args;
+			var_dump($out_args);
+			exit();
+		}catch(exception $e){
+			throw new exception('Ошибка при построении параметром запроса заявок.');
 		}
-		return $out_args;
-		var_dump($out_args);
-		exit();
 	}
 }
