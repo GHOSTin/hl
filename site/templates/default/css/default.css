@@ -35,16 +35,6 @@ footer, #push{
 	border: 1px solid black;
 }
 
-
-.popover{
-    width:600px;
-    height: 600px;
-}
-
-.popover-title {
-    display: none;
-}
-
 .user-list {
     position: relative;
     overflow: hidden;
@@ -67,6 +57,7 @@ footer, #push{
 
 .feed{
     height: 400px;
+    overflow-y: scroll;
 }
 
 .scroller {
@@ -107,4 +98,9 @@ footer, #push{
 
 .user-list, .chat-list {
     display: table-cell;
+    vertical-align: top;
+}
+
+.user-list li.active a{
+    font-weight: bold;
 }
