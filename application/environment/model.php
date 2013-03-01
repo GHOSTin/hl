@@ -32,7 +32,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
- 			return [false, 'Fail database connection']; 
+ 			throw new exception();
 		}
 		// устанавливаем параметры по умолчанию
 		try{

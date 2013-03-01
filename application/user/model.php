@@ -23,7 +23,7 @@ class model_user{
 			$stm->closeCursor();
 			return $user;
 		}catch(exception $e){
-			throw new exception('User ID = '.$user_id.' not found.');
+			return false;
 		}
 	}
 	/**

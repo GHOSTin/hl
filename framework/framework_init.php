@@ -69,7 +69,6 @@ class twig{
  // Применение
 
 function load_template($name, $args = []){
-
 	return twig::get_instance()->load_template($name, $args);
 }
 /*
