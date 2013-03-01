@@ -15,9 +15,9 @@
                        <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li><a tabindex="-1" href="/?p=profile">Профиль</a></li>
+                        <li><a tabindex="-1" href="/profile/">Профиль</a></li>
                         <li class="divider"></li>
-                        <li><a tabindex="-1" href="/?p=exit">Выход</a></li>
+                        <li><a tabindex="-1" href="/exit/">Выход</a></li>
                     </ul>
                 </li>
             </ul>

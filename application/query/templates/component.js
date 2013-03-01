@@ -1,60 +1,60 @@
 $(document).ready(function(){
 	$('body').on('click', '.get_query_content', function(){
-		$.get('index.php',{p: 'query.get_query_content',
+		$.get('/query/get_query_content',{
 			 id: $(this).attr('query_id')
 			},function(r){
 				show_content(r);
 			});
 	});
 	$('body').on('click', '.get_query_title', function(){
-		$.get('index.php',{p: 'query.get_query_title',
+		$.get('/query/get_query_title',{
 			 id: get_query_id($(this))
 			},function(r){
 				show_content(r);
 			});
 	});	
 	$('body').on('click', '.get_query_title', function(){
-		$.get('index.php',{p: 'query.get_query_title',
+		$.get('/query/get_query_title',{
 			 id: get_query_id($(this))
 			},function(r){
 				show_content(r);
 			});
 	});	
 	$('body').on('click', '.timeline-day', function(){
-		$.get('index.php',{p: 'query.get_day',
+		$.get('/query/get_day',{
 			 time: $(this).attr('time')
 			},function(r){
 				$('.queries').html(r);
 			});
 	});		
 	$('body').on('click', '.get_search', function(){
-		$.get('index.php',{p: 'query.get_search'
+		$.get('/query/get_search',{
 			},function(r){
 				$('.queries').html(r);
 			});
 	});
 	$('body').on('click', '.get_search_result', function(){
-		$.get('index.php',{p: 'query.get_search_result',
+		$.get('/query/get_search_result',{
 			param: $('.search_parameters').val()
 			},function(r){
 				$('.queries').html(r);
 			});
 	});
 	$('body').on('click', '.clear_filters', function(){
-		$.get('index.php',{p: 'query.clear_filters'
+		$.get('/query/clear_filters',{
 			},function(r){
 				$('.queries').html(r);
 			});
 	});	
 	$('.filter-content-select-status').change(function(){
-		$.get('index.php',{p: 'query.set_status',
+		$.get('/query/set_status',{
 			value: $('.filter-content-select-status :selected').val()
 			},function(r){
 				$('.queries').html(r);
 			});
 	});	
 	$('body').on('click', '.get_dialog_create_query', function(){
-		$.get('index.php',{p: 'query.get_dialog_create_query'
+		$.get('/query/get_dialog_create_query',{
 			},function(r){
 				show_content(r);
 			});
