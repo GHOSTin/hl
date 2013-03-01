@@ -85,7 +85,7 @@ $('.light').on('click', function(){
 });
 $('#nt-center').on('click', function(){
     var self = $(this);
-    $.get('index.php',{p: 'profile.get_notification_center_content'
+    $.get('/profile/get_notification_center_content',{
         },function(r){
             show_notification_center(self.parent(), r);
             baron($('.user-list'), {
