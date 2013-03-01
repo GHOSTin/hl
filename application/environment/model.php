@@ -13,6 +13,9 @@ class model_environment{
 	* Строит роутер
 	*/
 	public static function build_router(){
+		var_dump($_SERVER['REQUEST_URI']);
+		print 1;
+		exit();
 		try{
 			session_start();
 			if($_SESSION['user'] instanceof data_user){

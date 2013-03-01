@@ -39,7 +39,7 @@ class controller_query{
 						'query_work_types' => $types];
 			break;
 			default:
-				return false;		
+				return ['initiator' => false];		
 		}
 	}		
 	public static function private_get_houses(){
