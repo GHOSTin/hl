@@ -63,19 +63,15 @@ class model_environment{
 				throw new exception($code);
 			//self::get_user_profiles($controller);
 			// проверяю если ли права доступа
-			if(true){
-				if($_SESSION['user'] instanceof data_user){
-					$menu = view_menu::build_horizontal_menu();
-				}
-				$c_data = $controller::$method();
-				$data = ['component' => $component, 'view' => $view::$method($c_data),
-						'menu' => $menu];
-			}else{
-				$data = ['component' => 'error', 'view' => 'Access Denied'];
+			if($_SESSION['user'] instanceof data_user){
+				$menu = view_menu::build_horizontal_menu();
 			}
+			$c_data = $controller::$method();
+			$data = ['component' => $component, 'view' => $view::$method($c_data),
+					'menu' => $menu];
 			return self::build_page($data);
 		}catch(exception $e){
-			die($e->getMessage());
+			return $e->getMessage();
 		}
 	}
 	/**

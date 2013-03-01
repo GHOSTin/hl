@@ -23,7 +23,7 @@ class model_user{
 			$stm->closeCursor();
 			return $user;
 		}catch(exception $e){
-			return false;
+			throw new exception('User ID = '.$user_id.' not found.');
 		}
 	}
 	/**
@@ -37,7 +37,6 @@ class model_user{
 					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
 					`users`.`cellphone`
 					FROM `users`";
-					
 			$stm = db::get_handler()->prepare($sql);
 			$stm->execute();
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');

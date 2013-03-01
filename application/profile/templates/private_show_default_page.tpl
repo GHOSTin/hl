@@ -1,4 +1,3 @@
-{% if user != false %}
 <div>
 	ФИО: {{user.lastname}} {{user.firstname}} {{user.middlename}}
 </div>
@@ -11,4 +10,3 @@
 <div>
 	Сотовый: {{user.cellphone}} <span class="cm">изменить</span>
 </div>
-{% endif %}
