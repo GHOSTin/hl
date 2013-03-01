@@ -6,7 +6,7 @@ class model_environment{
 				return load_template('default_page.main_page', $data);
 				return $data['view'];
 		}catch(exception $e){
-			throw new exception('Fail build page');
+			throw new exception('Ошибка при строительстве страницы.');
 		}
 	}
 	/*
@@ -22,7 +22,7 @@ class model_environment{
 				$route = ['auth', 'public_login'];
 			return $route;
 		}catch(exception $e){
-			throw new exception('Fail build router');
+			throw new exception('Ошибка постройки маршрута.');
 		}
 	}
 	/**
@@ -36,7 +36,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
- 			throw new exception('Database not connected');
+ 			throw new exception('Нет соединения с базой данных.');
 		}
 		// устанавливаем параметры по умолчанию
 		try{
@@ -44,7 +44,7 @@ class model_environment{
 			db::get_handler()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			db::get_handler()->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		}catch(exception $e){
-			throw new exception('Properties not loaded'); 
+			throw new exception('Аттрибуты соединения с базой данных не применились.'); 
 		}
 	}
 	/*
@@ -57,7 +57,7 @@ class model_environment{
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			self::load_twig();
-				//self::get_user_profiles($controller);
+			//self::get_user_profiles($controller);
 			// проверяю если ли права доступа
 			if($_SESSION['user'] instanceof data_user){
 				$menu = view_menu::build_horizontal_menu();
@@ -113,7 +113,7 @@ class model_environment{
 			require_once ROOT.'/libs/Twig/Autoloader.php';
 			Twig_Autoloader::register();
 		}catch(exception $e){
-			throw new exception('Fail load template machine');
+			throw new exception('Шаблонизатор не может быть подгружен.');
 		}
 	}	
 }

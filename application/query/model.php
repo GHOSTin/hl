@@ -49,7 +49,6 @@ class model_query{
 	*/
 	public static function get_queries($args){
 		$_SESSION['filters']['query'] = $args = self::build_query_filter($args);
-		//var_dump($args);exit();
 		try{
 			if(!empty($args['number'])){
 
@@ -108,7 +107,6 @@ class model_query{
 					}
 					$sql .= " ORDER BY `opentime` DESC";
 			}
-
 			$stm = db::get_handler()->prepare($sql);
 			if(!empty($args['number'])){
 				$stm->bindParam(':number', $number, PDO::PARAM_INT, 10);
@@ -123,14 +121,17 @@ class model_query{
 				$stm->bindValue(':status', $args['statuses'][0], PDO::PARAM_STR);
 			}
 			$stm->execute();
-			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
-			while($query = $stm->fetch())
-				$result[$query->id] = $query;
+			if($stm->rowCount() > 0){
+				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
+				while($query = $stm->fetch())
+					$result[$query->id] = $query;
+			}else{
+				$result = false;
+			}
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
-			die($e->getMessage());
-			return false;
+			throw new exception('Ошибка при выборке заявок.');
 		}
 	}	
 	/*

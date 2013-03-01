@@ -18,14 +18,16 @@ class model_auth{
 			$stm->bindParam(':login', $login, PDO::PARAM_STR, 255);
 			$stm->bindParam(':hash', $hash , PDO::PARAM_STR, 255);
 			$stm->execute();
-			if($stm->rowCount() !== 1)
-				throw new exception('user not exists');
-			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
-			$_SESSION['user'] = $stm->fetch();
-			$stm->closeCursor();
-			return true;
+			if($stm->rowCount() !== 1){
+				return false;
+			}else{
+				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
+				$_SESSION['user'] = $stm->fetch();
+				$stm->closeCursor();
+				return true;
+			}
  		}catch(exception $e){
- 			return false;
+ 			throw new exception('Ошибка аутентификации.');
  		}
 	}
 }
