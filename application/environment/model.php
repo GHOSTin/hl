@@ -13,14 +13,21 @@ class model_environment{
 	* Строит роутер
 	*/
 	public static function build_router(){
-		var_dump($_SERVER['REQUEST_URI']);
-		print 1;
-		exit();
 		try{
 			session_start();
 			if($_SESSION['user'] instanceof data_user){
-				$route = [http_router::get_component_name(),
-				'private_'.http_router::get_method_name()];
+				$urlArray = parse_url($_SERVER['REQUEST_URI']);
+				$url = explode('/', substr($urlArray['path'], 1));
+				$component = (string) $url[0];
+				if(empty($component)){
+					$component = 'default_page';
+					$method = 'show_default_page';
+				}else{
+					$method = (string) $url[1];
+					if(empty($method))
+						$method = 'show_default_page';
+				}
+				$route = [$component, 'private_'.$method];
 			}else
 				$route = ['auth', 'public_login'];
 			return $route;
