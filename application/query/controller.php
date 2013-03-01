@@ -68,8 +68,7 @@ class controller_query{
 	}
 	public static function private_set_status(){
 		$args['statuses'] = [(string) $_GET['value']];
-		$args['queries'] = model_query::get_queries($args);
-		return $args;
+		return ['queries' => model_query::get_queries($args)];
 	}
 	public static function private_show_default_page(){
 		$queries = model_query::get_queries([]);
