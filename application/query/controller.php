@@ -62,10 +62,9 @@ class controller_query{
 	}
 	public static function private_get_search_result(){
 		$args['number'] = (int) $_GET['param'];
-		$args['queries'] = ($args['number'] === 0)?
-			false:
-			model_query::get_queries($args);
-		return $args;
+		if($args['number'] === 0)
+			return ['queries' => false];
+			return ['queries' => model_query::get_queries($args)];
 	}
 	public static function private_set_status(){
 		$args['statuses'] = [(string) $_GET['value']];
