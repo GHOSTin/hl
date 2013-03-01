@@ -13,8 +13,7 @@ class controller_query{
 		$time = getdate($_GET['time']);
 		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$args['time_interval']['end'] = $args['time_interval']['begin'] + 86399;
-		$queries = model_query::get_queries($args);
-		$args['queries'] = $queries;
+		$args['queries'] = model_query::get_queries($args);
 		return $args;
 	}	
 	public static function private_get_dialog_create_query(){
@@ -57,9 +56,7 @@ class controller_query{
 		return model_query::get_query($args);
 	}
 	public static function private_get_query_title(){
-		$args = ['query_id' => $_GET['id']];
-		$query = model_query::get_query($args);
-		return $args;
+		return model_query::get_query(['query_id' => $_GET['id']]);
 	}
 	public static function private_get_search(){
 		return view_query::private_get_search();
