@@ -7,9 +7,9 @@
 	</script>
 	<div>
 		{% if query.initiator == 'number' %}
-			<img src="templates/default/images/icons/xfn-friend.png" />
+			<img src="/templates/default/images/icons/xfn-friend.png" />
 		{% else %}
-			<img src="templates/default/images/icons/home-medium.png" />
+			<img src="/templates/default/images/icons/home-medium.png" />
 		{% endif %}
 		<b>№{{query.number}}</b> {{query.time_open|date("H:i d.m.y")}}
 		{{query.street_name}}, дом №{{query.house_number}}
