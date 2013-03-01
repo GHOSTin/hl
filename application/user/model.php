@@ -23,7 +23,7 @@ class model_user{
 			$stm->closeCursor();
 			return $user;
 		}catch(exception $e){
-			return false;
+			throw new exception('Fail user');
 		}
 	}
 	/**
@@ -32,6 +32,7 @@ class model_user{
 	*/
 	public static function get_users($args){
 		try{
+			$result = [];
 			$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
@@ -45,7 +46,7 @@ class model_user{
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
-			return false;
+			throw new exception('Fail users');
 		}
 	}	
 }

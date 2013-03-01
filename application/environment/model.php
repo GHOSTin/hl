@@ -1,9 +1,13 @@
 <?php
 class model_environment{
 	public static function build_page($data){
-		if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-			return load_template('default_page.main_page', $data);
-			return $data['view'];
+		try{
+			if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+				return load_template('default_page.main_page', $data);
+				return $data['view'];
+		}catch(exception $e){
+			throw new exception('Fail build page');
+		}
 	}
 	/*
 	* Строит роутер
@@ -16,9 +20,9 @@ class model_environment{
 				'private_'.http_router::get_method_name()];
 			}else
 				$route = ['auth', 'public_login'];
-			return [true, $route];
+			return $route;
 		}catch(exception $e){
-			return [false, 'Fail build router'];
+			throw new exception('Fail build router');
 		}
 	}
 	/**
@@ -32,7 +36,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
- 			throw new exception();
+ 			throw new exception('Database not connected');
 		}
 		// устанавливаем параметры по умолчанию
 		try{
@@ -40,28 +44,20 @@ class model_environment{
 			db::get_handler()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			db::get_handler()->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		}catch(exception $e){
-			return [false, 'Fail set database properties']; 
+			throw new exception('Properties not loaded'); 
 		}
-		return [true];
 	}
 	/*
 	* Функция возвращает содержимое страницы
 	*/
 	public static function get_page_content(){
 		try{
-			list($error, $code) = self::create_batabase_connection();
-			if($error !== true)
-				throw new exception($code);
-			list($error, $code) = self::build_router();
-			if($error !== true)
-				throw new exception($code);
-				list($component, $method) = $code;
+			self::create_batabase_connection();
+			list($component, $method) = self::build_router();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
-			list($error, $code) = self::load_twig();
-			if($error !== true)
-				throw new exception($code);
-			//self::get_user_profiles($controller);
+			self::load_twig();
+				//self::get_user_profiles($controller);
 			// проверяю если ли права доступа
 			if($_SESSION['user'] instanceof data_user){
 				$menu = view_menu::build_horizontal_menu();
@@ -107,7 +103,6 @@ class model_environment{
 			//var_dump($controller::$rules);
 		}catch(exception $e){
 			die($e->getMessage());
-			return false;
 		}
 	}
 	/*
@@ -118,8 +113,7 @@ class model_environment{
 			require_once ROOT.'/libs/Twig/Autoloader.php';
 			Twig_Autoloader::register();
 		}catch(exception $e){
-			return [false, 'Fail load template machine'];
+			throw new exception('Fail load template machine');
 		}
-		return [true];
 	}	
 }
