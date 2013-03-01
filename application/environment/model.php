@@ -34,7 +34,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
- 			die('Fail database connection'); 
+ 			var_dump($e); exit();die('Fail database connection');
 		}
 		// устанавливаем параметры по умолчанию
 		try{

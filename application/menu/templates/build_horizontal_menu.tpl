@@ -4,8 +4,8 @@
             <!-- begin user -->
 			<ul class="nav pull-right">
                 <li><button class="light">...</button></li>
-                <li id="nt-center">
-                    <a href="#">
+                <li>
+                    <a href="#" id="nt-center">
                         <i class="icon-envelope notification-center-icon"></i>
                     </a>
                 </li>
