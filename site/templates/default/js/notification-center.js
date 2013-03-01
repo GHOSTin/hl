@@ -6,9 +6,9 @@ var notify_center = io.connect('http://192.168.2.202:3000/notify');
 var chat = io.connect('http://192.168.2.202:3000/chat');
  
 var tryReconnect = function(){
-     if (notify.socket.connected === false &&
-         notify.socket.connecting === false) {
-        notify.socket.connect();
+     if (notify_center.socket.connected === false &&
+         notify_center.socket.connecting === false) {
+         notify_center.socket.connect();
      }
 }
 
@@ -55,6 +55,7 @@ chat.on('message', function (event) {
 $(document).on('click', '.users li a', function () {
     $('#main').show();
 
+    var user = userList.list[$(this).attr("user_id")];
 //    console.log(user);
     if (!user.previousMessagesLoaded) {
         user.loadPreviousMessages();
@@ -86,7 +87,7 @@ $('#nt-center').on('click', function(){
     var self = $(this);
     $.get('index.php',{p: 'profile.get_notification_center_content'
         },function(r){
-            show_notification_center(r);
+            show_notification_center(self.parent(), r);
             baron($('.user-list'), {
                 scroller: '.scroller',
                 container: '.scroller_conteiner',
@@ -102,8 +103,8 @@ $('#nt-center').on('click', function(){
             $('.notification-center-icon').removeClass('icon-white');
         });
 });
-function show_notification_center(r){
+function show_notification_center(selector, r){
     $('#_hidden_notification_center').remove();
-    $('#nt-center').append('<div id="_hidden_notification_center" style="display:none">' + r + '</div>');
+    selector.append('<div id="_hidden_notification_center" style="display:none">' + r + '</div>');
     $('#_hidden_notification_center').show();
 }
