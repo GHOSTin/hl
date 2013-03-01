@@ -5,8 +5,7 @@ class controller_query{
 		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$args['time_interval']['end'] = $args['time_interval']['begin'] + 86399;
 		$args['statuses'] = [];
-		$queries = model_query::get_queries($args);
-		$args['queries'] = $queries;
+		$args['queries'] = model_query::get_queries($args);
 		return $args;
 	}		
 	public static function private_get_day(){
@@ -59,7 +58,7 @@ class controller_query{
 		return model_query::get_query(['query_id' => $_GET['id']]);
 	}
 	public static function private_get_search(){
-		return view_query::private_get_search();
+		return true;
 	}
 	public static function private_get_search_result(){
 		$args['number'] = (int) $_GET['param'];
