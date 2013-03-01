@@ -11,7 +11,7 @@ window.userList = {
         this.renderPanes();
     },
     renderMenu:function () {
-        var activeTabId = $('li.active a').data('uid');
+        var activeTabId = $('li.active a').attr('user_id');
         $('.users li').remove();
         var online = ''; //список онлайн
         var offline = ''; //список оффлайн
