@@ -9,6 +9,16 @@ set_time_limit(0);
 $dir = dirname(__FILE__);
 define('ROOT' , substr($dir, 0, (strlen($dir) - strlen('/test'))));
 require_once(ROOT."/framework/framework.php");
+$current_user = new data_user();
+$current_user->id = 10000;
+$current_user->company_id = 1;
+$current_user->status = true;
+$current_user->login = 'system';
+$current_user->firstname = 'systemfirstname';
+$current_user->lastname = 'systemlastname';
+$current_user->middlename = 'systemmiddlename';
+$current_user->telephone = '123456';
+$current_user->cellphone = '123456789';
 /*
 * Парсинг xml
 */
@@ -202,42 +212,21 @@ function load_ls($xml){
 /*
 * Создает фейковых юзеров
 */
-function create_users($xml){
+function create_users($xml, $current_user){
 	if(count($xml->users->user) < 1){
-		throw new exception('Not users');
+		throw new exception('В конфигурации не перечислены пользователи.');
 	}else{
-		$sql = "INSERT INTO `users` (
-					`id`, `company_id`, `status`, `username`, `firstname`, `lastname`,
-					`midlename`, `password`, `telephone`, `cellphone`
-				) VALUES (
-					:user_id, :company_id, :status, :login, :firstname, :lastname, 
-					:middlename, :password, :telephone, :cellphone
-				);";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':user_id', $user_id);
-		$stm->bindParam(':company_id', $company_id);
-		$stm->bindParam(':status', $status);
-		$stm->bindParam(':login', $login);
-		$stm->bindParam(':firstname', $firstname);
-		$stm->bindParam(':lastname', $lastname);
-		$stm->bindParam(':middlename', $middlename);
-		$stm->bindParam(':password', $password);
-		$stm->bindParam(':telephone', $telephone);
-		$stm->bindParam(':cellphone', $cellphone);
 		foreach($xml->users->user as $user){
 			$user = $user->attributes();
-			$user_id = $user->id;
-			$company_id = $user->company_id;
-			$status = $user->status;
-			$login = $user->login;
-			$firstname = $user->firstname;
-			$lastname = $user->lastname;
-			$middlename = $user->middlename;
-			$password = get_password_hash($user->password);
-			$telephone = $user->telephone;
-			$cellphone = $user->cellphone;
-			$stm->execute();
-			$stm->closeCursor();
+			$args['login'] = $user->login;
+			$args['firstname'] = $user->firstname;
+			$args['lastname'] = $user->lastname;
+			$args['middlename'] = $user->middlename;
+			$args['password'] = $user->password;
+			$args['telephone'] = $user->telephone;
+			$args['cellphone'] = $user->cellphone;
+			if(model_user::create_user($args, $current_user) === false)
+				throw new exception('Проблема при создании пользователей.');
 		}
 	}
 }
@@ -264,7 +253,8 @@ try{
 	model_environment::create_batabase_connection();
 	drop_tables();
 	create_tables();
-	create_users($xml);
+	create_users($xml, $current_user);
+	exit();
 	load_ls($xml);
 }catch(exception $e){
 	die($e->getMessage());

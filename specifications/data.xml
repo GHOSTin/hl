@@ -25,7 +25,7 @@
 		<city name="Ревда" id="2" status="true"></city>
 	</cities>
 	<users>
-		<user id="1" company_id="1" status="true" login="NekrasovEV" firstname="Евгений" lastname="Некрасов" middlename="Валерьевич" password="{htyfntym" telephone="647957" cellphone="89222944742" />
-		<user id="2" company_id="1" status="true" login="test" firstname="testFirstname" lastname="testLastname" middlename="testMiddlename" password="test" telephone="647957" cellphone="89222944742" />
+		<user company_id="1" status="true" login="NekrasovEV" firstname="Евгений" lastname="Некрасов" middlename="Валерьевич" password="{htyfntym" telephone="647957" cellphone="89222944742" />
+		<user company_id="1" status="true" login="test" firstname="testFirstname" lastname="testLastname" middlename="testMiddlename" password="test" telephone="647957" cellphone="89222944742" />
 	</users>
 </data>
