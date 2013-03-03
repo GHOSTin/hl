@@ -9,16 +9,7 @@ set_time_limit(0);
 $dir = dirname(__FILE__);
 define('ROOT' , substr($dir, 0, (strlen($dir) - strlen('/test'))));
 require_once(ROOT."/framework/framework.php");
-$current_user = new data_user();
-$current_user->id = 10000;
-$current_user->company_id = 1;
-$current_user->status = true;
-$current_user->login = 'system';
-$current_user->firstname = 'systemfirstname';
-$current_user->lastname = 'systemlastname';
-$current_user->middlename = 'systemmiddlename';
-$current_user->telephone = '123456';
-$current_user->cellphone = '123456789';
+
 /*
 * Парсинг xml
 */
@@ -209,6 +200,25 @@ function load_ls($xml){
 		}
 	}
 }
+function build_current_user($xml){
+	try{
+		$user = $xml->users->user[0]->attributes();
+		$current_user = new data_user();
+		$current_user->id = 1;
+		$current_user->company_id = 1;
+		$current_user->status = true;
+		$current_user->login = $user->login;
+		$current_user->login = $user->password;
+		$current_user->firstname = $user->firstname;
+		$current_user->lastname = $user->lastname;
+		$current_user->middlename = $user->middlename;
+		$current_user->telephone = $user->telephone;
+		$current_user->cellphone = $user->cellphone;
+		return $current_user;
+	}catch(exception $e){
+		throw new exception('Проблемы при постройки текущего пользователя.');
+	}
+}
 /*
 * Создает фейковых юзеров
 */
@@ -253,6 +263,7 @@ try{
 	model_environment::create_batabase_connection();
 	drop_tables();
 	create_tables();
+	$current_user = build_current_user($xml);
 	create_users($xml, $current_user);
 	exit();
 	load_ls($xml);
