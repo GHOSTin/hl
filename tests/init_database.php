@@ -200,6 +200,9 @@ function load_ls($xml){
 		}
 	}
 }
+/*
+* Строит объект пользователя от которого будет проходить инифиализация.
+*/
 function build_current_user($xml){
 	try{
 		$user = $xml->users->user[0]->attributes();
