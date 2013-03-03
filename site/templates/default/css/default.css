@@ -33,6 +33,7 @@ footer, #push{
 	position:absolute;
 	top:50px;
 	right:0px;
+    padding: 10px;
 	z-index:101;
 	width:600px;
 	height:600px;
@@ -40,20 +41,19 @@ footer, #push{
 	border: 1px solid black;
 }
 
-.user-list {
+.user-list, .chat-list {
     position: relative;
     overflow: hidden;
+    height: 600px;
+}
+
+.user-list{
     width: 200px;
-    height: 580px;
     border-right: 1px solid #000;
 }
 
-.chat-list{
-    position: relative;
-    overflow: hidden;
-    height: 580px;
-    width: 370px;
-    background: #ddd;
+form.well{
+    margin: 0;
 }
 
 .chat {
@@ -61,7 +61,7 @@ footer, #push{
 }
 
 .feed{
-    height: 400px;
+    height: 425px;
     overflow-y: scroll;
 }
 

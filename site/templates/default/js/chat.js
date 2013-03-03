@@ -22,7 +22,7 @@ window.userList = {
             var li = '';
             li += '<li><a href="#user_' + user.id + '" class="' + online_status + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
             if (user.hasUnread())
-                li += '<span class="unread_count label label-info">+' + user.unreadCount() + '</span>';
+                li += '<span class="unread_count label label-info pull-right">+' + user.unreadCount() + '</span>';
             li += '</a></li>';
             (user.online) ? online += li : offline += li;
         }
@@ -69,9 +69,14 @@ window.feed = {
                 case 4:
                     var message = new Message(update);
                     break;
-//                case 5:
-//
-//                    break;
+                case 5:
+                    var user_id = update[0];
+                    var user = userList.list[user_id];
+                    if(typeof user !== 'undefined' && user !== null) {
+                        user.unread = update[1];
+                        userList.renderMenu();
+                    }
+                    break;
                 case 1:
                 case 2:
                     var user_id = update[0];

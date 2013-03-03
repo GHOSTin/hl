@@ -14,8 +14,7 @@ var tryReconnect = function(){
 
 var intervalID = setInterval(tryReconnect, 60000);
 notify_center.on('connect', function(){
-//    notify.json.send({"type":"test", "data":""});
-    notify_center.json.send({"type":"user_ready", "data":{'uid': $('.current_user').attr('user_id')}});
+    notify_center.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
     clearInterval(intervalID);
 });
 notify_center.on('message', function(event){
@@ -99,7 +98,8 @@ $('#nt-center').on('click', function(){
                 users.push({"id": $(this).attr('user_id'), "name": $(this).text()})
             });
             userList.load(users);
-            chat.json.send({"type":"user_ready", "data":{'uid': $('.current_user').attr('user_id')}});
+
+            chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
             $('.notification-center-icon').removeClass('icon-white');
         });
 });
