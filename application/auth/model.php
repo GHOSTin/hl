@@ -7,7 +7,7 @@ class model_auth{
 	public static function get_login(){
 		try{
 			$login = htmlspecialchars($_POST['login']);
-			$hash = md5(md5(htmlspecialchars($_POST['password'])).application_configuration::authSalt);
+			$hash = model_user::get_password_hash($_POST['password']);
 			$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,

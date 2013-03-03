@@ -21,8 +21,8 @@ class model_user{
 						:middlename, :password, :telephone, :cellphone
 					);";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindValue(':user_id', $user_id);
-			$stm->bindValue(':company_id', $current_user->company_id);
+			$stm->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 			$stm->bindValue(':status', true);
 			$stm->bindValue(':login', $args['login'], PDO::PARAM_STR);
 			$stm->bindValue(':firstname', $args['firstname'], PDO::PARAM_STR);
