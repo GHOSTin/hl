@@ -168,12 +168,13 @@ function create_street($street){
 	$stm->closeCursor();
 }
 
-function load_ls($xml){
+function load_ls($xml, $current_user){
 	if(count($xml->cities->city) < 1)
 		throw new exception('Not city');
 	foreach($xml->cities->city as $city_node){
 		$city = $city_node->attributes();
-		create_city($city);
+		var_dump(model_city::create_city($args, $current_user));
+		exit();
 		if(count($city_node->street) > 0){
 			foreach($city_node->street as $street_node){
 				$street = $street_node->attributes();
@@ -230,15 +231,16 @@ function create_users($xml, $current_user){
 		throw new exception('В конфигурации не перечислены пользователи.');
 	}else{
 		foreach($xml->users->user as $user){
-			$user = $user->attributes();
-			$args['login'] = $user->login;
-			$args['firstname'] = $user->firstname;
-			$args['lastname'] = $user->lastname;
-			$args['middlename'] = $user->middlename;
-			$args['password'] = $user->password;
-			$args['telephone'] = $user->telephone;
-			$args['cellphone'] = $user->cellphone;
-			if(model_user::create_user($args, $current_user) === false)
+			$user_attr = $user->attributes();
+			$new_user = new data_user();
+			$new_user->login = $user_attr->login;
+			$new_user->firstname = $user_attr->firstname;
+			$new_user->lastname = $user_attr->lastname;
+			$new_user->middlename = $user_attr->middlename;
+			$new_user->password = $user_attr->password;
+			$new_user->telephone = $user_attr->telephone;
+			$new_user->cellphone = $user_attr->cellphone;
+			if(model_user::create_user($new_user, $current_user) === false)
 				throw new exception('Проблема при создании пользователей.');
 		}
 	}
@@ -269,7 +271,7 @@ try{
 	$current_user = build_current_user($xml);
 	create_users($xml, $current_user);
 	exit();
-	load_ls($xml);
+	load_ls($xml, $current_user);
 }catch(exception $e){
 	die($e->getMessage());
 }
