@@ -125,7 +125,19 @@ function load_ls($xml, $current_user){
 								if(count($flat_node->number) > 0){
 									foreach($flat_node->number as $number_node){
 										$number = $number_node->attributes();
-										create_number($number);
+										$new_number = new data_number();
+										$new_number->number = (string) $number->number;
+										$new_number->password = (string) $number->password;
+										$new_number->fio = (string) $number->fio;
+										$new_number->status = (string) $number->status;
+										$new_number->telephone = (string) $number->telephone;
+										$new_number->cellphone = (string) $number->cellphone;
+										$new_number->contact_fio = (string) $number->contact_fio;
+										$new_number->contact_telephone = (string) $number->contact_telephone;
+										$new_number->contact_cellphone = (string) $number->contact_cellphone;
+										$number = model_number::create_number($city, $flat, $new_number, $current_user);
+										if($number === false)
+											throw new exception('Проблема при создании лицевого счета.');
 									}
 								}
 							}
