@@ -70,31 +70,6 @@ function create_flat($flat){
 	$stm->closeCursor();
 }
 /*
-* Создает улицы
-*/
-
-function create_house($house){
-	global $city_id, $street_id, $house_id;
-	$house_id++;
-	$sql = "INSERT INTO `houses` (
-				`id`, `company_id`, `city_id`, `street_id`, `department_id`,
-				`status`, `housenumber`
-			) VALUES (
-				:house_id, :company_id, :city_id, :street_id, :department_id,
-				:status, :number
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':house_id', $house_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':street_id', $street_id);
-	$stm->bindValue(':department_id', $house->department_id);
-	$stm->bindValue(':status', $house->status);
-	$stm->bindValue(':number', $house->number);
-	$stm->execute();
-	$stm->closeCursor();
-}
-/*
 * Создает лицевые счета
 */
 function create_number($number){
@@ -128,27 +103,6 @@ function create_number($number){
 	$stm->execute();
 	$stm->closeCursor();
 }
-/*
-* Создает улицу
-*/
-function create_street($street){
-	global $city_id, $street_id;
-	$street_id++;
-	$sql = "INSERT INTO `streets` (
-			`id`, `company_id`, `city_id`, `status`, `name`
-		) VALUES (
-			:street_id, :company_id, :city_id, :status, :name 
-		);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':street_id', $street_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':status', $street->status);
-	$stm->bindValue(':name', $street->name);
-	$stm->execute();
-	$stm->closeCursor();
-}
-
 function load_ls($xml, $current_user){
 	if(count($xml->cities->city) < 1)
 		throw new exception('Not city');
@@ -166,37 +120,31 @@ function load_ls($xml, $current_user){
 				$new_street = new data_street();
 				$new_street->name = (string) $street->name;
 				$new_street->status = (string) $street->status;
-				var_dump(model_street::create_street($city, $new_street, $current_user));
-				exit();
-				// $sql = "INSERT INTO `streets` (
-				// 		`id`, `company_id`, `city_id`, `status`, `name`
-				// 	) VALUES (
-				// 		:street_id, :company_id, :city_id, :status, :name 
-				// 	);";
-				// $stm = db::get_handler()->prepare($sql);
-				// $stm->bindValue(':street_id', $street_id);
-				// $stm->bindValue(':company_id', 1);
-				// $stm->bindValue(':city_id', $city_id);
-				// $stm->bindValue(':status', $street->status);
-				// $stm->bindValue(':name', $street->name);
-				// $stm->execute();
-				// $stm->closeCursor();
+				$street = model_street::create_street($city, $new_street, $current_user);
+				if($street === false)
+					throw new exception('Проблема при создании улицы.');
 				if(count($street_node->house) > 0){
 					foreach($street_node->house as $house_node){
 						$house = $house_node->attributes();
-						create_house($house);
-						if(count($house_node->flat) > 0){
-							foreach($house_node->flat as $flat_node){
-								$flat = $flat_node->attributes();
-								create_flat($flat);
-								if(count($flat_node->number) > 0){
-									foreach($flat_node->number as $number_node){
-										$number = $number_node->attributes();
-										create_number($number);
-									}
-								}
-							}
-						}
+						$new_house = new data_house();
+						$new_house->number = (string) $house->number;
+						$new_house->status = (string) $house->status;
+						$new_house->department_id = (int) $house->department_id;
+						$house = model_house::create_house($street, $new_house, $current_user);
+						if($house === false)
+							throw new exception('Проблема при создании дома.');
+						// if(count($house_node->flat) > 0){
+						// 	foreach($house_node->flat as $flat_node){
+						// 		$flat = $flat_node->attributes();
+						// 		create_flat($flat);
+						// 		if(count($flat_node->number) > 0){
+						// 			foreach($flat_node->number as $number_node){
+						// 				$number = $number_node->attributes();
+						// 				create_number($number);
+						// 			}
+						// 		}
+						// 	}
+						// }
 					}
 				}
 			}
