@@ -50,26 +50,6 @@ function create_departments(){
 	}
 }
 /*
-* Создает квартиры
-*/
-function create_flat($flat){
-	global $house_id, $flat_id;
-	$flat_id++;
-	$sql = "INSERT INTO `flats` (
-				`id`, `company_id`, `house_id`, `status`, `flatnumber`
-			) VALUES (
-				:flat_id, :company_id, :house_id, :status, :number 
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':flat_id', $flat_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':house_id', $house_id);
-	$stm->bindValue(':status', $flat->status);
-	$stm->bindValue(':number', $flat->number);
-	$stm->execute();
-	$stm->closeCursor();
-}
-/*
 * Создает лицевые счета
 */
 function create_number($number){
@@ -133,18 +113,23 @@ function load_ls($xml, $current_user){
 						$house = model_house::create_house($street, $new_house, $current_user);
 						if($house === false)
 							throw new exception('Проблема при создании дома.');
-						// if(count($house_node->flat) > 0){
-						// 	foreach($house_node->flat as $flat_node){
-						// 		$flat = $flat_node->attributes();
-						// 		create_flat($flat);
-						// 		if(count($flat_node->number) > 0){
-						// 			foreach($flat_node->number as $number_node){
-						// 				$number = $number_node->attributes();
-						// 				create_number($number);
-						// 			}
-						// 		}
-						// 	}
-						// }
+						if(count($house_node->flat) > 0){
+							foreach($house_node->flat as $flat_node){
+								$flat = $flat_node->attributes();
+								$new_flat = new data_flat();
+								$new_flat->status = (string) $flat->status;
+								$new_flat->number = (string) $flat->number;
+								$flat = model_flat::create_flat($house, $new_flat, $current_user);
+								if($flat === false)
+									throw new exception('Проблема при создании квартиры.');
+								if(count($flat_node->number) > 0){
+									foreach($flat_node->number as $number_node){
+										$number = $number_node->attributes();
+										create_number($number);
+									}
+								}
+							}
+						}
 					}
 				}
 			}
