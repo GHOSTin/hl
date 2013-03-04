@@ -1,6 +1,5 @@
 <?php
 final class data_user extends data_object{
-
 	public $id;
 	public $status;
 	public $login;
@@ -12,7 +11,7 @@ final class data_user extends data_object{
 	public $telephone;
 	public $cellphone;
 	public $password;
-/*
+	/*
 	public function __construct(){
 		unset($this->password);
 	}

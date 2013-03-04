@@ -8,6 +8,7 @@ class model_user{
 			if(empty($new_user->login) OR empty($new_user->firstname)
 				OR empty($new_user->lastname) OR empty($new_user->password)
 			) throw new exception('Не все параметры заданы правильно.');
+			$new_user->company_id = $current_user->company_id;
 			$user_id = self::get_insert_id();
 			if($user_id === false)
 				return false;
@@ -21,7 +22,7 @@ class model_user{
 					);";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindValue(':user_id', $new_user->id, PDO::PARAM_INT);
-			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':company_id', $new_user->company_id, PDO::PARAM_INT);
 			$stm->bindValue(':status', true);
 			$stm->bindValue(':login', $new_user->login, PDO::PARAM_STR);
 			$stm->bindValue(':firstname', $new_user->firstname, PDO::PARAM_STR);

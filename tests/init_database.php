@@ -173,8 +173,25 @@ function load_ls($xml, $current_user){
 		throw new exception('Not city');
 	foreach($xml->cities->city as $city_node){
 		$city = $city_node->attributes();
-		var_dump(model_city::create_city($args, $current_user));
+		$new_city = new data_city();
+		$new_city->name = (string) $city->name;
+		$new_city->status = (string) $city->status;
+		var_dump(model_city::create_city($new_city, $current_user));
 		exit();
+	// 		global $city_id;
+	// $city_id++;
+	// $sql = "INSERT INTO `cities` (
+	// 			`id`, `company_id`, `status`, `name`
+	// 		) VALUES (
+	// 			:city_id, :company_id, :status, :name 
+	// 		);";
+	// $stm = db::get_handler()->prepare($sql);
+	// $stm->bindValue(':city_id', $city_id);
+	// $stm->bindValue(':company_id', 1);
+	// $stm->bindValue(':status', $city->status);
+	// $stm->bindValue(':name', $city->name);
+	// $stm->execute();
+	// $stm->closeCursor();
 		if(count($city_node->street) > 0){
 			foreach($city_node->street as $street_node){
 				$street = $street_node->attributes();
@@ -211,13 +228,13 @@ function build_current_user($xml){
 		$current_user->id = 1;
 		$current_user->company_id = 1;
 		$current_user->status = true;
-		$current_user->login = $user->login;
-		$current_user->login = $user->password;
-		$current_user->firstname = $user->firstname;
-		$current_user->lastname = $user->lastname;
-		$current_user->middlename = $user->middlename;
-		$current_user->telephone = $user->telephone;
-		$current_user->cellphone = $user->cellphone;
+		$current_user->login = (string) $user->login;
+		$current_user->login = (string) $user->password;
+		$current_user->firstname = (string) $user->firstname;
+		$current_user->lastname = (string) $user->lastname;
+		$current_user->middlename = (string) $user->middlename;
+		$current_user->telephone = (string) $user->telephone;
+		$current_user->cellphone = (string) $user->cellphone;
 		return $current_user;
 	}catch(exception $e){
 		throw new exception('Проблемы при постройки текущего пользователя.');
@@ -270,7 +287,6 @@ try{
 	create_tables();
 	$current_user = build_current_user($xml);
 	create_users($xml, $current_user);
-	exit();
 	load_ls($xml, $current_user);
 }catch(exception $e){
 	die($e->getMessage());
