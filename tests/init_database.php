@@ -25,25 +25,6 @@ function create_tables(){
 	$stm = db::get_handler()->exec(file_get_contents(ROOT."/specifications/database_structure.sql"));
 }
 /*
-* Создает города
-*/
-function create_city($city){
-	global $city_id;
-	$city_id++;
-	$sql = "INSERT INTO `cities` (
-				`id`, `company_id`, `status`, `name`
-			) VALUES (
-				:city_id, :company_id, :status, :name 
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':status', $city->status);
-	$stm->bindValue(':name', $city->name);
-	$stm->execute();
-	$stm->closeCursor();
-}
-/*
 * Создает участки
 */
 function create_departments(){
@@ -176,26 +157,30 @@ function load_ls($xml, $current_user){
 		$new_city = new data_city();
 		$new_city->name = (string) $city->name;
 		$new_city->status = (string) $city->status;
-		var_dump(model_city::create_city($new_city, $current_user));
-		exit();
-	// 		global $city_id;
-	// $city_id++;
-	// $sql = "INSERT INTO `cities` (
-	// 			`id`, `company_id`, `status`, `name`
-	// 		) VALUES (
-	// 			:city_id, :company_id, :status, :name 
-	// 		);";
-	// $stm = db::get_handler()->prepare($sql);
-	// $stm->bindValue(':city_id', $city_id);
-	// $stm->bindValue(':company_id', 1);
-	// $stm->bindValue(':status', $city->status);
-	// $stm->bindValue(':name', $city->name);
-	// $stm->execute();
-	// $stm->closeCursor();
+		$city = model_city::create_city($new_city, $current_user);
+		if($city === false)
+				throw new exception('Проблема при создании города.');
 		if(count($city_node->street) > 0){
 			foreach($city_node->street as $street_node){
 				$street = $street_node->attributes();
-				create_street($street);
+				$new_street = new data_street();
+				$new_street->name = (string) $street->name;
+				$new_street->status = (string) $street->status;
+				var_dump(model_street::create_street($city, $new_street, $current_user));
+				exit();
+				// $sql = "INSERT INTO `streets` (
+				// 		`id`, `company_id`, `city_id`, `status`, `name`
+				// 	) VALUES (
+				// 		:street_id, :company_id, :city_id, :status, :name 
+				// 	);";
+				// $stm = db::get_handler()->prepare($sql);
+				// $stm->bindValue(':street_id', $street_id);
+				// $stm->bindValue(':company_id', 1);
+				// $stm->bindValue(':city_id', $city_id);
+				// $stm->bindValue(':status', $street->status);
+				// $stm->bindValue(':name', $street->name);
+				// $stm->execute();
+				// $stm->closeCursor();
 				if(count($street_node->house) > 0){
 					foreach($street_node->house as $house_node){
 						$house = $house_node->attributes();

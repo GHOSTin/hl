@@ -3,16 +3,16 @@ class model_user{
 	/*
 	* Создает пользователя
 	*/
-	public static function create_user(data_user $new_user, data_user $current_user){
+	public static function create_user(data_user $user, data_user $current_user){
 		try{
-			if(empty($new_user->login) OR empty($new_user->firstname)
-				OR empty($new_user->lastname) OR empty($new_user->password)
+			if(empty($user->login) OR empty($user->firstname)
+				OR empty($user->lastname) OR empty($user->password)
 			) throw new exception('Не все параметры заданы правильно.');
-			$new_user->company_id = $current_user->company_id;
+			$user->company_id = $current_user->company_id;
 			$user_id = self::get_insert_id();
 			if($user_id === false)
 				return false;
-				$new_user->id = $user_id;
+				$user->id = $user_id;
 			$sql = "INSERT INTO `users` (
 						`id`, `company_id`, `status`, `username`, `firstname`, `lastname`,
 						`midlename`, `password`, `telephone`, `cellphone`
@@ -21,19 +21,19 @@ class model_user{
 						:middlename, :password, :telephone, :cellphone
 					);";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindValue(':user_id', $new_user->id, PDO::PARAM_INT);
-			$stm->bindValue(':company_id', $new_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
+			$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
 			$stm->bindValue(':status', true);
-			$stm->bindValue(':login', $new_user->login, PDO::PARAM_STR);
-			$stm->bindValue(':firstname', $new_user->firstname, PDO::PARAM_STR);
-			$stm->bindValue(':lastname', $new_user->lastname, PDO::PARAM_STR);
-			$stm->bindValue(':middlename', $new_user->middlename, PDO::PARAM_STR);
-			$stm->bindValue(':password', get_password_hash($new_user->password), PDO::PARAM_STR);
-			$stm->bindValue(':telephone', $new_user->telephone, PDO::PARAM_STR);
-			$stm->bindValue(':cellphone', $new_user->cellphone, PDO::PARAM_STR);
+			$stm->bindValue(':login', $user->login, PDO::PARAM_STR);
+			$stm->bindValue(':firstname', $user->firstname, PDO::PARAM_STR);
+			$stm->bindValue(':lastname', $user->lastname, PDO::PARAM_STR);
+			$stm->bindValue(':middlename', $user->middlename, PDO::PARAM_STR);
+			$stm->bindValue(':password', get_password_hash($user->password), PDO::PARAM_STR);
+			$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
+			$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
 			if($stm->execute() === false)
 				return false;
-				return $new_user;				
+				return $user;				
 			$stm->closeCursor();
 		}catch(exception $e){
 			throw new exception('Проблемы при создании пользователя.');
