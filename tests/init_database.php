@@ -49,40 +49,6 @@ function create_departments(){
 		$stm->closeCursor();
 	}
 }
-/*
-* Создает лицевые счета
-*/
-function create_number($number){
-	global $city_id, $house_id, $flat_id, $number_id;
-	$number_id++;
-	$sql = "INSERT INTO `numbers` (
-				`id`, `company_id`, `city_id`, `house_id`, `flat_id`, `number`, `type`, `status`,
-				`fio`, `telephone`, `cellphone`, `password`, `contact-fio`, `contact-telephone`,
-				`contact-cellphone`
-			) VALUES (
-				:number_id, :company_id, :city_id, :house_id, :flat_id, :number, :type, :status,
-				:fio, :telephone, :cellphone, :password, :contact_fio, :contact_telephone,
-				:contact_cellphone
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':number_id', $number_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':house_id', $house_id);
-	$stm->bindValue(':flat_id', $flat_id);
-	$stm->bindValue(':number', $number->number);
-	$stm->bindValue(':type', 'human');
-	$stm->bindValue(':status', $number->status);
-	$stm->bindValue(':fio', $number->fio);
-	$stm->bindValue(':telephone', $number->telephone);
-	$stm->bindValue(':cellphone', $number->cellphone);
-	$stm->bindValue(':password', $number->password);
-	$stm->bindValue(':contact_fio', $number->contact_fio);
-	$stm->bindValue(':contact_telephone', $number->contact_telephone);
-	$stm->bindValue(':contact_cellphone', $number->contact_cellphone);
-	$stm->execute();
-	$stm->closeCursor();
-}
 function load_ls($xml, $current_user){
 	if(count($xml->cities->city) < 1)
 		throw new exception('Not city');
