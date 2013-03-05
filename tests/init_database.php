@@ -9,7 +9,6 @@ set_time_limit(0);
 $dir = dirname(__FILE__);
 define('ROOT' , substr($dir, 0, (strlen($dir) - strlen('/test'))));
 require_once(ROOT."/framework/framework.php");
-
 /*
 * Парсинг xml
 */
@@ -25,7 +24,7 @@ function create_tables(){
 	$stm = db::get_handler()->exec(file_get_contents(ROOT."/specifications/database_structure.sql"));
 }
 /*
-* Создает участки
+* Создает данные в привязке к компаниям.
 */
 function create_companies($xml, $current_user){
 	if(count($xml->companies->company) < 1)
@@ -37,10 +36,74 @@ function create_companies($xml, $current_user){
 		$new_company->status = (string) $company->status;
 		$company = model_company::create_company($new_company, $current_user);
 		if($company === false)
-				throw new exception('Проблема при создании компании.');
+			throw new exception('Проблема при создании компании.');
 	}
 }
-function load_ls($xml, $current_user){
+function create_flats($house_node, $city, $house, $current_user){
+	if(count($house_node->flat) > 0){
+		foreach($house_node->flat as $flat_node){
+			$flat = $flat_node->attributes();
+			$new_flat = new data_flat();
+			$new_flat->status = (string) $flat->status;
+			$new_flat->number = (string) $flat->number;
+			$flat = model_flat::create_flat($house, $new_flat, $current_user);
+			if($flat === false)
+				throw new exception('Проблема при создании квартиры.');
+			create_numbers($flat_node, $city, $flat, $current_user);
+		}
+	}
+
+}
+function create_houses($street_node, $city, $street, $current_user){
+	if(count($street_node->house) > 0){
+		foreach($street_node->house as $house_node){
+			$house = $house_node->attributes();
+			$new_house = new data_house();
+			$new_house->number = (string) $house->number;
+			$new_house->status = (string) $house->status;
+			$new_house->department_id = (int) $house->department_id;
+			$house = model_house::create_house($street, $new_house, $current_user);
+			if($house === false)
+				throw new exception('Проблема при создании дома.');
+			create_flats($house_node, $city, $house, $current_user);
+		}
+	}	
+}
+function create_numbers($flat_node, $city, $flat, $current_user){
+	if(count($flat_node->number) > 0){
+		foreach($flat_node->number as $number_node){
+			$number = $number_node->attributes();
+			$new_number = new data_number();
+			$new_number->number = (string) $number->number;
+			$new_number->password = (string) $number->password;
+			$new_number->fio = (string) $number->fio;
+			$new_number->status = (string) $number->status;
+			$new_number->telephone = (string) $number->telephone;
+			$new_number->cellphone = (string) $number->cellphone;
+			$new_number->contact_fio = (string) $number->contact_fio;
+			$new_number->contact_telephone = (string) $number->contact_telephone;
+			$new_number->contact_cellphone = (string) $number->contact_cellphone;
+			$number = model_number::create_number($city, $flat, $new_number, $current_user);
+			if($number === false)
+				throw new exception('Проблема при создании лицевого счета.');
+		}
+	}
+}
+function create_streets($city_node, $city, $current_user){
+	if(count($city_node->street) > 0){
+		foreach($city_node->street as $street_node){
+			$street = $street_node->attributes();
+			$new_street = new data_street();
+			$new_street->name = (string) $street->name;
+			$new_street->status = (string) $street->status;
+			$street = model_street::create_street($city, $new_street, $current_user);
+			if($street === false)
+				throw new exception('Проблема при создании улицы.');
+			create_houses($street_node, $city, $street, $current_user);
+		}
+	}
+}
+function create_cities($xml, $current_user){
 	if(count($xml->cities->city) < 1)
 		throw new exception('Not city');
 	foreach($xml->cities->city as $city_node){
@@ -51,58 +114,7 @@ function load_ls($xml, $current_user){
 		$city = model_city::create_city($new_city, $current_user);
 		if($city === false)
 				throw new exception('Проблема при создании города.');
-		if(count($city_node->street) > 0){
-			foreach($city_node->street as $street_node){
-				$street = $street_node->attributes();
-				$new_street = new data_street();
-				$new_street->name = (string) $street->name;
-				$new_street->status = (string) $street->status;
-				$street = model_street::create_street($city, $new_street, $current_user);
-				if($street === false)
-					throw new exception('Проблема при создании улицы.');
-				if(count($street_node->house) > 0){
-					foreach($street_node->house as $house_node){
-						$house = $house_node->attributes();
-						$new_house = new data_house();
-						$new_house->number = (string) $house->number;
-						$new_house->status = (string) $house->status;
-						$new_house->department_id = (int) $house->department_id;
-						$house = model_house::create_house($street, $new_house, $current_user);
-						if($house === false)
-							throw new exception('Проблема при создании дома.');
-						if(count($house_node->flat) > 0){
-							foreach($house_node->flat as $flat_node){
-								$flat = $flat_node->attributes();
-								$new_flat = new data_flat();
-								$new_flat->status = (string) $flat->status;
-								$new_flat->number = (string) $flat->number;
-								$flat = model_flat::create_flat($house, $new_flat, $current_user);
-								if($flat === false)
-									throw new exception('Проблема при создании квартиры.');
-								if(count($flat_node->number) > 0){
-									foreach($flat_node->number as $number_node){
-										$number = $number_node->attributes();
-										$new_number = new data_number();
-										$new_number->number = (string) $number->number;
-										$new_number->password = (string) $number->password;
-										$new_number->fio = (string) $number->fio;
-										$new_number->status = (string) $number->status;
-										$new_number->telephone = (string) $number->telephone;
-										$new_number->cellphone = (string) $number->cellphone;
-										$new_number->contact_fio = (string) $number->contact_fio;
-										$new_number->contact_telephone = (string) $number->contact_telephone;
-										$new_number->contact_cellphone = (string) $number->contact_cellphone;
-										$number = model_number::create_number($city, $flat, $new_number, $current_user);
-										if($number === false)
-											throw new exception('Проблема при создании лицевого счета.');
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		create_streets($city_node, $city, $current_user);
 	}
 }
 /*
@@ -172,7 +184,7 @@ try{
 	$current_user = build_current_user($xml);
 	create_users($xml, $current_user);
 	create_companies($xml, $current_user);
-	//load_ls($xml, $current_user);
+	create_cities($xml, $current_user);
 	print 'Установка прошла успешно.'.PHP_EOL;
 }catch(exception $e){
 	die($e->getMessage());
