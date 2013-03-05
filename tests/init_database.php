@@ -27,26 +27,17 @@ function create_tables(){
 /*
 * Создает участки
 */
-function create_departments(){
-	$departments = [
-		[1, 1, true, 'Центральный'],
-		[2, 1, true, 'Первый'],
-		[3, 1, true, 'Второй']
-	];
-	$sql = "INSERT INTO `departments` (
-				`id`, `company_id`, `status`, `name`
-			) VALUES (
-				:department_id, :company_id, :status, :name 
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindParam(':department_id', $department_id);
-	$stm->bindParam(':company_id', $company_id);
-	$stm->bindParam(':status', $status);
-	$stm->bindParam(':name', $name);
-	foreach($departments as $department){
-		list($department_id, $company_id, $status, $name) = $department;
-		$stm->execute();
-		$stm->closeCursor();
+function create_companies($xml, $current_user){
+	if(count($xml->companies->company) < 1)
+			throw new exception('Нет компаний');
+	foreach($xml->companies->company as $company_node){
+		$company = $company_node->attributes();
+		$new_company = new data_company();
+		$new_company->name = (string) $company->name;
+		$new_company->status = (string) $company->status;
+		$company = model_company::create_company($new_company, $current_user);
+		if($company === false)
+				throw new exception('Проблема при создании компании.');
 	}
 }
 function load_ls($xml, $current_user){
@@ -183,7 +174,9 @@ try{
 	create_tables();
 	$current_user = build_current_user($xml);
 	create_users($xml, $current_user);
-	load_ls($xml, $current_user);
+	create_companies($xml, $current_user);
+	//load_ls($xml, $current_user);
+	print 'Установка прошла успешно.'.PHP_EOL;
 }catch(exception $e){
 	die($e->getMessage());
 }
