@@ -53,6 +53,20 @@ function create_companies($xml, $current_user){
 		$company = model_company::create_company($new_company, $current_user);
 		if($company === false)
 			throw new exception('Проблема при создании компании.');
+		create_departments($company_node, $company, $current_user);
+	}
+}
+function create_departments($company_node, $company, $current_user){
+	if(count($company_node->departments->department) > 0){
+		foreach($company_node->departments->department as $department_node){
+			$department = $department_node->attributes();
+			$new_department = new data_department();
+			$new_department->name = (string) $department->name;
+			$new_department->status = (string) $department->status;
+			$department = model_department::create_department($company, $new_department, $current_user);
+			if($department === false)
+					throw new exception('Проблема при создании участка.');
+		}
 	}
 }
 function create_flats($house_node, $city, $house, $current_user){

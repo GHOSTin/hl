@@ -1,48 +1,49 @@
 <?php
-class model_flat{
-	public static function create_flat(data_house $house, data_flat $flat, data_user $current_user){
+class model_department{
+	public static function create_department(data_company $company, data_department $department, data_user $current_user){
 		try{
-			if(empty($flat->status) OR empty($flat->number))
+			if(empty($department->status) OR empty($department->name))
 				throw new exception('Не все параметры заданы правильно.');
-			$flat->company_id = $current_user->company_id;
-			$flat->house_id = $house->id;
-			$flat_id = self::get_insert_id();
-			if($flat_id === false)
+			$department->company_id = $company->id;
+			$department_id = self::get_insert_id($company);
+			if($department_id === false)
 				return false;
-				$flat->id = $flat_id;
-			$sql = "INSERT INTO `flats` (
-						`id`, `company_id`, `house_id`, `status`, `flatnumber`
+				$department->id = $department_id;
+			$sql = "INSERT INTO `departments` (
+						`id`, `company_id`, `status`, `name`
 					) VALUES (
-						:flat_id, :company_id, :house_id, :status, :number 
+						:department_id, :company_id, :status, :name 
 					);";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindValue(':flat_id', $flat->id);
-			$stm->bindValue(':company_id', $flat->company_id);
-			$stm->bindValue(':house_id', $flat->house_id);
-			$stm->bindValue(':status', $flat->status);
-			$stm->bindValue(':number', $flat->number);
+			$stm->bindValue(':department_id', $department->id);
+			$stm->bindValue(':company_id', $department->company_id);
+			$stm->bindValue(':status', $department->status);
+			$stm->bindValue(':name', $department->name);
 			if($stm->execute() === false)
 				return false;
-				return $flat;
+				return $department;
 			$stm->closeCursor();
 		}catch(exception $e){
-			throw new exception('Проблемы при создании Квартиры.');
+			throw new exception('Проблемы при создании участка.');
 		}
 	}
-	private static function get_insert_id(){
+	private static function get_insert_id(data_company $company){
 		try{
-			$sql = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
-			$stm = db::get_handler()->query($sql);
+			$sql = "SELECT MAX(`id`) as `max_department_id` FROM `departments`
+				WHERE `company_id` = :company_id";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':company_id', $company->id, PDO::PARAM_INT);
+			$stm->execute();
 			if($stm === false){
 				return false;
 			}else{
 				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_flat_id'] + 1;
+					return (int) $stm->fetch()['max_department_id'] + 1;
 				}else
 					return false;
 			}
 		}catch(exception $e){
-			throw new exception('Проблема при опредении следующего user_id.');
+			throw new exception('Проблема при опредении следующего department_id.');
 		}
-	}		
+	}			
 }
