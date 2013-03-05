@@ -28,7 +28,7 @@ class model_user{
 			$stm->bindValue(':firstname', $user->firstname, PDO::PARAM_STR);
 			$stm->bindValue(':lastname', $user->lastname, PDO::PARAM_STR);
 			$stm->bindValue(':middlename', $user->middlename, PDO::PARAM_STR);
-			$stm->bindValue(':password', get_password_hash($user->password), PDO::PARAM_STR);
+			$stm->bindValue(':password', self::get_password_hash($user->password), PDO::PARAM_STR);
 			$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
 			$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
 			if($stm->execute() === false)

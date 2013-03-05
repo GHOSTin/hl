@@ -161,9 +161,6 @@ function drop_tables(){
 	if(!empty($table_string))
 		$stm = db::get_handler()->exec('DROP TABLES '.substr($table_string, 0, -2));
 }
-function get_password_hash($passwd){
-	return md5(md5(htmlspecialchars($passwd)).application_configuration::authSalt);
-}
 /*
 * Запуск
 */
