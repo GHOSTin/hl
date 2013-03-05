@@ -1,27 +1,43 @@
 <?php
-$city_id = 0;
-$street_id = 0;
-$house_id = 0;
-$flat_id = 0;
-$number_id = 0;
 set_time_limit(0);
 # подключаем фреймворк
-$dir = dirname(__FILE__);
-define('ROOT' , substr($dir, 0, (strlen($dir) - strlen('/test'))));
+define('ROOT' , substr(__DIR__, 0, (strlen(__DIR__) - strlen('/test'))));
 require_once(ROOT."/framework/framework.php");
 /*
-* Парсинг xml
+* Строит объект пользователя от которого будет проходить инифиализация.
 */
-function parse_xml(){
-	$xml = simplexml_load_file(ROOT.'/specifications/data.xml');
-	if($xml === false) die('XML ошибка!');
-	return $xml;
+function build_current_user($xml){
+	try{
+		$user = $xml->users->user[0]->attributes();
+		$current_user = new data_user();
+		$current_user->id = 1;
+		$current_user->company_id = 1;
+		$current_user->status = true;
+		$current_user->login = (string) $user->login;
+		$current_user->login = (string) $user->password;
+		$current_user->firstname = (string) $user->firstname;
+		$current_user->lastname = (string) $user->lastname;
+		$current_user->middlename = (string) $user->middlename;
+		$current_user->telephone = (string) $user->telephone;
+		$current_user->cellphone = (string) $user->cellphone;
+		return $current_user;
+	}catch(exception $e){
+		throw new exception('Проблемы при постройки текущего пользователя.');
+	}
 }
-/*
-* Создает таблицы
-*/
-function create_tables(){
-	$stm = db::get_handler()->exec(file_get_contents(ROOT."/specifications/database_structure.sql"));
+function create_cities($xml, $current_user){
+	if(count($xml->cities->city) < 1)
+		throw new exception('Not city');
+	foreach($xml->cities->city as $city_node){
+		$city = $city_node->attributes();
+		$new_city = new data_city();
+		$new_city->name = (string) $city->name;
+		$new_city->status = (string) $city->status;
+		$city = model_city::create_city($new_city, $current_user);
+		if($city === false)
+				throw new exception('Проблема при создании города.');
+		create_streets($city_node, $city, $current_user);
+	}
 }
 /*
 * Создает данные в привязке к компаниям.
@@ -103,42 +119,13 @@ function create_streets($city_node, $city, $current_user){
 		}
 	}
 }
-function create_cities($xml, $current_user){
-	if(count($xml->cities->city) < 1)
-		throw new exception('Not city');
-	foreach($xml->cities->city as $city_node){
-		$city = $city_node->attributes();
-		$new_city = new data_city();
-		$new_city->name = (string) $city->name;
-		$new_city->status = (string) $city->status;
-		$city = model_city::create_city($new_city, $current_user);
-		if($city === false)
-				throw new exception('Проблема при создании города.');
-		create_streets($city_node, $city, $current_user);
-	}
-}
 /*
-* Строит объект пользователя от которого будет проходить инифиализация.
+* Создает таблицы
 */
-function build_current_user($xml){
-	try{
-		$user = $xml->users->user[0]->attributes();
-		$current_user = new data_user();
-		$current_user->id = 1;
-		$current_user->company_id = 1;
-		$current_user->status = true;
-		$current_user->login = (string) $user->login;
-		$current_user->login = (string) $user->password;
-		$current_user->firstname = (string) $user->firstname;
-		$current_user->lastname = (string) $user->lastname;
-		$current_user->middlename = (string) $user->middlename;
-		$current_user->telephone = (string) $user->telephone;
-		$current_user->cellphone = (string) $user->cellphone;
-		return $current_user;
-	}catch(exception $e){
-		throw new exception('Проблемы при постройки текущего пользователя.');
-	}
+function create_tables(){
+	$stm = db::get_handler()->exec(file_get_contents(ROOT."/specifications/database_structure.sql"));
 }
+
 /*
 * Создает фейковых юзеров
 */
@@ -174,6 +161,14 @@ function drop_tables(){
 		$stm = db::get_handler()->exec('DROP TABLES '.substr($table_string, 0, -2));
 }
 /*
+* Парсинг xml
+*/
+function parse_xml(){
+	$xml = simplexml_load_file(ROOT.'/specifications/data.xml');
+	if($xml === false) die('XML ошибка!');
+	return $xml;
+}
+/*
 * Запуск
 */
 try{
@@ -187,5 +182,5 @@ try{
 	create_cities($xml, $current_user);
 	print 'Установка прошла успешно.'.PHP_EOL;
 }catch(exception $e){
-	die($e->getMessage());
+	die($e->getMessage().PHP_EOL);
 }
