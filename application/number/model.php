@@ -63,7 +63,7 @@ class model_number{
 					return false;
 			}
 		}catch(exception $e){
-			throw new exception('Проблема при опредении следующего user_id.');
+			throw new exception('Проблема при опредении следующего number_id.');
 		}
 	}	
 	public static function get_number($args){

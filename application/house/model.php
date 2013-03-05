@@ -48,7 +48,7 @@ class model_house{
 					return false;
 			}
 		}catch(exception $e){
-			throw new exception('Проблема при опредении следующего user_id.');
+			throw new exception('Проблема при опредении следующего house_id.');
 		}
 	}		
 	public static function get_house($args){

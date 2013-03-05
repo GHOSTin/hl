@@ -68,7 +68,6 @@ function create_flats($house_node, $city, $house, $current_user){
 			create_numbers($flat_node, $city, $flat, $current_user);
 		}
 	}
-
 }
 function create_houses($street_node, $city, $street, $current_user){
 	if(count($street_node->house) > 0){
@@ -125,7 +124,6 @@ function create_streets($city_node, $city, $current_user){
 function create_tables(){
 	$stm = db::get_handler()->exec(file_get_contents(ROOT."/specifications/database_structure.sql"));
 }
-
 /*
 * Создает фейковых юзеров
 */

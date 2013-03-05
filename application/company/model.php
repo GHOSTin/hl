@@ -30,16 +30,6 @@ class model_company{
 			throw new exception('Проблемы при создании компании.');
 		}
 	}
-
-// 	CREATE TABLE IF NOT EXISTS `companies` (
-//   `id` TINYINT(3) UNSIGNED NOT NULL,
-//   `status` ENUM('true','false') NOT NULL DEFAULT 'true',
-//   `name` VARCHAR(255) NOT NULL,
-//   `smslogin` VARCHAR(255) NOT NULL,
-//   `smspassword` VARCHAR(255) NOT NULL,
-//   `smssender` VARCHAR(255) NOT NULL,
-//   PRIMARY KEY (`id`)
-// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	private static function get_insert_id(){
 		try{
 			$sql = "SELECT MAX(`id`) as `max_company_id` FROM `companies`";

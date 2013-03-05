@@ -40,7 +40,7 @@ class model_city{
 					return false;
 			}
 		}catch(exception $e){
-			throw new exception('Проблема при опредении следующего user_id.');
+			throw new exception('Проблема при опредении следующего city_id.');
 		}
 	}	
 }

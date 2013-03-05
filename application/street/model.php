@@ -42,7 +42,7 @@ class model_street{
 					return false;
 			}
 		}catch(exception $e){
-			throw new exception('Проблема при опредении следующего user_id.');
+			throw new exception('Проблема при опредении следующего street_id.');
 		}
 	}		
 	public static function get_streets(){
