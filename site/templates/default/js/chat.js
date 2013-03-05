@@ -38,7 +38,7 @@ window.userList = {
                 pane += '<ul class="feed"></ul>';
                 pane += '<form class="well message" data-user-id="' + user.id + '">';
                 pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
-                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
+//                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
                 pane += '<button class="btn btn-primary" type="submit">Отправить</button>';
                 pane += '<ul class="attachments nav nav-tabs nav-stacked"></ul>';
                 pane += '<input type="file" id="lefile" style="display:none;">';
@@ -96,34 +96,56 @@ window.feed = {
         }
     },
 
-    formatDate:function (_date) {
+    formatDate:function (_date, _status) {
+        var status = _status || 'time';
         var date = (typeof _date!=='undefined' && _date !==null)?new Date(_date):new Date();
-        var dateParts = [
-            date.getDate(),
-            date.getMonth() + 1,
-            date.getFullYear(),
-        ];
-        var dateString = '';
-        var today = new Date();
-        if (dateParts[0] == today.getDate() && dateParts[1] == today.getMonth() + 1 && dateParts[2] == today.getFullYear())
-            dateString = 'сегодня';
-        else {
-            for (var part in dateParts)
-                if (dateParts[part].toString().length == 1) dateParts[part] = "0" + dateParts[part];
-            dateString = dateParts.join('.');
+        switch (status) {
+            case 'date':
+                var date_parts = [
+                    date.getDate(),
+                    date.getMonth(),
+                    date.getFullYear(),
+                ];
+                var months = [
+                    'января',
+                    'февраля',
+                    'марта',
+                    'апреля',
+                    'мая',
+                    'июня',
+                    'июля',
+                    'августа',
+                    'сентября',
+                    'октября',
+                    'ноября',
+                    'декабря',
+                ];
+                var date_string = date_parts[0] + " " + months[date_parts[1]];
+
+//                var today = new Date();
+//                if (dateParts[0] == today.getDate() && dateParts[1] == today.getMonth() + 1 && dateParts[2] == today.getFullYear())
+//                    dateString = 'сегодня';
+//                else {
+//                    for (var part in dateParts)
+//                        if (dateParts[part].toString().length == 1) dateParts[part] = "0" + dateParts[part];
+//                    dateString = dateParts.join('.');
+//                }
+                return date_string;
+            break;
+            case 'time':
+            default:
+                var time_parts = [
+                    date.getHours(),
+                    date.getMinutes(),
+//                    date.getSeconds(),
+                ]
+
+                for (var part in time_parts)
+                    if (time_parts[part].toString().length == 1) time_parts[part] = "0" + time_parts[part];
+                var time_string = time_parts.join(':');
+                return time_string;
+            break;
         }
-
-        var timeParts = [
-            date.getHours(),
-            date.getMinutes(),
-            date.getSeconds(),
-        ]
-
-        for (var part in timeParts)
-            if (timeParts[part].toString().length == 1) timeParts[part] = "0" + timeParts[part];
-        var timeString = timeParts.join(':');
-
-        return dateString + " в " + timeString;
     },
 
     addStatus:function (statusString, user) {
@@ -242,7 +264,6 @@ Message.prototype.read = function () {
 Message.prototype.render = function () {
     var classes = ['message'];
     if (this.outgoing) classes.push('pull-right');
-    var sender = (this.outgoing) ? 'Я' : this.user.name;
     var attachments = '';
 
     if(typeof this.attachments !== 'undefined' && this.attachments !== '') {
@@ -252,12 +273,14 @@ Message.prototype.render = function () {
         });
     }
 
-
     var messageString = '';
+    var _date = new Date(this.date)
+    var active_date = _date.getFullYear()+'_'+_date.getMonth()+'_'+_date.getDate();
+    if(!$("#user_" + this.user.id + " ul.feed time#"+active_date).length > 0)
+        messageString += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
     messageString += '<blockquote class="' + classes.join(' ') + '">';
-    messageString += "<p>" + this.text + attachments + "</p>";
-    messageString += '<small><i class="icon-user"></i> ' + sender;
-    messageString += ' | ' + feed.formatDate(this.date) + '</small>'
+    messageString += '<p>' + this.text + attachments + '</p>';
+    messageString +=  feed.formatDate(this.date) + '</small>';
     messageString += '</blockquote>';
     messageString += '<div class="clearfix"></div>';
 
