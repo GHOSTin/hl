@@ -6,7 +6,7 @@ class model_environment{
 				return load_template('default_page.main_page', $data);
 				return $data['view'];
 		}catch(exception $e){
-			throw new exception('Fail build page');
+			throw new exception('Ошибка при строительстве страницы.');
 		}
 	}
 	/*
@@ -16,13 +16,23 @@ class model_environment{
 		try{
 			session_start();
 			if($_SESSION['user'] instanceof data_user){
-				$route = [http_router::get_component_name(),
-				'private_'.http_router::get_method_name()];
+				$urlArray = parse_url($_SERVER['REQUEST_URI']);
+				$url = explode('/', substr($urlArray['path'], 1));
+				$component = (string) $url[0];
+				if(empty($component)){
+					$component = 'default_page';
+					$method = 'show_default_page';
+				}else{
+					$method = (string) $url[1];
+					if(empty($method))
+						$method = 'show_default_page';
+				}
+				$route = [$component, 'private_'.$method];
 			}else
 				$route = ['auth', 'public_login'];
 			return $route;
 		}catch(exception $e){
-			throw new exception('Fail build router');
+			throw new exception('Ошибка постройки маршрута.');
 		}
 	}
 	/**
@@ -36,7 +46,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
- 			throw new exception('Database not connected');
+ 			throw new exception('Нет соединения с базой данных.');
 		}
 		// устанавливаем параметры по умолчанию
 		try{
@@ -44,7 +54,7 @@ class model_environment{
 			db::get_handler()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			db::get_handler()->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		}catch(exception $e){
-			throw new exception('Properties not loaded'); 
+			throw new exception('Аттрибуты соединения с базой данных не применились.'); 
 		}
 	}
 	/*
@@ -57,14 +67,18 @@ class model_environment{
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			self::load_twig();
-				//self::get_user_profiles($controller);
+			//self::get_user_profiles($controller);
 			// проверяю если ли права доступа
 			if($_SESSION['user'] instanceof data_user){
 				$menu = view_menu::build_horizontal_menu();
 			}
 			$c_data = $controller::$method();
-			$data = ['component' => $component, 'view' => $view::$method($c_data),
-					'menu' => $menu];
+			try{
+				$data = ['component' => $component, 'view' => $view::$method($c_data),
+						'menu' => $menu];
+			}catch(exception $e){
+				// throw new exception('Проблема на этапе представления информации компонента.');
+			}
 			return self::build_page($data);
 		}catch(exception $e){
 			return $e->getMessage();
@@ -113,7 +127,7 @@ class model_environment{
 			require_once ROOT.'/libs/Twig/Autoloader.php';
 			Twig_Autoloader::register();
 		}catch(exception $e){
-			throw new exception('Fail load template machine');
+			throw new exception('Шаблонизатор не может быть подгружен.');
 		}
 	}	
 }

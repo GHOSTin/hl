@@ -15,9 +15,9 @@
                        <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li><a tabindex="-1" href="/?p=profile">Профиль</a></li>
+                        <li><a tabindex="-1" href="/profile/">Профиль</a></li>
                         <li class="divider"></li>
-                        <li><a tabindex="-1" href="/?p=exit">Выход</a></li>
+                        <li><a tabindex="-1" href="/exit/">Выход</a></li>
                     </ul>
                 </li>
             </ul>
@@ -30,11 +30,11 @@
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             {% for link in menu %}
-                                <li><a tabindex="-1" href="/?p={{link.href}}">{{link.text}}</a></li>
+                                <li><a tabindex="-1" href="/{{link.href}}/">{{link.text}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>
-                    <li><a href="/?p=task">Задачи</a></li>
+                    <li><a href="/task/">Задачи</a></li>
                 </ul>
             </div>
             <!-- end menu -->

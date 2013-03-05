@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data>
 	<companies>
-		<company name="Уралагрострой" id="1" />
-		<company name="Наш город" id="2" />
+		<company name="Уралагрострой" status="true">
+			<departments>
+				<department name="Общий" status="true" />
+				<department name="1 участок" status="true" />
+			</departments>
+		</company>
+		<company name="Наш город" status="true" />
 	</companies>
 	<cities>
-		<city name="Первоуральск" id="1" status="true">
+		<city name="Первоуральск" status="true">
 			<street name="Ватутина ул" status="true">
 				<house number="52" department_id="2" status="true">
 					<flat number="19" status="true">
@@ -22,10 +27,10 @@
 			<street name="Ленина ул" status="true" />
 			<street name="Чекистов ул" status="true" />
 		</city>
-		<city name="Ревда" id="2" status="true"></city>
+		<city name="Ревда" status="true"></city>
 	</cities>
 	<users>
-		<user id="1" company_id="1" status="true" login="NekrasovEV" firstname="Евгений" lastname="Некрасов" middlename="Валерьевич" password="{htyfntym" telephone="647957" cellphone="89222944742" />
-		<user id="2" company_id="1" status="true" login="test" firstname="testFirstname" lastname="testLastname" middlename="testMiddlename" password="test" telephone="647957" cellphone="89222944742" />
+		<user company_id="1" status="true" login="NekrasovEV" firstname="Евгений" lastname="Некрасов" middlename="Валерьевич" password="{htyfntym" telephone="647957" cellphone="89222944742" />
+		<user company_id="1" status="true" login="test" firstname="testFirstname" lastname="testLastname" middlename="testMiddlename" password="test" telephone="647957" cellphone="89222944742" />
 	</users>
 </data>

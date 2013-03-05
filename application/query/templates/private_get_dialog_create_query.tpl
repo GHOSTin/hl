@@ -2,7 +2,7 @@
 	function _content(){
 		show_dialog($('.ajx').html());
 		$('.get_dialog_initiator').click(function(){
-			$.get('index.php',{p: 'query.get_dialog_initiator',
+			$.get('get_dialog_initiator',{
 				value: $(this).attr('param')
 				},function(r){
 					show_content(r);

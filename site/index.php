@@ -1,7 +1,6 @@
 <?php
 # подключаем фреймворк
-$dir = dirname(__FILE__);
-define('ROOT' , substr($dir, 0, (strlen($dir) - strlen('/site'))));
+define('ROOT' , substr(__DIR__, 0, (strlen(__DIR__) - strlen('/site'))));
 require_once(ROOT."/framework/framework.php");
 # отделение статики от работы php-скрипта
 if(!empty($_GET['js'])){

@@ -1,21 +1,136 @@
 <?php
-$city_id = 0;
-$street_id = 0;
-$house_id = 0;
-$flat_id = 0;
-$number_id = 0;
 set_time_limit(0);
 # подключаем фреймворк
-$dir = dirname(__FILE__);
-define('ROOT' , substr($dir, 0, (strlen($dir) - strlen('/test'))));
+define('ROOT' , substr(__DIR__, 0, (strlen(__DIR__) - strlen('/test'))));
 require_once(ROOT."/framework/framework.php");
 /*
-* Парсинг xml
+* Строит объект пользователя от которого будет проходить инифиализация.
 */
-function parse_xml(){
-	$xml = simplexml_load_file(ROOT.'/specifications/data.xml');
-	if($xml === false) die('XML ошибка!');
-	return $xml;
+function build_current_user($xml){
+	try{
+		$user = $xml->users->user[0]->attributes();
+		$current_user = new data_user();
+		$current_user->id = 1;
+		$current_user->company_id = 1;
+		$current_user->status = true;
+		$current_user->login = (string) $user->login;
+		$current_user->login = (string) $user->password;
+		$current_user->firstname = (string) $user->firstname;
+		$current_user->lastname = (string) $user->lastname;
+		$current_user->middlename = (string) $user->middlename;
+		$current_user->telephone = (string) $user->telephone;
+		$current_user->cellphone = (string) $user->cellphone;
+		return $current_user;
+	}catch(exception $e){
+		throw new exception('Проблемы при постройки текущего пользователя.');
+	}
+}
+function create_cities($xml, $current_user){
+	if(count($xml->cities->city) < 1)
+		throw new exception('Not city');
+	foreach($xml->cities->city as $city_node){
+		$city = $city_node->attributes();
+		$new_city = new data_city();
+		$new_city->name = (string) $city->name;
+		$new_city->status = (string) $city->status;
+		$city = model_city::create_city($new_city, $current_user);
+		if($city === false)
+				throw new exception('Проблема при создании города.');
+		create_streets($city_node, $city, $current_user);
+	}
+}
+/*
+* Создает данные в привязке к компаниям.
+*/
+function create_companies($xml, $current_user){
+	if(count($xml->companies->company) < 1)
+			throw new exception('Нет компаний');
+	foreach($xml->companies->company as $company_node){
+		$company = $company_node->attributes();
+		$new_company = new data_company();
+		$new_company->name = (string) $company->name;
+		$new_company->status = (string) $company->status;
+		$company = model_company::create_company($new_company, $current_user);
+		if($company === false)
+			throw new exception('Проблема при создании компании.');
+		create_departments($company_node, $company, $current_user);
+	}
+}
+function create_departments($company_node, $company, $current_user){
+	if(count($company_node->departments->department) > 0){
+		foreach($company_node->departments->department as $department_node){
+			$department = $department_node->attributes();
+			$new_department = new data_department();
+			$new_department->name = (string) $department->name;
+			$new_department->status = (string) $department->status;
+			$department = model_department::create_department($company, $new_department, $current_user);
+			if($department === false)
+					throw new exception('Проблема при создании участка.');
+		}
+	}
+}
+function create_flats($house_node, $city, $house, $current_user){
+	if(count($house_node->flat) > 0){
+		foreach($house_node->flat as $flat_node){
+			$flat = $flat_node->attributes();
+			$new_flat = new data_flat();
+			$new_flat->status = (string) $flat->status;
+			$new_flat->number = (string) $flat->number;
+			$flat = model_flat::create_flat($house, $new_flat, $current_user);
+			if($flat === false)
+				throw new exception('Проблема при создании квартиры.');
+			create_numbers($flat_node, $city, $flat, $current_user);
+		}
+	}
+}
+function create_houses($street_node, $city, $street, $current_user){
+	if(count($street_node->house) > 0){
+		foreach($street_node->house as $house_node){
+			$house = $house_node->attributes();
+			$new_house = new data_house();
+			$new_house->number = (string) $house->number;
+			$new_house->status = (string) $house->status;
+			$new_house->department_id = (int) $house->department_id;
+			$house = model_house::create_house($street, $new_house, $current_user);
+			if($house === false)
+				throw new exception('Проблема при создании дома.');
+			create_flats($house_node, $city, $house, $current_user);
+		}
+	}	
+}
+function create_numbers($flat_node, $city, $flat, $current_user){
+	if(count($flat_node->number) > 0){
+		foreach($flat_node->number as $number_node){
+			$number = $number_node->attributes();
+			$new_number = new data_number();
+			$new_number->number = (string) $number->number;
+			$new_number->password = (string) $number->password;
+			$new_number->fio = (string) $number->fio;
+			$new_number->status = (string) $number->status;
+			$new_number->telephone = (string) $number->telephone;
+			$new_number->cellphone = (string) $number->cellphone;
+			$new_number->contact_fio = (string) $number->contact_fio;
+			$new_number->contact_telephone = (string) $number->contact_telephone;
+			$new_number->contact_cellphone = (string) $number->contact_cellphone;
+			$number = model_number::create_number($city, $flat, $new_number, $current_user);
+			if($number === false)
+				throw new exception('Проблема при создании лицевого счета.');
+		}
+	}
+}
+function create_streets($city_node, $city, $current_user){
+	if(count($city_node->street) > 0){
+		foreach($city_node->street as $street_node){
+			$street = $street_node->attributes();
+			$new_street = new data_street();
+			$new_street->name = (string) $street->name;
+			$new_street->status = (string) $street->status;
+			$street = model_street::create_street($city, $new_street, $current_user);
+			if($street === false)
+				throw new exception('Проблема при создании улицы.');
+			create_houses($street_node, $city, $street, $current_user);
+		}
+	}
 }
 /*
 * Создает таблицы
@@ -24,220 +139,24 @@ function create_tables(){
 	$stm = db::get_handler()->exec(file_get_contents(ROOT."/specifications/database_structure.sql"));
 }
 /*
-* Создает города
-*/
-function create_city($city){
-	global $city_id;
-	$city_id++;
-	$sql = "INSERT INTO `cities` (
-				`id`, `company_id`, `status`, `name`
-			) VALUES (
-				:city_id, :company_id, :status, :name 
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':status', $city->status);
-	$stm->bindValue(':name', $city->name);
-	$stm->execute();
-	$stm->closeCursor();
-}
-/*
-* Создает участки
-*/
-function create_departments(){
-	$departments = [
-		[1, 1, true, 'Центральный'],
-		[2, 1, true, 'Первый'],
-		[3, 1, true, 'Второй']
-	];
-	$sql = "INSERT INTO `departments` (
-				`id`, `company_id`, `status`, `name`
-			) VALUES (
-				:department_id, :company_id, :status, :name 
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindParam(':department_id', $department_id);
-	$stm->bindParam(':company_id', $company_id);
-	$stm->bindParam(':status', $status);
-	$stm->bindParam(':name', $name);
-	foreach($departments as $department){
-		list($department_id, $company_id, $status, $name) = $department;
-		$stm->execute();
-		$stm->closeCursor();
-	}
-}
-/*
-* Создает квартиры
-*/
-function create_flat($flat){
-	global $house_id, $flat_id;
-	$flat_id++;
-	$sql = "INSERT INTO `flats` (
-				`id`, `company_id`, `house_id`, `status`, `flatnumber`
-			) VALUES (
-				:flat_id, :company_id, :house_id, :status, :number 
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':flat_id', $flat_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':house_id', $house_id);
-	$stm->bindValue(':status', $flat->status);
-	$stm->bindValue(':number', $flat->number);
-	$stm->execute();
-	$stm->closeCursor();
-}
-/*
-* Создает улицы
-*/
-
-function create_house($house){
-	global $city_id, $street_id, $house_id;
-	$house_id++;
-	$sql = "INSERT INTO `houses` (
-				`id`, `company_id`, `city_id`, `street_id`, `department_id`,
-				`status`, `housenumber`
-			) VALUES (
-				:house_id, :company_id, :city_id, :street_id, :department_id,
-				:status, :number
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':house_id', $house_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':street_id', $street_id);
-	$stm->bindValue(':department_id', $house->department_id);
-	$stm->bindValue(':status', $house->status);
-	$stm->bindValue(':number', $house->number);
-	$stm->execute();
-	$stm->closeCursor();
-}
-/*
-* Создает лицевые счета
-*/
-function create_number($number){
-	global $city_id, $house_id, $flat_id, $number_id;
-	$number_id++;
-	$sql = "INSERT INTO `numbers` (
-				`id`, `company_id`, `city_id`, `house_id`, `flat_id`, `number`, `type`, `status`,
-				`fio`, `telephone`, `cellphone`, `password`, `contact-fio`, `contact-telephone`,
-				`contact-cellphone`
-			) VALUES (
-				:number_id, :company_id, :city_id, :house_id, :flat_id, :number, :type, :status,
-				:fio, :telephone, :cellphone, :password, :contact_fio, :contact_telephone,
-				:contact_cellphone
-			);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':number_id', $number_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':house_id', $house_id);
-	$stm->bindValue(':flat_id', $flat_id);
-	$stm->bindValue(':number', $number->number);
-	$stm->bindValue(':type', 'human');
-	$stm->bindValue(':status', $number->status);
-	$stm->bindValue(':fio', $number->fio);
-	$stm->bindValue(':telephone', $number->telephone);
-	$stm->bindValue(':cellphone', $number->cellphone);
-	$stm->bindValue(':password', $number->password);
-	$stm->bindValue(':contact_fio', $number->contact_fio);
-	$stm->bindValue(':contact_telephone', $number->contact_telephone);
-	$stm->bindValue(':contact_cellphone', $number->contact_cellphone);
-	$stm->execute();
-	$stm->closeCursor();
-}
-/*
-* Создает улицу
-*/
-function create_street($street){
-	global $city_id, $street_id;
-	$street_id++;
-	$sql = "INSERT INTO `streets` (
-			`id`, `company_id`, `city_id`, `status`, `name`
-		) VALUES (
-			:street_id, :company_id, :city_id, :status, :name 
-		);";
-	$stm = db::get_handler()->prepare($sql);
-	$stm->bindValue(':street_id', $street_id);
-	$stm->bindValue(':company_id', 1);
-	$stm->bindValue(':city_id', $city_id);
-	$stm->bindValue(':status', $street->status);
-	$stm->bindValue(':name', $street->name);
-	$stm->execute();
-	$stm->closeCursor();
-}
-
-function load_ls($xml){
-	if(count($xml->cities->city) < 1)
-		throw new exception('Not city');
-	foreach($xml->cities->city as $city_node){
-		$city = $city_node->attributes();
-		create_city($city);
-		if(count($city_node->street) > 0){
-			foreach($city_node->street as $street_node){
-				$street = $street_node->attributes();
-				create_street($street);
-				if(count($street_node->house) > 0){
-					foreach($street_node->house as $house_node){
-						$house = $house_node->attributes();
-						create_house($house);
-						if(count($house_node->flat) > 0){
-							foreach($house_node->flat as $flat_node){
-								$flat = $flat_node->attributes();
-								create_flat($flat);
-								if(count($flat_node->number) > 0){
-									foreach($flat_node->number as $number_node){
-										$number = $number_node->attributes();
-										create_number($number);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-}
-/*
 * Создает фейковых юзеров
 */
-function create_users($xml){
+function create_users($xml, $current_user){
 	if(count($xml->users->user) < 1){
-		throw new exception('Not users');
+		throw new exception('В конфигурации не перечислены пользователи.');
 	}else{
-		$sql = "INSERT INTO `users` (
-					`id`, `company_id`, `status`, `username`, `firstname`, `lastname`,
-					`midlename`, `password`, `telephone`, `cellphone`
-				) VALUES (
-					:user_id, :company_id, :status, :login, :firstname, :lastname, 
-					:middlename, :password, :telephone, :cellphone
-				);";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':user_id', $user_id);
-		$stm->bindParam(':company_id', $company_id);
-		$stm->bindParam(':status', $status);
-		$stm->bindParam(':login', $login);
-		$stm->bindParam(':firstname', $firstname);
-		$stm->bindParam(':lastname', $lastname);
-		$stm->bindParam(':middlename', $middlename);
-		$stm->bindParam(':password', $password);
-		$stm->bindParam(':telephone', $telephone);
-		$stm->bindParam(':cellphone', $cellphone);
 		foreach($xml->users->user as $user){
-			$user = $user->attributes();
-			$user_id = $user->id;
-			$company_id = $user->company_id;
-			$status = $user->status;
-			$login = $user->login;
-			$firstname = $user->firstname;
-			$lastname = $user->lastname;
-			$middlename = $user->middlename;
-			$password = get_password_hash($user->password);
-			$telephone = $user->telephone;
-			$cellphone = $user->cellphone;
-			$stm->execute();
-			$stm->closeCursor();
+			$user_attr = $user->attributes();
+			$new_user = new data_user();
+			$new_user->login = $user_attr->login;
+			$new_user->firstname = $user_attr->firstname;
+			$new_user->lastname = $user_attr->lastname;
+			$new_user->middlename = $user_attr->middlename;
+			$new_user->password = $user_attr->password;
+			$new_user->telephone = $user_attr->telephone;
+			$new_user->cellphone = $user_attr->cellphone;
+			if(model_user::create_user($new_user, $current_user) === false)
+				throw new exception('Проблема при создании пользователей.');
 		}
 	}
 }
@@ -253,8 +172,13 @@ function drop_tables(){
 	if(!empty($table_string))
 		$stm = db::get_handler()->exec('DROP TABLES '.substr($table_string, 0, -2));
 }
-function get_password_hash($passwd){
-	return md5(md5(htmlspecialchars($passwd)).application_configuration::authSalt);
+/*
+* Парсинг xml
+*/
+function parse_xml(){
+	$xml = simplexml_load_file(ROOT.'/specifications/data.xml');
+	if($xml === false) die('XML ошибка!');
+	return $xml;
 }
 /*
 * Запуск
@@ -264,8 +188,11 @@ try{
 	model_environment::create_batabase_connection();
 	drop_tables();
 	create_tables();
-	create_users($xml);
-	load_ls($xml);
+	$current_user = build_current_user($xml);
+	create_users($xml, $current_user);
+	create_companies($xml, $current_user);
+	create_cities($xml, $current_user);
+	print 'Установка прошла успешно.'.PHP_EOL;
 }catch(exception $e){
-	die($e->getMessage());
+	die($e->getMessage().PHP_EOL);
 }

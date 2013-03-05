@@ -2,7 +2,7 @@
 	function _content(){
 		$('.modal-body').html(get_hidden_content());
 		$('.dialog-select-street').change(function(){
-			$.get('index.php',{p: 'query.get_houses',
+			$.get('get_houses',{
 				id: $('.dialog-select-street :selected').val()
 			},function(r){
 				$('.dialog-select-house').html(r).attr('disabled', false);
@@ -10,7 +10,7 @@
 		});		
 		{% if initiator == 'house' %}
 			$('.dialog-select-house').change(function(){
-				$.get('index.php',{p: 'query.get_initiator',
+				$.get('get_initiator',{
 					initiator: 'house',
 					id: $('.dialog-select-house :selected').val()
 				},function(r){
@@ -19,14 +19,14 @@
 			});	
 		{% else %}
 			$('.dialog-select-house').change(function(){
-				$.get('index.php',{p: 'query.get_numbers',
+				$.get('get_numbers',{
 					id: $('.dialog-select-house :selected').val()
 				},function(r){
 					$('.dialog-select-number').html(r).attr('disabled', false);
 				});
 			});
 			$('.dialog-select-number').change(function(){
-				$.get('index.php',{p: 'query.get_initiator',
+				$.get('get_initiator',{
 					initiator: 'number',
 					id: $('.dialog-select-number :selected').val()
 				},function(r){
