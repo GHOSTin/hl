@@ -60,9 +60,21 @@ form.well{
     max-height: 580px;
 }
 
+.chat h6 {
+    text-align: center;
+    background: #dedede;
+    margin-left: 10px;
+    border-radius: 7px 7px 0 0;
+}
+
 .feed{
     height: 425px;
     overflow-y: scroll;
+}
+
+.feed blockquote p {
+    word-wrap: break-word;
+    width: 300px;
 }
 
 .scroller {

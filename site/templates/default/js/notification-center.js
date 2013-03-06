@@ -39,7 +39,7 @@ chat.on('message', function (event) {
 //            userList.load(message.data);
 //            break;
         case 'previous_messages':
-//            log(message.data.messages);
+            log(message.data.messages);
             userList.list[message.data.uid].loadPreviousMessages(message.data.messages);
             break;
         case 'updates':
@@ -55,7 +55,7 @@ $(document).on('click', '.users li a', function () {
     $('#main').show();
 
     var user = userList.list[$(this).attr("user_id")];
-//    console.log(user);
+
     if (!user.previousMessagesLoaded) {
         user.loadPreviousMessages();
     }
@@ -76,7 +76,6 @@ $(document).on('submit', 'form.message', function (e) {
     form[0].message.value = "";
     return false;
 });
-
 
 
 $('.light').on('click', function(){
