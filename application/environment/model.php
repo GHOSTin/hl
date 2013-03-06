@@ -67,8 +67,8 @@ class model_environment{
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			self::load_twig();
-			//self::get_user_profiles($controller);
-			// проверяю если ли права доступа
+			self::get_user_profiles();
+			//self::check_access($controller);
 			if($_SESSION['user'] instanceof data_user){
 				$menu = view_menu::build_horizontal_menu();
 			}
@@ -88,35 +88,31 @@ class model_environment{
 	* Проверяет залогинен ли пользователь
 	* @return bolean
 	*/
-	private static function get_user_profiles($controller){
-		// потом проверяем соответсвет ли блок профиля с настройками по умолчанию
-		//  если соответсвует то даем выполнятся запросу
-		// иначе выводим ACCESS DENIED
-		// нужно сделать запрос к базе данных
-		// 	получить все профили
-		// засунуть в сессию
-		// Если не существет rules то проверку не делаем
+	private static function get_user_profiles(){
 		try{
-			if(property_exists($controller, 'rules') AND ($_SESSION['user'] instanceof data_user)){
-				$sql = "SELECT `company_id`, `user_id`, `profile`,
-					`rules`, `restrictions`, `settings`
+			if($_SESSION['user'] instanceof data_user){
+				// if(!property_exists($controller, 'rules'))
+				// 	throw new exception('Контроллер не имеет настроек.');
+				$sql = "SELECT `profile`, `rules`, `restrictions`, `settings`
 					FROM `profiles`
 					WHERE  `user_id` = :user_id
 					AND `company_id` = :company_id";
 				$stm = db::get_handler()->prepare($sql);
-				$stm->bindValue(':user_id',$_SESSION['user']->id , PDO::PARAM_INT);
+				$stm->bindValue(':user_id', $_SESSION['user']->id , PDO::PARAM_INT);
 				$stm->bindValue(':company_id',$_SESSION['user']->company_id , PDO::PARAM_INT);
-				$stm->execute();
-				//$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
-				$query = $stm->fetch();
-				var_dump($query);
-				die('Profile');
+				if($stm->execute() == false)
+					throw new exception('Ошибка при получении профиля.');
+				if($stm->rowCount() > 0){
+					while($profile = $stm->fetch()){
+						$_SESSION['rules'][$profile['profile']] = $profile['rules'];
+						$_SESSION['restrictions'][$profile['profile']] = $profile['restrictions'];
+						$_SESSION['settings'][$profile['profile']] = $profile['settings'];
+					}
+				}
 				$stm->closeCursor();
-				return $query;
 			}
-			//var_dump($controller::$rules);
 		}catch(exception $e){
-			die($e->getMessage());
+			throw new exception('Ошибка при получении профиля.');
 		}
 	}
 	/*

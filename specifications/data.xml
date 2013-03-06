@@ -6,6 +6,10 @@
 				<department name="Общий" status="true" />
 				<department name="1 участок" status="true" />
 			</departments>
+			<queries>
+				<query type="house" />
+				<query type="number" />
+			<queries>
 		</company>
 		<company name="Наш город" status="true" />
 	</companies>
