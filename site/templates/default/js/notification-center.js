@@ -40,7 +40,7 @@ chat.on('message', function (event) {
 //            break;
         case 'previous_messages':
             log(message.data.messages);
-            userList.list[message.data.uid].loadPreviousMessages(message.data.messages);
+            userList.list[message.data.uid].loadPreviousMessages(message.data.messages, message.data.status || 'new');
             break;
         case 'updates':
             feed.process(message.data);
