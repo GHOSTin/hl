@@ -51,9 +51,8 @@ window.userList = {
         $('ul.feed').scroll(function(e){
             if($(this).scrollTop() == 0){
                 var active_user = list[$('.chat.active').attr('id').split('_')[1]];
-
                 var offset = Object.keys(active_user.messages).length;
-                log(offset);
+                active_user.first_message_id = $('.chat.active ul.feed blockquote:first').attr('id');
                 chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
             }
         });
@@ -160,6 +159,13 @@ window.feed = {
 
     addStatus:function (statusString, user) {
         $('#user_'+user.id+' ul.feed').append("<li>" + statusString + "</li>").scrollTop(9999);
+    },
+
+    urlify:function(text){
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, function(url) {
+            return '<a href="' + url + '" target="_blank">' + url + '</a>';
+        });
     }
 };
 
@@ -298,7 +304,7 @@ Message.prototype.render = function () {
         }
     }
     message_string += '<blockquote class="' + classes.join(' ') + '" id="' + this.id + '">';
-    message_string += '<p>' + this.text + attachments + '</p>';
+    message_string += '<p>' + feed.urlify(this.text) + attachments + '</p>';
     message_string += '<small>' + feed.formatDate(this.date) + '</small>';
     message_string += '</blockquote>';
     message_string += '<div class="clearfix"></div>';
@@ -309,7 +315,7 @@ Message.prototype.render = function () {
 };
 
 Message.prototype.prepend = function(render) {
-    $("#user_" + this.user.id + " ul.feed").prepend(render).scrollTop(100);
+    $("#user_" + this.user.id + " ul.feed").prepend(render).stop().scrollTo('blockquote#'+this.user.first_message_id);
 };
 
 Message.prototype.append = function(render) {

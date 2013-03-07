@@ -35,11 +35,7 @@ notify_center.on('disconnect', function(){
 chat.on('message', function (event) {
     var message = event.data;
     switch (message.type) {
-//        case 'get_user_list':
-//            userList.load(message.data);
-//            break;
         case 'previous_messages':
-            log(message.data.messages);
             userList.list[message.data.uid].loadPreviousMessages(message.data.messages, message.data.status || 'new');
             break;
         case 'updates':

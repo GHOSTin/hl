@@ -37,6 +37,7 @@
     <script src="/templates/default/js/jcanvas.min.js"></script>
     <script src="/templates/default/js/ajaxupload.js"></script>
     <script src="/templates/default/js/socket.io.js"></script>
+    <script src="/templates/default/js/jquery.scrollTo.min.js"></script>
     <script src="/templates/default/js/notification-center.js"></script>
     <script src="/templates/default/js/default.js"></script>
     <script src="/templates/default/js/baron.js"></script>
