@@ -27,9 +27,9 @@ class model_environment{
 					if(empty($method))
 						$method = 'show_default_page';
 				}
-				$route = [$component, 'private_'.$method];
+				$route = [$component, 'private_', $method];
 			}else
-				$route = ['auth', 'public_login'];
+				$route = ['auth', 'public_', 'login'];
 			return $route;
 		}catch(exception $e){
 			throw new exception('Ошибка постройки маршрута.');
@@ -58,27 +58,44 @@ class model_environment{
 		}
 	}
 	/*
+	* Проверяет права доступа пользователя
+	*/
+	private static function check_general_access($controller, $component){
+		try{
+			if(property_exists($controller, 'rules')){
+				if($_SESSION['rules'][$component]->generalAccess !== true)
+					return false;
+					return true;
+			}else
+				return true;
+		}catch(exception $e){
+			throw new exception('Проблема при проверке прав доступа.');
+		}
+	}
+	/*
 	* Функция возвращает содержимое страницы
 	*/
 	public static function get_page_content(){
 		try{
 			self::create_batabase_connection();
-			list($component, $method) = self::build_router();
+			list($component, $prefix, $method) = self::build_router();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			self::load_twig();
-			self::get_user_profiles();
-			//self::check_access($controller);
 			if($_SESSION['user'] instanceof data_user){
+				self::get_user_profiles();
+				$access = (self::check_general_access($controller, $component));
+				if($access !== true){
+					$controller = 'controller_error';
+					$view = 'view_error';
+					$prefix = 'private_';
+					$method = 'get_access_denied_message';
+				}
 				$menu = view_menu::build_horizontal_menu();
 			}
-			$c_data = $controller::$method();
-			try{
-				$data = ['component' => $component, 'view' => $view::$method($c_data),
+			$c_data = $controller::{$prefix.$method}();
+			$data = ['component' => $component, 'view' => $view::{$prefix.$method}($c_data),
 						'menu' => $menu];
-			}catch(exception $e){
-				// throw new exception('Проблема на этапе представления информации компонента.');
-			}
 			return self::build_page($data);
 		}catch(exception $e){
 			return $e->getMessage();
@@ -90,27 +107,23 @@ class model_environment{
 	*/
 	private static function get_user_profiles(){
 		try{
-			if($_SESSION['user'] instanceof data_user){
-				// if(!property_exists($controller, 'rules'))
-				// 	throw new exception('Контроллер не имеет настроек.');
-				$sql = "SELECT `profile`, `rules`, `restrictions`, `settings`
-					FROM `profiles`
-					WHERE  `user_id` = :user_id
-					AND `company_id` = :company_id";
-				$stm = db::get_handler()->prepare($sql);
-				$stm->bindValue(':user_id', $_SESSION['user']->id , PDO::PARAM_INT);
-				$stm->bindValue(':company_id',$_SESSION['user']->company_id , PDO::PARAM_INT);
-				if($stm->execute() == false)
-					throw new exception('Ошибка при получении профиля.');
-				if($stm->rowCount() > 0){
-					while($profile = $stm->fetch()){
-						$_SESSION['rules'][$profile['profile']] = $profile['rules'];
-						$_SESSION['restrictions'][$profile['profile']] = $profile['restrictions'];
-						$_SESSION['settings'][$profile['profile']] = $profile['settings'];
-					}
+			$sql = "SELECT `profile`, `rules`, `restrictions`, `settings`
+				FROM `profiles`
+				WHERE  `user_id` = :user_id
+				AND `company_id` = :company_id";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':user_id', $_SESSION['user']->id , PDO::PARAM_INT);
+			$stm->bindValue(':company_id',$_SESSION['user']->company_id , PDO::PARAM_INT);
+			if($stm->execute() == false)
+				throw new exception('Ошибка при получении профиля.');
+			if($stm->rowCount() > 0){
+				while($profile = $stm->fetch()){
+					$_SESSION['rules'][$profile['profile']] = json_decode($profile['rules']);
+					$_SESSION['restrictions'][$profile['profile']] = json_decode($profile['restrictions']);
+					$_SESSION['settings'][$profile['profile']] = json_decode($profile['settings']);
 				}
-				$stm->closeCursor();
 			}
+			$stm->closeCursor();
 		}catch(exception $e){
 			throw new exception('Ошибка при получении профиля.');
 		}

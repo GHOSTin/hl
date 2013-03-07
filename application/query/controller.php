@@ -1,5 +1,6 @@
 <?php
 class controller_query{
+	static $rules = [];
 	public static function private_clear_filters(){
 		$time = getdate();
 		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
