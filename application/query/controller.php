@@ -1,5 +1,6 @@
 <?php
 class controller_query{
+	const name = 'Заявки';
 	static $rules = [];
 	public static function private_clear_filters(){
 		$time = getdate();

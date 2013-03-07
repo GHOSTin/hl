@@ -30,7 +30,7 @@
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             {% for link in menu %}
-                                <li><a tabindex="-1" href="/{{link.href}}/">{{link.text}}</a></li>
+                                <li><a tabindex="-1" href="/{{link.href}}/">{{link.title}}</a></li>
                             {% endfor %}
                         </ul>
                     </li>

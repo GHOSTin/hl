@@ -91,7 +91,7 @@ class model_environment{
 					$prefix = 'private_';
 					$method = 'get_access_denied_message';
 				}
-				$menu = view_menu::build_horizontal_menu();
+				$menu = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu']]);
 			}
 			$c_data = $controller::{$prefix.$method}();
 			$data = ['component' => $component, 'view' => $view::{$prefix.$method}($c_data),
@@ -121,6 +121,11 @@ class model_environment{
 					$_SESSION['rules'][$profile['profile']] = json_decode($profile['rules']);
 					$_SESSION['restrictions'][$profile['profile']] = json_decode($profile['restrictions']);
 					$_SESSION['settings'][$profile['profile']] = json_decode($profile['settings']);
+					if($_SESSION['rules'][$profile['profile']]->generalAccess === true){
+						$c = 'controller_'.$profile['profile'];
+						$links[] = ['href' => $profile['profile'], 'title' => $c::name];
+					}
+					$_SESSION['menu'] = $links;
 				}
 			}
 			$stm->closeCursor();
