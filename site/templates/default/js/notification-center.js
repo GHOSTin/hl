@@ -73,6 +73,14 @@ $(document).on('submit', 'form.message', function (e) {
     return false;
 });
 
+$(document).on('keypress', '.chat.active textarea',function (event) {
+    var keyCode = (event.which ? event.which : event.keyCode);
+
+    if (keyCode === 10 || keyCode == 13 && event.ctrlKey) {
+        $(this).parent().submit();
+    }
+});
+
 
 $('.light').on('click', function(){
     notify_center.json.send({"type":"test", "data":""});
