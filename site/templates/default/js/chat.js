@@ -51,6 +51,7 @@ window.userList = {
         $('ul.feed').scroll(function(e){
             if($(this).scrollTop() == 0){
                 var active_user = list[$('.chat.active').attr('id').split('_')[1]];
+                log(Object.keys(active_user.messages).length);
                 chat.json.send({'type':'load_previous_messages', 'data':{"uid":this.id, "offset": active_user.messages.length}});
             }
         });
