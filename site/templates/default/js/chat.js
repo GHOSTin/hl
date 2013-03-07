@@ -30,6 +30,7 @@ window.userList = {
         $('a[user_id=' + activeTabId + "]").parent().addClass('active');
     },
     renderPanes:function () {
+        var list = this.list;
         for (var i in this.list) {
             var user = this.list[i];
                 var pane = '';
@@ -47,6 +48,13 @@ window.userList = {
 
                 $('#main').append(pane);
         }
+        $('ul.feed').scroll(function(e){
+            if($(this).scrollTop() == 0){
+                var active_user = list[$('.chat.active').attr('id').split('_')[1]];
+                log(Object.keys(active_user.messages).length);
+                chat.json.send({'type':'load_previous_messages', 'data':{"uid":this.id, "offset": active_user.messages.length}});
+            }
+        });
     },
     clearOnLoad:function () {
     }
@@ -165,8 +173,8 @@ var User =
 
 User.prototype.loadPreviousMessages = function (messages) {
     if (typeof messages !== "undefined" && messages !== null) {
-        this.messages = {};
-        $('#user_' + this.id + ' ul.feed').text("");
+//        this.messages = {};
+//        $('#user_' + this.id + ' ul.feed').text("");
         for (var id in messages) {
             var message = messages[id];
             var unread = (!message.unread) ? 0 : 1;
@@ -234,8 +242,9 @@ User.prototype.markAllAsRead = function () {
 };
 
 var Message =
-    function (params/* id, flags, from_id, timestamp, subject, text, attachments*/) {
+    function (params/* id, flags, from_id, timestamp, subject, text, attachments, status*/) {
         this.id = params[0];
+        this.status = params[7] || 'new';
         this.subject = params[4];
         this.text = params[5];
         this.attachments = params[6];
@@ -274,15 +283,25 @@ Message.prototype.render = function () {
     }
 
     var messageString = '';
-    var _date = new Date(this.date)
+    var _date = new Date(this.date);
     var active_date = _date.getFullYear()+'_'+_date.getMonth()+'_'+_date.getDate();
     if(!$("#user_" + this.user.id + " ul.feed time#"+active_date).length > 0)
         messageString += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
-    messageString += '<blockquote class="' + classes.join(' ') + '">';
+    messageString += '<blockquote class="' + classes.join(' ') + '" id="' + this.id + '">';
     messageString += '<p>' + this.text + attachments + '</p>';
     messageString +=  feed.formatDate(this.date) + '</small>';
     messageString += '</blockquote>';
     messageString += '<div class="clearfix"></div>';
 
-    $("#user_" + this.user.id + " ul.feed").append(messageString).scrollTop(9999);
+    if(this.status == 'history')
+        this.prepend(messageString);
+    else this.append(messageString);
+};
+
+Message.prototype.prepend = function(render) {
+    $("#user_" + this.user.id + " ul.feed").prepend(render).scrollTop(20);
+};
+
+Message.prototype.append = function(render) {
+    $("#user_" + this.user.id + " ul.feed").append(render).scrollTop(9999);
 };
