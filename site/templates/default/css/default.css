@@ -43,8 +43,9 @@ footer, #push{
 
 .user-list, .chat-list {
     position: relative;
-    overflow: hidden;
     height: 600px;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .chat-list{
@@ -52,8 +53,9 @@ footer, #push{
 }
 
 .user-list{
-    width: 200px;
+    width: 195px;
     border-right: 1px solid #000;
+    overflow: auto;
 }
 
 form.well{
@@ -81,8 +83,12 @@ form.well{
 
 .feed{
     height: 435px;
-    overflow-y: scroll;
+    overflow: auto;
     margin: 0 0 10px;
+}
+
+.feed ul {
+    margin: 0;
 }
 
 .feed time{
@@ -163,11 +169,6 @@ form.well{
 
 .offline {
     color: #ccc;
-}
-
-.user-list, .chat-list {
-    display: table-cell;
-    vertical-align: top;
 }
 
 .user-list li.active a{

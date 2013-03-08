@@ -36,7 +36,7 @@ window.userList = {
                 var pane = '';
                 pane += '<div class="chat tab-pane fade user" id="user_' + user.id + '">';
                 pane += '<h6>' + user.name + '</h6>';
-                pane += '<ul class="feed"></ul>';
+                pane += '<div class="feed"><ul></ul></div>';
                 pane += '<form class="well message" data-user-id="' + user.id + '">';
                 pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
 //                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
@@ -48,14 +48,6 @@ window.userList = {
 
                 $('#main').append(pane);
         }
-        $('ul.feed').scroll(function(e){
-            if($(this).scrollTop() == 0){
-                var active_user = list[$('.chat.active').attr('id').split('_')[1]];
-                var offset = Object.keys(active_user.messages).length;
-                active_user.first_message_id = $('.chat.active ul.feed blockquote:first').attr('id');
-                chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
-            }
-        });
     },
     clearOnLoad:function () {
     }
@@ -90,16 +82,18 @@ window.feed = {
                 case 2:
                     var user_id = update[0];
                     var user = userList.list[user_id];
-                    user.online = (code == 1) ? 1 : 0;
-                    userList.renderMenu();
+                    if(typeof user !== 'indefined' && user !== null){
+                        user.online = (code === 1) ? 1 : 0;
+                        userList.renderMenu();
 
-                    var date = '<span class="badge">' + this.formatDate() + '</span>';
-                    var label = '';
-                    if (code == 1)
-                        label = '<span class="label label-info">В сети</span>';
-                    else
-                        label = '<span class="label label-important">Отключился</span>';
-                    this.addStatus([date, label].join(' '), user);
+                        var date = '<span class="badge">' + this.formatDate() + '</span>';
+                        var label = '';
+                        if (code == 1)
+                            label = '<span class="label label-info">В сети</span>';
+                        else
+                            label = '<span class="label label-important">Отключился</span>';
+                        this.addStatus([date, label].join(' '), user);
+                    }
                     break;
             }
         }
@@ -158,7 +152,7 @@ window.feed = {
     },
 
     addStatus:function (statusString, user) {
-        $('#user_'+user.id+' ul.feed').append("<li>" + statusString + "</li>").scrollTop(9999);
+        $('#user_'+user.id+' div.feed ul').append("<li>" + statusString + "</li>").scrollTop(9999);
     },
 
     urlify:function(text){
@@ -294,12 +288,12 @@ Message.prototype.render = function () {
     var message_string = '';
     var _date = new Date(this.date);
     var active_date = _date.getFullYear()+'_'+_date.getMonth()+'_'+_date.getDate();
-    if(!$("#user_" + this.user.id + " ul.feed time#"+active_date).length > 0) {
+    if(!$("#user_" + this.user.id + " div.feed time#"+active_date).length > 0) {
         message_string += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
     }
     else {
         if(this.status === 'history'){
-            $("#user_" + this.user.id + " ul.feed time#"+active_date).remove();
+            $("#user_" + this.user.id + " div.feed time#"+active_date).remove();
             message_string += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
         }
     }
@@ -315,9 +309,13 @@ Message.prototype.render = function () {
 };
 
 Message.prototype.prepend = function(render) {
-    $("#user_" + this.user.id + " ul.feed").prepend(render).stop().scrollTo('blockquote#'+this.user.first_message_id);
+    $("#user_" + this.user.id + " div.feed ul").prepend(render);
+    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
+    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo",'blockquote#'+this.user.first_message_id);
 };
 
 Message.prototype.append = function(render) {
-    $("#user_" + this.user.id + " ul.feed").append(render).scrollTop(9999);
+    $("#user_" + this.user.id + " div.feed ul").append(render);
+    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
+    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo","bottom");
 };

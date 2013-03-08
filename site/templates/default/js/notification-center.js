@@ -18,10 +18,43 @@ notify_center.on('connect', function(){
     notify_center.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
     clearInterval(intervalID);
 });
-chat.on('connect', function(){
-    chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
-    clearInterval(intervalID);
-});
+
+if($('.current_user').attr('user_id').length){
+    $.get('/profile/get_notification_center_content',{
+    },function(r){
+        create_notification_center($('#nt-center').parent(), r);
+        var users = [];
+        $('.users li').each(function(){
+            users.push({"id": $(this).attr('user_id'), "name": $(this).text()});
+        });
+        userList.load(users);
+        $('.user-list').mCustomScrollbar({
+            scrollButtons:{
+                enable: true
+            },
+            theme: "dark-thick",
+            updateOnContentResize:true,
+            scrollInertia: 0
+        });
+        $('.feed').mCustomScrollbar({
+            scrollButtons:{
+                enable: true
+            },
+            theme: "dark-thick",
+            updateOnContentResize:true,
+            scrollInertia: 0,
+            callbacks:{
+                onTotalScrollBack: function(){
+                    var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+                    var offset = Object.keys(active_user.messages).length;
+                    active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
+                    chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
+                }
+            }
+        });
+        chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
+    });
+}
 
 notify_center.on('message', function(event){
     var message = event.data;
@@ -45,6 +78,7 @@ chat.on('message', function (event) {
             userList.list[message.data.uid].loadPreviousMessages(message.data.messages, message.data.status || 'new');
             break;
         case 'updates':
+            log(message);
             feed.process(message.data);
             break;
         default:
@@ -54,10 +88,11 @@ chat.on('message', function (event) {
 });
 
 $(document).on('click', '.users li a', function () {
-    $('#main').show();
-
+    var customScrollbar=$('.chat.active').find(".mCSB_scrollTools");
+    customScrollbar.css({"opacity":0});
+    $('.chat.active').mCustomScrollbar("update");
+    customScrollbar.animate({opacity:1},"slow");
     var user = userList.list[$(this).attr("user_id")];
-
     if (!user.previousMessagesLoaded) {
         user.loadPreviousMessages();
     }
@@ -92,27 +127,17 @@ $('.light').on('click', function(){
     notify_center.json.send({"type":"test", "data":""});
 });
 
-$('#nt-center').on('click', function(){
-    var self = $(this);
-    $.get('/profile/get_notification_center_content',{
-        },function(r){
-            show_notification_center(self.parent(), r);
-            baron($('.user-list'), {
-                scroller: '.scroller',
-                container: '.scroller_conteiner',
-                bar: '.scroller__bar',
-                barOnCls: 'scroller__bar_state_on'
-            });
-            var users = [];
-            $('.users li').each(function(){
-                users.push({"id": $(this).attr('user_id'), "name": $(this).text()})
-            });
-            userList.load(users);
-            $('.notification-center-icon').removeClass('icon-white');
-        });
+$('#nt-center').on('click', function(e){
+    e.preventDefault();
+    $('#_hidden_notification_center').fadeToggle("fast",function(){
+        var customScrollbar=$(".user-list").find(".mCSB_scrollTools");
+        customScrollbar.css({"opacity":0});
+        $(".user-list").mCustomScrollbar("update");
+        customScrollbar.animate({opacity:1},"slow");
+    });
+    $('.notification-center-icon').removeClass('icon-white');
 });
-function show_notification_center(selector, r){
+function create_notification_center(selector, r){
     $('#_hidden_notification_center').remove();
     selector.append('<div id="_hidden_notification_center" style="display:none">' + r + '</div>');
-    $('#_hidden_notification_center').show();
 }

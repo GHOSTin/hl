@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="/templates/default/css/bootstrap.min.css" >
     <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css" >
     <link rel="stylesheet" href="/templates/default/css/default.css" >
+    <link rel="stylesheet" href="/templates/default/css/libs.css" >
 	<link rel="stylesheet" href="/?css=component.css&p={{component}}" >
 </head>
 <body>
@@ -37,10 +38,9 @@
     <script src="/templates/default/js/jcanvas.min.js"></script>
     <script src="/templates/default/js/ajaxupload.js"></script>
     <script src="/templates/default/js/socket.io.js"></script>
-    <script src="/templates/default/js/jquery.scrollTo.min.js"></script>
+    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="/templates/default/js/notification-center.js"></script>
     <script src="/templates/default/js/default.js"></script>
-    <script src="/templates/default/js/baron.js"></script>
     <script src="/templates/default/js/chat.js"></script>
     
     {% if component %}
