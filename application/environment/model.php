@@ -91,7 +91,8 @@ class model_environment{
 					$prefix = 'private_';
 					$method = 'get_access_denied_message';
 				}
-				$menu = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu']]);
+				model_menu::get_hot_menu($component, $controller);
+				$menu = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
 			}
 			$c_data = $controller::{$prefix.$method}();
 			$data = ['component' => $component, 'view' => $view::{$prefix.$method}($c_data),

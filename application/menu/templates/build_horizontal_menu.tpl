@@ -34,7 +34,11 @@
                             {% endfor %}
                         </ul>
                     </li>
-                    <li><a href="/task/">Задачи</a></li>
+                    {% if hot_menu|length >0 %}
+                        {% for link in hot_menu %}
+                            <li><a href="/{{link.href}}/">{{link.title}}</a></li>
+                        {% endfor %}
+                    {% endif %}
                 </ul>
             </div>
             <!-- end menu -->
