@@ -35,8 +35,8 @@
                         </ul>
                     </li>
                     {% if hot_menu|length >0 %}
-                        {% for link in hot_menu %}
-                            <li><a href="/{{link.href}}/">{{link.title}}</a></li>
+                        {% for href, title in hot_menu %}
+                            <li><a href="/{{href}}/">{{title}}</a></li>
                         {% endfor %}
                     {% endif %}
                 </ul>

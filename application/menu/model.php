@@ -1,11 +1,23 @@
 <?php
 class model_menu{
-	public static function get_hot_menu($component, $controller){
-		$hot_menu[] = ['href' => $component, 'title' => $controller::name];
-		if($_SESSION['hot_menu'][0])
-			$hot_menu[] = $_SESSION['hot_menu'][0];
-		if($_SESSION['hot_menu'][1])
-			$hot_menu[] = $_SESSION['hot_menu'][1];
-		$_SESSION['hot_menu'] = $hot_menu;
+	public static function build_hot_menu($component, $controller){
+		try{
+			if(property_exists($controller, 'name')){
+				$hot_menu = [$component => $controller::$name];
+				$_SESSION['hot_menu'] = (array_merge((array)$_SESSION['hot_menu'], $hot_menu));
+			}
+		}catch(exception $e){
+			throw new exception('Проблема при формировании hot_menu.');
+		}
 	}
+	public static function get_hot_menu($component, $controller){
+		try{
+			if(property_exists($controller, 'name')){
+				$hot_menu = [$component => $controller::$name];
+				$_SESSION['hot_menu'] = (array_merge((array)$_SESSION['hot_menu'], $hot_menu));
+			}
+		}catch(exception $e){
+			throw new exception('Проблема при формировании hot_menu.');
+		}
+	}	
 }

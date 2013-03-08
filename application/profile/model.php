@@ -22,7 +22,7 @@ class model_profile{
 					$_SESSION['settings'][$profile['profile']] = json_decode($profile['settings']);
 					if($_SESSION['rules'][$profile['profile']]->generalAccess === true){
 						$c = 'controller_'.$profile['profile'];
-						$links[] = ['href' => $profile['profile'], 'title' => $c::name];
+						$links[] = ['href' => $profile['profile'], 'title' => $c::$name];
 					}
 					$_SESSION['menu'] = $links;
 				}

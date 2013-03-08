@@ -1,6 +1,6 @@
 <?php
 class controller_task{
-	const name = 'Задачи';
+	static $name = 'Задачи';
 	public static function private_show_default_page(){
 		return true;		
 	}
