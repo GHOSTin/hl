@@ -51,8 +51,9 @@ window.userList = {
         $('ul.feed').scroll(function(e){
             if($(this).scrollTop() == 0){
                 var active_user = list[$('.chat.active').attr('id').split('_')[1]];
-                log(Object.keys(active_user.messages).length);
-                chat.json.send({'type':'load_previous_messages', 'data':{"uid":this.id, "offset": active_user.messages.length}});
+                var offset = Object.keys(active_user.messages).length;
+                active_user.first_message_id = $('.chat.active ul.feed blockquote:first').attr('id');
+                chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
             }
         });
     },
@@ -158,6 +159,13 @@ window.feed = {
 
     addStatus:function (statusString, user) {
         $('#user_'+user.id+' ul.feed').append("<li>" + statusString + "</li>").scrollTop(9999);
+    },
+
+    urlify:function(text){
+        var urlRegex = /(https?:\/\/[^\s]+)/g;
+        return text.replace(urlRegex, function(url) {
+            return '<a href="' + url + '" target="_blank">' + url + '</a>';
+        });
     }
 };
 
@@ -171,7 +179,7 @@ var User =
         this.previousMessagesLoaded = false;
     };
 
-User.prototype.loadPreviousMessages = function (messages) {
+User.prototype.loadPreviousMessages = function (messages, status) {
     if (typeof messages !== "undefined" && messages !== null) {
 //        this.messages = {};
 //        $('#user_' + this.id + ' ul.feed').text("");
@@ -187,7 +195,8 @@ User.prototype.loadPreviousMessages = function (messages) {
                 message.date,
                 null,
                 message.text,
-                message.attachments
+                message.attachments,
+                status
             ];
             new Message(params);
         }
@@ -272,7 +281,7 @@ Message.prototype.read = function () {
 
 Message.prototype.render = function () {
     var classes = ['message'];
-    if (this.outgoing) classes.push('pull-right');
+    (this.outgoing)? classes.push('pull-right'): classes.push('pull-left');
     var attachments = '';
 
     if(typeof this.attachments !== 'undefined' && this.attachments !== '') {
@@ -282,24 +291,31 @@ Message.prototype.render = function () {
         });
     }
 
-    var messageString = '';
+    var message_string = '';
     var _date = new Date(this.date);
     var active_date = _date.getFullYear()+'_'+_date.getMonth()+'_'+_date.getDate();
-    if(!$("#user_" + this.user.id + " ul.feed time#"+active_date).length > 0)
-        messageString += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
-    messageString += '<blockquote class="' + classes.join(' ') + '" id="' + this.id + '">';
-    messageString += '<p>' + this.text + attachments + '</p>';
-    messageString +=  feed.formatDate(this.date) + '</small>';
-    messageString += '</blockquote>';
-    messageString += '<div class="clearfix"></div>';
+    if(!$("#user_" + this.user.id + " ul.feed time#"+active_date).length > 0) {
+        message_string += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
+    }
+    else {
+        if(this.status === 'history'){
+            $("#user_" + this.user.id + " ul.feed time#"+active_date).remove();
+            message_string += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
+        }
+    }
+    message_string += '<blockquote class="' + classes.join(' ') + '" id="' + this.id + '">';
+    message_string += '<p>' + feed.urlify(this.text) + attachments + '</p>';
+    message_string += '<small>' + feed.formatDate(this.date) + '</small>';
+    message_string += '</blockquote>';
+    message_string += '<div class="clearfix"></div>';
 
-    if(this.status == 'history')
-        this.prepend(messageString);
-    else this.append(messageString);
+    if(this.status === 'history')
+        this.prepend(message_string);
+    else this.append(message_string);
 };
 
 Message.prototype.prepend = function(render) {
-    $("#user_" + this.user.id + " ul.feed").prepend(render).scrollTop(20);
+    $("#user_" + this.user.id + " ul.feed").prepend(render).stop().scrollTo('blockquote#'+this.user.first_message_id);
 };
 
 Message.prototype.append = function(render) {

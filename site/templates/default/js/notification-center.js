@@ -9,6 +9,7 @@ var tryReconnect = function(){
      if (notify_center.socket.connected === false &&
          notify_center.socket.connecting === false) {
          notify_center.socket.connect();
+         chat.socket.connect();
      }
 }
 
@@ -17,6 +18,11 @@ notify_center.on('connect', function(){
     notify_center.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
     clearInterval(intervalID);
 });
+chat.on('connect', function(){
+    chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
+    clearInterval(intervalID);
+});
+
 notify_center.on('message', function(event){
     var message = event.data;
     switch (message.type) {
@@ -35,12 +41,8 @@ notify_center.on('disconnect', function(){
 chat.on('message', function (event) {
     var message = event.data;
     switch (message.type) {
-//        case 'get_user_list':
-//            userList.load(message.data);
-//            break;
         case 'previous_messages':
-            log(message.data.messages);
-            userList.list[message.data.uid].loadPreviousMessages(message.data.messages);
+            userList.list[message.data.uid].loadPreviousMessages(message.data.messages, message.data.status || 'new');
             break;
         case 'updates':
             feed.process(message.data);
@@ -77,10 +79,19 @@ $(document).on('submit', 'form.message', function (e) {
     return false;
 });
 
+$(document).on('keypress', '.chat.active textarea',function (event) {
+    var keyCode = (event.which ? event.which : event.keyCode);
+
+    if (keyCode === 10 || keyCode == 13 && event.ctrlKey) {
+        $(this).parent().submit();
+    }
+});
+
 
 $('.light').on('click', function(){
     notify_center.json.send({"type":"test", "data":""});
 });
+
 $('#nt-center').on('click', function(){
     var self = $(this);
     $.get('/profile/get_notification_center_content',{
@@ -97,8 +108,6 @@ $('#nt-center').on('click', function(){
                 users.push({"id": $(this).attr('user_id'), "name": $(this).text()})
             });
             userList.load(users);
-
-            chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
             $('.notification-center-icon').removeClass('icon-white');
         });
 });

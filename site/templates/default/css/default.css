@@ -47,6 +47,10 @@ footer, #push{
     height: 600px;
 }
 
+.chat-list{
+    width: 400px;
+}
+
 .user-list{
     width: 200px;
     border-right: 1px solid #000;
@@ -57,25 +61,73 @@ form.well{
 }
 
 .chat {
-    max-height: 580px;
+    max-height: 600px;
+    padding: 0 10px;
 }
 
 .chat h6 {
     text-align: center;
     background: #dedede;
-    margin-left: 10px;
     border-radius: 7px 7px 0 0;
+    margin: 0;
+}
+
+
+
+.chat textarea{
+    width: 336px;
+    height: 40px;
 }
 
 .feed{
-    height: 425px;
+    height: 435px;
     overflow-y: scroll;
+    margin: 0 0 10px;
+}
+
+.feed time{
+    text-align: center;
+    font-weight: bold;
+    display: block;
+}
+
+.feed blockquote{
+    position: relative;
+    padding: 0;
+}
+
+.feed blockquote.pull-left{
+    padding-right: 35px;
+}
+
+.feed blockquote.pull-right{
+    padding-left: 35px;
 }
 
 .feed blockquote p {
     word-wrap: break-word;
-    width: 300px;
+    max-width: 300px;
 }
+
+.feed blockquote small {
+    display: inline-block;
+    margin-top: -20px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    font-size: 70%;
+}
+
+.feed blockquote.pull-right small{
+    right: auto;
+    left: 0;
+}
+
+.feed blockquote.pull-right small:after,
+.feed blockquote small:before {
+    content: '';
+}
+
 
 .scroller {
     height: 100%;
