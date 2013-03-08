@@ -76,6 +76,7 @@ class controller_query{
 		$queries = model_query::get_queries([]);
 		$args['queries'] = $queries;
 		$args['filters'] = $_SESSION['filters']['query'];
+		$args['rules'] = $_SESSION['rules']['query'];
 		return $args;
 	}
 }
