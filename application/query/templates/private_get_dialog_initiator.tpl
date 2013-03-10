@@ -1,5 +1,5 @@
 <script>
-	function _content(){
+	function _hidden_content(){
 		$('.modal-body').html(get_hidden_content());
 		$('.dialog-select-street').change(function(){
 			$.get('get_houses',{
@@ -14,7 +14,7 @@
 					initiator: 'house',
 					id: $('.dialog-select-house :selected').val()
 				},function(r){
-					show_content(r);
+					init_content(r);
 				});
 			});	
 		{% else %}
@@ -30,12 +30,13 @@
 					initiator: 'number',
 					id: $('.dialog-select-number :selected').val()
 				},function(r){
-					show_content(r);
+					init_content(r);
 				});
 			});	
 		{% endif %}
 	}
 </script>
+<div class="_hidden_content_html">
 {% if streets != false %}
 	<select style="display:block" class="dialog-select-street">
 		{% for street in streets %}
@@ -51,3 +52,4 @@
 		</select>
 	{% endif %}
 {% endif %}
+</div>

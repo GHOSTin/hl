@@ -4,7 +4,8 @@ class view_query{
 		return load_template('query.private_get_day', $args);
 	}	
 	public static function private_get_dialog_create_query(){
-		return load_template('query.private_get_dialog_create_query', []);
+		$args = ['_hidden_content' => new dialog()];
+		return load_template('query.private_get_dialog_create_query', $args);
 	}		
 	public static function private_get_dialog_initiator($args){
 		return load_template('query.private_get_dialog_initiator', $args);
