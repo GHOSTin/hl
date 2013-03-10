@@ -12,7 +12,6 @@ require_once 'environment.php';
 require_once 'timestamp.php';
 require_once 'html_page.php';
 require_once 'data_object.php';
-require_once 'dialog.php';
 # database
 require_once 'xdb_mysql.class.php';
 # init
