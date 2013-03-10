@@ -8,7 +8,7 @@
 				init_content(r);
 			});
 	});
-{% endblock %}
+{% endblock js %}
 {% block html %}
 <div class="modal">
     <div class="modal-header">
@@ -21,4 +21,4 @@
 		<div class="btn close_dialog">Отмена</div>
 	</div>	  
 </div>
-{% endblock %}
+{% endblock html %}
