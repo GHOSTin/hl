@@ -17,11 +17,7 @@
         {% endautoescape %}
         </header>
     	<div class="container-fluid">
-            <section class="main">
-    		{% autoescape false %}
-                {{view}}
-            {% endautoescape %}
-            </section>
+            <section class="main">{% block component %}{% endblock component %}</section>
             <section id="push"></section>
         </div>
     </div>

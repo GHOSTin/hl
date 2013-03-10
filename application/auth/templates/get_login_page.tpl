@@ -1,3 +1,5 @@
+{% extends "default.tpl" %}
+{% block component %}
 <div class="row-fluid">
     <div class="span6">
         <form action="/?p=auth.login" method="post" class="form-horizontal">
@@ -22,3 +24,4 @@
         </form>
     </div>
 </div>
+{% endblock component %}
