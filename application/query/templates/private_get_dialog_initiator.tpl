@@ -14,7 +14,7 @@
 					initiator: 'house',
 					id: $('.dialog-select-house :selected').val()
 				},function(r){
-					$('.modal-body').html(r);
+					show_content(r);
 				});
 			});	
 		{% else %}
@@ -30,7 +30,7 @@
 					initiator: 'number',
 					id: $('.dialog-select-number :selected').val()
 				},function(r){
-					$('.modal-body').html(r);
+					show_content(r);
 				});
 			});	
 		{% endif %}

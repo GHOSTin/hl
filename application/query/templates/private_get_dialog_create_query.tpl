@@ -1,6 +1,6 @@
 <script>
 	function _content(){
-		show_dialog($('.ajx').html());
+		show_dialog($('._hidden_content_html').html());
 		$('.get_dialog_initiator').click(function(){
 			$.get('get_dialog_initiator',{
 				value: $(this).attr('param')
@@ -10,7 +10,7 @@
 		});
 	}
 </script>
-<div class="ajx">
+<div class="_hidden_content_html">
 	<div class="modal">
 	    <div class="modal-header">
 	        <h3>Форма создания заявки</h3>

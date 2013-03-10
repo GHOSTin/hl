@@ -5,10 +5,10 @@ function show_dialog(result){
 	$('.dialog').modal({keyboard: false});
 }
 function show_content(result){
-    $('#_hidden_content').remove();
-    $('body').append('<div id="_hidden_content" >' + result + '</div>');
+    $('._hidden_content').remove();
+    $('body').append('<div class="_hidden_content" style="display:none">' + result + '</div>');
     _content();
-    $('#_hidden_content').remove();
+    $('._hidden_content').remove();
 }
 function get_hidden_content(){
     return $('#_hidden_content').html();
