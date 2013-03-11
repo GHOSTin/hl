@@ -15,48 +15,12 @@ var tryReconnect = function(){
 
 var intervalID = setInterval(tryReconnect, 60000);
 notify_center.on('connect', function(){
-    notify_center.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
+    if($('.current_user').length){
+        notify_center.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
+        chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
+    }
     clearInterval(intervalID);
 });
-
-if($('.current_user').attr('user_id').length){
-    $.get('/profile/get_notification_center_content',{
-    },function(r){
-        create_notification_center($('#nt-center').parent(), r);
-        var users = [];
-        $('.users li').each(function(){
-            users.push({"id": $(this).attr('user_id'), "name": $(this).text()});
-        });
-        userList.load(users);
-        $('.user-list').mCustomScrollbar({
-            scrollButtons:{
-                enable: true
-            },
-            theme: "dark-thick",
-            updateOnContentResize:true,
-            autoHideScrollbar: true,
-            scrollInertia: 0
-        });
-        $('.feed').mCustomScrollbar({
-            scrollButtons:{
-                enable: true
-            },
-            theme: "dark-thick",
-            updateOnContentResize:true,
-            autoHideScrollbar: true,
-            scrollInertia: 0,
-            callbacks:{
-                onTotalScrollBack: function(){
-                    var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
-                    var offset = Object.keys(active_user.messages).length;
-                    active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
-                    chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
-                }
-            }
-        });
-        chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
-    });
-}
 
 notify_center.on('message', function(event){
     var message = event.data;
@@ -80,7 +44,7 @@ chat.on('message', function (event) {
             userList.list[message.data.uid].loadPreviousMessages(message.data.messages, message.data.status || 'new');
             break;
         case 'updates':
-            log(message);
+            log(message.data);
             feed.process(message.data);
             break;
         default:
@@ -131,15 +95,56 @@ $('.light').on('click', function(){
 
 $('#nt-center').on('click', function(e){
     e.preventDefault();
-    $('#_hidden_notification_center').fadeToggle("fast",function(){
-        var customScrollbar=$(".user-list").find(".mCSB_scrollTools");
-        customScrollbar.css({"opacity":0});
-        $(".user-list").mCustomScrollbar("update");
-        customScrollbar.animate({opacity:1},"slow");
-    });
+    if($('#_hidden_notification_center').length){
+        $('#_hidden_notification_center').fadeToggle("fast",function(){
+            var customScrollbar=$(".user-list").find(".mCSB_scrollTools");
+            customScrollbar.css({"opacity":0});
+            $(".user-list").mCustomScrollbar("update");
+            customScrollbar.animate({opacity:1},"slow");
+        });
+    } else {
+        chat.json.send({'type':'get_users_list'});
+        $.get('/profile/get_notification_center_content',{
+        },function(r){
+            create_notification_center($('#nt-center').parent(), r);
+            var users = [];
+            $('.users li').each(function(){
+                users.push({"id": $(this).attr('user_id'), "name": $(this).text()});
+            });
+            userList.load(users);
+            $('.user-list').mCustomScrollbar({
+                scrollButtons:{
+                    enable: true
+                },
+                theme: "dark-thick",
+                updateOnContentResize:true,
+                autoHideScrollbar: true,
+                scrollInertia: 0
+            });
+            $('.feed').mCustomScrollbar({
+                scrollButtons:{
+                    enable: true
+                },
+                theme: "dark-thick",
+                updateOnContentResize:true,
+                autoHideScrollbar: true,
+                scrollInertia: 0,
+                callbacks:{
+                    onTotalScrollBack: function(){
+                        var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+                        var offset = Object.keys(active_user.messages).length;
+                        active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
+                        chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
+                    }
+                }
+            });
+        });
+        chat.json.send({'type':'get_unread_messages'});
+        userList.renderMenu();
+    }
     $('.notification-center-icon').removeClass('icon-white');
 });
 function create_notification_center(selector, r){
     $('#_hidden_notification_center').remove();
-    selector.append('<div id="_hidden_notification_center" style="display:none">' + r + '</div>');
+    selector.append('<div id="_hidden_notification_center">' + r + '</div>');
 }

@@ -11,7 +11,7 @@ window.userList = {
         this.renderPanes();
     },
     renderMenu:function () {
-        var activeTabId = $('li.active a').attr('user_id');
+        var activeTabId = $('.users li.active a').attr('user_id');
         $('.users li').remove();
         var online = ''; //список онлайн
         var offline = ''; //список оффлайн
@@ -58,7 +58,6 @@ window.feed = {
         for (var id in updates) {
             var update = updates[id];
             var code = update.shift();
-            log(code);
             switch (code) {
                 case 3:
                     var message_id = update.shift();
@@ -85,14 +84,6 @@ window.feed = {
                     if(typeof user !== 'undefined' && user !== null){
                         user.online = (code === 1) ? 1 : 0;
                         userList.renderMenu();
-
-                        var date = '<span class="badge">' + this.formatDate() + '</span>';
-                        var label = '';
-                        if (code == 1)
-                            label = '<span class="label label-info">В сети</span>';
-                        else
-                            label = '<span class="label label-important">Отключился</span>';
-                        this.addStatus([date, label].join(' '), user);
                     }
                     break;
             }
