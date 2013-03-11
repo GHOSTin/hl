@@ -1,14 +1,5 @@
 <?php
 class model_environment{
-	public static function build_page($data){
-		try{
-			if(empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-				return load_template('default_page.main_page', $data);
-				return $data['view'];
-		}catch(exception $e){
-			throw new exception('Ошибка при строительстве страницы.');
-		}
-	}
 	/*
 	* Строит роутер
 	*/
@@ -67,6 +58,7 @@ class model_environment{
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			self::load_twig();
+			$c_data['anonymous'] = true;
 			if($_SESSION['user'] instanceof data_user){
 				model_profile::get_user_profiles();
 				$access = (model_profile::check_general_access($controller, $component));
@@ -81,11 +73,12 @@ class model_environment{
 				// var_dump($_SESSION['hot_menu']);
 				// exit();
 				$menu = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
+				$c_data['anonymous'] = false;
 			}
-			$c_data = $controller::{$prefix.$method}();
-			$data = ['component' => $component, 'view' => $view::{$prefix.$method}($c_data),
-						'menu' => $menu];
-			return self::build_page($data);
+			$c_data['component'] = $controller::{$prefix.$method}();
+			$c_data['menu'] = $menu;
+			$c_data['component'] = $component;
+			return $view::{$prefix.$method}($c_data);
 		}catch(exception $e){
 			return $e->getMessage();
 		}
