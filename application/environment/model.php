@@ -58,6 +58,9 @@ class model_environment{
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			self::load_twig();
+			if($method === 'show_default_page'){
+				$c_data['componentName'] = $component;
+			}
 			$c_data['anonymous'] = true;
 			if($_SESSION['user'] instanceof data_user){
 				model_profile::get_user_profiles();
@@ -72,11 +75,10 @@ class model_environment{
 				// $hot_menu = model_menu::get_hot_menu();
 				// var_dump($_SESSION['hot_menu']);
 				// exit();
-				$menu = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
+				$c_data['menu'] = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
 				$c_data['anonymous'] = false;
 			}
 			$c_data['component'] = $controller::{$prefix.$method}();
-			$c_data['menu'] = $menu;
 			return $view::{$prefix.$method}($c_data);
 		}catch(exception $e){
 			return $e->getMessage();

@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     {% if anonymous == false %}
 	    <link rel="stylesheet" href="/templates/default/css/libs.css" >
-		<link rel="stylesheet" href="/?css=component.css&p={{component}}" >
+		<link rel="stylesheet" href="/?css=component.css&p={{componentName}}" >
 	{% endif %}
 </head>
 <body>
@@ -41,6 +41,6 @@
 	    <script src="/templates/default/js/notification-center.js"></script>
 	    <script src="/templates/default/js/default.js"></script>
 	    <script src="/templates/default/js/chat.js"></script>
-	    <script src="/?js=component.js&p={{component}}"></script>
+	    <script src="/?js=component.js&p={{componentName}}"></script>
     {% endif %}
 </html>
