@@ -34,6 +34,7 @@ if($('.current_user').attr('user_id').length){
             },
             theme: "dark-thick",
             updateOnContentResize:true,
+            autoHideScrollbar: true,
             scrollInertia: 0
         });
         $('.feed').mCustomScrollbar({
@@ -42,6 +43,7 @@ if($('.current_user').attr('user_id').length){
             },
             theme: "dark-thick",
             updateOnContentResize:true,
+            autoHideScrollbar: true,
             scrollInertia: 0,
             callbacks:{
                 onTotalScrollBack: function(){
