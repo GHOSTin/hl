@@ -44,7 +44,6 @@ chat.on('message', function (event) {
             userList.list[message.data.uid].loadPreviousMessages(message.data.messages, message.data.status || 'new');
             break;
         case 'updates':
-            log(message.data);
             feed.process(message.data);
             break;
         default:
@@ -103,7 +102,6 @@ $('#nt-center').on('click', function(e){
             customScrollbar.animate({opacity:1},"slow");
         });
     } else {
-        chat.json.send({'type':'get_users_list'});
         $.get('/profile/get_notification_center_content',{
         },function(r){
             create_notification_center($('#nt-center').parent(), r);
@@ -112,6 +110,8 @@ $('#nt-center').on('click', function(e){
                 users.push({"id": $(this).attr('user_id'), "name": $(this).text()});
             });
             userList.load(users);
+            chat.json.send({'type':'get_users_list'});
+            chat.json.send({'type':'get_unread_messages'});
             $('.user-list').mCustomScrollbar({
                 scrollButtons:{
                     enable: true
@@ -139,8 +139,6 @@ $('#nt-center').on('click', function(e){
                 }
             });
         });
-        chat.json.send({'type':'get_unread_messages'});
-        userList.renderMenu();
     }
     $('.notification-center-icon').removeClass('icon-white');
 });
