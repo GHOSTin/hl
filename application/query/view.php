@@ -38,9 +38,9 @@ class view_query{
 		return load_template('query.private_get_search', []);
 	}	
 	public static function private_get_query_content($args){
-		return load_template('query.private_get_query_content', ['query' => $args]);
+		return load_template('query.private_get_query_content', $args);
 	}	
 	public static function private_get_query_title($args){
-		return load_template('query.private_get_query_title', ['query' => $args]);
+		return load_template('query.private_get_query_title', $args);
 	}		
 }

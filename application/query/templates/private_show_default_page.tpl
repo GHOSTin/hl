@@ -100,8 +100,8 @@
         </nav>
         <!-- end timeline, begin queries -->
         <div class="queries">
-            {% if queries != false %}
-            	{% for query in queries %}
+            {% if component.queries != false %}
+            	{% for query in component.queries %}
             		<div class="query get_query_content
             		{% if query.status in ['working','open', 'close', 'reopen']%}
             			query_status_{{query.status}}

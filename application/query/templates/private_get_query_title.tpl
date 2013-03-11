@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
 {% if query != false %}
 	{% block js %}
-			$('.query[query_id={{query.id}}]').html(get_temp_html())
+			$('.query[query_id={{component.query.id}}]').html(get_hidden_content())
 			.addClass('get_query_content');
 	{% endblock js %}
 	{% block html %}
@@ -11,9 +11,9 @@
 		{% else %}
 			<img src="/templates/default/images/icons/home-medium.png" />
 		{% endif %}
-		<b>№{{query.number}}</b> {{query.time_open|date("H:i d.m.y")}}
-		{{query.street_name}}, дом №{{query.house_number}}
+		<b>№{{component.query.number}}</b> {{component.query.time_open|date("H:i d.m.y")}}
+		{{component.query.street_name}}, дом №{{component.query.house_number}}
 	</div>
-	{{query.description}}
+	{{component.query.description}}
 	{% endblock html %}
 {% endif %}

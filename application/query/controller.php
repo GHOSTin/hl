@@ -54,10 +54,10 @@ class controller_query{
 	}		
 	public static function private_get_query_content(){
 		$args = ['query_id' => $_GET['id']];
-		return model_query::get_query($args);
+		return ['query' => model_query::get_query($args)];
 	}
 	public static function private_get_query_title(){
-		return model_query::get_query(['query_id' => $_GET['id']]);
+		return ['query' => model_query::get_query(['query_id' => $_GET['id']])];
 	}
 	public static function private_get_search(){
 		return true;

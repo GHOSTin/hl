@@ -3,7 +3,7 @@ $(document).ready(function(){
 		$.get('get_query_content',{
 			 id: $(this).attr('query_id')
 			},function(r){
-				show_content(r);
+				init_content(r);
 			});
 	});
 	$('body').on('click', '.get_query_title', function(){
