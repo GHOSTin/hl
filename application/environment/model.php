@@ -72,9 +72,6 @@ class model_environment{
 					$method = 'get_access_denied_message';
 				}
 				model_menu::build_hot_menu($component, $controller);
-				// $hot_menu = model_menu::get_hot_menu();
-				// var_dump($_SESSION['hot_menu']);
-				// exit();
 				$c_data['menu'] = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
 				$c_data['anonymous'] = false;
 			}
