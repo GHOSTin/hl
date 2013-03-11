@@ -22,7 +22,16 @@ class model_profile{
 					$_SESSION['settings'][$profile['profile']] = json_decode($profile['settings']);
 					if($_SESSION['rules'][$profile['profile']]->generalAccess === true){
 						$c = 'controller_'.$profile['profile'];
-						$links[] = ['href' => $profile['profile'], 'title' => $c::$name];
+						if($profile['profile'] === 'import'
+							OR $profile['profile'] === 'materialgroup'
+							OR $profile['profile'] === 'meter'
+							OR $profile['profile'] === 'phrase'
+							OR $profile['profile'] === 'system'
+							OR $profile['profile'] === 'workgroup'
+							){
+						}else{
+							$links[] = ['href' => $profile['profile'], 'title' => $c::$name];
+						}
 					}
 					$_SESSION['menu'] = $links;
 				}
