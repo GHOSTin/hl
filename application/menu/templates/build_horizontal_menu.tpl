@@ -3,7 +3,6 @@
         <div class="container-fluid">
             <!-- begin user -->
 			<ul class="nav pull-right">
-                <li><button class="light">...</button></li>
                 <li id="nt-center">
                     <a href="#">
                         <i class="icon-envelope notification-center-icon"></i>

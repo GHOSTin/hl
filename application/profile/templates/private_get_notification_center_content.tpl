@@ -1,7 +1,7 @@
-{% if ans != false %}
+{% if component.users != false %}
 <div class='user-list'>
     <ul class='users'>
-        {% for user in ans %}
+        {% for user in component.users %}
             <li user_id="{{user.id}}">{{user.lastname}}</li>
         {% endfor %}
     </ul>
