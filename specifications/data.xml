@@ -9,7 +9,7 @@
 			<queries>
 				<query type="house" />
 				<query type="number" />
-			<queries>
+			</queries>
 		</company>
 		<company name="Наш город" status="true" />
 	</companies>
