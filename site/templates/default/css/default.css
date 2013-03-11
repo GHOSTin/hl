@@ -38,7 +38,9 @@ footer, #push{
 	width:600px;
 	height:600px;
 	background:white;
-	border: 1px solid black;
+	border: 1px solid rgba(0,0,0,.2);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .user-list, .chat-list {
@@ -54,7 +56,7 @@ footer, #push{
 
 .user-list{
     width: 195px;
-    border-right: 1px solid #000;
+    border-right: 1px solid rgba(0,0,0,.1);
     overflow: auto;
 }
 
@@ -70,7 +72,7 @@ form.well{
 .chat h6 {
     text-align: center;
     background: #dedede;
-    border-radius: 7px 7px 0 0;
+    border-radius: 4px 4px 0 0;
     margin: 0;
 }
 

@@ -58,7 +58,7 @@ window.feed = {
         for (var id in updates) {
             var update = updates[id];
             var code = update.shift();
-
+            log(code);
             switch (code) {
                 case 3:
                     var message_id = update.shift();
@@ -82,7 +82,7 @@ window.feed = {
                 case 2:
                     var user_id = update[0];
                     var user = userList.list[user_id];
-                    if(typeof user !== 'indefined' && user !== null){
+                    if(typeof user !== 'undefined' && user !== null){
                         user.online = (code === 1) ? 1 : 0;
                         userList.renderMenu();
 
