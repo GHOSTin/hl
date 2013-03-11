@@ -77,7 +77,6 @@ class model_environment{
 			}
 			$c_data['component'] = $controller::{$prefix.$method}();
 			$c_data['menu'] = $menu;
-			$c_data['component'] = $component;
 			return $view::{$prefix.$method}($c_data);
 		}catch(exception $e){
 			return $e->getMessage();
