@@ -26,7 +26,9 @@ notify_center.on('message', function(event){
     var message = event.data;
     switch (message.type) {
         case 'toggle_semaphore':
-               $('.notification-center-icon').addClass('icon-white');
+            if(!$('#_hidden_notification_center').length || $('#_hidden_notification_center').is(':hidden')){
+                $('.notification-center-icon').addClass('icon-white');
+            }
             break;
         default:
             console.log('received unknown message:');
