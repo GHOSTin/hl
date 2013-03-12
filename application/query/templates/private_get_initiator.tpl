@@ -1,30 +1,38 @@
 {% extends "ajax.tpl" %}
+{% block js %}
+	show_dialog(get_hidden_content());
+{% endblock js %}
 {% block html %}
-	{% if initiator != false %}
-		{% if initiator == 'number' %}
-			{%if number != false %}
+<div class="modal">
+    <div class="modal-header">
+        <h3>Форма создания заявки</h3>
+    </div>
+    <div class="modal-body">
+	{% if component.initiator != false %}
+		{% if component.initiator == 'number' %}
+			{%if component.number != false %}
 				<ul>
-					<li>л/с №{{number.number}}</li>
-					<li>Владелец: {{number.fio}}</li>
-					<li>Телефон: {{number.telephone}}</li>
-					<li>Сотовый: {{number.cellphone}}</li>
-					<li>Контактное лицо: {{number.contact_fio}}</li>
-					<li>Телефон контактного лица: {{number.contact_telephone}}</li>
-					<li>Сотовые телефон контактного лица: {{number.contact_cellphone}}</li>
+					<li>л/с №{{component.number.number}}</li>
+					<li>Владелец: {{component.number.fio}}</li>
+					<li>Телефон: {{component.number.telephone}}</li>
+					<li>Сотовый: {{component.number.cellphone}}</li>
+					<li>Контактное лицо: {{component.number.contact_fio}}</li>
+					<li>Телефон контактного лица: {{component.number.contact_telephone}}</li>
+					<li>Сотовые телефон контактного лица: {{component.number.contact_cellphone}}</li>
 				</ul>
 			{% endif %}
-		{% elseif initiator == 'house' %}
+		{% elseif component.initiator == 'house' %}
 			{% if house != false %}
 				<div>
-					{{house.street_name}}, дом №{{house.number}}
+					{{component.house.street_name}}, дом №{{component.house.number}}
 				</div>
 			{% endif %}
 		{% endif %}
 		<div>
 			<div>Выберите тип работ по заявке </div>
 			<select class="dialog-select-worktypeID">
-				{% if query_work_types != false %}
-					{% for query_work_type in query_work_types %}
+				{% if component.query_work_types != false %}
+					{% for query_work_type in component.query_work_types %}
 						<option value="{{query_work_type.id}}">{{query_work_type.name}}</option>
 					{% endfor %}
 				{% endif %}
@@ -61,4 +69,10 @@
 			<textarea class="dialog-trouble-textarea" style="width:500px; height:100px;"></textarea>
 		</div>
 	{% endif %}
+	</div>
+	<div class="modal-footer">
+		<div class="btn create_query">Создать</div>
+		<div class="btn close_dialog">Отмена</div>
+	</div>
+</div>
 {% endblock html %}
