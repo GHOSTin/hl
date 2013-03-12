@@ -2,8 +2,8 @@
 {% if component.query != false %}
 	{% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'}%}
 	{% block js %}
-			$('.query[query_id = {{component.query.id}}]').html(get_hidden_content())
-			.removeClass('get_query_content');
+		$('.query[query_id = {{component.query.id}}]').html(get_hidden_content())
+		.removeClass('get_query_content');
 	{% endblock js %}
 	{% block html %}
 	<div>
