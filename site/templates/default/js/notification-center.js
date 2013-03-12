@@ -122,10 +122,12 @@ $('#nt-center').on('click', function(e){
                 scrollInertia: 0,
                 callbacks:{
                     onTotalScrollBack: function(){
-                        var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
-                        var offset = Object.keys(active_user.messages).length;
-                        active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
-                        chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
+                        if($('.chat.active').length){
+                            var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+                            var offset = Object.keys(active_user.messages).length;
+                            active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
+                            chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
+                        }
                     }
                 }
             });
