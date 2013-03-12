@@ -4,7 +4,6 @@ window.userList = {
         for (var id in list) {
             var user_attributes = list[id];
             this.list[user_attributes.id] = new User(user_attributes);
-//            console.log(this.list[user_attributes.id]);
         }
         this.clearOnLoad();
         this.renderMenu();
@@ -159,15 +158,13 @@ var User =
         this.id = data.id;
         this.name = data.name;
         this.online = data.online;
-        this.unread = data.unread;
+        this.unread = data.unread || 0;
         this.messages = {};
         this.previousMessagesLoaded = false;
     };
 
 User.prototype.loadPreviousMessages = function (messages, status) {
     if (typeof messages !== "undefined" && messages !== null) {
-//        this.messages = {};
-//        $('#user_' + this.id + ' ul.feed').text("");
         for (var id in messages) {
             var message = messages[id];
             var unread = (!message.unread) ? 0 : 1;
