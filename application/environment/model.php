@@ -76,6 +76,7 @@ class model_environment{
 				$c_data['anonymous'] = false;
 			}
 			$c_data['component'] = $controller::{$prefix.$method}();
+			$c_data['rules'] = $_SESSION['rules'][$component];
 			return $view::{$prefix.$method}($c_data);
 		}catch(exception $e){
 			return $e->getMessage();

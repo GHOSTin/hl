@@ -46,11 +46,11 @@ class controller_query{
 	}		
 	public static function private_get_houses(){
 		$args['street_id'] = $_GET['id'];
-		return model_street::get_houses($args);
+		return ['houses' => model_street::get_houses($args)];
 	}	
 	public static function private_get_numbers(){
 		$args['house_id'] = $_GET['id'];
-		return model_house::get_numbers($args);
+		return ['numbers' => model_house::get_numbers($args)];
 	}		
 	public static function private_get_query_content(){
 		$args = ['query_id' => $_GET['id']];
@@ -73,10 +73,8 @@ class controller_query{
 		return ['queries' => model_query::get_queries($args)];
 	}
 	public static function private_show_default_page(){
-		$queries = model_query::get_queries([]);
-		$args['queries'] = $queries;
-		$args['filters'] = $_SESSION['filters']['query'];
-		$args['rules'] = $_SESSION['rules']['query'];
-		return $args;
+		return ['queries' => model_query::get_queries([]),
+			'filters' => $_SESSION['filters']['query'],
+			'rules' => $_SESSION['rules']['query']];
 	}
 }

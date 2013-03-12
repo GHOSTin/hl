@@ -2,7 +2,7 @@
 {% block component %}
     <!-- begin left block -->
     <div style="display:inline-block; vertical-align:top;">
-        {% if rules.generalAccess == true %}
+        {% if rules.createQuery == true %}
         <div class="get_dialog_create_query cm">Создать заявку</div>
         {% endif %}
         <div class="get_search cm">Поиск</div>
