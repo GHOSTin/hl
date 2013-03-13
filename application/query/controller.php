@@ -4,11 +4,10 @@ class controller_query{
 	static $rules = [];
 	public static function private_clear_filters(){
 		$time = getdate();
-		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$args['time_interval']['end'] = $args['time_interval']['begin'] + 86399;
-		$args['statuses'] = [];
-		$args['queries'] = model_query::get_queries($args);
-		return $args;
+		$query = new data_query();
+		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$query->time_open['end'] = $query->time_open['begin'] + 86399;
+		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_create_query(){
 		if($_GET['initiator'] === 'number'){
@@ -82,10 +81,9 @@ class controller_query{
 		return true;
 	}
 	public static function private_get_search_result(){
-		$args['number'] = (int) $_GET['param'];
-		if($args['number'] === 0)
-			return ['queries' => false];
-			return ['queries' => model_query::get_queries($args)];
+		$query = new data_query();
+		$query->number = (int) $_GET['param'];
+		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_set_status(){
 		$args['statuses'] = [(string) $_GET['value']];
