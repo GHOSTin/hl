@@ -5,10 +5,7 @@ class model_department{
 			if(empty($department->status) OR empty($department->name))
 				throw new exception('Не все параметры заданы правильно.');
 			$department->company_id = $company->id;
-			$department_id = self::get_insert_id($company);
-			if($department_id === false)
-				return false;
-				$department->id = $department_id;
+			$department->id = self::get_insert_id($company);
 			$sql = "INSERT INTO `departments` (
 						`id`, `company_id`, `status`, `name`
 					) VALUES (
@@ -19,10 +16,10 @@ class model_department{
 			$stm->bindValue(':company_id', $department->company_id);
 			$stm->bindValue(':status', $department->status);
 			$stm->bindValue(':name', $department->name);
-			if($stm->execute() === false)
-				return false;
-				return $department;
+			if($stm->execute() == false)
+				throw new exception('Проблемы при создании участка.');
 			$stm->closeCursor();
+			return $department;
 		}catch(exception $e){
 			throw new exception('Проблемы при создании участка.');
 		}
@@ -33,15 +30,13 @@ class model_department{
 				WHERE `company_id` = :company_id";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindValue(':company_id', $company->id, PDO::PARAM_INT);
-			$stm->execute();
-			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_department_id'] + 1;
-				}else
-					return false;
-			}
+			if($stm->execute() == false)
+				throw new exception('Проблема при опредении следующего department_id.');
+				if($stm->rowCount() !== 1)
+					throw new exception('Проблема при опредении следующего department_id.');
+			$department_id = (int) $stm->fetch()['max_department_id'] + 1;
+			$stm->closeCursor();
+			return $department_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего department_id.');
 		}

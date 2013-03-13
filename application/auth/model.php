@@ -19,13 +19,11 @@ class model_auth{
 			$stm->bindParam(':hash', $hash , PDO::PARAM_STR, 255);
 			$stm->execute();
 			if($stm->rowCount() !== 1){
-				return false;
-			}else{
-				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
-				$_SESSION['user'] = $stm->fetch();
-				return true;
-			}
+				throw new exception('Ошибка аутентификации.');
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
+			$_SESSION['user'] = $stm->fetch();
 			$stm->closeCursor();
+			return true;
  		}catch(exception $e){
  			throw new exception('Ошибка аутентификации.');
  		}

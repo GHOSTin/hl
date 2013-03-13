@@ -4,10 +4,10 @@ class model_company{
 		try{
 			if(empty($company->status) OR empty($company->name))
 				throw new exception('Не все параметры заданы правильно.');
-			$company_id = self::get_insert_id();
-			if($company_id === false)
-				return false;
-				$company->id = $company_id;
+			$company->id = self::get_insert_id();
+			$company->smslogin = 'smslogin';
+			$company->smspassword = 'smspassword';
+			$company->smssender = 'smssender';
 			$sql = "INSERT INTO `companies` (
 						`id`, `status`, `name`, `smslogin`, `smspassword`, `smssender`
 					) VALUES (
@@ -18,15 +18,14 @@ class model_company{
 			$stm->bindValue(':company_id', $company->id);
 			$stm->bindValue(':status', $company->status);
 			$stm->bindValue(':name', $company->name);
-			$stm->bindValue(':smslogin', 'smslogin');
-			$stm->bindValue(':smspassword', 'smspassword');
-			$stm->bindValue(':smssender', 'smssender');
-			if($stm->execute() === false)
-				return false;
-				return $company;
+			$stm->bindValue(':smslogin', $company->smslogin);
+			$stm->bindValue(':smspassword', $company->smspassword);
+			$stm->bindValue(':smssender', $company->smssender);
+			if($stm->execute() == false)
+				throw new exception('Проблемы при создании компании.');
 			$stm->closeCursor();
+			return $company;
 		}catch(exception $e){
-			die($e->getMessage());
 			throw new exception('Проблемы при создании компании.');
 		}
 	}
@@ -34,14 +33,13 @@ class model_company{
 		try{
 			$sql = "SELECT MAX(`id`) as `max_company_id` FROM `companies`";
 			$stm = db::get_handler()->query($sql);
-			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_company_id'] + 1;
-				}else
-					return false;
-			}
+			if($stm == false)
+				throw new exception('Проблема при опредении следующего company_id.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при опредении следующего company_id.');
+			$company_id = (int) $stm->fetch()['max_company_id'] + 1;
+			$stm->closeCursor();
+			return $company_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего company_id.');
 		}

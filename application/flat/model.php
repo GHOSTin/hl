@@ -6,10 +6,7 @@ class model_flat{
 				throw new exception('Не все параметры заданы правильно.');
 			$flat->company_id = $current_user->company_id;
 			$flat->house_id = $house->id;
-			$flat_id = self::get_insert_id();
-			if($flat_id === false)
-				return false;
-				$flat->id = $flat_id;
+			$flat->id = self::get_insert_id();
 			$sql = "INSERT INTO `flats` (
 						`id`, `company_id`, `house_id`, `status`, `flatnumber`
 					) VALUES (
@@ -21,10 +18,10 @@ class model_flat{
 			$stm->bindValue(':house_id', $flat->house_id);
 			$stm->bindValue(':status', $flat->status);
 			$stm->bindValue(':number', $flat->number);
-			if($stm->execute() === false)
-				return false;
-				return $flat;
+			if($stm->execute() == false)
+				throw new exception('Не все параметры заданы правильно.');
 			$stm->closeCursor();
+			return $flat;
 		}catch(exception $e){
 			throw new exception('Проблемы при создании Квартиры.');
 		}
@@ -34,13 +31,12 @@ class model_flat{
 			$sql = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
 			$stm = db::get_handler()->query($sql);
 			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_flat_id'] + 1;
-				}else
-					return false;
-			}
+				throw new exception('Проблема при опредении следующего flat_id.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при опредении следующего flat_id.');
+			$flat_id = (int) $stm->fetch()['max_flat_id'] + 1;
+			$stm->closeCursor();
+			return $flat_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего flat_id.');
 		}

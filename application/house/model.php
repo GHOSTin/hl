@@ -37,7 +37,7 @@ class model_house{
 			$sql = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
 			$stm = db::get_handler()->query($sql);
 			if($stm == false){
-			throw new exception('Проблема при опредении следующего house_id.');
+				throw new exception('Проблема при опредении следующего house_id.');
 			if($stm->rowCount() !== 1)
 				throw new exception('Проблема при опредении следующего house_id.');
 			$house_id = (int) $stm->fetch()['max_house_id'] + 1;
@@ -60,14 +60,15 @@ class model_house{
 					WHERE `houses`.`id` = :house_id
 					AND `houses`.`street_id` = `streets`.`id`";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindParam(':house_id', $house_id, PDO::PARAM_INT);
-			$stm->execute();
+			$stm->bindValue(':house_id', $house_id, PDO::PARAM_INT);
+			if($stm->execute() == false)
+				throw new exception('Проблемы при выборке дома.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
 			$house = $stm->fetch();
 			$stm->closeCursor();
 			return $house;
 		}catch(exception $e){
-			return false;
+			throw new exception('Проблемы при выборке дома.');
 		}
 	}
 	public static function get_numbers($args){
@@ -94,14 +95,16 @@ class model_house{
 					AND `houses`.`street_id` = `streets`.`id`";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':house_id', $house_id, PDO::PARAM_STR);
-			$stm->execute();
+			if($stm->execute() == false)
+				throw new exception('Проблемы при выборке номеров.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
+			$result = [];
 			while($user = $stm->fetch())
 				$result[] = $user;
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
-			return false;
+			throw new exception('Проблемы при выборке номеров.');
 		}
 	}		
 }
