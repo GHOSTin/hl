@@ -6,25 +6,22 @@ class model_street{
 				throw new exception('Не все параметры заданы правильно.');
 			$street->company_id = $current_user->company_id;
 			$street->city_id = $city->id;
-			$street_id = self::get_insert_id();
-			if($street_id === false)
-				return false;
-				$street->id = $street_id;
+			$street->id = self::get_insert_id();
 			$sql = "INSERT INTO `streets` (
 					`id`, `company_id`, `city_id`, `status`, `name`
 				) VALUES (
 					:street_id, :company_id, :city_id, :status, :name 
 				);";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindValue(':street_id', $street->id);
-			$stm->bindValue(':company_id', $street->company_id);
-			$stm->bindValue(':city_id', $street->city_id);
-			$stm->bindValue(':status', $street->status);
-			$stm->bindValue(':name', $street->name);
+			$stm->bindValue(':street_id', $street->id, PDO::PARAM_INT);
+			$stm->bindValue(':company_id', $street->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':city_id', $street->city_id, PDO::PARAM_INT);
+			$stm->bindValue(':status', $street->status, PDO::PARAM_STR);
+			$stm->bindValue(':name', $street->name, PDO::PARAM_STR);
 			if($stm->execute() === false)
-				return false;
-				return $street;
+				throw new exception('Проблемы при создании улицы.');
 			$stm->closeCursor();
+			return $street;
 		}catch(exception $e){
 			throw new exception('Проблемы при создании улицы.');
 		}
