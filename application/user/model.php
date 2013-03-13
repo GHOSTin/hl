@@ -41,9 +41,9 @@ class model_user{
 		try{
 			$sql = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
 			$stm = db::get_handler()->query($sql);
-			if($stm == false){
+			if($stm == false)
 				throw new exception('Проблема при опредении следующего user_id.');
-			if($stm->rowCount() !== 1){
+			if($stm->rowCount() !== 1)
 				throw new exception('Проблема при опредении следующего user_id.');
 			$user_id = (int) $stm->fetch()['max_user_id'] + 1;
 			$stm->closeCursor();
