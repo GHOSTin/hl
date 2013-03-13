@@ -29,7 +29,7 @@ class model_user{
 			$stm->bindValue(':password', self::get_password_hash($user->password), PDO::PARAM_STR);
 			$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
 			$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
-			if($stm->execute() === false)
+			if($stm->execute() == false)
 				throw new exception('Проблемы при создании пользователя.');
 			$stm->closeCursor();
 			return $user;
@@ -41,7 +41,7 @@ class model_user{
 		try{
 			$sql = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
 			$stm = db::get_handler()->query($sql);
-			if($stm === false){
+			if($stm == false){
 				throw new exception('Проблема при опредении следующего user_id.');
 			if($stm->rowCount() !== 1){
 				throw new exception('Проблема при опредении следующего user_id.');
@@ -72,7 +72,7 @@ class model_user{
 					WHERE `users`.`id` = :user_id";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-			if($stm->execute() === false)
+			if($stm->execute() == false)
 				throw new exception('Проблема при выборке пользователя');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
 			$user = $stm->fetch();
@@ -94,7 +94,7 @@ class model_user{
 					`users`.`cellphone`
 					FROM `users`";
 			$stm = db::get_handler()->prepare($sql);
-			if($stm->execute() === false)
+			if($stm->execute() == false)
 				throw new exception('Проблема при выборке пользователей.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
 			$result = [];

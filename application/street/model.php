@@ -18,7 +18,7 @@ class model_street{
 			$stm->bindValue(':city_id', $street->city_id, PDO::PARAM_INT);
 			$stm->bindValue(':status', $street->status, PDO::PARAM_STR);
 			$stm->bindValue(':name', $street->name, PDO::PARAM_STR);
-			if($stm->execute() === false)
+			if($stm->execute() == false)
 				throw new exception('Проблемы при создании улицы.');
 			$stm->closeCursor();
 			return $street;
@@ -30,7 +30,7 @@ class model_street{
 		try{
 			$sql = "SELECT MAX(`id`) as `max_street_id` FROM `streets`";
 			$stm = db::get_handler()->query($sql);
-			if($stm === false)
+			if($stm == false)
 				throw new exception('Проблема при опредении следующего street_id.');
 			if($stm->rowCount() !== 1)
 				throw new exception('Проблема при опредении следующего street_id.');
@@ -47,7 +47,7 @@ class model_street{
 					FROM `streets`
 					ORDER BY `name`";
 			$stm = db::get_handler()->prepare($sql);
-			if($stm->execute() === false)
+			if($stm->execute() == false)
 				throw new exception('Проблема при выборке улиц.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_street');
 			$result = [];
@@ -70,7 +70,7 @@ class model_street{
 					ORDER BY (`housenumber` + 0)";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':street_id', $street->id, PDO::PARAM_INT);
-			if($stm->execute() === false)
+			if($stm->execute() == false)
 				throw new exception('Проблема при выборке домов.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
 			$result = [];

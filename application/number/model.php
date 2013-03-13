@@ -10,10 +10,7 @@ class model_number{
 			$number->type = 'human';
 			$number->house_id = $flat->house_id;
 			$number->flat_id = $flat->id;
-			$number_id = self::get_insert_id($city);
-			if($number_id === false)
-				return false;
-				$number->id = $number_id;
+			$number->id = self::get_insert_id($city);
 			$sql = "INSERT INTO `numbers` (
 						`id`, `company_id`, `city_id`, `house_id`, `flat_id`, `number`, `type`, `status`,
 						`fio`, `telephone`, `cellphone`, `password`, `contact-fio`, `contact-telephone`,
@@ -39,10 +36,10 @@ class model_number{
 			$stm->bindValue(':contact_fio', $number->contact_fio);
 			$stm->bindValue(':contact_telephone', $number->contact_telephone);
 			$stm->bindValue(':contact_cellphone', $number->contact_cellphone);
-			if($stm->execute() === false)
-				return false;
-				return $number;
+			if($stm->execute() == false)
+				throw new exception('Проблемы при создании номера.');
 			$stm->closeCursor();
+			return $number;
 		}catch(exception $e){
 			throw new exception('Проблемы при создании номера.');
 		}
@@ -53,15 +50,13 @@ class model_number{
 				WHERE `city_id` = :city_id";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindValue(':city_id', $city->id, PDO::PARAM_INT);
-			$stm->execute();
-			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_number_id'] + 1;
-				}else
-					return false;
-			}
+			if($stm->execute() == false)
+				throw new exception('Проблема при опредении следующего number_id.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при опредении следующего number_id.');
+			$number_id = (int) $stm->fetch()['max_number_id'] + 1;
+			$stm->closeCurscor();
+			return $nuber_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего number_id.');
 		}
@@ -69,7 +64,7 @@ class model_number{
 	public static function get_number(data_number $number){
 		try{
 			if(empty($number->id))
-				throw new exception('Wrong parametrs');
+				throw new exception('Неверные входящие параметры.');
 			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
 						`numbers`.`flat_id`, `numbers`.`number`,
@@ -90,16 +85,14 @@ class model_number{
 					AND `houses`.`street_id` = `streets`.`id`";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':number_id', $number->id, PDO::PARAM_INT);
-			$stm->execute();
-			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() !== 1)
-					return false;
-				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
-				return $stm->fetch();
-			}
+			if($stm->execute() == false)
+				throw new exception('Проблема при запросе лицевого счета.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при запросе лицевого счета.');
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
+			$number = $stm->fetch();
 			$stm->closeCursor();
+			return $number;
 		}catch(exception $e){
 			throw new exception('Проблема при запросе лицевого счета.');
 		}

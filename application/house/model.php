@@ -8,10 +8,7 @@ class model_house{
 			$house->company_id = $current_user->company_id;
 			$house->city_id = $street->city_id;
 			$house->street_id = $street->id;
-			$house_id = self::get_insert_id();
-			if($house_id === false)
-				return false;
-				$house->id = $house_id;
+			$house->id = self::get_insert_id();
 			$sql = "INSERT INTO `houses` (
 						`id`, `company_id`, `city_id`, `street_id`, `department_id`,
 						`status`, `housenumber`
@@ -27,10 +24,10 @@ class model_house{
 			$stm->bindValue(':department_id', $house->department_id);
 			$stm->bindValue(':status', $house->status);
 			$stm->bindValue(':number', $house->number);
-			if($stm->execute() === false)
-				return false;
-				return $house;
+			if($stm->execute() == false)
+				throw new exception('Проблемы при создании дома.')
 			$stm->closeCursor();
+			return $house;
 		}catch(exception $e){
 			throw new exception('Проблемы при создании дома.');
 		}
@@ -39,14 +36,13 @@ class model_house{
 		try{
 			$sql = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
 			$stm = db::get_handler()->query($sql);
-			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_house_id'] + 1;
-				}else
-					return false;
-			}
+			if($stm == false){
+			throw new exception('Проблема при опредении следующего house_id.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при опредении следующего house_id.');
+			$house_id = (int) $stm->fetch()['max_house_id'] + 1;
+			$stm->closeCursor();
+			return $house_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего house_id.');
 		}
