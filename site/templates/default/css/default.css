@@ -74,7 +74,7 @@ footer, #push{
 }
 
 .users li.active a{
-    border-radius: 10px;
+    border-radius: 5px;
     background-color: #e8e8e8 !important;
     color: #08c !important;
 }
@@ -112,7 +112,7 @@ form.well{
     margin: 0;
 }
 
-.feed time{
+.feed header{
     text-align: center;
     font-weight: bold;
     display: block;

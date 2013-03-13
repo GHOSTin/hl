@@ -12,20 +12,24 @@ window.userList = {
     renderMenu:function () {
         var activeTabId = $('.users li.active a').attr('user_id');
         $('.users li').remove();
-        var online = ''; //список онлайн
-        var offline = ''; //список оффлайн
+        var online = '',  //список онлайн
+            offline = '', //список оффлайн
+            unread = '';  //список тех у кого есть непрочитанные сообщения
         for (var id in this.list) {
             var user = this.list[id];
             var online_status = ((user.online) ? 'online' : 'offline');
-
             var li = '';
             li += '<li><a href="#user_' + user.id + '" class="' + online_status + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
             if (user.hasUnread())
                 li += '<span class="unread_count label label-info pull-right">+' + user.unreadCount() + '</span>';
             li += '</a></li>';
-            (user.online) ? online += li : offline += li;
+            if (user.hasUnread()) {
+                unread += li;
+            } else {
+                (user.online)? online += li: offline += li;
+            }
         }
-        $('.users').append(online+offline);
+        $('.users').append(unread + online + offline);
         $('a[user_id=' + activeTabId + "]").parent().addClass('active');
     },
     renderPanes:function () {
@@ -35,7 +39,7 @@ window.userList = {
                 var pane = '';
                 pane += '<div class="chat tab-pane fade user" id="user_' + user.id + '">';
                 pane += '<h6>' + user.name + '</h6>';
-                pane += '<div class="feed"><ul></ul></div>';
+                pane += '<div class="feed"><ul id="dates"></ul></div>';
                 pane += '<form class="well message" data-user-id="' + user.id + '">';
                 pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
 //                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
@@ -142,7 +146,7 @@ window.feed = {
     },
 
     addStatus:function (statusString, user) {
-        $('#user_'+user.id+' div.feed ul').append("<li>" + statusString + "</li>").scrollTop(9999);
+        $('#user_'+user.id+' div.feed ul#dates').append("<li>" + statusString + "</li>");
     },
 
     urlify:function(text){
@@ -276,13 +280,12 @@ Message.prototype.render = function () {
     var message_string = '';
     var _date = new Date(this.date);
     var active_date = _date.getFullYear()+'_'+_date.getMonth()+'_'+_date.getDate();
-    if(!$("#user_" + this.user.id + " div.feed time#"+active_date).length > 0) {
-        message_string += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
-    }
-    else {
+    if(!$("#user_" + this.user.id + " div.feed section#"+active_date).length > 0) {
         if(this.status === 'history'){
-            $("#user_" + this.user.id + " div.feed time#"+active_date).remove();
-            message_string += '<time id="'+active_date+'">' + feed.formatDate(this.date, 'date') + '</time>';
+            $("#user_" + this.user.id + " div.feed ul#dates").prepend('<section id="'+active_date+'"><header>' + feed.formatDate(this.date, 'date') + '</header><ul></ul></section>');
+        }
+        else{
+            $("#user_" + this.user.id + " div.feed ul#dates").append('<section id="'+active_date+'"><header>' + feed.formatDate(this.date, 'date') + '</header><ul></ul></section>');
         }
     }
     message_string += '<blockquote class="' + classes.join(' ') + '" id="' + this.id + '">';
@@ -297,13 +300,13 @@ Message.prototype.render = function () {
 };
 
 Message.prototype.prepend = function(render) {
-    $("#user_" + this.user.id + " div.feed ul").prepend(render);
+    $("#user_" + this.user.id + " div.feed section:first ul").prepend(render);
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo",'blockquote#'+this.user.first_message_id);
 };
 
 Message.prototype.append = function(render) {
-    $("#user_" + this.user.id + " div.feed ul").append(render);
+    $("#user_" + this.user.id + " div.feed section:last ul").append(render);
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo","bottom");
 };
