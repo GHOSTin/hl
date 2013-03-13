@@ -27,10 +27,10 @@ class controller_query{
 	}	
 	public static function private_get_day(){
 		$time = getdate($_GET['time']);
-		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$args['time_interval']['end'] = $args['time_interval']['begin'] + 86399;
-		$args['queries'] = model_query::get_queries($args);
-		return $args;
+		$query = new data_query();
+		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$query->time_open['end'] = $query->time_open['begin'] + 86399;
+		return ['queries' => model_query::get_queries($query)];
 	}	
 	public static function private_get_dialog_create_query(){
 		return true;
@@ -44,15 +44,17 @@ class controller_query{
 		$types = model_query_work_type::get_query_work_types();
 		switch($_GET['initiator']){
 			case 'number':
-				$args['number_id'] = $_GET['id'];
+				$number = new data_number();
+				$number->id = $_GET['id'];
 				return ['initiator' => 'number',
-						'number' => model_number::get_number($args),
+						'number' => model_number::get_number($number),
 						'query_work_types' => $types];
 			break;
 			case 'house':
-				$args['house_id'] = $_GET['id'];
+				$house = new data_house();
+				$house->id = $_GET['id'];
 				return ['initiator' => 'house',
-						'house' => model_house::get_house($args),
+						'house' => model_house::get_house($house),
 						'query_work_types' => $types];
 			break;
 			default:
@@ -65,8 +67,9 @@ class controller_query{
 		return ['houses' => model_street::get_houses($street)];
 	}	
 	public static function private_get_numbers(){
-		$args['house_id'] = $_GET['id'];
-		return ['numbers' => model_house::get_numbers($args)];
+		$house = new data_house();
+		$house->id = $_GET['id'];
+		return ['numbers' => model_house::get_numbers($house)];
 	}		
 	public static function private_get_query_content(){
 		$args = ['query_id' => $_GET['id']];
@@ -89,8 +92,7 @@ class controller_query{
 		return ['queries' => model_query::get_queries($args)];
 	}
 	public static function private_show_default_page(){
-		return ['queries' => model_query::get_queries([]),
-			'filters' => $_SESSION['filters']['query'],
-			'rules' => $_SESSION['rules']['query']];
+		return ['queries' => model_query::get_queries(new data_query()),
+			'filters' => $_SESSION['filters']['query']];
 	}
 }

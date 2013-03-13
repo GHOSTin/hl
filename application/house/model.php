@@ -47,10 +47,9 @@ class model_house{
 			throw new exception('Проблема при опредении следующего house_id.');
 		}
 	}		
-	public static function get_house($args){
+	public static function get_house(data_house $house){
 		try{
-			$house_id = $args['house_id'];
-			if(empty($house_id))
+			if(empty($house->id))
 				throw new exception('Wrong parametrs');
 			$sql = "SELECT `houses`.`id`, `houses`.`company_id`, `houses`.`city_id`,
 					`houses`.`street_id`, `houses`.`department_id`, `houses`.`status`, 
@@ -60,7 +59,7 @@ class model_house{
 					WHERE `houses`.`id` = :house_id
 					AND `houses`.`street_id` = `streets`.`id`";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindValue(':house_id', $house_id, PDO::PARAM_INT);
+			$stm->bindValue(':house_id', $house->id, PDO::PARAM_INT);
 			if($stm->execute() == false)
 				throw new exception('Проблемы при выборке дома.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
@@ -71,10 +70,9 @@ class model_house{
 			throw new exception('Проблемы при выборке дома.');
 		}
 	}
-	public static function get_numbers($args){
+	public static function get_numbers(data_house $house){
 		try{
-			$house_id = $args['house_id'];
-			if(empty($house_id))
+			if(empty($house->id))
 				throw new exception('Wrong parametrs');
 			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
@@ -94,7 +92,7 @@ class model_house{
 					AND `numbers`.`house_id` = `houses`.`id`
 					AND `houses`.`street_id` = `streets`.`id`";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindParam(':house_id', $house_id, PDO::PARAM_STR);
+			$stm->bindParam(':house_id', $house->id, PDO::PARAM_STR);
 			if($stm->execute() == false)
 				throw new exception('Проблемы при выборке номеров.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');

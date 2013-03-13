@@ -218,10 +218,10 @@ class model_query{
 	* Возвращает заявки
 	* @return false or array
 	*/
-	public static function get_queries($args){
-		$_SESSION['filters']['query'] = $args = self::build_query_filter($args);
+	public static function get_queries(data_query $query){
+		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		try{
-			if(!empty($args['number'])){
+			if(!empty($query->number)){
 
 				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -273,34 +273,29 @@ class model_query{
 					AND `houses`.`street_id` = `streets`.`id`
 					AND `opentime` > :time_open
 					AND `opentime` <= :time_close";
-					if(!empty($args['statuses']) AND is_array($args['statuses'])){
+					if(!empty($query->status)){
 						$sql .= " AND `queries`.`status` IN(:status)";
 					}
 					$sql .= " ORDER BY `opentime` DESC";
 			}
 			$stm = db::get_handler()->prepare($sql);
-			if(!empty($args['number'])){
-				$stm->bindParam(':number', $number, PDO::PARAM_INT, 10);
+			if(!empty($query->number)){
+				$stm->bindValue(':number', $query->number, PDO::PARAM_INT);
 			}else{
-				$stm->bindParam(':time_open', $time_open, PDO::PARAM_INT, 10);
-				$stm->bindParam(':time_close', $time_close, PDO::PARAM_INT, 10);
+				$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
+				$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			}
-			$time_open = $args['time_interval']['begin'];	
-			$time_close = $args['time_interval']['end'];
-			$number = $args['number'];
-			if(!empty($args['statuses']) AND is_array($args['statuses'])){
-				$stm->bindValue(':status', $args['statuses'][0], PDO::PARAM_STR);
+			if(!empty($query->status)){
+				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 			}
-			$stm->execute();
-			if($stm->rowCount() > 0){
-				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
-				while($query = $stm->fetch())
-					$result[$query->id] = $query;
-				return $result;
-			}else{
-				return false;
-			}
+			if($stm->execute() == false)
+				throw new exception('Ошибка при выборке заявок.');
+			$result = [];
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
+			while($query = $stm->fetch())
+				$result[$query->id] = $query;
 			$stm->closeCursor();
+			return $result;
 		}catch(exception $e){
 			throw new exception('Ошибка при выборке заявок.');
 		}
@@ -309,55 +304,42 @@ class model_query{
 	* Проверяет правильность параметров
 	* Скармиливаем массив получаем правильный набор параметров
 	*/
-	public static function build_query_filter($in_args){
+	public static function build_query_filter(data_query $query){
 		try{
-			$s_args = $_SESSION['filters']['query'];
-			/*
-			* Если нет в in_args то не записываем и в out_args
-			*/
-			if(!empty($in_args['number'])){
-				$out_args['number'] = (int) $in_args['number'];
-			}
-			/*
-			* Если нет в in_args проверяем в сессии и берем оттуда параметры.
-			* Если нет в сессии генерируем по умолчанию
-			*/
-			// проверка интервала времени
-			if(empty($in_args['time_interval']['begin']) OR empty($in_args['time_interval']['end'])){
-				if(empty($s_args['time_interval']['begin']) OR empty($s_args['time_interval']['end'])){
-					$time = getdate();
-					$out_args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-					$out_args['time_interval']['end'] = $out_args['time_interval']['begin'] + 86399;
+			$previous = $_SESSION['filters']['query'];
+			$time = getdate();
+			if(empty($query->time_open)){
+				if($previous instanceof data_queery){
+					$query->time_open = $previous->time_open;
 				}else{
-					$out_args['time_interval']['begin'] = $s_args['time_interval']['begin'];
-					$out_args['time_interval']['end'] = $s_args['time_interval']['end'];
+					$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+					$query->time_open['end'] = $query->time_open['begin'] + 86399;
 				}
 			}else{
-				$out_args['time_interval']['begin'] = $in_args['time_interval']['begin'];
-				$out_args['time_interval']['end'] = $in_args['time_interval']['end'];
+				if(!is_array($query->time_open))
+					throw new exception('Проблема с временем открытия.');
+				if(!is_int($query->time_open['begin']))
+					throw new exception('Проблема с временем открытия.');
+				if(!is_int($query->time_open['end']))
+					throw new exception('Проблема с временем открытия.');
+				if($query->time_open['end'] < $query->time_open['begin'])
+					throw new exception('Проблема с временем открытия.');
 			}
-			// проверяет статус
-			$statuses = ['open', 'working', 'close', 'reopen', 'open+working'];
-			if(empty($in_args['statuses'])){
-				if(!empty($s_args['statuses'])){
-					$out_args['statuses'] = $s_args['statuses'];
+			
+			if(empty($query->status)){
+				if($previous instanceof data_queery){
+					$query->status = $previous->status;
 				}
 			}else{
-				if(is_array($in_args['statuses'])){
-					foreach ($in_args['statuses'] as $status){
-						if(array_search($status, $statuses, true) !== false){
-							if($status === 'open+working'){
-								$out_args['statuses'][] = 'open';
-								$out_args['statuses'][] = 'working';
-							}else
-								$out_args['statuses'][] = $status;
-						}
-					}
-				}
+				$statuses = ['open', 'working', 'close', 'reopen'];
+				if(array_search($query->status, $statuses) === false)
+					throw new exception('Проблема со статусами.');
 			}
-			return $out_args;
-			var_dump($out_args);
-			exit();
+			if(!empty($query->number)){
+				if(!is_int($query->number))
+					throw new exception('Проблема с номером заявки.');
+			}
+			return $query;
 		}catch(exception $e){
 			throw new exception('Ошибка при построении параметром запроса заявок.');
 		}
