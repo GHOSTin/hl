@@ -66,10 +66,9 @@ class model_number{
 			throw new exception('Проблема при опредении следующего number_id.');
 		}
 	}	
-	public static function get_number($args){
+	public static function get_number(data_number $number){
 		try{
-			$number_id = $args['number_id'];
-			if(empty($number_id))
+			if(empty($number->id))
 				throw new exception('Wrong parametrs');
 			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
@@ -82,6 +81,7 @@ class model_number{
 						`numbers`.`contact-cellphone` as `contact_cellphone`,
 						`flats`.`flatnumber` as `flat_number`,
 						`houses`.`housenumber` as `house_number`,
+						`houses`.`department_id`,
 						`streets`.`name` as `street_name`
 					FROM `numbers`, `flats`, `houses`, `streets`
 					WHERE `numbers`.`id` = :number_id
@@ -89,14 +89,19 @@ class model_number{
 					AND `numbers`.`house_id` = `houses`.`id`
 					AND `houses`.`street_id` = `streets`.`id`";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->bindParam(':number_id', $number_id, PDO::PARAM_INT);
+			$stm->bindParam(':number_id', $number->id, PDO::PARAM_INT);
 			$stm->execute();
-			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
-			$number = $stm->fetch();
+			if($stm === false){
+				return false;
+			}else{
+				if($stm->rowCount() !== 1)
+					return false;
+				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
+				return $stm->fetch();
+			}
 			$stm->closeCursor();
-			return $number;
 		}catch(exception $e){
-			return false;
+			throw new exception('Проблема при запросе лицевого счета.');
 		}
 	}
 }

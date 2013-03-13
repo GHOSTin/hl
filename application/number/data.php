@@ -19,4 +19,5 @@ final class data_number extends data_object{
 	public $flat_number;
 	public $house_number;
 	public $street_name;
+	public $department_id;
 }

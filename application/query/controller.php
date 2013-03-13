@@ -9,7 +9,22 @@ class controller_query{
 		$args['statuses'] = [];
 		$args['queries'] = model_query::get_queries($args);
 		return $args;
-	}		
+	}
+	public static function private_create_query(){
+		if($_GET['initiator'] === 'number'){
+			$initiator = new data_number();
+		}elseif($_GET['house'] === 'house'){
+			$initiator = new data_house();
+		}
+		$initiator->id = (int) $_GET['id'];
+		$query = new data_query();
+		$query->description = htmlspecialchars($_GET['description']);
+		$query->contact_fio = htmlspecialchars($_GET['fio']);
+		$query->contact_telephone = htmlspecialchars($_GET['telephone']);
+		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
+		var_dump(model_query::create_query($query, $initiator, $_SESSION['user']));
+		exit();
+	}	
 	public static function private_get_day(){
 		$time = getdate($_GET['time']);
 		$args['time_interval']['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
