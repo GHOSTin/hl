@@ -9,10 +9,8 @@ class model_user{
 				OR empty($user->lastname) OR empty($user->password)
 			) throw new exception('Не все параметры заданы правильно.');
 			$user->company_id = $current_user->company_id;
-			$user_id = self::get_insert_id();
-			if($user_id === false)
-				return false;
-				$user->id = $user_id;
+			$user->id = self::get_insert_id();
+			$user->status = true;
 			$sql = "INSERT INTO `users` (
 						`id`, `company_id`, `status`, `username`, `firstname`, `lastname`,
 						`midlename`, `password`, `telephone`, `cellphone`
@@ -23,7 +21,7 @@ class model_user{
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
 			$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
-			$stm->bindValue(':status', true);
+			$stm->bindValue(':status', $user->status);
 			$stm->bindValue(':login', $user->login, PDO::PARAM_STR);
 			$stm->bindValue(':firstname', $user->firstname, PDO::PARAM_STR);
 			$stm->bindValue(':lastname', $user->lastname, PDO::PARAM_STR);
@@ -32,9 +30,9 @@ class model_user{
 			$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
 			$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
 			if($stm->execute() === false)
-				return false;
-				return $user;				
+				throw new exception('Проблемы при создании пользователя.');
 			$stm->closeCursor();
+			return $user;
 		}catch(exception $e){
 			throw new exception('Проблемы при создании пользователя.');
 		}
@@ -44,13 +42,12 @@ class model_user{
 			$sql = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
 			$stm = db::get_handler()->query($sql);
 			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_user_id'] + 1;
-				}else
-					return false;
-			}
+				throw new exception('Проблема при опредении следующего user_id.');
+			if($stm->rowCount() !== 1){
+				throw new exception('Проблема при опредении следующего user_id.');
+			$user_id = (int) $stm->fetch()['max_user_id'] + 1;
+			$stm->closeCursor();
+			return $user_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего user_id.');
 		}
@@ -66,7 +63,7 @@ class model_user{
 		try{
 			$user_id = $args['user_id'];
 			if(empty($user_id))
-				throw new exception('Wrong parametrs');
+				throw new exception('Не все параметры заданы правильно.');
 			$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
@@ -75,13 +72,14 @@ class model_user{
 					WHERE `users`.`id` = :user_id";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-			$stm->execute();
+			if($stm->execute() === false)
+				throw new exception('Проблема при выборке пользователя');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
 			$user = $stm->fetch();
 			$stm->closeCursor();
 			return $user;
 		}catch(exception $e){
-			throw new exception('Fail user');
+			throw new exception('Проблема при выборке пользователя');
 		}
 	}
 	/**
@@ -90,21 +88,22 @@ class model_user{
 	*/
 	public static function get_users($args){
 		try{
-			$result = [];
 			$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
 					`users`.`cellphone`
 					FROM `users`";
 			$stm = db::get_handler()->prepare($sql);
-			$stm->execute();
+			if($stm->execute() === false)
+				throw new exception('Проблема при выборке пользователей.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
+			$result = [];
 			while($user = $stm->fetch())
 				$result[] = $user;
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
-			throw new exception('Fail users');
+			throw new exception('Проблема при выборке пользователей.');
 		}
 	}	
 }

@@ -32,10 +32,11 @@ class model_street{
 			$stm = db::get_handler()->query($sql);
 			if($stm === false)
 				throw new exception('Проблема при опредении следующего street_id.');
-			if($stm->rowCount() === 1){
-				return (int) $stm->fetch()['max_street_id'] + 1;
-			}else
+			if($stm->rowCount() !== 1)
 				throw new exception('Проблема при опредении следующего street_id.');
+			$street_id = (int) $stm->fetch()['max_street_id'] + 1;
+			$stm->closeCursor();
+			return $street_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего street_id.');
 		}
@@ -49,15 +50,11 @@ class model_street{
 			if($stm->execute() === false)
 				throw new exception('Проблема при выборке улиц.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_street');
-			if($stm->rowCount() > 0){
-				while($user = $stm->fetch())
-					$result[] = $user;
-				$stm->closeCursor();
-				return $result;
-			}else{
-				$stm->closeCursor();
-				return false;
-			}
+			$result = [];
+			while($street = $stm->fetch())
+				$result[] = $street;
+			$stm->closeCursor();
+			return $result;
 		}catch(exception $e){
 			throw new exception('Проблема при выборке улиц.');
 		}
@@ -75,16 +72,12 @@ class model_street{
 			$stm->bindParam(':street_id', $street->id, PDO::PARAM_INT);
 			if($stm->execute() === false)
 				throw new exception('Проблема при выборке домов.');
-			if($stm->rowCount() > 0){
-				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
-				while($house = $stm->fetch())
-					$result[] = $house;
-				$stm->closeCursor();
-				return $result;
-			}else{
-				$stm->closeCursor();
-				return false;
-			}
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
+			$result = [];
+			while($house = $stm->fetch())
+				$result[] = $house;
+			$stm->closeCursor();
+			return $result;
 		}catch(exception $e){
 			throw new exception('Проблема при выборке домов.');
 		}
