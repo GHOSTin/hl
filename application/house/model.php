@@ -25,7 +25,7 @@ class model_house{
 			$stm->bindValue(':status', $house->status);
 			$stm->bindValue(':number', $house->number);
 			if($stm->execute() == false)
-				throw new exception('Проблемы при создании дома.')
+				throw new exception('Проблемы при создании дома.');
 			$stm->closeCursor();
 			return $house;
 		}catch(exception $e){
@@ -36,7 +36,7 @@ class model_house{
 		try{
 			$sql = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
 			$stm = db::get_handler()->query($sql);
-			if($stm == false){
+			if($stm == false)
 				throw new exception('Проблема при опредении следующего house_id.');
 			if($stm->rowCount() !== 1)
 				throw new exception('Проблема при опредении следующего house_id.');
