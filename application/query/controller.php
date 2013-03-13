@@ -60,8 +60,9 @@ class controller_query{
 		}
 	}		
 	public static function private_get_houses(){
-		$args['street_id'] = $_GET['id'];
-		return ['houses' => model_street::get_houses($args)];
+		$street = new data_street();
+		$street->id = $_GET['id'];
+		return ['houses' => model_street::get_houses($street)];
 	}	
 	public static function private_get_numbers(){
 		$args['house_id'] = $_GET['id'];

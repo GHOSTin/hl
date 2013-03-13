@@ -23,9 +23,9 @@ class model_auth{
 			}else{
 				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
 				$_SESSION['user'] = $stm->fetch();
-				$stm->closeCursor();
 				return true;
 			}
+			$stm->closeCursor();
  		}catch(exception $e){
  			throw new exception('Ошибка аутентификации.');
  		}
