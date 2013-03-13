@@ -169,60 +169,38 @@ class model_query{
 		return $ctl;
 	}
 	/**
-	* Возвращает заявку
-	* @return false or data_query
-	*/
-	public static function get_query($args){
-		try{
-			$query_id = $args['query_id'];
-			if(empty($query_id))
-				throw new exception('Wrong parametr');
-			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
-				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
-				`queries`.`payment-status` as `payment_status`,
-				`queries`.`warning-type` as `warning_status`,
-				`queries`.`department_id`, `queries`.`house_id`,
-				`queries`.`query_close_reason_id` as `close_reason_id`,
-				`queries`.`query_worktype_id` as `worktype_id`,
-				`queries`.`opentime` as `time_open`,
-				`queries`.`worktime` as `time_work`,
-				`queries`.`closetime` as `time_close`,
-				`queries`.`addinfo-name` as `contact_fio`,
-				`queries`.`addinfo-telephone` as `contact_telephone`,
-				`queries`.`addinfo-cellphone` as `contact_cellphone`,
-				`queries`.`description-open` as `description`,
-				`queries`.`description-close` as `close_reason`,
-				`queries`.`querynumber` as `number`,
-				`queries`.`query_inspection` as `inspection`, 
-				`houses`.`housenumber` as `house_number`,
-				`streets`.`name` as `street_name`
-				FROM `queries`, `houses`, `streets`
-				WHERE `queries`.`house_id` = `houses`.`id`
-				AND `houses`.`street_id` = `streets`.`id`
-				AND `queries`.`id` = :query_id";
-			$stm = db::get_handler()->prepare($sql);
-			$stm->bindParam(':query_id', $query_id, PDO::PARAM_INT);
-			$stm->execute();
-			if($stm->rowCount() > 0){
-				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
-				return $stm->fetch();
-			}else{
-				return false;
-			}
-			$stm->closeCursor();
-		}catch(exception $e){
-			throw new exception('Ошибка при запросе заявки.');
-		}
-	}
-	/**
 	* Возвращает заявки
 	* @return false or array
 	*/
 	public static function get_queries(data_query $query){
 		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		try{
-			if(!empty($query->number)){
+			if(!empty($query->id)){
 
+				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
+					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
+					`queries`.`payment-status` as `payment_status`,
+					`queries`.`warning-type` as `warning_status`,
+					`queries`.`department_id`, `queries`.`house_id`,
+					`queries`.`query_close_reason_id` as `close_reason_id`,
+					`queries`.`query_worktype_id` as `worktype_id`,
+					`queries`.`opentime` as `time_open`,
+					`queries`.`worktime` as `time_work`,
+					`queries`.`closetime` as `time_close`,
+					`queries`.`addinfo-name` as `contact_fio`,
+					`queries`.`addinfo-telephone` as `contact_telephone`,
+					`queries`.`addinfo-cellphone` as `contact_cellphone`,
+					`queries`.`description-open` as `description`,
+					`queries`.`description-close` as `close_reason`,
+					`queries`.`querynumber` as `number`,
+					`queries`.`query_inspection` as `inspection`, 
+					`houses`.`housenumber` as `house_number`,
+					`streets`.`name` as `street_name`
+					FROM `queries`, `houses`, `streets`
+					WHERE `queries`.`house_id` = `houses`.`id`
+					AND `houses`.`street_id` = `streets`.`id`
+					AND `queries`.`id` = :id";
+			}elseif(!empty($query->number)){
 				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
 					`queries`.`payment-status` as `payment_status`,
@@ -247,7 +225,6 @@ class model_query{
 					AND `houses`.`street_id` = `streets`.`id`
 					AND `querynumber` = :number
 					ORDER BY `opentime` DESC";				
-
 			}else{
 				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -279,7 +256,9 @@ class model_query{
 					$sql .= " ORDER BY `opentime` DESC";
 			}
 			$stm = db::get_handler()->prepare($sql);
-			if(!empty($query->number)){
+			if(!empty($query->id)){
+				$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
+			}elseif(!empty($query->number)){
 				$stm->bindValue(':number', $query->number, PDO::PARAM_INT);
 			}else{
 				$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
@@ -293,7 +272,7 @@ class model_query{
 			$result = [];
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
 			while($query = $stm->fetch())
-				$result[$query->id] = $query;
+				$result[] = $query;
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
@@ -325,7 +304,6 @@ class model_query{
 				if($query->time_open['end'] < $query->time_open['begin'])
 					throw new exception('Проблема с временем открытия.');
 			}
-			
 			if(empty($query->status)){
 				if($previous instanceof data_queery){
 					$query->status = $previous->status;
@@ -335,8 +313,12 @@ class model_query{
 				if(array_search($query->status, $statuses) === false)
 					throw new exception('Проблема со статусами.');
 			}
+			if(!empty($query->id)){
+				if((int) $query->id < 1)
+					throw new exception('Проблема с идентификатором заявки.');
+			}
 			if(!empty($query->number)){
-				if(!is_int($query->number))
+				if((int) $query->number < 1)
 					throw new exception('Проблема с номером заявки.');
 			}
 			return $query;

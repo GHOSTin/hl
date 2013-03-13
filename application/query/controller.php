@@ -35,9 +35,8 @@ class controller_query{
 		return true;
 	}
 	public static function private_get_dialog_initiator(){
-		$args['streets'] = model_street::get_streets();
-		$args['initiator'] = $_GET['value'];
-		return $args;
+		return ['streets' => model_street::get_streets(),
+				'initiator' => $_GET['value']];
 	}
 	public static function private_get_initiator(){
 		$types = model_query_work_type::get_query_work_types();
@@ -71,8 +70,9 @@ class controller_query{
 		return ['numbers' => model_house::get_numbers($house)];
 	}		
 	public static function private_get_query_content(){
-		$args = ['query_id' => $_GET['id']];
-		return ['query' => model_query::get_query($args)];
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_get_query_title(){
 		return ['query' => model_query::get_query(['query_id' => $_GET['id']])];
@@ -82,7 +82,7 @@ class controller_query{
 	}
 	public static function private_get_search_result(){
 		$query = new data_query();
-		$query->number = (int) $_GET['param'];
+		$query->number = $_GET['param'];
 		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_set_status(){
