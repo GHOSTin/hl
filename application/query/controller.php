@@ -75,7 +75,9 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_get_query_title(){
-		return ['query' => model_query::get_query(['query_id' => $_GET['id']])];
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_get_search(){
 		return true;
