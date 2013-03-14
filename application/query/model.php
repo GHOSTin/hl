@@ -251,7 +251,7 @@ class model_query{
 					AND `opentime` > :time_open
 					AND `opentime` <= :time_close";
 					if(!empty($query->status)){
-						$sql .= " AND `queries`.`status` IN(:status)";
+						$sql .= " AND `queries`.`status` = :status";
 					}
 					$sql .= " ORDER BY `opentime` DESC";
 			}
@@ -288,7 +288,7 @@ class model_query{
 			$previous = $_SESSION['filters']['query'];
 			$time = getdate();
 			if(empty($query->time_open)){
-				if($previous instanceof data_queery){
+				if($previous instanceof data_query){
 					$query->time_open = $previous->time_open;
 				}else{
 					$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
@@ -305,7 +305,7 @@ class model_query{
 					throw new exception('Проблема с временем открытия.');
 			}
 			if(empty($query->status)){
-				if($previous instanceof data_queery){
+				if($previous instanceof data_query){
 					$query->status = $previous->status;
 				}
 			}else{
