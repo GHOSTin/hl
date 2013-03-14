@@ -311,7 +311,7 @@ class model_query{
 			}else{
 				$statuses = ['open', 'working', 'close', 'reopen'];
 				if(array_search($query->status, $statuses) === false)
-					throw new exception('Проблема со статусами.');
+					$query->status = null;
 			}
 			if(!empty($query->id)){
 				if((int) $query->id < 1)

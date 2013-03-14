@@ -19,10 +19,14 @@
                     <label class="view-select">
                     <select class="filter-content-select-status">
                         <option value="all">Все заявки</option>
-                        <option value="open">Открытые заявки</option>
-                        <option value="close">Закрытые заявки</option>
-                        <option value="reopen">Переоткрытые заявки</option>
-                        <option value="working">В работе</option>
+                        {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые'} %}
+                        {% for key, status in statuses %}
+                            <option value="{{key}}" 
+                            {% if key == component.filters.status %}
+                             selected
+                            {% endif %}
+                            >{{status}}</option>
+                        {% endfor %}
                     </select></label>
                 </div>
             </div>
