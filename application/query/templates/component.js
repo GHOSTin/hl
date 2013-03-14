@@ -59,6 +59,14 @@ $(document).ready(function(){
 				show_content(r);
 			});
 	});		
+	$('body').on('click', '.get_timeline', function(){
+		$.get('get_timeline',{
+			act: $(this).attr('act'),
+			time: $('.timeline-month').attr('time')
+			},function(r){
+				init_content(r);
+			});
+	});	
 });
 function get_query_id(obj){
 	return obj.closest('.query').attr('query_id');

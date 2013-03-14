@@ -92,8 +92,33 @@ class controller_query{
 		$query->status = $_GET['value'];
 		return ['queries' => model_query::get_queries($query)];
 	}
+	public static function private_get_timeline(){
+		$time = (int) $_GET['time'];
+		$query = new data_query();
+		if($time < 0)
+			$time = getdate();
+			$time = getdate($time);
+			$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
+			switch ($_GET['act']) {
+				case 'next':
+					$query->time_open['begin'] = strtotime("+1 month", $time);
+					$timeline = strtotime("+1 month +12 hours", $time);
+				break;
+				case 'previous':
+					$query->time_open['begin'] = strtotime("-1 day", $time);
+					$timeline = strtotime("-1 month +12 hours", $time);
+				break;
+				default:
+					return false;
+			}
+			$query->time_open['end'] = $query->time_open['begin'] + 86399;
+		return ['queries' => model_query::get_queries($query),
+			'timeline' => $timeline];
+	}
 	public static function private_show_default_page(){
+		$time = getdate($_SESSION['filters']['query']->time_open['begin']);
 		return ['queries' => model_query::get_queries(new data_query()),
-			'filters' => $_SESSION['filters']['query']];
+			'filters' => $_SESSION['filters']['query'],
+			'timeline' =>  mktime(12, 0, 0, $time['mon'], 1, $time['year'])];
 	}
 }
