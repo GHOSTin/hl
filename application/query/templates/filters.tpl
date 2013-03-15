@@ -32,11 +32,6 @@
 	    			{% endif %}
 	       		</select>
 	       	</label>
-	   		<label class="view-select">
-	   			<select class="filter-content-select-house" style="margin:5px 0px 0px 0px;">
-	        		<option value="all">Все дома</option>
-	   			</select>
-	   		</label>
 	    </div>
 	</div>
 	<!-- end filter street, begin filter department -->
