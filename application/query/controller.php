@@ -116,8 +116,9 @@ class controller_query{
 			'timeline' => $timeline];
 	}
 	public static function private_show_default_page(){
-		$time = getdate($_SESSION['filters']['query']->time_open['begin']);
-		// var_dump();exit();
+		if($_SESSION['filters']['query'] instanceof data_query)
+			$time = getdate($_SESSION['filters']['query']->time_open['begin']);
+			$time = getdate();
 		return ['queries' => model_query::get_queries(new data_query()),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], 1, $time['year']),
