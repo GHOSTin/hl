@@ -285,9 +285,9 @@ class model_query{
 			}else{
 				$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 				$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			}
-			if(!empty($query->status)){
-				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+				if(!empty($query->status)){
+					$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+				}
 			}
 			if($stm->execute() == false)
 				throw new exception('Ошибка при выборке заявок.');
