@@ -1,26 +1,50 @@
 <?php
 class model_query{
-	private static function add_initiaor(data_query $query, $initiator){
+	private static function __add_number(data_query $query, data_number $number, $default, data_user $current_user){
+		$sql = "INSERT INTO `query2number` (
+					`query_id`, `number_id`, `company_id`, `default`
+				) VALUES (
+					:query_id, :number_id, :company_id, :default
+				)";
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':default', $default, PDO::PARAM_STR);
+		$stm->bindValue(':number_id', $number->id, PDO::PARAM_INT);
+		if($stm->execute() === false)
+			throw new exception('Проблема при добавлении лицевого счета.');
+	}
+	private static function __add_user(data_query $query, data_user $current_user, $class){
+		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
+			throw new exception('Не соответсвует тип пользователя.');
+		$sql = "INSERT INTO `query2user` (
+					`query_id`, `user_id`, `company_id`, `class`
+				) VALUES (
+					:query_id, :user_id, :company_id, :class
+				)";
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':user_id', $current_user->id, PDO::PARAM_INT);
+		$stm->bindValue(':class', $class, PDO::PARAM_STR);
+		if($stm->execute() === false)
+			throw new exception('Проблема при добавлении пользователя.');
+	}
+	private static function add_numbers(data_query $query, $initiator, data_user $current_user){
 		try{
 			if($initiator instanceof data_house){
-				$initiator = model_house::get_house($initiator);
+				$numbers = model_house::get_numbers($initiator);
+				$default = 'false';
 			}elseif($initiator instanceof data_number){
-				$initiator = model_number::get_number($initiator);
+				$numbers[] = model_number::get_number($initiator);
+				$default = 'true';
 			}else{
 				throw new exception('Не подходящий тип инициатора.');
 			}
-			$sql = "SELECT MAX(`id`) as `max_query_id` FROM `queries`
-				WHERE `company_id` = :company_id";
-			$stm = db::get_handler()->prepare($sql);
-			$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
-			$stm->execute();
-			if($stm === false){
-				return false;
-			}else{
-				if($stm->rowCount() === 1){
-					return (int) $stm->fetch()['max_query_id'] + 1;
-				}else
-					return false;
+			if(count($numbers) < 1)
+				throw new exception('Не соответсвующее количество лицевых счетов.');
+			foreach($numbers as $number){
+				self::__add_number($query, $number, $default, $current_user);
 			}
 		}catch(exception $e){
 			throw new exception('Проблема при добавлении иницитора.');
@@ -28,6 +52,7 @@ class model_query{
 	}	
 	public static function create_query(data_query $query, $initiator, data_user $current_user){
 		try{
+			db::get_handler()->beginTransaction();
 			if($initiator instanceof data_house){
 				$initiator = model_house::get_house($initiator);
 			}elseif($initiator instanceof data_number){
@@ -36,7 +61,7 @@ class model_query{
 				throw new exception('Не подходящий тип инициатора.');
 			}
 			if($initiator === false)
-				return false;
+				throw new exception('Инициатор не был сформирован.');
 			if($initiator instanceof data_house){
 				$query->initiator = 'house';
 				$query->house_id = $initiator->id;
@@ -44,17 +69,14 @@ class model_query{
 				$query->initiator = 'number';
 				$query->house_id = $initiator->house_id;
 			}	
-			db::get_handler()->beginTransaction();
 			$query_id = self::get_insert_id($current_user);
 			if($query_id === false){
-				db::get_handler()->rollBack();
-				return false;
+				throw new exception('Не был получени query_id для вставки.');
 			}
 			$time = getdate();
 			$query_number = self::get_insert_query_number($current_user, $time);
 			if($query_number === false){
-				db::get_handler()->rollBack();
-				return false;
+				throw new exception('Инициатор не был сформирован.');
 			}
 			$query->id = $query_id;
 			$query->company_id = $current_user->company_id;
@@ -98,17 +120,17 @@ class model_query{
 			$stm->bindParam(':contact_cellphone', $query->contact_cellphone, PDO::PARAM_STR);
 			$stm->bindParam(':description', $query->description, PDO::PARAM_STR);
 			$stm->bindParam(':number', $query->number, PDO::PARAM_INT);
-			if($stm->execute() === false){
-				db::get_handler()->rollBack();
-				return false;
-			}
+			if($stm->execute() === false)
+				throw new exception('Инициатор не был сформирован.');
 
-			var_dump(self::add_initiator($query, $initiator));
+			self::add_numbers($query, $initiator, $current_user);
+			self::__add_user($query, $current_user, 'creator');
+			self::__add_user($query, $current_user, 'manager');
+			self::__add_user($query, $current_user, 'observer');
 
-			//db::get_handler()->commit();
-
-			exit();
+			db::get_handler()->commit();
 		}catch(exception $e){
+			db::get_handler()->rollBack();-
 			die($e->getMessage());
 			throw new exception('Ошибка при создании заявки.');
 		}

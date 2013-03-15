@@ -12,7 +12,7 @@ class controller_query{
 	public static function private_create_query(){
 		if($_GET['initiator'] === 'number'){
 			$initiator = new data_number();
-		}elseif($_GET['house'] === 'house'){
+		}elseif($_GET['initiator'] === 'house'){
 			$initiator = new data_house();
 		}
 		$initiator->id = (int) $_GET['id'];
