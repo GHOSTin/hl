@@ -40,5 +40,33 @@ class model_department{
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего department_id.');
 		}
-	}			
+	}		
+// 	CREATE TABLE IF NOT EXISTS `departments` (
+//   `id` TINYINT(3) UNSIGNED NOT NULL,
+//   `company_id` TINYINT(3) UNSIGNED NOT NULL,
+//   `status` ENUM('active','deactive') NOT NULL DEFAULT 'active',
+//   `name` VARCHAR(255) NOT NULL,
+//   KEY `id` (`company_id`,`id`),
+//   KEY `name` (`name`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;	
+	public static function get_departments(data_user $current_user){
+		try{
+			$sql = "SELECT `departments`.`id`, `departments`.`company_id`, 
+						`departments`.`status`, `departments`.`name`
+					FROM `departments`
+					WHERE `departments`.`company_id` = :company_id";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			if($stm->execute() == false)
+				throw new exception('Проблемы при выборке участков.');
+			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_department');
+			$result = [];
+			while($department = $stm->fetch())
+				$result[] = $department;
+			$stm->closeCursor();
+			return $result;
+		}catch(exception $e){
+			throw new exception('Проблемы при выборке участков.');
+		}
+	}
 }

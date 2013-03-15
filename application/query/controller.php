@@ -117,8 +117,13 @@ class controller_query{
 	}
 	public static function private_show_default_page(){
 		$time = getdate($_SESSION['filters']['query']->time_open['begin']);
+		// var_dump();exit();
 		return ['queries' => model_query::get_queries(new data_query()),
 			'filters' => $_SESSION['filters']['query'],
-			'timeline' =>  mktime(12, 0, 0, $time['mon'], 1, $time['year'])];
+			'timeline' =>  mktime(12, 0, 0, $time['mon'], 1, $time['year']),
+			'streets' => model_street::get_streets(),
+			'users' => model_user::get_users([]),
+			'departments' => model_department::get_departments($_SESSION['user']),
+			'query_work_types' => model_query_work_type::get_query_work_types()];
 	}
 }

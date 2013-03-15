@@ -25,6 +25,11 @@
 	    	<label class="view-select">
 	    		<select class="filter-content-select-street">
 	    			<option value="">Все улицы</option>
+	    			{% if component.streets != false %}
+	    				{% for street in component.streets %}
+	    					<option value="{{street.id}}">{{street.name}}</option>
+	    				{% endfor %}
+	    			{% endif %}
 	       		</select>
 	       	</label>
 	   		<label class="view-select">
@@ -41,6 +46,11 @@
 	        <label class="view-select">
 	        	<select class="filter-content-select-department">
 	        		<option value="">Все участки</option>
+	        		{% if component.departments != false %}
+	    				{% for department in component.departments %}
+	    					<option value="{{department.id}}">{{department.name}}</option>
+	    				{% endfor %}
+	    			{% endif %}
 	        	</select>
 	        </label>
 	    </div>
@@ -52,6 +62,11 @@
 	    	<label class="view-select">
 	    		<select class="filter-content-select-workType">
 	    			<option value="">Все типы</option>
+	    			{% if component.query_work_types != false %}
+	    				{% for query_work_type in component.query_work_types %}
+	    					<option value="{{query_work_type.id}}">{{query_work_type.name}}</option>
+	    				{% endfor %}
+	    			{% endif %}
 	    		</select>
 	    	</label>
 	    </div>
@@ -63,6 +78,11 @@
 	    	<label class="view-select">
 	    		<select class="filter-content-select-user">
 	            	<option value="all">Все пользователи</option>
+	    			{% if component.users != false %}
+	    				{% for user in component.users %}
+	    					<option value="{{user.id}}">{{user.lastname}} {{user.firstname}}</option>
+	    				{% endfor %}
+	    			{% endif %}
 	        	</select>
 	        </label>
 	    </div>
