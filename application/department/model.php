@@ -32,8 +32,8 @@ class model_department{
 			$stm->bindValue(':company_id', $company->id, PDO::PARAM_INT);
 			if($stm->execute() == false)
 				throw new exception('Проблема при опредении следующего department_id.');
-				if($stm->rowCount() !== 1)
-					throw new exception('Проблема при опредении следующего department_id.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при опредении следующего department_id.');
 			$department_id = (int) $stm->fetch()['max_department_id'] + 1;
 			$stm->closeCursor();
 			return $department_id;
@@ -41,14 +41,6 @@ class model_department{
 			throw new exception('Проблема при опредении следующего department_id.');
 		}
 	}		
-// 	CREATE TABLE IF NOT EXISTS `departments` (
-//   `id` TINYINT(3) UNSIGNED NOT NULL,
-//   `company_id` TINYINT(3) UNSIGNED NOT NULL,
-//   `status` ENUM('active','deactive') NOT NULL DEFAULT 'active',
-//   `name` VARCHAR(255) NOT NULL,
-//   KEY `id` (`company_id`,`id`),
-//   KEY `name` (`name`)
-// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;	
 	public static function get_departments(data_user $current_user){
 		try{
 			$sql = "SELECT `departments`.`id`, `departments`.`company_id`, 

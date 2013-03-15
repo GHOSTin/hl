@@ -65,7 +65,7 @@ function create_departments($company_node, $company, $current_user){
 			$new_department->status = (string) $department->status;
 			$department = model_department::create_department($company, $new_department, $current_user);
 			if($department === false)
-					throw new exception('Проблема при создании участка.');
+				throw new exception('Проблема при создании участка.');
 		}
 	}
 }

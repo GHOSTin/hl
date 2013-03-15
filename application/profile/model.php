@@ -29,9 +29,8 @@ class model_profile{
 							OR $profile['profile'] === 'system'
 							OR $profile['profile'] === 'workgroup'
 							){
-						}else{
+						}else
 							$links[] = ['href' => $profile['profile'], 'title' => $c::$name];
-						}
 					}
 					$_SESSION['menu'] = $links;
 				}
@@ -49,6 +48,7 @@ class model_profile{
 			if(property_exists($controller, 'rules')){
 				if($_SESSION['rules'][$component]->generalAccess !== true)
 					return false;
+				else
 					return true;
 			}else
 				return true;

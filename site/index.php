@@ -3,10 +3,9 @@
 define('ROOT' , substr(__DIR__, 0, (strlen(__DIR__) - strlen('/site'))));
 require_once(ROOT."/framework/framework.php");
 # отделение статики от работы php-скрипта
-if(!empty($_GET['js'])){
+if(!empty($_GET['js']))
 	get_component_js();
-}elseif(!empty($_GET['css'])){
+elseif(!empty($_GET['css']))
 	get_component_css();
-}else{
+else
 	print model_environment::get_page_content();
-}

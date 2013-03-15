@@ -10,11 +10,10 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_create_query(){
-		if($_GET['initiator'] === 'number'){
+		if($_GET['initiator'] === 'number')
 			$initiator = new data_number();
-		}elseif($_GET['initiator'] === 'house'){
+		elseif($_GET['initiator'] === 'house')
 			$initiator = new data_house();
-		}
 		$initiator->id = (int) $_GET['id'];
 		$query = new data_query();
 		$query->description = htmlspecialchars($_GET['description']);
@@ -97,27 +96,29 @@ class controller_query{
 		$query = new data_query();
 		if($time < 0)
 			$time = getdate();
+		else
 			$time = getdate($time);
-			$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
-			switch ($_GET['act']) {
-				case 'next':
-					$query->time_open['begin'] = strtotime("+1 month", $time);
-					$timeline = strtotime("+1 month +12 hours", $time);
-				break;
-				case 'previous':
-					$query->time_open['begin'] = strtotime("-1 day", $time);
-					$timeline = strtotime("-1 month +12 hours", $time);
-				break;
-				default:
-					return false;
-			}
-			$query->time_open['end'] = $query->time_open['begin'] + 86399;
+		$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
+		switch ($_GET['act']) {
+			case 'next':
+				$query->time_open['begin'] = strtotime("+1 month", $time);
+				$timeline = strtotime("+1 month +12 hours", $time);
+			break;
+			case 'previous':
+				$query->time_open['begin'] = strtotime("-1 day", $time);
+				$timeline = strtotime("-1 month +12 hours", $time);
+			break;
+			default:
+				return false;
+		}
+		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		return ['queries' => model_query::get_queries($query),
 			'timeline' => $timeline];
 	}
 	public static function private_show_default_page(){
 		if($_SESSION['filters']['query'] instanceof data_query)
 			$time = getdate($_SESSION['filters']['query']->time_open['begin']);
+		else
 			$time = getdate();
 		return ['queries' => model_query::get_queries(new data_query()),
 			'filters' => $_SESSION['filters']['query'],

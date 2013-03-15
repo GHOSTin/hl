@@ -18,9 +18,9 @@ class model_auth{
 			$stm->bindParam(':login', $login, PDO::PARAM_STR, 255);
 			$stm->bindParam(':hash', $hash , PDO::PARAM_STR, 255);
 			$stm->execute();
-			if($stm->rowCount() !== 1){
+			if($stm->rowCount() !== 1)
 				return false;
-			}else{
+			else{
 				$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
 				$_SESSION['user'] = $stm->fetch();
 				return true;

@@ -58,9 +58,8 @@ class model_environment{
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			self::load_twig();
-			if($method === 'show_default_page'){
+			if($method === 'show_default_page')
 				$c_data['componentName'] = $component;
-			}
 			$c_data['anonymous'] = true;
 			if($_SESSION['user'] instanceof data_user){
 				model_profile::get_user_profiles();

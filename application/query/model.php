@@ -38,9 +38,8 @@ class model_query{
 			}elseif($initiator instanceof data_number){
 				$numbers[] = model_number::get_number($initiator);
 				$default = 'true';
-			}else{
+			}else
 				throw new exception('Не подходящий тип инициатора.');
-			}
 			if(count($numbers) < 1)
 				throw new exception('Не соответсвующее количество лицевых счетов.');
 			foreach($numbers as $number){
@@ -57,9 +56,8 @@ class model_query{
 				$initiator = model_house::get_house($initiator);
 			}elseif($initiator instanceof data_number){
 				$initiator = model_number::get_number($initiator);
-			}else{
+			}else
 				throw new exception('Не подходящий тип инициатора.');
-			}
 			if($initiator === false)
 				throw new exception('Инициатор не был сформирован.');
 			if($initiator instanceof data_house){
@@ -70,14 +68,12 @@ class model_query{
 				$query->house_id = $initiator->house_id;
 			}	
 			$query_id = self::get_insert_id($current_user);
-			if($query_id === false){
+			if($query_id === false)
 				throw new exception('Не был получени query_id для вставки.');
-			}
 			$time = getdate();
 			$query_number = self::get_insert_query_number($current_user, $time);
-			if($query_number === false){
+			if($query_number === false)
 				throw new exception('Инициатор не был сформирован.');
-			}
 			$query->id = $query_id;
 			$query->company_id = $current_user->company_id;
 			$query->status = 'open';
@@ -122,12 +118,10 @@ class model_query{
 			$stm->bindParam(':number', $query->number, PDO::PARAM_INT);
 			if($stm->execute() === false)
 				throw new exception('Инициатор не был сформирован.');
-
 			self::add_numbers($query, $initiator, $current_user);
 			self::__add_user($query, $current_user, 'creator');
 			self::__add_user($query, $current_user, 'manager');
 			self::__add_user($query, $current_user, 'observer');
-
 			db::get_handler()->commit();
 		}catch(exception $e){
 			db::get_handler()->rollBack();-
@@ -142,12 +136,12 @@ class model_query{
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
 			$stm->execute();
-			if($stm === false){
+			if($stm === false)
 				return false;
-			}else{
-				if($stm->rowCount() === 1){
+			else{
+				if($stm->rowCount() === 1)
 					return (int) $stm->fetch()['max_query_id'] + 1;
-				}else
+				else
 					return false;
 			}
 		}catch(exception $e){
@@ -165,27 +159,24 @@ class model_query{
 			$stm->bindValue(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
 			$stm->bindValue(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
 			$stm->execute();
-			if($stm === false){
+			if($stm === false)
 				return false;
-			}else{
-				if($stm->rowCount() === 1){
+			else{
+				if($stm->rowCount() === 1)
 					return (int) $stm->fetch()['querynumber'] + 1;
-				}else
+				else
 					return false;
 			}
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего querynumber.');
 		}
-
 		$time 	= getdate();
 		$begin 	= mktime(0,0,0,1,1,$time['year']);
 		$end 	= mktime(23,59,59,12,31,$time['year']);
-			
 		$sql = "SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
 			 WHERE `opentime` > ".$begin."
 			 AND `opentime` <= ".$end."
 			 AND `company_id` = ".environment::$data->user->companyID;
-			
 		$ctl = self::select($sql);
 		$ctl->set_data(intval($ctl->data->self[0]['querynumber']) + 1);
 		return $ctl;
@@ -198,7 +189,6 @@ class model_query{
 		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		try{
 			if(!empty($query->id)){
-
 				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
 					`queries`.`payment-status` as `payment_status`,
@@ -278,16 +268,15 @@ class model_query{
 					$sql .= " ORDER BY `opentime` DESC";
 			}
 			$stm = db::get_handler()->prepare($sql);
-			if(!empty($query->id)){
+			if(!empty($query->id))
 				$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
-			}elseif(!empty($query->number)){
+			elseif(!empty($query->number))
 				$stm->bindValue(':number', $query->number, PDO::PARAM_INT);
-			}else{
+			else{
 				$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 				$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-				if(!empty($query->status)){
+				if(!empty($query->status))
 					$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
-				}
 			}
 			if($stm->execute() == false)
 				throw new exception('Ошибка при выборке заявок.');
@@ -310,9 +299,9 @@ class model_query{
 			$previous = $_SESSION['filters']['query'];
 			$time = getdate();
 			if(empty($query->time_open)){
-				if($previous instanceof data_query){
+				if($previous instanceof data_query)
 					$query->time_open = $previous->time_open;
-				}else{
+				else{
 					$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 					$query->time_open['end'] = $query->time_open['begin'] + 86399;
 				}
@@ -327,9 +316,8 @@ class model_query{
 					throw new exception('Проблема с временем открытия.');
 			}
 			if(empty($query->status)){
-				if($previous instanceof data_query){
+				if($previous instanceof data_query)
 					$query->status = $previous->status;
-				}
 			}else{
 				$statuses = ['open', 'working', 'close', 'reopen'];
 				if(array_search($query->status, $statuses) === false)
