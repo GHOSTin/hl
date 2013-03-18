@@ -132,6 +132,7 @@ class model_query{
 			db::get_handler()->commit();
 			return $query;
 		}catch(exception $e){
+			die($e->getMessage());
 			db::get_handler()->rollBack();
 			throw new exception('Ошибка при создании заявки.');
 		}
@@ -142,13 +143,13 @@ class model_query{
 				WHERE `company_id` = :company_id";
 			$stm = db::get_handler()->prepare($sql);
 			$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
-			$stm->execute();
-			if($stm === false)
+			if($stm->execute() === false)
 				throw new exception('Проблема при опредении следующего query_id.');
 			if($stm->rowCount() !== 1)
 				throw new exception('Проблема при опредении следующего query_id.');
+			$query_id = (int) $stm->fetch()['max_query_id'] + 1;
 			$stm->closeCursor();
-			return (int) $stm->fetch()['max_query_id'] + 1;
+			return $query_id;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего query_id.');
 		}
@@ -163,12 +164,13 @@ class model_query{
 			$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
 			$stm->bindValue(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
 			$stm->bindValue(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
-			$stm->execute();
-			if($stm === false)
+			if($stm->execute() === false)
 				throw new exception('Проблема при опредении следующего querynumber.');
 			if($stm->rowCount() !== 1)
 				throw new exception('Проблема при опредении следующего querynumber.');
-			return (int) $stm->fetch()['querynumber'] + 1;
+			$query_number = (int) $stm->fetch()['querynumber'] + 1;
+			$stm->closeCursor();
+			return $query_number;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего querynumber.');
 		}
