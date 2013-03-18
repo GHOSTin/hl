@@ -123,6 +123,8 @@ class model_query{
 			if(!is_int($query->number = self::get_insert_query_number($current_user, $time)))
 				throw new exception('Инициатор не был сформирован.');
 			$query = self::__add_query($query, $initiator, $current_user, $time);
+			if(!($query instanceof data_query))
+				throw new exception('Не корректный объект query');
 			self::add_numbers($query, $initiator, $current_user);
 			self::__add_user($query, $current_user, 'creator');
 			self::__add_user($query, $current_user, 'manager');
@@ -142,13 +144,11 @@ class model_query{
 			$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
 			$stm->execute();
 			if($stm === false)
-				return false;
-			else{
-				if($stm->rowCount() === 1)
-					return (int) $stm->fetch()['max_query_id'] + 1;
-				else
-					return false;
-			}
+				throw new exception('Проблема при опредении следующего query_id.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при опредении следующего query_id.');
+			$stm->closeCursor();
+			return (int) $stm->fetch()['max_query_id'] + 1;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего query_id.');
 		}
@@ -165,26 +165,13 @@ class model_query{
 			$stm->bindValue(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
 			$stm->execute();
 			if($stm === false)
-				return false;
-			else{
-				if($stm->rowCount() === 1)
-					return (int) $stm->fetch()['querynumber'] + 1;
-				else
-					return false;
-			}
+				throw new exception('Проблема при опредении следующего querynumber.');
+			if($stm->rowCount() !== 1)
+				throw new exception('Проблема при опредении следующего querynumber.');
+			return (int) $stm->fetch()['querynumber'] + 1;
 		}catch(exception $e){
 			throw new exception('Проблема при опредении следующего querynumber.');
 		}
-		$time 	= getdate();
-		$begin 	= mktime(0,0,0,1,1,$time['year']);
-		$end 	= mktime(23,59,59,12,31,$time['year']);
-		$sql = "SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
-			 WHERE `opentime` > ".$begin."
-			 AND `opentime` <= ".$end."
-			 AND `company_id` = ".environment::$data->user->companyID;
-		$ctl = self::select($sql);
-		$ctl->set_data(intval($ctl->data->self[0]['querynumber']) + 1);
-		return $ctl;
 	}
 	/**
 	* Возвращает заявки
