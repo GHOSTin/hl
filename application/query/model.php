@@ -1,86 +1,101 @@
 <?php
 class model_query{
 	private static function __add_number(data_query $query, data_number $number, $default, data_user $current_user){
-		$sql = "INSERT INTO `query2number` (
+		try{
+			$sql = "INSERT INTO `query2number` (
 					`query_id`, `number_id`, `company_id`, `default`
 				) VALUES (
 					:query_id, :number_id, :company_id, :default
 				)";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
-		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		$stm->bindValue(':default', $default, PDO::PARAM_STR);
-		$stm->bindValue(':number_id', $number->id, PDO::PARAM_INT);
-		if($stm->execute() === false)
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':default', $default, PDO::PARAM_STR);
+			$stm->bindValue(':number_id', $number->id, PDO::PARAM_INT);
+			if($stm->execute() === false)
+				throw new exception('Проблема при добавлении лицевого счета.');
+		}catch(exception $e){
+			return false;
 			throw new exception('Проблема при добавлении лицевого счета.');
+		}
 	}
 	private static function __add_user(data_query $query, data_user $current_user, $class){
-		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
-			throw new exception('Не соответсвует тип пользователя.');
-		$sql = "INSERT INTO `query2user` (
-					`query_id`, `user_id`, `company_id`, `class`
-				) VALUES (
-					:query_id, :user_id, :company_id, :class
-				)";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
-		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		$stm->bindValue(':user_id', $current_user->id, PDO::PARAM_INT);
-		$stm->bindValue(':class', $class, PDO::PARAM_STR);
-		if($stm->execute() === false)
+		try{
+			if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
+				throw new exception('Не соответсвует тип пользователя.');
+			$sql = "INSERT INTO `query2user` (
+						`query_id`, `user_id`, `company_id`, `class`
+					) VALUES (
+						:query_id, :user_id, :company_id, :class
+					)";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':user_id', $current_user->id, PDO::PARAM_INT);
+			$stm->bindValue(':class', $class, PDO::PARAM_STR);
+			if($stm->execute() === false)
+				throw new exception('Проблема при добавлении пользователя.');
+		}catch(exception $e){
+			return false;
 			throw new exception('Проблема при добавлении пользователя.');
+		}
 	}
 	private static function __add_query(data_query $query, $initiator, data_user $current_user, $time){
-		if(empty($current_user->company_id))
-			throw new exception('company_id не указан.');
-		if(!($initiator instanceof data_house OR $initiator instanceof data_number))
-			throw new exception('Инициатор не верного формата.');
-		if(empty($initiator->department_id))
-			throw new exception('department_id не указан.');
-		if(!is_int($time))
-			throw new exception('Неверная дата.');
-		$query->company_id = $current_user->company_id;
-		$query->status = 'open';
-		$query->payment_status = 'unpaid';
-		$query->warning_status = 'normal';
-		$query->department_id = $initiator->department_id;
-		$query->worktype_id = 1;
-		$query->time_open = $query->time_work = $time;
-		$sql = "INSERT INTO `queries` (
-					`id`, `company_id`, `status`, `initiator-type`,
-					`payment-status`, `warning-type`, `department_id`,
-					`house_id`, `query_worktype_id`,
-					`opentime`, `worktime`, `addinfo-name`,
-					`addinfo-telephone`, `addinfo-cellphone`,
-					`description-open`, 
-					`querynumber`
-				) VALUES (
-					:id, :company_id, :status, :initiator, :payment_status, 
-					:warning_status,
-					:department_id, :house_id, :worktype_id, :time_open,
-					:time_work, :contact_fio, :contact_telephone,
-					:contact_cellphone, :description, :number
-				);";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':id', $query->id, PDO::PARAM_INT);
-		$stm->bindParam(':company_id', $query->company_id, PDO::PARAM_INT, 3);
-		$stm->bindParam(':status', $query->status, PDO::PARAM_STR);
-		$stm->bindParam(':initiator', $query->initiator, PDO::PARAM_STR);
-		$stm->bindParam(':payment_status', $query->payment_status, PDO::PARAM_STR);
-		$stm->bindParam(':warning_status', $query->warning_status, PDO::PARAM_STR);
-		$stm->bindParam(':department_id', $query->department_id, PDO::PARAM_INT);
-		$stm->bindParam(':house_id', $query->house_id, PDO::PARAM_INT);
-		$stm->bindParam(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
-		$stm->bindParam(':time_open', $query->time_open, PDO::PARAM_INT);
-		$stm->bindParam(':time_work', $query->time_work, PDO::PARAM_INT);
-		$stm->bindParam(':contact_fio', $query->contact_fio, PDO::PARAM_STR);
-		$stm->bindParam(':contact_telephone', $query->contact_telephone, PDO::PARAM_STR);
-		$stm->bindParam(':contact_cellphone', $query->contact_cellphone, PDO::PARAM_STR);
-		$stm->bindParam(':description', $query->description, PDO::PARAM_STR);
-		$stm->bindParam(':number', $query->number, PDO::PARAM_INT);
-		if($stm->execute() === false)
+		try{
+			if(empty($current_user->company_id))
+				throw new exception('company_id не указан.');
+			if(!($initiator instanceof data_house OR $initiator instanceof data_number))
+				throw new exception('Инициатор не верного формата.');
+			if(empty($initiator->department_id))
+				throw new exception('department_id не указан.');
+			if(!is_int($time))
+				throw new exception('Неверная дата.');
+			$query->company_id = $current_user->company_id;
+			$query->status = 'open';
+			$query->payment_status = 'unpaid';
+			$query->warning_status = 'normal';
+			$query->department_id = $initiator->department_id;
+			$query->worktype_id = 1;
+			$query->time_open = $query->time_work = $time;
+			$sql = "INSERT INTO `queries` (
+						`id`, `company_id`, `status`, `initiator-type`,
+						`payment-status`, `warning-type`, `department_id`,
+						`house_id`, `query_worktype_id`,
+						`opentime`, `worktime`, `addinfo-name`,
+						`addinfo-telephone`, `addinfo-cellphone`,
+						`description-open`, 
+						`querynumber`
+					) VALUES (
+						:id, :company_id, :status, :initiator, :payment_status, 
+						:warning_status,
+						:department_id, :house_id, :worktype_id, :time_open,
+						:time_work, :contact_fio, :contact_telephone,
+						:contact_cellphone, :description, :number
+					);";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindParam(':id', $query->id, PDO::PARAM_INT);
+			$stm->bindParam(':company_id', $query->company_id, PDO::PARAM_INT, 3);
+			$stm->bindParam(':status', $query->status, PDO::PARAM_STR);
+			$stm->bindParam(':initiator', $query->initiator, PDO::PARAM_STR);
+			$stm->bindParam(':payment_status', $query->payment_status, PDO::PARAM_STR);
+			$stm->bindParam(':warning_status', $query->warning_status, PDO::PARAM_STR);
+			$stm->bindParam(':department_id', $query->department_id, PDO::PARAM_INT);
+			$stm->bindParam(':house_id', $query->house_id, PDO::PARAM_INT);
+			$stm->bindParam(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
+			$stm->bindParam(':time_open', $query->time_open, PDO::PARAM_INT);
+			$stm->bindParam(':time_work', $query->time_work, PDO::PARAM_INT);
+			$stm->bindParam(':contact_fio', $query->contact_fio, PDO::PARAM_STR);
+			$stm->bindParam(':contact_telephone', $query->contact_telephone, PDO::PARAM_STR);
+			$stm->bindParam(':contact_cellphone', $query->contact_cellphone, PDO::PARAM_STR);
+			$stm->bindParam(':description', $query->description, PDO::PARAM_STR);
+			$stm->bindParam(':number', $query->number, PDO::PARAM_INT);
+			if($stm->execute() === false)
+				throw new exception('Проблемы при создании заявки.');
+			return $query;
+		}catch(exception $e){
+			return false;
 			throw new exception('Инициатор не был сформирован.');
-		return $query;
+		}
 	}	
 	private static function add_numbers(data_query $query, $initiator, data_user $current_user){
 		try{
@@ -132,8 +147,8 @@ class model_query{
 			db::get_handler()->commit();
 			return $query;
 		}catch(exception $e){
-			die($e->getMessage());
 			db::get_handler()->rollBack();
+			return false;
 			throw new exception('Ошибка при создании заявки.');
 		}
 	}
@@ -151,6 +166,7 @@ class model_query{
 			$stm->closeCursor();
 			return $query_id;
 		}catch(exception $e){
+			return false;
 			throw new exception('Проблема при опредении следующего query_id.');
 		}
 	}	
@@ -172,6 +188,7 @@ class model_query{
 			$stm->closeCursor();
 			return $query_number;
 		}catch(exception $e){
+			return false;
 			throw new exception('Проблема при опредении следующего querynumber.');
 		}
 	}
@@ -180,8 +197,8 @@ class model_query{
 	* @return false or array
 	*/
 	public static function get_queries(data_query $query){
-		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		try{
+			$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 			if(!empty($query->id)){
 				$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 					`queries`.`status`, `queries`.`initiator-type` as `initiator`,
