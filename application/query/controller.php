@@ -20,8 +20,8 @@ class controller_query{
 		$query->contact_fio = htmlspecialchars($_GET['fio']);
 		$query->contact_telephone = htmlspecialchars($_GET['telephone']);
 		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
-		var_dump(model_query::create_query($query, $initiator, $_SESSION['user']));
-		exit();
+		$queries[] = model_query::create_query($query, $initiator, $_SESSION['user']);
+		return ['queries' => $queries];
 	}	
 	public static function private_get_day(){
 		$time = getdate($_GET['time']);

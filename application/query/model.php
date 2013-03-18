@@ -113,6 +113,7 @@ class model_query{
 				self::__add_number($query, $number, $default, $current_user);
 			}
 		}catch(exception $e){
+			return false;
 			throw new exception('Проблема при добавлении иницитора.');
 		}
 	}	

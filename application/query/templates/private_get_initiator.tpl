@@ -16,6 +16,8 @@
 			cellphone: $('.dialog-cellphone').val(),
 			description: $('.dialog-description').val()
 			},function(r){
+				$('.queries').prepend(r);
+				$('.dialog').modal('hide');
 			});
 	});
 {% endblock js %}
