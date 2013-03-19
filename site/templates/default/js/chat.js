@@ -44,7 +44,7 @@ window.userList = {
                 pane += '</button></h6>';
                 pane += '<div class="feed">';
                 pane += '<ul id="dates"></ul>';
-                pane += '<ul id="history"></ul>';
+                pane += '<ul id="history" style="display:none;"></ul>';
                 pane += '</div>';
                 pane += '<form class="well message" data-user-id="' + user.id + '">';
                 pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
@@ -192,7 +192,7 @@ User.prototype.loadPreviousMessages = function (messages, status) {
                 message._id,
                 flags,
                 this.id,
-                message.date,
+                message.date+message.time,
                 null,
                 message.text,
                 message.attachments,

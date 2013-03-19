@@ -19,5 +19,5 @@ class model_menu{
 		}catch(exception $e){
 			throw new exception('Проблема при формировании hot_menu.');
 		}
-	}	
+	}
 }

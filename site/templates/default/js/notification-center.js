@@ -61,7 +61,6 @@ $(document).on('click', '.users li a', function (e) {
         user.loadPreviousMessages();
     }
     user.markAllAsRead();
-//    $(".chat h6").text(user.name);
     $("textarea").val("");
     $('.chat.active .feed').mCustomScrollbar("update");
     $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
@@ -73,7 +72,9 @@ $(document).on('submit', 'form.message', function (e) {
     $('.attachments li').each(function(){
         files.push($(this).attr('id'));
     });
-    chat.json.send({'type':'send_message', "data":{'to':$('.chat.active').attr('id').split('_')[1], 'message':form[0].message.value.replace(/\r\n|\r|\n/g, "<br>"), 'attachments': files.join(',')}});
+    if(form[0].message.value !== '' || $('.attachments li').length) {
+        chat.json.send({'type':'send_message', "data":{'to':$('.chat.active').attr('id').split('_')[1], 'message':form[0].message.value.replace(/\r\n|\r|\n/g, "<br>"), 'attachments': files.join(',')}});
+    }
     $("input[id=lefile]").attr({ value: '' });
     $(".attachments").html("");
     form[0].message.value = "";
@@ -91,8 +92,17 @@ $(document).on('keypress', '.chat.active textarea',function (event) {
 $(document).on('click', '.history', function(e){
     e.preventDefault();
     if($(this).hasClass('active')){
-        chat.json.send({'type':'get_history_list', 'data':{"uid": parseInt($('.chat.active').attr('id').split('_')[1])}});
+        var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+        chat.json.send({'type':'get_history_list', 'data':{"uid": user.id, 'offset': Object.keys(user.history).length}});
     }
+    $('.chat.active ul#dates').toggle("fast", function(){
+        $('.chat.active .feed').mCustomScrollbar("update");
+        $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
+    });
+    $('.chat.active ul#history').toggle("fast", function(){
+        $('.chat.active .feed').mCustomScrollbar("update");
+        $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
+    });
 });
 
 $('#nt-center').on('click', function(e){
