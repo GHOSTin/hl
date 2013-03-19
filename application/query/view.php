@@ -28,6 +28,9 @@ class view_query{
 	public static function private_get_numbers($args){
 		$args['numbers'] = $args;
 		return load_template('query.private_get_numbers', $args);
+	}	
+	public static function private_print_query($args){
+		return load_template('query.private_print_query', $args);
 	}		
 	public static function private_get_search_result($args){
 		return load_template('query.private_get_day', $args);

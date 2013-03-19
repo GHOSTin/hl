@@ -70,7 +70,12 @@ class controller_query{
 		$house = new data_house();
 		$house->id = $_GET['id'];
 		return ['numbers' => model_house::get_numbers($house)];
-	}		
+	}	
+	public static function private_print_query(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		return ['queries' => model_query::get_queries($query)];
+	}
 	public static function private_get_query_content(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
