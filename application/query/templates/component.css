@@ -12,8 +12,10 @@
 
 .timeline-day {
     cursor: pointer;
-    width:10px;
-    height:10px;
+    width:14px;
+    height:14px;
+    line-height: 14px;
+    text-align: center;
     display:inline-block;
     padding: 4px;
     border:1px solid black;
