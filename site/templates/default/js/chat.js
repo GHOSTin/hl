@@ -38,8 +38,14 @@ window.userList = {
             var user = this.list[i];
                 var pane = '';
                 pane += '<div class="chat tab-pane fade user" id="user_' + user.id + '">';
-                pane += '<h6>' + user.name + '</h6>';
-                pane += '<div class="feed"><ul id="dates"></ul></div>';
+                pane += '<h6>' + user.name;
+                pane += '<button type="button" class="history btn btn-mini pull-right" data-toggle="button">';
+                pane += '<i class="icon-book"></i>';
+                pane += '</button></h6>';
+                pane += '<div class="feed">';
+                pane += '<ul id="dates"></ul>';
+                pane += '<ul id="history"></ul>';
+                pane += '</div>';
                 pane += '<form class="well message" data-user-id="' + user.id + '">';
                 pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
 //                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
@@ -62,17 +68,17 @@ window.feed = {
             var update = updates[id];
             var code = update.shift();
             switch (code) {
-                case 3:
+                case 3: //отметить сообщение как прочитанное
                     var message_id = update.shift();
                     var flags = update.shift();
                     var user_id = update.shift();
 
                     if (flags & 1) userList.list[user_id].messages[message_id].read();
                     break;
-                case 4:
+                case 4: //пришло новое сообщение
                     var message = new Message(update);
                     break;
-                case 5:
+                case 5: //кол-во не прочитанных сообщений
                     var user_id = update[0];
                     var user = userList.list[user_id];
                     if(typeof user !== 'undefined' && user !== null) {
@@ -80,14 +86,21 @@ window.feed = {
                         userList.renderMenu();
                     }
                     break;
-                case 1:
-                case 2:
+                case 6: //подгрузка списка дат
+                    var history = new History(update);
+                    break;
+                case 1: //пользователь онлайн
+                case 2: //пользователь оффлайн
                     var user_id = update[0];
                     var user = userList.list[user_id];
                     if(typeof user !== 'undefined' && user !== null){
                         user.online = (code === 1) ? 1 : 0;
                         userList.renderMenu();
                     }
+                    break;
+                default:
+                    log('received unknown update:');
+                    log(update);
                     break;
             }
         }
@@ -164,6 +177,7 @@ var User =
         this.online = data.online;
         this.unread = data.unread || 0;
         this.messages = {};
+        this.history = {};
         this.previousMessagesLoaded = false;
     };
 
@@ -230,11 +244,36 @@ User.prototype.addMessage = function (message) {
     if (this.paneActive()) this.markAllAsRead();
 };
 
+User.prototype.addHistory = function (history) {
+    this.history[history.id] = history;
+}
+
 User.prototype.markAllAsRead = function () {
     if (this.previousMessagesLoaded && this.hasUnread()) {
         chat.json.send({'type':'mark_as_read', 'data':{'mids':this.unreadMessagesIds().join(','), 'uid':this.id}});
     }
 };
+
+var History =
+    function(params){
+        this.id = params[0];
+        this.value = feed.formatDate(params[0], 'date');
+        this.user = userList.list[params[1]];
+
+        this.user.addHistory(this);
+        this.render();
+    }
+
+History.prototype.render = function(){
+    var history_date = '';
+    history_date += '<section>';
+    history_date += '<header>' + this.value + '</header>';
+    history_date += '<ul></ul>';
+    history_date += '</section>';
+
+    $("#user_" + this.user.id + " div.feed ul#history").prepend(history_date);
+    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
+}
 
 var Message =
     function (params/* id, flags, from_id, timestamp, subject, text, attachments, status*/) {
@@ -300,13 +339,13 @@ Message.prototype.render = function () {
 };
 
 Message.prototype.prepend = function(render) {
-    $("#user_" + this.user.id + " div.feed section:first ul").prepend(render);
+    $("#user_" + this.user.id + " div.feed ul#dates section:first ul").prepend(render);
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo",'blockquote#'+this.user.first_message_id);
 };
 
 Message.prototype.append = function(render) {
-    $("#user_" + this.user.id + " div.feed section:last ul").append(render);
+    $("#user_" + this.user.id + " div.feed ul#dates section:last ul").append(render);
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo","bottom");
 };

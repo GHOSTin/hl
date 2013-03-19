@@ -95,7 +95,10 @@ form.well{
     margin: 0;
 }
 
-
+.chat .history{
+    margin: 0;
+    height: 20px;
+}
 
 .chat textarea{
     width: 336px;

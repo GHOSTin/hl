@@ -61,7 +61,7 @@ $(document).on('click', '.users li a', function (e) {
         user.loadPreviousMessages();
     }
     user.markAllAsRead();
-    $(".chat h6").text(user.name);
+//    $(".chat h6").text(user.name);
     $("textarea").val("");
     $('.chat.active .feed').mCustomScrollbar("update");
     $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
@@ -85,6 +85,13 @@ $(document).on('keypress', '.chat.active textarea',function (event) {
 
     if (keyCode === 10 || keyCode == 13 && event.ctrlKey) {
         $(this).parent().submit();
+    }
+});
+
+$(document).on('click', '.history', function(e){
+    e.preventDefault();
+    if($(this).hasClass('active')){
+        chat.json.send({'type':'get_history_list', 'data':{"uid": parseInt($('.chat.active').attr('id').split('_')[1])}});
     }
 });
 
