@@ -6,7 +6,7 @@
 		.removeClass('get_query_content');
 	{% endblock js %}
 	{% block html %}
-	<div style="padding:10px">
+	<div style="padding:5px">
 		<h4>
 			{% if query.initiator == 'number' %}
 				<img src="/templates/default/images/icons/xfn-friend.png" />
@@ -25,7 +25,7 @@
 	</div>
 	<div>
 		<ul class="nav nav-pills">
-			<li><a href="#">Документы</a></li>
+			<li><a href="#" class="get_documents">Документы</a></li>
 			<li><a href="#">История заявки</a></li>
 			<li><a href="#">Закрыть заявку</a></li>
 			<li><a href="#">Передать в работу</a></li>

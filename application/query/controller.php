@@ -23,6 +23,9 @@ class controller_query{
 		$queries[] = model_query::create_query($query, $initiator, $_SESSION['user']);
 		return ['queries' => $queries];
 	}	
+	public static function private_get_documents(){
+		return ['query_id' => $_GET['id']];
+	}
 	public static function private_get_day(){
 		$time = getdate($_GET['time']);
 		$query = new data_query();

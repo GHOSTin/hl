@@ -1,4 +1,11 @@
 $(document).ready(function(){
+	$('body').on('click', '.get_documents', function(){
+		$.get('get_documents',{
+			 id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	});	
 	$('body').on('click', '.get_query_content', function(){
 		$.get('get_query_content',{
 			 id: $(this).attr('query_id')
