@@ -173,6 +173,7 @@ class model_query{
 	}	
 	private static function get_insert_query_number(data_user $user, $time){
 		try{
+			$time = getdate($time);
 			$sql = "SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
 			 WHERE `opentime` > :begin
 			 AND `opentime` <= :end
