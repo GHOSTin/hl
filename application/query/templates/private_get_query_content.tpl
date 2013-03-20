@@ -6,29 +6,27 @@
 		.removeClass('get_query_content');
 	{% endblock js %}
 	{% block html %}
-	<div style="padding:5px">
-		<h4>
-			{% if query.initiator == 'number' %}
-				<img src="/templates/default/images/icons/xfn-friend.png" />
-			{% else %}
-				<img src="/templates/default/images/icons/home-medium.png" />
-			{% endif %}
-			Заявка №{{component.queries[0].number}} (
-			{% if component.queries[0].status in statuses|keys %}
-				{{statuses[component.queries[0].status]}}
-			{% else %}
-				Статус не определен
-			{% endif %}
-			)
-			<button class="close get_query_title">&times;</button>
-		</h4>
-	</div>
-		<ul class="nav nav-pills">
-			<li><a href="#" class="get_documents">Документы</a></li>
-			<li><a href="#">История заявки</a></li>
-			<li><a href="#">Закрыть заявку</a></li>
-			<li><a href="#">Передать в работу</a></li>
-		</ul>
+	<h4>
+		{% if query.initiator == 'number' %}
+			<img src="/templates/default/images/icons/xfn-friend.png" />
+		{% else %}
+			<img src="/templates/default/images/icons/home-medium.png" />
+		{% endif %}
+		Заявка №{{component.queries[0].number}} (
+		{% if component.queries[0].status in statuses|keys %}
+			{{statuses[component.queries[0].status]}}
+		{% else %}
+			Статус не определен
+		{% endif %}
+		)
+		<button class="close get_query_title">&times;</button>
+	</h4>
+	<ul class="nav nav-pills">
+		<li><a href="#" class="get_documents">Документы</a></li>
+		<li><a href="#">История заявки</a></li>
+		<li><a href="#">Закрыть заявку</a></li>
+		<li><a href="#">Передать в работу</a></li>
+	</ul>
 	<ul>
 		<li class="query-general">
 			<h5>Общая информация</h5>
