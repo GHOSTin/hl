@@ -28,11 +28,8 @@
 		<li><a href="#">Закрыть заявку</a></li>
 		<li><a href="#">Передать в работу</a></li>
 	</ul>
+	{% include '@query/query_general_information.tpl' %}
 	<ul>
-		<li class="query-general">
-			<h5>Общая информация</h5>
-			{% include '@query/query_general_information.tpl' %}
-		</li>
 		<li class="query-numbers">
 			<h5>Лицевые счета</h5>
 		</li>
