@@ -48,6 +48,10 @@ chat.on('message', function (event) {
         case 'updates':
             feed.process(message.data);
             break;
+        case 'history':
+            log(message);
+            userList.list[message.data.uid].history_dates[message.data.date].loadHistory(message.data.messages);
+            break;
         default:
             log('received unknown message:');
             log(message);

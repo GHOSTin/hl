@@ -293,7 +293,7 @@ History_dates.prototype.loadHistory = function (messages) {
         this.history_loaded = true;
     }
     else {
-        chat.json.send({'type':'load_previous_messages', 'data':{"uid":this.id}});
+        chat.json.send({'type':'get_history_day', 'data':{"uid":this.user.id, "date": this.id}});
     }
 };
 
@@ -320,6 +320,10 @@ History.prototype.render = function(){
     message_string += '<small>' + feed.formatDate(this.time) + '</small>';
     message_string += '</blockquote>';
     message_string += '<div class="clearfix"></div>';
+
+    $('header#'+this.date.id).siblings('ul').append(message_string);
+    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
+    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo","#history blockquote#"+this.id);
 };
 
 var Message =
