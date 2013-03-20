@@ -93,7 +93,7 @@ $(document).on('click', '.history', function(e){
     e.preventDefault();
     if($(this).hasClass('active')){
         var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
-        chat.json.send({'type':'get_history_list', 'data':{"uid": user.id, 'offset': Object.keys(user.history).length}});
+        chat.json.send({'type':'get_history_list', 'data':{"uid": user.id, "offset": Object.keys(user.history_dates).length}});
     }
     $('.chat.active ul#dates').toggle("fast", function(){
         $('.chat.active .feed').mCustomScrollbar("update");
@@ -103,6 +103,15 @@ $(document).on('click', '.history', function(e){
         $('.chat.active .feed').mCustomScrollbar("update");
         $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
     });
+});
+
+$(document).on('click', '.chat.active ul#history header', function(e){
+    e.preventDefault();
+    var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+    var date = user.history_dates[$(this).attr('id')];
+    if(!date.history_loaded){
+        date.loadHistory();
+    }
 });
 
 $('#nt-center').on('click', function(e){
