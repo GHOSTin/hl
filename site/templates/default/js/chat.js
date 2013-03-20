@@ -44,7 +44,7 @@ window.userList = {
                 pane += '</button></h6>';
                 pane += '<div class="feed">';
                 pane += '<ul id="dates"></ul>';
-                pane += '<ul id="history"></ul>';
+                pane += '<ul id="history" style="display:none;"></ul>';
                 pane += '</div>';
                 pane += '<form class="well message" data-user-id="' + user.id + '">';
                 pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
@@ -87,7 +87,10 @@ window.feed = {
                     }
                     break;
                 case 6: //подгрузка списка дат
-                    var history = new History(update);
+                    new History_dates(update);
+                    break;
+                case 7: //загрузка истории
+                    new History(update);
                     break;
                 case 1: //пользователь онлайн
                 case 2: //пользователь оффлайн
@@ -131,23 +134,13 @@ window.feed = {
                     'декабря',
                 ];
                 var date_string = date_parts[0] + " " + months[date_parts[1]];
-
-//                var today = new Date();
-//                if (dateParts[0] == today.getDate() && dateParts[1] == today.getMonth() + 1 && dateParts[2] == today.getFullYear())
-//                    dateString = 'сегодня';
-//                else {
-//                    for (var part in dateParts)
-//                        if (dateParts[part].toString().length == 1) dateParts[part] = "0" + dateParts[part];
-//                    dateString = dateParts.join('.');
-//                }
                 return date_string;
             break;
             case 'time':
             default:
                 var time_parts = [
                     date.getHours(),
-                    date.getMinutes(),
-//                    date.getSeconds(),
+                    date.getMinutes()
                 ]
 
                 for (var part in time_parts)
@@ -177,7 +170,7 @@ var User =
         this.online = data.online;
         this.unread = data.unread || 0;
         this.messages = {};
-        this.history = {};
+        this.history_dates = {};
         this.previousMessagesLoaded = false;
     };
 
@@ -192,7 +185,7 @@ User.prototype.loadPreviousMessages = function (messages, status) {
                 message._id,
                 flags,
                 this.id,
-                message.date,
+                message.date+message.time,
                 null,
                 message.text,
                 message.attachments,
@@ -244,8 +237,8 @@ User.prototype.addMessage = function (message) {
     if (this.paneActive()) this.markAllAsRead();
 };
 
-User.prototype.addHistory = function (history) {
-    this.history[history.id] = history;
+User.prototype.addHistory_date = function (history) {
+    this.history_dates[history.id] = history;
 }
 
 User.prototype.markAllAsRead = function () {
@@ -254,26 +247,87 @@ User.prototype.markAllAsRead = function () {
     }
 };
 
-var History =
+var History_dates =
     function(params){
         this.id = params[0];
         this.value = feed.formatDate(params[0], 'date');
         this.user = userList.list[params[1]];
+        this.history = {};
+        this.history_loaded = false;
 
-        this.user.addHistory(this);
+        this.user.addHistory_date(this);
         this.render();
-    }
+    };
 
-History.prototype.render = function(){
+History_dates.prototype.render = function(){
     var history_date = '';
     history_date += '<section>';
-    history_date += '<header>' + this.value + '</header>';
-    history_date += '<ul></ul>';
+    history_date += '<header id="' + this.id + '">' + this.value + '</header>';
+    history_date += '<ul style="display:none;"></ul>';
     history_date += '</section>';
 
     $("#user_" + this.user.id + " div.feed ul#history").prepend(history_date);
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
-}
+};
+
+History_dates.prototype.addHistory = function(history){
+    this.history[history.id] = history;
+};
+
+History_dates.prototype.clear = function(){
+    $('header#'+this.id).siblings('ul').empty();
+};
+
+History_dates.prototype.loadHistory = function (messages) {
+    if (typeof messages !== "undefined" && messages !== null) {
+        this.clear();
+        for (var id in messages) {
+            var message = messages[id];
+            message.out = (message.uid !== parseInt($('.current_user').attr('user_id'))) ? 0 : 1;
+            var flags = message.out;
+            var params = [
+                message._id,
+                flags,
+                this.user.id,
+                this.id,
+                message.date+message.time,
+                message.text
+            ];
+            new History(params);
+        }
+        this.history_loaded = true;
+    }
+    else {
+        chat.json.send({'type':'get_history_day', 'data':{"uid":this.user.id, "date": this.id}});
+    }
+};
+
+var History =
+    function(params){
+        this.id = params[0];
+        this.user = userList.list[params[2]];
+        this.date = this.user.history_dates[params[3]];
+        this.outgoing = !!(params[1] & 1);
+        this.text = params[5];
+        this.time = new Date(params[4]);
+
+        this.date.addHistory(this);
+        this.render();
+    };
+
+History.prototype.render = function(){
+    var classes = ['message'];
+    (this.outgoing)? classes.push('pull-right'): classes.push('pull-left');
+
+    var message_string = '';
+    message_string += '<blockquote class="' + classes.join(' ') + '" id="' + this.id + '">';
+    message_string += '<p>' + feed.urlify(this.text) + '</p>';
+    message_string += '<small>' + feed.formatDate(this.time) + '</small>';
+    message_string += '</blockquote>';
+    message_string += '<div class="clearfix"></div>';
+
+    $('header#'+this.date.id).siblings('ul').append(message_string);
+};
 
 var Message =
     function (params/* id, flags, from_id, timestamp, subject, text, attachments, status*/) {

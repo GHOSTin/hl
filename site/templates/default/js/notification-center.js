@@ -48,6 +48,10 @@ chat.on('message', function (event) {
         case 'updates':
             feed.process(message.data);
             break;
+        case 'history':
+            log(message);
+            userList.list[message.data.uid].history_dates[message.data.date].loadHistory(message.data.messages);
+            break;
         default:
             log('received unknown message:');
             log(message);
@@ -61,7 +65,6 @@ $(document).on('click', '.users li a', function (e) {
         user.loadPreviousMessages();
     }
     user.markAllAsRead();
-//    $(".chat h6").text(user.name);
     $("textarea").val("");
     $('.chat.active .feed').mCustomScrollbar("update");
     $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
@@ -73,7 +76,9 @@ $(document).on('submit', 'form.message', function (e) {
     $('.attachments li').each(function(){
         files.push($(this).attr('id'));
     });
-    chat.json.send({'type':'send_message', "data":{'to':$('.chat.active').attr('id').split('_')[1], 'message':form[0].message.value.replace(/\r\n|\r|\n/g, "<br>"), 'attachments': files.join(',')}});
+    if(form[0].message.value !== '' || $('.attachments li').length) {
+        chat.json.send({'type':'send_message', "data":{'to':$('.chat.active').attr('id').split('_')[1], 'message':form[0].message.value.replace(/\r\n|\r|\n/g, "<br>"), 'attachments': files.join(',')}});
+    }
     $("input[id=lefile]").attr({ value: '' });
     $(".attachments").html("");
     form[0].message.value = "";
@@ -91,7 +96,37 @@ $(document).on('keypress', '.chat.active textarea',function (event) {
 $(document).on('click', '.history', function(e){
     e.preventDefault();
     if($(this).hasClass('active')){
-        chat.json.send({'type':'get_history_list', 'data':{"uid": parseInt($('.chat.active').attr('id').split('_')[1])}});
+        var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+        chat.json.send({'type':'get_history_list', 'data':{"uid": user.id, "offset": Object.keys(user.history_dates).length}});
+    }
+    $('.chat.active ul#dates').toggle("fast", function(){
+        $('.chat.active .feed').mCustomScrollbar("update");
+        $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
+    });
+    $('.chat.active ul#history').toggle("fast", function(){
+        $('.chat.active .feed').mCustomScrollbar("update");
+        $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
+    });
+});
+
+$(document).on('click', '.chat.active ul#history header', function(e){
+    e.preventDefault();
+    if($(this).siblings('ul').is(':hidden')){
+        var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+        var date = user.history_dates[$(this).attr('id')];
+        var d = new Date();
+        if(!date.history_loaded || date.id === new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12).getTime()){
+            date.loadHistory();
+        }
+        $('.chat.active #history section ul').each(function(){
+            $(this).hide();
+        });
+        $(this).siblings('ul').show();
+        $(".chat.active .feed").mCustomScrollbar("update");
+    }
+    else{
+        $(this).siblings('ul').hide();
+        $(".chat.active .feed").mCustomScrollbar("update");
     }
 });
 
