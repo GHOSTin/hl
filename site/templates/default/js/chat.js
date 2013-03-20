@@ -274,8 +274,13 @@ History_dates.prototype.addHistory = function(history){
     this.history[history.id] = history;
 };
 
+History_dates.prototype.clear = function(){
+    $('header#'+this.id).siblings('ul').empty();
+};
+
 History_dates.prototype.loadHistory = function (messages) {
     if (typeof messages !== "undefined" && messages !== null) {
+        this.clear();
         for (var id in messages) {
             var message = messages[id];
             message.out = (message.uid !== parseInt($('.current_user').attr('user_id'))) ? 0 : 1;
@@ -323,7 +328,6 @@ History.prototype.render = function(){
 
     $('header#'+this.date.id).siblings('ul').append(message_string);
     $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
-    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo","#history blockquote#"+this.id);
 };
 
 var Message =

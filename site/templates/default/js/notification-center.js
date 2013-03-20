@@ -113,7 +113,8 @@ $(document).on('click', '.chat.active ul#history header', function(e){
     e.preventDefault();
     var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
     var date = user.history_dates[$(this).attr('id')];
-    if(!date.history_loaded){
+    var d = new Date();
+    if(!date.history_loaded || date.id === new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12).getTime()){
         date.loadHistory();
     }
 });
