@@ -41,6 +41,18 @@
 							{{warning_statuses[query.warning_status]}}
 						{% endif %}</li>
 		<li>Диспетчер:</li>
+		<li>Описание: {{query.description}}</li>
+	
+	{% if query.contact_fio != false or query.contact_telephone != false or query.contact_cellphone != false %}
+		<lo>
+			<div>Контактная информация</div>
+			<ul>
+				<li>ФИО: {{query.contact_fio}}</li>
+				<li>Телефон: {{query.contact_telephone}}</li>
+				<li>Сотовый: {{query.contact_cellphone}}</li>
+			</ul>
+		</li>
+	{% endif %}
 	</ul>
 	<ul>
 		<li class="query-numbers">
