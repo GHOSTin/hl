@@ -263,7 +263,7 @@ History_dates.prototype.render = function(){
     var history_date = '';
     history_date += '<section>';
     history_date += '<header id="' + this.id + '">' + this.value + '</header>';
-    history_date += '<ul></ul>';
+    history_date += '<ul style="display:none;"></ul>';
     history_date += '</section>';
 
     $("#user_" + this.user.id + " div.feed ul#history").prepend(history_date);
@@ -327,7 +327,6 @@ History.prototype.render = function(){
     message_string += '<div class="clearfix"></div>';
 
     $('header#'+this.date.id).siblings('ul').append(message_string);
-    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
 };
 
 var Message =

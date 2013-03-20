@@ -111,11 +111,22 @@ $(document).on('click', '.history', function(e){
 
 $(document).on('click', '.chat.active ul#history header', function(e){
     e.preventDefault();
-    var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
-    var date = user.history_dates[$(this).attr('id')];
-    var d = new Date();
-    if(!date.history_loaded || date.id === new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12).getTime()){
-        date.loadHistory();
+    if($(this).siblings('ul').is(':hidden')){
+        var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+        var date = user.history_dates[$(this).attr('id')];
+        var d = new Date();
+        if(!date.history_loaded || date.id === new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12).getTime()){
+            date.loadHistory();
+        }
+        $('.chat.active #history section ul').each(function(){
+            $(this).hide();
+        });
+        $(this).siblings('ul').show();
+        $(".chat.active .feed").mCustomScrollbar("update");
+    }
+    else{
+        $(this).siblings('ul').hide();
+        $(".chat.active .feed").mCustomScrollbar("update");
     }
 });
 
