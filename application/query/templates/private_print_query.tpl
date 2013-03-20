@@ -19,7 +19,7 @@
 			<div class="main-block">
 				<div class="ttle">Заявка №{{query.number}} от {{query.time_open|date('H:i d.m.Y')}}</div>
 				<div class="ttle">
-						{{query.street_name}} {{query.house_number}}
+						{{query.street_name}}, дом №{{query.house_number}}
 				</div>
 				<div class="ttle">{{query.description}}</div>
 				<table style="padding:5mm 0mm 0mm 0mm;">

@@ -120,6 +120,8 @@ class model_query{
 	public static function create_query(data_query $query, $initiator, data_user $current_user){
 		try{
 			db::get_handler()->beginTransaction();
+			if(empty($query->description))
+				throw new exception('Пустое описание заявки.');
 			if($initiator instanceof data_house)
 				$initiator = model_house::get_house($initiator);
 			elseif($initiator instanceof data_number)
