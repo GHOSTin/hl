@@ -222,9 +222,11 @@ class model_query{
 					`queries`.`querynumber` as `number`,
 					`queries`.`query_inspection` as `inspection`, 
 					`houses`.`housenumber` as `house_number`,
-					`streets`.`name` as `street_name`
-					FROM `queries`, `houses`, `streets`
+					`streets`.`name` as `street_name`,
+					`query_worktypes`.`name` as `work_type_name`
+					FROM `queries`, `houses`, `streets`, `query_worktypes`
 					WHERE `queries`.`house_id` = `houses`.`id`
+					AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 					AND `houses`.`street_id` = `streets`.`id`
 					AND `queries`.`id` = :id";
 			}elseif(!empty($query->number)){
@@ -246,10 +248,12 @@ class model_query{
 					`queries`.`querynumber` as `number`,
 					`queries`.`query_inspection` as `inspection`, 
 					`houses`.`housenumber` as `house_number`,
-					`streets`.`name` as `street_name`
-					FROM `queries`, `houses`, `streets`
+					`streets`.`name` as `street_name`,
+					`query_worktypes`.`name` as `work_type_name`
+					FROM `queries`, `houses`, `streets`, `query_worktypes`
 					WHERE `queries`.`house_id` = `houses`.`id`
 					AND `houses`.`street_id` = `streets`.`id`
+					AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 					AND `querynumber` = :number
 					ORDER BY `opentime` DESC";				
 			}else{
@@ -271,10 +275,12 @@ class model_query{
 					`queries`.`querynumber` as `number`,
 					`queries`.`query_inspection` as `inspection`, 
 					`houses`.`housenumber` as `house_number`,
-					`streets`.`name` as `street_name`
-					FROM `queries`, `houses`, `streets`
+					`streets`.`name` as `street_name`,
+					`query_worktypes`.`name` as `work_type_name`
+					FROM `queries`, `houses`, `streets`, `query_worktypes`
 					WHERE `queries`.`house_id` = `houses`.`id`
 					AND `houses`.`street_id` = `streets`.`id`
+					AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 					AND `opentime` > :time_open
 					AND `opentime` <= :time_close";
 					if(!empty($query->status)){
@@ -302,6 +308,7 @@ class model_query{
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
+			die($e->getMessage());
 			throw new exception('Ошибка при выборке заявок.');
 		}
 	}	

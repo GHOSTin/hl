@@ -9,6 +9,7 @@ final class data_query extends data_object{
 	public $house_id;
 	public $close_reason_id;
 	public $worktype_id;
+	public $work_type_name;
 	public $time_open;
 	public $time_work;
 	public $time_close;

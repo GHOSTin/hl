@@ -1,8 +1,9 @@
 {% extends "ajax.tpl" %}
 {% if component.queries != false %}
+	{%set query = component.queries[0] %}
 	{% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'}%}
 	{% block js %}
-		$('.query[query_id = {{component.queries[0].id}}]').html(get_hidden_content())
+		$('.query[query_id = {{query.id}}]').html(get_hidden_content())
 		.removeClass('get_query_content');
 	{% endblock js %}
 	{% block html %}
@@ -13,8 +14,8 @@
 			<img src="/templates/default/images/icons/home-medium.png" />
 		{% endif %}
 		Заявка №{{component.queries[0].number}} (
-		{% if component.queries[0].status in statuses|keys %}
-			{{statuses[component.queries[0].status]}}
+		{% if query.status in statuses|keys %}
+			{{statuses[query.status]}}
 		{% else %}
 			Статус не определен
 		{% endif %}
