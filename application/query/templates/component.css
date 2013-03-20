@@ -23,3 +23,6 @@
 .timeline-month{
     text-align:center;
 }
+.query-sub ul{
+    list-style:none;
+}

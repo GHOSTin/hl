@@ -23,25 +23,31 @@
 			<button class="close get_query_title">&times;</button>
 		</h4>
 	</div>
-	<div>
 		<ul class="nav nav-pills">
 			<li><a href="#" class="get_documents">Документы</a></li>
 			<li><a href="#">История заявки</a></li>
 			<li><a href="#">Закрыть заявку</a></li>
 			<li><a href="#">Передать в работу</a></li>
 		</ul>
-	</div>
-	<div style="height:400px">
-		<ul>
-			<li class="query-general">Общая информация
-				{% include '@query/query_description.tpl' %}
-			</li>
-			<li class="query-numbers">Лицевые счета</li>
-			<li class="query-performers">Исполнители</li>
-			<li class="query-managers">Ответственные</li>
-			<li class="query-works">Работы</li>
-			<li class="query-material">Материалы</li>
-		</ul>
-	</div>
+	<ul>
+		<li class="query-general">
+			<h5>Общая информация</h5>
+			{% include '@query/query_general_information.tpl' %}
+		</li>
+		<li class="query-numbers">
+			<h5>Лицевые счета</h5>
+		</li>
+		<li class="query-performers">
+			<h5>Исполнители</h5>
+		</li>
+		<li class="query-managers">
+			<h5>Ответственные</h5>
+		<li class="query-works">
+			<h5>Работы</h5>
+		</li>
+		<li class="query-material">
+			<h5>Материалы</h5>
+		</li>
+	</ul>
 	{% endblock html %}
 {% endif %}
