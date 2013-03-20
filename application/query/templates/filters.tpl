@@ -18,6 +18,7 @@
 	        </select></label>
 	    </div>
 	</div>
+	{# 
 	<!-- end filter status, begin filter street -->
 	<div class="filter">
 	    <div class="filter-name">по улице и дому</div>
@@ -83,5 +84,6 @@
 	    </div>
 	</div>
 	<!-- end filter users -->
+	#}
 </div>
 <!-- end filters -->
