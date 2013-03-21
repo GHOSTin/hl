@@ -119,6 +119,15 @@ form.well{
     text-align: center;
     font-weight: bold;
     display: block;
+    padding: 5px 0;
+    border-radius: 3px;
+    margin: 1px 0;
+    border: 1px solid #e1e9ec;
+}
+
+.feed header .caret{
+    margin-top: 8px;
+    margin-right: 8px;
 }
 
 .feed blockquote{

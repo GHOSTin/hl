@@ -262,7 +262,7 @@ var History_dates =
 History_dates.prototype.render = function(){
     var history_date = '';
     history_date += '<section>';
-    history_date += '<header id="' + this.id + '">' + this.value + '</header>';
+    history_date += '<header id="' + this.id + '">' + this.value + '<span class="caret pull-right"></span></header>';
     history_date += '<ul style="display:none;"></ul>';
     history_date += '</section>';
 

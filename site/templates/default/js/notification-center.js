@@ -49,7 +49,6 @@ chat.on('message', function (event) {
             feed.process(message.data);
             break;
         case 'history':
-            log(message);
             userList.list[message.data.uid].history_dates[message.data.date].loadHistory(message.data.messages);
             break;
         default:
@@ -118,16 +117,12 @@ $(document).on('click', '.chat.active ul#history header', function(e){
         if(!date.history_loaded || date.id === new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12).getTime()){
             date.loadHistory();
         }
-        $('.chat.active #history section ul').each(function(){
-            $(this).hide();
-        });
         $(this).siblings('ul').show();
-        $(".chat.active .feed").mCustomScrollbar("update");
     }
     else{
         $(this).siblings('ul').hide();
-        $(".chat.active .feed").mCustomScrollbar("update");
     }
+    $(".chat.active .feed").mCustomScrollbar("update");
 });
 
 $('#nt-center').on('click', function(e){
@@ -168,9 +163,16 @@ $('#nt-center').on('click', function(e){
                     onTotalScrollBack: function(){
                         if($('.chat.active').length){
                             var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
-                            var offset = Object.keys(active_user.messages).length;
-                            active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
-                            chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
+                            var offset = 0;
+                            if($('#dates').is(':visible')){
+                                offset = Object.keys(active_user.messages).length;
+                                active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
+                                chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
+                            }
+                            if($('#history').is(':visible')){
+                                offset = Object.keys(active_user.history_dates).length;
+                                chat.json.send({'type':'get_history_list', 'data':{'uid':active_user.id, 'offset': offset}})
+                            }
                         }
                     }
                 }
