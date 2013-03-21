@@ -79,7 +79,8 @@ class controller_query{
 	public static function private_get_query_content(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries($query),
+			'users' => model_query::get_users($query, $_SESSION['user'])];
 	}
 	public static function private_get_query_title(){
 		$query = new data_query();

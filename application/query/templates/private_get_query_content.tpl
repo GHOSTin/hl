@@ -40,7 +40,11 @@
 		<li>Тип заявки: {% if query.warning_status in warning_statuses|keys %}
 							{{warning_statuses[query.warning_status]}}
 						{% endif %}</li>
-		<li>Диспетчер:</li>
+		<li>Диспетчер:
+		{% if component.users != false %}
+			{% set creator = component.users.users[component.users.structure[query.id].creator[0]] %}
+			{{creator.lastname}} {{creator.firstname}} {{creator.middlename}}
+		{% endif %}</li>
 		<li>Описание: {{query.description}}</li>
 	
 	{% if query.contact_fio != false or query.contact_telephone != false or query.contact_cellphone != false %}

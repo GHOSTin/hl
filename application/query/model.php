@@ -308,8 +308,65 @@ class model_query{
 			$stm->closeCursor();
 			return $result;
 		}catch(exception $e){
-			die($e->getMessage());
 			throw new exception('Ошибка при выборке заявок.');
+		}
+	}	
+	/**
+	* Возвращает Пользователей заявки 
+	* @return false or array
+	*/
+	public static function get_users(data_query $query, data_user $current_user){
+		try{
+			$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
+			if(!empty($query->id)){
+				$sql = "SELECT `query2user`.`query_id`, `query2user`.`class`, `users`.`id`,
+					`users`.`firstname`, `users`.`lastname`, `users`.`midlename`
+					FROM `query2user`, `users`
+					WHERE `query2user`.`company_id` = :company_id
+					AND `users`.`id` = `query2user`.`user_id`
+					AND `query2user`.`query_id` = :id";
+			}else{
+				$sql = "SELECT `query2user`.`query_id`,  `query2user`.`class`, `users`.`id`,
+					`users`.`firstname`, `users`.`lastname`, `users`.`midlename`
+					FROM `queries`, `query2user`, `users`
+					WHERE `queries`.`company_id` = :company_id
+					AND `query2user`.`company_id` = :company_id
+					AND `users`.`id` = `query2user`.`user_id`
+					AND `queries`.`id` = `query2user`.`query_id`
+					AND `opentime` > :time_open
+					AND `opentime` <= :time_close";
+					if(!empty($query->status)){
+						$sql .= " AND `queries`.`status` = :status";
+					}
+					$sql .= " ORDER BY `opentime` DESC";
+			}
+			$stm = db::get_handler()->prepare($sql);
+			if(!empty($query->id)){
+				$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
+				$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			}else{
+				$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
+				$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
+				$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+				if(!empty($query->status))
+					$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+			}
+			if($stm->execute() == false)
+				throw new exception('Ошибка при выборке пользователей.');
+			$result = ['structure' => [], 'users' => []];
+			while($row = $stm->fetch()){
+				$user = new data_user();
+				$user->id = $row['id'];
+				$user->firstname = $row['firstname'];
+				$user->lastname = $row['lastname'];
+				$user->middlename = $row['midlename'];
+				$result['structure'][$row['query_id']][$row['class']][] = $user->id;
+				$result['users'][$user->id] = $user;
+			}
+			$stm->closeCursor();
+			return $result;
+		}catch(exception $e){
+			throw new exception('Ошибка при выборке пользователей.');
 		}
 	}	
 	/*
