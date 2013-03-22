@@ -32,7 +32,14 @@
 	</ul>
 	<ul class="query-sub">
 		<li>Время открытия: {{query.time_open|date('H:i d.m.Y')}}</li>
-		<li>Адрес: {{query.street_name}}, дом №{{query.house_number}}</li>
+		<li>Адрес: {{query.street_name}}, дом №{{query.house_number}}
+			{% if query.initiator == 'number' %}
+				{% if component.numbers.numbers != false %}
+					{% set number = component.numbers.numbers[component.numbers.structure[query.id].true[0]] %}
+					, кв. {{number.flat_number}}
+				{% endif %}
+			{% endif %}
+		</li>
 		<li>Тип оплаты: {% if query.payment_status in payment_statuses|keys %}
 							{{payment_statuses[query.payment_status]}}
 						{% endif %}</li>

@@ -31,7 +31,8 @@ class controller_query{
 		$query = new data_query();
 		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries($query),
+			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}	
 	public static function private_get_dialog_create_query(){
 		return true;
@@ -80,7 +81,8 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
-			'users' => model_query::get_users($query, $_SESSION['user'])];
+			'users' => model_query::get_users($query, $_SESSION['user']),
+			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}
 	public static function private_get_query_title(){
 		$query = new data_query();
@@ -129,12 +131,14 @@ class controller_query{
 			$time = getdate($_SESSION['filters']['query']->time_open['begin']);
 		else
 			$time = getdate();
-		return ['queries' => model_query::get_queries(new data_query()),
+		$query = new data_query();
+		return ['queries' => model_query::get_queries($query),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], 1, $time['year']),
 			'streets' => model_street::get_streets(),
 			'users' => model_user::get_users([]),
 			'departments' => model_department::get_departments($_SESSION['user']),
+			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'query_work_types' => model_query_work_type::get_query_work_types()];
 	}
 }

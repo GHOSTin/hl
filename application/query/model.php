@@ -286,7 +286,6 @@ class model_query{
 					if(!empty($query->status)){
 						$sql .= " AND `queries`.`status` = :status";
 					}
-					$sql .= " ORDER BY `opentime` DESC";
 			}
 			$stm = db::get_handler()->prepare($sql);
 			if(!empty($query->id))
@@ -309,6 +308,68 @@ class model_query{
 			return $result;
 		}catch(exception $e){
 			throw new exception('Ошибка при выборке заявок.');
+		}
+	}	
+	/**
+	* Возвращает лицевые счета заявки 
+	* @return false or array
+	*/
+	public static function get_numbers(data_query $query, data_user $current_user){
+		try{
+			$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
+			if(!empty($query->id)){
+				$sql = "SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
+					`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
+					FROM `query2number`, `numbers`, `flats`
+					WHERE `query2number`.`company_id` = :company_id
+					AND `numbers`.`company_id` = :company_id
+					AND `numbers`.`id` = `query2number`.`number_id`
+					AND `numbers`.`flat_id` = `flats`.`id`
+					AND `query2number`.`query_id` = :id";
+			}else{
+				$sql = "SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
+					`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
+					FROM `queries`, `query2number`, `numbers`, `flats`
+					WHERE `queries`.`company_id` = :company_id
+					AND `query2number`.`company_id` = :company_id
+					AND `flats`.`company_id` = :company_id
+					AND `numbers`.`company_id` = :company_id
+					AND `queries`.`id` = `query2number`.`query_id`
+					AND `numbers`.`id` = `query2number`.`number_id`
+					AND `numbers`.`flat_id` = `flats`.`id`
+					AND `opentime` > :time_open
+					AND `opentime` <= :time_close";
+					if(!empty($query->status)){
+						$sql .= " AND `queries`.`status` = :status";
+					}
+			}
+			$stm = db::get_handler()->prepare($sql);
+			if(!empty($query->id)){
+				$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
+				$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			}else{
+				$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
+				$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
+				$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+				if(!empty($query->status))
+					$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+			}
+			if($stm->execute() == false)
+				throw new exception('Ошибка при выборке пользователей.');
+			$result = ['structure' => [], 'numbers' => []];
+			while($row = $stm->fetch()){
+				$number = new data_number();
+				$number->id = $row['id'];
+				$number->fio = $row['fio'];
+				$number->number = $row['number'];
+				$number->flat_number = $row['flat_number'];
+				$result['structure'][$row['query_id']][$row['default']][] = $number->id;
+				$result['numbers'][$number->id] = $number;
+			}
+			$stm->closeCursor();
+			return $result;
+		}catch(exception $e){
+			throw new exception('Ошибка при выборке пользователей.');
 		}
 	}	
 	/**
