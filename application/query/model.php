@@ -430,6 +430,91 @@ class model_query{
 			throw new exception('Ошибка при выборке пользователей.');
 		}
 	}	
+// CREATE TABLE IF NOT EXISTS `query2work` (
+//   `query_id` INT(10) UNSIGNED NOT NULL,
+//   `work_id` SMALLINT(5) UNSIGNED NOT NULL,
+//   `company_id` TINYINT(3) UNSIGNED NOT NULL,
+//   `opentime` INT(10) UNSIGNED NOT NULL,
+//   `closetime` INT(10) UNSIGNED NOT NULL,
+//   `value` decimal(10,2) DEFAULT '0.00',
+//   KEY `query_id` (`query_id`),
+//   KEY `work_id` (`work_id`),
+//   KEY `company_id` (`company_id`),
+//   KEY `opentime` (`opentime`),
+//   KEY `closetime` (`closetime`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;	
+// CREATE TABLE IF NOT EXISTS `works` (
+//   `id` SMALLINT(5) UNSIGNED NOT NULL,
+//   `company_id` TINYINT(3) UNSIGNED NOT NULL,
+//   `workgroup_id` SMALLINT(5) UNSIGNED NOT NULL,
+//   `status` ENUM('active','deactive') NOT NULL DEFAULT 'active',
+//   `name` VARCHAR(255) NOT NULL,
+//   UNIQUE KEY `id` (`company_id`,`id`),
+//   UNIQUE KEY `workgroup_id` (`company_id`,`workgroup_id`,`id`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+	/**
+	* Возвращает работы заявки 
+	* @return false or array
+	*/
+	public static function get_works(data_query $query, data_user $current_user){
+		try{
+			$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
+			if(!empty($query->id)){
+				$sql = "SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
+					`query2work`.`closetime` as `time_close`, `query2work`.`value`,
+					`works`.`id`, `works`.`name`
+					FROM `query2work`, `works`
+					WHERE `query2work`.`company_id` = :company_id
+					AND `works`.`company_id` = :company_id
+					AND `works`.`id` = `query2work`.`work_id`
+					AND `query2work`.`query_id` = :id";
+			}else{
+				$sql = "SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
+					`query2work`.`closetime` as `time_close`, `query2work`.`value`,
+					`works`.`id`, `works`.`name`
+					FROM `queries`, `query2work`, `works`
+					WHERE `queries`.`company_id` = :company_id
+					AND `query2work`.`company_id` = :company_id
+					AND `works`.`id` = `query2work`.`work_id`
+					AND `queries`.`id` = `query2work`.`query_id`
+					AND `queries`.`opentime` > :time_open
+					AND `queries`.`opentime` <= :time_close";
+					if(!empty($query->status)){
+						$sql .= " AND `queries`.`status` = :status";
+					}
+					$sql .= " ORDER BY `queries`.`opentime` DESC";
+			}
+			$stm = db::get_handler()->prepare($sql);
+			if(!empty($query->id)){
+				$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
+				$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			}else{
+				$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
+				$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
+				$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+				if(!empty($query->status))
+					$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+			}
+			if($stm->execute() == false)
+				throw new exception('Ошибка при выборке работ.');
+			$result = ['structure' => [], 'works' => []];
+			while($row = $stm->fetch()){
+				$work = new data_work();
+				$work->id = $row['id'];
+				$work->name = $row['name'];
+				$current = ['work_id' => $work->id, 'time_open' => $row['time_open'],
+					'time_close' => $row['time_close'], 'value' => $row['value']];
+				$result['structure'][$row['query_id']][] = $current;
+				$result['works'][$work->id] = $work ;
+			}
+			$stm->closeCursor();
+			return $result;
+		}catch(exception $e){
+			die($e->getMessage());
+			throw new exception('Ошибка при выборке работ.');
+		}
+	}	
 	/*
 	* Проверяет правильность параметров
 	* Скармиливаем массив получаем правильный набор параметров

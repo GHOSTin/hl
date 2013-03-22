@@ -58,5 +58,8 @@ class view_query{
 	}		
 	public static function private_get_query_users($args){
 		return load_template('query.private_get_query_users', $args);
+	}
+	public static function private_get_query_works($args){
+		return load_template('query.private_get_query_works', $args);
 	}	
 }

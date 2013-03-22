@@ -100,7 +100,13 @@ class controller_query{
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
 				'users' => model_query::get_users($query, $_SESSION['user'])];
-	}	
+	}
+	public static function private_get_query_works(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		return ['queries' => model_query::get_queries($query),
+				'works' => model_query::get_works($query, $_SESSION['user'])];
+	}		
 	public static function private_get_search(){
 		return true;
 	}
