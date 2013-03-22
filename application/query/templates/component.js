@@ -27,6 +27,13 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	});
+	$('body').on('click', '.query-users', function(){
+		$.get('get_query_users',{
+			 id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	});
 	$('body').on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
 			 id: get_query_id($(this))

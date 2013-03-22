@@ -54,7 +54,9 @@ class view_query{
 		return load_template('query.private_get_query_title', $args);
 	}	
 	public static function private_get_query_numbers($args){
-		var_dump($args);
 		return load_template('query.private_get_query_numbers', $args);
 	}		
+	public static function private_get_query_users($args){
+		return load_template('query.private_get_query_users', $args);
+	}	
 }
