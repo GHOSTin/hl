@@ -59,7 +59,6 @@
 			{{creator.lastname}} {{creator.firstname}} {{creator.middlename}}
 		{% endif %}</li>
 		<li>Описание: {{query.description}}</li>
-	
 	{% if query.contact_fio != false or query.contact_telephone != false or query.contact_cellphone != false %}
 		<lo>
 			<div>Контактная информация</div>
@@ -75,11 +74,9 @@
 		<li class="query-numbers">
 			<h5>Лицевые счета</h5>
 		</li>
-		<li class="query-performers">
-			<h5>Исполнители</h5>
+		<li class="query-users">
+			<h5>Участники</h5>
 		</li>
-		<li class="query-managers">
-			<h5>Ответственные</h5>
 		<li class="query-works">
 			<h5>Работы</h5>
 		</li>

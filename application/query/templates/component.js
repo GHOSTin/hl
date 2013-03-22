@@ -20,6 +20,13 @@ $(document).ready(function(){
 				show_content(r);
 			});
 	});	
+	$('body').on('click', '.query-numbers', function(){
+		$.get('get_query_numbers',{
+			 id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	});
 	$('body').on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
 			 id: get_query_id($(this))
