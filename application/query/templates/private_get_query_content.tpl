@@ -4,6 +4,11 @@
 	{% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'}%}
 	{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'}%}
 	{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'recalculation': 'плановая'}%}
+	{% if query.initiator == 'number' %}
+				{% if component.numbers.numbers != false %}
+					{% set number = component.numbers.numbers[component.numbers.structure[query.id].true[0]] %}
+				{% endif %}
+			{% endif %}
 	{% block js %}
 		$('.query[query_id = {{query.id}}]').html(get_hidden_content())
 		.removeClass('get_query_content');
@@ -35,8 +40,9 @@
 		<li>Адрес: {{query.street_name}}, дом №{{query.house_number}}
 			{% if query.initiator == 'number' %}
 				{% if component.numbers.numbers != false %}
-					{% set number = component.numbers.numbers[component.numbers.structure[query.id].true[0]] %}
 					, кв. {{number.flat_number}}
+					<li>Владелец: {{number.fio}}</li>
+					<li>Лицевой счет: №{{number.number}}</li>
 				{% endif %}
 			{% endif %}
 		</li>
