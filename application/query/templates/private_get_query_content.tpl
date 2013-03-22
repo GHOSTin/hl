@@ -79,10 +79,10 @@
 		</li>
 		<li class="query-works">
 			<h5>Работы</h5>
-		</li>
+		</li>{#
 		<li class="query-material">
 			<h5>Материалы</h5>
-		</li>
+		</li>#}
 	</ul>
 	{% endblock html %}
 {% endif %}
