@@ -26,9 +26,7 @@ footer, #push{
 .cm{
 	color:blue;
 }
-@media (max-width: 979px){
- .main {margin: 60px 0px 0px 0px;}
-}
+
 #_hidden_notification_center{
 	position:absolute;
 	top:50px;
@@ -206,4 +204,8 @@ form.well{
 
 .user-list li.active a{
     font-weight: bold;
+}
+
+@media (max-width: 979px){
+    .main {margin: 60px 0px 0px 0px;}
 }
