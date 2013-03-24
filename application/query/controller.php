@@ -38,8 +38,11 @@ class controller_query{
 		return true;
 	}
 	public static function private_get_dialog_edit_description(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new exception('Недостаточно параметров.');
 		$query = new data_query();
-		$query->id = $_GET['id'];
+		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
 	}
 	public static function private_get_dialog_edit_contact_information(){

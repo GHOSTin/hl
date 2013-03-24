@@ -89,6 +89,7 @@ $(document).ready(function(){
 	});	
 	$('body').on('click', '.get_dialog_edit_description', function(){
 		$.get('get_dialog_edit_description',{
+			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
