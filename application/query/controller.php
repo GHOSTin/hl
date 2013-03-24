@@ -37,6 +37,11 @@ class controller_query{
 	public static function private_get_dialog_create_query(){
 		return true;
 	}
+	public static function private_get_dialog_edit_description(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		return ['queries' => model_query::get_queries($query)];
+	}
 	public static function private_get_dialog_initiator(){
 		return ['streets' => model_street::get_streets(),
 				'initiator' => $_GET['value']];
@@ -159,4 +164,10 @@ class controller_query{
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'query_work_types' => model_query_work_type::get_query_work_types()];
 	}
+	public static function private_update_description(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$query->description = $_GET['description'];
+		return ['queries' => model_query::update_description($query, $_SESSION['user'])];
+	}	
 }

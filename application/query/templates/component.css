@@ -23,7 +23,7 @@
 .timeline-month{
     text-align:center;
 }
-ul.query-sub{
+ul.query-sub, ul.query-general{
     list-style:none;
 }
 .query{

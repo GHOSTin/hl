@@ -35,7 +35,7 @@
 		<li><a href="#">Закрыть заявку</a></li>
 		<li><a href="#">Передать в работу</a></li>
 	</ul>
-	<ul class="query-sub">
+	<ul class="query-general">
 		<li>Время открытия: {{query.time_open|date('H:i d.m.Y')}}</li>
 		<li>Адрес: {{query.street_name}}, дом №{{query.house_number}}
 			{% if query.initiator == 'number' %}
@@ -58,7 +58,7 @@
 			{% set creator = component.users.users[component.users.structure[query.id].creator[0]] %}
 			{{creator.lastname}} {{creator.firstname}} {{creator.middlename}}
 		{% endif %}</li>
-		<li>Описание: {{query.description}}</li>
+		<li>Описание: <span class="query-general-description">{{query.description}}</span> <span class="cm get_dialog_edit_description">изменить</span></li>
 	{% if query.contact_fio != false or query.contact_telephone != false or query.contact_cellphone != false %}
 		<lo>
 			<div>Контактная информация</div>

@@ -86,7 +86,13 @@ $(document).ready(function(){
 			},function(r){
 				show_content(r);
 			});
-	});		
+	});	
+	$('body').on('click', '.get_dialog_edit_description', function(){
+		$.get('get_dialog_edit_description',{
+			},function(r){
+				init_content(r);
+			});
+	});	
 	$('body').on('click', '.get_timeline', function(){
 		$.get('get_timeline',{
 			act: $(this).attr('act'),

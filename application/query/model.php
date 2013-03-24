@@ -602,4 +602,33 @@ class model_query{
 			throw new exception('Ошибка при построении параметром запроса заявок.');
 		}
 	}
+	/**
+	* Возвращает работы заявки 
+	* @return false or array
+	*/
+	public static function update_description(data_query $query, data_user $current_user){
+		try{
+			if(empty($query->description))
+				throw new exception('Плохие параметры.');
+			$description = $query->description;
+			$current_query = self::get_queries($query, $current_user)[0];
+			if(!($current_query instanceof data_query))
+				throw new exception('Проблема при выборке заявки.');
+			$current_query->description = $description;
+			$sql = 'UPDATE `queries`
+					SET `description-open` = :description
+					WHERE `company_id` = :company_id
+					AND `id` = :query_id';
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':description', $current_query->description, PDO::PARAM_STR);
+			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':query_id', $current_query->id, PDO::PARAM_INT);
+			if($stm->execute() == false)
+				throw new exception('Ошибка при обновлении описания заявки.');
+			return [$current_query];
+		}catch(exception $e){
+			die($e->getMessage());
+			throw new exception('Ошибка при обновлении описания заявки.');
+		}
+	}		
 }

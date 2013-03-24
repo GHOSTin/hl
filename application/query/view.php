@@ -11,6 +11,9 @@ class view_query{
 	}	
 	public static function private_get_dialog_create_query(){
 		return load_template('query.private_get_dialog_create_query', []);
+	}
+	public static function private_get_dialog_edit_description($args){
+		return load_template('query.private_get_dialog_edit_description', $args);
 	}		
 	public static function private_get_dialog_initiator($args){
 		return load_template('query.private_get_dialog_initiator', $args);
@@ -61,5 +64,8 @@ class view_query{
 	}
 	public static function private_get_query_works($args){
 		return load_template('query.private_get_query_works', $args);
-	}	
+	}
+	public static function private_update_description($args){
+		return load_template('query.private_update_description', $args);
+	}
 }
