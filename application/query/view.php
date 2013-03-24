@@ -14,6 +14,9 @@ class view_query{
 	}
 	public static function private_get_dialog_edit_description($args){
 		return load_template('query.private_get_dialog_edit_description', $args);
+	}
+	public static function private_get_dialog_edit_contact_information($args){
+		return load_template('query.private_get_dialog_edit_contact_information', $args);
 	}		
 	public static function private_get_dialog_initiator($args){
 		return load_template('query.private_get_dialog_initiator', $args);
@@ -67,5 +70,8 @@ class view_query{
 	}
 	public static function private_update_description($args){
 		return load_template('query.private_update_description', $args);
+	}
+	public static function private_update_contact_information($args){
+		return load_template('query.private_update_contact_information', $args);
 	}
 }

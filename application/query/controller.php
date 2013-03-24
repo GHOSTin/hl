@@ -42,6 +42,14 @@ class controller_query{
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query)];
 	}
+	public static function private_get_dialog_edit_contact_information(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new exception('Недостаточно параметров.');
+		$query = new data_query();
+		$query->id = $id;
+		return ['queries' => model_query::get_queries($query)];
+	}	
 	public static function private_get_dialog_initiator(){
 		return ['streets' => model_street::get_streets(),
 				'initiator' => $_GET['value']];
@@ -169,5 +177,13 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$query->description = $_GET['description'];
 		return ['queries' => model_query::update_description($query, $_SESSION['user'])];
+	}	
+	public static function private_update_contact_information(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$query->contact_fio = $_GET['fio'];
+		$query->contact_telephone = $_GET['telephone'];
+		$query->contact_cellphone = $_GET['cellphone'];
+		return ['queries' => model_query::update_contact_information($query, $_SESSION['user'])];
 	}	
 }

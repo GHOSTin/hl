@@ -59,16 +59,14 @@
 			{{creator.lastname}} {{creator.firstname}} {{creator.middlename}}
 		{% endif %}</li>
 		<li>Описание: <span class="query-general-description">{{query.description}}</span> <span class="cm get_dialog_edit_description">изменить</span></li>
-	{% if query.contact_fio != false or query.contact_telephone != false or query.contact_cellphone != false %}
 		<lo>
-			<div>Контактная информация</div>
-			<ul>
+			<div>Контактная информация <span class="cm get_dialog_edit_contact_information">изменить</span></div>
+			<ul class="query-general-contacts">
 				<li>ФИО: {{query.contact_fio}}</li>
 				<li>Телефон: {{query.contact_telephone}}</li>
 				<li>Сотовый: {{query.contact_cellphone}}</li>
 			</ul>
 		</li>
-	{% endif %}
 	</ul>
 	<ul>
 		<li class="query-numbers">

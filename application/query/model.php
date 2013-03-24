@@ -630,5 +630,31 @@ class model_query{
 			die($e->getMessage());
 			throw new exception('Ошибка при обновлении описания заявки.');
 		}
-	}		
+	}	
+	/**
+	* Возвращает работы заявки 
+	* @return false or array
+	*/
+	public static function update_contact_information(data_query $query, data_user $current_user){
+		try{
+			if(empty($query->id))
+				throw new exception('Плохие параметры.');
+			$sql = 'UPDATE `queries`
+					SET `addinfo-name` = :fio, `addinfo-telephone` = :telephone, 
+					`addinfo-cellphone` = :cellphone 
+					WHERE `company_id` = :company_id
+					AND `id` = :query_id';
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':fio', $query->contact_fio, PDO::PARAM_STR);
+			$stm->bindValue(':telephone', $query->contact_telephone, PDO::PARAM_STR);
+			$stm->bindValue(':cellphone', $query->contact_cellphone, PDO::PARAM_STR);
+			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':query_id', $current_query->id, PDO::PARAM_INT);
+			if($stm->execute() == false)
+				throw new exception('Ошибка при обновлении описания заявки.');
+			return [$query];
+		}catch(exception $e){
+			throw new exception('Ошибка при обновлении описания заявки.');
+		}
+	}	
 }
