@@ -58,3 +58,4 @@ function load_template($name, $args = []){
 class e_controller extends exception{}
 class e_model extends exception{}
 class e_view extends exception{}
+class e_params extends exception{}
