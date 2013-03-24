@@ -98,10 +98,10 @@ $(document).on('click', '.history', function(e){
         var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
         chat.json.send({'type':'get_history_list', 'data':{"uid": user.id, "offset": Object.keys(user.history_dates).length}});
     }
-    $('.chat.active ul#dates').toggle("fast", function(){
+    $('.chat.active ul#dates').toggle(10, function(){
         $('.chat.active .feed').mCustomScrollbar("update");
     });
-    $('.chat.active ul#history').toggle("fast", function(){
+    $('.chat.active ul#history').toggle(10, function(){
         $('.chat.active .feed').mCustomScrollbar("update");
     });
 });
@@ -115,18 +115,16 @@ $(document).on('click', '.chat.active ul#history header', function(e){
         if(!date.history_loaded || date.id === new Date(d.getFullYear(), d.getMonth(), d.getDate(), 12).getTime()){
             date.loadHistory();
         }
-        $(this).siblings('ul').show();
     }
-    else{
-        $(this).siblings('ul').hide();
-    }
-    $(".chat.active .feed").mCustomScrollbar("update");
+    $(this).siblings('ul').toggle(10, function(){
+        $(".chat.active .feed").mCustomScrollbar("update");
+    });
 });
 
 $('#nt-center').on('click', function(e){
     e.preventDefault();
     if($('#_hidden_notification_center').length){
-        $('#_hidden_notification_center').fadeToggle("fast",function(){
+        $('#_hidden_notification_center').fadeToggle(10,function(){
             $(".user-list").mCustomScrollbar("update");
         });
     } else {
