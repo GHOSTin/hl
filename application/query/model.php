@@ -558,11 +558,11 @@ class model_query{
 				AND `id` = :query_id';
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':description', $query->description, PDO::PARAM_STR);
-		$stm->bindValue(':company_id', $query->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении описания заявки.');
-		return [$current_query];
+		return [$query];
 	}	
 	/**
 	* Обновляет контактную информацию
