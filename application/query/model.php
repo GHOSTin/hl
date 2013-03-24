@@ -302,9 +302,8 @@ class model_query{
 				AND `queries`.`id` = `query2material`.`query_id`
 				AND `queries`.`opentime` > :time_open
 				AND `queries`.`opentime` <= :time_close";
-				if(!empty($query->status)){
+				if(!empty($query->status))
 					$sql .= " AND `queries`.`status` = :status";
-				}
 				$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
 		$stm = db::get_handler()->prepare($sql);
@@ -363,9 +362,8 @@ class model_query{
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close";
-				if(!empty($query->status)){
+				if(!empty($query->status))
 					$sql .= " AND `queries`.`status` = :status";
-				}
 		}
 		$stm = db::get_handler()->prepare($sql);
 		if(!empty($query->id)){
@@ -416,9 +414,8 @@ class model_query{
 				AND `queries`.`id` = `query2user`.`query_id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close";
-				if(!empty($query->status)){
+				if(!empty($query->status))
 					$sql .= " AND `queries`.`status` = :status";
-				}
 				$sql .= " ORDER BY `opentime` DESC";
 		}
 		$stm = db::get_handler()->prepare($sql);
@@ -473,9 +470,8 @@ class model_query{
 				AND `queries`.`id` = `query2work`.`query_id`
 				AND `queries`.`opentime` > :time_open
 				AND `queries`.`opentime` <= :time_close";
-				if(!empty($query->status)){
+				if(!empty($query->status))
 					$sql .= " AND `queries`.`status` = :status";
-				}
 				$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
 		$stm = db::get_handler()->prepare($sql);

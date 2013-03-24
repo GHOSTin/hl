@@ -1,5 +1,9 @@
 <?php
 class model_query_work_type{
+	/**
+	* Возвращает список работ заявки
+	* @return array
+	*/
 	public static function get_query_work_types(){
 		$sql = "SELECT `id`,`company_id`, `status`, `name`
 				FROM `query_worktypes`

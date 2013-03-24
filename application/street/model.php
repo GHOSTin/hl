@@ -1,5 +1,9 @@
 <?php
 class model_street{
+	/**
+	* Создает улицу
+	* @return data_street
+	*/
 	public static function create_street(data_city $city, data_street $street, data_user $current_user){
 		if(empty($street->status) OR empty($street->name))
 			throw new e_model('Не все параметры заданы правильно.');
@@ -22,6 +26,10 @@ class model_street{
 		$stm->closeCursor();
 		return $street;
 	}
+	/**
+	* Возвращает следующий для вставки street_id
+	* @return int
+	*/
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_street_id` FROM `streets`";
 		$stm = db::get_handler()->query($sql);
@@ -32,7 +40,11 @@ class model_street{
 		$street_id = (int) $stm->fetch()['max_street_id'] + 1;
 		$stm->closeCursor();
 		return $street_id;
-	}		
+	}
+	/**
+	* Возвращает список улиц
+	* @return array
+	*/	
 	public static function get_streets(){
 		$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
 				FROM `streets`
@@ -47,6 +59,10 @@ class model_street{
 		$stm->closeCursor();
 		return $result;
 	}
+	/**
+	* Возвращает список домов
+	* @return array
+	*/
 	public static function get_houses(data_street $street){
 		if(empty($street->id))
 			throw new e_model('Wrong parametrs');
