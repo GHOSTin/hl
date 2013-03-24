@@ -16,7 +16,7 @@ class model_query{
 	}
 	private static function __add_user(data_query $query, data_user $current_user, $class){
 		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
-			throw new e_params('Не соответсвует тип пользователя.');
+			throw new e_model('Не соответсвует тип пользователя.');
 		$sql = "INSERT INTO `query2user` (
 					`query_id`, `user_id`, `company_id`, `class`
 				) VALUES (
@@ -32,13 +32,13 @@ class model_query{
 	}
 	private static function __add_query(data_query $query, $initiator, data_user $current_user, $time){
 		if(empty($current_user->company_id))
-			throw new e_params('company_id не указан.');
+			throw new e_model('company_id не указан.');
 		if(!($initiator instanceof data_house OR $initiator instanceof data_number))
-			throw new e_params('Инициатор не верного формата.');
+			throw new e_model('Инициатор не верного формата.');
 		if(empty($initiator->department_id))
-			throw new e_params('department_id не указан.');
+			throw new e_model('department_id не указан.');
 		if(!is_int($time))
-			throw new e_params('Неверная дата.');
+			throw new e_model('Неверная дата.');
 		$query->company_id = $current_user->company_id;
 		$query->status = 'open';
 		$query->payment_status = 'unpaid';
@@ -90,9 +90,9 @@ class model_query{
 			$numbers[] = model_number::get_number($initiator);
 			$default = 'true';
 		}else
-			throw new e_params('Не подходящий тип инициатора.');
+			throw new e_model('Не подходящий тип инициатора.');
 		if(count($numbers) < 1)
-			throw new e_params('Не соответсвующее количество лицевых счетов.');
+			throw new e_model('Не соответсвующее количество лицевых счетов.');
 		foreach($numbers as $number){
 			self::__add_number($query, $number, $default, $current_user);
 		}
@@ -101,13 +101,13 @@ class model_query{
 		try{
 			db::get_handler()->beginTransaction();
 			if(empty($query->description))
-				throw new e_params('Пустое описание заявки.');
+				throw new e_model('Пустое описание заявки.');
 			if($initiator instanceof data_house)
 				$initiator = model_house::get_house($initiator);
 			elseif($initiator instanceof data_number)
 				$initiator = model_number::get_number($initiator);
 			if(!($initiator instanceof data_number OR $initiator instanceof data_house))
-				throw new e_params('Инициатор не корректен.');
+				throw new e_model('Инициатор не корректен.');
 			if($initiator instanceof data_house){
 				$query->initiator = 'house';
 				$query->house_id = $initiator->id;
@@ -520,13 +520,13 @@ class model_query{
 			}
 		}else{
 			if(!is_array($query->time_open))
-				throw new e_params('Проблема с временем открытия.');
+				throw new e_model('Проблема с временем открытия.');
 			if(!is_int($query->time_open['begin']))
-				throw new e_params('Проблема с временем открытия.');
+				throw new e_model('Проблема с временем открытия.');
 			if(!is_int($query->time_open['end']))
-				throw new e_params('Проблема с временем открытия.');
+				throw new e_model('Проблема с временем открытия.');
 			if($query->time_open['end'] < $query->time_open['begin'])
-				throw new e_params('Проблема с временем открытия.');
+				throw new e_model('Проблема с временем открытия.');
 		}
 		if(empty($query->status)){
 			if($previous instanceof data_query)
@@ -538,11 +538,11 @@ class model_query{
 		}
 		if(!empty($query->id)){
 			if((int) $query->id < 1)
-				throw new e_params('Проблема с идентификатором заявки.');
+				throw new e_model('Проблема с идентификатором заявки.');
 		}
 		if(!empty($query->number)){
 			if((int) $query->number < 1)
-				throw new e_params('Проблема с номером заявки.');
+				throw new e_model('Проблема с номером заявки.');
 		}
 		return $query;
 	}
@@ -551,7 +551,7 @@ class model_query{
 	*/
 	public static function update_description(data_query $query, data_user $current_user){
 		if(empty($query->description) OR empty($query->id))
-			throw new e_params('Плохие параметры.');
+			throw new e_model('Плохие параметры.');
 		$sql = 'UPDATE `queries`
 				SET `description-open` = :description
 				WHERE `company_id` = :company_id
@@ -569,7 +569,7 @@ class model_query{
 	*/
 	public static function update_contact_information(data_query $query, data_user $current_user){
 		if(empty($query->id))
-			throw new e_params('Плохие параметры.');
+			throw new e_model('Плохие параметры.');
 		$sql = 'UPDATE `queries`
 				SET `addinfo-name` = :fio, `addinfo-telephone` = :telephone, 
 				`addinfo-cellphone` = :cellphone 

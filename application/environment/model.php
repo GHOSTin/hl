@@ -23,7 +23,7 @@ class model_environment{
 				$route = ['auth', 'public_', 'login'];
 			return $route;
 		}catch(exception $e){
-			throw new exception('Ошибка постройки маршрута.');
+			throw new e_model('Ошибка постройки маршрута.');
 		}
 	}
 	/**
@@ -37,7 +37,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
- 			throw new exception('Нет соединения с базой данных.');
+ 			throw new e_model('Нет соединения с базой данных.');
 		}
 		// устанавливаем параметры по умолчанию
 		try{
@@ -45,7 +45,7 @@ class model_environment{
 			db::get_handler()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			db::get_handler()->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		}catch(exception $e){
-			throw new exception('Аттрибуты соединения с базой данных не применились.'); 
+			throw new e_model('Аттрибуты соединения с базой данных не применились.'); 
 		}
 	}
 	/*
@@ -89,7 +89,7 @@ class model_environment{
 			require_once ROOT.'/libs/Twig/Autoloader.php';
 			Twig_Autoloader::register();
 		}catch(exception $e){
-			throw new exception('Шаблонизатор не может быть подгружен.');
+			throw new e_model('Шаблонизатор не может быть подгружен.');
 		}
 	}	
 }
