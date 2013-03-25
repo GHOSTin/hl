@@ -52,7 +52,15 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
-	}	
+	}
+	public static function private_get_dialog_edit_payment_status(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new e_model('Проблема с идентификатором заявки.');
+		$query = new data_query();
+		$query->id = $id;
+		return ['queries' => model_query::get_queries($query)];
+	}
 	public static function private_get_dialog_initiator(){
 		return ['streets' => model_street::get_streets(),
 				'initiator' => $_GET['value']];
@@ -189,4 +197,10 @@ class controller_query{
 		$query->contact_cellphone = $_GET['cellphone'];
 		return ['queries' => model_query::update_contact_information($query, $_SESSION['user'])];
 	}	
+	public static function private_update_payment_status(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$query->payment_status = $_GET['status'];
+		return ['queries' => model_query::update_payment_status($query, $_SESSION['user'])];
+	}
 }

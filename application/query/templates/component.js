@@ -100,7 +100,14 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
+	$('body').on('click', '.get_dialog_edit_payment_status', function(){
+		$.get('get_dialog_edit_payment_status',{
+			id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	});		
 	$('body').on('click', '.get_timeline', function(){
 		$.get('get_timeline',{
 			act: $(this).attr('act'),

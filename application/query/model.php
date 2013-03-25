@@ -581,4 +581,26 @@ class model_query{
 			throw new e_model('Ошибка при обновлении описания заявки.');
 		return [$query];
 	}	
+	/**
+	* Обновляет контактную информацию
+	*/
+	public static function update_payment_status(data_query $query_params, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('Несоответствующие параметры: id.');
+		if(array_search($query_params->payment_status, ['paid', 'unpaid', 'recalculation']) === false)
+			throw new e_model('Несоответствующие параметры: payment_status.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при получении заявки.');
+		$query->payment_status = $query_params->payment_status;
+		$sql = 'UPDATE `queries` SET `payment-status` = :payment_status
+				WHERE `company_id` = :company_id AND `id` = :id';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':payment_status', $query->payment_status, PDO::PARAM_STR);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при обновлении статуса оплаты заявки.');
+		return [$query];
+	}		
 }

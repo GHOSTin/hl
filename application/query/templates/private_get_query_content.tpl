@@ -46,9 +46,9 @@
 				{% endif %}
 			{% endif %}
 		</li>
-		<li>Тип оплаты: {% if query.payment_status in payment_statuses|keys %}
+		<li>Тип оплаты: <span class="query-general-payment_status">{% if query.payment_status in payment_statuses|keys %}
 							{{payment_statuses[query.payment_status]}}
-						{% endif %}</li>
+						{% endif %}</span> <span class="cm get_dialog_edit_payment_status">изменить</span></li>
 		<li>Тип работ: {{query.work_type_name}}</li>
 		<li>Тип заявки: {% if query.warning_status in warning_statuses|keys %}
 							{{warning_statuses[query.warning_status]}}
