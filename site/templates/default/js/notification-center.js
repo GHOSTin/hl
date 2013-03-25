@@ -2,8 +2,8 @@ var log = function (param) {
     console.log(param);
 };
 
-var notify_center = io.connect('http://mshc.local:3000/notify');
-var chat = io.connect('http://mshc2.local:3000/chat');
+var notify_center = io.connect('http://192.168.2.202:3000/notify');
+var chat = io.connect('http://192.168.2.202:3000/chat');
 
 var tryReconnect = function(){
      if (notify_center.socket.connected === false &&
