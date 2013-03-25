@@ -11,13 +11,13 @@ class model_auth{
 				FROM `users`
 				WHERE `username` = :login AND `password` = :hash";
 		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':login', htmlspecialchars($_POST['login']) PDO::PARAM_STR, 255);
+		$stm->bindParam(':login', htmlspecialchars($_POST['login']), PDO::PARAM_STR, 255);
 		$stm->bindParam(':hash', model_user::get_password_hash($_POST['password']) , PDO::PARAM_STR, 255);
 		$stm->execute();
-		if($stm->rowCount() !== 1)
+		if($stm->rowCount() !== 1){
 			$stm->closeCursor();
 			return false;
-		else{
+		}else{
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
 			$_SESSION['user'] = $stm->fetch();
 			$stm->closeCursor();
