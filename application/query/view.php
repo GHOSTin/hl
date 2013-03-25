@@ -21,6 +21,9 @@ class view_query{
 	public static function private_get_dialog_edit_payment_status($args){
 		return load_template('query.private_get_dialog_edit_payment_status', $args);
 	}	
+	public static function private_get_dialog_edit_warning_status($args){
+		return load_template('query.private_get_dialog_edit_warning_status', $args);
+	}	
 	public static function private_get_dialog_initiator($args){
 		return load_template('query.private_get_dialog_initiator', $args);
 	}	
@@ -80,4 +83,7 @@ class view_query{
 	public static function private_update_payment_status($args){
 		return load_template('query.private_update_payment_status', $args);
 	}	
+	public static function private_update_warning_status($args){
+		return load_template('query.private_update_warning_status', $args);
+	}		
 }

@@ -3,7 +3,7 @@
 	{%set query = component.queries[0] %}
 	{% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'}%}
 	{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'}%}
-	{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'recalculation': 'плановая'}%}
+	{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'}%}
 	{% if query.initiator == 'number' %}
 				{% if component.numbers.numbers != false %}
 					{% set number = component.numbers.numbers[component.numbers.structure[query.id].true[0]] %}
@@ -51,7 +51,7 @@
 						{% endif %}</span> <span class="cm get_dialog_edit_payment_status">изменить</span></li>
 		<li>Тип работ: {{query.work_type_name}}</li>
 		<li>Тип заявки: {% if query.warning_status in warning_statuses|keys %}
-							{{warning_statuses[query.warning_status]}}
+							{{warning_statuses[query.warning_status]}} <span class="cm get_dialog_edit_warning_status">изменить</span>
 						{% endif %}</li>
 		<li>Диспетчер:
 		{% if component.users != false %}

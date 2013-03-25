@@ -602,5 +602,27 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении статуса оплаты заявки.');
 		return [$query];
+	}	
+	/**
+	* Обновляет тип заявки
+	*/
+	public static function update_warning_status(data_query $query_params, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('Несоответствующие параметры: id.');
+		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
+			throw new e_model('Несоответствующие параметры: payment_status.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при получении заявки.');
+		$query->warning_status = $query_params->warning_status;
+		$sql = 'UPDATE `queries` SET `warning-type` = :warning_status
+				WHERE `company_id` = :company_id AND `id` = :id';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':warning_status', $query->warning_status, PDO::PARAM_STR);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при обновлении статуса оплаты заявки.');
+		return [$query];
 	}		
 }
