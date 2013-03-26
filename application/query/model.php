@@ -624,5 +624,27 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении статуса оплаты заявки.');
 		return [$query];
+	}	
+	/**
+	* Обновляет тип работ
+	*/
+	public static function update_work_type(data_query $query_params, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('Несоответствующие параметры: id.');
+		if(empty($query_params->worktype_id))
+			throw new e_model('Несоответствующие параметры: worktype_id.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при получении заявки.');
+		$query->worktype_id = $query_params->worktype_id;
+		$sql = 'UPDATE `queries` SET `query_worktype_id` = :work_type_id
+				WHERE `company_id` = :company_id AND `id` = :id';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':work_type_id', $query->worktype_id, PDO::PARAM_STR);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при обновлении статуса оплаты заявки.');
+		return [$query];
 	}		
 }

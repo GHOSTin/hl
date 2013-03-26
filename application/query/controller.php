@@ -68,6 +68,15 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
+	}
+	public static function private_get_dialog_edit_work_type(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new e_model('Проблема с идентификатором заявки.');
+		$query = new data_query();
+		$query->id = $id;
+		return ['queries' => model_query::get_queries($query),
+			'work_types' => model_query_work_type::get_query_work_types()];
 	}	
 	public static function private_get_dialog_initiator(){
 		return ['streets' => model_street::get_streets(),
@@ -216,5 +225,11 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$query->warning_status = $_GET['status'];
 		return ['queries' => model_query::update_warning_status($query, $_SESSION['user'])];
+	}
+	public static function private_update_work_type(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$query->worktype_id = $_GET['type'];
+		return ['queries' => model_query::update_work_type($query, $_SESSION['user'])];
 	}	
 }

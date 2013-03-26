@@ -23,7 +23,10 @@ class view_query{
 	}	
 	public static function private_get_dialog_edit_warning_status($args){
 		return load_template('query.private_get_dialog_edit_warning_status', $args);
-	}	
+	}
+	public static function private_get_dialog_edit_work_type($args){
+		return load_template('query.private_get_dialog_edit_work_type', $args);
+	}		
 	public static function private_get_dialog_initiator($args){
 		return load_template('query.private_get_dialog_initiator', $args);
 	}	
@@ -85,5 +88,8 @@ class view_query{
 	}	
 	public static function private_update_warning_status($args){
 		return load_template('query.private_update_warning_status', $args);
-	}		
+	}	
+	public static function private_update_work_type($args){
+		return load_template('query.private_update_work_type', $args);
+	}			
 }
