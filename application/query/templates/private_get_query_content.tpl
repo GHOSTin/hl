@@ -49,7 +49,7 @@
 		<li>Тип оплаты: <span class="query-general-payment_status">{% if query.payment_status in payment_statuses|keys %}
 							{{payment_statuses[query.payment_status]}}
 						{% endif %}</span> <span class="cm get_dialog_edit_payment_status">изменить</span></li>
-		<li>Тип работ: <span class="query-general-work_type">{{query.work_type_name}}</span> <span class="cm get_dialog_edit_work_type">изменить</span></li>
+		<li>Тип работ: <span class="query-general-work_type">{{query.work_type_name}}</span>  <span class="cm get_dialog_edit_work_type">изменить</span></li>
 		<li>Тип заявки: {% if query.warning_status in warning_statuses|keys %}
 							{{warning_statuses[query.warning_status]}} <span class="cm get_dialog_edit_warning_status">изменить</span>
 						{% endif %}</li>

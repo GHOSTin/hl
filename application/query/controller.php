@@ -76,14 +76,14 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query),
-			'work_types' => model_query_work_type::get_query_work_types()];
+			'work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
 	}	
 	public static function private_get_dialog_initiator(){
 		return ['streets' => model_street::get_streets(),
 				'initiator' => $_GET['value']];
 	}
 	public static function private_get_initiator(){
-		$types = model_query_work_type::get_query_work_types();
+		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user']);
 		switch($_GET['initiator']){
 			case 'number':
 				$number = new data_number();
@@ -198,7 +198,7 @@ class controller_query{
 			'users' => model_user::get_users([]),
 			'departments' => model_department::get_departments($_SESSION['user']),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
-			'query_work_types' => model_query_work_type::get_query_work_types()];
+			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
 	}
 	public static function private_update_description(){
 		$query = new data_query();
