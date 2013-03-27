@@ -1,4 +1,8 @@
 <?php
+/*
+* Связь с таблицей `streest`.
+* Улицы глобальны, но пока привязаны к компании.
+*/
 final class data_street extends data_object{
 	
 	public $id;
