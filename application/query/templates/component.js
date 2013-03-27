@@ -20,26 +20,38 @@ $(document).ready(function(){
 				show_content(r);
 			});
 	});	
+	// выводит лицевые счета заявки
 	$('body').on('click', '.query-numbers', function(){
-		$.get('get_query_numbers',{
-			 id: get_query_id($(this))
-			},function(r){
-				init_content(r);
-			});
+		if($(this).children().is('.query-sub'))
+			$(this).children('.query-sub').remove();
+		else
+			$.get('get_query_numbers',{
+				 id: get_query_id($(this))
+				},function(r){
+					init_content(r);
+				});
 	});
+	// выводит пользователей заявки
 	$('body').on('click', '.query-users', function(){
-		$.get('get_query_users',{
-			 id: get_query_id($(this))
-			},function(r){
-				init_content(r);
-			});
+		if($(this).children().is('.query-sub'))
+			$(this).children('.query-sub').remove();
+		else
+			$.get('get_query_users',{
+				 id: get_query_id($(this))
+				},function(r){
+					init_content(r);
+				});
 	});
+	// выводит работы заявки
 	$('body').on('click', '.query-works', function(){
-		$.get('get_query_works',{
-			 id: get_query_id($(this))
-			},function(r){
-				init_content(r);
-			});
+		if($(this).children().is('.query-sub'))
+			$(this).children('.query-sub').remove();
+		else
+			$.get('get_query_works',{
+				 id: get_query_id($(this))
+				},function(r){
+					init_content(r);
+				});
 	});
 	$('body').on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
