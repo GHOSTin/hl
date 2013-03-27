@@ -1,6 +1,10 @@
 <?php
 class view_query{
 
+	public static function private_add_user($args){
+		return load_template('query.private_get_query_users', $args);
+	}
+
 	public static function private_get_documents($args){
 		return load_template('query.private_get_documents', $args);
 	}
@@ -12,6 +16,10 @@ class view_query{
 	public static function private_create_query($args){
 		return load_template('query.private_get_day', $args);
 	}
+
+	public static function private_get_dialog_add_user($args){
+		return load_template('query.private_get_dialog_add_user', $args);
+	}	
 
 	public static function private_get_dialog_create_query(){
 		return load_template('query.private_get_dialog_create_query', []);

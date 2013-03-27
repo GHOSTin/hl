@@ -93,7 +93,36 @@ class model_query{
 		if($stm->execute() === false)
 			throw new e_model('Проблемы при создании заявки.');
 		return $query;
-	}	
+	}
+	/**
+	* Добавляет ассоциацию заявка-пользователь.
+	*/
+	public static function add_user(data_query $query_params, data_user $user_params, $class, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('Несоответствующие параметры: id заявки.');
+		if(empty($user_params->id))
+			throw new e_model('Несоответствующие параметры: id пользователя.');
+		if(array_search($class, ['manager', 'performer']) === false)
+			throw new e_model('Несоответствующие параметры: class.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при получении заявки.');
+		$user = model_user::get_users($user_params)[0];
+		if(!($user instanceof data_user))
+			throw new e_model('Проблемы при получении пользователя.');
+		$sql = 'INSERT INTO `query2user` (`query_id`, `user_id`, `company_id`,
+				 `class`, `protect`) VALUES (:query_id, :user_id, :company_id,
+				 :class, :protect)';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_STR);
+		$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':class', $class, PDO::PARAM_STR);
+		$stm->bindValue(':protect', 'false', PDO::PARAM_STR);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при добавлении пользователя.');
+		return [$query];
+	}			
 	/*
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-лицевой_счет в зависимости от типа инициатора.

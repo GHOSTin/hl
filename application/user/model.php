@@ -56,39 +56,20 @@ class model_user{
 		return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
 	}
 	/**
-	* Возвращает информацию о пользователе
-	* @return data_user
-	*/
-	public static function get_user($args){
-		$user_id = $args['user_id'];
-		if(empty($user_id))
-			throw new e_model('Не все параметры заданы правильно.');
-		$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
-				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
-				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
-				`users`.`cellphone`
-				FROM `users`
-				WHERE `users`.`id` = :user_id";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':user_id', $user_id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке пользователя');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
-		$user = $stm->fetch();
-		$stm->closeCursor();
-		return $user;
-	}
-	/**
 	* Возвращает пользователей
-	* @return data_user
+	* @return array из data_user
 	*/
-	public static function get_users($args){
+	public static function get_users(data_user $user_params){
 		$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
 				`users`.`cellphone`
 				FROM `users`";
+		if(!empty($user_params->id))
+			$sql .= " WHERE `id` = :id";
 		$stm = db::get_handler()->prepare($sql);
+		if(!empty($user_params->id))
+			$stm->bindValue(':id', $user_params->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Проблема при выборке пользователей.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');

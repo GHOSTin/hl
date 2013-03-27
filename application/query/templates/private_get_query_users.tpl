@@ -8,7 +8,7 @@
 		{% if component.users.users %}
 			{% if component.users.structure[query.id] != false %}
 				<ul class="query-sub">
-					<li>Ответственные
+					<li>Ответственные <span class="get_dialog_add_user cm" type="manager">добавить</span>
 						<ul>
 						{% for number_id in component.users.structure[query.id].manager %}
 							{% set user = component.users.users[number_id] %}
@@ -16,7 +16,7 @@
 						{% endfor %}
 						</ul>
 					</li>
-					<li>Исполнители
+					<li>Исполнители <span class="get_dialog_add_user cm" type="performer">добавить</span>
 						<ul>
 						{% for number_id in component.users.structure[query.id].performer %}
 							{% set user = component.users.users[number_id] %}

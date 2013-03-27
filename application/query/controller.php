@@ -7,6 +7,16 @@ class controller_query{
 	static $name = 'Заявки';
 	static $rules = [];
 
+	public static function private_add_user(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$user = new data_user();
+		$user->id = $_GET['user_id'];
+		$class = $_GET['type'];
+		return ['queries' => model_query::add_user($query, $user, $class, $_SESSION['user']),
+				'users' => model_query::get_users($query, $_SESSION['user'])];
+	}	
+
 	public static function private_clear_filters(){
 		$time = getdate();
 		$query = new data_query();
@@ -42,6 +52,20 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}
+
+	public static function private_get_dialog_add_user(){
+		$id = (int) $_GET['id'];
+		$type = (string) $_GET['type'];
+		if(empty($id))
+			throw new e_model('Проблема с идентификатором заявки.');
+		if(array_search($type, ['manager', 'performer']) === false)
+			throw new e_model('Проблема с типом.');
+		$query = new data_query();
+		$query->id = $id;
+		return ['queries' => model_query::get_queries($query),
+			'users' => model_user::get_users(new data_user()),
+			'type' => $type];
+	}	
 
 	public static function private_get_dialog_create_query(){
 		return true;
@@ -224,7 +248,7 @@ class controller_query{
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], 1, $time['year']),
 			'streets' => model_street::get_streets(),
-			'users' => model_user::get_users([]),
+			'users' => model_user::get_users(new data_user()),
 			'departments' => model_department::get_departments($_SESSION['user']),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
