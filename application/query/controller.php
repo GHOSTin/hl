@@ -1,4 +1,7 @@
 <?php
+/*
+* Контроллер компонента заявок.
+*/
 class controller_query{
 	
 	static $name = 'Заявки';
