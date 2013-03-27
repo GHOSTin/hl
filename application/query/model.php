@@ -113,7 +113,7 @@ class model_query{
 			self::__add_number($query, $number, $default, $current_user);
 		}
 	}	
-	/*
+	/**
 	* Создает новую заявку.
 	* @retrun array из data_query
 	*/
@@ -662,7 +662,13 @@ class model_query{
 		$query = self::get_queries($query_params)[0];
 		if(!($query instanceof data_query))
 			throw new e_model('Проблемы при получении заявки.');
-		$query->worktype_id = $query_params->worktype_id;
+		$query_work_type_params = new data_query_work_type();
+		$query_work_type_params->id = $query_params->worktype_id;
+		$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, $_SESSION['user'])[0];
+		if(!($query_work_type instanceof data_query_work_type))
+			throw new e_model('Проблемы при получении типа работ.');
+		$query->worktype_id = $query_work_type->id;
+		$query->work_type_name = $query_work_type->name;
 		$sql = 'UPDATE `queries` SET `query_worktype_id` = :work_type_id
 				WHERE `company_id` = :company_id AND `id` = :id';
 		$stm = db::get_handler()->prepare($sql);

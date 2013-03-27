@@ -4,5 +4,5 @@
 	$('.query[query_id = {{query.id}}] .query-general-work_type').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
-	незвестно
+	{{query.work_type_name}}
 {% endblock html %}
