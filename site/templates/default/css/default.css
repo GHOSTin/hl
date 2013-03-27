@@ -77,6 +77,13 @@ footer, #push{
     color: #08c !important;
 }
 
+.users li.active a.offline{
+    border-radius: 5px;
+    background-color: #e8e8e8 !important;
+    color: #7c7d7e !important;
+}
+
+
 form.well{
     margin: 0;
 }
