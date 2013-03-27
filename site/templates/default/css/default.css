@@ -81,6 +81,10 @@ form.well{
     margin: 0;
 }
 
+.mCSB_container.mCS_no_scrollbar{
+    margin-right: 30px !important;
+}
+
 .chat {
     max-height: 600px;
     padding: 0 10px;
