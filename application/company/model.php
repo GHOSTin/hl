@@ -1,5 +1,6 @@
 <?php
 class model_company{
+
 	public static function create_company(data_company $company, data_user $current_user){
 		if(empty($company->status) OR empty($company->name))
 			throw new exception('Не все параметры заданы правильно.');
@@ -25,6 +26,7 @@ class model_company{
 		$stm->closeCursor();
 		return $company;
 	}
+	
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_company_id` FROM `companies`";
 		$stm = db::get_handler()->query($sql);

@@ -1,5 +1,6 @@
 <?php
 class model_number{
+
 	public static function create_number(data_city $city, data_flat $flat, data_number $number, data_user $current_user){
 		if(empty($number->number) OR empty($number->fio)
 			OR empty($number->status) OR empty($number->fio))
@@ -40,6 +41,7 @@ class model_number{
 		$stm->closeCursor();
 		return $number;
 	}
+
 	private static function get_insert_id(data_city $city){
 		$sql = "SELECT MAX(`id`) as `max_number_id` FROM `numbers`
 			WHERE `city_id` = :city_id";
@@ -53,6 +55,7 @@ class model_number{
 		$stm->closeCurscor();
 		return $nuber_id;
 	}	
+	
 	public static function get_number(data_number $number){
 		if(empty($number->id))
 			throw new e_model('Неверные входящие параметры.');

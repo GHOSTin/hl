@@ -1,5 +1,6 @@
 <?php
 class model_house{
+
 	public static function create_house(data_street $street, data_house $house, data_user $current_user){
 		if(empty($house->status) OR empty($house->number)
 			OR empty($house->department_id))
@@ -28,6 +29,7 @@ class model_house{
 		$stm->closeCursor();
 		return $house;
 	}
+
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
 		$stm = db::get_handler()->query($sql);
@@ -38,7 +40,8 @@ class model_house{
 		$house_id = (int) $stm->fetch()['max_house_id'] + 1;
 		$stm->closeCursor();
 		return $house_id;
-	}		
+	}
+
 	public static function get_house(data_house $house){
 		if(empty($house->id))
 			throw new e_model('Wrong parametrs');
@@ -58,6 +61,7 @@ class model_house{
 		$stm->closeCursor();
 		return $house;
 	}
+	
 	public static function get_numbers(data_house $house){
 		if(empty($house->id))
 			throw new e_model('Wrong parametrs');

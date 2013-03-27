@@ -1,5 +1,6 @@
 <?php
 class model_flat{
+
 	public static function create_flat(data_house $house, data_flat $flat, data_user $current_user){
 		if(empty($flat->status) OR empty($flat->number))
 			throw new e_model('Не все параметры заданы правильно.');
@@ -22,6 +23,7 @@ class model_flat{
 		$stm->closeCursor();
 		return $flat;
 	}
+	
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
 		$stm = db::get_handler()->query($sql);

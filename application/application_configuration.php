@@ -1,5 +1,6 @@
  <?php
 class application_configuration{
+	
 	const templateName = 'default';
 	// database option
 	const database_name 		= 'mshc2_test';

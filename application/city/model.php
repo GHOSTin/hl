@@ -1,5 +1,6 @@
 <?php
 class model_city{
+
 	public static function create_city(data_city $city, data_user $current_user){
 		if(empty($city->status) OR empty($city->name))
 			throw new e_model('Не все параметры заданы правильно.');
@@ -20,6 +21,7 @@ class model_city{
 		$stm->closeCursor();
 		return $city;
 	}
+	
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_city_id` FROM `cities`";
 		$stm = db::get_handler()->query($sql);

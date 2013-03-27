@@ -1,5 +1,6 @@
 <?php
 class model_query{
+
 	private static function __add_number(data_query $query, data_number $number, $default, data_user $current_user){
 		$sql = "INSERT INTO `query2number` (
 				`query_id`, `number_id`, `company_id`, `default`
@@ -14,6 +15,7 @@ class model_query{
 		if($stm->execute() === false)
 			throw new e_model('Проблема при добавлении лицевого счета.');
 	}
+
 	private static function __add_user(data_query $query, data_user $current_user, $class){
 		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
 			throw new e_model('Не соответсвует тип пользователя.');
@@ -30,6 +32,7 @@ class model_query{
 		if($stm->execute() === false)
 			throw new e_model('Проблема при добавлении пользователя.');
 	}
+
 	private static function __add_query(data_query $query, $initiator, data_user $current_user, $time){
 		if(empty($current_user->company_id))
 			throw new e_model('company_id не указан.');
@@ -82,6 +85,7 @@ class model_query{
 			throw new e_model('Проблемы при создании заявки.');
 		return $query;
 	}	
+
 	private static function add_numbers(data_query $query, $initiator, data_user $current_user){
 		if($initiator instanceof data_house){
 			$numbers = model_house::get_numbers($initiator);
@@ -97,6 +101,7 @@ class model_query{
 			self::__add_number($query, $number, $default, $current_user);
 		}
 	}	
+
 	public static function create_query(data_query $query, $initiator, data_user $current_user){
 		try{
 			db::get_handler()->beginTransaction();
@@ -135,6 +140,7 @@ class model_query{
 			throw new e_model('Ошибка при создании заявки.');
 		}
 	}
+
 	private static function get_insert_id(data_user $user){
 		$sql = "SELECT MAX(`id`) as `max_query_id` FROM `queries`
 			WHERE `company_id` = :company_id";
@@ -147,7 +153,8 @@ class model_query{
 		$query_id = (int) $stm->fetch()['max_query_id'] + 1;
 		$stm->closeCursor();
 		return $query_id;
-	}	
+	}
+
 	private static function get_insert_query_number(data_user $user, $time){
 		$time = getdate($time);
 		$sql = "SELECT MAX(`querynumber`) as `querynumber` FROM `queries`

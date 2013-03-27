@@ -1,7 +1,9 @@
 <?php
 class controller_query{
+	
 	static $name = 'Заявки';
 	static $rules = [];
+
 	public static function private_clear_filters(){
 		$time = getdate();
 		$query = new data_query();
@@ -9,6 +11,7 @@ class controller_query{
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_create_query(){
 		if($_GET['initiator'] === 'number')
 			$initiator = new data_number();
@@ -22,10 +25,12 @@ class controller_query{
 		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
 		$queries[] = model_query::create_query($query, $initiator, $_SESSION['user']);
 		return ['queries' => $queries];
-	}	
+	}
+
 	public static function private_get_documents(){
 		return ['query_id' => $_GET['id']];
 	}
+
 	public static function private_get_day(){
 		$time = getdate($_GET['time']);
 		$query = new data_query();
@@ -33,10 +38,12 @@ class controller_query{
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		return ['queries' => model_query::get_queries($query),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
-	}	
+	}
+
 	public static function private_get_dialog_create_query(){
 		return true;
 	}
+
 	public static function private_get_dialog_edit_description(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
@@ -45,6 +52,7 @@ class controller_query{
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_get_dialog_edit_contact_information(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
@@ -53,6 +61,7 @@ class controller_query{
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_get_dialog_edit_payment_status(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
@@ -61,6 +70,7 @@ class controller_query{
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_get_dialog_edit_warning_status(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
@@ -69,6 +79,7 @@ class controller_query{
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_get_dialog_edit_work_type(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
@@ -77,11 +88,13 @@ class controller_query{
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query),
 			'work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
-	}	
+	}
+
 	public static function private_get_dialog_initiator(){
 		return ['streets' => model_street::get_streets(),
 				'initiator' => $_GET['value']];
 	}
+
 	public static function private_get_initiator(){
 		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user']);
 		switch($_GET['initiator']){
@@ -102,22 +115,26 @@ class controller_query{
 			default:
 				return ['initiator' => false];		
 		}
-	}		
+	}	
+
 	public static function private_get_houses(){
 		$street = new data_street();
 		$street->id = $_GET['id'];
 		return ['houses' => model_street::get_houses($street)];
 	}	
+
 	public static function private_get_numbers(){
 		$house = new data_house();
 		$house->id = $_GET['id'];
 		return ['numbers' => model_house::get_numbers($house)];
 	}	
+
 	public static function private_print_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_get_query_content(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
@@ -125,42 +142,50 @@ class controller_query{
 			'users' => model_query::get_users($query, $_SESSION['user']),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}
+
 	public static function private_get_query_title(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_get_query_numbers(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}
+
 	public static function private_get_query_users(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
 				'users' => model_query::get_users($query, $_SESSION['user'])];
 	}
+
 	public static function private_get_query_works(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
 				'works' => model_query::get_works($query, $_SESSION['user'])];
-	}		
+	}
+
 	public static function private_get_search(){
 		return true;
 	}
+
 	public static function private_get_search_result(){
 		$query = new data_query();
 		$query->number = $_GET['param'];
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_set_status(){
 		$query = new data_query();
 		$query->status = $_GET['value'];
 		return ['queries' => model_query::get_queries($query)];
 	}
+
 	public static function private_get_timeline(){
 		$time = (int) $_GET['time'];
 		$query = new data_query();
@@ -185,6 +210,7 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query),
 			'timeline' => $timeline];
 	}
+
 	public static function private_show_default_page(){
 		if($_SESSION['filters']['query'] instanceof data_query)
 			$time = getdate($_SESSION['filters']['query']->time_open['begin']);
@@ -200,12 +226,14 @@ class controller_query{
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
 	}
+
 	public static function private_update_description(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->description = $_GET['description'];
 		return ['queries' => model_query::update_description($query, $_SESSION['user'])];
 	}	
+
 	public static function private_update_contact_information(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
@@ -213,19 +241,22 @@ class controller_query{
 		$query->contact_telephone = $_GET['telephone'];
 		$query->contact_cellphone = $_GET['cellphone'];
 		return ['queries' => model_query::update_contact_information($query, $_SESSION['user'])];
-	}	
+	}
+
 	public static function private_update_payment_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->payment_status = $_GET['status'];
 		return ['queries' => model_query::update_payment_status($query, $_SESSION['user'])];
 	}
+
 	public static function private_update_warning_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->warning_status = $_GET['status'];
 		return ['queries' => model_query::update_warning_status($query, $_SESSION['user'])];
 	}
+
 	public static function private_update_work_type(){
 		$query = new data_query();
 		$query->id = $_GET['id'];

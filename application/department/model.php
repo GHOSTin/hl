@@ -1,5 +1,6 @@
 <?php
 class model_department{
+
 	public static function create_department(data_company $company, data_department $department, data_user $current_user){
 		if(empty($department->status) OR empty($department->name))
 			throw new e_params('Не все параметры заданы правильно.');
@@ -20,6 +21,7 @@ class model_department{
 		$stm->closeCursor();
 		return $department;
 	}
+
 	private static function get_insert_id(data_company $company){
 		$sql = "SELECT MAX(`id`) as `max_department_id` FROM `departments`
 			WHERE `company_id` = :company_id";
@@ -32,7 +34,8 @@ class model_department{
 		$department_id = (int) $stm->fetch()['max_department_id'] + 1;
 		$stm->closeCursor();
 		return $department_id;
-	}		
+	}	
+		
 	public static function get_departments(data_user $current_user){
 		$sql = "SELECT `departments`.`id`, `departments`.`company_id`, 
 					`departments`.`status`, `departments`.`name`
