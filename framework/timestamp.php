@@ -1,12 +1,16 @@
 <?php
 class timestamp{
+
 	private static $timestamps = array();
+
 	static public function create_timestamp(){
 		self::$timestamps[] = microtime(true);
 	}
+
 	static public function get_timestamp_counter(){
 		return count(self::$timestamps);
 	} 
+	
 	static public function print_html_report(){
 		if(empty(self::$timestamps))
 			$pr = 'No timestamps.';

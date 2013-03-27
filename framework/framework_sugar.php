@@ -6,6 +6,7 @@ function get_component_css(){
 	if(file_exists($file))
 		include($file);
 }
+
 function get_component_js(){
 	$file = htmlspecialchars($_GET['js']);
 	$file = ROOT.'/'.framework_configuration::application_folder.'/'.http_router::get_component_name().'/templates/component.js';
