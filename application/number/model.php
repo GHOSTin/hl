@@ -1,10 +1,12 @@
 <?php
 class model_number{
-
+	/**
+	* Создает новый лицевой ссчет уникальный для компании и для города.
+	* @return object data_number
+	*/
 	public static function create_number(data_city $city, data_flat $flat, data_number $number, data_user $current_user){
-		if(empty($number->number) OR empty($number->fio)
-			OR empty($number->status) OR empty($number->fio))
-			throw new e_model('Не все параметры заданы правильно.');
+		if(empty($number->number) OR empty($number->fio) OR empty($number->status))
+			throw new e_model('number, fio, status заданы не правильно.');
 		$number->company_id = $current_user->company_id;
 		$number->city_id = $city->id;
 		$number->type = 'human';
@@ -37,11 +39,14 @@ class model_number{
 		$stm->bindValue(':contact_telephone', $number->contact_telephone);
 		$stm->bindValue(':contact_cellphone', $number->contact_cellphone);
 		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании номера.');
+			throw new e_model('Проблемы при создании нового лицевого счета.');
 		$stm->closeCursor();
 		return $number;
 	}
-
+	/**
+	* Возвращает следующий для вставки идентификатор лицевого счета.
+	* @return int
+	*/
 	private static function get_insert_id(data_city $city){
 		$sql = "SELECT MAX(`id`) as `max_number_id` FROM `numbers`
 			WHERE `city_id` = :city_id";
@@ -55,10 +60,13 @@ class model_number{
 		$stm->closeCurscor();
 		return $nuber_id;
 	}	
-	
+	/**
+	* Возвращает информацию о лицевом счете.
+	* @return object data_number
+	*/
 	public static function get_number(data_number $number){
 		if(empty($number->id))
-			throw new e_model('Неверные входящие параметры.');
+			throw new e_model('id задан не верно.');
 		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
 					`numbers`.`flat_id`, `numbers`.`number`,
