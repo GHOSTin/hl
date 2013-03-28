@@ -1,21 +1,20 @@
 <?php
 class model_house{
-
+	/**
+	* Создает новый дом.
+	* @return object data_city
+	*/
 	public static function create_house(data_street $street, data_house $house, data_user $current_user){
-		if(empty($house->status) OR empty($house->number)
-			OR empty($house->department_id))
-			throw new e_model('Не все параметры заданы правильно.');
+		if(empty($house->status) OR empty($house->number) OR empty($house->department_id))
+			throw new e_model('status, number, department_id заданы не правильно.');
 		$house->company_id = $current_user->company_id;
 		$house->city_id = $street->city_id;
 		$house->street_id = $street->id;
 		$house->id = self::get_insert_id();
-		$sql = "INSERT INTO `houses` (
-					`id`, `company_id`, `city_id`, `street_id`, `department_id`,
-					`status`, `housenumber`
-				) VALUES (
-					:house_id, :company_id, :city_id, :street_id, :department_id,
-					:status, :number
-				);";
+		$sql = "INSERT INTO `houses` (`id`, `company_id`, `city_id`, `street_id`,
+				`department_id`, `status`, `housenumber`)
+				VALUES (:house_id, :company_id, :city_id, :street_id, :department_id,
+				:status, :number);";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':house_id', $house->id);
 		$stm->bindValue(':company_id', $house->company_id);
@@ -25,11 +24,14 @@ class model_house{
 		$stm->bindValue(':status', $house->status);
 		$stm->bindValue(':number', $house->number);
 		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании дома.');
+			throw new e_model('Проблемы при создании нового дома.');
 		$stm->closeCursor();
 		return $house;
 	}
-
+	/**
+	* Возвращает следующий для вставки идентификатор дома.
+	* @return int
+	*/
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
 		$stm = db::get_handler()->query($sql);
@@ -41,10 +43,13 @@ class model_house{
 		$stm->closeCursor();
 		return $house_id;
 	}
-
+	/**
+	* Возвращает информацию о доме.
+	* @return object data_house
+	*/
 	public static function get_house(data_house $house){
 		if(empty($house->id))
-			throw new e_model('Wrong parametrs');
+			throw new e_model('id задан неправильно.');
 		$sql = "SELECT `houses`.`id`, `houses`.`company_id`, `houses`.`city_id`,
 				`houses`.`street_id`, `houses`.`department_id`, `houses`.`status`, 
 				`houses`.`housenumber` as `number`,
@@ -61,7 +66,10 @@ class model_house{
 		$stm->closeCursor();
 		return $house;
 	}
-	
+	/**
+	* Возвращает лицевые счета дома.
+	* @return array из object data_number
+	*/
 	public static function get_numbers(data_house $house){
 		if(empty($house->id))
 			throw new e_model('Wrong parametrs');
