@@ -1,14 +1,12 @@
 <?php
 class model_profile{
 	/**
-	* Проверяет залогинен ли пользователь
-	* @return bolean
+	* Записывает в сессию правила, ограничения, настройки, меню.
 	*/
 	public static function get_user_profiles(){
 		$sql = "SELECT `profile`, `rules`, `restrictions`, `settings`
-			FROM `profiles`
-			WHERE  `user_id` = :user_id
-			AND `company_id` = :company_id";
+				FROM `profiles` WHERE  `user_id` = :user_id
+				AND `company_id` = :company_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':user_id', $_SESSION['user']->id , PDO::PARAM_INT);
 		$stm->bindValue(':company_id',$_SESSION['user']->company_id , PDO::PARAM_INT);
@@ -36,8 +34,9 @@ class model_profile{
 		}
 		$stm->closeCursor();
 	}
-	/*
-	* Проверяет права доступа пользователя
+	/**
+	* Проверяет права доступа пользователя.
+	* @return bolean
 	*/
 	public static function check_general_access($controller, $component){
 		if(property_exists($controller, 'rules')){
