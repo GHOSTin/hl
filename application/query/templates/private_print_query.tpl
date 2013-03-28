@@ -10,10 +10,17 @@
 				.main-block table {border-collapse: collapse; border-spacing: 0mm;}
 				.ttle {font-size:14pt; font-weight:900;}
 				.main {border:1px solid grey; width:200mm; padding: 0mm 0mm 5mm 0mm;}
-				.main-block {width:194mm; padding:1mm 2mm 2mm 2mm; };
+				.main-block {width:194mm; padding:1mm 2mm 2mm 2mm; }
+				@media print{
+					#b{
+						display:none;
+						visibility: hidden;
+					}
+				}
 			</style>
 		</head>
 		<body>
+		<button id="b" onclick="window.print(); return false;">Печать</button>
 		<div class="main">
 			<!-- begin 1 block -->
 			<div class="main-block">

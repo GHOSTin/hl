@@ -5,9 +5,23 @@
 * Каждый год номер заявки начинает идти с 1, а иджентификатор заявки увеличивается дальше.
 */
 final class data_query extends data_object{
-	
+	/*
+	* Идентификатор заявки уникален для компании.
+	*/
 	public $id;
+	/*
+	* Статус заявки: 
+	* open - открытая заявка 
+	* working - заявка передана в работу
+	* close - закрытая заявка
+	* reopen - переоткрытая заявка
+	*/
 	public $status;
+	/*
+	* Тип ициниатора.
+	* number - лицевой счет
+	* house - дом
+	*/
 	public $initiator;
 	public $payment_status;
 	public $warning_status;
