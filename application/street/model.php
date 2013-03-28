@@ -1,20 +1,17 @@
 <?php
 class model_street{
 	/**
-	* Создает улицу
-	* @return data_street
+	* Создает новую улицу.
+	* @return object data_street
 	*/
 	public static function create_street(data_city $city, data_street $street, data_user $current_user){
 		if(empty($street->status) OR empty($street->name))
-			throw new e_model('Не все параметры заданы правильно.');
+			throw new e_model('status и name заданы не правильно.');
 		$street->company_id = $current_user->company_id;
 		$street->city_id = $city->id;
 		$street->id = self::get_insert_id();
-		$sql = "INSERT INTO `streets` (
-				`id`, `company_id`, `city_id`, `status`, `name`
-			) VALUES (
-				:street_id, :company_id, :city_id, :status, :name 
-			);";
+		$sql = "INSERT INTO `streets` (`id`, `company_id`, `city_id`, `status`, `name`)
+				VALUES (:street_id, :company_id, :city_id, :status, :name);";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':street_id', $street->id, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $street->company_id, PDO::PARAM_INT);
@@ -22,12 +19,12 @@ class model_street{
 		$stm->bindValue(':status', $street->status, PDO::PARAM_STR);
 		$stm->bindValue(':name', $street->name, PDO::PARAM_STR);
 		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании улицы.');
+			throw new e_model('Проблемы при вставке улицы в базу данных.');
 		$stm->closeCursor();
 		return $street;
 	}
 	/**
-	* Возвращает следующий для вставки street_id
+	* Возвращает следующий для вставки идентификатор улицы.
 	* @return int
 	*/
 	private static function get_insert_id(){
@@ -42,16 +39,15 @@ class model_street{
 		return $street_id;
 	}
 	/**
-	* Возвращает список улиц
-	* @return array
+	* Возвращает список улиц.
+	* @return array из object data_street
 	*/	
 	public static function get_streets(){
 		$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
-				FROM `streets`
-				ORDER BY `name`";
+				FROM `streets` ORDER BY `name`";
 		$stm = db::get_handler()->prepare($sql);
 		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке улиц.');
+			throw new e_model('Проблема при выборке улиц из базы данных.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_street');
 		$result = [];
 		while($street = $stm->fetch())
@@ -61,20 +57,19 @@ class model_street{
 	}
 	/**
 	* Возвращает список домов
-	* @return array
+	* @return array из object data_house
 	*/
 	public static function get_houses(data_street $street){
 		if(empty($street->id))
-			throw new e_model('Wrong parametrs');
+			throw new e_model('id задан не правильно.');
 		$sql = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
 		 		`department_id`, `status`, `housenumber` as `number`
-				FROM `houses`
-				WHERE `street_id` = :street_id
+				FROM `houses` WHERE `street_id` = :street_id
 				ORDER BY (`housenumber` + 0)";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindParam(':street_id', $street->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке домов.');
+			throw new e_model('Проблема при выборке домов из базы данных.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
 		$result = [];
 		while($house = $stm->fetch())
