@@ -1,16 +1,16 @@
 <?php
 class model_city{
-
+	/**
+	* Создает новый дом.
+	* @return data_city
+	*/
 	public static function create_city(data_city $city, data_user $current_user){
 		if(empty($city->status) OR empty($city->name))
 			throw new e_model('Не все параметры заданы правильно.');
 		$city->company_id = $current_user->company_id;
 		$city->id = self::get_insert_id();
-		$sql = "INSERT INTO `cities` (
-					`id`, `company_id`, `status`, `name`
-				) VALUES (
-					:city_id, :company_id, :status, :name 
-				);";
+		$sql = "INSERT INTO `cities` (`id`, `company_id`, `status`, `name`)
+				VALUES (:city_id, :company_id, :status, :name);";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':city_id', $city->id);
 		$stm->bindValue(':company_id', $city->company_id);
@@ -21,7 +21,10 @@ class model_city{
 		$stm->closeCursor();
 		return $city;
 	}
-	
+	/**
+	* Возвращает следующий для вставки идентификатор дома.
+	* @return int
+	*/
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_city_id` FROM `cities`";
 		$stm = db::get_handler()->query($sql);
