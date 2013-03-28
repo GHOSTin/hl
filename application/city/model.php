@@ -2,7 +2,7 @@
 class model_city{
 	/**
 	* Создает новый дом.
-	* @return data_city
+	* @return object data_city
 	*/
 	public static function create_city(data_city $city, data_user $current_user){
 		if(empty($city->status) OR empty($city->name))
