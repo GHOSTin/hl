@@ -30,10 +30,15 @@
 		<button class="close get_query_title">&times;</button>
 	</h4>
 	<ul class="nav nav-pills">
+	{% if rules.showDocs == true %}
 		<li><a href="#" class="get_documents">Документы</a></li>
-		<li><a href="#">История заявки</a></li>
+	{% endif %}
+	{% if rules.closeQuery == true and query.status in ['open', 'working', 'reopen'] %}
 		<li><a href="#">Закрыть заявку</a></li>
+	{% endif %}
+	{% if query.status == 'open' %}
 		<li><a href="#">Передать в работу</a></li>
+	{% endif %}
 	</ul>
 	<ul class="query-general">
 		<li>Время открытия: {{query.time_open|date('H:i d.m.Y')}}</li>
@@ -46,21 +51,40 @@
 				{% endif %}
 			{% endif %}
 		</li>
-		<li>Тип оплаты: <span class="query-general-payment_status">{% if query.payment_status in payment_statuses|keys %}
-							{{payment_statuses[query.payment_status]}}
-						{% endif %}</span> <span class="cm get_dialog_edit_payment_status">изменить</span></li>
-		<li>Тип работ: <span class="query-general-work_type">{{query.work_type_name}}</span>  <span class="cm get_dialog_edit_work_type">изменить</span></li>
-		<li>Тип заявки: {% if query.warning_status in warning_statuses|keys %}
-							{{warning_statuses[query.warning_status]}} <span class="cm get_dialog_edit_warning_status">изменить</span>
-						{% endif %}</li>
+		<li>Тип оплаты: <span class="query-general-payment_status">
+			{% if query.payment_status in payment_statuses|keys %}
+				{{payment_statuses[query.payment_status]}}
+			{% endif %}</span>
+			{% if query.status in ['open', 'working', 'reopen'] %}
+			<span class="cm get_dialog_edit_payment_status">изменить</span>
+			{% endif %}
+		</li>
+		<li>Тип работ: <span class="query-general-work_type">{{query.work_type_name}}</span>  
+			{% if query.status in ['open', 'working', 'reopen'] %}
+			<span class="cm get_dialog_edit_work_type">изменить</span></li>
+			{% endif %}
+		<li>Тип заявки: 
+			{% if query.warning_status in warning_statuses|keys %}
+				{{warning_statuses[query.warning_status]}}
+			{% endif %}
+			{% if query.status in ['open', 'working', 'reopen'] %}
+			<span class="cm get_dialog_edit_warning_status">изменить</span>
+			{% endif %}
+		</li>
 		<li>Диспетчер:
 		{% if component.users != false %}
 			{% set creator = component.users.users[component.users.structure[query.id].creator[0]] %}
 			{{creator.lastname}} {{creator.firstname}} {{creator.middlename}}
 		{% endif %}</li>
-		<li>Описание: <span class="query-general-description">{{query.description}}</span> <span class="cm get_dialog_edit_description">изменить</span></li>
+		<li>Описание: <span class="query-general-description">{{query.description}}</span>
+			{% if query.status in ['open', 'working', 'reopen'] %}
+			<span class="cm get_dialog_edit_description">изменить</span></li>
+			{% endif %}
 		<lo>
-			<div>Контактная информация <span class="cm get_dialog_edit_contact_information">изменить</span></div>
+			<div>Контактная информация
+			{% if query.status in ['open', 'working', 'reopen'] %}
+			<span class="cm get_dialog_edit_contact_information">изменить</span></div>
+			{% endif %}
 			<ul class="query-general-contacts">
 				<li>ФИО: {{query.contact_fio}}</li>
 				<li>Телефон: {{query.contact_telephone}}</li>
