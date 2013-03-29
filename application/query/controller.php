@@ -122,6 +122,25 @@ class controller_query{
 				'initiator' => $_GET['value']];
 	}
 
+	public static function private_get_dialog_remove_user(){
+		$id = (int) $_GET['id'];
+		$user_id = (int) $_GET['user_id'];
+		$type = (string) $_GET['type'];
+		if(empty($id))
+			throw new e_model('id задан не верно.');
+		if(empty($user_id))
+			throw new e_model('user задан не верно.');
+		if(array_search($type, ['manager', 'performer']) === false)
+			throw new e_model('Проблема с типом.');
+		$query = new data_query();
+		$query->id = $id;
+		$user = new data_user();
+		$user->id = $user_id;
+		return ['queries' => model_query::get_queries($query),
+			'users' => model_user::get_users($user),
+			'type' => $type];
+	}	
+
 	public static function private_get_initiator(){
 		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user']);
 		switch($_GET['initiator']){
@@ -253,6 +272,17 @@ class controller_query{
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
 	}
+
+	public static function private_remove_user(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$user = new data_user();
+		$user->id = $_GET['user_id'];
+		$type = $_GET['type'];
+		var_dump(model_query::remove_user($query, $user, $type, $_SESSION['user']));
+		exit();
+		return ['queries' => model_query::update_work_type($query, $_SESSION['user'])];
+	}	
 
 	public static function private_update_description(){
 		$query = new data_query();

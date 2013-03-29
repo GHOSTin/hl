@@ -141,6 +141,15 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
+	})	
+	$('body').on('click', '.get_dialog_remove_user', function(){
+		$.get('get_dialog_remove_user',{
+			id: get_query_id($(this)),
+			user_id: $(this).parent().attr('user'),
+			type: $(this).parent().attr('type')
+			},function(r){
+				init_content(r);
+			});
 	})			
 	$('body').on('click', '.get_timeline', function(){
 		$.get('get_timeline',{

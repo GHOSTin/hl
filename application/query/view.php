@@ -49,6 +49,10 @@ class view_query{
 		return load_template('query.private_get_dialog_initiator', $args);
 	}
 
+	public static function private_get_dialog_remove_user($args){
+		return load_template('query.private_get_dialog_remove_user', $args);
+	}
+
 	public static function private_get_initiator($args){
 		return load_template('query.private_get_initiator', $args);
 	}

@@ -598,6 +598,34 @@ class model_query{
 		return $query;
 	}
 	/**
+	* Обновляет тип работ.
+	*/
+	public static function remove_user(data_query $query_params, data_user $user_params, $class, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('id заявки задан не верно.');
+		if(empty($user_params->id))
+			throw new e_model('id пользователя задан не верно.');
+		if(array_search($class, ['manager', 'performer']) === false)
+			throw new e_model('Несоответствующие параметры: class.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при проверке типа заявки.');
+		$user = model_user::get_users($user_params)[0];
+		if(!($user instanceof data_user))
+			throw new e_model('Проблемы при проверке типа порльзователя.');
+		$sql = 'DELETE FROM `query2user`
+				WHERE `company_id` = :company_id AND `query_id` = :query_id
+				AND `user_id` = :user_id AND `class` = :class';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_STR);
+		$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':class', $class, PDO::PARAM_STR);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при удалении пользователя и заявки.');
+		return [$query];
+	}			
+	/**
 	* Обновляет описание заявки.
 	*/
 	public static function update_description(data_query $query, data_user $current_user){
