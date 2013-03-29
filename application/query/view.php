@@ -2,7 +2,7 @@
 class view_query{
 
 	public static function private_add_user($args){
-		return load_template('query.private_get_query_users', $args);
+		return load_template('query.private_add_user', $args);
 	}
 
 	public static function private_get_documents($args){
