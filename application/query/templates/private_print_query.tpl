@@ -1,3 +1,9 @@
+{%set query = component.queries[0] %}
+{% if query.initiator == 'number' %}
+	{% if component.numbers.numbers != false %}
+		{% set number = component.numbers.numbers[component.numbers.structure[query.id].true[0]] %}
+	{% endif %}
+{% endif %}
 {% if component.queries != false %}
 	{% set query = component.queries[0] %}
 	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -27,6 +33,11 @@
 				<div class="ttle">Заявка №{{query.number}} от {{query.time_open|date('H:i d.m.Y')}}</div>
 				<div class="ttle">
 						{{query.street_name}}, дом №{{query.house_number}}
+						{% if query.initiator == 'number' %}
+							{% if component.numbers.numbers != false %}
+								, кв. {{number.flat_number}} (л/с №{{number.number}}, {{number.fio}})
+							{% endif %}
+						{% endif %}
 				</div>
 				<div class="ttle">{{query.description}}</div>
 				<table style="padding:5mm 0mm 0mm 0mm;">
@@ -61,24 +72,30 @@
 		</div>
 		<!-- end 1 block, begin 2 block -->
 		<div class="main-block">
-			<!--
-		if($ctl->data->self->initiator === 'number') $pr .= '
-		<div>Владелец '.$query->numbers->data->self['default'][0]->fio.'</div>';
-
-		if(!empty($query->contactName) OR !empty($query->contactTelephone) OR !empty($query->contactCellphone)){
-
-			$pr .= '<div>Заявку подал ';
-
-			if(!empty($query->contactName)) $pr .= ' '.iconv_substr($query->contactName,0,20,'utf-8');
-			if(!empty($query->contactTelephone)) $pr .= ' тел. '.$query->contactTelephone;
-			if(!empty($query->contactCellphone)) $pr .= ' сот. '.$query->contactCellphone;
-
-			$pr .= '</div>';
-		}
-		-->
+		{% if query.initiator == 'number' %}
+			<div>Владелец {{number.fio}}</div>
+		{% endif %}
+		{% if query.contact_fio != false or query.contact_telephone != false or query.contact_cellphone != false%}
+			<div>Заявку подал:
+				{% if query.contact_fio != false %}
+					{{query.contact_fio}}
+				{% endif %}
+				{% if query.contact_telephone != false %}
+					тел. {{query.contact_telephone}}
+				{% endif %}
+				{% if query.contact_cellphone != false %}
+					сот. {{query.contact_cellphone}}
+				{% endif %}
+			</div>
+		{% endif %}
 			<table style="margin:2mm 0mm 0mm 0mm; width:194mm">
 				<tr>
-					<td style="border-bottom: 1px solid black; width:49%; height:8mm;">Сотрудники: диспетчер</td>
+					<td style="border-bottom: 1px solid black; width:49%; height:8mm;">Сотрудники: диспетчер
+					{% if component.users != false %}
+						{% set creator = component.users.users[component.users.structure[query.id].creator[0]] %}
+						{{creator.lastname}} {{creator.firstname}} {{creator.middlename}}
+					{% endif %}
+					</td>
 					<td style="width:1%; height:8mm;"></td>
 					<td style="border-bottom: 1px solid black; width:50%; height:8mm;">Отметки:</td>
 				</tr>
