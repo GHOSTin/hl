@@ -287,6 +287,7 @@ class model_query{
 	* @return array
 	*/
 	public static function get_queries(data_query $query){
+		$restrictions = $_SESSION['restrictions']['query'];
 		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		if(!empty($query->id)){
 			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
@@ -371,6 +372,18 @@ class model_query{
 				if(!empty($query->status)){
 					$sql .= " AND `queries`.`status` = :status";
 				}
+				if($restrictions instanceof stdClass){
+					if(!empty($restrictions->departments)){
+						$sql .= " AND `queries`.`department_id` IN(";
+						$dep = count($restrictions->departments) - 1;
+						foreach($restrictions->departments as $key => $value){
+							$sql .= ":department_id".$key;
+							if($i++ < $dep)
+								$sql .= ",";
+						}	
+						$sql .= ")";
+					}
+				}
 		}
 		$stm = db::get_handler()->prepare($sql);
 		if(!empty($query->id))
@@ -382,6 +395,12 @@ class model_query{
 			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			if(!empty($query->status))
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+			if($restrictions instanceof stdClass){
+				if(!empty($restrictions->departments)){
+					foreach($restrictions->departments as $key => $value)
+						$stm->bindValue(':department_id'.$key, $value, PDO::PARAM_INT);
+				}
+			}
 		}
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при выборке заявок.');
