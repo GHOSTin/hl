@@ -64,9 +64,11 @@
 			<span class="cm get_dialog_edit_work_type">изменить</span></li>
 			{% endif %}
 		<li>Тип заявки: 
+			<span class="query-general-warning_status">
 			{% if query.warning_status in warning_statuses|keys %}
 				{{warning_statuses[query.warning_status]}}
 			{% endif %}
+			</span>
 			{% if query.status in ['open', 'working', 'reopen'] %}
 			<span class="cm get_dialog_edit_warning_status">изменить</span>
 			{% endif %}

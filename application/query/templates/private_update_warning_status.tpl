@@ -2,7 +2,7 @@
 {% set query = component.queries[0] %}
 {% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'}%}
 {% block js %}
-	$('.query[query_id = {{query.id}}] .query-general-payment_status').html(get_hidden_content());
+	$('.query[query_id = {{query.id}}] .query-general-warning_status').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
 	{% if query.warning_status in warning_statuses|keys %}
