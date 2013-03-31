@@ -173,7 +173,36 @@ class model_query{
 		foreach($numbers as $number){
 			self::__add_number($query, $number, $default, $current_user);
 		}
-	}	
+	}
+	/**
+	* Закрывает заявку.
+	*/
+	public static function close_query(data_query $query_params, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('id заявки задан не верно.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при получении заявки.');
+		if($query->status === 'close')
+			throw new e_model('Заявка уже закрыта.');
+		$query->status = 'close';
+		$query->close_reason = $query_params->close_reason;
+		$query->time_close = time();
+		$sql = "UPDATE `queries`
+				SET `description-close` = :reason,
+				`status` = :status, `closetime` = :time_close
+				WHERE `company_id` = :company_id
+				AND `id` = :query_id";
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':reason', $query->close_reason, PDO::PARAM_STR);
+		$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+		$stm->bindValue(':time_close', $query->time_close, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при закрытии заявки.');
+		return [$query];
+	}
 	/**
 	* Создает новую заявку.
 	* @retrun array из data_query

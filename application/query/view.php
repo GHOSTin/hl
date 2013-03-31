@@ -17,8 +17,15 @@ class view_query{
 		return load_template('query.private_get_day', $args);
 	}
 
+	public static function private_close_query($args){
+		return load_template('query.private_get_query_content', $args);
+	}
 	public static function private_create_query($args){
 		return load_template('query.private_get_day', $args);
+	}
+
+	public static function private_get_dialog_close_query($args){
+		return load_template('query.private_get_dialog_close_query', $args);
 	}
 
 	public static function private_get_dialog_add_user($args){

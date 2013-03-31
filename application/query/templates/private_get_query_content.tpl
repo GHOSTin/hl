@@ -34,7 +34,7 @@
 		<li><a href="#" class="get_documents">Документы</a></li>
 	{% endif %}
 	{% if rules.closeQuery == true and query.status in ['open', 'working', 'reopen'] %}
-		<li><a href="#">Закрыть заявку</a></li>
+		<li><a href="#" class="get_dialog_close_query">Закрыть заявку</a></li>
 	{% endif %}
 	{% if query.status == 'open' %}
 		<li><a href="#">Передать в работу</a></li>

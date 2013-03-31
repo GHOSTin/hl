@@ -42,6 +42,13 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query)];
 	}
 
+	public static function private_close_query(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$query->close_reason = $_GET['reason'];
+		return ['queries' => model_query::close_query($query, $_SESSION['user'])];
+	}
+
 	public static function private_create_query(){
 		if($_GET['initiator'] === 'number')
 			$initiator = new data_number();
@@ -98,10 +105,19 @@ class controller_query{
 		return true;
 	}
 
+	public static function private_get_dialog_close_query(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new e_model('id заявки зада не верно.');
+		$query = new data_query();
+		$query->id = $id;
+		return ['queries' => model_query::get_queries($query)];
+	}
+
 	public static function private_get_dialog_edit_description(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
-			throw new exception('Недостаточно параметров.');
+			throw new e_model('Недостаточно параметров.');
 		$query = new data_query();
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
@@ -110,7 +126,7 @@ class controller_query{
 	public static function private_get_dialog_edit_contact_information(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
-			throw new exception('Недостаточно параметров.');
+			throw new e_model('Недостаточно параметров.');
 		$query = new data_query();
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query)];
