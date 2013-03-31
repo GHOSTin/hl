@@ -15,7 +15,10 @@ class twig{
     }
     public function load_twig(){
 		$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
-		self::$twig = new Twig_Environment($loader);
+		self::$twig = new Twig_Environment($loader,[
+            'cache' => ROOT.'/cache',
+            'auto_reload' => true
+            ]);
     }
     public function get_twig(){
     	return self::$twig;
