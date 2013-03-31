@@ -5,6 +5,10 @@ class view_query{
 		return load_template('query.private_add_user', $args);
 	}
 
+	public static function private_add_work($args){
+		return load_template('query.private_add_work', $args);
+	}	
+
 	public static function private_get_documents($args){
 		return load_template('query.private_get_documents', $args);
 	}
@@ -19,7 +23,11 @@ class view_query{
 
 	public static function private_get_dialog_add_user($args){
 		return load_template('query.private_get_dialog_add_user', $args);
-	}	
+	}
+
+	public static function private_get_dialog_add_work($args){
+		return load_template('query.private_get_dialog_add_work', $args);
+	}
 
 	public static function private_get_dialog_create_query(){
 		return load_template('query.private_get_dialog_create_query', []);
@@ -51,6 +59,10 @@ class view_query{
 
 	public static function private_get_dialog_remove_user($args){
 		return load_template('query.private_get_dialog_remove_user', $args);
+	}
+
+	public static function private_get_dialog_remove_work($args){
+		return load_template('query.private_get_dialog_remove_work', $args);
 	}
 
 	public static function private_get_initiator($args){
@@ -115,6 +127,10 @@ class view_query{
 		return load_template('query.private_get_query_works', $args);
 	}
 
+	public static function private_get_work_options($args){
+		return load_template('query.private_get_work_options', $args);
+	}
+
 	public static function private_update_description($args){
 		return load_template('query.private_update_description', $args);
 	}
@@ -129,6 +145,14 @@ class view_query{
 
 	public static function private_update_warning_status($args){
 		return load_template('query.private_update_warning_status', $args);
+	}
+
+	public static function private_remove_user($args){
+		return;
+	}
+
+	public static function private_remove_work($args){
+		return;
 	}
 	
 	public static function private_update_work_type($args){

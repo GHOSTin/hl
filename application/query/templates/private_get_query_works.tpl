@@ -5,19 +5,13 @@
 		$('.query[query_id = {{query.id}}] .query-works').append(get_hidden_content())
 	{% endblock js %}
 	{% block html %}
-		{% if component.works.works %}
-			{% if component.works.structure[query.id] != false %}
-				<ol class="query-sub">
-				{% for current_work in component.works.structure[query.id] %}
-					{% set work = component.works.works[current_work.work_id] %}
-					<li work="{{work.id}}">{{work.name}}
-						<div>Время: с {{current_work.time_open|date('H:i d.m.Y')}} до {{current_work.time_close|date('H:i d.m.Y')}}</div>
-					</li>
-				{% endfor %}
+		<ul class="query-sub">
+			<li class="get_dialog_add_work cm">добавить</li>
+			<li>
+				<ol class="works">
+				{% include '@query/query_works.tpl' %}
 				</ol>
-			{% endif %}
-		{% else %}
-			Нет пользователей.
-		{% endif %}
+			</li>
+		</ul>
 	{% endblock html %}
 {% endif %}

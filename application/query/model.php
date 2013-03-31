@@ -114,13 +114,45 @@ class model_query{
 				 `class`, `protect`) VALUES (:query_id, :user_id, :company_id,
 				 :class, :protect)';
 		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':query_id', $query->id, PDO::PARAM_STR);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
 		$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':class', $class, PDO::PARAM_STR);
 		$stm->bindValue(':protect', 'false', PDO::PARAM_STR);
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при добавлении пользователя.');
+		return [$query];
+	}
+
+	/**
+	* Добавляет ассоциацию заявка-работа.
+	*/
+	public static function add_work(data_query $query_params, data_work $work_params, $begin_time, $end_time, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('Несоответствующие параметры: id заявки.');
+		if(empty($work_params->id))
+			throw new e_model('Несоответствующие параметры: id работы.');
+		if(!is_int($begin_time) OR !is_int($end_time))
+			throw new e_model('Время задано не верно.');
+		if($begin_time > $end_time)
+			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при получении заявки.');
+		$work = model_work::get_works($work_params, $current_user)[0];
+		if(!($work instanceof data_work))
+			throw new e_model('Проблемы при получении работы.');
+		$sql = 'INSERT INTO `query2work` (`query_id`, `work_id`, `company_id`,
+				 `opentime`, `closetime`) VALUES (:query_id, :work_id, :company_id,
+				 :time_open, :time_close)';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+		$stm->bindValue(':work_id', $work_params->id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':time_open', $begin_time, PDO::PARAM_INT);
+		$stm->bindValue(':time_close', $end_time, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при добавлении работы.');
 		return [$query];
 	}			
 	/*
@@ -598,7 +630,7 @@ class model_query{
 		return $query;
 	}
 	/**
-	* Обновляет тип работ.
+	* Удаляет пользователя из заявки.
 	*/
 	public static function remove_user(data_query $query_params, data_user $user_params, $class, data_user $current_user){
 		if(empty($query_params->id))
@@ -624,7 +656,32 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при удалении пользователя и заявки.');
 		return [$query];
-	}			
+	}
+	/**
+	* Обновляет работу из заявки.
+	*/
+	public static function remove_work(data_query $query_params, data_work $work_params, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('id заявки задан не верно.');
+		if(empty($work_params->id))
+			throw new e_model('id пользователя задан не верно.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при проверке типа заявки.');
+		$work = model_work::get_works($work_params, $current_user)[0];
+		if(!($work instanceof data_work))
+			throw new e_model('Проблемы при проверке типа работы.');
+		$sql = 'DELETE FROM `query2work`
+				WHERE `company_id` = :company_id AND `query_id` = :query_id
+				AND `work_id` = :work_id';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+		$stm->bindValue(':work_id', $work->id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при удалении работы из заявки.');
+		return [$query];
+	}
 	/**
 	* Обновляет описание заявки.
 	*/

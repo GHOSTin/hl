@@ -15,7 +15,24 @@ class controller_query{
 		$class = $_GET['type'];
 		return ['queries' => model_query::add_user($query, $user, $class, $_SESSION['user']),
 				'users' => model_query::get_users($query, $_SESSION['user'])];
-	}	
+	}
+
+	public static function private_add_work(){
+		$begin_hours = (int) $_GET['begin_hours'];
+		$begin_minutes = (int) $_GET['begin_minutes'];
+		$begin_date = (string) $_GET['begin_date'];
+		$end_hours = (int) $_GET['end_hours'];
+		$end_minutes = (int) $_GET['end_minutes'];
+		$end_date = (string) $_GET['end_date'];
+		$begin_time = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
+		$end_time = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$work = new data_work();
+		$work->id = $_GET['work_id'];
+		return ['queries' => model_query::add_work($query, $work, $begin_time, $end_time, $_SESSION['user']),
+				'works' => model_query::get_works($query, $_SESSION['user'])];
+	}		
 
 	public static function private_clear_filters(){
 		$time = getdate();
@@ -65,6 +82,16 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query),
 			'users' => model_user::get_users(new data_user()),
 			'type' => $type];
+	}
+
+	public static function private_get_dialog_add_work(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new e_model('id заявки задан не верно.');
+		$query = new data_query();
+		$query->id = $id;
+		return ['queries' => model_query::get_queries($query),
+			'workgroups' => model_workgroup::get_workgroups(new data_workgroup(), $_SESSION['user'])];
 	}	
 
 	public static function private_get_dialog_create_query(){
@@ -140,6 +167,21 @@ class controller_query{
 			'users' => model_user::get_users($user),
 			'type' => $type];
 	}	
+
+	public static function private_get_dialog_remove_work(){
+		$id = (int) $_GET['id'];
+		$work_id = (int) $_GET['work_id'];
+		if(empty($id))
+			throw new e_model('id заявки задан не верно.');
+		if(empty($work_id))
+			throw new e_model('id работы задан не верно.');
+				$query = new data_query();
+		$query->id = $id;
+		$work = new data_work();
+		$work->id = $work_id;
+		return ['queries' => model_query::get_queries($query),
+				'works' => model_work::get_works($work, $_SESSION['user'])];
+	}
 
 	public static function private_get_initiator(){
 		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user']);
@@ -257,6 +299,15 @@ class controller_query{
 			'timeline' => $timeline];
 	}
 
+	public static function private_get_work_options(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new e_model('id группы задан не верно.');
+		$work_group = new data_workgroup();
+		$work_group->id = $id;
+		return ['works' => model_workgroup::get_works($work_group, $_SESSION['user'])];
+	}
+
 	public static function private_show_default_page(){
 		if($_SESSION['filters']['query'] instanceof data_query)
 			$time = getdate($_SESSION['filters']['query']->time_open['begin']);
@@ -279,9 +330,17 @@ class controller_query{
 		$user = new data_user();
 		$user->id = $_GET['user_id'];
 		$type = $_GET['type'];
-		var_dump(model_query::remove_user($query, $user, $type, $_SESSION['user']));
-		exit();
-		return ['queries' => model_query::update_work_type($query, $_SESSION['user'])];
+		return ['queries' => model_query::remove_user($query, $user, $type, $_SESSION['user']),
+				'users' => model_query::get_users($query, $_SESSION['user'])];
+	}	
+
+	public static function private_remove_work(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$work = new data_work();
+		$work->id = $_GET['work_id'];
+		return ['queries' => model_query::remove_work($query, $work, $_SESSION['user']),
+				'works' => model_query::get_works($query, $_SESSION['user'])];
 	}	
 
 	public static function private_update_description(){

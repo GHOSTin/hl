@@ -150,6 +150,21 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
+	})	
+	$('body').on('click', '.get_dialog_add_work', function(){
+		$.get('get_dialog_add_work',{
+			id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	})
+	$('body').on('click', '.get_dialog_remove_work', function(){
+		$.get('get_dialog_remove_work',{
+			id: get_query_id($(this)),
+			work_id: $(this).parent().attr('work')
+			},function(r){
+				init_content(r);
+			});
 	})			
 	$('body').on('click', '.get_timeline', function(){
 		$.get('get_timeline',{
