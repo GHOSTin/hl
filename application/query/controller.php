@@ -75,7 +75,9 @@ class controller_query{
 	}
 
 	public static function private_get_documents(){
-		return ['query_id' => $_GET['id']];
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		return ['queries' => model_query::get_queries($query, $_SESSION['user'])];
 	}
 
 	public static function private_get_day(){
