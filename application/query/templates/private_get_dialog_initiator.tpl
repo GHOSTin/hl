@@ -38,6 +38,7 @@
 {% block html %}
 	{% if component.streets != false %}
 		<select style="display:block" class="dialog-select-street">
+			<option value="0">Выберите улицу</option>
 			{% for street in component.streets %}
 				<option value="{{street.id}}">{{street.name}}</option>
 			{% endfor %}
