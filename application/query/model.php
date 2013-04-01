@@ -204,6 +204,32 @@ class model_query{
 		return [$query];
 	}
 	/**
+	* Передает заявку в работу.
+	*/
+	public static function to_working_query(data_query $query_params, data_user $current_user){
+		if(empty($query_params->id))
+			throw new e_model('id заявки задан не верно.');
+		$query = self::get_queries($query_params)[0];
+		if(!($query instanceof data_query))
+			throw new e_model('Проблемы при получении заявки.');
+		if($query->status !== 'open')
+			throw new e_model('Заявка имеет статус не позволяющий её передать в работу.');
+		$query->status = 'working';
+		$query->time_work = time();
+		$sql = "UPDATE `queries`
+				SET `status` = :status, `worktime` = :time_work
+				WHERE `company_id` = :company_id
+				AND `id` = :query_id";
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+		$stm->bindValue(':time_work', $query->time_work, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при передачи в работу заявки.');
+		return [$query];
+	}
+	/**
 	* Создает новую заявку.
 	* @retrun array из data_query
 	*/

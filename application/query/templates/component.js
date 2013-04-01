@@ -173,6 +173,14 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	})	
+	
+	$('body').on('click', '.get_dialog_to_working_query', function(){
+		$.get('get_dialog_to_working_query',{
+			id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	})	
 	$('body').on('click', '.get_timeline', function(){
 		$.get('get_timeline',{
 			act: $(this).attr('act'),

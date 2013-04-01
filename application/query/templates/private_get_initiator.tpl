@@ -24,7 +24,7 @@
 {% block html %}
 <div class="modal">
     <div class="modal-header">
-        <h3>Форма создания заявки1sdfsdf</h3>
+        <h3>Форма создания заявки</h3>
     </div>
     <div class="modal-body">
 	{% if component.initiator != false %}

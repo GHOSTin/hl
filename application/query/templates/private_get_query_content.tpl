@@ -36,6 +36,9 @@
 	{% if rules.closeQuery == true and query.status in ['open', 'working', 'reopen'] %}
 		<li><a href="#" class="get_dialog_close_query">Закрыть заявку</a></li>
 	{% endif %}
+	{% if query.status == 'open' %}
+		<li><a href="#" class="get_dialog_to_working_query">Передать в работу</a></li>
+	{% endif %}
 	</ul>
 	<ul class="query-general">
 		<li>Время открытия: {{query.time_open|date('H:i d.m.Y')}}</li>

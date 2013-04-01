@@ -46,7 +46,17 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->close_reason = $_GET['reason'];
-		return ['queries' => model_query::close_query($query, $_SESSION['user'])];
+		return ['queries' => model_query::close_query($query, $_SESSION['user']),
+			'users' => model_query::get_users($query, $_SESSION['user']),
+			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+	}
+
+	public static function private_to_working_query(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		return ['queries' => model_query::to_working_query($query, $_SESSION['user']),
+			'users' => model_query::get_users($query, $_SESSION['user']),
+			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}
 
 	public static function private_create_query(){
@@ -106,6 +116,15 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_close_query(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new e_model('id заявки зада не верно.');
+		$query = new data_query();
+		$query->id = $id;
+		return ['queries' => model_query::get_queries($query)];
+	}
+
+	public static function private_get_dialog_to_working_query(){
 		$id = (int) $_GET['id'];
 		if(empty($id))
 			throw new e_model('id заявки зада не верно.');
