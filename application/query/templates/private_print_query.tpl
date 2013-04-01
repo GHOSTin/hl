@@ -18,7 +18,7 @@
 				.main {border:1px solid grey; width:200mm; padding: 0mm 0mm 5mm 0mm;}
 				.main-block {width:194mm; padding:1mm 2mm 2mm 2mm; }
 				@media print{
-					#b{
+					.navbar{
 						display:none;
 						visibility: hidden;
 					}
@@ -26,7 +26,21 @@
 			</style>
 		</head>
 		<body>
-		<button id="b" onclick="window.print(); return false;">Печать</button>
+        <header>
+            <nav class="navbar navbar-inverse navbar-fixed-top">
+                <div class="navbar-inner">
+                    <a class="btn" href="#" onclick="window.print(); return false;">
+                        <i class="icon-print"></i>
+                         Печать
+                    </a>
+                    <a class="btn" onclick="window.close();">
+                        <i class="icon-remove"></i>
+                         Отмена
+                    </a>
+                </div>
+            </nav>
+        </header>
+		<button id="b" >Печать</button>
 		<div class="main">
 			<!-- begin 1 block -->
 			<div class="main-block">
