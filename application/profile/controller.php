@@ -2,11 +2,12 @@
 class controller_profile{
 
 	public static function private_show_default_page(){
-		$args['user_id'] = $_SESSION['user']->id;
-		return ['user' => model_user::get_user($args)];
+		$user = new data_user();
+		$user->id= $_SESSION['user']->id;
+		return ['user' => model_user::get_users($user)];
 	}
 	
 	public static function private_get_notification_center_content(){
-		return ['users' => model_user::get_users($args)];
+		return ['users' => model_user::get_users(new data_user())];
 	}
 }
