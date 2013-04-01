@@ -7,9 +7,9 @@ var log = function (param) {
     console.log(param);
 };
 /** сокет-соединение для центра уведомлений */
-var notify_center = io.connect('http://192.168.2.202:3000/notify');
+var notify_center = io.connect('http://mshc2.local:3000/notify');
 /** сокет-соединение для чата */
-var chat = io.connect('http://192.168.2.202:3000/chat');
+var chat = io.connect('http://mshc2.local:3000/chat');
 /**
  * если сокет создан, но не произошло соединение, то совершать пересоединение
  * @function

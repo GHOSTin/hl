@@ -12,5 +12,5 @@ class application_configuration{
 	//chat
 	const chat_enable = false;
 	const chat_host = 'localhost';
-	const chat_port = 27015;
+	const chat_port = 3000;
 }
