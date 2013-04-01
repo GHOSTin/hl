@@ -99,7 +99,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $id;
 		return ['queries' => model_query::get_queries($query),
-			'users' => model_user::get_users(new data_user()),
+			'groups' => model_group::get_groups(new data_group(), $_SESSION['user']),
 			'type' => $type];
 	}
 
@@ -337,6 +337,15 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query),
 			'timeline' => $timeline];
 	}
+
+	public static function private_get_user_options(){
+		$id = (int) $_GET['id'];
+		if(empty($id))
+			throw new e_model('id группы задан не верно.');
+		$group = new data_group();
+		$group->id = $id;
+		return ['users' => model_group::get_users($group, $_SESSION['user'])];
+	}	
 
 	public static function private_get_work_options(){
 		$id = (int) $_GET['id'];

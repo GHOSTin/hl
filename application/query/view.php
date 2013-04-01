@@ -143,6 +143,10 @@ class view_query{
 		return load_template('query.private_get_query_works', $args);
 	}
 
+	public static function private_get_user_options($args){
+		return load_template('query.private_get_user_options', $args);
+	}
+
 	public static function private_get_work_options($args){
 		return load_template('query.private_get_work_options', $args);
 	}

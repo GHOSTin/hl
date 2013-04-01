@@ -15,6 +15,16 @@
 				});
 		}
 	});
+	$('.dialog-select-group').change(function(){
+		var group_id = $('.dialog-select-group :selected').val();
+		if(group_id > 0){
+			$.get('get_user_options',{
+				id: group_id
+				},function(r){
+					$('.dialog-select-user').html(r).attr('disabled', false);
+				});
+		}
+	});
 {% endblock js %}
 {% block html %}
 <div class="modal">
@@ -27,11 +37,14 @@
         </h3>
     </div>	
 	<div class="modal-body">
-		<select class="dialog-select-user">
-			<option value="0">Выберите пользователя</option>
-		{% for user in component.users %}
-			<option value="{{user.id}}">{{user.lastname}} {{user.firstname}} {{user.middlename}}</option>
+		<select class="dialog-select-group">
+			<option value="0">Выберите группу</option>
+		{% for group in component.groups %}
+			<option value="{{group.id}}">{{group.name}}</option>
 		{% endfor %}
+		</select>
+		<select class="dialog-select-user" style="display:block" disabled="disabled">
+			<option value="0">Ожидание...</option>
 		</select>
 	</div>
 	<div class="modal-footer">
