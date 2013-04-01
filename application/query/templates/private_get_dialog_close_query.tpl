@@ -5,7 +5,7 @@
 	$('.close_query').click(function(){
 		$.get('close_query',{
 			id: {{query.id}},
-			description: $('.dialog-reason').val()
+			reason: $('.dialog-reason').val()
 			},function(r){
 				init_content(r);
 				$('.dialog').modal('hide');

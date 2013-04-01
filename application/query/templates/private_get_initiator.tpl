@@ -24,7 +24,7 @@
 {% block html %}
 <div class="modal">
     <div class="modal-header">
-        <h3>Форма создания заявки</h3>
+        <h3>Форма создания заявки1sdfsdf</h3>
     </div>
     <div class="modal-body">
 	{% if component.initiator != false %}
@@ -47,7 +47,7 @@
 				</div>
 			{% endif %}
 		{% endif %}
-		<div style="padding: 20px 0px 20px 0px;">
+		<div style="display:inline-block;vertical-align:top; width:300px">
 			<div>Данные контактного лица по заявке</div>
 			<div class="dialog-addinfo">
 				<table>
@@ -66,7 +66,7 @@
 				</table>
 			</div>
 		</div>
-		<div>
+		<div style="display:inline-block;">
 			<div>Выберите тип работ по заявке </div>
 			<select class="dialog-worktype">
 				{% if component.query_work_types != false %}
@@ -75,18 +75,19 @@
 					{% endfor %}
 				{% endif %}
 			</select>
-		</div>
-		<div style="padding:10px 0px 0px 0px;">
-			<div>Выберите тип заявка</div>
-			<select class="dialog-warningtype">
-				<option value="hight">Аварийная заявка</option>
-				<option value="normal" selected>Заявка на участок</option>
-				<option value="planned">Плановая заявка</option>
-			</select>
+			<div>
+				<div>Выберите тип заявка</div>
+				<select class="dialog-warningtype">
+					<option value="hight">Аварийная заявка</option>
+					<option value="normal" selected>Заявка на участок</option>
+					<option value="planned">Плановая заявка</option>
+				</select>
+			</div>
 		</div>
 		<div class="dialog-trouble" style="padding: 20px 0px 0px 0px;">
 			<textarea class="dialog-description" style="width:500px; height:100px;"></textarea>
 		</div>
+
 	{% endif %}
 	</div>
 	<div class="modal-footer">

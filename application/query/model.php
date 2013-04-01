@@ -384,6 +384,7 @@ class model_query{
 						$sql .= ")";
 					}
 				}
+			$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
 		$stm = db::get_handler()->prepare($sql);
 		if(!empty($query->id))
