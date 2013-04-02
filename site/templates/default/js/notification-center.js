@@ -6,6 +6,7 @@
 var log = function (param) {
     console.log(param);
 };
+var global_title = $(document).attr('title') || '';
 /** сокет-соединение для центра уведомлений */
 var notify_center = io.connect('http://192.168.2.202:3000/notify');
 /** сокет-соединение для чата */
@@ -48,6 +49,14 @@ notify_center.on('message', function(event){
                 $('.notification-center-icon').addClass('icon-white');
             }
             break;
+        case 'unread_count_messages':
+            if(message.data>0){
+                $(document).attr('title', message.data+' новых сообщений');
+            } else {
+                $(document).attr('title', global_title);
+                $('.notification-center-icon').removeClass('icon-white');
+            }
+            break;
         default:
             console.log('received unknown message:');
             console.log(message);
@@ -65,7 +74,7 @@ notify_center.on('disconnect', function(){
 chat.on('message', function (event) {
     var message = event.data;
     switch (message.type) {
-        case 'previous_messages': /** сщщбщение - присланы предыдущие сообщения */
+        case 'previous_messages': /** сообщение - присланы предыдущие сообщения */
             userList.list[message.data.uid].loadPreviousMessages(message.data.messages, message.data.status || 'new');
             break;
         case 'updates': /** сообщение - произвести обновления */
@@ -220,7 +229,6 @@ $('#nt-center').on('click', function(e){
             });
         });
     }
-    $('.notification-center-icon').removeClass('icon-white');
 });
 /**
  * создает блок для центра уведомлений

@@ -101,6 +101,7 @@ window.feed = {
                     if (flags & 1) userList.list[user_id].messages[message_id].read();
                     break;
                 case 4: /** @lends пришло новое сообщение */
+                    chat.json.send({'type':'get_unread_count'});
                     var message = new Message(update);
                     break;
                 case 5: /** @lends кол-во не прочитанных сообщений */
@@ -313,6 +314,7 @@ User.prototype.addHistory_date = function (history) {
 User.prototype.markAllAsRead = function () {
     if (this.previousMessagesLoaded && this.hasUnread()) {
         chat.json.send({'type':'mark_as_read', 'data':{'mids':this.unreadMessagesIds().join(','), 'uid':this.id}});
+        chat.json.send({'type':'get_unread_count'});
     }
 };
 /**
