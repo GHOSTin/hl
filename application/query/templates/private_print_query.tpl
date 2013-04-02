@@ -22,6 +22,17 @@
                     margin-bottom: 20px;
                     overflow: visible;
                 }
+                .navbar-inverse .navbar-inner {
+                    background-color: #1b1b1b;
+                    background-image: -moz-linear-gradient(top, #222222, #111111);
+                    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#111111));
+                    background-image: -webkit-linear-gradient(top, #222222, #111111);
+                    background-image: -o-linear-gradient(top, #222222, #111111);
+                    background-image: linear-gradient(to bottom, #222222, #111111);
+                    background-repeat: repeat-x;
+                    border-color: #252525;
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
+                }
                 .navbar-inner {
                     min-height: 40px;
                     padding-right: 20px;
@@ -100,8 +111,46 @@
                     background-color: #e6e6e6;
                     *background-color: #d9d9d9;
                 }
-                .icon-print {
-                    background-position: -96px -48px;
+                .btn:active,
+                .btn.active {
+                    background-color: #cccccc \9;
+                }
+
+                .btn:first-child {
+                    *margin-left: 0;
+                }
+                .btn:hover,
+                .btn:focus {
+                    color: #333333;
+                    text-decoration: none;
+                    background-position: 0 -15px;
+                    -webkit-transition: background-position 0.1s linear;
+                    -moz-transition: background-position 0.1s linear;
+                    -o-transition: background-position 0.1s linear;
+                    transition: background-position 0.1s linear;
+                }
+                .btn:focus {
+                    outline: thin dotted #333;
+                    outline: 5px auto -webkit-focus-ring-color;
+                    outline-offset: -2px;
+                }
+                .btn.active,
+                .btn:active {
+                    background-image: none;
+                    outline: 0;
+                    -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+                    -moz-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+                    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+                }
+                .btn.disabled,
+                .btn[disabled] {
+                    cursor: default;
+                    background-image: none;
+                    opacity: 0.65;
+                    filter: alpha(opacity=65);
+                    -webkit-box-shadow: none;
+                    -moz-box-shadow: none;
+                    box-shadow: none;
                 }
                 [class^="icon-"],
                 [class*=" icon-"] {
@@ -115,6 +164,12 @@
                     background-image: url("/templates/default/images/glyphicons-halflings.png");
                     background-position: 14px 14px;
                     background-repeat: no-repeat;
+                }
+                .icon-print {
+                    background-position: -96px -48px;
+                }
+                .icon-remove {
+                    background-position: -312px 0;
                 }
 				.main-block {width:194mm; padding:1mm 2mm 2mm 2mm; }
 				@media print{
