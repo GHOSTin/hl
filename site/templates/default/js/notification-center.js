@@ -8,9 +8,9 @@ var log = function (param) {
 };
 var global_title = $(document).attr('title') || '';
 /** сокет-соединение для центра уведомлений */
-var notify_center = io.connect('http://mshc2_test:3000/notify');
+var notify_center = io.connect('http://mshc22.local:3000/notify');
 /** сокет-соединение для чата */
-var chat = io.connect('http://mshc2_test:3000/chat');
+var chat = io.connect('http://mshc22.local:3000/chat');
 /**
  * если сокет создан, но не произошло соединение, то совершать пересоединение
  * @function
@@ -173,6 +173,8 @@ $('#nt-center').on('click', function(e){
     if($('#_hidden_notification_center').length){
         $('#_hidden_notification_center').fadeToggle(10,function(){
             $(".user-list").mCustomScrollbar("update");
+            $('.users li.active').removeClass('active');
+            $('.chat.active').removeClass('active');
         });
     } else {
         /** подгрузить контент */

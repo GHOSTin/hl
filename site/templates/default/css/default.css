@@ -76,18 +76,37 @@ footer, #push{
     padding: 5px;
 }
 
+.users li.offline a{
+    color: #ccc;
+}
+
 .users li.active a{
     border-radius: 5px;
     background-color: #e8e8e8 !important;
     color: #08c !important;
+    font-weight: bold;
 }
 
-.users li.active a.offline{
+.users li.active.offline a{
     border-radius: 5px;
     background-color: #e8e8e8 !important;
     color: #7c7d7e !important;
 }
 
+.users .status {
+    font-size: 2.2em;
+    vertical-align: middle;
+    margin: 0 3px;
+
+}
+
+.users .offline .status{
+    color: palevioletred;
+}
+
+.users .online .status{
+    color: greenyellow;
+}
 
 form.well{
     margin: 0;
@@ -212,14 +231,6 @@ form.well{
 
 .container1 {
     overflow: hidden;
-}
-
-.offline {
-    color: #ccc;
-}
-
-.user-list li.active a{
-    font-weight: bold;
 }
 
 @media (max-width: 979px){

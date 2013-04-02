@@ -32,7 +32,7 @@ window.userList = {
             var user = this.list[id];
             var online_status = ((user.online) ? 'online' : 'offline');
             var li = '';
-            li += '<li><a href="#user_' + user.id + '" class="' + online_status + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
+            li += '<li class="' + online_status + '"><span class="status">&bull;</span><a href="#user_' + user.id + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
             if (user.hasUnread())
                 li += '<span class="unread_count label label-info pull-right">+' + user.unreadCount() + '</span>';
             li += '</a></li>';
@@ -55,7 +55,7 @@ window.userList = {
             var user = this.list[i];
                 var pane = '';
                 pane += '<div class="chat tab-pane fade user" id="user_' + user.id + '">';
-                pane += '<h6>' + user.name;
+                pane += '<h6><span class="status">&bull;</span>' + user.name;
                 pane += '<button type="button" class="history btn btn-mini pull-right" data-toggle="button">';
                 pane += '<i class="icon-book"></i>';
                 pane += '</button></h6>';
