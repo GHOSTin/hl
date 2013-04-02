@@ -2,7 +2,6 @@
 	background-color: #e8eefa;
 	max-width: 800px;
 	margin: 2px;
-	padding: 0px 5px;
 }
 
 .query_status_open {border-left:4px solid #ff0000;}
@@ -25,7 +24,4 @@
 }
 ul.query-sub, ul.query-general{
     list-style:none;
-}
-.query{
-    padding:3px 3px;
 }

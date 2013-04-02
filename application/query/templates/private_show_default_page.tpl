@@ -20,7 +20,7 @@
         </nav>
         <!-- end timeline, begin queries -->
         <div class="queries">
-            {% include '@query/private_get_day.tpl' %}
+            {% include '@query/query_titles.tpl' %}
         </div>
         <!-- end queries -->
     </div>
