@@ -10,6 +10,7 @@
 	    <link rel="stylesheet" href="/templates/default/css/libs.css" >
 		<link rel="stylesheet" href="/?css=component.css&p={{componentName}}" >
 	{% endif %}
+    {% block css %}{% endblock css %}
 </head>
 <body>
     <div id="wrap">
@@ -45,4 +46,5 @@
 	    <script src="/templates/default/js/chat.js"></script>
 	    <script src="/?js=component.js&p={{componentName}}"></script>
     {% endif %}
+    {% block javascript %}{% endblock javascript %}
 </html>

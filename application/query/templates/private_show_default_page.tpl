@@ -26,3 +26,9 @@
     </div>
     <!-- end right block -->
 {% endblock component %}
+{% block javascript %}
+    <script src="/templates/default/js/bootstrap-datepicker.js"></script>
+{% endblock javascript %}
+{% block css %}
+    <link rel="stylesheet" href="/templates/default/css/datepicker.css" >
+{% endblock css %}

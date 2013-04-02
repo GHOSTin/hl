@@ -30,6 +30,12 @@
 				});
 		}
 	});
+	$('.dialog-begin_date').datepicker({format: 'dd.mm.yyyy'}).on('changeDate', function(){
+		$('.dialog-begin_date').datepicker('hide');
+	});
+	$('.dialog-end_date').datepicker({format: 'dd.mm.yyyy'}).on('changeDate', function(){
+		$('.dialog-end_date').datepicker('hide');
+	});
 {% endblock js %}
 {% block html %}
 <div class="modal">
