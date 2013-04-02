@@ -14,6 +14,10 @@
 		.removeClass('get_query_content');
 	{% endblock js %}
 	{% block html %}
+	<div  class="query-wrap
+{% if query.status in ['working','open', 'close', 'reopen']%}
+	query_status_{{query.status}}
+{% endif %}">
 	<h4>
 		{% if query.initiator == 'number' %}
 			<img src="/templates/default/images/icons/xfn-friend.png" />
@@ -111,5 +115,6 @@
 			<h5>Материалы</h5>
 		</li>#}
 	</ul>
+	</div>
 	{% endblock html %}
 {% endif %}

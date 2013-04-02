@@ -3,6 +3,10 @@
 	max-width: 800px;
 	margin: 2px;
 }
+.query-wrap{
+    padding:3px 5px;
+}
+
 
 .query_status_open {border-left:4px solid #ff0000;}
 .query_status_close {border-left:4px solid #cccccc;}

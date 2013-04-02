@@ -1,4 +1,4 @@
-<div  class="query-title
+<div  class="query-wrap
 {% if query.status in ['working','open', 'close', 'reopen']%}
 	query_status_{{query.status}}
 {% endif %}">
