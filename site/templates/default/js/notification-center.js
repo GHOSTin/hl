@@ -6,6 +6,17 @@
 var log = function (param) {
     console.log(param);
 };
+/**
+ * функция аналог jQuery:contains без учета регистра
+ */
+$.extend($.expr[':'], {
+    'containsi': function(elem, i, match, array) {
+        log(i);
+        return (elem.textContent || elem.innerText || '').toLowerCase()
+            .indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+});
+/** тайтл страницы */
 var global_title = $(document).attr('title') || '';
 /** сокет-соединение для центра уведомлений */
 var notify_center = io.connect('http://mshc22.local:3000/notify');
@@ -228,6 +239,14 @@ $('#nt-center').on('click', function(e){
                         }
                     }
                 }
+            });
+            $("#user-filter").keyup( function() {
+                if($(this).val()!==''){
+                    $(".users li").hide().filter(":containsi('"+ $(this).val() +"')").show();
+                } else {
+                    userList.renderMenu();
+                }
+                $('.user-list').mCustomScrollbar("update");
             });
         });
     }

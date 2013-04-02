@@ -46,18 +46,18 @@ footer, #push{
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-.user-list, .chat-list {
+div[class^=col-]{
     position: relative;
     height: 500px;
     display: inline-block;
     vertical-align: top;
 }
 
-.chat-list{
+.col-right{
     width: 400px;
 }
 
-.user-list{
+.col-left{
     width: 195px;
     border-right: 1px solid rgba(0,0,0,.1);
     overflow: auto;
