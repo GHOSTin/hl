@@ -11,7 +11,6 @@ var log = function (param) {
  */
 $.extend($.expr[':'], {
     'containsi': function(elem, i, match, array) {
-        log(i);
         return (elem.textContent || elem.innerText || '').toLowerCase()
             .indexOf((match[3] || "").toLowerCase()) >= 0;
     }

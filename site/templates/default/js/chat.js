@@ -313,8 +313,8 @@ User.prototype.addHistory_date = function (history) {
  */
 User.prototype.markAllAsRead = function () {
     if (this.previousMessagesLoaded && this.hasUnread()) {
-        chat.json.send({'type':'mark_as_read', 'data':{'mids':this.unreadMessagesIds().join(','), 'uid':this.id}});
         chat.json.send({'type':'get_unread_count'});
+        chat.json.send({'type':'mark_as_read', 'data':{'mids':this.unreadMessagesIds().join(','), 'uid':this.id}});
     }
 };
 /**
