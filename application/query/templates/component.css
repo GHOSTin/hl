@@ -24,6 +24,7 @@
     border:1px solid black;
 }
 .timeline-day-wday{
+    margin-top:3px;
     font-size:10px;
 }
 .timeline-day-current{
