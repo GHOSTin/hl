@@ -61,9 +61,12 @@ $(document).ready(function(){
 			});
 	});	
 	$('body').on('click', '.timeline-day', function(){
+		var self = $(this);
 		$.get('get_day',{
 			 time: $(this).attr('time')
 			},function(r){
+				$('.timeline-day').removeClass('timeline-day-current');
+				self.addClass('timeline-day-current');
 				$('.queries').html(r);
 			});
 	});		
