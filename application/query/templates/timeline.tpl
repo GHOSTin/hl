@@ -17,6 +17,10 @@
     <div class="timeline-day
         {% if day|date('U') == current_day_time %}
             timeline-day-current
+        {% else %}
+            {% if day|date('U') == component.now %}
+            timeline-day-now
+            {% endif %}
         {% endif %}
         " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
     	<div>{{ i }}</div>

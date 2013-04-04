@@ -30,6 +30,9 @@
 .timeline-day-current{
     background: red;
 }
+.timeline-day-now{
+    background: green;
+}
 .timeline-month{
     text-align:center;
 }
