@@ -26,11 +26,11 @@ var chat = io.connect('http://mshc2.local:3000/chat');
  * @function
  */
 var tryReconnect = function(){
-     if (notify_center.socket.connected === false &&
+    if (notify_center.socket.connected === false &&
          notify_center.socket.connecting === false) {
          notify_center.socket.connect();
          chat.socket.connect();
-     }
+    }
 }
 /**
  * с интервалом раз в минуту вызывать функцию tryReconnect
