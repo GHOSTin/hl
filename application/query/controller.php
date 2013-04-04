@@ -331,15 +331,14 @@ class controller_query{
 			break;
 			case 'previous':
 				$query->time_open['begin'] = strtotime("-1 day", $time);
-				$timeline = strtotime("-1 month +12 hours", $time);
+				$timeline = strtotime("-12 hours", $time);
 			break;
 			default:
 				return false;
 		}
-		// var_dump(getdate($timeline));
-		// exit();
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		return ['queries' => model_query::get_queries($query),
+			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'timeline' => $timeline];
 	}
 
@@ -369,7 +368,7 @@ class controller_query{
 		$query = new data_query();
 		return ['queries' => model_query::get_queries($query),
 			'filters' => $_SESSION['filters']['query'],
-			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['wday'], $time['year']),
+			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'streets' => model_street::get_streets(),
 			'users' => model_user::get_users(new data_user()),
 			'departments' => model_department::get_departments($_SESSION['user']),

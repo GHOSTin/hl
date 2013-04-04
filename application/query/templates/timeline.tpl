@@ -15,7 +15,7 @@
 <i class="icon-chevron-left get_timeline" act="previous"></i>
 {% for i in range(1, current_day_time|date('t')) %}
     <div class="timeline-day
-        {% if day == current_day_time %}
+        {% if day|date('U') == current_day_time %}
             timeline-day-current
         {% endif %}
         " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
