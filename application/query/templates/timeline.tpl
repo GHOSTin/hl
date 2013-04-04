@@ -27,7 +27,13 @@
     	<div class="timeline-day-wday">
     		{% set w = day|date('w') %}
     		{% if w in wdays|keys %}
+                {% if w in [0, 6] %}
+                    <b>
+                {% endif %}
     			{{ wdays[w] }}
+                {% if w in [0, 6] %}
+                    </b>
+                {% endif %}
     		{% endif %}
     	</div>
     </div>
