@@ -7,7 +7,7 @@
 	        <label class="view-select">
 	        <select class="filter-content-select-status">
 	            <option value="all">Все заявки</option>
-	            {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые'} %}
+	            {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
 	            {% for key, status in statuses %}
 	                <option value="{{key}}" 
 	                {% if key == component.filters.status %}
