@@ -23,6 +23,12 @@
     padding: 4px;
     border:1px solid black;
 }
+.timeline-day-wday{
+    font-size:10px;
+}
+.timeline-day-current{
+    background: red;
+}
 .timeline-month{
     text-align:center;
 }
