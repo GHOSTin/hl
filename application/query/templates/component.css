@@ -19,11 +19,12 @@
 .timeline .btn-group{
     white-space: normal;
 }
-.timeline-day {
+.timeline-control, .timeline-day {
     cursor: pointer;
-    width:14px;
-    height:14px;
-    line-height: 14px;
+    width:16px;
+    height:16px;
+    line-height: 16px;
+    font-size:12px !important;
     padding: 4px;
     margin-bottom: 14px;
 }

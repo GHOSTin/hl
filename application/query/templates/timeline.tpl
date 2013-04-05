@@ -13,17 +13,16 @@
     {{ y }}
 </div>
 <div class="btn-group pagination" data-toggle="buttons-radio">
-    <a class="timeline-day btn">
+    <a class="timeline-control btn">
         <i class="icon-chevron-left get_timeline" act="previous"></i>
     </a>
     {% for i in range(1, current_day_time|date('t')) %}
         <a class="timeline-day btn
             {% if day|date('U') == current_day_time %}
                 active
-            {% else %}
-                {% if day|date('U') == component.now %}
+            {% endif %}
+            {% if day|date('U') == component.now %}
                 btn-primary
-                {% endif %}
             {% endif %}
             " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
             <div>{{ i }}</div>
@@ -42,7 +41,7 @@
         </a>
         {% set day = day|date_modify('+1 day') %}
     {% endfor %}
-    <a class="timeline-day btn">
+    <a class="timeline-control btn">
         <i class="icon-chevron-right get_timeline" act="next"></i>
     </a>
 </div>
