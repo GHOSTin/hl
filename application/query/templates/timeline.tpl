@@ -12,31 +12,37 @@
     {% endif %}
     {{ y }}
 </div>
-<i class="icon-chevron-left get_timeline" act="previous"></i>
-{% for i in range(1, current_day_time|date('t')) %}
-    <div class="timeline-day
-        {% if day|date('U') == current_day_time %}
-            timeline-day-current
-        {% else %}
-            {% if day|date('U') == component.now %}
-            timeline-day-now
+<div class="btn-group pagination" data-toggle="buttons-radio">
+    <a class="timeline-day btn">
+        <i class="icon-chevron-left get_timeline" act="previous"></i>
+    </a>
+    {% for i in range(1, current_day_time|date('t')) %}
+        <a class="timeline-day btn
+            {% if day|date('U') == current_day_time %}
+                active
+            {% else %}
+                {% if day|date('U') == component.now %}
+                btn-primary
+                {% endif %}
             {% endif %}
-        {% endif %}
-        " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
-    	<div>{{ i }}</div>
-    	<div class="timeline-day-wday">
-    		{% set w = day|date('w') %}
-    		{% if w in wdays|keys %}
-                {% if w in [0, 6] %}
-                    <b>
+            " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
+            <div>{{ i }}</div>
+            <div class="timeline-day-wday">
+                {% set w = day|date('w') %}
+                {% if w in wdays|keys %}
+                    {% if w in [0, 6] %}
+                        <b>
+                    {% endif %}
+                    {{ wdays[w] }}
+                    {% if w in [0, 6] %}
+                        </b>
+                    {% endif %}
                 {% endif %}
-    			{{ wdays[w] }}
-                {% if w in [0, 6] %}
-                    </b>
-                {% endif %}
-    		{% endif %}
-    	</div>
-    </div>
-    {% set day = day|date_modify('+1 day') %}
-{% endfor %}
-<i class="icon-chevron-right get_timeline" act="next"></i>
+            </div>
+        </a>
+        {% set day = day|date_modify('+1 day') %}
+    {% endfor %}
+    <a class="timeline-day btn">
+        <i class="icon-chevron-right get_timeline" act="next"></i>
+    </a>
+</div>

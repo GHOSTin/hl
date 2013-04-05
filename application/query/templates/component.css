@@ -13,25 +13,24 @@
 .query_status_reopen {border-left:4px solid blue;}
 .query_status_working {border-left:4px solid black;}
 
+.timeline .pagination{
+    margin: 0;
+}
+.timeline .btn-group{
+    white-space: normal;
+}
 .timeline-day {
     cursor: pointer;
     width:14px;
     height:14px;
     line-height: 14px;
-    text-align: center;
-    display:inline-block;
     padding: 4px;
-    border:1px solid black;
+    margin-bottom: 14px;
 }
 .timeline-day-wday{
     margin-top:3px;
     font-size:10px;
-}
-.timeline-day-current{
-    background: red;
-}
-.timeline-day-now{
-    background: green;
+    color: black;
 }
 .timeline-month{
     text-align:center;
