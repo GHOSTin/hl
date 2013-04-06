@@ -11,6 +11,7 @@ html,body{
     height: auto !important;
     height: 100%;
     margin: 0 auto -60px;
+    background-color: rgb(246,246,246);
 }
 footer, #push{
     height: 60px;
