@@ -95,6 +95,13 @@ $(document).ready(function(){
 			},function(r){
 				$('.queries').html(r);
 			});
+	});
+	$('.filter-content-select-street').change(function(){
+		$.get('set_street',{
+			value: $('.filter-content-select-street :selected').val()
+			},function(r){
+				$('.queries').html(r);
+			});
 	});	
 	$('body').on('click', '.get_dialog_create_query', function(){
 		$.get('get_dialog_create_query',{

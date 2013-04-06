@@ -109,4 +109,8 @@ final class data_query extends data_object{
 	* Идентификатор компании.
 	*/
 	public $company_id;
+	/*
+	* Идентификатор улицы
+	*/
+	public $street_id;
 }

@@ -18,7 +18,6 @@
 	        </select></label>
 	    </div>
 	</div>
-	{# 
 	<!-- end filter status, begin filter street -->
 	<div class="filter">
 	    <div class="filter-name">по улице и дому</div>
@@ -35,6 +34,7 @@
 	       	</label>
 	    </div>
 	</div>
+	{# 
 	<!-- end filter street, begin filter department -->
 	<div class="filter">
 	    <div class="filter-name">по участку</div>

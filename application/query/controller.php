@@ -315,6 +315,12 @@ class controller_query{
 		return ['queries' => model_query::get_queries($query)];
 	}
 
+	public static function private_set_street(){
+		$query = new data_query();
+		$query->street_id = $_GET['value'];
+		return ['queries' => model_query::get_queries($query)];
+	}
+
 	public static function private_get_timeline(){
 		$time = (int) $_GET['time'];
 		$query = new data_query();
