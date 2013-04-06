@@ -18,15 +18,17 @@
     </div>
     <!-- end left block, begin right block -->
     <div class="span9">
-        <!-- begin timeline -->
-        <nav class="timeline">
-            {% include '@query/timeline.tpl' %}
-        </nav>
-        <!-- end timeline, begin queries -->
-        <div class="queries">
-            {% include '@query/query_titles.tpl' %}
+        <div class="row-fluid">
+            <!-- begin timeline -->
+            <nav class="timeline row-fluid">
+                {% include '@query/timeline.tpl' %}
+            </nav>
+            <!-- end timeline, begin queries -->
+            <div class="queries row-fluid">
+                {% include '@query/query_titles.tpl' %}
+            </div>
+            <!-- end queries -->
         </div>
-        <!-- end queries -->
     </div>
     <!-- end right block -->
 {% endblock component %}

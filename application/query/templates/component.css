@@ -1,7 +1,7 @@
 .query{
-	background-color: #e8eefa;
-	max-width: 800px;
-	margin: 2px;
+	background-color: #fff;
+	margin: 3px;
+    box-shadow: 0 1px 2px #c4c4c4;
 }
 .query-wrap{
     padding:3px 5px;
@@ -30,9 +30,9 @@
 }
 .timeline-control, .timeline-day {
     cursor: pointer;
-    width:16px;
-    height:16px;
-    line-height: 16px;
+    width:18px;
+    height:20px;
+    line-height: 20px;
     font-size:12px !important;
     padding: 4px;
     margin-bottom: 14px;
