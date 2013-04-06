@@ -7,11 +7,20 @@
     padding:3px 5px;
 }
 
+.query_controls{
+   margin-left: 6% !important;
+   margin-top: 20px;
+}
 
 .query_status_open {border-left:4px solid #ff0000;}
 .query_status_close {border-left:4px solid #cccccc;}
 .query_status_reopen {border-left:4px solid blue;}
 .query_status_working {border-left:4px solid black;}
+
+.query_controls + .page-header{
+    padding: 0;
+    margin: 10px 0;
+}
 
 .timeline .pagination{
     margin: 0;
@@ -38,4 +47,8 @@
 }
 ul.query-sub, ul.query-general{
     list-style:none;
+}
+
+@media (max-width: 768px){
+    .query_controls {margin: 0 !important;}
 }

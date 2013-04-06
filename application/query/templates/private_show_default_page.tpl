@@ -3,15 +3,15 @@
     <!-- begin left block -->
     <div class="span3">
         <div class="row-fluid">
-            <div class="btn-group span12" style="margin-left: 4.564102564102564%;">
+            <div class="btn-group span12 query_controls">
                 {% if rules.createQuery == true %}
-                <div class="get_dialog_create_query cm btn span7">Создать заявку</div>
+                <div class="get_dialog_create_query cm btn span8">Создать заявку</div>
                 {% endif %}
                 <div class="get_search cm btn span4">Поиск</div>
             </div>
-            <div>
-                <span class="view-toggle-filters">Фильтры</span>
-                <span class="cm clear_filters absolute_hide">сбросить</span>
+            <div  class="page-header span12">
+                <h4 class="view-toggle-filters">Фильтры
+                <small class="pull-right cm clear_filters absolute_hide">сбросить</small></h4>
             </div>
             {% include '@query/filters.tpl' %}
         </div>
