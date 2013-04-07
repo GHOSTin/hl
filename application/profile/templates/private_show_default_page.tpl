@@ -1,19 +1,19 @@
 {% extends "default.tpl" %}
 {% block component %}
-	{% if component.user != false %}
+	{% set user = component.users[0] %}
+	<div class="profile" user="{{ user.id }}">
 		<div>
-			ФИО: {{component.user.lastname}} {{component.user.firstname}} {{component.user.middlename}}
+			ФИО: {{ user.lastname }} {{ user.firstname }} {{ user.middlename }} ( {{ user.id }} )
+		</div>
+		
+		<div>
+			Телефон: {{ user.telephone }} <span class="cm">изменить</span>
 		</div>
 		<div>
-			Идентификатор: {{component.user.id}}
+			Сотовый: {{ user.cellphone }} <span class="cm">изменить</span>
 		</div>
 		<div>
-			Телефон: {{component.user.telephone}} <span class="cm">изменить</span>
+			Пароль: ****** <span class="cm get_dialog_edit_password">изменить</span>
 		</div>
-		<div>
-			Сотовый: {{component.user.cellphone}} <span class="cm">изменить</span>
-		</div>
-	{% else %}
-		<div>Информация о профиле не может быть загружена</div>
-	{% endif %}
+	</div>
 {% endblock component %}
