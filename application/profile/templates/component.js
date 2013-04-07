@@ -5,5 +5,11 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
+	$('body').on('click', '.get_dialog_edit_cellphone', function(){
+		$.get('get_dialog_edit_cellphone',{
+			},function(r){
+				init_content(r);
+			});
+	});
 });
