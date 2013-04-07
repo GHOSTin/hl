@@ -79,5 +79,20 @@ class model_profile{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при изменении номера сотового телефона.');
 		return $user;
-	}	
+	}
+	/**
+	* Обновляет номер телефона пользователя
+	* @return bolean
+	*/
+	public static function update_telephone(data_user $user, $telephone){
+		$user->telephone = (string) $telephone;
+		$sql = 'UPDATE `users` SET `telephone` = :telephone
+				WHERE `id` = :id';
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
+		$stm->bindValue(':id', $user->id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Ошибка при изменении номера телефона.');
+		return $user;
+	}
 }
