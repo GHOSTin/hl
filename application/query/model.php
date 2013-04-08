@@ -313,8 +313,6 @@ class model_query{
 	* @return array
 	*/
 	public static function get_queries(data_query $query){
-		$restrictions = $_SESSION['restrictions']['query'];
-		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		if(!empty($query->id)){
 			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -398,18 +396,6 @@ class model_query{
 				if(!empty($query->status)){
 					$sql .= " AND `queries`.`status` = :status";
 				}
-				if($restrictions instanceof stdClass){
-					if(!empty($restrictions->departments)){
-						$sql .= " AND `queries`.`department_id` IN(";
-						$dep = count($restrictions->departments) - 1;
-						foreach($restrictions->departments as $key => $value){
-							$sql .= ":department_id".$key;
-							if($i++ < $dep)
-								$sql .= ",";
-						}	
-						$sql .= ")";
-					}
-				}
 			$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
 		$stm = db::get_handler()->prepare($sql);
@@ -422,12 +408,6 @@ class model_query{
 			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			if(!empty($query->status))
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
-			if($restrictions instanceof stdClass){
-				if(!empty($restrictions->departments)){
-					foreach($restrictions->departments as $key => $value)
-						$stm->bindValue(':department_id'.$key, $value, PDO::PARAM_INT);
-				}
-			}
 		}
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при выборке заявок.');
@@ -501,7 +481,6 @@ class model_query{
 	* @return array
 	*/
 	public static function get_numbers(data_query $query, data_user $current_user){
-		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		if(!empty($query->id)){
 			$sql = "SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
 				`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
@@ -663,45 +642,24 @@ class model_query{
 		return $result;
 	}	
 	/*
-	* Проверяет правильность параметров.
-	* Скармиливаем массив получаем правильный набор параметров.
+	* Учитывает сессионный фильтры.
 	*/
-	public static function build_query_filter(data_query $query){
-		$previous = $_SESSION['filters']['query'];
+	public static function build_query_params(data_query $query, data_query $filters = null, stdClass $restrictions){
 		$time = getdate();
+		if(!$filters instanceof data_query){
+			$query = new data_query();
+			$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+			$query->time_open['end'] = $query->time_open['begin'] + 86399;
+		}
 		if(empty($query->time_open)){
-			if($previous instanceof data_query)
-				$query->time_open = $previous->time_open;
-			else{
-				$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-				$query->time_open['end'] = $query->time_open['begin'] + 86399;
-			}
-		}else{
-			if(!is_array($query->time_open))
-				throw new e_model('Проблема с временем открытия.');
-			if(!is_int($query->time_open['begin']))
-				throw new e_model('Проблема с временем открытия.');
-			if(!is_int($query->time_open['end']))
-				throw new e_model('Проблема с временем открытия.');
-			if($query->time_open['end'] < $query->time_open['begin'])
-				throw new e_model('Проблема с временем открытия.');
+			$query->time_open = $filters->time_open;
 		}
-		if(empty($query->status)){
-			if($previous instanceof data_query)
-				$query->status = $previous->status;
-		}else{
-			$statuses = ['open', 'working', 'close', 'reopen'];
-			if(array_search($query->status, $statuses) === false)
-				$query->status = null;
-		}
-		if(!empty($query->id)){
-			if((int) $query->id < 1)
-				throw new e_model('Проблема с идентификатором заявки.');
-		}
-		if(!empty($query->number)){
-			if((int) $query->number < 1)
-				throw new e_model('Проблема с номером заявки.');
-		}
+		// if(empty($filters->department_id)){
+		// 	$query->department_id = $restrictions->departments;
+		// }else{
+		// 	if(array_search($filters->department_id, $restrictions->departments) === false)
+		// 		$query->department_id = $restrictions->departments;
+		// }
 		return $query;
 	}
 	/**

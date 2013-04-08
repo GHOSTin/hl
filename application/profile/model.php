@@ -16,7 +16,6 @@ class model_profile{
 			while($profile = $stm->fetch()){
 				$_SESSION['rules'][$profile['profile']] = json_decode($profile['rules']);
 				$_SESSION['restrictions'][$profile['profile']] = json_decode($profile['restrictions']);
-				$_SESSION['settings'][$profile['profile']] = json_decode($profile['settings']);
 				if($_SESSION['rules'][$profile['profile']]->generalAccess === true){
 					$c = 'controller_'.$profile['profile'];
 					if($profile['profile'] === 'import'
