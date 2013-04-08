@@ -39,6 +39,7 @@ class controller_query{
 		$query = new data_query();
 		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
+		$query->status = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
