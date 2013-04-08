@@ -39,7 +39,7 @@ class controller_query{
 		$query = new data_query();
 		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		$_SESSION['filters']['query'] = $query = model_query::build_query_filter($query);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}
@@ -314,7 +314,7 @@ class controller_query{
 	public static function private_set_status(){
 		$query = new data_query();
 		$query->status = $_GET['value'];
-		$_SESSION['filters']['query'] = $query = model_query::build_query_filter($query);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query)];
 	}
 
@@ -348,7 +348,7 @@ class controller_query{
 		}
 		$now = getdate();
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		$_SESSION['filters']['query'] = $query = model_query::build_query_filter($query);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),

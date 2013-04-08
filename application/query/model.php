@@ -393,7 +393,7 @@ class model_query{
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close";
-				if(!empty($query->status)){
+				if(!empty($query->status) AND $query->status !== 'all'){
 					$sql .= " AND `queries`.`status` = :status";
 				}
 			$sql .= " ORDER BY `queries`.`opentime` DESC";
@@ -406,8 +406,11 @@ class model_query{
 		else{
 			$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			if(!empty($query->status))
+			if(!empty($query->status) AND $query->status !== 'all'){
+				if(!in_array($query->status, ['open', 'close', 'working', 'reopen']))
+					throw new e_model('Невозможный статус заявки.');
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
+			}
 		}
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при выборке заявок.');
@@ -653,6 +656,9 @@ class model_query{
 		}
 		if(empty($query->time_open)){
 			$query->time_open = $filters->time_open;
+		}
+		if(empty($query->status)){
+			$query->status = $filters->status;
 		}
 		// if(empty($filters->department_id)){
 		// 	$query->department_id = $restrictions->departments;
