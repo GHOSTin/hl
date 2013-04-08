@@ -1,17 +1,26 @@
 .query{
-	background-color: #e8eefa;
-	max-width: 800px;
-	margin: 2px;
+	background-color: #fff;
+	margin: 3px;
+    box-shadow: 0 1px 2px #c4c4c4;
 }
 .query-wrap{
     padding:3px 5px;
 }
 
+.query_controls{
+   margin-left: 6% !important;
+   margin-top: 20px;
+}
 
 .query_status_open {border-left:4px solid #ff0000;}
 .query_status_close {border-left:4px solid #cccccc;}
 .query_status_reopen {border-left:4px solid blue;}
 .query_status_working {border-left:4px solid black;}
+
+.query_controls + .page-header{
+    padding: 0;
+    margin: 10px 0;
+}
 
 .timeline .pagination{
     margin: 0;
@@ -21,21 +30,26 @@
 }
 .timeline-control, .timeline-day {
     cursor: pointer;
-    width:16px;
-    height:16px;
-    line-height: 16px;
+    width:18px;
+    height:20px;
+    line-height: 20px;
     font-size:12px !important;
     padding: 4px;
-    margin-bottom: 14px;
+    margin-bottom: 20px;
 }
 .timeline-day-wday{
     margin-top:3px;
     font-size:10px;
     color: black;
+    font-weight: normal;
 }
 .timeline-month{
     text-align:center;
 }
 ul.query-sub, ul.query-general{
     list-style:none;
+}
+
+@media (max-width: 768px){
+    .query_controls {margin: 0 !important;}
 }

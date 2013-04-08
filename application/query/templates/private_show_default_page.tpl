@@ -1,28 +1,34 @@
 {% extends "default.tpl" %}
 {% block component %}
     <!-- begin left block -->
-    <div style="display:inline-block; vertical-align:top;">
-        {% if rules.createQuery == true %}
-        <div class="get_dialog_create_query cm">Создать заявку</div>
-        {% endif %}
-        <div class="get_search cm">Поиск</div>
-        <div>
-            <span class="view-toggle-filters">Фильтры</span>
-            <span class="cm clear_filters absolute_hide">сбросить</span>
-        </div> 
-        {% include '@query/filters.tpl' %}
+    <div class="span3">
+        <div class="row-fluid">
+            <div class="btn-group span12 query_controls">
+                {% if rules.createQuery == true %}
+                <div class="get_dialog_create_query cm btn span8">Создать заявку</div>
+                {% endif %}
+                <div class="get_search cm btn span4">Поиск</div>
+            </div>
+            <div  class="page-header span12">
+                <h4 class="view-toggle-filters">Фильтры
+                <small class="pull-right cm clear_filters absolute_hide">сбросить</small></h4>
+            </div>
+            {% include '@query/filters.tpl' %}
+        </div>
     </div>
     <!-- end left block, begin right block -->
-    <div style="display:inline-block; vertical-align:top;">
-        <!-- begin timeline -->
-        <nav class="timeline">
-            {% include '@query/timeline.tpl' %}
-        </nav>
-        <!-- end timeline, begin queries -->
-        <div class="queries">
-            {% include '@query/query_titles.tpl' %}
+    <div class="span9">
+        <div class="row-fluid">
+            <!-- begin timeline -->
+            <nav class="timeline row-fluid">
+                {% include '@query/timeline.tpl' %}
+            </nav>
+            <!-- end timeline, begin queries -->
+            <div class="queries row-fluid">
+                {% include '@query/query_titles.tpl' %}
+            </div>
+            <!-- end queries -->
         </div>
-        <!-- end queries -->
     </div>
     <!-- end right block -->
 {% endblock component %}

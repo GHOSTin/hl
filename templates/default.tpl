@@ -22,7 +22,7 @@
             </header>
         {% endif %}
     	<div class="container-fluid">
-            <section class="main">{% block component %}{% endblock component %}</section>
+            <section class="main row-fluid">{% block component %}{% endblock component %}</section>
             <section id="push"></section>
         </div>
     </div>

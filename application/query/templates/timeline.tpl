@@ -22,7 +22,7 @@
                 active
             {% endif %}
             {% if day|date('U') == component.now %}
-                btn-primary
+                btn-info
             {% endif %}
             " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
             <div>{{ i }}</div>

@@ -1,5 +1,9 @@
 {% if component.queries != false %}
-	{{component.queries|length}} заявок
+    <div class="muted">
+        <small>
+	        Количество: {{component.queries|length}} заявок
+        </small>
+    </div>
 	{% for query in component.queries %}
 		<div class="query get_query_content" query_id="{{query.id}}">
 			{% include '@query/build_query_title.tpl' %}

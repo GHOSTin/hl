@@ -1,11 +1,9 @@
 @CHARSET "UTF-8";
 html,body{
 	height: 100%;
+    background-color: rgb(246,246,246);
 }
 .main{margin-top: 60px}
-@media (max-width: 979px){
-    .main {margin: 60px 0px 0px 0px;}
-}
 #wrap{
     min-height: 100%;
     height: auto !important;
@@ -25,6 +23,7 @@ footer, #push{
 
 .cm{
 	color:#0088CC;
+    cursor: pointer;
 }
 
 .modal{
@@ -238,7 +237,7 @@ form.well{
 }
 
 @media (max-width: 979px){
-    .main {margin: 60px 0px 0px 0px;}
+    .main {margin: 0;}
 }
 
 @media print{
