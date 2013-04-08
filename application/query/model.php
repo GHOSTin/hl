@@ -540,7 +540,6 @@ class model_query{
 	* @return array
 	*/
 	public static function get_users(data_query $query, data_user $current_user){
-		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		if(!empty($query->id)){
 			$sql = "SELECT `query2user`.`query_id`, `query2user`.`class`, `users`.`id`,
 				`users`.`firstname`, `users`.`lastname`, `users`.`midlename`
@@ -593,7 +592,6 @@ class model_query{
 	* @return array
 	*/
 	public static function get_works(data_query $query, data_user $current_user){
-		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
 		if(!empty($query->id)){
 			$sql = "SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
 				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
