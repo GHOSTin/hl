@@ -7,6 +7,52 @@ var log = function (param) {
     console.log(param);
 };
 /**
+ * Декодирует строку в ASCII символы
+ * @param {string} s строка для декодирования
+ * @returns {string}
+ */
+function decode(s) {
+    var pluses = /\+/g;
+    return decodeURIComponent(s.replace(pluses, ' '));
+}
+/**
+ * Удаляет из строки лишние спецсимволы
+ * @param {string} s
+ * @returns {string}
+ */
+function converted(s) {
+    if (s.indexOf('"') === 0) {
+        s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+    }
+    try {
+        return s;
+    } catch(er) {}
+}
+/**
+ * Возвращает значение запрашиваемой куки
+ * @param {string} key имя куки
+ * @returns {string|null} значение, если отсутствует то возвращает нуль
+ */
+var get_cookie = function(key) {
+    var cookies = document.cookie.split('; ');
+    var result = key ? undefined : {};
+    for (var i= 0, l = cookies.length; i < l; i++) {
+        var parts = cookies[i].split('=');
+        var name = decode(parts.shift());
+        var cookie = decode(parts.join('='));
+
+        if(key && key === name) {
+            result = converted(cookie);
+            break;
+        }
+
+        if(!key) {
+            result[name] = converted(cookie);
+        }
+    }
+    return result;
+}
+/**
  * функция аналог jQuery:contains без учета регистра
  */
 $.extend($.expr[':'], {
@@ -18,9 +64,9 @@ $.extend($.expr[':'], {
 /** тайтл страницы */
 var global_title = $(document).attr('title') || '';
 /** сокет-соединение для центра уведомлений */
-var notify_center = io.connect('http://mshc2.local:3000/notify');
+var notify_center = io.connect('http://'+ get_cookie('chat_host') + ':' + get_cookie('chat_port') + '/notify');
 /** сокет-соединение для чата */
-var chat = io.connect('http://mshc2.local:3000/chat');
+var chat = io.connect('http://'+ get_cookie('chat_host') + ':' + get_cookie('chat_port') + '/chat');
 /**
  * если сокет создан, но не произошло соединение, то совершать пересоединение
  * @function
