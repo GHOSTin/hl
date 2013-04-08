@@ -20,6 +20,8 @@ class model_auth{
 		}else{
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
 			$_SESSION['user'] = $stm->fetch();
+			setcookie("chat_host", application_configuration::chat_host, 0);
+			setcookie("chat_port", application_configuration::chat_port, 0);
 			$stm->closeCursor();
 			return true;
 		}
