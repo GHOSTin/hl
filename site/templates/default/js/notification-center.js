@@ -147,7 +147,7 @@ chat.on('message', function (event) {
 /**
  * произведен клик на имя пользователя
  */
-$(document).on('click', '.users li a', function (e) {
+$(document).on('click', '.chat-users li a', function (e) {
     e.preventDefault();
     var user = userList.list[$(this).attr("user_id")];
     /** если у пользователя не были подгружены последние 15 сообщений*/
@@ -156,8 +156,8 @@ $(document).on('click', '.users li a', function (e) {
     }
     user.markAllAsRead();
     $("textarea").val("");
-    $('.chat.active .feed').mCustomScrollbar("update");
-    $('.chat.active .feed').mCustomScrollbar("scrollTo", "bottom");
+    $('.chat.active .chat-feed').mCustomScrollbar("update");
+    $('.chat.active .chat-feed').mCustomScrollbar("scrollTo", "bottom");
 });
 /**
  * произведена отправка формы
@@ -189,24 +189,24 @@ $(document).on('keypress', '.chat.active textarea',function (event) {
 /**
  * обработка события нажатия на кнопку показа истории
  */
-$(document).on('click', '.history', function(e){
+$(document).on('click', '.chat-history', function(e){
     e.preventDefault();
     /** если клавиша не была нажата, то подгрузить даты */
     if($(this).hasClass('active')){
         var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
         chat.json.send({'type':'get_history_list', 'data':{"uid": user.id, "offset": Object.keys(user.history_dates).length}});
     }
-    $('.chat.active ul#dates').toggle(10, function(){
-        $('.chat.active .feed').mCustomScrollbar("update");
+    $('.chat.active ul#chat-dates').toggle(10, function(){
+        $('.chat.active .chat-feed').mCustomScrollbar("update");
     });
-    $('.chat.active ul#history').toggle(10, function(){
-        $('.chat.active .feed').mCustomScrollbar("update");
+    $('.chat.active ul#chat-history').toggle(10, function(){
+        $('.chat.active .chat-feed').mCustomScrollbar("update");
     });
 });
 /**
  * обработка события нажатия на конкретную дату в истории
  */
-$(document).on('click', '.chat.active ul#history header', function(e){
+$(document).on('click', '.chat.active ul#chat-history header', function(e){
     e.preventDefault();
     if($(this).siblings('ul').is(':hidden')){
         var user = userList.list[$('.chat.active').attr('id').split('_')[1]];
@@ -217,7 +217,7 @@ $(document).on('click', '.chat.active ul#history header', function(e){
         }
     }
     $(this).siblings('ul').toggle(10, function(){
-        $(".chat.active .feed").mCustomScrollbar("update");
+        $(".chat.active .chat-feed").mCustomScrollbar("update");
     });
 });
 /**
@@ -228,8 +228,8 @@ $('#nt-center').on('click', function(e){
     /** если существует то показать/скрыть */
     if($('#_hidden_notification_center').length){
         $('#_hidden_notification_center').fadeToggle(10,function(){
-            $(".user-list").mCustomScrollbar("update");
-            $('.users li.active').removeClass('active');
+            $(".chat-user-list").mCustomScrollbar("update");
+            $('.chat-users li.active').removeClass('active');
             $('.chat.active').removeClass('active');
         });
     } else {
@@ -239,7 +239,7 @@ $('#nt-center').on('click', function(e){
             /** создать блок с полученным контентом */
             create_notification_center($('#nt-center').parent(), r);
             var users = [];
-            $('.users li').each(function(){
+            $('.chat-users li').each(function(){
                 users.push({"id": $(this).attr('user_id'), "name": $(this).text()});
             });
             /** передает список пользователей полученных из контента */
@@ -249,7 +249,7 @@ $('#nt-center').on('click', function(e){
             /** запрос на получение кол-ва непрочитанных сообщений */
             chat.json.send({'type':'get_unread_messages'});
             /** подключение custom скролла */
-            $('.user-list').mCustomScrollbar({
+            $('.chat-user-list').mCustomScrollbar({
                 scrollButtons:{
                     enable: true
                 },
@@ -258,7 +258,7 @@ $('#nt-center').on('click', function(e){
                 autoHideScrollbar: true,
                 scrollInertia: 0
             });
-            $('.feed').mCustomScrollbar({
+            $('.chat-feed').mCustomScrollbar({
                 scrollButtons:{
                     enable: true
                 },
@@ -272,12 +272,12 @@ $('#nt-center').on('click', function(e){
                         if($('.chat.active').length){
                             var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
                             var offset = 0;
-                            if($('#dates').is(':visible')){
+                            if($('#chat-dates').is(':visible')){
                                 offset = Object.keys(active_user.messages).length;
-                                active_user.first_message_id = $('.chat.active div.feed blockquote:first').attr('id');
+                                active_user.first_message_id = $('.chat.active div.chat-feed blockquote:first').attr('id');
                                 chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
                             }
-                            if($('#history').is(':visible')){
+                            if($('#chat-history').is(':visible')){
                                 offset = Object.keys(active_user.history_dates).length;
                                 chat.json.send({'type':'get_history_list', 'data':{'uid':active_user.id, 'offset': offset}})
                             }
@@ -285,13 +285,13 @@ $('#nt-center').on('click', function(e){
                     }
                 }
             });
-            $("#user-filter").keyup( function() {
+            $("#chat-user-filter").keyup( function() {
                 if($(this).val()!==''){
-                    $(".users li").hide().filter(":containsi('"+ $(this).val() +"')").show();
+                    $(".chat-users li").hide().filter(":containsi('"+ $(this).val() +"')").show();
                 } else {
                     userList.renderMenu();
                 }
-                $('.user-list').mCustomScrollbar("update");
+                $('.chat-user-list').mCustomScrollbar("update");
             });
         });
     }

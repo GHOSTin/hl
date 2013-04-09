@@ -23,8 +23,8 @@ window.userList = {
      * @this {userList}
      */
     renderMenu:function () {
-        var activeTabId = $('.users li.active a').attr('user_id');
-        $('.users li').remove();
+        var activeTabId = $('.chat-users li.active a').attr('user_id');
+        $('.chat-users li').remove();
         var online = '',  /** {String} Список онлайн*/
             offline = '', /** {String} список оффлайн */
             unread = '';  /** {String} список тех у кого есть непрочитанные сообщения*/
@@ -32,7 +32,7 @@ window.userList = {
             var user = this.list[id];
             var online_status = ((user.online) ? 'online' : 'offline');
             var li = '';
-            li += '<li class="' + online_status + '"><span class="status">&bull;</span><a href="#user_' + user.id + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
+            li += '<li class="' + online_status + '"><span class="status">&bull;</span><a href="#chat-user_' + user.id + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
             if (user.hasUnread())
                 li += '<span class="unread_count label label-info pull-right">+' + user.unreadCount() + '</span>';
             li += '</a></li>';
@@ -42,7 +42,7 @@ window.userList = {
                 (user.online)? online += li: offline += li;
             }
         }
-        $('.users').append(unread + online + offline);
+        $('.chat-users').append(unread + online + offline);
         $('a[user_id=' + activeTabId + "]").parent().addClass('active');
     },
     /**
@@ -54,14 +54,14 @@ window.userList = {
         for (var i in this.list) {
             var user = this.list[i];
                 var pane = '';
-                pane += '<div class="chat tab-pane fade user" id="user_' + user.id + '">';
+                pane += '<div class="chat tab-pane fade user" id="chat-user_' + user.id + '">';
                 pane += '<h6><span class="status">&bull;</span>' + user.name;
-                pane += '<button type="button" class="history btn btn-mini pull-right" data-toggle="button">';
+                pane += '<button type="button" class="chat-history btn btn-mini pull-right" data-toggle="button">';
                 pane += '<i class="icon-book"></i>';
                 pane += '</button></h6>';
-                pane += '<div class="feed">';
-                pane += '<ul id="dates"></ul>';
-                pane += '<ul id="history" style="display:none;"></ul>';
+                pane += '<div class="chat-feed">';
+                pane += '<ul id="chat-dates"></ul>';
+                pane += '<ul id="chat-history" style="display:none;"></ul>';
                 pane += '</div>';
                 pane += '<form class="well message" data-user-id="' + user.id + '">';
                 pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
@@ -189,7 +189,7 @@ window.feed = {
      * @param {User} user Пользователь статус которого изменился
      */
     addStatus:function (statusString, user) {
-        $('#user_'+user.id+' div.feed ul#dates').append("<li>" + statusString + "</li>");
+        $('#chat-user_'+user.id+' div.feed ul#dates').append("<li>" + statusString + "</li>");
     },
     /**
      * @function
@@ -343,8 +343,8 @@ History_dates.prototype.render = function(){
     history_date += '<ul style="display:none;"></ul>';
     history_date += '</section>';
 
-    $("#user_" + this.user.id + " div.feed ul#history").prepend(history_date);
-    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
+    $("#chat-user_" + this.user.id + " div.chat-feed ul#chat-history").prepend(history_date);
+    $("#chat-user_" + this.user.id + " div.chat-feed").mCustomScrollbar("update");
 };
 /**
  * добавляет сообщение из истории в конкретную дату
@@ -419,7 +419,7 @@ History.prototype.render = function(){
     message_string += '<div class="clearfix"></div>';
 
     $('header#'+this.date.id).siblings('ul').append(message_string);
-    $(".chat.active .feed").mCustomScrollbar("update");
+    $(".chat.active .chat-feed").mCustomScrollbar("update");
 };
 /**
  * создает экземпляр Message
@@ -477,12 +477,12 @@ Message.prototype.render = function () {
     var message_string = '';
     var _date = new Date(this.date);
     var active_date = _date.getFullYear()+'_'+_date.getMonth()+'_'+_date.getDate();
-    if(!$("#user_" + this.user.id + " div.feed section#"+active_date).length > 0) {
+    if(!$("#chat-user_" + this.user.id + " div.chat-feed section#"+active_date).length > 0) {
         if(this.status === 'history'){
-            $("#user_" + this.user.id + " div.feed ul#dates").prepend('<section id="'+active_date+'"><header>' + feed.formatDate(this.date, 'date') + '</header><ul></ul></section>');
+            $("#chat-user_" + this.user.id + " div.chat-feed ul#chat-dates").prepend('<section id="'+active_date+'"><header>' + feed.formatDate(this.date, 'date') + '</header><ul></ul></section>');
         }
         else{
-            $("#user_" + this.user.id + " div.feed ul#dates").append('<section id="'+active_date+'"><header>' + feed.formatDate(this.date, 'date') + '</header><ul></ul></section>');
+            $("#chat-user_" + this.user.id + " div.chat-feed ul#chat-dates").append('<section id="'+active_date+'"><header>' + feed.formatDate(this.date, 'date') + '</header><ul></ul></section>');
         }
     }
     message_string += '<blockquote class="' + classes.join(' ') + '" id="' + this.id + '">';
@@ -500,16 +500,16 @@ Message.prototype.render = function () {
  * @param {string} render - рендер сообщения
  */
 Message.prototype.prepend = function(render) {
-    $("#user_" + this.user.id + " div.feed ul#dates section:first ul").prepend(render);
-    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
-    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo",'blockquote#'+this.user.first_message_id);
+    $("#chat-user_" + this.user.id + " div.chat-feed ul#chat-dates section:first ul").prepend(render);
+    $("#chat-user_" + this.user.id + " div.chat-feed").mCustomScrollbar("update");
+    $("#chat-user_" + this.user.id + " div.chat-feed").mCustomScrollbar("scrollTo",'blockquote#'+this.user.first_message_id);
 };
 /**
  * вызывается если сообщение новое
  * @param {string} render - рендер сообщения
  */
 Message.prototype.append = function(render) {
-    $("#user_" + this.user.id + " div.feed ul#dates section:last ul").append(render);
-    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("update");
-    $("#user_" + this.user.id + " div.feed").mCustomScrollbar("scrollTo","bottom");
+    $("#chat-user_" + this.user.id + " div.chat-feed ul#chat-dates section:last ul").append(render);
+    $("#chat-user_" + this.user.id + " div.chat-feed").mCustomScrollbar("update");
+    $("#chat-user_" + this.user.id + " div.chat-feed").mCustomScrollbar("scrollTo","bottom");
 };
