@@ -397,6 +397,17 @@ class model_query{
 					$sql .= " AND `queries`.`status` = :status";
 				if(!empty($query->street_id))
 					$sql .= " AND `houses`.`street_id` = :street_id";
+				if(!empty($query->department_id)){
+					$sql .= " AND `queries`.`department_id` IN(";
+					$count = count($query->department_id);
+					$i = 1;
+					foreach($query->department_id as $key => $department){
+						$sql .= ':department_id'.$key;
+						if($i++ < $count)
+							$sql .= ',';
+					}
+					$sql .= ")";
+				}
 			$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
 		$stm = db::get_handler()->prepare($sql);
@@ -414,7 +425,11 @@ class model_query{
 			}
 			if(!empty($query->street_id))
 				$stm->bindValue(':street_id', $query->street_id, PDO::PARAM_INT);
+			if(!empty($query->department_id))
+				foreach($query->department_id as $key => $department)
+					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
 		}
+
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при выборке заявок.');
 		$result = [];
@@ -664,12 +679,12 @@ class model_query{
 		else
 			if($query->street_id === 'all')
 				$query->street_id = null;
-		// if(empty($query_filter->department_id)){
-		// 	$query->department_id = $restrictions->departments;
-		// }else{
-		// 	if(array_search($query_filter->department_id, $restrictions->departments) === false)
-		// 		$query->department_id = $restrictions->departments;
-		// }
+		if(empty($query_filter->department_id)){
+			$query->department_id = $restrictions->departments;
+		}else{
+			if(array_search($query_filter->department_id, $restrictions->departments) === false)
+				$query->department_id = $restrictions->departments;
+		}
 		return $query;
 	}
 	/**
