@@ -11,6 +11,6 @@ class application_configuration{
 	const authSalt 			= 'GbpltwGjkysqFYtGfhjkm';	
 	//chat
 	const chat_enable = false;
-	const chat_host = 'mshc22.local';
+	const chat_host = 'mshc2.local';
 	const chat_port = 3000;
 }
