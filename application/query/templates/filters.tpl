@@ -19,10 +19,14 @@
 	<div class="filter">
 	    <label>по улице и дому</label>
         <select class="filter-content-select-street span12">
-            <option value="">Все улицы</option>
+            <option value="all">Все улицы</option>
             {% if component.streets != false %}
                 {% for street in component.streets %}
-                    <option value="{{street.id}}">{{street.name}}</option>
+                    <option value="{{street.id}}"
+                    {% if street.id == component.filters.street_id %}
+                        selected
+                    {% endif %}
+                    >{{street.name}}</option>
                 {% endfor %}
             {% endif %}
         </select>

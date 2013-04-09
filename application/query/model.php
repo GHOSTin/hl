@@ -393,9 +393,10 @@ class model_query{
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close";
-				if(!empty($query->status) AND $query->status !== 'all'){
+				if(!empty($query->status) AND $query->status !== 'all')
 					$sql .= " AND `queries`.`status` = :status";
-				}
+				if(!empty($query->street_id))
+					$sql .= " AND `houses`.`street_id` = :street_id";
 			$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
 		$stm = db::get_handler()->prepare($sql);
@@ -411,6 +412,8 @@ class model_query{
 					throw new e_model('Невозможный статус заявки.');
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 			}
+			if(!empty($query->street_id))
+				$stm->bindValue(':street_id', $query->street_id, PDO::PARAM_INT);
 		}
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при выборке заявок.');
@@ -447,7 +450,7 @@ class model_query{
 				AND `queries`.`id` = `query2material`.`query_id`
 				AND `queries`.`opentime` > :time_open
 				AND `queries`.`opentime` <= :time_close";
-				if(!empty($query->status))
+				if(!empty($query->status) AND $query->status !== 'all')
 					$sql .= " AND `queries`.`status` = :status";
 				$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
@@ -459,7 +462,7 @@ class model_query{
 			$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-			if(!empty($query->status))
+			if(!empty($query->status) AND $query->status !== 'all')
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		}
 		if($stm->execute() == false)
@@ -506,7 +509,7 @@ class model_query{
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close";
-				if(!empty($query->status))
+				if(!empty($query->status) AND $query->status !== 'all')
 					$sql .= " AND `queries`.`status` = :status";
 		}
 		$stm = db::get_handler()->prepare($sql);
@@ -517,7 +520,7 @@ class model_query{
 			$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-			if(!empty($query->status))
+			if(!empty($query->status) AND $query->status !== 'all')
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		}
 		if($stm->execute() == false)
@@ -557,7 +560,7 @@ class model_query{
 				AND `queries`.`id` = `query2user`.`query_id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close";
-				if(!empty($query->status))
+				if(!empty($query->status) AND $query->status !== 'all')
 					$sql .= " AND `queries`.`status` = :status";
 				$sql .= " ORDER BY `opentime` DESC";
 		}
@@ -569,7 +572,7 @@ class model_query{
 			$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-			if(!empty($query->status))
+			if(!empty($query->status) AND $query->status !== 'all')
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		}
 		if($stm->execute() == false)
@@ -612,7 +615,7 @@ class model_query{
 				AND `queries`.`id` = `query2work`.`query_id`
 				AND `queries`.`opentime` > :time_open
 				AND `queries`.`opentime` <= :time_close";
-				if(!empty($query->status))
+				if(!empty($query->status) AND $query->status !== 'all')
 					$sql .= " AND `queries`.`status` = :status";
 				$sql .= " ORDER BY `queries`.`opentime` DESC";
 		}
@@ -624,7 +627,7 @@ class model_query{
 			$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-			if(!empty($query->status))
+			if(!empty($query->status) AND $query->status !== 'all')
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		}
 		if($stm->execute() == false)
@@ -645,23 +648,26 @@ class model_query{
 	/*
 	* Учитывает сессионный фильтры.
 	*/
-	public static function build_query_params(data_query $query, data_query $filters = null, stdClass $restrictions){
+	public static function build_query_params(data_query $query, data_query $query_filter = null, stdClass $restrictions){
 		$time = getdate();
-		if(!$filters instanceof data_query){
+		if(!$query_filter instanceof data_query){
 			$query = new data_query();
 			$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 			$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		}
-		if(empty($query->time_open)){
-			$query->time_open = $filters->time_open;
-		}
-		if(empty($query->status)){
-			$query->status = $filters->status;
-		}
-		// if(empty($filters->department_id)){
+		if(empty($query->time_open))
+			$query->time_open = $query_filter->time_open;
+		if(empty($query->status))
+			$query->status = $query_filter->status;
+		if(empty($query->street_id))
+			$query->street_id = $query_filter->street_id;
+		else
+			if($query->street_id === 'all')
+				$query->street_id = null;
+		// if(empty($query_filter->department_id)){
 		// 	$query->department_id = $restrictions->departments;
 		// }else{
-		// 	if(array_search($filters->department_id, $restrictions->departments) === false)
+		// 	if(array_search($query_filter->department_id, $restrictions->departments) === false)
 		// 		$query->department_id = $restrictions->departments;
 		// }
 		return $query;

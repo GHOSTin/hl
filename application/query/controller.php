@@ -323,6 +323,8 @@ class controller_query{
 		$query = new data_query();
 		$query->street_id = $_GET['value'];
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		// var_dump(model_query::get_queries($query));
+		// exit();
 		return ['queries' => model_query::get_queries($query)];
 	}
 
