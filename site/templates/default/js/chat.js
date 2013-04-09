@@ -419,6 +419,7 @@ History.prototype.render = function(){
     message_string += '<div class="clearfix"></div>';
 
     $('header#'+this.date.id).siblings('ul').append(message_string);
+    $(".chat.active .feed").mCustomScrollbar("update");
 };
 /**
  * создает экземпляр Message
