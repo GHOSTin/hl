@@ -51,5 +51,5 @@ final class http_router{
 
 	static private function set_default_method_name(){
 		self::set_method_name(framework_configuration::default_method_name);
-	}		
+	}
 }

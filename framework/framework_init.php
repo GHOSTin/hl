@@ -20,8 +20,8 @@ function framework_autoload($class_name){
 			require_once $file_path;
 		else
 			die('Class '.$class_name.' not found!');
-  }else
-    return;
+	}else
+		return;
 }
 spl_autoload_register('framework_autoload');
 // подгрузка временной реализации класс шаблонизатора

@@ -96,7 +96,7 @@ function create_houses($street_node, $city, $street, $current_user){
 				throw new exception('Проблема при создании дома.');
 			create_flats($house_node, $city, $house, $current_user);
 		}
-	}	
+	}
 }
 function create_numbers($flat_node, $city, $flat, $current_user){
 	if(count($flat_node->number) > 0){

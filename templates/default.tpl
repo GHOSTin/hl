@@ -37,7 +37,7 @@
     <script src="/templates/default/js/jquery.min.js"></script>
     <script src="/templates/default/js/bootstrap.min.js"></script>
     {% if anonymous == false %}
-	    <script src="/templates/default/js/jcanvas.min.js"></script>
+        <script src="/templates/default/js/jcanvas.min.js"></script>
 	    <script src="/templates/default/js/ajaxupload.js"></script>
 	    <script src="/templates/default/js/socket.io.js"></script>
 	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>

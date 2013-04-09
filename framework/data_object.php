@@ -18,7 +18,7 @@ class data_object{
 	}
 	/*
 	* При проверке существования неопределенного поля заканчивает работу скрита
-	*/	
+	*/
 	final public function __isset($property){
 		die('Property $'.$property.' not exist!');
 	}
@@ -33,5 +33,5 @@ class data_object{
 	*/
 	final public function __unset($property){
 		die('Property $'.$property.' not exist!');
-	}	
+	}
 }
