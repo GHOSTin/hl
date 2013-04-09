@@ -7,7 +7,7 @@ class view_query{
 
 	public static function private_add_work($args){
 		return load_template('query.private_add_work', $args);
-	}	
+	}
 
 	public static function private_get_documents($args){
 		return load_template('query.private_get_documents', $args);
@@ -181,5 +181,5 @@ class view_query{
 	
 	public static function private_update_work_type($args){
 		return load_template('query.private_update_work_type', $args);
-	}			
+	}
 }

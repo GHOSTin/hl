@@ -32,7 +32,7 @@ class controller_query{
 		$work->id = $_GET['work_id'];
 		return ['queries' => model_query::add_work($query, $work, $begin_time, $end_time, $_SESSION['user']),
 				'works' => model_query::get_works($query, $_SESSION['user'])];
-	}		
+	}
 
 	public static function private_clear_filters(){
 		$time = getdate();
@@ -205,8 +205,8 @@ class controller_query{
 		$user = new data_user();
 		$user->id = $user_id;
 		return ['queries' => model_query::get_queries($query),
-			'users' => model_user::get_users($user),
-			'type' => $type];
+				'users' => model_user::get_users($user),
+				'type' => $type];
 	}	
 
 	public static function private_get_dialog_remove_work(){
@@ -244,19 +244,19 @@ class controller_query{
 			default:
 				return ['initiator' => false];		
 		}
-	}	
+	}
 
 	public static function private_get_houses(){
 		$street = new data_street();
 		$street->id = $_GET['id'];
 		return ['houses' => model_street::get_houses($street)];
-	}	
+	}
 
 	public static function private_get_numbers(){
 		$house = new data_house();
 		$house->id = $_GET['id'];
 		return ['numbers' => model_house::get_numbers($house)];
-	}	
+	}
 
 	public static function private_print_query(){
 		$query = new data_query();
@@ -363,7 +363,7 @@ class controller_query{
 		$group = new data_group();
 		$group->id = $id;
 		return ['users' => model_group::get_users($group, $_SESSION['user'])];
-	}	
+	}
 
 	public static function private_get_work_options(){
 		$id = (int) $_GET['id'];
@@ -398,7 +398,7 @@ class controller_query{
 		$type = $_GET['type'];
 		return ['queries' => model_query::remove_user($query, $user, $type, $_SESSION['user']),
 				'users' => model_query::get_users($query, $_SESSION['user'])];
-	}	
+	}
 
 	public static function private_remove_work(){
 		$query = new data_query();
@@ -407,14 +407,14 @@ class controller_query{
 		$work->id = $_GET['work_id'];
 		return ['queries' => model_query::remove_work($query, $work, $_SESSION['user']),
 				'works' => model_query::get_works($query, $_SESSION['user'])];
-	}	
+	}
 
 	public static function private_update_description(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->description = $_GET['description'];
 		return ['queries' => model_query::update_description($query, $_SESSION['user'])];
-	}	
+	}
 
 	public static function private_update_contact_information(){
 		$query = new data_query();
@@ -444,5 +444,5 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$query->worktype_id = $_GET['type'];
 		return ['queries' => model_query::update_work_type($query, $_SESSION['user'])];
-	}	
+	}
 }

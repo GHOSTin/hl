@@ -154,7 +154,7 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при добавлении работы.');
 		return [$query];
-	}			
+	}
 	/*
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-лицевой_счет в зависимости от типа инициатора.
@@ -365,7 +365,7 @@ class model_query{
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `querynumber` = :number
-				ORDER BY `opentime` DESC";				
+				ORDER BY `opentime` DESC";
 		}else{
 			$sql = "SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -420,7 +420,7 @@ class model_query{
 			$result[] = $query;
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
 	/**
 	* Возвращает материалы заявки.
 	* @return array
@@ -478,7 +478,7 @@ class model_query{
 		}
 		$stm->closeCursor();
 		return $result;
-	}		
+	}
 	/**
 	* Возвращает лицевые счета заявки.
 	* @return array
@@ -534,7 +534,7 @@ class model_query{
 		}
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
 	/**
 	* Возвращает пользователей заявки.
 	* @return array
@@ -586,7 +586,7 @@ class model_query{
 		}
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
 	/**
 	* Возвращает работы.
 	* @return array
@@ -641,7 +641,7 @@ class model_query{
 		}
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
 	/*
 	* Учитывает сессионный фильтры.
 	*/
@@ -736,7 +736,7 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении описания заявки.');
 		return [$query];
-	}	
+	}
 	/**
 	* Обновляет контактную информацию.
 	*/
@@ -757,7 +757,7 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении описания заявки.');
 		return [$query];
-	}	
+	}
 	/**
 	* Обновляет статус оплаты.
 	*/
@@ -779,7 +779,7 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении статуса оплаты заявки.');
 		return [$query];
-	}	
+	}
 	/**
 	* Обновляет статус реакции.
 	*/
@@ -801,7 +801,7 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении статуса реакции.');
 		return [$query];
-	}	
+	}
 	/**
 	* Обновляет тип работ.
 	*/
@@ -829,5 +829,5 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении типа работ.');
 		return [$query];
-	}		
+	}
 }
