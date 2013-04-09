@@ -37,5 +37,5 @@ class model_company{
 		$company_id = (int) $stm->fetch()['max_company_id'] + 1;
 		$stm->closeCursor();
 		return $company_id;
-	}	
+	}
 }

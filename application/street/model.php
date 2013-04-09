@@ -41,7 +41,7 @@ class model_street{
 	/**
 	* Возвращает список улиц.
 	* @return array из object data_street
-	*/	
+	*/
 	public static function get_streets(){
 		$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
 				FROM `streets` ORDER BY `name`";
@@ -76,5 +76,5 @@ class model_street{
 			$result[] = $house;
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
 }

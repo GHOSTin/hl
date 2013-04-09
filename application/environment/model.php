@@ -91,5 +91,5 @@ class model_environment{
 		}catch(exception $e){
 			throw new e_model('Шаблонизатор не может быть подгружен.');
 		}
-	}	
+	}
 }

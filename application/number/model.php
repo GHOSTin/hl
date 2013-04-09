@@ -59,7 +59,7 @@ class model_number{
 		$number_id = (int) $stm->fetch()['max_number_id'] + 1;
 		$stm->closeCurscor();
 		return $nuber_id;
-	}	
+	}
 	/**
 	* Возвращает информацию о лицевом счете.
 	* @return object data_number

@@ -46,5 +46,5 @@ class model_group{
 			$result[] = $works;
 		$stm->closeCursor();
 		return $result;
-	}			
+	}
 }

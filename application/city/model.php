@@ -35,5 +35,5 @@ class model_city{
 		$city_id = (int) $stm->fetch()['max_city_id'] + 1;
 		$stm->closeCursor();
 		return $city_id;
-	}	
+	}
 }

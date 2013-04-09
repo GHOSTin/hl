@@ -100,5 +100,5 @@ class model_house{
 			$result[] = $user;
 		$stm->closeCursor();
 		return $result;
-	}		
+	}
 }

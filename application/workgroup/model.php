@@ -45,5 +45,5 @@ class model_workgroup{
 			$result[] = $works;
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
 }

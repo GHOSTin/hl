@@ -13,5 +13,5 @@ class controller_auth{
 	public static function private_login(){
 		header('Location:/');
 		exit();
-	}	
+	}
 }

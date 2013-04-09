@@ -78,5 +78,5 @@ class model_user{
 			$result[] = $user;
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
 }

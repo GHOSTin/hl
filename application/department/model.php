@@ -37,7 +37,7 @@ class model_department{
 		$department_id = (int) $stm->fetch()['max_department_id'] + 1;
 		$stm->closeCursor();
 		return $department_id;
-	}	
+	}
 	/**
 	* Возвращает список участков компании.
 	* @return array из object data_department

@@ -23,7 +23,7 @@ class model_flat{
 		$stm->closeCursor();
 		return $flat;
 	}
-	
+
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
 		$stm = db::get_handler()->query($sql);
@@ -34,5 +34,5 @@ class model_flat{
 		$flat_id = (int) $stm->fetch()['max_flat_id'] + 1;
 		$stm->closeCursor();
 		return $flat_id;
-	}		
+	}
 }
