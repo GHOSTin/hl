@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <house city="Первоуральск" street="Ватутина" number="52а">
 	<flat number="1">
-		<number number="233242" fio="Хорошавцев" telephone="" cellphone="" contact_fio="" contact_telephone="" contact_cellphone="" />
+		<number number="233242" fio="Хорошавцев" telephone="" cellphone="" contact_fio="" contact_telephone="" contact_cellphone="">
+			<meter name="СВГ-15" service="ГВС" serial="127485аб" date_install="21.12.1984" date_expire="21.12.2013" tarif="2">
+				<data time="21.12.2012" tarif="1" value="456" />
+				<data time="21.12.2012" tarif="2" value="450" />
+			</meter>
+			<meter name="СВГ-15" service="ХВС" serial="12748565" date_install="22.12.1984" date_expire="22.12.2013" tarif="1">
+				<data time="21.12.2012" tarif="1" value="80" />
+			</meter>
+		</number>
 	</flat>
 	<flat number="19">
 		<number number="233243" fio="Некрасов Евгений Валерьевич" telephone="647957" cellphone="89222944742" contact_fio="Иван Васильевич" contact_telephone="654238" contact_cellphone="89992223656" />
 	</flat>
 	<flat number="20">
-		<number number="233244первый" fio="Котькорло Валентина" telephone="647954" cellphone="8922342944742" contact_fio="" contact_telephone="" contact_cellphone="" />
+		<number number="233244первый" fio="Котькорло Валентина" telephone="647954" cellphone="8922342944742" contact_fio="" contact_telephone="" contact_cellphone="">
+			<meter name="СВГ-15" service="ХВС" serial="12748566" date_install="30.12.1984" date_expire="30.12.2013" tarif="1">
+				<data time="30.12.2012" tarif="1" value="90" />
+			</meter>
+		</number>
 		<number number="233244второй" fio="Котькорло Валентина" telephone="647954" cellphone="8922342944742" contact_fio="" contact_telephone="" contact_cellphone="" />
 	</flat>
 </house>
