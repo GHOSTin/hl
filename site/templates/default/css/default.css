@@ -45,69 +45,69 @@ footer, #push{
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
-div[class^=col-]{
+div[class^=chat-col-]{
     position: relative;
     height: 500px;
     display: inline-block;
     vertical-align: top;
 }
 
-.col-right{
-    width: 400px;
+.chat-col-right{
+    width: 399px;
 }
 
-.col-left{
+.chat-col-left{
     width: 195px;
     border-right: 1px solid rgba(0,0,0,.1);
 }
 
-.user-list{
+.chat-user-list{
     overflow: auto;
     height: 470px;
 }
 
-.users{
+.chat-users{
     margin: 0;
 }
 
-.users li{
+.chat-users li{
     list-style: none;
     margin: 5px 0;
 }
 
-.users li a{
+.chat-users li a{
     padding: 5px;
 }
 
-.users li.offline a{
+.chat-users li.offline a{
     color: #ccc;
 }
 
-.users li.active a{
+.chat-users li.active a{
     border-radius: 5px;
     background-color: #e8e8e8 !important;
     color: #08c !important;
     font-weight: bold;
 }
 
-.users li.active.offline a{
+.chat-users li.active.offline a{
     border-radius: 5px;
     background-color: #e8e8e8 !important;
     color: #7c7d7e !important;
 }
 
-.users .status {
+.chat-users .status {
     font-size: 2.2em;
     vertical-align: middle;
     margin: 0 3px;
 
 }
 
-.users .offline .status{
+.chat-users .offline .status{
     color: palevioletred;
 }
 
-.users .online .status{
+.chat-users .online .status{
     color: greenyellow;
 }
 
@@ -131,7 +131,7 @@ form.well{
     margin: 0;
 }
 
-.chat .history{
+.chat .chat-history{
     margin: 0;
     height: 20px;
 }
@@ -141,17 +141,17 @@ form.well{
     height: 40px;
 }
 
-.feed{
+.chat-feed{
     height: 335px;
     overflow: auto;
     margin: 0 0 10px;
 }
 
-.feed ul {
+.chat-feed ul {
     margin: 0;
 }
 
-.feed header{
+.chat-feed header{
     text-align: center;
     font-weight: bold;
     display: block;
@@ -161,30 +161,30 @@ form.well{
     border: 1px solid #e1e9ec;
 }
 
-.feed header .caret{
+.chat-feed header .caret{
     margin-top: 8px;
     margin-right: 8px;
 }
 
-.feed blockquote{
+.chat-feed blockquote{
     position: relative;
     padding: 0;
 }
 
-.feed blockquote.pull-left{
+.chat-feed blockquote.pull-left{
     padding-right: 35px;
 }
 
-.feed blockquote.pull-right{
+.chat-feed blockquote.pull-right{
     padding-left: 35px;
 }
 
-.feed blockquote p {
+.chat-feed blockquote p {
     word-wrap: break-word;
     max-width: 300px;
 }
 
-.feed blockquote small {
+.chat-feed blockquote small {
     display: inline-block;
     margin-top: -20px;
     position: absolute;
@@ -193,13 +193,13 @@ form.well{
     font-size: 70%;
 }
 
-.feed blockquote.pull-right small{
+.chat-feed blockquote.pull-right small{
     right: auto;
     left: 0;
 }
 
-.feed blockquote.pull-right small:after,
-.feed blockquote small:before {
+.chat-feed blockquote.pull-right small:after,
+.chat-feed blockquote small:before {
     content: '';
 }
 
