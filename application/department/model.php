@@ -42,11 +42,31 @@ class model_department{
 	* Возвращает список участков компании.
 	* @return array из object data_department
 	*/
-	public static function get_departments(data_user $current_user){
+	public static function get_departments(data_department $department_params, data_user $current_user){
 		$sql = "SELECT `id`, `company_id`, `status`, `name`
 				FROM `departments` WHERE `departments`.`company_id` = :company_id";
+		if(!empty($department_params->id)){
+			$sql .= ' AND `id` IN(';
+			if(is_array($department_params->id)){
+				$count = count($department_params->id);
+				$i = 1;
+				foreach($department_params->id as $key => $department){
+					$sql .= ':department_id'.$key;
+					if($i++ < $count)
+						$sql .= ',';
+				}
+			}else
+				$sql .= ':department_id0';
+			$sql .= ")";
+		}
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		if(!empty($department_params->id))
+			if(is_array($department_params->id))
+				foreach($department_params->id as $key => $department)
+					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
+			else
+				$stm->bindValue(':department_id0', $department_params->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Проблемы при выборке участков.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_department');

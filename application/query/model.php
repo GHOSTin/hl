@@ -693,8 +693,9 @@ class model_query{
 			if($query->department_id === 'all')
 				$query->department_id = $restrictions->departments;
 			else
-				if(array_search($query->department_id, $restrictions->departments) === false)
-					$query->department_id = $restrictions->departments;
+				if(!empty($restrictions->departments))
+					if(array_search($query->department_id, $restrictions->departments) === false)
+						$query->department_id = $restrictions->departments;
 		}
 		return $query;
 	}

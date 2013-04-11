@@ -331,6 +331,7 @@ class controller_query{
 	public static function private_set_department(){
 		$query = new data_query();
 		$query->department_id = $_GET['value'];
+		$query->street_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query)];
 	}	
@@ -390,13 +391,15 @@ class controller_query{
 		$now = getdate();
 		$street = new data_street();
 		$street->department_id = $query->department_id;
+		$department = new data_department();
+		$department->id = $_SESSION['restrictions']['query']->departments;
 		return ['queries' => model_query::get_queries($query),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),
 			'users' => model_user::get_users(new data_user()),
-			'departments' => model_department::get_departments($_SESSION['user']),
+			'departments' => model_department::get_departments($department, $_SESSION['user']),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
 			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
 	}
