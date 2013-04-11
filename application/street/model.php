@@ -42,10 +42,34 @@ class model_street{
 	* Возвращает список улиц.
 	* @return array из object data_street
 	*/
-	public static function get_streets(){
-		$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
-				FROM `streets` ORDER BY `name`";
+	public static function get_streets(data_street $street_params){
+		if(!empty($street_params->department_id)){
+			$sql = "SELECT DISTINCT`streets`.`id`, `streets`.`company_id`, `streets`.`city_id`, `streets`.`status`, `streets`.`name`
+					FROM `streets`, `houses`
+					WHERE `houses`.`street_id` = `streets`.`id`
+					AND `houses`.`department_id` IN(";
+			if(is_array($street_params->department_id)){
+				$count = count($street_params->department_id);
+				$i = 1;
+				foreach($street_params->department_id as $key => $department){
+					$sql .= ':department_id'.$key;
+					if($i++ < $count)
+						$sql .= ',';
+				}
+			}else
+				$sql .= ':department_id0';
+
+			$sql .= ") ORDER BY `streets`.`name`";
+		}else
+			$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
+					FROM `streets` ORDER BY `name`";
 		$stm = db::get_handler()->prepare($sql);
+		if(!empty($street_params->department_id))
+			if(is_array($street_params->department_id))
+				foreach($street_params->department_id as $key => $department)
+					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
+			else
+				$stm->bindValue(':department_id0', $street_params->department_id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Проблема при выборке улиц из базы данных.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_street');

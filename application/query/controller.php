@@ -388,11 +388,13 @@ class controller_query{
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		$time = getdate($query->time_open['begin']);
 		$now = getdate();
+		$street = new data_street();
+		$street->department_id = $query->department_id;
 		return ['queries' => model_query::get_queries($query),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
-			'streets' => model_street::get_streets(),
+			'streets' => model_street::get_streets($street),
 			'users' => model_user::get_users(new data_user()),
 			'departments' => model_department::get_departments($_SESSION['user']),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
