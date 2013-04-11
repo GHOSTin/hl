@@ -13,4 +13,11 @@ class controller_number{
         return ['houses' => model_street::get_houses($street, $_SESSION['user']),
                 'street' => $street];
     }
+
+    public static function private_get_house_content(){
+        $house = new data_house();
+        $house->id = $_GET['id'];
+        return ['numbers' => model_house::get_numbers($house, $_SESSION['user']),
+                'house' => $house];
+    }
 }
