@@ -7,7 +7,7 @@
             <option value="all">Все заявки</option>
             {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
             {% for key, status in statuses %}
-                <option value="{{key}}"
+                <option value="{{ key }}"
                 {% if key == component.filters.status %}
                  selected
                 {% endif %}
@@ -15,22 +15,23 @@
             {% endfor %}
         </select>
 	</div>
+    <!-- end filter status, begin filter department -->
     <div class="filter">
         <label>по участку</label>
         <select class="filter-content-select-department span12">
             <option value="all">Все участки</option>
             {% if component.departments != false %}
                 {% for department in component.departments %}
-                    <option value="{{department.id}}"
+                    <option value="{{ department.id }}"
                     {% if department.id == component.filters.department_id %}
-                        selected
+                    selected
                     {% endif %}
-                    >{{department.name}}</option>
+                    >{{ department.name }}</option>
                 {% endfor %}
             {% endif %}
         </select>
     </div>
-	<!-- end filter status, begin filter street -->
+	<!-- end filter department, begin filter street -->
 	<div class="filter">
 	    <label>по улице и дому</label>
         <select class="filter-content-select-street span12">
@@ -45,10 +46,12 @@
                 {% endfor %}
             {% endif %}
         </select>
+        <select class="filter-content-select-house span12" disabled="disabled">
+            <option value="all">Ожидание</option>
+        </select>
 	</div>
-	<!-- end filter street, begin filter department -->
+	<!-- end filter street, begin filter worktype -->
     {#
-	<!-- end filter department, begin filter worktype -->
 	<div class="filter">
 	    <label>по типу работ</label>
         <select class="filter-content-select-workType span12">
