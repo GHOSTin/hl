@@ -398,13 +398,16 @@ class model_query{
 					$sql .= " AND `houses`.`street_id` = :street_id";
 				if(!empty($query->department_id)){
 					$sql .= " AND `queries`.`department_id` IN(";
-					$count = count($query->department_id);
-					$i = 1;
-					foreach($query->department_id as $key => $department){
-						$sql .= ':department_id'.$key;
-						if($i++ < $count)
-							$sql .= ',';
-					}
+					if(is_array($query->department_id)){
+						$count = count($query->department_id);
+						$i = 1;
+						foreach($query->department_id as $key => $department){
+							$sql .= ':department_id'.$key;
+							if($i++ < $count)
+								$sql .= ',';
+						}
+					}else
+						$sql .= ':department_id0';
 					$sql .= ")";
 				}
 			$sql .= " ORDER BY `queries`.`opentime` DESC";
@@ -425,8 +428,11 @@ class model_query{
 			if(!empty($query->street_id))
 				$stm->bindValue(':street_id', $query->street_id, PDO::PARAM_INT);
 			if(!empty($query->department_id))
-				foreach($query->department_id as $key => $department)
-					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
+				if(is_array($query->department_id))
+					foreach($query->department_id as $key => $department)
+						$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
+				else
+					$stm->bindValue(':department_id0', $query->department_id, PDO::PARAM_INT);
 		}
 
 		if($stm->execute() == false)
@@ -678,11 +684,17 @@ class model_query{
 		else
 			if($query->street_id === 'all')
 				$query->street_id = null;
-		if(empty($query_filter->department_id)){
-			$query->department_id = $restrictions->departments;
-		}else{
-			if(array_search($query_filter->department_id, $restrictions->departments) === false)
+		if(empty($query->department_id)){
+			if(empty($query_filter->department_id))
 				$query->department_id = $restrictions->departments;
+			else
+				$query->department_id = $query_filter->department_id;
+		}else{
+			if($query->department_id === 'all')
+				$query->department_id = $restrictions->departments;
+			else
+				if(array_search($query->department_id, $restrictions->departments) === false)
+					$query->department_id = $restrictions->departments;
 		}
 		return $query;
 	}

@@ -16,7 +16,7 @@
 	</flat>
 	<flat number="20">
 		<number number="233244первый" fio="Котькорло Валентина" telephone="647954" cellphone="8922342944742" contact_fio="" contact_telephone="" contact_cellphone="">
-			<meter name="СВГ-15" service="ХВС" serial="12748566" date_install="30.12.1984" date_expire="30.12.2013" tarif="1">
+			<meter service="ХВС" name="СВГ-15" serial="12748566" date_install="30.12.1984" date_expire="30.12.2013" tarif="1">
 				<data time="30.12.2012" tarif="1" value="90" />
 			</meter>
 		</number>

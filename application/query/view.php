@@ -115,6 +115,10 @@ class view_query{
 		return load_template('query.query_titles', $args);
 	}
 
+	public static function private_set_department($args){
+		return load_template('query.query_titles', $args);
+	}
+
 	public static function private_show_default_page($args){
 		return load_template('query.private_show_default_page', $args);
 	}

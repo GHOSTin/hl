@@ -102,7 +102,14 @@ $(document).ready(function(){
 			},function(r){
 				$('.queries').html(r);
 			});
-	});	
+	});
+	$('.filter-content-select-department').change(function(){
+		$.get('set_department',{
+			value: $('.filter-content-select-department :selected').val()
+			},function(r){
+				$('.queries').html(r);
+			});
+	});
 	$('body').on('click', '.get_dialog_create_query', function(){
 		$.get('get_dialog_create_query',{
 			},function(r){

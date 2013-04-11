@@ -41,6 +41,7 @@ class controller_query{
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		$query->status = 'all';
 		$query->street_id = 'all';
+		$query->department_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
@@ -324,10 +325,15 @@ class controller_query{
 		$query = new data_query();
 		$query->street_id = $_GET['value'];
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
-		// var_dump(model_query::get_queries($query));
-		// exit();
 		return ['queries' => model_query::get_queries($query)];
 	}
+
+	public static function private_set_department(){
+		$query = new data_query();
+		$query->department_id = $_GET['value'];
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		return ['queries' => model_query::get_queries($query)];
+	}	
 
 	public static function private_get_timeline(){
 		$time = (int) $_GET['time'];
