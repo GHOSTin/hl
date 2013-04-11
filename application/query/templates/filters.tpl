@@ -15,6 +15,21 @@
             {% endfor %}
         </select>
 	</div>
+    <div class="filter">
+        <label>по участку</label>
+        <select class="filter-content-select-department span12">
+            <option value="all">Все участки</option>
+            {% if component.departments != false %}
+                {% for department in component.departments %}
+                    <option value="{{department.id}}"
+                    {% if department.id == component.filters.department_id %}
+                        selected
+                    {% endif %}
+                    >{{department.name}}</option>
+                {% endfor %}
+            {% endif %}
+        </select>
+    </div>
 	<!-- end filter status, begin filter street -->
 	<div class="filter">
 	    <label>по улице и дому</label>
@@ -32,21 +47,6 @@
         </select>
 	</div>
 	<!-- end filter street, begin filter department -->
-	<div class="filter">
-	    <label>по участку</label>
-        <select class="filter-content-select-department span12">
-            <option value="all">Все участки</option>
-            {% if component.departments != false %}
-                {% for department in component.departments %}
-                    <option value="{{department.id}}"
-                    {% if department.id == component.filters.department_id %}
-                        selected
-                    {% endif %}
-                    >{{department.name}}</option>
-                {% endfor %}
-            {% endif %}
-        </select>
-	</div>
     {#
 	<!-- end filter department, begin filter worktype -->
 	<div class="filter">
