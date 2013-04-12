@@ -1,4 +1,4 @@
- <?php
+<?php
 class application_configuration{
 
 	const templateName = 'default';

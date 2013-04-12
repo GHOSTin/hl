@@ -324,6 +324,7 @@ class controller_query{
 	public static function private_set_status(){
 		$query = new data_query();
 		$query->status = $_GET['value'];
+		$query->department_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
@@ -333,8 +334,12 @@ class controller_query{
 		$query = new data_query();
 		$query->street_id = $_GET['value'];
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$street = new data_street();
+		$street->id = $_GET['value'];
+		$street->department_id = $query->department_id;
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+				'numbers' => model_query::get_numbers($query, $_SESSION['user']),
+				'houses' => model_street::get_houses($street)];
 	}
 
 	public static function private_set_department(){

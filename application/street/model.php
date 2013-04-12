@@ -83,15 +83,35 @@ class model_street{
 	* Возвращает список домов
 	* @return array из object data_house
 	*/
-	public static function get_houses(data_street $street){
-		if(empty($street->id))
+	public static function get_houses(data_street $street_params){
+		if(empty($street_params->id))
 			throw new e_model('id задан не правильно.');
 		$sql = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
 		 		`department_id`, `status`, `housenumber` as `number`
-				FROM `houses` WHERE `street_id` = :street_id
-				ORDER BY (`housenumber` + 0)";
+				FROM `houses` WHERE `street_id` = :street_id";
+		if(!empty($street_params->department_id)){
+			$sql .= " AND `houses`.`department_id` IN(";
+			if(is_array($street_params->department_id)){
+				$count = count($street_params->department_id);
+				$i = 1;
+				foreach($street_params->department_id as $key => $department){
+					$sql .= ':department_id'.$key;
+					if($i++ < $count)
+						$sql .= ',';
+				}
+			}else
+				$sql .= ':department_id0';
+			$sql .= ")";
+		}
+		$sql .= " ORDER BY (`housenumber` + 0)";
 		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':street_id', $street->id, PDO::PARAM_INT);
+		$stm->bindParam(':street_id', $street_params->id, PDO::PARAM_INT);
+		if(!empty($street_params->department_id))
+			if(is_array($street_params->department_id))
+				foreach($street_params->department_id as $key => $department)
+					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
+			else
+				$stm->bindValue(':department_id0', $street_params->department_id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Проблема при выборке домов из базы данных.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');

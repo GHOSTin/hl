@@ -100,7 +100,7 @@ $(document).ready(function(){
 		$.get('set_street',{
 			value: $('.filter-content-select-street :selected').val()
 			},function(r){
-				$('.queries').html(r);
+				init_content(r);
 			});
 	});
 	$('.filter-content-select-department').change(function(){
