@@ -86,7 +86,7 @@ class view_query{
 	}
 
 	public static function private_clear_filters($args){
-		return load_template('query.query_titles', $args);
+		return load_template('query.private_clear_filters', $args);
 	}
 
 	public static function private_get_houses($args){

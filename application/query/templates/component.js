@@ -86,7 +86,7 @@ $(document).ready(function(){
 	$('body').on('click', '.clear_filters', function(){
 		$.get('clear_filters',{
 			},function(r){
-				$('.queries').html(r);
+				init_content(r);
 			});
 	});	
 	$('.filter-content-select-status').change(function(){

@@ -42,9 +42,12 @@ class controller_query{
 		$query->status = 'all';
 		$query->street_id = 'all';
 		$query->department_id = 'all';
+		$time = getdate();
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+				'numbers' => model_query::get_numbers($query, $_SESSION['user']),
+				'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
+				'now' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year'])];
 	}
 
 	public static function private_close_query(){

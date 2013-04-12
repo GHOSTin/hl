@@ -13,8 +13,13 @@ function init_content(result){
 function show_content(result){
     init_content(result);
 }
-function get_hidden_content(){
-    return $('._hidden_content_html').html();
+function get_hidden_content(tag){
+    if(typeof tag !== 'undefined' && tag !== null){
+        if(typeof tag === 'string')
+            return $('._hidden_content_html > ' + tag).html();
+        console.log('tag is not string');
+    }else
+        return $('._hidden_content_html').html();
 }
 $('body').on('click', '.close_dialog', function(){
 	$('.dialog').modal('hide');
