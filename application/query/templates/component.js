@@ -93,7 +93,7 @@ $(document).ready(function(){
 		$.get('set_status',{
 			value: $('.filter-content-select-status :selected').val()
 			},function(r){
-				$('.queries').html(r);
+				init_content(r);
 			});
 	});
 	$('.filter-content-select-street').change(function(){

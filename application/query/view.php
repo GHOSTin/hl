@@ -108,7 +108,7 @@ class view_query{
 	}
 
 	public static function private_set_status($args){
-		return load_template('query.query_titles', $args);
+		return load_template('query.private_set_status', $args);
 	}
 
 	public static function private_set_street($args){

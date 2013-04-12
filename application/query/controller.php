@@ -340,7 +340,8 @@ class controller_query{
 		$query->department_id = $_GET['value'];
 		$query->street_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries($query),
+				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
 	}	
 
 	public static function private_get_timeline(){
