@@ -110,6 +110,13 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});
+	$('.filter-content-select-house').change(function(){
+		$.get('set_house',{
+			value: $('.filter-content-select-house :selected').val()
+			},function(r){
+				$('.queries').html(r);
+			});
+	});
 	$('body').on('click', '.get_dialog_create_query', function(){
 		$.get('get_dialog_create_query',{
 			},function(r){

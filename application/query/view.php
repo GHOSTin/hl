@@ -115,6 +115,10 @@ class view_query{
 		return load_template('query.private_set_street', $args);
 	}
 
+	public static function private_set_house($args){
+		return load_template('query.query_titles', $args);
+	}
+
 	public static function private_set_department($args){
 		return load_template('query.query_titles', $args);
 	}

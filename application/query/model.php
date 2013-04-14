@@ -396,6 +396,8 @@ class model_query{
 					$sql .= " AND `queries`.`status` = :status";
 				if(!empty($query->street_id))
 					$sql .= " AND `houses`.`street_id` = :street_id";
+				if(!empty($query->house_id))
+					$sql .= " AND `queries`.`house_id` = :house_id";
 				if(!empty($query->department_id)){
 					$sql .= " AND `queries`.`department_id` IN(";
 					if(is_array($query->department_id)){
@@ -427,6 +429,8 @@ class model_query{
 			}
 			if(!empty($query->street_id))
 				$stm->bindValue(':street_id', $query->street_id, PDO::PARAM_INT);
+			if(!empty($query->house_id))
+				$stm->bindValue(':house_id', $query->house_id, PDO::PARAM_INT);
 			if(!empty($query->department_id))
 				if(is_array($query->department_id))
 					foreach($query->department_id as $key => $department)
@@ -684,6 +688,11 @@ class model_query{
 		else
 			if($query->street_id === 'all')
 				$query->street_id = null;
+		if(empty($query->house_id))
+			$query->house_id = $query_filter->house_id;
+		else
+			if($query->house_id === 'all')
+				$query->house_id = null;
 		if(empty($query->department_id)){
 			if(empty($query_filter->department_id))
 				$query->department_id = $restrictions->departments;

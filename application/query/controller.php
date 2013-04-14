@@ -41,6 +41,7 @@ class controller_query{
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		$query->status = 'all';
 		$query->street_id = 'all';
+		$query->house_id = 'all';
 		$query->department_id = 'all';
 		$time = getdate();
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
@@ -336,6 +337,7 @@ class controller_query{
 	public static function private_set_street(){
 		$query = new data_query();
 		$query->street_id = $_GET['value'];
+		$query->department_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		$street = new data_street();
 		$street->id = $_GET['value'];
@@ -345,10 +347,20 @@ class controller_query{
 				'houses' => model_street::get_houses($street)];
 	}
 
+	public static function private_set_house(){
+		$query = new data_query();
+		$query->house_id = $_GET['value'];
+		$query->department_id = 'all';
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		return ['queries' => model_query::get_queries($query),
+				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+	}
+
 	public static function private_set_department(){
 		$query = new data_query();
 		$query->department_id = $_GET['value'];
 		$query->street_id = 'all';
+		$query->house_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
