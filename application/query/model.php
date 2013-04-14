@@ -683,16 +683,21 @@ class model_query{
 			$query->time_open = $query_filter->time_open;
 		if(empty($query->status))
 			$query->status = $query_filter->status;
-		if(empty($query->street_id))
+		// обработка улиц
+		if($query->street_id === 'all')
+			$query->street_id = null;
+		elseif(empty($query->street_id))
 			$query->street_id = $query_filter->street_id;
-		else
-			if($query->street_id === 'all')
-				$query->street_id = null;
-		if(empty($query->house_id))
-			$query->house_id = $query_filter->house_id;
-		else
-			if($query->house_id === 'all')
-				$query->house_id = null;
+		// обработка дома
+		if(!empty($query->street_id)){
+			if(empty($query->house_id))
+				$query->house_id = $query_filter->house_id;
+			else
+				if($query->house_id === 'all')
+					$query->house_id = null;
+		}else
+			$query->house_id = null;
+		// обработка участка
 		if(empty($query->department_id)){
 			if(empty($query_filter->department_id))
 				$query->department_id = $restrictions->departments;

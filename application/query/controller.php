@@ -338,6 +338,7 @@ class controller_query{
 		$query = new data_query();
 		$query->street_id = $_GET['value'];
 		$query->department_id = 'all';
+		$query->house_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		$street = new data_street();
 		$street->id = $_GET['value'];
