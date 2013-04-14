@@ -46,8 +46,23 @@
                 {% endfor %}
             {% endif %}
         </select>
-        <select class="filter-content-select-house span12" disabled="disabled">
-            <option value="all">Ожидание</option>
+        <select class="filter-content-select-house span12" 
+            {% if component.houses|length < 1 %}
+                disabled="disabled"
+            {% endif %}
+            >
+            {% if component.houses|length >0 %}
+                <option value="all">Все дома</option>
+            {% else %}
+                <option value="all">Ожидание...</option>
+            {% endif %}
+            {% for house in component.houses %}
+                    <option value="{{house.id}}"
+                    {% if house.id == component.filters.house_id %}
+                        selected
+                    {% endif %}
+                    >дом №{{house.number}}</option>
+            {% endfor %}
         </select>
 	</div>
 	<!-- end filter street, begin filter worktype -->

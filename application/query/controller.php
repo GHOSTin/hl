@@ -256,8 +256,11 @@ class controller_query{
 	}
 
 	public static function private_get_houses(){
+		$query = new data_query();
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
 		$street = new data_street();
 		$street->id = $_GET['id'];
+		$street->department_id = $query->department_id;
 		return ['houses' => model_street::get_houses($street)];
 	}
 
@@ -406,6 +409,10 @@ class controller_query{
 		$now = getdate();
 		$street = new data_street();
 		$street->department_id = $query->department_id;
+		if(!empty($query->street_id)){
+			$street->id = $query->street_id;
+			$houses = model_street::get_houses($street);
+		}
 		$department = new data_department();
 		$department->id = $_SESSION['restrictions']['query']->departments;
 		return ['queries' => model_query::get_queries($query),
@@ -416,7 +423,8 @@ class controller_query{
 			'users' => model_user::get_users(new data_user()),
 			'departments' => model_department::get_departments($department, $_SESSION['user']),
 			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
-			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
+			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user']),
+			'houses' => $houses];
 	}
 
 	public static function private_remove_user(){
