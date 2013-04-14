@@ -1,1 +1,1 @@
-<li class="street" street="{{ street.id }}"><div class="get_street_content">{{ street.name }}<div></li>
+<li class="street" street="{{ street.id }}"><a class="get_street_content">{{ street.name }}</a></li>

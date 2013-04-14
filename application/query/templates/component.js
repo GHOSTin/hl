@@ -1,4 +1,18 @@
 $(document).ready(function(){
+    $(document).on('keydown', function(e){
+        if(e.keyCode === 17) {
+            if($('nav.timeline .btn-group').attr('data-toggle') === 'buttons-radio'){
+                $('nav.timeline .btn-group').attr('data-toggle', 'buttons-checked');
+            }
+        }
+    });
+    $(document).on('keyup', function(e){
+        if(e.keyCode === 17) {
+            if($('nav.timeline .btn-group').attr('data-toggle') === 'buttons-checked'){
+                $('nav.timeline .btn-group').attr('data-toggle', 'buttons-radio');
+            }
+        }
+    });
 	$('body').on('click', '.get_documents', function(){
 		$.get('get_documents',{
 			 id: get_query_id($(this))
