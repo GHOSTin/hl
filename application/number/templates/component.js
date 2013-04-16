@@ -24,10 +24,14 @@ $(document).ready(function(){
         $("#search-number")
             .prop("disabled", false)
             .attr('filter', 'flats');
-        $('#filter-numbers span.house,#filter-numbers span.flat').remove();
+        $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
+        var street = $(this).closest('li.street');
+        $('#filter-numbers')
+            .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
         $('#filter-numbers span.street')
             .after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
-        $('.house.active, .number.active').removeClass('active');
+        $('.street.active, .house.active, .number.active').removeClass('active');
+        street.addClass('active');
         $(this).parent().addClass('active');
         scrollTo($(this).parent());
     });
@@ -40,10 +44,18 @@ $(document).ready(function(){
         $("#search-number")
             .prop("disabled", true)
             .attr('filter', 'flats');
-        $("#filter-numbers span.flat").remove();
+        $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
+        var street = $(this).closest('li.street');
+        $('#filter-numbers')
+            .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
+        var house = $(this).closest('li.house');
+        $('#filter-numbers span.street')
+            .after('<span class="label house" house-id="'+house.attr('house')+'">'+house.children('.get_house_content').text()+'<a class="close">&times;</a></span>');
         $("#filter-numbers span.house")
             .after('<span class="label flat" flat-id="'+$(this).parent().attr('number')+'">кв. '+$(this).text().split(' ')[1]+'<a class="close">&times;</a></span>');
-        $('.number.active').removeClass('active');
+        $('.street.active, .house.active, .number.active').removeClass('active');
+        street.addClass('active');
+        house.addClass('active');
         $(this).parent().addClass('active');
         scrollTo($(this).parent());
     });
