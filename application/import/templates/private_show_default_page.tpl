@@ -8,6 +8,11 @@
                 <li class="get_dialog_import_meters"><a href="#">Импорт счетчиков</a></li>
             </ul>
         </div>
-        <div class="span9 import-window"></div>
+        <div class="span9 import-form"></div>
     </div>
 {% endblock component %}
+{% block javascript %}
+    <script src="/templates/default/js/jquery.ui.widget.js"></script>
+    <script src="/templates/default/js/jquery.iframe-transport.js"></script>
+    <script src="/templates/default/js/jupload.js"></script>
+{% endblock javascript %}

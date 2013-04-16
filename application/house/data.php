@@ -13,4 +13,5 @@ final class data_house extends data_object{
 	public $status;
 	public $number;
 	public $street_name;
+    public $city_name;
 }
