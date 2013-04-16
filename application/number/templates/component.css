@@ -1,3 +1,14 @@
+.nav-fixed{
+    position: fixed;
+    margin:-20px;
+    left: 0;
+    padding: 0 20px;
+}
+
+.nav-fixed + .streets {
+    padding-top: 30px;
+}
+
 #filter-numbers .close{
     line-height: 14px;
     padding-left: 5px;
@@ -10,7 +21,6 @@
 #search-number{
     margin: 0;
 }
-
 .streets, .houses, .numbers{
     list-style:none;
 }
