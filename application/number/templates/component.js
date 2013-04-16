@@ -133,6 +133,13 @@ $(document).ready(function(){
             return null;
         }
     });
+    $(window).scroll(function(){
+        if($('body').scrollTop() > 20){
+            $('.main > .navbar').addClass('nav-fixed');
+        } else {
+            $('.nav-fixed').removeClass('nav-fixed');
+        }
+    });
 });
 function get_query_id(obj){
     return obj.closest('.query').attr('query_id');
@@ -140,6 +147,6 @@ function get_query_id(obj){
 
 function scrollTo(el){
     $('html, body').animate({
-        scrollTop: $(el).offset().top-125
+        scrollTop: $(el).offset().top-110
     }, 100);
 }
