@@ -5,21 +5,35 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-        $("#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat").remove();
-        $("#filter-numbers").prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+        $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
+        $('#filter-numbers').prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+        $(this).parent().addClass('active');
         scrollTo($(this).parent());
-        $("#filter-numbers #search-number").attr('filter', 'houses');
+        $('#filter-numbers').find('#search-number').attr('filter', 'houses');
     });
     $('body').on('click', '.get_house_content', function(){
         $.get('get_house_content',{
-             id: $(this).parent().attr('house')
-            },function(r){
-                init_content(r);
-            });
-        $("#filter-numbers span.house,#filter-numbers span.flat").remove();
-        $("#filter-numbers span.street").after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+            id: $(this).parent().attr('house')
+        },function(r){
+            init_content(r);
+        });
+        $('#filter-numbers span.house,#filter-numbers span.flat').remove();
+        $('#filter-numbers span.street').after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+        $(this).parent().addClass('active');
         scrollTo($(this).parent());
-        $("#filter-numbers #search-number").attr('filter', 'numbers');
+        $('#filter-numbers #search-number').attr('filter', 'flats');
+    });
+    $('body').on('click', '.get_number_content', function(){
+//        $.get('get_house_content',{
+//            id: $(this).parent().attr('house')
+//        },function(r){
+//            init_content(r);
+//        });
+        $("#filter-numbers span.flat").remove();
+        $("#filter-numbers span.house").after('<span class="label flat" flat-id="'+$(this).parent().attr('number')+'">кв. '+$(this).text().split(' ')[1]+'<a class="close">&times;</a></span>');
+        $(this).parent().addClass('active');
+        scrollTo($(this).parent());
+        $("#filter-numbers #search-number").attr('filter', 'flats');
     });
     $("#search-number").typeahead({
         source: function(query, process) {
@@ -35,8 +49,14 @@ $(document).ready(function(){
                     break;
                 case 'houses':
                     data = [];
-                    $('li[street="'+$('#filter-numbers span.street').attr('street-id')+'"]>ul.houses li').each(function(){
+                    $('.streets li.active > ul.houses li').each(function(){
                         data.push({"id": $(this).attr('house'), "label": $(this).children('a').text().replace('дом №', '') });
+                    });
+                    break;
+                case 'flats':
+                    data = [];
+                    $('.streets li.active ul.houses li.active > ul.numbers li').each(function(){
+                        data.push({"id": $(this).attr('number'), "label": $(this).children('a').text().replace('кв. №', '').split(' ')[0] });
                     });
                     break;
             }
@@ -52,7 +72,10 @@ $(document).ready(function(){
                     $('ul.streets li[street="'+map[item].id+'"] a.get_street_content').click();
                     break;
                 case 'houses':
-                    $('li[street="'+$('#filter-numbers span.street').attr('street-id')+'"]>ul.houses li[house="'+map[item].id+'"] a.get_house_content').click();
+                    $('.streets li.active > ul.houses li[house="'+map[item].id+'"] a.get_house_content').click();
+                    break;
+                case 'flats':
+                    $('.streets li.active ul.houses li.active > ul.numbers li[number="'+map[item].id+'"] a.get_number_content').click();
                     break;
             }
             return null;
@@ -65,6 +88,6 @@ function get_query_id(obj){
 
 function scrollTo(el){
     $('html, body').animate({
-        scrollTop: $(el).offset().top
+        scrollTop: $(el).offset().top-60
     }, 100);
 }
