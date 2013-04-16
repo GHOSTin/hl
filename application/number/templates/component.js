@@ -140,6 +140,6 @@ function get_query_id(obj){
 
 function scrollTo(el){
     $('html, body').animate({
-        scrollTop: $(el).offset().top-100
+        scrollTop: $(el).offset().top-125
     }, 100);
 }
