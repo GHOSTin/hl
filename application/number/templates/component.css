@@ -12,6 +12,8 @@
 #filter-numbers .close{
     line-height: 14px;
     padding-left: 5px;
+    float: none;
+    vertical-align: middle;
 }
 
 #filter-numbers span.label {
