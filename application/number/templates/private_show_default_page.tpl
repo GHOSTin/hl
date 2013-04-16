@@ -1,8 +1,12 @@
 {% extends "default.tpl" %}
 {% set streets = component.streets %}
 {% block component %}
-     {% include '@number/build_street_titles.tpl' %}
-     <div class="span6" id="filter-numbers" style="position: fixed; right:0;">
-         <input type="text" id="search-number" filter="streets">
-     </div>
+    <div class="navbar span6" style="position: fixed;">
+        <div class="navbar-inner">
+            <form class="navbar-search pull-left" id="filter-numbers">
+                <input type="text" id="search-number" filter="streets">
+            </form>
+        </div>
+    </div>
+    {% include '@number/build_street_titles.tpl' %}
 {% endblock component %}

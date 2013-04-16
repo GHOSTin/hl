@@ -53,7 +53,9 @@ $(document).ready(function(){
                 $("#search-number")
                     .prop("disabled", false)
                     .attr('filter', 'streets');
+                $('.street.active, .house.active, .number.active').removeClass('active');
                 $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
+                scrollTo($('body'));
                 break;
             case $(this).closest('.label').hasClass('house'):
                 $("#search-number")
@@ -61,6 +63,7 @@ $(document).ready(function(){
                     .attr('filter', 'houses');
                 $('.house.active, .number.active').removeClass('active');
                 $('#filter-numbers span.house,#filter-numbers span.flat').remove();
+                scrollTo($('ul.streets > li.street.active'));
                 break;
             case $(this).closest('.label').hasClass('flat'):
                 $("#search-number")
@@ -68,6 +71,7 @@ $(document).ready(function(){
                     .attr('filter', 'flats');
                 $('.number.active').removeClass('active');
                 $('#filter-numbers span.flat').remove();
+                scrollTo($('ul.houses > li.house.active'));
                 break;
         }
     });
@@ -124,6 +128,6 @@ function get_query_id(obj){
 
 function scrollTo(el){
     $('html, body').animate({
-        scrollTop: $(el).offset().top-60
+        scrollTop: $(el).offset().top-100
     }, 100);
 }

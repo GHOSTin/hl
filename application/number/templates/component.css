@@ -10,9 +10,12 @@
 #search-number{
     margin: 0;
 }
-
 .streets, .houses, .numbers{
     list-style:none;
+}
+
+.streets{
+    padding-top: 40px;
 }
 
 .houses, .numbers {
