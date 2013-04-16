@@ -5,8 +5,9 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-        $("#filter-numbers span.street").remove();
-        $("#filter-numbers").prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close" href="#">&times;</a></span>')
+        $("#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat").remove();
+        $("#filter-numbers").prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+        scrollTo($(this).parent());
         $("#filter-numbers #search-number").attr('filter', 'houses');
     });
     $('body').on('click', '.get_house_content', function(){
@@ -15,8 +16,10 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-        $("#filter-numbers span.house").remove();
-        $("#filter-numbers span.street").after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close" href="#">&times;</a></span>');
+        $("#filter-numbers span.house,#filter-numbers span.flat").remove();
+        $("#filter-numbers span.street").after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+        scrollTo($(this).parent());
+        $("#filter-numbers #search-number").attr('filter', 'numbers');
     });
     $("#search-number").typeahead({
         source: function(query, process) {
@@ -32,7 +35,7 @@ $(document).ready(function(){
                     break;
                 case 'houses':
                     data = [];
-                    $('.houses li').each(function(){
+                    $('li[street="'+$('#filter-numbers span.street').attr('street-id')+'"]>ul.houses li').each(function(){
                         data.push({"id": $(this).attr('house'), "label": $(this).children('a').text().replace('дом №', '') });
                     });
                     break;
@@ -49,7 +52,7 @@ $(document).ready(function(){
                     $('ul.streets li[street="'+map[item].id+'"] a.get_street_content').click();
                     break;
                 case 'houses':
-                    $('ul.houses li[house="'+map[item].id+'"] a.get_house_content').click();
+                    $('li[street="'+$('#filter-numbers span.street').attr('street-id')+'"]>ul.houses li[house="'+map[item].id+'"] a.get_house_content').click();
                     break;
             }
             return null;
@@ -58,4 +61,10 @@ $(document).ready(function(){
 });
 function get_query_id(obj){
     return obj.closest('.query').attr('query_id');
+}
+
+function scrollTo(el){
+    $('html, body').animate({
+        scrollTop: $(el).offset().top
+    }, 100);
 }
