@@ -5,6 +5,7 @@
     $('#fileupload').fileupload({
         dataType: 'html',
         done: function(e, data){
+         init_content(data.result);
         }
     });
 {% endblock js %}
