@@ -83,7 +83,7 @@ class model_street{
 	* Возвращает список домов
 	* @return array из object data_house
 	*/
-	public static function get_houses(data_street $street_params){
+	public static function get_houses(data_street $street_params, data_house $house_params = null){
 		if(empty($street_params->id))
 			throw new e_model('id задан не правильно.');
 		$sql = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
@@ -103,6 +103,8 @@ class model_street{
 				$sql .= ':department_id0';
 			$sql .= ")";
 		}
+		if($house_params instanceof data_house AND !empty($house_params->number))
+			$sql .= ' AND `housenumber` = :number';
 		$sql .= " ORDER BY (`housenumber` + 0)";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindParam(':street_id', $street_params->id, PDO::PARAM_INT);
@@ -112,6 +114,8 @@ class model_street{
 					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
 			else
 				$stm->bindValue(':department_id0', $street_params->department_id, PDO::PARAM_INT);
+		if($house_params instanceof data_house AND !empty($house_params->number))
+			$stm->bindValue(':number', $house_params->number, PDO::PARAM_STR);
 		if($stm->execute() == false)
 			throw new e_model('Проблема при выборке домов из базы данных.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
