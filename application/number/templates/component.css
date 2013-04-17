@@ -12,6 +12,8 @@
 #filter-numbers .close{
     line-height: 14px;
     padding-left: 5px;
+    float: none;
+    vertical-align: middle;
 }
 
 #filter-numbers span.label {
@@ -39,4 +41,16 @@
 .streets.nav>li>a:hover, .houses.nav>li>a:hover, .numbers.nav>li>a:hover{
     text-decoration: underline;
     border: none;
+}
+
+@media (max-width: 979px) {
+    .nav-fixed {
+        position: static;
+        margin: 0 -20px 20px;
+        padding: 0;
+    }
+
+    .nav-fixed + .streets {
+        padding-top: 0;
+    }
 }

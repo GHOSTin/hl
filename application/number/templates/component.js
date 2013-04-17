@@ -134,9 +134,10 @@ $(document).ready(function(){
         }
     });
     $(window).scroll(function(){
-        if($('body').scrollTop() > 20){
+        if($(window).scrollTop() > 20){
             $('.main > .navbar').addClass('nav-fixed');
-        } else {
+        }
+        if($(window).scrollTop() < 20) {
             $('.nav-fixed').removeClass('nav-fixed');
         }
     });
