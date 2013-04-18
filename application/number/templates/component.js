@@ -1,10 +1,13 @@
 $(document).ready(function(){
     $('body').on('click', '.get_street_content', function(){
-        $.get('get_street_content',{
-             id: $(this).parent().attr('street')
-            },function(r){
-                init_content(r);
-            });
+        if($(this).siblings().is('.houses'))
+            $(this).siblings('.houses').remove();
+        else
+            $.get('get_street_content',{
+                 id: $(this).parent().attr('street')
+                },function(r){
+                    init_content(r);
+                });
         $("#search-number")
             .prop("disabled", false)
             .attr('filter', 'houses');
@@ -16,11 +19,14 @@ $(document).ready(function(){
         scrollTo($(this).parent());
     });
     $('body').on('click', '.get_house_content', function(){
-        $.get('get_house_content',{
-            id: $(this).parent().attr('house')
-        },function(r){
-            init_content(r);
-        });
+        if($(this).siblings().is('.numbers'))
+            $(this).siblings('.numbers').remove();
+        else
+            $.get('get_house_content',{
+                id: $(this).parent().attr('house')
+            },function(r){
+                init_content(r);
+            });
         $("#search-number")
             .prop("disabled", false)
             .attr('filter', 'flats');
@@ -36,11 +42,14 @@ $(document).ready(function(){
         scrollTo($(this).parent());
     });
     $('body').on('click', '.get_number_content', function(){
-       $.get('get_number_content',{
-           id: $(this).parent().attr('number')
-       },function(r){
-           init_content(r);
-       });
+        if($(this).siblings().is('.number-content'))
+            $(this).siblings('.number-content').remove();
+        else
+            $.get('get_number_content',{
+                id: $(this).parent().attr('number')
+            },function(r){
+                init_content(r);
+            });
         $("#search-number")
             .prop("disabled", true)
             .attr('filter', 'flats');

@@ -3,10 +3,10 @@
     $('.number[number = {{component.id}}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
-<ul class="nav nav-tabs nav-stacked">
+<ul class="number-content nav nav-tabs nav-stacked">
     <li>
         <div>
-        <a href="#">Счетчики</a>
+        <a>Счетчики</a>
         </div>
     </li>
     <li>
