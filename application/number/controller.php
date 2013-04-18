@@ -10,7 +10,7 @@ class controller_number{
     public static function private_get_street_content(){
         $street = new data_street();
         $street->id = $_GET['id'];
-        return ['houses' => model_street::get_houses($street, $_SESSION['user']),
+        return ['houses' => model_street::get_houses($street),
                 'street' => $street];
     }
 
