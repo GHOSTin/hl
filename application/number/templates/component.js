@@ -36,11 +36,11 @@ $(document).ready(function(){
         scrollTo($(this).parent());
     });
     $('body').on('click', '.get_number_content', function(){
-//        $.get('get_house_content',{
-//            id: $(this).parent().attr('house')
-//        },function(r){
-//            init_content(r);
-//        });
+       $.get('get_number_content',{
+           id: $(this).parent().attr('number')
+       },function(r){
+           init_content(r);
+       });
         $("#search-number")
             .prop("disabled", true)
             .attr('filter', 'flats');

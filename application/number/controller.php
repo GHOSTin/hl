@@ -20,4 +20,10 @@ class controller_number{
         return ['numbers' => model_house::get_numbers($house, $_SESSION['user']),
                 'house' => $house];
     }
+
+    public static function private_get_number_content(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return model_number::get_number($number);
+    }
 }
