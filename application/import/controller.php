@@ -9,6 +9,10 @@ class controller_import{
         return true;
     }
 
+    public static function private_get_dialog_import_meters(){
+        return true;
+    }
+
     public static function private_import_numbers(){
         return model_import::analize_import_numbers($_FILES['file']);
     }
