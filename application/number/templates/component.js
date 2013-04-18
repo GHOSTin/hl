@@ -1,72 +1,78 @@
 $(document).ready(function(){
     $('body').on('click', '.get_street_content', function(){
-        if($(this).siblings().is('.houses'))
+        if($(this).siblings().is('.houses')){
             $(this).siblings('.houses').remove();
-        else
+            $('#filter-numbers').find('.street a.close').click();
+        } else{
             $.get('get_street_content',{
                  id: $(this).parent().attr('street')
                 },function(r){
                     init_content(r);
                 });
-        $("#search-number")
-            .prop("disabled", false)
-            .attr('filter', 'houses');
-        $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
-        $('#filter-numbers')
-            .prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
-        $('.street.active').removeClass('active');
-        $(this).parent().addClass('active');
-        scrollTo($(this).parent());
+            $("#search-number")
+                .prop("disabled", false)
+                .attr('filter', 'houses');
+            $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
+            $('#filter-numbers')
+                .prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+            $('.street.active').removeClass('active');
+            $(this).parent().addClass('active');
+            scrollTo($(this).parent());
+        }
     });
     $('body').on('click', '.get_house_content', function(){
-        if($(this).siblings().is('.numbers'))
+        if($(this).siblings().is('.numbers')) {
             $(this).siblings('.numbers').remove();
-        else
+            $('#filter-numbers').find('.house a.close').click();
+        } else{
             $.get('get_house_content',{
                 id: $(this).parent().attr('house')
             },function(r){
                 init_content(r);
             });
-        $("#search-number")
-            .prop("disabled", false)
-            .attr('filter', 'flats');
-        $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
-        var street = $(this).closest('li.street');
-        $('#filter-numbers')
-            .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
-        $('#filter-numbers span.street')
-            .after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
-        $('.street.active, .house.active, .number.active').removeClass('active');
-        street.addClass('active');
-        $(this).parent().addClass('active');
-        scrollTo($(this).parent());
+            $("#search-number")
+                .prop("disabled", false)
+                .attr('filter', 'flats');
+            $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
+            var street = $(this).closest('li.street');
+            $('#filter-numbers')
+                .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
+            $('#filter-numbers span.street')
+                .after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+            $('.street.active, .house.active, .number.active').removeClass('active');
+            street.addClass('active');
+            $(this).parent().addClass('active');
+            scrollTo($(this).parent());
+        }
     });
     $('body').on('click', '.get_number_content', function(){
-        if($(this).siblings().is('.number-content'))
+        if($(this).siblings().is('.number-content')){
             $(this).siblings('.number-content').remove();
-        else
+            $('#filter-numbers').find('.flat a.close').click();
+        } else{
             $.get('get_number_content',{
                 id: $(this).parent().attr('number')
             },function(r){
                 init_content(r);
             });
-        $("#search-number")
-            .prop("disabled", true)
-            .attr('filter', 'flats');
-        $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
-        var street = $(this).closest('li.street');
-        $('#filter-numbers')
-            .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
-        var house = $(this).closest('li.house');
-        $('#filter-numbers span.street')
-            .after('<span class="label house" house-id="'+house.attr('house')+'">'+house.children('.get_house_content').text()+'<a class="close">&times;</a></span>');
-        $("#filter-numbers span.house")
-            .after('<span class="label flat" flat-id="'+$(this).parent().attr('number')+'">кв. '+$(this).text().split(' ')[1]+'<a class="close">&times;</a></span>');
-        $('.street.active, .house.active, .number.active').removeClass('active');
-        street.addClass('active');
-        house.addClass('active');
-        $(this).parent().addClass('active');
-        scrollTo($(this).parent());
+            $("#search-number")
+                .prop("disabled", true)
+                .attr('filter', 'flats');
+            $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
+            var street = $(this).closest('li.street');
+            $('#filter-numbers')
+                .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
+            var house = $(this).closest('li.house');
+            $('#filter-numbers span.street')
+                .after('<span class="label house" house-id="'+house.attr('house')+'">'+house.children('.get_house_content').text()+'<a class="close">&times;</a></span>');
+            $("#filter-numbers span.house")
+                .after('<span class="label flat" flat-id="'+$(this).parent().attr('number')+'">кв. '+$(this).text().split(' ')[1]+'<a class="close">&times;</a></span>');
+            $('.street.active, .house.active, .number.active').removeClass('active');
+            street.addClass('active');
+            house.addClass('active');
+            $(this).parent().addClass('active');
+            scrollTo($(this).parent());
+        }
     });
     $(document).on('click', '#filter-numbers span a.close', function(){
         switch(true){
