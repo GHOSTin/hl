@@ -3,11 +3,11 @@ class model_import{
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
-	public static function analize_import_numbers($fileArray){
+	public static function analize_import_numbers($file_array){
 		try{
-			if(!file_exists($fileArray['tmp_name']))
+			if(!file_exists($file_array['tmp_name']))
 				throw new e_model('Файла для обработки не существует.');
-			$xml = simplexml_load_file($fileArray['tmp_name']);
+			$xml = simplexml_load_file($file_array['tmp_name']);
 			if($xml === false)
 				throw new e_model('Ошибка в xml файле.');
 			if(count($xml->flat) < 1)
@@ -39,15 +39,16 @@ class model_import{
 				if(count($flat_node->number) > 0)
 					foreach($flat_node as $number_node){
 						$number_attr = $number_node->attributes();
-						$new_number = new data_number();
-						$new_number->fio = $number_attr->fio;
-						$new_number->number = $number_attr->number;
-						$numbers[] = $number;
-						$number_values[] = $new_number->number;
+						$number = new data_number();
+						$number->fio = (string) $number_attr->fio;
+						$number->number = (string) $number_attr->number;
+						if(isset($numbers[$number->number]))
+							throw new e_model('В xml файле повторются номера лицевых счетов.');
+						$numbers[$number->number]['new'] = $number;
+						$number_values[] = $number->number;
 						$number_params[] = ':number'.$i;
 						$i++;
 					}
-
 			if(empty($numbers))
 				throw new e_model('Нечего импортировать.');
 			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
@@ -69,12 +70,10 @@ class model_import{
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
 			$old_numbers = [];
 			while($number = $stm->fetch())
-				$old_numbers[] = $number;
+				$numbers[$number->number]['old'] = $number;
 			$stm->closeCursor();
-			var_dump($old_numbers);
-			exit();
-			return ['file' => $fileArray, 'house' => $house,
-					'numbers' => $numbers ];
+			return ['file' => $file_array, 'city' => $city, 'street' => $street, 'house' => $house,
+					'numbers' => $numbers];
 		}catch(exception $e){
 			die($e->getMessage());
 			if($e instanceof e_model)
