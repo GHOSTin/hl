@@ -5,13 +5,12 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
-<<<<<<< HEAD
     $('body').on('click', '.get_dialog_import_meters', function(){
         $.get('get_dialog_import_meters',{
             },function(r){
                 init_content(r);
             });
-=======
+    });
     $(document).on('click', '#toggle_checkboxes', function(){
         $('tbody input[type=checkbox]').prop('checked', ($(this).is(':checked')));
     });
@@ -28,6 +27,5 @@ $(document).ready(function(){
             }
         });
         $.post('load_numbers', {'numbers': data});
->>>>>>> d112b7f11347652f009cb42e1b9891647f01b32a
     });
 });

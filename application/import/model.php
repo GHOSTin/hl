@@ -82,4 +82,14 @@ class model_import{
 				return ['error' => 'Неизвестная ошибка.'];
 		}
 	}
+
+	public static function load_numbers($numbers, data_user $current_user){
+		if(empty($numbers))
+			throw new e_model('Нечего импортировать.');
+		foreach($numbers as $number_params){
+			$number = new data_number();
+		}
+		var_dump('sdfsdf');
+		exit();
+	}
 }

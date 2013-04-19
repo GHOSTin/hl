@@ -13,6 +13,14 @@ class controller_import{
         return true;
     }
 
+    public static function private_load_numbers(){
+        $numbers = $_POST['numbers'];
+        model_import::load_numbers($numbers, $_SESSION['user']);
+        exit();
+
+        return true;
+    }
+
     public static function private_import_numbers(){
         return model_import::analize_import_numbers($_FILES['file']);
     }
