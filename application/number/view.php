@@ -16,4 +16,8 @@ class view_number{
     public static function private_get_number_content($args){
         return load_template('number.private_get_number_content', $args);
     }
+
+    public static function private_get_meters($args){
+        return load_template('number.private_get_meters', $args);
+    }
 }

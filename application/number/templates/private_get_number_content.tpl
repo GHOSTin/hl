@@ -6,7 +6,7 @@
 <ul class="number-content nav nav-tabs nav-stacked">
     <li>
         <div>
-        <a>Счетчики</a>
+        <a class="get_meters">Счетчики</a>
         </div>
     </li>
     <li>

@@ -156,9 +156,16 @@ $(document).ready(function(){
             $('.nav-fixed').removeClass('nav-fixed');
         }
     });
+    $('body').on('click', '.get_meters', function(){
+        $.get('get_meters',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+    });
 });
-function get_query_id(obj){
-    return obj.closest('.query').attr('query_id');
+function get_number_id(obj){
+    return obj.closest('.number').attr('number');
 }
 
 function scrollTo(el){

@@ -21,6 +21,12 @@ class controller_number{
                 'house' => $house];
     }
 
+    public static function private_get_meters(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return ['number' => model_number::get_number($number)];
+    }
+
     public static function private_get_number_content(){
         $number = new data_number();
         $number->id = $_GET['id'];
