@@ -174,7 +174,17 @@ $(document).ready(function(){
                 },function(r){
                     init_content(r);
                 });
-    });    
+    });
+    $('body').on('click', '.get_dialog_edit_meter_data', function(){
+        $.get('get_dialog_edit_meter_data',{
+            id: get_number_id($(this)),
+            meter_id: $(this).closest('.meter').attr('meter'),
+            serial: $(this).closest('.meter').attr('serial'),
+            time: $(this).parent().parent().attr('time')
+            },function(r){
+                init_content(r);
+            });
+    }); 
 });
 function get_number_id(obj){
     return obj.closest('.number').attr('number');

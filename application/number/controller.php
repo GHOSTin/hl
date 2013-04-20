@@ -40,8 +40,12 @@ class controller_number{
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
-        return [ 'meter' => $meter,
-                'number' => $number,
+        $time = time();
+        return [ 'meter' => $meter, 'number' => $number, 'time' => $time, 
                 'meter_data' =>model_number::get_meter_data($meter, $number, $_SESSION['user'], time())];
+    }
+
+    public static function private_get_dialog_edit_meter_data(){
+        return true;
     }
 }
