@@ -24,12 +24,24 @@ class controller_number{
     public static function private_get_meters(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        return ['number' => model_number::get_number($number)];
+        return ['number' => model_number::get_number($number),
+                'meters' => model_number::get_meters($number, $_SESSION['user'])];
     }
 
     public static function private_get_number_content(){
         $number = new data_number();
         $number->id = $_GET['id'];
         return model_number::get_number($number);
+    }
+
+    public static function private_get_meter_data(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $meter = new data_meter();
+        $meter->id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        return [ 'meter' => $meter,
+                'number' => $number,
+                'meter_data' =>model_number::get_meter_data($meter, $number, $_SESSION['user'], time())];
     }
 }

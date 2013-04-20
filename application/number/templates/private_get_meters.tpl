@@ -10,6 +10,10 @@
         </div>
     </li>
     <li>
-        Нет счетчиков
+        <ul style="padding:20px">
+        {% for meter in component.meters %}
+            <li class="meter" meter="{{ meter.id }}" serial="{{ meter.serial }}"><p class="get_meter_data">{{ meter.service }} {{ meter.name }} №{{ meter.serial }}</p></li>
+        {% endfor %}
+        </ul>
     </li>
 {% endblock html %}

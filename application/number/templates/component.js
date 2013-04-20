@@ -163,6 +163,18 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.get_meter_data', function(){
+        if($(this).siblings().is('.meter-data'))
+            $(this).siblings('.meter-data').remove();
+        else
+            $.get('get_meter_data',{
+                id: get_number_id($(this)),
+                meter_id: $(this).parent().attr('meter'),
+                serial: $(this).parent().attr('serial')
+                },function(r){
+                    init_content(r);
+                });
+    });    
 });
 function get_number_id(obj){
     return obj.closest('.number').attr('number');
