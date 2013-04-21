@@ -4,7 +4,7 @@
     <div class="navbar span12">
         <div class="navbar-inner">
             <form class="navbar-search pull-left" id="filter-numbers">
-                <input type="text" id="search-number" filter="streets">
+                <input type="text" id="search-number" filter="streets" autocomplete="off">
             </form>
         </div>
     </div>
