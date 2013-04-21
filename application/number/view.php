@@ -17,6 +17,10 @@ class view_number{
         return load_template('number.private_get_number_content', $args);
     }
 
+    public static function private_get_number_information($args){
+        return load_template('number.private_get_number_information', $args);
+    }
+
     public static function private_get_meters($args){
         return load_template('number.private_get_meters', $args);
     }

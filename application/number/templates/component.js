@@ -163,6 +163,13 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.get_number_information', function(){
+        $.get('get_number_information',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+    });    
     $('body').on('click', '.get_meter_data', function(){
         if($(this).siblings().is('.meter-data'))
             $(this).siblings('.meter-data').remove();
@@ -184,7 +191,7 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-    }); 
+    });
 });
 function get_number_id(obj){
     return obj.closest('.number').attr('number');

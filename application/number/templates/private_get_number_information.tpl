@@ -1,9 +1,8 @@
 {% extends "ajax.tpl" %}
 {% block js %}
-    $('.number[number = {{component.id}}]').append(get_hidden_content())
+    $('.number[number = {{component.id}}] .number-content').html(get_hidden_content())
 {% endblock js %}
 {% block html %}
-<ul class="number-content nav nav-tabs nav-stacked">
     <li>
         <div>
             <ul class="nav nav-pills">
@@ -26,5 +25,4 @@
             <dd>{{ component.cellphone }}</dd>
         </dl>
     </li>
-</ul>
 {% endblock html %}

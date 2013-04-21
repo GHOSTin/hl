@@ -5,9 +5,12 @@
 {% endblock js %}
 {% block html %}
     <li>
-        <div>
-        <a class="get_meters">Счетчики</a>
-        </div>
+        <ul class="nav nav-pills">
+            <li>
+                <a class="get_number_information">Информация о счете</a>
+            </li>
+            <li class="active"><a class="get_meters">Счетчики</a></li>
+        </ul>
     </li>
     <li>
         <ul style="padding:20px">

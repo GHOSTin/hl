@@ -34,6 +34,12 @@ class controller_number{
         return model_number::get_number($number);
     }
 
+    public static function private_get_number_information(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return model_number::get_number($number);
+    }
+
     public static function private_get_meter_data(){
         $number = new data_number();
         $number->id = $_GET['id'];
