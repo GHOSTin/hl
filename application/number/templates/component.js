@@ -1,8 +1,33 @@
 $(document).ready(function(){
+    var remove_badges = function(level){
+        switch(level){
+            case 'street':
+                $("#search-number")
+                    .prop("disabled", false)
+                    .attr('filter', 'streets');
+                $('.street.active, .house.active, .number.active').removeClass('active');
+                $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
+                break;
+            case 'house':
+                $("#search-number")
+                    .prop("disabled", false)
+                    .attr('filter', 'houses');
+                $('.house.active, .number.active').removeClass('active');
+                $('#filter-numbers span.house,#filter-numbers span.flat').remove();
+                break;
+            case 'flat':
+                $("#search-number")
+                    .prop("disabled", false)
+                    .attr('filter', 'flats');
+                $('.number.active').removeClass('active');
+                $('#filter-numbers span.flat').remove();
+                break;
+        }
+    };
     $('body').on('click', '.get_street_content', function(){
         if($(this).siblings().is('.houses')){
             $(this).siblings('.houses').remove();
-            $('#filter-numbers').find('.street a.close').click();
+            remove_badges('street');
         } else{
             $.get('get_street_content',{
                  id: $(this).parent().attr('street')
@@ -23,7 +48,7 @@ $(document).ready(function(){
     $('body').on('click', '.get_house_content', function(){
         if($(this).siblings().is('.numbers')) {
             $(this).siblings('.numbers').remove();
-            $('#filter-numbers').find('.house a.close').click();
+            remove_badges('house');
         } else{
             $.get('get_house_content',{
                 id: $(this).parent().attr('house')
@@ -48,7 +73,7 @@ $(document).ready(function(){
     $('body').on('click', '.get_number_content', function(){
         if($(this).siblings().is('.number-content')){
             $(this).siblings('.number-content').remove();
-            $('#filter-numbers').find('.flat a.close').click();
+            remove_badges('flat');
         } else{
             $.get('get_number_content',{
                 id: $(this).parent().attr('number')
@@ -77,27 +102,15 @@ $(document).ready(function(){
     $(document).on('click', '#filter-numbers span a.close', function(){
         switch(true){
             case $(this).closest('.label').hasClass('street'):
-                $("#search-number")
-                    .prop("disabled", false)
-                    .attr('filter', 'streets');
-                $('.street.active, .house.active, .number.active').removeClass('active');
-                $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
+                remove_badges('street');
                 scrollTo($('body'));
                 break;
             case $(this).closest('.label').hasClass('house'):
-                $("#search-number")
-                    .prop("disabled", false)
-                    .attr('filter', 'houses');
-                $('.house.active, .number.active').removeClass('active');
-                $('#filter-numbers span.house,#filter-numbers span.flat').remove();
+                remove_badges('house');
                 scrollTo($('ul.streets > li.street.active'));
                 break;
             case $(this).closest('.label').hasClass('flat'):
-                $("#search-number")
-                    .prop("disabled", false)
-                    .attr('filter', 'flats');
-                $('.number.active').removeClass('active');
-                $('#filter-numbers span.flat').remove();
+                remove_badges('flat');
                 scrollTo($('ul.houses > li.house.active'));
                 break;
         }
