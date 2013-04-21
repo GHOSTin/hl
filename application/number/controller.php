@@ -60,4 +60,11 @@ class controller_number{
     public static function private_get_dialog_edit_meter_data(){
         return true;
     }
+
+    public static function private_update_number(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->number = $_GET['number'];
+        return model_number::update_number($number, $_SESSION['user']);
+    }
 }

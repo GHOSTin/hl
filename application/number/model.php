@@ -165,5 +165,64 @@ class model_number{
 			$result[$data['time']] = $data['value'];
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
+	/**
+	* Обнавляет номер лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number(data_number $number_params, data_user $current_user){
+		if(empty($number_params->id))
+			throw new e_model('Идентификатор задан не верно.');
+		$number = model_number::get_number($number_params);
+		if(!($number instanceof data_number))
+			throw new e_model('Неверно выбран лицевой счет.');
+		if(empty($number_params->number))
+			throw new e_model('Номер лицевого задан не верно.');
+		$number->number = $number_params->number;
+		try{
+			db::get_handler()->beginTransaction();
+			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
+						`numbers`.`city_id`, `numbers`.`house_id`, 
+						`numbers`.`flat_id`, `numbers`.`number`,
+						`numbers`.`type`, `numbers`.`status`,
+						`numbers`.`fio`, `numbers`.`telephone`,
+						`numbers`.`cellphone`, `numbers`.`password`,
+						`numbers`.`contact-fio` as `contact_fio`,
+						`numbers`.`contact-telephone` as `contact_telephone`,
+						`numbers`.`contact-cellphone` as `contact_cellphone`
+					FROM `numbers` WHERE `numbers`.`company_id` = :company_id
+					AND `numbers`.`id` = :number_id
+					AND `numbers`.`number` = :number
+					AND `numbers`.`city_id` = :city_id";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':number_id', $number->id, PDO::PARAM_INT);
+			$stm->bindValue(':number', $number->number, PDO::PARAM_STR);
+			$stm->bindValue(':city_id', $number->city_id, PDO::PARAM_INT);
+			if($stm->execute() == false)
+				throw new e_model('Проблема при запросе лицевого счета.');
+			if($stm->rowCount() > 0)
+				throw new e_model('Счет с таким лицевым уже существует в системе.');
+			$stm->closeCursor();
+			$sql = "UPDATE `numbers` SET `number` = :number 
+					WHERE `company_id` = :company_id
+					AND `city_id` = :city_id
+					AND `id` = :number_id";
+			$stm = db::get_handler()->prepare($sql);
+			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$stm->bindValue(':number_id', $number->id, PDO::PARAM_INT);
+			$stm->bindValue(':number', $number->number, PDO::PARAM_STR);
+			$stm->bindValue(':city_id', $number->city_id, PDO::PARAM_INT);
+			if($stm->execute() == false)
+				throw new e_model('Проблема при запросе лицевого счета.');
+			db::get_handler()->commit();
+			return $number;
+		}catch(exception $e){
+			db::get_handler()->rollBack();
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
 }
