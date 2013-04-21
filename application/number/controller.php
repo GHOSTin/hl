@@ -58,7 +58,17 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_meter_data(){
-        return true;
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $meter = new data_meter();
+        $meter->id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        $time = $_GET['time'];
+        $time = explode('.', $time);
+        if(count($time) !== 2)
+            throw new e_model('Время задано не верно.');
+        return ['number' => $number, 'meter' => $meter,
+                'time' => mktime(12, 0, 0, $time[0], 1, $time[1])];
     }
 
     public static function private_update_number(){
@@ -66,5 +76,7 @@ class controller_number{
         $number->id = $_GET['id'];
         $number->number = $_GET['number'];
         return model_number::update_number($number, $_SESSION['user']);
+    }
+    public static function private_update_meter_data(){
     }
 }
