@@ -13,7 +13,7 @@
         <dt>Владелец:</dt>
         <dd>{{ component.fio }}</dd>
         <dt>Лицевой счет:</dt>
-        <dd>{{ component.number }}</dd>
+        <dd>{{ component.number }} <a class="get_dialog_edit_number">изменить</a></dd>
         <dt>Телефон:</dt>
         <dd>{{ component.telephone }}</dd>
         <dt>Сотовый телефон:</dt>

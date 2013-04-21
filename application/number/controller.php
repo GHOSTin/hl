@@ -51,6 +51,12 @@ class controller_number{
                 'meter_data' =>model_number::get_meter_data($meter, $number, $_SESSION['user'], time())];
     }
 
+    public static function private_get_dialog_edit_number(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return model_number::get_number($number);
+    }
+
     public static function private_get_dialog_edit_meter_data(){
         return true;
     }

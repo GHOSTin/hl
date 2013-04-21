@@ -192,6 +192,13 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.get_dialog_edit_number', function(){
+        $.get('get_dialog_edit_number',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+    });
 });
 function get_number_id(obj){
     return obj.closest('.number').attr('number');
