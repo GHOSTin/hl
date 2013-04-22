@@ -43,6 +43,18 @@
     border: none;
 }
 
+.number-content{
+    padding: 0px 0px 0px 40px;
+}
+
+.table th, .table td {
+    vertical-align: middle;
+}
+
+.table th > input, .table td > input{
+    margin: 0;
+}
+
 @media (max-width: 979px) {
     .nav-fixed {
         position: static;
@@ -53,7 +65,4 @@
     .nav-fixed + .streets {
         padding-top: 0;
     }
-}
-.number-content{
-    padding: 0px 0px 0px 40px;
 }

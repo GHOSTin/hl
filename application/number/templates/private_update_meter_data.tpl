@@ -6,7 +6,7 @@
 {% endblock js %}
 {% block html %}
     <div>{{months[component.time|date("m") - 1]}}</div>
-    <div><input type="text" style="width:100px" value="{{ component.meter_data[0] }}" class="tarif1"></div>
-    <div><input type="text" style="width:100px" value="{{ component.meter_data[1] }}" class="tarif2"></div>
+    <div><input type="text" value="{{ component.meter_data[0] }}" class="tarif1 input-small"></div>
+    <div><input type="text" value="{{ component.meter_data[1] }}" class="tarif2 input-small"></div>
     <div><a class="get_dialog_edit_meter_data">изменить</a></div>
 {% endblock html %}

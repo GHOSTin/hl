@@ -9,14 +9,14 @@
 {% block html %}
 <div class="meter-data">
     <h3>{{ component.time|date('Y')}}</h3>
-    <table>
+    <table class="table table-condensed span12">
     {% for i in 0..11 %}
         {% set data = component.meter_data[date|date("U")] %}
         <tr class="month" time="{{ date|date("U") }}">
             <td>{{ months[i] }}</td>
-            <td><input type="text" style="width:100px" value="{{ data[0] }}" class="tarif1"></td>
-            <td><input type="text" style="width:100px"  value="{{ data[1] }}" class="tarif2"></td>
-            <td><a class="get_dialog_edit_meter_data">изменить</a></td>
+            <td><input type="text" value="{{ data[0] }}" class="tarif1 input-small"></td>
+            <td><input type="text" value="{{ data[1] }}" class="tarif2 input-small"></td>
+            <td><a class="btn get_dialog_edit_meter_data">изменить</a></td>
         </tr>
         {% set date = date|date_modify("+1 month") %}
     {% endfor %}
