@@ -41,6 +41,7 @@ class view_number{
         return load_template('number.private_update_number', $args);
     }
 
-    public static function private_update_meter_data(){
+    public static function private_update_meter_data($args){
+        return load_template('number.private_update_meter_data', $args);
     }
 }

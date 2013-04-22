@@ -239,10 +239,13 @@ class model_number{
 				throw new e_model('Проблема при при выборки данных счетчика.');
 			$stm->closeCursor();
 			db::get_handler()->commit();
-			return $result;
+			return $tarif;
 		}catch(exception $e){
-
-			die($e->getMessage());
+			db::get_handler()->rollBack();
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
 		}
 	}
 	/**
