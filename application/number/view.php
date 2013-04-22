@@ -40,7 +40,7 @@ class view_number{
     public static function private_update_number($args){
         return load_template('number.private_update_number', $args);
     }
-    
+
     public static function private_update_meter_data(){
     }
 }

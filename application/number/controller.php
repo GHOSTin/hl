@@ -46,9 +46,9 @@ class controller_number{
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
-        $time = time();
-        return [ 'meter' => $meter, 'number' => $number, 'time' => $time, 
-                'meter_data' =>model_number::get_meter_data($meter, $number, $_SESSION['user'], time())];
+        $time = getdate();
+        return [ 'meter' => $meter, 'number' => $number, 'time' => mktime(12, 0, 0, 1, 1, $time['year']), 
+                'meter_data' =>model_number::get_meter_data($meter, $number, $_SESSION['user'], mktime(12, 0, 0, 1, 1, $time['year']))];
     }
 
     public static function private_get_dialog_edit_number(){
@@ -64,11 +64,8 @@ class controller_number{
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
         $time = $_GET['time'];
-        $time = explode('.', $time);
-        if(count($time) !== 2)
-            throw new e_model('Время задано не верно.');
         return ['number' => $number, 'meter' => $meter,
-                'time' => mktime(12, 0, 0, $time[0], 1, $time[1])];
+                'time' => $_GET['time']];
     }
 
     public static function private_update_number(){
@@ -78,5 +75,12 @@ class controller_number{
         return model_number::update_number($number, $_SESSION['user']);
     }
     public static function private_update_meter_data(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $meter = new data_meter();
+        $meter->id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        var_dump(model_number::update_meter_data($meter, $number, $_SESSION['user'], time()));
+        exit();
     }
 }

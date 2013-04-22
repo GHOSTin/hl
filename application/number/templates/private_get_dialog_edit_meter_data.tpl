@@ -1,4 +1,6 @@
 {% extends "ajax.tpl" %}
+{% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
+    'сентябрь', 'октябрь', 'ноябрь', 'декабрь'] %}
 {% block js %}
     show_dialog(get_hidden_content());
     $('.update_meter_data').click(function(){
@@ -7,6 +9,7 @@
             meter_id: {{ component.meter.id }},
             serial: {{ component.meter.serial }},
             number: $('.dialog-number').val(),
+            time: {{ component.time }},
             tarif1: $('.dialog-tarif1').val(),
             tarif2: $('.dialog-tarif2').val()
             },function(r){
@@ -18,7 +21,7 @@
 {% block html %}
 <div class="modal">
     <div class="modal-header">
-        <h3>Данный счетчика за месяц</h3>
+        <h3>Данный счетчика за {{ months[component.time|date("m") - 1] }} {{ component.time|date("Y") }}</h3>
     </div>  
     <div class="modal-body">
         1 тариф <input type="text" style="width:50px" class="dialog-tarif1"> 2тариф <input type="text" style="width:50px" class="dialog-tarif2">

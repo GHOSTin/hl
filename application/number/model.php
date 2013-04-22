@@ -166,6 +166,44 @@ class model_number{
 		$stm->closeCursor();
 		return $result;
 	}
+	/*
+	* Возвращает данные счетчика
+	*/
+	public static function update_meter_data(data_meter $meter, data_number $number, data_user $current_user, $time){
+		if(empty($meter->id))
+			throw new e_model('Идентификатор счетчика задан не верно.');
+		if(empty($meter->serial))
+			throw new e_model('Серийный номер счетчика задан не верно.');
+		if(empty($number->id))
+			throw new e_model('Идентификатор лицевого счета задан не верно.');
+		if(empty($current_user->company_id))
+			throw new e_model('Идентификатор компании задан не верно.');
+		if(empty($time))
+			throw new e_model('Время выборки задано не верно.');
+		$time = getdate($time);
+		$sql = "SELECT `time`, `value` FROM `meter2data`
+		WHERE `meter2data`.`company_id` = :company_id
+		AND `meter2data`.`number_id` = :number_id
+		AND `meter2data`.`meter_id` = :meter_id
+		AND `meter2data`.`serial` = :serial
+		AND `meter2data`.`time` >= :time_begin
+		AND `meter2data`.`time` <= :time_end";
+		exit();
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindParam(':meter_id', $meter->id, PDO::PARAM_INT);
+		$stm->bindParam(':serial', $meter->serial, PDO::PARAM_INT);
+		$stm->bindParam(':number_id', $number->id, PDO::PARAM_INT);
+		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$stm->bindParam(':time_begin', mktime(0, 0, 0, 1, 1, $time['Y']), PDO::PARAM_INT);
+		$stm->bindParam(':time_end', mktime(23, 59, 59, 12, 31, $time['Y']), PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Проблема при при выборки данных счетчика.');
+		$result = [];
+		while($data = $stm->fetch())
+			$result[$data['time']] = $data['value'];
+		$stm->closeCursor();
+		return $result;
+	}
 	/**
 	* Обнавляет номер лицевого счета
 	* @return object data_number
