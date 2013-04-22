@@ -80,7 +80,7 @@ class controller_number{
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
-        var_dump(model_number::update_meter_data($meter, $number, $_SESSION['user'], time()));
+        var_dump(model_number::update_meter_data($meter, $number, $_SESSION['user'], $_GET['time'], $_GET['tarif']));
         exit();
     }
 }
