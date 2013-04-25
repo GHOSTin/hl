@@ -109,7 +109,7 @@ class model_import{
 			$number = new data_number();
 			$number->number = $number_data['number'];
 			$number->fio = $number_data['fio'];
-			$numbers = model_number::get_numbers($number, $_SESSION['user']);
+			$numbers = model_city::get_numbers($city, $number, $_SESSION['user']);
 			if(count($numbers) > 1)
 				throw new e_model('Возвращается больше чем один лицевой счет.');
 			// лицевой счет существует нужно апдейтить
@@ -121,7 +121,5 @@ class model_import{
 			else
 			exit();
 		}
-		var_dump('sdfsdf');
-		exit();
 	}
 }

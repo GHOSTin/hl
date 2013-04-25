@@ -78,5 +78,49 @@ class model_city{
 			$result[] = $street;
 		$stm->closeCursor();
 		return $result;
-	}	
+	}
+	/*
+	* Возвращает список улиц города
+	*/
+	public static function get_numbers(data_city $city_params,
+		data_number $number_params, data_user $current_user){
+		if(empty($city_params->id))
+			throw new e_model('id города задан не верно.');
+		if(empty($number_params->number))
+			throw new e_model('Идентификатор лицевого счета задан не верно.');
+		if(empty($current_user->id))
+			throw new e_model('Идентификатор пользователя задан не верно.');
+		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
+				`numbers`.`city_id`, `numbers`.`house_id`, 
+				`numbers`.`flat_id`, `numbers`.`number`,
+				`numbers`.`type`, `numbers`.`status`,
+				`numbers`.`fio`, `numbers`.`telephone`,
+				`numbers`.`cellphone`, `numbers`.`password`,
+				`numbers`.`contact-fio` as `contact_fio`,
+				`numbers`.`contact-telephone` as `contact_telephone`,
+				`numbers`.`contact-cellphone` as `contact_cellphone`,
+				`flats`.`flatnumber` as `flat_number`,
+				`houses`.`housenumber` as `house_number`,
+				`houses`.`department_id`,
+				`streets`.`name` as `street_name`
+			FROM `numbers`, `flats`, `houses`, `streets`
+			WHERE `numbers`.`company_id` = :company_id
+			AND `numbers`.`number` = :number
+			AND `numbers`.`city_id` = :city_id
+			AND `numbers`.`flat_id` = `flats`.`id`
+			AND `numbers`.`house_id` = `houses`.`id`
+			AND `houses`.`street_id` = `streets`.`id`";
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':city_id', $city_params->id, PDO::PARAM_INT);
+		$stm->bindValue(':number', $number_params->number, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Проблема при выборке лицевых счетов.');
+		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
+		$result = [];
+		while($number = $stm->fetch())
+			$result[] = $number;
+		$stm->closeCursor();
+		return $result;
+	}
 }
