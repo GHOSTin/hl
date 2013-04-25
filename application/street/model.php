@@ -44,8 +44,7 @@ class model_street{
 	*/
 	public static function get_streets(data_street $street_params){
 		if(!empty($street_params->department_id)){
-			$sql = "SELECT DISTINCT`streets`.`id`, `streets`.`company_id`,
-					`streets`.`city_id`, `streets`.`status`, `streets`.`name`
+			$sql = "SELECT DISTINCT`streets`.`id`, `streets`.`company_id`, `streets`.`city_id`, `streets`.`status`, `streets`.`name`
 					FROM `streets`, `houses`
 					WHERE `houses`.`street_id` = `streets`.`id`
 					AND `houses`.`department_id` IN(";
@@ -61,6 +60,9 @@ class model_street{
 				$sql .= ':department_id0';
 
 			$sql .= ") ORDER BY `streets`.`name`";
+		}elseif(!empty($street_params->id)){
+			$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
+					FROM `streets` WHERE `id` = :id";
 		}else
 			$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
 					FROM `streets` ORDER BY `name`";
@@ -71,6 +73,8 @@ class model_street{
 					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
 			else
 				$stm->bindValue(':department_id0', $street_params->department_id, PDO::PARAM_INT);
+		elseif(!empty($street_params->id))
+			$stm->bindValue(':id', $street_params->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Проблема при выборке улиц из базы данных.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_street');
@@ -104,8 +108,10 @@ class model_street{
 				$sql .= ':department_id0';
 			$sql .= ")";
 		}
-		if($house_params instanceof data_house AND !empty($house_params->number))
+		if(!empty($house_params->number))
 			$sql .= ' AND `housenumber` = :number';
+		if(!empty($house_params->id))
+			$sql .= ' AND `id` = :house_id';
 		$sql .= " ORDER BY (`housenumber` + 0)";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindParam(':street_id', $street_params->id, PDO::PARAM_INT);
@@ -115,8 +121,10 @@ class model_street{
 					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
 			else
 				$stm->bindValue(':department_id0', $street_params->department_id, PDO::PARAM_INT);
-		if($house_params instanceof data_house AND !empty($house_params->number))
+		if(!empty($house_params->number))
 			$stm->bindValue(':number', $house_params->number, PDO::PARAM_STR);
+		if(!empty($house_params->id))
+			$stm->bindValue(':house_id', $house_params->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Проблема при выборке домов из базы данных.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
