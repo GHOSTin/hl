@@ -79,7 +79,9 @@ class controller_query{
 		$query->contact_fio = htmlspecialchars($_GET['fio']);
 		$query->contact_telephone = htmlspecialchars($_GET['telephone']);
 		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
-		$queries[] = model_query::create_query($query, $initiator, $_SESSION['user']);
+		$query_work_type = new data_query_work_type();
+		$query_work_type->id = $_GET['work_type'];
+		$queries[] = model_query::create_query($query, $initiator, $query_work_type, $_SESSION['user']);
 		return ['queries' => $queries];
 	}
 

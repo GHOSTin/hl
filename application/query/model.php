@@ -56,7 +56,6 @@ class model_query{
 		$query->payment_status = 'unpaid';
 		$query->warning_status = 'normal';
 		$query->department_id = $initiator->department_id;
-		$query->worktype_id = 1;
 		$query->time_open = $query->time_work = $time;
 		$sql = "INSERT INTO `queries` (
 					`id`, `company_id`, `status`, `initiator-type`,
@@ -232,7 +231,8 @@ class model_query{
 	* Создает новую заявку.
 	* @retrun array из data_query
 	*/
-	public static function create_query(data_query $query, $initiator, data_user $current_user){
+	public static function create_query(data_query $query, $initiator, 
+		data_query_work_type $query_work_type_params, data_user $current_user){
 		try{
 			db::get_handler()->beginTransaction();
 			if(empty($query->description))
@@ -249,7 +249,11 @@ class model_query{
 			}else{
 				$query->initiator = 'number';
 				$query->house_id = $initiator->house_id;
-			}	
+			}
+			$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, $current_user)[0];
+			if(!($query_work_type instanceof data_query_work_type))
+				throw new e_model('Тип работ заявки задан не верно.');
+			$query->worktype_id = $query_work_type->id;
 			if(!is_int($query->id = self::get_insert_id($current_user)))
 				throw new e_model('Не был получени query_id для вставки.');
 			$time = time();
@@ -266,8 +270,10 @@ class model_query{
 			return $query;
 		}catch(exception $e){
 			db::get_handler()->rollBack();
-			return false;
-			throw new e_model('Ошибка при создании заявки.');
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка при создании заявки.');
 		}
 	}
 	/*
