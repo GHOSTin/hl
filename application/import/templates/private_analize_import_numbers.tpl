@@ -7,7 +7,9 @@
     {{ component.error }}
 {% else %}
     <h5>Файл "{{ component.file.name }}"<br>
-        {{ component.city.name }}, {{ component.street.name }}, дом №{{ component.house.number }}
+        <span class="dialog-city_id" city_id="{{ component.city.id }}">{{ component.city.name }}</span>,
+        <span class="dialog-street_id" street_id="{{ component.street.id }}">{{ component.street.name }}</span>,
+        <span class="dialog-house_id" house_id="{{ component.house.id }}">дом №{{ component.house.number }}</span>
     </h5>
     <div>
         <table class="table table-striped">

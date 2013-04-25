@@ -83,11 +83,34 @@ class model_import{
 		}
 	}
 
-	public static function load_numbers($numbers, data_user $current_user){
+	public static function load_numbers(data_city $city_params, data_street $street_params,
+		data_house $house_params, $numbers, data_user $current_user){
 		if(empty($numbers))
 			throw new e_model('Нечего импортировать.');
-		foreach($numbers as $number_params){
+		$cities = model_city::get_cities($city_params);
+		if(count($cities) !== 1)
+			throw new e_model('Возвращено неверное количество городов.');
+		$city = $cities[0];
+		if(!($city instanceof data_city))
+			throw new e_model('Проблема при запросе города.');
+		$streets = model_street::get_streets($street_params);
+		var_dump($streets);
+		exit();
+		foreach($numbers as $number_data){
 			$number = new data_number();
+			$number->number = $number_data['number'];
+			$number->fio = $number_data['fio'];
+			$numbers = model_number::get_numbers($number, $_SESSION['user']);
+			if(count($numbers) > 1)
+				throw new e_model('Возвращается больше чем один лицевой счет.');
+			// лицевой счет существует нужно апдейтить
+			if(count($numbers) === 1)
+				$number = $numbers[0];
+				if(!($number instanceof data_number))
+					throw new e_model('Лицевой счет не найден.');
+			// лицевой счет отсутствует, нужно создавать
+			else
+			exit();
 		}
 		var_dump('sdfsdf');
 		exit();

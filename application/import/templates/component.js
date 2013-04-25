@@ -19,13 +19,18 @@ $(document).ready(function(){
         $('table.table > tbody > tr').each(function(){
             if($(this).find('td:first-child input[type=checkbox]').is(':checked')){
                 data.push({
-                    'ls': $(this).find('td:nth-child(3)').text().replace('л/c №', '')
+                    'number': $(this).find('td:nth-child(3)').text().replace('л/c №', '')
                     ,'fio': ($(this).find('td:nth-child(4) select').length)?
                                 $(this).find('td:nth-child(4) select').val():
                                 $(this).find('td:nth-child(4)').text()
                 });
             }
         });
-        $.post('load_numbers', {'numbers': data});
+        $.post('load_numbers', {
+            'city_id': $('.dialog-city_id').attr('city_id'),
+            'street_id': $('.dialog-street_id').attr('street_id'),
+            'house_id': $('.dialog-house_id').attr('house_id'),
+            'numbers': data
+        });
     });
 });

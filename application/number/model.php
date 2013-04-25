@@ -4,7 +4,8 @@ class model_number{
 	* Создает новый лицевой ссчет уникальный для компании и для города.
 	* @return object data_number
 	*/
-	public static function create_number(data_city $city, data_flat $flat, data_number $number, data_user $current_user){
+	public static function create_number(data_city $city, data_flat $flat,
+		data_number $number, data_user $current_user){
 		if(empty($number->number) OR empty($number->fio) OR empty($number->status))
 			throw new e_model('number, fio, status заданы не правильно.');
 		$number->company_id = $current_user->company_id;
@@ -96,10 +97,73 @@ class model_number{
 		$stm->closeCursor();
 		return $number;
 	}
+	/**
+	* Возвращает список лицевых счетов.
+	* @return array object data_number
+	*/
+	public static function get_numbers(data_number $number, data_user $current_user){
+		if(!empty($number->id))
+			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
+						`numbers`.`city_id`, `numbers`.`house_id`, 
+						`numbers`.`flat_id`, `numbers`.`number`,
+						`numbers`.`type`, `numbers`.`status`,
+						`numbers`.`fio`, `numbers`.`telephone`,
+						`numbers`.`cellphone`, `numbers`.`password`,
+						`numbers`.`contact-fio` as `contact_fio`,
+						`numbers`.`contact-telephone` as `contact_telephone`,
+						`numbers`.`contact-cellphone` as `contact_cellphone`,
+						`flats`.`flatnumber` as `flat_number`,
+						`houses`.`housenumber` as `house_number`,
+						`houses`.`department_id`,
+						`streets`.`name` as `street_name`
+					FROM `numbers`, `flats`, `houses`, `streets`
+					WHERE `numbers`.`company_id` = :company_id
+					AND `numbers`.`id` = :number_id
+					AND `numbers`.`flat_id` = `flats`.`id`
+					AND `numbers`.`house_id` = `houses`.`id`
+					AND `houses`.`street_id` = `streets`.`id`";
+		elseif(!empty($number->number))
+			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
+						`numbers`.`city_id`, `numbers`.`house_id`, 
+						`numbers`.`flat_id`, `numbers`.`number`,
+						`numbers`.`type`, `numbers`.`status`,
+						`numbers`.`fio`, `numbers`.`telephone`,
+						`numbers`.`cellphone`, `numbers`.`password`,
+						`numbers`.`contact-fio` as `contact_fio`,
+						`numbers`.`contact-telephone` as `contact_telephone`,
+						`numbers`.`contact-cellphone` as `contact_cellphone`,
+						`flats`.`flatnumber` as `flat_number`,
+						`houses`.`housenumber` as `house_number`,
+						`houses`.`department_id`,
+						`streets`.`name` as `street_name`
+					FROM `numbers`, `flats`, `houses`, `streets`
+					WHERE `numbers`.`company_id` = :company_id
+					AND `numbers`.`number` = :number
+					AND `numbers`.`flat_id` = `flats`.`id`
+					AND `numbers`.`house_id` = `houses`.`id`
+					AND `houses`.`street_id` = `streets`.`id`";
+		else
+			throw new e_model('Не заданы нужные параметры.');
+		$stm = db::get_handler()->prepare($sql);
+		if(!empty($number->id))
+			$stm->bindParam(':number_id', $number->id, PDO::PARAM_INT);
+		else
+			$stm->bindParam(':number', $number->number, PDO::PARAM_INT);
+		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		if($stm->execute() == false)
+			throw new e_model('Проблема при запросе лицевых счетов.');
+		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
+		$result = [];
+		while($number = $stm->fetch())
+			$result[] = $number;
+		$stm->closeCursor();
+		return $result;
+	}	
 	/*
 	* Возвращает список счетчиков лицевого счета
 	*/
-	public static function get_meters(data_number $number_params, data_user $current_user, data_meter $meter_params = null){
+	public static function get_meters(data_number $number_params,
+		data_user $current_user, data_meter $meter_params = null){
 		if(empty($number_params->id))
 			throw new e_model('Идентификатор лицевого счета задан не верно.');
 		if(empty($current_user->company_id))
@@ -139,7 +203,8 @@ class model_number{
 	/*
 	* Возвращает данные счетчика
 	*/
-	public static function get_meter_data(data_meter $meter, data_number $number, data_user $current_user, $time){
+	public static function get_meter_data(data_meter $meter,
+		data_number $number, data_user $current_user, $time){
 		if(empty($meter->id))
 			throw new e_model('Идентификатор счетчика задан не верно.');
 		if(empty($meter->serial))
@@ -176,7 +241,8 @@ class model_number{
 	/*
 	* Возвращает данные счетчика
 	*/
-	public static function update_meter_data(data_meter $meter, data_number $number, data_user $current_user, $time, $tarif){
+	public static function update_meter_data(data_meter $meter,
+		data_number $number, data_user $current_user, $time, $tarif){
 		try{
 			db::get_handler()->beginTransaction();
 			if(empty($meter->id))

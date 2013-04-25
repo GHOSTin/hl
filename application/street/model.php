@@ -44,7 +44,8 @@ class model_street{
 	*/
 	public static function get_streets(data_street $street_params){
 		if(!empty($street_params->department_id)){
-			$sql = "SELECT DISTINCT`streets`.`id`, `streets`.`company_id`, `streets`.`city_id`, `streets`.`status`, `streets`.`name`
+			$sql = "SELECT DISTINCT`streets`.`id`, `streets`.`company_id`,
+					`streets`.`city_id`, `streets`.`status`, `streets`.`name`
 					FROM `streets`, `houses`
 					WHERE `houses`.`street_id` = `streets`.`id`
 					AND `houses`.`department_id` IN(";
