@@ -47,6 +47,10 @@
     padding: 0px 0px 0px 40px;
 }
 
+table caption h3 {
+    display: inline-block;
+}
+
 .table th, .table td {
     vertical-align: middle;
 }

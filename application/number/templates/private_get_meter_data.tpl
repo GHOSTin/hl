@@ -8,8 +8,20 @@
 {% endblock js %}
 {% block html %}
 <div class="meter-data">
-    <h3>{{ component.time|date('Y')}}</h3>
     <table class="table table-condensed span12">
+        <caption>
+            <ul class="pager">
+                <li class="previous">
+                    <a><i class="icon-chevron-left"></i></a>
+                </li>
+                <li>
+                    <h3>{{ component.time|date('Y')}}</h3>
+                </li>
+                <li class="next">
+                    <a><i class="icon-chevron-right"></i></a>
+                </li>
+            </ul>
+        </caption>
     {% for i in 0..11 %}
         {% set data = component.meter_data[date|date("U")] %}
         <tr class="month" time="{{ date|date("U") }}">
