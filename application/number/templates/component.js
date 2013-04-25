@@ -212,6 +212,18 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.get_meter_data_year', function(){
+        var self = $(this);
+        $.get('get_meter_data', {
+            id: get_number_id($(this)),
+            meter_id: $(this).closest('.meter').attr('meter'),
+            serial: $(this).closest('.meter').attr('serial'),
+            time: $(this).attr('act')
+            },function(r){
+                self.closest('.meter-data').remove();
+                init_content(r);
+            });
+    });
 });
 function get_number_id(obj){
     return obj.closest('.number').attr('number');

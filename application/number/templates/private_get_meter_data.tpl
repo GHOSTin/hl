@@ -12,13 +12,13 @@
         <caption>
             <ul class="pager">
                 <li class="previous">
-                    <a><i class="icon-chevron-left"></i></a>
+                    <a class="get_meter_data_year" act='{{ component.time|date_modify("-1 year")|date("U")}}'><i class="icon-chevron-left"></i></a>
                 </li>
                 <li>
                     <h3>{{ component.time|date('Y')}}</h3>
                 </li>
                 <li class="next">
-                    <a><i class="icon-chevron-right"></i></a>
+                    <a class="get_meter_data_year" act='{{ component.time|date_modify("+1 year")|date("U")}}'><i class="icon-chevron-right"></i></a>
                 </li>
             </ul>
         </caption>
