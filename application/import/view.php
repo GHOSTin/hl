@@ -13,7 +13,15 @@ class view_import{
         return load_template('import.private_get_dialog_import_meters', $args);
     }
 
+    public static function private_get_dialog_import_street($args){
+        return load_template('import.private_get_dialog_import_street', $args);
+    }
+
     public static function private_import_numbers($args){
         return load_template('import.private_analize_import_numbers', $args);
-    }    
+    }
+
+    public static function private_analize_street($args){
+        return load_template('import.private_analize_street', $args);
+    } 
 }

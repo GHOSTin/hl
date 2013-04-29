@@ -83,6 +83,40 @@ class model_import{
 		}
 	}
 
+	/*
+	* Анализирует файт импорта лицевых счетов
+	*/
+	public static function analize_import_street($file_array){
+		if(!file_exists($file_array['tmp_name']))
+			throw new e_model('Файла для обработки не существует.');
+		$xml = simplexml_load_file($file_array['tmp_name']);
+		if($xml === false)
+			throw new e_model('Ошибка в xml файле.');
+		$house_node = $xml->attributes();
+		// проверка существования городв
+		$city = new data_city();
+		$city->name = (string) $house_node->city;
+		$cities = model_city::get_cities($city);
+		if(count($cities) !== 1 OR !($cities[0] instanceof data_city))
+			throw new e_model('Проблема при выборе города.');
+		$city = $cities[0];
+		// проверка существования улицы
+		$street = new data_street();
+		$street->name = (string) $house_node->street;
+		$streets = model_city::get_streets($city, $street);
+		$count = count($streets);
+		if($count === 0)
+			$street = null;
+		elseif($count === 1)
+			if($streets[0] instanceof data_street)
+				$street = $streets[0];
+			else
+				throw new e_model('Проблема при выборе улицы.');
+		else
+			throw new e_model('Проблема при выборе улицы.');
+		return ['file' => $file_array, 'city' => $city, 'street' => $street, 'street_name' => (string) $house_node->street];
+	}
+
 	public static function load_numbers(data_city $city_params, data_street $street_params,
 		data_house $house_params, $numbers, data_user $current_user){
 		if(empty($numbers))

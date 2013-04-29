@@ -13,6 +13,10 @@ class controller_import{
         return true;
     }
 
+    public static function private_get_dialog_import_street(){
+        return true;
+    }
+
     public static function private_load_numbers(){
         $numbers = $_POST['numbers'];
         $city = new data_city();
@@ -29,5 +33,9 @@ class controller_import{
 
     public static function private_import_numbers(){
         return model_import::analize_import_numbers($_FILES['file']);
+    }
+
+    public static function private_analize_street(){
+        return model_import::analize_import_street($_FILES['file']);
     }
 }
