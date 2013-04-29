@@ -1,33 +1,10 @@
 <?php
 class model_street{
 	/**
-	* Создает новую улицу.
-	* @return object data_street
-	*/
-	public static function create_street(data_city $city, data_street $street, data_user $current_user){
-		if(empty($street->status) OR empty($street->name))
-			throw new e_model('status и name заданы не правильно.');
-		$street->company_id = $current_user->company_id;
-		$street->city_id = $city->id;
-		$street->id = self::get_insert_id();
-		$sql = "INSERT INTO `streets` (`id`, `company_id`, `city_id`, `status`, `name`)
-				VALUES (:street_id, :company_id, :city_id, :status, :name);";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':street_id', $street->id, PDO::PARAM_INT);
-		$stm->bindValue(':company_id', $street->company_id, PDO::PARAM_INT);
-		$stm->bindValue(':city_id', $street->city_id, PDO::PARAM_INT);
-		$stm->bindValue(':status', $street->status, PDO::PARAM_STR);
-		$stm->bindValue(':name', $street->name, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при вставке улицы в базу данных.');
-		$stm->closeCursor();
-		return $street;
-	}
-	/**
 	* Возвращает следующий для вставки идентификатор улицы.
 	* @return int
 	*/
-	private static function get_insert_id(){
+	public static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_street_id` FROM `streets`";
 		$stm = db::get_handler()->query($sql);
 		if($stm == false)

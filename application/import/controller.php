@@ -17,6 +17,15 @@ class controller_import{
         return true;
     }
 
+    public static function private_create_street(){
+        $street = new data_street();
+        $street->name = $_GET['name'];
+        $street->status = true;
+        $city = new data_city();
+        $city->id = $_GET['city_id'];
+        return model_city::create_street($city, $street, $_SESSION['user']);
+    }
+
     public static function private_load_numbers(){
         $numbers = $_POST['numbers'];
         $city = new data_city();

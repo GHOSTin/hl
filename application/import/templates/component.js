@@ -19,7 +19,8 @@ $(document).ready(function(){
     });
     $('body').on('click', '.create_street', function(){
         $.get('create_street',{
-            name: $('.dialog-street').text()
+            name: $('.dialog-street').text(),
+            city_id: $('.dialog-city_id').attr('city_id')
             },function(r){
                 init_content(r);
             });

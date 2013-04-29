@@ -23,5 +23,8 @@ class view_import{
 
     public static function private_analize_street($args){
         return load_template('import.private_analize_street', $args);
+    }
+    public static function private_create_street($args){
+        return load_template('import.private_create_street', $args);
     } 
 }

@@ -22,6 +22,40 @@ class model_city{
 		return $city;
 	}
 	/**
+	* Создает новую улицу.
+	* @return object data_street
+	*/
+	public static function create_street(data_city $city, data_street $street, data_user $current_user){
+		if(empty($street->status) OR empty($street->name))
+			throw new e_model('status и name заданы не правильно.');
+		if(empty($city->id))
+			throw new e_model('Идентификатор города задан не верно.');
+		$cities = self::get_cities($city);
+		if(count($cities) !== 1)
+			throw new e_model('Проблемы при выборке города.');
+		$city = $cities[0];
+		if(!($city instanceof data_city))
+			throw new e_model('Проблемы при выборке города.');
+		$streets = self::get_streets($city, $street);
+		if(count($streets) > 0)
+			throw new e_model('Улица уже существует.');
+		$street->company_id = $current_user->company_id;
+		$street->city_id = $city->id;
+		$street->id = model_street::get_insert_id();
+		$sql = "INSERT INTO `streets` (`id`, `company_id`, `city_id`, `status`, `name`)
+				VALUES (:street_id, :company_id, :city_id, :status, :name);";
+		$stm = db::get_handler()->prepare($sql);
+		$stm->bindValue(':street_id', $street->id, PDO::PARAM_INT);
+		$stm->bindValue(':company_id', $street->company_id, PDO::PARAM_INT);
+		$stm->bindValue(':city_id', $street->city_id, PDO::PARAM_INT);
+		$stm->bindValue(':status', $street->status, PDO::PARAM_STR);
+		$stm->bindValue(':name', $street->name, PDO::PARAM_STR);
+		if($stm->execute() == false)
+			throw new e_model('Проблемы при вставке улицы в базу данных.');
+		$stm->closeCursor();
+		return $street;
+	}
+	/**
 	* Возвращает следующий для вставки идентификатор дома.
 	* @return int
 	*/
