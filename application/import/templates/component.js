@@ -17,6 +17,12 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.get_dialog_import_house', function(){
+        $.get('get_dialog_import_house',{
+            },function(r){
+                init_content(r);
+            });
+    });
     $('body').on('click', '.create_street', function(){
         $.get('create_street',{
             name: $('.dialog-street').text(),

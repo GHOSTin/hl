@@ -35,7 +35,6 @@ class model_street{
 				}
 			}else
 				$sql .= ':department_id0';
-
 			$sql .= ") ORDER BY `streets`.`name`";
 		}elseif(!empty($street_params->id)){
 			$sql = "SELECT `id`, `company_id`, `city_id`, `status`, `name`

@@ -17,6 +17,10 @@ class controller_import{
         return true;
     }
 
+    public static function private_get_dialog_import_house(){
+        return true;
+    }
+
     public static function private_create_street(){
         $street = new data_street();
         $street->name = $_GET['name'];
@@ -46,5 +50,8 @@ class controller_import{
 
     public static function private_analize_street(){
         return model_import::analize_import_street($_FILES['file']);
+    }
+    public static function private_analize_house(){
+        return model_import::analize_import_house($_FILES['file']);
     }
 }
