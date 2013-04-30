@@ -167,4 +167,18 @@ class model_street{
 		if(empty($street->name))
 			throw new e_model('Название улицы задан не верно.');
 	}
+	/**
+	* Верификация идентификатора компании улицы
+	*/
+	public static function verify_street_company_id(data_street $street){
+		if($street->company_id < 1)
+			throw new e_model('Идентификатор компании улицы задан не верно.');
+	}
+	/**
+	* Верификация идентификатора города улицы
+	*/
+	public static function verify_street_city_id(data_street $street){
+		if($street->city_id < 1)
+			throw new e_model('Идентификатор города улицы задан не верно.');
+	}
 }

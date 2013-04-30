@@ -5,11 +5,12 @@ class model_city{
 	* @return object data_city
 	*/
 	public static function create_city(data_city $city, data_user $current_user){
-		self::verify_city_status($city_params);
-		self::verify_city_name($city_params);
-		model_user::verify_user_company_id($current_user);
 		$city->company_id = $current_user->company_id;
 		$city->id = self::get_insert_id();
+		self::verify_city_status($city_params);
+		self::verify_city_name($city_params);
+		self::verify_city_company_id($city_params);
+		self::verify_city_id($city_params);
 		$sql = "INSERT INTO `cities` (`id`, `company_id`, `status`, `name`)
 				VALUES (:city_id, :company_id, :status, :name);";
 		$stm = db::get_handler()->prepare($sql);
@@ -30,7 +31,6 @@ class model_city{
 		model_street::verify_street_status($street);
 		model_street::verify_street_name($street);
 		self::verify_city_id($city_params);
-		model_user::verify_user_company_id($current_user);
 		$cities = self::get_cities($city);
 		if(count($cities) !== 1)
 			throw new e_model('Проблемы при выборке города.');
@@ -42,6 +42,9 @@ class model_city{
 		$street->company_id = $current_user->company_id;
 		$street->city_id = $city->id;
 		$street->id = model_street::get_insert_id();
+		model_street::verify_street_company_id($street);
+		model_street::verify_street_city_id($street);
+		model_street::verify_street_id($street);
 		$sql = "INSERT INTO `streets` (`id`, `company_id`, `city_id`, `status`, `name`)
 				VALUES (:street_id, :company_id, :city_id, :status, :name);";
 		$stm = db::get_handler()->prepare($sql);
@@ -118,7 +121,7 @@ class model_city{
 		data_number $number_params, data_user $current_user){
 		self::verify_city_id($city_params);
 		model_number::verify_number_number($number_params);
-		model_user::verify_user_id($current_user);
+		model_user::verify_user_company_id($current_user);
 		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 				`numbers`.`city_id`, `numbers`.`house_id`, 
 				`numbers`.`flat_id`, `numbers`.`number`,
@@ -172,6 +175,13 @@ class model_city{
 	public static function verify_city_name(data_city $city){
 		if(empty($city->name))
 			throw new e_model('Название города задан не верно.');
+	}
+	/**
+	* Верификация идентификатора компании города
+	*/
+	public static function verify_city_company_id(data_city $city){
+		if($city->company_id < 1)
+			throw new e_model('Идентификатор компании города задан не верно.');
 	}
 	/**
 	* Верификация типа объекта города
