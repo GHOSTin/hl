@@ -50,6 +50,13 @@ class model_company{
 			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
+	* Верификация названия компании
+	*/
+	public static function verify_company_name(data_company $company){
+		if(empty($company->name))
+			throw new e_model('Название компании задано не верно.');
+	}
+	/**
 	* Верификация статуса компании
 	*/
 	public static function verify_company_status(data_company $company){
@@ -57,10 +64,10 @@ class model_company{
 			throw new e_model('Статус компании задан не верно.');
 	}
 	/**
-	* Верификация названия компании
+	* Верификация типа объекта компании
 	*/
-	public static function verify_company_name(data_company $company){
-		if(empty($company->name))
-			throw new e_model('Название компании задано не верно.');
+	public static function is_data_company($company){
+		if(!($company instanceof data_company))
+			throw new e_model('Возвращеный объект не является компанией.');
 	}
 }

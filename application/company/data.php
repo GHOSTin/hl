@@ -6,6 +6,6 @@
 final class data_company extends data_object{
 
 	public $id;
+    public $name;
 	public $status;
-	public $name;
 }
