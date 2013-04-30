@@ -203,14 +203,10 @@ class model_number{
 	*/
 	public static function get_meter_data(data_meter $meter,
 		data_number $number, data_user $current_user, $time){
-		if(empty($meter->id))
-			throw new e_model('Идентификатор счетчика задан не верно.');
-		if(empty($meter->serial))
-			throw new e_model('Серийный номер счетчика задан не верно.');
-		if(empty($number->id))
-			throw new e_model('Идентификатор лицевого счета задан не верно.');
-		if(empty($current_user->company_id))
-			throw new e_model('Идентификатор компании задан не верно.');
+		model_meter::verify_meter_id($meter);
+		model_meter::verify_meter_serial($meter);
+		self::verify_number_id($number);
+		self::verify_user_company_id($current_user);
 		if(empty($time))
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);
@@ -243,14 +239,10 @@ class model_number{
 		data_number $number, data_user $current_user, $time, $tarif){
 		try{
 			db::get_handler()->beginTransaction();
-			if(empty($meter->id))
-				throw new e_model('Идентификатор счетчика задан не верно.');
-			if(empty($meter->serial))
-				throw new e_model('Серийный номер счетчика задан не верно.');
-			if(empty($number->id))
-				throw new e_model('Идентификатор лицевого счета задан не верно.');
-			if(empty($current_user->company_id))
-				throw new e_model('Идентификатор компании задан не верно.');
+			model_meter::verify_meter_id($meter);
+			model_meter::verify_meter_serial($meter);
+			self::verify_number_id($number);
+			self::verify_user_company_id($current_user);
 			if(empty($time))
 				throw new e_model('Время выборки задано не верно.');
 			if(count($tarif) !== 2)

@@ -5,8 +5,9 @@ class model_department{
 	* @return object data_department
 	*/
 	public static function create_department(data_company $company, data_department $department, data_user $current_user){
-		if(empty($department->status) OR empty($department->name))
-			throw new e_params('status и name заданы не правильно.');
+		self::verify_department_status($department);
+		self::verify_department_name($department);
+		model_company::verify_company_id($company);
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
 		$sql = "INSERT INTO `departments` (`id`, `company_id`, `status`, `name`)
@@ -75,5 +76,19 @@ class model_department{
 			$result[] = $department;
 		$stm->closeCursor();
 		return $result;
+	}
+	/**
+	* Верификация идентификатора участка
+	*/
+	public static function verify_department_id(data_department $department){
+		if($department->id < 1)
+			throw new e_model('Идентификатор участка задан не верно.');
+	}
+	/**
+	* Верификация имени участка
+	*/
+	public static function verify_department_name(data_department $department){
+		if(empty($department->name))
+			throw new e_model('Название участка задано не верно.');
 	}
 }

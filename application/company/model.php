@@ -39,6 +39,13 @@ class model_company{
 		return $company_id;
 	}
 	/**
+	* Верификация идентификатора компании
+	*/
+	public static function verify_company_id(data_company $company){
+		if($company->id < 1)
+			throw new e_model('Идентификатор компании задан не верно.');
+	}
+	/**
 	* Верификация статуса компании
 	*/
 	public static function verify_company_status(data_company $company){

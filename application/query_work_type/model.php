@@ -5,8 +5,7 @@ class model_query_work_type{
 	* @return array из data_query_work_type
 	*/
 	public static function get_query_work_types(data_query_work_type $query_work_type_params, data_user $current_user){
-		$sql = "SELECT `id`,`company_id`, `status`, `name`
-				FROM `query_worktypes`
+		$sql = "SELECT `id`,`company_id`, `status`, `name` FROM `query_worktypes`
 				WHERE `company_id` = :company_id";
 				if(!empty($query_work_type_params->id))
 					$sql .= " AND `id` = :id";

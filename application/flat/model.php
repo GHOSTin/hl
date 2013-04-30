@@ -2,8 +2,10 @@
 class model_flat{
 
 	public static function create_flat(data_house $house, data_flat $flat, data_user $current_user){
-		if(empty($flat->status) OR empty($flat->number))
-			throw new e_model('Не все параметры заданы правильно.');
+		self::verify_flat_status($flat);
+		self::verify_flat_number($flat);
+		model_user::verify_user_company_id($current_user);
+		model_house::verify_house_id($house;
 		$flat->company_id = $current_user->company_id;
 		$flat->house_id = $house->id;
 		$flat->id = self::get_insert_id();
@@ -23,7 +25,10 @@ class model_flat{
 		$stm->closeCursor();
 		return $flat;
 	}
-
+	/**
+	* Возвращает следующий для вставки идентификатор квартиры.
+	* @return int
+	*/
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
 		$stm = db::get_handler()->query($sql);
@@ -34,5 +39,19 @@ class model_flat{
 		$flat_id = (int) $stm->fetch()['max_flat_id'] + 1;
 		$stm->closeCursor();
 		return $flat_id;
+	}
+	/**
+	* Верификация статуса квартиры
+	*/
+	public static function verify_flat_status(data_flat $flat){
+		if(empty($flat->status))
+			throw new e_model('Статус квартиры задан не верно.');
+	}
+	/**
+	* Верификация номера квартиры
+	*/
+	public static function verify_flat_number(data_flat $flat){
+		if(empty($flat->number))
+			throw new e_model('Номер квартиры задан не верно.');
 	}
 }

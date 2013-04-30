@@ -28,8 +28,7 @@ class model_group{
 	* @return array из data_user
 	*/
 	public static function get_users(data_group $group_params, data_user $current_user){
-		if(empty($group_params->id))
-			throw new e_model('id группы пользователей задан не верно.');
+		self::verify_group_id($group_params);
 		$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
@@ -46,5 +45,12 @@ class model_group{
 			$result[] = $works;
 		$stm->closeCursor();
 		return $result;
+	}
+	/**
+	* Верификация идентификатора группы
+	*/
+	public static function verify_group_id(data_group $group){
+		if($group->id < 1)
+			throw new e_model('Идентификатор группы задан не верно.');
 	}
 }
