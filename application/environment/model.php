@@ -7,8 +7,8 @@ class model_environment{
 		try{
 			session_start();
 			if($_SESSION['user'] instanceof data_user){
-				$urlArray = parse_url($_SERVER['REQUEST_URI']);
-				$url = explode('/', substr($urlArray['path'], 1));
+				$url_array = parse_url($_SERVER['REQUEST_URI']);
+				$url = explode('/', substr($url_array['path'], 1));
 				$component = (string) $url[0];
 				if(empty($component)){
 					$component = 'default_page';
@@ -53,11 +53,11 @@ class model_environment{
 	*/
 	public static function get_page_content(){
 		try{
+			self::load_twig();
 			self::create_batabase_connection();
 			list($component, $prefix, $method) = self::build_router();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
-			self::load_twig();
 			if($method === 'show_default_page')
 				$c_data['componentName'] = $component;
 			$c_data['anonymous'] = true;
