@@ -1,6 +1,6 @@
 <?php
 class view_auth{
-	
+
 	public static function public_login($args){
 		if($_SESSION['user'] instanceof data_user){
 			header('Location:/');
