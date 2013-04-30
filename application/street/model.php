@@ -1,14 +1,13 @@
 <?php
 class model_street{
-		/**
+	/**
 	* Создает новый дом.
 	* @return object data_city
 	*/
 	public static function create_house(data_street $street, data_house $house, data_user $current_user){
-		if(empty($house->status) OR empty($house->number))
-			throw new e_model('status, number, department_id заданы не правильно.');
-		if(empty($street->id))
-			throw new e_model('Идентификатор улицы задан не верно.');
+		model_house::verify_house_status($house);
+		model_house::verify_house_number($house);
+		self::verify_street_id($street);
 		$streets = model_street::get_streets($street);
 		if(count($streets) !== 1)
 			throw new e_model('Проблема при запросе улицы.');
@@ -103,8 +102,7 @@ class model_street{
 	* @return array из object data_house
 	*/
 	public static function get_houses(data_street $street_params, data_house $house_params = null){
-		if(empty($street_params->id))
-			throw new e_model('id задан не правильно.');
+		self::verify_street_id($street_params);
 		$sql = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
 		 		`department_id`, `status`, `housenumber` as `number`
 				FROM `houses` WHERE `street_id` = :street_id";
@@ -147,5 +145,12 @@ class model_street{
 			$result[] = $house;
 		$stm->closeCursor();
 		return $result;
+	}
+	/**
+	* Проверка идентификатора улицы
+	*/
+	public static function verify_street_id(data_street $street){
+		if($street->id < 1)
+			throw new e_model('Идентификатор улицы задан не верно.');
 	}
 }

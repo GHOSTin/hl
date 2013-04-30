@@ -7,6 +7,8 @@ class model_city{
 	public static function create_city(data_city $city, data_user $current_user){
 		if(empty($city->status) OR empty($city->name))
 			throw new e_model('Не все параметры заданы правильно.');
+		if($current_user->company_id < 1)
+			throw new e_model('Идентификатор компании задан не верно.');
 		$city->company_id = $current_user->company_id;
 		$city->id = self::get_insert_id();
 		$sql = "INSERT INTO `cities` (`id`, `company_id`, `status`, `name`)
@@ -28,8 +30,10 @@ class model_city{
 	public static function create_street(data_city $city, data_street $street, data_user $current_user){
 		if(empty($street->status) OR empty($street->name))
 			throw new e_model('status и name заданы не правильно.');
-		if(empty($city->id))
+		if($city->id < 1)
 			throw new e_model('Идентификатор города задан не верно.');
+		if($current_user->company_id < 1)
+			throw new e_model('Идентификатор компании задан не верно.');
 		$cities = self::get_cities($city);
 		if(count($cities) !== 1)
 			throw new e_model('Проблемы при выборке города.');
