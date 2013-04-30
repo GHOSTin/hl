@@ -147,10 +147,24 @@ class model_street{
 		return $result;
 	}
 	/**
-	* Проверка идентификатора улицы
+	* Верификация идентификатора улицы
 	*/
 	public static function verify_street_id(data_street $street){
 		if($street->id < 1)
 			throw new e_model('Идентификатор улицы задан не верно.');
+	}
+	/**
+	* Верификация статуса улицы
+	*/
+	public static function verify_street_status(data_street $street){
+		if(empty($street->status))
+			throw new e_model('Статус улицы задан не верно.');
+	}
+	/**
+	* Верификация названия улицы
+	*/
+	public static function verify_street_name(data_street $street){
+		if(empty($street->name))
+			throw new e_model('Название улицы задан не верно.');
 	}
 }

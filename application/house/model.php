@@ -72,21 +72,21 @@ class model_house{
 		return $result;
 	}
 	/**
-	* Проверка идентификатора дома
+	* Верификация идентификатора дома
 	*/
 	public static function verify_house_id(data_house $house){
 		if($house->id < 1)
 			throw new e_model('Идентификатор дома задан не верно.');
 	}
 	/**
-	* Проверка статуса дома
+	* Верификация статуса дома
 	*/
 	public static function verify_house_status(data_house $house){
 		if(empty($house->status))
 			throw new e_model('Статус дома задан не верно.');
 	}
 	/**
-	* Проверка номера дома
+	* Верификация номера дома
 	*/
 	public static function verify_house_number(data_house $house){
 		if(empty($house->number))

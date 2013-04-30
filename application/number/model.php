@@ -6,8 +6,9 @@ class model_number{
 	*/
 	public static function create_number(data_city $city, data_flat $flat,
 		data_number $number, data_user $current_user){
-		if(empty($number->number) OR empty($number->fio) OR empty($number->status))
-			throw new e_model('number, fio, status заданы не правильно.');
+		self::verify_number_number($number);
+		self::verify_number_fio($number);
+		self::verify_number_status($number);
 		$number->company_id = $current_user->company_id;
 		$number->city_id = $city->id;
 		$number->type = 'human';
@@ -66,8 +67,7 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function get_number(data_number $number){
-		if(empty($number->id))
-			throw new e_model('id задан не верно.');
+		self::verify_number_id($number);
 		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
 					`numbers`.`flat_id`, `numbers`.`number`,
@@ -164,10 +164,8 @@ class model_number{
 	*/
 	public static function get_meters(data_number $number_params,
 		data_user $current_user, data_meter $meter_params = null){
-		if(empty($number_params->id))
-			throw new e_model('Идентификатор лицевого счета задан не верно.');
-		if(empty($current_user->company_id))
-			throw new e_model('Идентификатор компании задан не верно.');
+		self::verify_number_id($number);
+		model_user::verify_user_company_id($current_user);
 		if(!is_null($meter_params))
 			if(empty($meter_params->id))
 				throw new e_model('Идентификатор счетчики задан не верно.');
@@ -319,13 +317,10 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function update_number(data_number $number_params, data_user $current_user){
-		if(empty($number_params->id))
-			throw new e_model('Идентификатор задан не верно.');
+		self::verify_number_id($number_params);
+		self::verify_number_number($number_params);
 		$number = model_number::get_number($number_params);
-		if(!($number instanceof data_number))
-			throw new e_model('Неверно выбран лицевой счет.');
-		if(empty($number_params->number))
-			throw new e_model('Номер лицевого задан не верно.');
+		self::is_data_number($number);
 		$number->number = $number_params->number;
 		try{
 			db::get_handler()->beginTransaction();
@@ -372,5 +367,40 @@ class model_number{
 			else
 				throw new e_model('Ошибка в PDO.');
 		}
+	}
+	/**
+	* Верификация идентификатора лицевого счета
+	*/
+	public static function verify_number_id(data_number $number){
+		if($number->id < 1)
+			throw new e_model('Идентификатор лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация номера лицевого счета
+	*/
+	public static function verify_number_number(data_number $number){
+		if(empty($number->number))
+			throw new e_model('Номер лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация ФИО лицевого счета
+	*/
+	public static function verify_number_fio(data_number $number){
+		if(empty($number->fio))
+			throw new e_model('Фамилия владельца лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация статуса лицевого счета
+	*/
+	public static function verify_number_status(data_number $number){
+		if(empty($number->status))
+			throw new e_model('Статус лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация типа объекта лицевого счета
+	*/
+	public static function is_data_number($number){
+		if(!($number instanceof data_number))
+			throw new e_model('Возвращен объект не является лицевым счетом');
 	}
 }

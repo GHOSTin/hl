@@ -4,9 +4,11 @@ class model_user{
 	* Создает пользователя
 	*/
 	public static function create_user(data_user $user, data_user $current_user){
-		if(empty($user->login) OR empty($user->firstname)
-			OR empty($user->lastname) OR empty($user->password)
-		) throw new e_model('Не все параметры заданы правильно.');
+		self::verify_user_login($user);
+		self::verify_user_password($user);
+		self::verify_user_firstname($user);
+		self::verify_user_lastname($user);
+		self::verify_user_company_id($current_user);
 		$user->company_id = $current_user->company_id;
 		$user->id = self::get_insert_id();
 		$user->status = true;
@@ -78,5 +80,54 @@ class model_user{
 			$result[] = $user;
 		$stm->closeCursor();
 		return $result;
+	}
+	/**
+	* Верификация идентификатора пользователя
+	*/
+	public static function verify_user_id(data_user $user){
+		if($user->id < 1)
+			throw new e_model('Идентификатор пользователя задан не верно.');
+	}
+	/**
+	* Верификация идентификатора компании пользователя
+	*/
+	public static function verify_user_company_id(data_user $user){
+		if($user->company_id < 1)
+			throw new e_model('Идентификатор компании пользователя задан не верно.');
+	}
+	/**
+	* Верификация логина пользователя
+	*/
+	public static function verify_user_login(data_user $user){
+		if(empty($user->login))
+			throw new e_model('Логин пользователя задан не верно.');
+	}
+	/**
+	* Верификация пароля пользователя
+	*/
+	public static function verify_user_password(data_user $user){
+		if(empty($user->password))
+			throw new e_model('Пароля пользователя задан не верно.');
+	}
+	/**
+	* Верификация имени пользователя
+	*/
+	public static function verify_user_firstname(data_user $user){
+		if(empty($user->firstname))
+			throw new e_model('Имя пользователя задано не верно.');
+	}
+	/**
+	* Верификация фамилии пользователя
+	*/
+	public static function verify_user_lastname(data_user $user){
+		if(empty($user->lastname))
+			throw new e_model('Фамилия пользователя задана не верно.');
+	}
+	/**
+	* Верификация типа объекта пользователя
+	*/
+	public static function is_data_user($user){
+		if(!($user instanceof data_user))
+			throw new e_model('Возвращен объект не является пользователем');
 	}
 }

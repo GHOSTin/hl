@@ -5,10 +5,9 @@ class model_city{
 	* @return object data_city
 	*/
 	public static function create_city(data_city $city, data_user $current_user){
-		if(empty($city->status) OR empty($city->name))
-			throw new e_model('Не все параметры заданы правильно.');
-		if($current_user->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
+		self::verify_city_status($city_params);
+		self::verify_city_name($city_params);
+		model_user::verify_user_company_id($current_user);
 		$city->company_id = $current_user->company_id;
 		$city->id = self::get_insert_id();
 		$sql = "INSERT INTO `cities` (`id`, `company_id`, `status`, `name`)
@@ -28,18 +27,15 @@ class model_city{
 	* @return object data_street
 	*/
 	public static function create_street(data_city $city, data_street $street, data_user $current_user){
-		if(empty($street->status) OR empty($street->name))
-			throw new e_model('status и name заданы не правильно.');
-		if($city->id < 1)
-			throw new e_model('Идентификатор города задан не верно.');
-		if($current_user->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
+		model_street::verify_street_status($street);
+		model_street::verify_street_name($street);
+		self::verify_city_id($city_params);
+		model_user::verify_user_company_id($current_user);
 		$cities = self::get_cities($city);
 		if(count($cities) !== 1)
 			throw new e_model('Проблемы при выборке города.');
 		$city = $cities[0];
-		if(!($city instanceof data_city))
-			throw new e_model('Проблемы при выборке города.');
+		self::is_data_city($city);
 		$streets = self::get_streets($city, $street);
 		if(count($streets) > 0)
 			throw new e_model('Улица уже существует.');
@@ -78,8 +74,7 @@ class model_city{
 	* Возвращает список городов
 	*/
 	public static function get_cities(data_city $city_params){
-		$sql = "SELECT `id`, `status`, `name`
-				FROM `cities`";
+		$sql = "SELECT `id`, `status`, `name` FROM `cities`";
 		if(!empty($city_params->name))
 			$sql .= " WHERE `name` = :name";
 		$stm = db::get_handler()->prepare($sql);
@@ -98,8 +93,7 @@ class model_city{
 	* Возвращает список улиц города
 	*/
 	public static function get_streets(data_city $city_params, data_street $street_params){
-		if(empty($city_params->id))
-			throw new e_model('id города задан не верно.');
+		self::verify_city_id($city_params);
 		$sql = "SELECT `id`, `city_id`, `status`, `name`
 				FROM `streets` WHERE `city_id` = :city_id";
 		if(!empty($street_params->name))
@@ -122,12 +116,9 @@ class model_city{
 	*/
 	public static function get_numbers(data_city $city_params,
 		data_number $number_params, data_user $current_user){
-		if(empty($city_params->id))
-			throw new e_model('id города задан не верно.');
-		if(empty($number_params->number))
-			throw new e_model('Идентификатор лицевого счета задан не верно.');
-		if(empty($current_user->id))
-			throw new e_model('Идентификатор пользователя задан не верно.');
+		self::verify_city_id($city_params);
+		model_number::verify_number_number($number_params);
+		model_user::verify_user_id($current_user);
 		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 				`numbers`.`city_id`, `numbers`.`house_id`, 
 				`numbers`.`flat_id`, `numbers`.`number`,
@@ -160,5 +151,33 @@ class model_city{
 			$result[] = $number;
 		$stm->closeCursor();
 		return $result;
+	}
+	/**
+	* Верификация идентификатора города
+	*/
+	public static function verify_city_id(data_city $city){
+		if($city->id < 1)
+			throw new e_model('Идентификатор города задан не верно.');
+	}
+	/**
+	* Верификация статус города
+	*/
+	public static function verify_city_status(data_city $city){
+		if(empty($city->status))
+			throw new e_model('Статус города задан не верно.');
+	}
+	/**
+	* Верификация название города
+	*/
+	public static function verify_city_name(data_city $city){
+		if(empty($city->name))
+			throw new e_model('Название города задан не верно.');
+	}
+	/**
+	* Верификация типа объекта города
+	*/
+	public static function is_data_city($city){
+		if(!($city instanceof data_city))
+			throw new e_model('Возвращен объект не является городом.');
 	}
 }
