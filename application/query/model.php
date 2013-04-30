@@ -5,11 +5,11 @@ class model_query{
 	* Добавляет ассоциацию заявка-лицевой_счет.
 	*/
 	private static function __add_number(data_query $query, data_number $number, $default, data_user $current_user){
-		$sql = "INSERT INTO `query2number` (
-				`query_id`, `number_id`, `company_id`, `default`
-			) VALUES (
-				:query_id, :number_id, :company_id, :default
-			)";
+		self::verify_query_id($query);
+		model_user::verify_user_company_id($current_user);
+		model_number::verify_number_id($number);
+		$sql = "INSERT INTO `query2number` (`query_id`, `number_id`, `company_id`, `default`) 
+				VALUES (:query_id, :number_id, :company_id, :default)";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
@@ -23,13 +23,14 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	private static function __add_user(data_query $query, data_user $current_user, $class){
+		self::verify_query_id($query);
+		model_user::verify_user_company_id($current_user);
+		model_user::verify_user_id($current_user);
+		model_number::verify_number_id($number);
 		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
 			throw new e_model('Не соответсвует тип пользователя.');
-		$sql = "INSERT INTO `query2user` (
-					`query_id`, `user_id`, `company_id`, `class`
-				) VALUES (
-					:query_id, :user_id, :company_id, :class
-				)";
+		$sql = "INSERT INTO `query2user` (`query_id`, `user_id`, `company_id`, `class`)
+				VALUES (:query_id, :user_id, :company_id, :class)";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
@@ -43,8 +44,7 @@ class model_query{
 	* Создает заявку и записывает в лог заявки.
 	*/
 	private static function __add_query(data_query $query, $initiator, data_user $current_user, $time){
-		if(empty($current_user->company_id))
-			throw new e_model('company_id не указан.');
+		model_user::verify_user_company_id($current_user);
 		if(!($initiator instanceof data_house OR $initiator instanceof data_number))
 			throw new e_model('Инициатор не верного формата.');
 		if(empty($initiator->department_id))
@@ -97,18 +97,14 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public static function add_user(data_query $query_params, data_user $user_params, $class, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('Несоответствующие параметры: id заявки.');
-		if(empty($user_params->id))
-			throw new e_model('Несоответствующие параметры: id пользователя.');
+		self::verify_query_id($query_params);
+		model_user::verify_user_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при получении заявки.');
+		self::is_data_query($query);
 		$user = model_user::get_users($user_params)[0];
-		if(!($user instanceof data_user))
-			throw new e_model('Проблемы при получении пользователя.');
+		model_user::is_data_user($user);
 		$sql = 'INSERT INTO `query2user` (`query_id`, `user_id`, `company_id`,
 				 `class`, `protect`) VALUES (:query_id, :user_id, :company_id,
 				 :class, :protect)';
@@ -126,20 +122,15 @@ class model_query{
 	* Добавляет ассоциацию заявка-работа.
 	*/
 	public static function add_work(data_query $query_params, data_work $work_params, $begin_time, $end_time, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('Несоответствующие параметры: id заявки.');
-		if(empty($work_params->id))
-			throw new e_model('Несоответствующие параметры: id работы.');
+		self::verify_query_id($query_params);
 		if(!is_int($begin_time) OR !is_int($end_time))
 			throw new e_model('Время задано не верно.');
 		if($begin_time > $end_time)
 			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при получении заявки.');
+		self::is_data_query($query);
 		$work = model_work::get_works($work_params, $current_user)[0];
-		if(!($work instanceof data_work))
-			throw new e_model('Проблемы при получении работы.');
+		self::is_data_work($work);
 		$sql = 'INSERT INTO `query2work` (`query_id`, `work_id`, `company_id`,
 				 `opentime`, `closetime`) VALUES (:query_id, :work_id, :company_id,
 				 :time_open, :time_close)';
@@ -176,21 +167,17 @@ class model_query{
 	* Закрывает заявку.
 	*/
 	public static function close_query(data_query $query_params, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('id заявки задан не верно.');
+		self::verify_query_id($query_params);
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при получении заявки.');
+		self::is_data_query($query);
 		if($query->status === 'close')
 			throw new e_model('Заявка уже закрыта.');
 		$query->status = 'close';
 		$query->close_reason = $query_params->close_reason;
 		$query->time_close = time();
-		$sql = "UPDATE `queries`
-				SET `description-close` = :reason,
+		$sql = "UPDATE `queries` SET `description-close` = :reason,
 				`status` = :status, `closetime` = :time_close
-				WHERE `company_id` = :company_id
-				AND `id` = :query_id";
+				WHERE `company_id` = :company_id AND `id` = :query_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':reason', $query->close_reason, PDO::PARAM_STR);
 		$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
@@ -205,19 +192,15 @@ class model_query{
 	* Передает заявку в работу.
 	*/
 	public static function to_working_query(data_query $query_params, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('id заявки задан не верно.');
+		self::verify_query_id($query_params);
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при получении заявки.');
+		self::is_data_query($query);
 		if($query->status !== 'open')
 			throw new e_model('Заявка имеет статус не позволяющий её передать в работу.');
 		$query->status = 'working';
 		$query->time_work = time();
-		$sql = "UPDATE `queries`
-				SET `status` = :status, `worktime` = :time_work
-				WHERE `company_id` = :company_id
-				AND `id` = :query_id";
+		$sql = "UPDATE `queries` SET `status` = :status, `worktime` = :time_work
+				WHERE `company_id` = :company_id AND `id` = :query_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		$stm->bindValue(':time_work', $query->time_work, PDO::PARAM_INT);
@@ -281,7 +264,7 @@ class model_query{
 	*/
 	private static function get_insert_id(data_user $user){
 		$sql = "SELECT MAX(`id`) as `max_query_id` FROM `queries`
-			WHERE `company_id` = :company_id";
+				WHERE `company_id` = :company_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
 		if($stm->execute() === false)
@@ -298,9 +281,8 @@ class model_query{
 	private static function get_insert_query_number(data_user $user, $time){
 		$time = getdate($time);
 		$sql = "SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
-		 WHERE `opentime` > :begin
-		 AND `opentime` <= :end
-		 AND `company_id` = :company_id";
+				WHERE `opentime` > :begin AND `opentime` <= :end
+				AND `company_id` = :company_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
@@ -444,7 +426,6 @@ class model_query{
 				else
 					$stm->bindValue(':department_id0', $query->department_id, PDO::PARAM_INT);
 		}
-
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при выборке заявок.');
 		$result = [];
@@ -723,18 +704,14 @@ class model_query{
 	* Удаляет пользователя из заявки.
 	*/
 	public static function remove_user(data_query $query_params, data_user $user_params, $class, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('id заявки задан не верно.');
-		if(empty($user_params->id))
-			throw new e_model('id пользователя задан не верно.');
+		self::verify_query_id($query_params);
+		model_user::verify_user_id($user_params)
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при проверке типа заявки.');
+		self::is_data_query($query);
 		$user = model_user::get_users($user_params)[0];
-		if(!($user instanceof data_user))
-			throw new e_model('Проблемы при проверке типа порльзователя.');
+		model_user::is_data_user($user);
 		$sql = 'DELETE FROM `query2user`
 				WHERE `company_id` = :company_id AND `query_id` = :query_id
 				AND `user_id` = :user_id AND `class` = :class';
@@ -751,16 +728,12 @@ class model_query{
 	* Обновляет работу из заявки.
 	*/
 	public static function remove_work(data_query $query_params, data_work $work_params, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('id заявки задан не верно.');
-		if(empty($work_params->id))
-			throw new e_model('id пользователя задан не верно.');
+		self::verify_query_id($query_params);
+		model_work::verify_work_id($work_params);
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при проверке типа заявки.');
+		self::is_data_query($query);
 		$work = model_work::get_works($work_params, $current_user)[0];
-		if(!($work instanceof data_work))
-			throw new e_model('Проблемы при проверке типа работы.');
+		model_work::is_data_work($work);
 		$sql = 'DELETE FROM `query2work`
 				WHERE `company_id` = :company_id AND `query_id` = :query_id
 				AND `work_id` = :work_id';
@@ -776,12 +749,10 @@ class model_query{
 	* Обновляет описание заявки.
 	*/
 	public static function update_description(data_query $query, data_user $current_user){
-		if(empty($query->description) OR empty($query->id))
-			throw new e_model('Плохие параметры.');
-		$sql = 'UPDATE `queries`
-				SET `description-open` = :description
-				WHERE `company_id` = :company_id
-				AND `id` = :query_id';
+		self::verify_query_id($query);
+		self::verify_query_description($query);
+		$sql = 'UPDATE `queries` SET `description-open` = :description
+				WHERE `company_id` = :company_id AND `id` = :query_id';
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':description', $query->description, PDO::PARAM_STR);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
@@ -794,13 +765,10 @@ class model_query{
 	* Обновляет контактную информацию.
 	*/
 	public static function update_contact_information(data_query $query, data_user $current_user){
-		if(empty($query->id))
-			throw new e_model('Плохие параметры.');
-		$sql = 'UPDATE `queries`
-				SET `addinfo-name` = :fio, `addinfo-telephone` = :telephone, 
-				`addinfo-cellphone` = :cellphone 
-				WHERE `company_id` = :company_id
-				AND `id` = :query_id';
+		self::verify_query_id($query);
+		$sql = 'UPDATE `queries` SET `addinfo-name` = :fio, 
+				addinfo-telephone` = :telephone, `addinfo-cellphone` = :cellphone 
+				WHERE `company_id` = :company_id AND `id` = :query_id';
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':fio', $query->contact_fio, PDO::PARAM_STR);
 		$stm->bindValue(':telephone', $query->contact_telephone, PDO::PARAM_STR);
@@ -815,13 +783,11 @@ class model_query{
 	* Обновляет статус оплаты.
 	*/
 	public static function update_payment_status(data_query $query_params, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('Несоответствующие параметры: id.');
+		self::verify_query_id($query_params);
 		if(array_search($query_params->payment_status, ['paid', 'unpaid', 'recalculation']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при получении заявки.');
+		self::is_data_query($query);
 		$query->payment_status = $query_params->payment_status;
 		$sql = 'UPDATE `queries` SET `payment-status` = :payment_status
 				WHERE `company_id` = :company_id AND `id` = :id';
@@ -837,13 +803,11 @@ class model_query{
 	* Обновляет статус реакции.
 	*/
 	public static function update_warning_status(data_query $query_params, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('Несоответствующие параметры: id.');
+		self::verify_query_id($query_params);
 		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при получении заявки.');
+		self::is_data_query($query);
 		$query->warning_status = $query_params->warning_status;
 		$sql = 'UPDATE `queries` SET `warning-type` = :warning_status
 				WHERE `company_id` = :company_id AND `id` = :id';
@@ -859,18 +823,14 @@ class model_query{
 	* Обновляет тип работ.
 	*/
 	public static function update_work_type(data_query $query_params, data_user $current_user){
-		if(empty($query_params->id))
-			throw new e_model('Несоответствующие параметры: id.');
-		if(empty($query_params->worktype_id))
-			throw new e_model('Несоответствующие параметры: worktype_id.');
+		self::verify_query_id($query_params);
+		self::verify_query_work_type_id($query_params);
 		$query = self::get_queries($query_params)[0];
-		if(!($query instanceof data_query))
-			throw new e_model('Проблемы при получении заявки.');
+		self::is_data_query($query);
 		$query_work_type_params = new data_query_work_type();
 		$query_work_type_params->id = $query_params->worktype_id;
 		$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, $_SESSION['user'])[0];
-		if(!($query_work_type instanceof data_query_work_type))
-			throw new e_model('Проблемы при получении типа работ.');
+		model_query_work_type::is_data_query_work_type($query_work_type);
 		$query->worktype_id = $query_work_type->id;
 		$query->work_type_name = $query_work_type->name;
 		$sql = 'UPDATE `queries` SET `query_worktype_id` = :work_type_id
@@ -882,5 +842,26 @@ class model_query{
 		if($stm->execute() == false)
 			throw new e_model('Ошибка при обновлении типа работ.');
 		return [$query];
+	}
+	/**
+	* Верификация идентификатора заявки
+	*/
+	public static function verify_query_id(data_query $query){
+		if($query->id < 1)
+			throw new e_model('Идентификатор заявки задан не верно.');
+	}
+	/**
+	* Верификация описания заявки
+	*/
+	public static function verify_query_description(data_query $query){
+		if(empty($query->description))
+			throw new e_model('Описание заявки задано не верно.');
+	}
+	/**
+	* Верификация типа объекта заявки
+	*/
+	public static function is_data_query($query){
+		if(!($query instanceof data_query))
+			throw new e_model('Возвращеный объект не является заявкой.');
 	}
 }
