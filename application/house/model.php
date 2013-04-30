@@ -23,10 +23,8 @@ class model_house{
 		self::verify_house_id($house);
 		$sql = "SELECT `houses`.`id`, `houses`.`company_id`, `houses`.`city_id`,
 				`houses`.`street_id`, `houses`.`department_id`, `houses`.`status`, 
-				`houses`.`housenumber` as `number`,
-				`streets`.`name` as `street_name`
-				FROM `houses`, `streets`
-				WHERE `houses`.`id` = :house_id
+				`houses`.`housenumber` as `number`, `streets`.`name` as `street_name`
+				FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
 				AND `houses`.`street_id` = `streets`.`id`";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':house_id', $house->id, PDO::PARAM_INT);
