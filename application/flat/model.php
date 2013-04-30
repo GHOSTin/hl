@@ -39,25 +39,18 @@ class model_flat{
 		return $flat_id;
 	}
 	/**
-	* Верификация статуса квартиры
-	*/
-	public static function verify_flat_status(data_flat $flat){
-		if(empty($flat->status))
-			throw new e_model('Статус квартиры задан не верно.');
-	}
-	/**
-	* Верификация номера квартиры
-	*/
-	public static function verify_flat_number(data_flat $flat){
-		if(empty($flat->number))
-			throw new e_model('Номер квартиры задан не верно.');
-	}
-	/**
 	* Верификация идентификатора компании квартиры
 	*/
 	public static function verify_flat_company_id(data_flat $flat){
 		if($flat->company_id < 1)
 			throw new e_model('Идентификатор компании квартиры задан не верно.');
+	}
+	/**
+	* Верификация идентифкатора дома квартиры
+	*/
+	public static function verify_flat_house_id(data_flat $flat){
+		if($flat->house_id < 1)
+			throw new e_model('Идентификатор дома квартиры задан не верно.');
 	}
 	/**
 	* Верификация идентификатора квартиры
@@ -67,10 +60,24 @@ class model_flat{
 			throw new e_model('Идентификатор квартиры задан не верно.');
 	}
 	/**
-	* Верификация идентифкатора дома квартиры
+	* Верификация номера квартиры
 	*/
-	public static function verify_flat_house_id(data_flat $flat){
-		if($flat->house_id < 1)
-			throw new e_model('Идентификатор дома квартиры задан не верно.');
+	public static function verify_flat_number(data_flat $flat){
+		if(empty($flat->number))
+			throw new e_model('Номер квартиры задан не верно.');
+	}
+	/**
+	* Верификация статуса квартиры
+	*/
+	public static function verify_flat_status(data_flat $flat){
+		if(empty($flat->status))
+			throw new e_model('Статус квартиры задан не верно.');
+	}
+	/**
+	* Верификация типа объекта города
+	*/
+	public static function is_data_flat($flat){
+		if(!($flat instanceof data_flat))
+			throw new e_model('Возвращеный объект не является квартирой.');
 	}
 }
