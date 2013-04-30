@@ -5,8 +5,8 @@
 */
 final class data_group extends data_object{
 
-	public $id;
-	public $status;
 	public $company_id;
-	public $name;
+    public $id;
+    public $name;
+    public $status;
 }
