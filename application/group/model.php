@@ -7,12 +7,12 @@ class model_group{
 	public static function get_groups(data_group $group_params, data_user $current_user){
 		$sql = "SELECT `id`, `company_id`, `status`, `name`
 				FROM `groups` WHERE `company_id` = :company_id";
-		if(!empty($group_params->id))
+		if($group_params->id > 0)
 			$sql .= " AND `id` = :id";
 		$sql .= " ORDER BY `name`";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if(!empty($group_params->id))
+		if($group_params->id > 0)
 			$stm->bindValue(':id', $group_params->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
 			throw new e_model('Проблема при выборке групп пользователей.');
