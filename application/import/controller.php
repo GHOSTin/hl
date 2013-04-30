@@ -30,6 +30,15 @@ class controller_import{
         return model_city::create_street($city, $street, $_SESSION['user']);
     }
 
+    public static function private_create_house(){
+        $house = new data_house();
+        $house->number = $_GET['number'];
+        $house->status = true;
+        $street = new data_street();
+        $street->id = $_GET['street_id'];
+        return model_street::create_house($street, $house, $_SESSION['user']);
+    }
+
     public static function private_load_numbers(){
         $numbers = $_POST['numbers'];
         $city = new data_city();

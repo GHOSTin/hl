@@ -31,6 +31,14 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.create_house', function(){
+        $.get('create_house',{
+            number: $('.dialog-house').text(),
+            street_id: $('.dialog-street_id').attr('street_id')
+            },function(r){
+                init_content(r);
+            });
+    });
     $(document).on('click', '#toggle_checkboxes', function(){
         $('tbody input[type=checkbox]').prop('checked', ($(this).is(':checked')));
     });
@@ -39,8 +47,8 @@ $(document).ready(function(){
         $('table.table > tbody > tr').each(function(){
             if($(this).find('td:first-child input[type=checkbox]').is(':checked')){
                 data.push({
-                    'number': $(this).find('td:nth-child(3)').text().replace('л/c №', '')
-                    ,'fio': ($(this).find('td:nth-child(4) select').length)?
+                    'number': $(this).find('td:nth-child(3)').text().replace('л/c №', ''),
+                    'fio': ($(this).find('td:nth-child(4) select').length)?
                                 $(this).find('td:nth-child(4) select').val():
                                 $(this).find('td:nth-child(4)').text()
                 });

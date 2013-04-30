@@ -153,7 +153,8 @@ class model_import{
 				throw new e_model('Проблема при выборе дома.');
 		else
 			throw new e_model('Проблема при выборе дома.');
-		return ['file' => $file_array, 'city' => $city, 'street' => $street, 'house_number' => (string) $house_node->number];
+		return ['file' => $file_array, 'city' => $city, 'street' => $street,
+		'house' => $house, 'house_number' => (string) $house_node->number];
 	}
 	public static function load_numbers(data_city $city_params, data_street $street_params,
 		data_house $house_params, $numbers, data_user $current_user){
