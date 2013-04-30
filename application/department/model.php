@@ -5,11 +5,12 @@ class model_department{
 	* @return object data_department
 	*/
 	public static function create_department(data_company $company, data_department $department, data_user $current_user){
-		self::verify_department_status($department);
-		self::verify_department_name($department);
-		model_company::verify_company_id($company);
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
+		self::verify_department_id($department);
+		self::verify_department_company_id($department);
+		self::verify_department_status($department);
+		self::verify_department_name($department);
 		$sql = "INSERT INTO `departments` (`id`, `company_id`, `status`, `name`)
 				VALUES (:department_id, :company_id, :status, :name);";
 		$stm = db::get_handler()->prepare($sql);
@@ -27,8 +28,9 @@ class model_department{
 	* @return int
 	*/
 	private static function get_insert_id(data_company $company){
+		model_company::verify_company_id($company);
 		$sql = "SELECT MAX(`id`) as `max_department_id` FROM `departments`
-			WHERE `company_id` = :company_id";
+				WHERE `company_id` = :company_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':company_id', $company->id, PDO::PARAM_INT);
 		if($stm->execute() == false)
@@ -46,7 +48,7 @@ class model_department{
 	public static function get_departments(data_department $department_params, data_user $current_user){
 		$sql = "SELECT `id`, `company_id`, `status`, `name`
 				FROM `departments` WHERE `departments`.`company_id` = :company_id";
-		if(!empty($department_params->id)){
+		if($department_params->id > 0){
 			$sql .= ' AND `id` IN(';
 			if(is_array($department_params->id)){
 				$count = count($department_params->id);
@@ -62,7 +64,7 @@ class model_department{
 		}
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if(!empty($department_params->id))
+		if($department_params->id > 0)
 			if(is_array($department_params->id))
 				foreach($department_params->id as $key => $department)
 					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
@@ -90,5 +92,12 @@ class model_department{
 	public static function verify_department_name(data_department $department){
 		if(empty($department->name))
 			throw new e_model('Название участка задано не верно.');
+	}
+	/**
+	* Верификация идентификатора компании участка
+	*/
+	public static function verify_department_company_id(data_department $department){
+		if($department->company_id < 1)
+			throw new e_model('Идентификатор компании участка задан не верно.');
 	}
 }
