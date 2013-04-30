@@ -156,11 +156,25 @@ class model_city{
 		return $result;
 	}
 	/**
+	* Верификация идентификатора компании города
+	*/
+	public static function verify_city_company_id(data_city $city){
+		if($city->company_id < 1)
+			throw new e_model('Идентификатор компании города задан не верно.');
+	}
+	/**
 	* Верификация идентификатора города
 	*/
 	public static function verify_city_id(data_city $city){
 		if($city->id < 1)
 			throw new e_model('Идентификатор города задан не верно.');
+	}
+	/**
+	* Верификация названия города
+	*/
+	public static function verify_city_name(data_city $city){
+		if(empty($city->name))
+			throw new e_model('Название города задано не верно.');
 	}
 	/**
 	* Верификация статус города
@@ -170,24 +184,10 @@ class model_city{
 			throw new e_model('Статус города задан не верно.');
 	}
 	/**
-	* Верификация название города
-	*/
-	public static function verify_city_name(data_city $city){
-		if(empty($city->name))
-			throw new e_model('Название города задан не верно.');
-	}
-	/**
-	* Верификация идентификатора компании города
-	*/
-	public static function verify_city_company_id(data_city $city){
-		if($city->company_id < 1)
-			throw new e_model('Идентификатор компании города задан не верно.');
-	}
-	/**
 	* Верификация типа объекта города
 	*/
 	public static function is_data_city($city){
 		if(!($city instanceof data_city))
-			throw new e_model('Возвращен объект не является городом.');
+			throw new e_model('Возвращеный объект не является городом.');
 	}
 }

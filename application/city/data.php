@@ -5,8 +5,8 @@
 */
 final class data_city extends data_object{
 	
+    public $company_id;
 	public $id;
-	public $company_id;
+    public $name;
 	public $status;
-	public $name;
 }
