@@ -6,15 +6,22 @@ class model_number{
 	*/
 	public static function create_number(data_city $city, data_flat $flat,
 		data_number $number, data_user $current_user){
-		self::verify_number_number($number);
-		self::verify_number_fio($number);
-		self::verify_number_status($number);
+		model_city::verify_city_id($city);
+		$number->id = self::get_insert_id($city);
 		$number->company_id = $current_user->company_id;
 		$number->city_id = $city->id;
 		$number->type = 'human';
 		$number->house_id = $flat->house_id;
 		$number->flat_id = $flat->id;
-		$number->id = self::get_insert_id($city);
+		self::verify_number_id($number);
+		self::verify_number_company_id($number);
+		self::verify_number_city_id($number);
+		self::verify_number_house_id($number);
+		self::verify_number_flat_id($number);
+		self::verify_number_number($number);
+		self::verify_number_type($number);
+		self::verify_number_status($number);
+		self::verify_number_fio($number);
 		$sql = "INSERT INTO `numbers` (
 					`id`, `company_id`, `city_id`, `house_id`, `flat_id`, `number`, `type`, `status`,
 					`fio`, `telephone`, `cellphone`, `password`, `contact-fio`, `contact-telephone`,
@@ -368,6 +375,34 @@ class model_number{
 			throw new e_model('Идентификатор лицевого счета задан не верно.');
 	}
 	/**
+	* Верификация идентификатора компании лицевого счета
+	*/
+	public static function verify_number_company_id(data_number $number){
+		if($number->company_id < 1)
+			throw new e_model('Идентификатор компании лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация идентификатора города лицевого счета
+	*/
+	public static function verify_number_city_id(data_number $number){
+		if($number->city_id < 1)
+			throw new e_model('Идентификатор города лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация идентификатора дома лицевого счета
+	*/
+	public static function verify_number_house_id(data_number $number){
+		if($number->house_id < 1)
+			throw new e_model('Идентификатор дома лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация идентификатора квартиры лицевого счета
+	*/
+	public static function verify_number_flat_id(data_number $number){
+		if($number->flat_id < 1)
+			throw new e_model('Идентификатор квартиры лицевого счета задан не верно.');
+	}
+	/**
 	* Верификация номера лицевого счета
 	*/
 	public static function verify_number_number(data_number $number){
@@ -380,6 +415,13 @@ class model_number{
 	public static function verify_number_fio(data_number $number){
 		if(empty($number->fio))
 			throw new e_model('Фамилия владельца лицевого счета задан не верно.');
+	}
+	/**
+	* Верификация типа лицевого счета
+	*/
+	public static function verify_number_type(data_number $number){
+		if(empty($number->type))
+			throw new e_model('Тип лицевого счета задан не верно.');
 	}
 	/**
 	* Верификация статуса лицевого счета
