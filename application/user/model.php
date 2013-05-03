@@ -82,46 +82,78 @@ class model_user{
 		return $result;
 	}
 	/**
-	* Верификация идентификатора пользователя
+	* Верификация сотового телефона пользователя
 	*/
-	public static function verify_user_id(data_user $user){
-		if($user->id < 1)
-			throw new e_model('Идентификатор пользователя задан не верно.');
+	public static function verify_cellphone(data_user $user){
 	}
 	/**
-	* Верификация идентификатора компании пользователя
+	* Верификация идентификатора компании
 	*/
-	public static function verify_user_company_id(data_user $user){
+	public static function verify_company_id(data_user $user){
 		if($user->company_id < 1)
-			throw new e_model('Идентификатор компании пользователя задан не верно.');
-	}
-	/**
-	* Верификация логина пользователя
-	*/
-	public static function verify_user_login(data_user $user){
-		if(empty($user->login))
-			throw new e_model('Логин пользователя задан не верно.');
-	}
-	/**
-	* Верификация пароля пользователя
-	*/
-	public static function verify_user_password(data_user $user){
-		if(empty($user->password))
-			throw new e_model('Пароля пользователя задан не верно.');
+			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
 	* Верификация имени пользователя
 	*/
-	public static function verify_user_firstname(data_user $user){
+	public static function verify_firstname(data_user $user){
 		if(empty($user->firstname))
 			throw new e_model('Имя пользователя задано не верно.');
 	}
 	/**
+	* Верификация идентификатора пользователя
+	*/
+	public static function verify_id(data_user $user){
+		if($user->id < 1)
+			throw new e_model('Идентификатор пользователя задан не верно.');
+	}
+	/**
 	* Верификация фамилии пользователя
 	*/
-	public static function verify_user_lastname(data_user $user){
+	public static function verify_lastname(data_user $user){
 		if(empty($user->lastname))
 			throw new e_model('Фамилия пользователя задана не верно.');
+	}
+	/**
+	* Верификация логина пользователя
+	*/
+	public static function verify_login(data_user $user){
+		if(empty($user->login))
+			throw new e_model('Логин пользователя задан не верно.');
+	}
+	/**
+	* Верификация фамилии пользователя
+	*/
+	public static function verify_lastname(data_user $user){
+		if(empty($user->lastname))
+			throw new e_model('Фамилия пользователя задано не верно.');
+	}
+	/**
+	* Верификация отчества пользователя
+	*/
+	public static function verify_middlename(data_user $user){
+	}
+	/**
+	* Верификация пароля пользователя
+	*/
+	public static function verify_password(data_user $user){
+		if(empty($user->password))
+			throw new e_model('Пароля пользователя задан не верно.');
+	}
+	/**
+	* Верификация пароля пользователя
+	*/
+	public static function verify_session(data_user $user){
+	}
+	/**
+	* Верификация статуса пользователя
+	*/
+	public static function verify_status(data_user $user){
+	}
+	/**
+	* Верификация телефона пользователя
+	*/
+	public static function verify_telephone(data_user $user){
 	}
 	/**
 	* Верификация типа объекта пользователя
