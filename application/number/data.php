@@ -6,24 +6,23 @@
 */
 final class data_number extends data_object{
 	
-	public $id;
-	public $company_id;
-	public $city_id;
-	public $house_id;
-	public $flat_id;
-	public $number;
-	public $type;
-	public $status;
-	public $fio;
-	public $telephone;
 	public $cellphone;
-	public $password;
+	public $city_id;
+	public $contact_cellphone;
 	public $contact_fio;
 	public $contact_telephone;
-	public $contact_cellphone;
-	// other
-	public $flat_number;
-	public $house_number;
-	public $street_name;
+	public $company_id;
 	public $department_id;
+	public $fio;
+	public $flat_number;
+	public $flat_id;
+	public $house_id;
+	public $house_number;
+	public $id;
+	public $number;
+	public $password;
+	public $status;
+	public $street_name;
+	public $telephone;
+	public $type;
 }
