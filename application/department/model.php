@@ -82,28 +82,28 @@ class model_department{
 	/**
 	* Верификация идентификатора компании участка
 	*/
-	public static function verify_department_company_id(data_department $department){
+	public static function verify_company_id(data_department $department){
 		if($department->company_id < 1)
 			throw new e_model('Идентификатор компании участка задан не верно.');
 	}
 	/**
 	* Верификация идентификатора участка
 	*/
-	public static function verify_department_id(data_department $department){
+	public static function verify_id(data_department $department){
 		if($department->id < 1)
 			throw new e_model('Идентификатор участка задан не верно.');
 	}
 	/**
 	* Верификация имени участка
 	*/
-	public static function verify_department_name(data_department $department){
+	public static function verify_name(data_department $department){
 		if(empty($department->name))
 			throw new e_model('Название участка задано не верно.');
 	}
 	/**
 	* Верификация статуса участка
 	*/
-	public static function verify_department_status(data_department $department){
+	public static function verify_status(data_department $department){
 		if(empty($department->status))
 			throw new e_model('Статус участка задан не верно.');
 	}

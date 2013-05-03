@@ -100,35 +100,35 @@ class model_house{
 	/**
 	* Верификация идентификатора дома
 	*/
-	public static function verify_house_id(data_house $house){
+	public static function verify_id(data_house $house){
 		if($house->id < 1)
 			throw new e_model('Идентификатор дома задан не верно.');
 	}
 	/**
 	* Верификация номера дома
 	*/
-	public static function verify_house_number(data_house $house){
+	public static function verify_number(data_house $house){
 		if(empty($house->number))
 			throw new e_model('Номер дома задан не верно.');
 	}
 	/**
 	* Верификация статуса дома
 	*/
-	public static function verify_house_status(data_house $house){
+	public static function verify_status(data_house $house){
 		if(empty($house->status))
 			throw new e_model('Статус дома задан не верно.');
 	}
 	/**
 	* Верификация идентификатора улицы
 	*/
-	public static function verify_street_id(data_house $house){
+	public static function verify_id(data_house $house){
 		if($house->street_id < 1)
 			throw new e_model('Идентификатор улицы задан не верно.');
 	}
 	/**
 	* Верификация названия улицы
 	*/
-	public static function verify_street_name(data_house $house){
+	public static function verify_name(data_house $house){
 		if(empty($house->street_name))
 			throw new e_model('Название улицы задано не верно.');
 	}

@@ -45,21 +45,21 @@ class model_company{
 	/**
 	* Верификация идентификатора компании
 	*/
-	public static function verify_company_id(data_company $company){
+	public static function verify_id(data_company $company){
 		if($company->id < 1)
 			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
 	* Верификация названия компании
 	*/
-	public static function verify_company_name(data_company $company){
+	public static function verify_name(data_company $company){
 		if(empty($company->name))
 			throw new e_model('Название компании задано не верно.');
 	}
 	/**
 	* Верификация статуса компании
 	*/
-	public static function verify_company_status(data_company $company){
+	public static function verify_status(data_company $company){
 		if(empty($company->status))
 			throw new e_model('Статус компании задан не верно.');
 	}

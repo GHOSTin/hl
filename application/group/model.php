@@ -49,28 +49,28 @@ class model_group{
 	/**
 	* Верификация идентификатора компании группы
 	*/
-	public static function verify_group_company_id(data_group $group){
+	public static function verify_company_id(data_group $group){
 		if($group->company_id < 1)
 			throw new e_model('Идентификатор компании группы задан не верно.');
 	}
 	/**
 	* Верификация идентификатора группы
 	*/
-	public static function verify_group_id(data_group $group){
+	public static function verify_id(data_group $group){
 		if($group->id < 1)
 			throw new e_model('Идентификатор группы задан не верно.');
 	}
 	/**
 	* Верификация названия группы
 	*/
-	public static function verify_group_name(data_group $group){
+	public static function verify_name(data_group $group){
 		if(empty($group->name))
 			throw new e_model('Название группы задано не верно.');
 	}
 	/**
 	* Верификация статуса группы
 	*/
-	public static function verify_group_status(data_group $group){
+	public static function verify_status(data_group $group){
 		if(empty($group->status))
 			throw new e_model('Статус группы задан не верно.');
 	}
