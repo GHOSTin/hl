@@ -5,8 +5,8 @@
 */
 final class data_workgroup extends data_object{
 
-	public $id;
 	public $company_id;
+    public $id;
+    public $name;
 	public $status;
-	public $name;
 }
