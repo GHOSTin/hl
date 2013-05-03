@@ -5,10 +5,10 @@
 */
 final class data_street extends data_object{
 
-	public $id;
-	public $company_id;
-	public $city_id;
-	public $status;
-	public $name;
+    public $company_id;
+    public $city_id;
     public $department_id;
+    public $id;
+    public $name;
+	public $status;
 }

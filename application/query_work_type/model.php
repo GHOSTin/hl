@@ -23,6 +23,13 @@ class model_query_work_type{
 		return $result;
 	}
 	/**
+	* Верификация идентификатора компании
+	*/
+	public static function verify_company_id(data_query_work_type $query_work_type){
+		if($query_work_type->company_id < 1)
+			throw new e_model('Идентификатор компании задан не верно.');
+	}
+	/**
 	* Верификация идентификатора типа работа заявки
 	*/
 	public static function verify_id(data_query_work_type $query_work_type){
