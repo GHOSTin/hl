@@ -2,7 +2,7 @@
 {% block component %}
 <div class="row-fluid">
     <div class="span6">
-        <form action="/?p=auth.login" method="post" class="form-horizontal">
+        <form action="/" method="post" class="form-horizontal">
             <legend>Вход в систему</legend>
             <fieldset>
                 <div class="control-group">

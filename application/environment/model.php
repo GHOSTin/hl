@@ -49,10 +49,25 @@ class model_environment{
 	*/
 	public static function get_page_content(){
 		try{
-			if(model_session::verify_user() instanceof data_user){
+			session_start();
+			if($_SESSION['user'] instanceof data_current_user){
 				self::create_batabase_connection();
 				list($component, $prefix, $method) = self::build_router();
+				model_session::set_user($_SESSION['user']);
+			}elseif(!empty($_POST)){
+				self::create_batabase_connection();
+				$user = model_auth::get_login();
+				if($user instanceof data_current_user){
+					list($component, $prefix, $method) = self::build_router();
+					model_session::set_user($user);
+				}else{
+					session_destroy();
+					$component = 'auth';
+					$prefix = 'public_';
+					$method = 'show_auth_form';
+				}
 			}else{
+				session_destroy();
 				$component = 'auth';
 				$prefix = 'public_';
 				$method = 'show_auth_form';
