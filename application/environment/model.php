@@ -73,21 +73,24 @@ class model_environment{
 			list($component, $prefix, $method) = self::create_session();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
-			// self::verify_general_access();
-			$c_data['component'] = $controller::{$prefix.$method}();
-			//$c_data['rules'] = $_SESSION['rules'][$component];
-			return $view::{$prefix.$method}($c_data);
+			$user = model_session::get_user();
+			if($user instanceof data_current_user){
+				model_profile::get_user_profiles($user);
+				$data['menu'] = model_menu::build_menu();
+				$data['rules'] = model_session::get_rules()[$component];
+				self::verify_general_access($component);
+			}
+			$data['component'] = $controller::{$prefix.$method}();
+			return $view::{$prefix.$method}($data);
 		}catch(exception $e){
 			return $e->getMessage();
 		}
 	}
-	public static function verify_general_access(){
-		if($method === 'show_default_page')
-            $c_data['componentName'] = $component;
-        $c_data['anonymous'] = true;
-        // нужно вынести это кусок -->
-        if($_SESSION['user'] instanceof data_user){
-            model_profile::get_user_profiles();
+	/**
+	* Верификация доступа к компоненту
+	*/
+	public static function verify_general_access($component){
+       /* if(model_session::get_user() instanceof data_current_user){
             $access = (model_profile::check_general_access($controller, $component));
             if($access !== true){
                 $controller = 'controller_error';
@@ -95,9 +98,6 @@ class model_environment{
                 $prefix = 'private_';
                 $method = 'get_access_denied_message';
             }
-            model_menu::build_hot_menu($component, $controller);
-            $c_data['menu'] = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
-            $c_data['anonymous'] = false;
-        }
+        }*/
 	}
 }

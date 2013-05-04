@@ -1,7 +1,7 @@
 <?php
 class model_auth{
 	/**
-	* При удачной авторизации в сессию добавляются данные о пользователе(класс data_user).
+	* Возвращает пользователя для сессии data_cureent_user
 	*/
 	public static function auth_user(){
 		$sql = "SELECT `id`, `company_id`, `status`, `username` as `login`,
