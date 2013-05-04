@@ -147,49 +147,49 @@ class model_street{
 		return $result;
 	}
 	/**
-	* Верификация идентификатора компании
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_company_id(data_street $street){
 		if($street->company_id < 1)
 			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
-	* Верификация идентификатора улицы
+	* Верификация идентификатора города.
 	*/
 	public static function verify_city_id(data_street $street){
 		if($street->city_id < 1)
 			throw new e_model('Идентификатор города задан не верно.');
 	}
 	/**
-	* Верификация идентификатора улицы
+	* Верификация идентификатора участка.
 	*/
 	public static function verify_department_id(data_street $street){
 		if($street->department_id < 1)
 			throw new e_model('Идентификатор участка задан не верно.');
 	}
 	/**
-	* Верификация идентификатора улицы
+	* Верификация идентификатора улицы.
 	*/
 	public static function verify_id(data_street $street){
 		if($street->id < 1)
 			throw new e_model('Идентификатор улицы задан не верно.');
 	}
 	/**
-	* Верификация статуса улицы
+	* Верификация статуса улицы.
 	*/
 	public static function verify_status(data_street $street){
 		if(empty($street->status))
 			throw new e_model('Статус улицы задан не верно.');
 	}
 	/**
-	* Верификация названия улицы
+	* Верификация названия улицы.
 	*/
 	public static function verify_name(data_street $street){
 		if(empty($street->name))
 			throw new e_model('Название улицы задан не верно.');
 	}
 	/**
-	* Проверка принадлежности объекта к классу data_street
+	* Проверка принадлежности объекта к классу data_street.
 	*/
 	public static function is_data_street($street){
 		if(!($street instanceof data_street))

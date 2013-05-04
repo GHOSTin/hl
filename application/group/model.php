@@ -47,35 +47,35 @@ class model_group{
 		return $result;
 	}
 	/**
-	* Верификация идентификатора компании группы
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_company_id(data_group $group){
 		if($group->company_id < 1)
-			throw new e_model('Идентификатор компании группы задан не верно.');
+			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
-	* Верификация идентификатора группы
+	* Верификация идентификатора группы.
 	*/
 	public static function verify_id(data_group $group){
 		if($group->id < 1)
 			throw new e_model('Идентификатор группы задан не верно.');
 	}
 	/**
-	* Верификация названия группы
+	* Верификация названия группы.
 	*/
 	public static function verify_name(data_group $group){
 		if(empty($group->name))
 			throw new e_model('Название группы задано не верно.');
 	}
 	/**
-	* Верификация статуса группы
+	* Верификация статуса группы.
 	*/
 	public static function verify_status(data_group $group){
 		if(empty($group->status))
 			throw new e_model('Статус группы задан не верно.');
 	}
 	/**
-	* Верификация типа объекта группы
+	* Проверка принадлежности объекта к классу data_group.
 	*/
 	public static function is_data_group($group){
 		if(!($group instanceof data_group))

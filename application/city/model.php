@@ -156,35 +156,35 @@ class model_city{
 		return $result;
 	}
 	/**
-	* Верификация идентификатора компании города
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_company_id(data_city $city){
 		if($city->company_id < 1)
 			throw new e_model('Идентификатор компании города задан не верно.');
 	}
 	/**
-	* Верификация идентификатора города
+	* Верификация идентификатора города.
 	*/
 	public static function verify_id(data_city $city){
 		if($city->id < 1)
 			throw new e_model('Идентификатор города задан не верно.');
 	}
 	/**
-	* Верификация названия города
+	* Верификация названия города.
 	*/
 	public static function verify_name(data_city $city){
 		if(empty($city->name))
 			throw new e_model('Название города задано не верно.');
 	}
 	/**
-	* Верификация статус города
+	* Верификация статуса города.
 	*/
 	public static function verify_status(data_city $city){
 		if(empty($city->status))
 			throw new e_model('Статус города задан не верно.');
 	}
 	/**
-	* Верификация типа объекта города
+	* Проверка принадлежности объекта к классу data_city.
 	*/
 	public static function is_data_city($city){
 		if(!($city instanceof data_city))

@@ -70,70 +70,70 @@ class model_house{
 		return $result;
 	}
 	/**
-	* Верификация идентификатора города
+	* Верификация идентификатора города.
 	*/
 	public static function verify_city_id(data_house $house){
 		if($house->city_id < 1)
 			throw new e_model('Идентификатор города задан не верно.');
 	}
 	/**
-	* Верификация названия города
+	* Верификация названия города.
 	*/
 	public static function verify_city_name(data_house $house){
 		if(empty($house->city_name))
 			throw new e_model('Название города задано не верно.');
 	}
 	/**
-	* Верификация идентификатора компании
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_company_id(data_house $house){
 		if($house->company_id < 1)
 			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
-	* Верификация идентификатора участка
+	* Верификация идентификатора участка.
 	*/
 	public static function verify_department_id(data_house $house){
 		if($house->department_id < 1)
 			throw new e_model('Идентификатор участка задан не верно.');
 	}
 	/**
-	* Верификация идентификатора дома
+	* Верификация идентификатора дома.
 	*/
 	public static function verify_id(data_house $house){
 		if($house->id < 1)
 			throw new e_model('Идентификатор дома задан не верно.');
 	}
 	/**
-	* Верификация номера дома
+	* Верификация номера дома.
 	*/
 	public static function verify_number(data_house $house){
 		if(empty($house->number))
 			throw new e_model('Номер дома задан не верно.');
 	}
 	/**
-	* Верификация статуса дома
+	* Верификация статуса дома.
 	*/
 	public static function verify_status(data_house $house){
 		if(empty($house->status))
 			throw new e_model('Статус дома задан не верно.');
 	}
 	/**
-	* Верификация идентификатора улицы
+	* Верификация идентификатора улицы.
 	*/
 	public static function verify_id(data_house $house){
 		if($house->street_id < 1)
 			throw new e_model('Идентификатор улицы задан не верно.');
 	}
 	/**
-	* Верификация названия улицы
+	* Верификация названия улицы.
 	*/
 	public static function verify_name(data_house $house){
 		if(empty($house->street_name))
 			throw new e_model('Название улицы задано не верно.');
 	}
 	/**
-	* Верификация типа объекта дома
+	* Проверка принадлежности объекта к классу data_house.
 	*/
 	public static function is_data_house($house){
 		if(!($house instanceof data_house))

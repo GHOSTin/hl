@@ -43,28 +43,28 @@ class model_company{
 		return $company_id;
 	}
 	/**
-	* Верификация идентификатора компании
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_id(data_company $company){
 		if($company->id < 1)
 			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
-	* Верификация названия компании
+	* Верификация названия компании.
 	*/
 	public static function verify_name(data_company $company){
 		if(empty($company->name))
 			throw new e_model('Название компании задано не верно.');
 	}
 	/**
-	* Верификация статуса компании
+	* Верификация статуса компании.
 	*/
 	public static function verify_status(data_company $company){
 		if(empty($company->status))
 			throw new e_model('Статус компании задан не верно.');
 	}
 	/**
-	* Верификация типа объекта компании
+	* Проверка принадлежности объекта к классу data_company.
 	*/
 	public static function is_data_company($company){
 		if(!($company instanceof data_company))

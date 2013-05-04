@@ -368,143 +368,141 @@ class model_number{
 		}
 	}
 	/**
-	* Верификация сотового телефона
+	* Верификация сотового телефона лицевого счета.
 	*/
 	public static function verify_cellphone(data_number $number){
-		if(empty($number->cellphone))
-			throw new e_model('Сотовый телефон задан не верно.');
 	}
 	/**
-	* Верификация идентификатора города лицевого счета
+	* Верификация идентификатора города.
 	*/
 	public static function verify_city_id(data_number $number){
 		if($number->city_id < 1)
-			throw new e_model('Идентификатор города лицевого счета задан не верно.');
+			throw new e_model('Идентификатор города задан не верно.');
 	}
 	/**
-	* Верификация сотового телефона контактного лица
+	* Верификация сотового телефона контактного лица.
 	*/
 	public static function verify_contact_cellphone(data_number $number){
 		if(empty($number->contact_cellphone))
-			throw new e_model('Сотовый телефон контакта задан не верно.');
+			throw new e_model('Сотовый телефон контактного лица задан не верно.');
 	}
 	/**
-	* Верификация ФИО контактного лица
+	* Верификация ФИО контактного лица.
 	*/
 	public static function verify_contact_fio(data_number $number){
 		if(empty($number->contact_fio))
-			throw new e_model('ФИО контакта заданы не верно.');
+			throw new e_model('ФИО контактного лица заданы не верно.');
 	}
 	/**
-	* Верификация телефона контактного лица
+	* Верификация телефона контактного лица.
 	*/
 	public static function verify_contact_telephone(data_number $number){
 		if(empty($number->contact_telephone))
-			throw new e_model('Телефон контакта задан не верно.');
+			throw new e_model('Телефон контактного лица задан не верно.');
 	}
 	/**
-	* Верификация идентификатора компании лицевого счета
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_company_id(data_number $number){
 		if($number->company_id < 1)
-			throw new e_model('Идентификатор компании лицевого счета задан не верно.');
+			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
-	* Верификация идентификатора участка
+	* Верификация идентификатора участка.
 	*/
 	public static function verify_department_id(data_number $number){
 		if($number->department_id < 1)
 			throw new e_model('Идентификатор участка задан не верно.');
 	}
 	/**
-	* Верификация ФИО лицевого счета
+	* Верификация ФИО владельца лицевого счета.
 	*/
 	public static function verify_fio(data_number $number){
 		if(empty($number->fio))
-			throw new e_model('Фамилия владельца лицевого счета задан не верно.');
+			throw new e_model('ФИО владельца лицевого счета заданы не верно.');
 	}
 	/**
-	* Верификация номера квартиры
+	* Верификация номера квартиры.
 	*/
 	public static function verify_flat_number(data_number $number){
 		if(empty($number->flat_number))
 			throw new e_model('Номер квартиры задан не верно.');
 	}
 	/**
-	* Верификация идентификатора квартиры лицевого счета
+	* Верификация идентификатора квартиры.
 	*/
 	public static function verify_flat_id(data_number $number){
 		if($number->flat_id < 1)
-			throw new e_model('Идентификатор квартиры лицевого счета задан не верно.');
+			throw new e_model('Идентификатор квартиры задан не верно.');
 	}
 	/**
-	* Верификация идентификатора дома лицевого счета
+	* Верификация идентификатора дома.
 	*/
 	public static function verify_house_id(data_number $number){
 		if($number->house_id < 1)
-			throw new e_model('Идентификатор дома лицевого счета задан не верно.');
+			throw new e_model('Идентификатор дома задан не верно.');
 	}
 	/**
-	* Верификация номера дома
+	* Верификация номера дома.
 	*/
 	public static function verify_house_number(data_number $number){
 		if(empty($number->house_number))
 			throw new e_model('Номер дома задан не верно.');
 	}
 	/**
-	* Верификация идентификатора лицевого счета
+	* Верификация идентификатора лицевого счета.
 	*/
 	public static function verify_id(data_number $number){
 		if($number->id < 1)
 			throw new e_model('Идентификатор лицевого счета задан не верно.');
 	}
 	/**
-	* Верификация номера лицевого счета
+	* Верификация номера лицевого счета.
 	*/
 	public static function verify_number(data_number $number){
 		if(empty($number->number))
 			throw new e_model('Номер лицевого счета задан не верно.');
 	}
 	/**
-	* Верификация пароля лицевого счета
+	* Верификация пароля лицевого счета.
 	*/
 	public static function verify_password(data_number $number){
 		if(empty($number->password))
 			throw new e_model('Пароль лицевого счета задан не верно.');
 	}
 	/**
-	* Верификация статуса лицевого счета
+	* Верификация статуса лицевого счета.
 	*/
 	public static function verify_status(data_number $number){
 		if(empty($number->status))
 			throw new e_model('Статус лицевого счета задан не верно.');
 	}
 	/**
-	* Верификация названия улицы
+	* Верификация названия улицы.
 	*/
 	public static function verify_street_name(data_number $number){
 		if(empty($number->street_name))
 			throw new e_model('Название улицы задано не верно.');
 	}
 	/**
-	* Верификация телефона лицевого счета
+	* Верификация телефона владельца лицевого счета.
 	*/
 	public static function verify_telephone(data_number $number){
 		if(empty($number->telephone))
-			throw new e_model('Телефон задан не верно.');
+			throw new e_model('Телефон владельца лицевого счета задан не верно.');
 	}
 	/**
-	* Верификация типа лицевого счета
+	* Верификация типа лицевого счета.
 	*/
 	public static function verify_number_type(data_number $number){
 		if(empty($number->type))
 			throw new e_model('Тип лицевого счета задан не верно.');
 	}
 	/**
-	* Верификация типа объекта лицевого счета
+	* Проверка принадлежности объекта к классу data_number.
 	*/
 	public static function is_data_number($number){
 		if(!($number instanceof data_number))
-			throw new e_model('Возвращен объект не является лицевым счетом');
+			throw new e_model('Возвращен объект не является лицевым счетом.');
 	}
 }

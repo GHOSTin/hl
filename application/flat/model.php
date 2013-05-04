@@ -39,42 +39,42 @@ class model_flat{
 		return $flat_id;
 	}
 	/**
-	* Верификация идентификатора компании квартиры
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_company_id(data_flat $flat){
 		if($flat->company_id < 1)
-			throw new e_model('Идентификатор компании квартиры задан не верно.');
+			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
-	* Верификация идентифкатора дома квартиры
+	* Верификация идентифкатора дома.
 	*/
 	public static function verify_house_id(data_flat $flat){
 		if($flat->house_id < 1)
-			throw new e_model('Идентификатор дома квартиры задан не верно.');
+			throw new e_model('Идентификатор дома задан не верно.');
 	}
 	/**
-	* Верификация идентификатора квартиры
+	* Верификация идентификатора квартиры.
 	*/
 	public static function verify_id(data_flat $flat){
 		if($flat->id < 1)
 			throw new e_model('Идентификатор квартиры задан не верно.');
 	}
 	/**
-	* Верификация номера квартиры
+	* Верификация номера квартиры.
 	*/
 	public static function verify_number(data_flat $flat){
 		if(empty($flat->number))
 			throw new e_model('Номер квартиры задан не верно.');
 	}
 	/**
-	* Верификация статуса квартиры
+	* Верификация статуса квартиры.
 	*/
 	public static function verify_status(data_flat $flat){
 		if(empty($flat->status))
 			throw new e_model('Статус квартиры задан не верно.');
 	}
 	/**
-	* Верификация типа объекта города
+	* Проверка принадлежности объекта к классу data_flat.
 	*/
 	public static function is_data_flat($flat){
 		if(!($flat instanceof data_flat))

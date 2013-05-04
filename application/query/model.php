@@ -844,175 +844,171 @@ class model_query{
 		return [$query];
 	}
 	/**
-	* Верификация идентификатора заявки
+	* Верификация идентификатора заявки.
 	*/
 	public static function verify_id(data_query $query){
 		if($query->id < 1)
 			throw new e_model('Идентификатор заявки задан не верно.');
 	}
 	/**
-	* Верификация статуса заявки
+	* Верификация статуса заявки.
 	*/
 	public static function verify_status(data_query $query){
 		if(empty($query->status))
 			throw new e_model('Статус заявки задан не верно.');
 	}
 	/**
-	* Верификация инициатора заявки
+	* Верификация инициатора заявки.
 	*/
 	public static function verify_initiator(data_query $query){
 		if(empty($query->initiator))
 			throw new e_model('Инициатор заявки задан не верно.');
 	}
 	/**
-	* Верификация инициатора заявки
+	* Верификация статуса оплаты заявки.
 	*/
 	public static function verify_payment_status(data_query $query){
 		if(empty($query->payment_status))
 			throw new e_model('Статус оплаты заявки задан не верно.');
 	}
 	/**
-	* Верификация ворнинга заявки
+	* Верификация ворнинга заявки.
 	*/
 	public static function verify_warning_status(data_query $query){
 		if(empty($query->warning_status))
 			throw new e_model('Статус ворнинга заявки задан не верно.');
 	}
 	/**
-	* Верификация идентификатора участка
+	* Верификация идентификатора участка.
 	*/
 	public static function verify_department_id(data_query $query){
 		if($query->department_id < 1)
 			throw new e_model('Идентификатор участка задан не верно.');
 	}
 	/**
-	* Верификация идентификатора дома
+	* Верификация идентификатора дома.
 	*/
 	public static function verify_house_id(data_query $query){
 		if($query->house_id < 1)
 			throw new e_model('Идентификатор дома задан не верно.');
 	}
 	/**
-	* Верификация идентификатора причины закрытия
+	* Верификация идентификатора причины закрытия.
 	*/
 	public static function verify_close_reason_id(data_query $query){
 		if($query->close_reason_id < 1)
 			throw new e_model('Идентификатор причины закрытия задан не верно.');
 	}
 	/**
-	* Верификация идентификатора причины закрытия
+	* Верификация идентификатора причины закрытия.
 	*/
 	public static function verify_work_type_id(data_query $query){
 		if($query->work_type_id < 1)
 			throw new e_model('Идентификатор типа заявки задан не верно.');
 	}
 	/**
-	* Верификация идентификатора причины закрытия
+	* Верификация название типа работы заявки.
 	*/
 	public static function verify_work_type_name(data_query $query){
 		if(empty($query->work_type_name))
-			throw new e_model('Название типа заявки задано не верно.');
+			throw new e_model('Название типа работы заявки задано не верно.');
 	}
 	/**
-	* Верификация времени открытия заявки
+	* Верификация времени открытия заявки.
 	*/
 	public static function verify_time_open(data_query $query){
 		if($query->time_open < 0)
 			throw new e_model('Время открытия заявки задано не верно.');
 	}
 	/**
-	* Верификация времени передачи в работу заявки
+	* Верификация времени передачи в работу заявки.
 	*/
 	public static function verify_time_work(data_query $query){
 		if($query->time_work < 0)
 			throw new e_model('Время передачи в работу заявки задано не верно.');
 	}
 	/**
-	* Верификация времени закрытия заявки
+	* Верификация времени закрытия заявки.
 	*/
 	public static function verify_time_close(data_query $query){
 		if($query->time_close < 0)
 			throw new e_model('Время закрытия заявки задано не верно.');
 	}
 	/**
-	* Верификация ФИО контакта заявки
+	* Верификация ФИО контакта заявки.
 	*/
 	public static function verify_contact_fio(data_query $query){
 		if(empty($query->contact_fio))
 			throw new e_model('ФИО контакта заявки заданы не верно.');
 	}
 	/**
-	* Верификация телефона контакта заявки
+	* Верификация телефона контакта заявки.
 	*/
 	public static function verify_contact_telephone(data_query $query){
-		if(empty($query->contact_telephone))
-			throw new e_model('Телефон контакта заявки заданы не верно.');
 	}
 	/**
-	* Верификация сотового телефона контакта заявки
+	* Верификация сотового телефона контакта заявки.
 	*/
 	public static function verify_contact_cellphone(data_query $query){
-		if(empty($query->contact_cellphone))
-			throw new e_model('Сотовый телефон контакта заявки заданы не верно.');
 	}
 	/**
-	* Верификация описания заявки
+	* Верификация описания заявки.
 	*/
 	public static function verify_description(data_query $query){
 		if(empty($query->description))
 			throw new e_model('Описание заявки заданы не верно.');
 	}
 	/**
-	* Верификация причины закрытия заявки
+	* Верификация причины закрытия заявки.
 	*/
 	public static function verify_close_reason(data_query $query){
 		if(empty($query->close_reason))
 			throw new e_model('Описание закрытия заявки заданы не верно.');
 	}
 	/**
-	* Верификация номера заявки
+	* Верификация номера заявки.
 	*/
 	public static function verify_number(data_query $query){
 		if($query->number < 0)
 			throw new e_model('Номер заявки задан не верно.');
 	}
 	/**
-	* Верификация инспеции заявки
+	* Верификация инспеции заявки.
 	*/
 	public static function verify_inspection(data_query $query){
 		if(empty($query->inspection))
 			throw new e_model('Инспекция заявки задана не верно.');
 	}
 	/**
-	* Верификация номера дома
+	* Верификация номера дома.
 	*/
 	public static function verify_house_number(data_query $query){
 		if(empty($query->house_number))
 			throw new e_model('Номер дома задан не верно.');
 	}
 	/**
-	* Верификация названия улицы
+	* Верификация названия улицы.
 	*/
 	public static function verify_street_name(data_query $query){
 		if(empty($query->street_name))
 			throw new e_model('Название улицы задано не верно.');
 	}
 	/**
-	* Верификация идентификатора компании
+	* Верификация идентификатора компании.
 	*/
 	public static function verify_company_id(data_query $query){
 		if($query->company_id < 0)
 			throw new e_model('Идентификатор компании задан не верно.');
 	}
 	/**
-	* Верификация идентификатора улицы
+	* Верификация идентификатора улицы.
 	*/
 	public static function verify_street_id(data_query $query){
 		if($query->street_id < 0)
 			throw new e_model('Идентификатор улицы задан не верно.');
 	}
 	/**
-	* Верификация типа объекта заявки
+	* Верификация типа объекта заявки.
 	*/
 	public static function is_data_query($query){
 		if(!($query instanceof data_query))
