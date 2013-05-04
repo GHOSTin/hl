@@ -122,13 +122,6 @@ class model_user{
 			throw new e_model('Логин пользователя задан не верно.');
 	}
 	/**
-	* Верификация фамилии пользователя.
-	*/
-	public static function verify_lastname(data_user $user){
-		if(empty($user->lastname))
-			throw new e_model('Фамилия пользователя задано не верно.');
-	}
-	/**
 	* Верификация отчества пользователя.
 	*/
 	public static function verify_middlename(data_user $user){
