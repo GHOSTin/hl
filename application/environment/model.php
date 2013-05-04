@@ -5,22 +5,18 @@ class model_environment{
 	*/
 	public static function build_router(){
 		try{
-			session_start();
-			if($_SESSION['user'] instanceof data_user){
-				$url_array = parse_url($_SERVER['REQUEST_URI']);
-				$url = explode('/', substr($url_array['path'], 1));
-				$component = (string) $url[0];
-				if(empty($component)){
-					$component = 'default_page';
+			$url_array = parse_url($_SERVER['REQUEST_URI']);
+			$url = explode('/', substr($url_array['path'], 1));
+			$component = (string) $url[0];
+			if(empty($component)){
+				$component = 'default_page';
+				$method = 'show_default_page';
+			}else{
+				$method = (string) $url[1];
+				if(empty($method))
 					$method = 'show_default_page';
-				}else{
-					$method = (string) $url[1];
-					if(empty($method))
-						$method = 'show_default_page';
-				}
-				$route = [$component, 'private_', $method];
-			}else
-				$route = ['auth', 'public_', 'login'];
+			}
+			$route = [$component, 'private_', $method];
 			return $route;
 		}catch(exception $e){
 			throw new e_model('Ошибка постройки маршрута.');
@@ -53,13 +49,26 @@ class model_environment{
 	*/
 	public static function get_page_content(){
 		try{
-			self::create_batabase_connection();
-			list($component, $prefix, $method) = self::build_router();
+			if(model_session::verify_user() instanceof data_user){
+				self::create_batabase_connection();
+				list($component, $prefix, $method) = self::build_router();
+			}else{
+				$component = 'auth';
+				$prefix = 'public_';
+				$metho = 'login';
+			}
+			var_dump($component);
+			exit();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
+			exit();
+
+
+
 			if($method === 'show_default_page')
 				$c_data['componentName'] = $component;
 			$c_data['anonymous'] = true;
+			// нужно вынести это кусок -->
 			if($_SESSION['user'] instanceof data_user){
 				model_profile::get_user_profiles();
 				$access = (model_profile::check_general_access($controller, $component));
@@ -73,6 +82,7 @@ class model_environment{
 				$c_data['menu'] = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
 				$c_data['anonymous'] = false;
 			}
+			// <--
 			$c_data['component'] = $controller::{$prefix.$method}();
 			$c_data['rules'] = $_SESSION['rules'][$component];
 			return $view::{$prefix.$method}($c_data);

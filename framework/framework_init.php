@@ -32,18 +32,3 @@ try{
 }catch(exception $e){
 	die('Шаблонизатор не может быть подгружен.');
 }
-
-class session{
-	private $user;
-
-	public function get_user(){
-		return $this->user;
-	}
-
-	public function set_user(data_user $user){
-		if(!isset($this->user))
-			$this->user = $user;
-		else
-			throw new exception('Нельзя дважды определить пользователя.');
-	}
-}
