@@ -55,36 +55,12 @@ class model_environment{
 			}else{
 				$component = 'auth';
 				$prefix = 'public_';
-				$metho = 'login';
+				$method = 'show_auth_form';
 			}
-			var_dump($component);
-			exit();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
-			exit();
-
-
-
-			if($method === 'show_default_page')
-				$c_data['componentName'] = $component;
-			$c_data['anonymous'] = true;
-			// нужно вынести это кусок -->
-			if($_SESSION['user'] instanceof data_user){
-				model_profile::get_user_profiles();
-				$access = (model_profile::check_general_access($controller, $component));
-				if($access !== true){
-					$controller = 'controller_error';
-					$view = 'view_error';
-					$prefix = 'private_';
-					$method = 'get_access_denied_message';
-				}
-				model_menu::build_hot_menu($component, $controller);
-				$c_data['menu'] = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
-				$c_data['anonymous'] = false;
-			}
-			// <--
 			$c_data['component'] = $controller::{$prefix.$method}();
-			$c_data['rules'] = $_SESSION['rules'][$component];
+			//$c_data['rules'] = $_SESSION['rules'][$component];
 			return $view::{$prefix.$method}($c_data);
 		}catch(exception $e){
 			return $e->getMessage();
