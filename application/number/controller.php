@@ -46,7 +46,10 @@ class controller_number{
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
-        $time = getdate();
+        if($_GET['time'] > 0)
+            $time = getdate($_GET['time']);
+        else
+            $time = getdate();
         return [ 'meter' => $meter, 'number' => $number, 'time' => mktime(12, 0, 0, 1, 1, $time['year']), 
                 'meter_data' =>model_number::get_meter_data($meter, $number, $_SESSION['user'], mktime(12, 0, 0, 1, 1, $time['year']))];
     }
@@ -64,8 +67,10 @@ class controller_number{
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
         $time = $_GET['time'];
-        return ['number' => $number, 'meter' => $meter,
-                'time' => $_GET['time']];
+//        var_dump(model_number::get_meter_data($meter, $number, $_SESSION['user'], mktime(12, 0, 0, 1, 1, getdate($time)['year'])));
+//        exit();
+        return ['number' => $number, 'meter' => $meter, 'time' => $_GET['time'],
+                'meter_data' =>model_number::get_meter_data($meter, $number, $_SESSION['user'], mktime(12, 0, 0, 1, 1, getdate($time)['year']))];
     }
 
     public static function private_update_number(){

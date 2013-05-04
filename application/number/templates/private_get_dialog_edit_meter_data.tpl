@@ -25,9 +25,30 @@
 <div class="modal">
     <div class="modal-header">
         <h3>Данный счетчика за {{ months[component.time|date("m") - 1] }} {{ component.time|date("Y") }}</h3>
-    </div>  
+    </div>
     <div class="modal-body">
-        1 тариф <input type="text" style="width:50px" class="dialog-tarif"> 2тариф <input type="text" style="width:50px" class="dialog-tarif">
+        <strong>Предыдущий месяц</strong>
+        <div class="controls controls-row previous_meter_data">
+            <div class="input-prepend span2">
+                <span class="add-on">1 тариф</span>
+                <span class="input-small uneditable-input">{{ component.meter_data[component.time|date_modify("-1 month")|date("U")][0] }}</span>
+            </div>
+            <div class="input-prepend span2">
+                <span class="add-on">2 тариф</span>
+                <span class="input-small uneditable-input">{{ component.meter_data[component.time|date_modify("-1 month")|date("U")][1] }}</span>
+            </div>
+        </div>
+        <strong>Текущий месяц</strong>
+        <div class="controls controls-row currents_meter_data">
+            <div class="input-prepend span2">
+                <span class="add-on">1 тариф</span>
+                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][0] }}">
+            </div>
+            <div class="input-prepend span2">
+                <span class="add-on">2 тариф</span>
+                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}">
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <div class="btn update_meter_data">Сохранить</div>

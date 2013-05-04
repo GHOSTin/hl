@@ -8,8 +8,22 @@
 {% endblock js %}
 {% block html %}
 <div class="meter-data">
-    <h3>{{ component.time|date('Y')}}</h3>
     <table class="table table-condensed span12">
+        <caption>
+            <ul class="pager">
+                <li class="previous">
+                    <a class="get_meter_data_year" act='{{ component.time|date_modify("-1 year")|date("U")}}'><i class="icon-chevron-left"></i></a>
+                </li>
+                <li>
+                    <h3>{{ component.time|date('Y')}}</h3>
+                </li>
+                {% if component.time|date('Y')!="now"|date('Y') %}
+                <li class="next">
+                    <a class="get_meter_data_year" act='{{ component.time|date_modify("+1 year")|date("U")}}'><i class="icon-chevron-right"></i></a>
+                </li>
+                {% endif %}
+            </ul>
+        </caption>
     {% for i in 0..11 %}
         {% set data = component.meter_data[date|date("U")] %}
         <tr class="month" time="{{ date|date("U") }}">
