@@ -14,4 +14,11 @@ class model_session{
         }else
             throw new exception('Нельзя дважды определить пользователя.');
     }
+    /**
+    * Настройка кук
+    */
+    private static function set_cockies(){
+        setcookie("chat_host", application_configuration::chat_host, 0);
+        setcookie("chat_port", application_configuration::chat_port, 0);
+    }
 }
