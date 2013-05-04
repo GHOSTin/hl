@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     {% if anonymous == false %}
 	    <link rel="stylesheet" href="/templates/default/css/libs.css" >
-		<link rel="stylesheet" href="/?css=component.css&p={{componentName}}" >
+		<link rel="stylesheet" href="/?css=component.css&p={{ file_prefix }}" >
 	{% endif %}
     {% block css %}{% endblock css %}
 </head>
@@ -44,7 +44,7 @@
 	    <script src="/templates/default/js/notification-center.js"></script>
 	    <script src="/templates/default/js/default.js"></script>
 	    <script src="/templates/default/js/chat.js"></script>
-	    <script src="/?js=component.js&p={{componentName}}"></script>
+	    <script src="/?js=component.js&p={{ file_prefix }}"></script>
     {% endif %}
     {% block javascript %}{% endblock javascript %}
 </html>

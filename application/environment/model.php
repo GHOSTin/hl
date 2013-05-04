@@ -80,6 +80,7 @@ class model_environment{
 				$data['rules'] = model_session::get_rules()[$component];
 				self::verify_general_access($component);
 			}
+			$data['file_prefix'] = $component;
 			$data['component'] = $controller::{$prefix.$method}();
 			return $view::{$prefix.$method}($data);
 		}catch(exception $e){
