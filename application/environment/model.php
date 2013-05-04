@@ -44,41 +44,60 @@ class model_environment{
 			throw new e_model('Аттрибуты соединения с базой данных не применились.'); 
 		}
 	}
+	public static function create_session(){
+		session_start();
+		if($_SESSION['user'] instanceof data_current_user){
+			self::create_batabase_connection();
+			model_session::set_user($_SESSION['user']);
+			return self::build_router();
+		}elseif(!empty($_POST['login'])){
+			self::create_batabase_connection();
+			$user = model_auth::auth_user();
+			if($user instanceof data_current_user){
+				model_session::set_user($user);
+				return self::build_router();
+			}else{
+				session_destroy();
+				return ['auth', 'public_', 'show_auth_form'];
+			}
+		}else{
+			session_destroy();
+			return ['auth', 'public_', 'show_auth_form'];
+		}
+	}
 	/*
 	* Функция возвращает содержимое страницы
 	*/
 	public static function get_page_content(){
 		try{
-			session_start();
-			if($_SESSION['user'] instanceof data_current_user){
-				self::create_batabase_connection();
-				list($component, $prefix, $method) = self::build_router();
-				model_session::set_user($_SESSION['user']);
-			}elseif(!empty($_POST['login'])){
-				self::create_batabase_connection();
-				$user = model_auth::get_login();
-				if($user instanceof data_current_user){
-					list($component, $prefix, $method) = self::build_router();
-					model_session::set_user($user);
-				}else{
-					session_destroy();
-					$component = 'auth';
-					$prefix = 'public_';
-					$method = 'show_auth_form';
-				}
-			}else{
-				session_destroy();
-				$component = 'auth';
-				$prefix = 'public_';
-				$method = 'show_auth_form';
-			}
+			list($component, $prefix, $method) = self::create_session();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
+			// self::verify_general_access();
 			$c_data['component'] = $controller::{$prefix.$method}();
 			//$c_data['rules'] = $_SESSION['rules'][$component];
 			return $view::{$prefix.$method}($c_data);
 		}catch(exception $e){
 			return $e->getMessage();
 		}
+	}
+	public static function verify_general_access(){
+		if($method === 'show_default_page')
+            $c_data['componentName'] = $component;
+        $c_data['anonymous'] = true;
+        // нужно вынести это кусок -->
+        if($_SESSION['user'] instanceof data_user){
+            model_profile::get_user_profiles();
+            $access = (model_profile::check_general_access($controller, $component));
+            if($access !== true){
+                $controller = 'controller_error';
+                $view = 'view_error';
+                $prefix = 'private_';
+                $method = 'get_access_denied_message';
+            }
+            model_menu::build_hot_menu($component, $controller);
+            $c_data['menu'] = view_menu::build_horizontal_menu(['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]);
+            $c_data['anonymous'] = false;
+        }
 	}
 }
