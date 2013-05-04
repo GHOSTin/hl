@@ -4,7 +4,7 @@
 * Пользователи глобальны и к ним могут быть определены компании,
 * в которых они учавствуют.
 */
-final class data_user extends data_object{
+class data_user extends data_object{
 
 	public $cellphone;
 	public $company_id;

@@ -53,7 +53,6 @@ class model_environment{
 	*/
 	public static function get_page_content(){
 		try{
-			self::load_twig();
 			self::create_batabase_connection();
 			list($component, $prefix, $method) = self::build_router();
 			$controller = 'controller_'.$component;
@@ -79,17 +78,6 @@ class model_environment{
 			return $view::{$prefix.$method}($c_data);
 		}catch(exception $e){
 			return $e->getMessage();
-		}
-	}
-	/*
-	* Регистрирует шаблонизатор
-	*/
-	public static function load_twig(){
-		try{
-			require_once ROOT.'/libs/Twig/Autoloader.php';
-			Twig_Autoloader::register();
-		}catch(exception $e){
-			throw new e_model('Шаблонизатор не может быть подгружен.');
 		}
 	}
 }

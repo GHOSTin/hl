@@ -25,4 +25,25 @@ function framework_autoload($class_name){
 }
 spl_autoload_register('framework_autoload');
 // подгрузка временной реализации класс шаблонизатора
-require_once('twig.php');
+try{
+	require_once('twig.php');
+	require_once ROOT.'/libs/Twig/Autoloader.php';
+	Twig_Autoloader::register();
+}catch(exception $e){
+	die('Шаблонизатор не может быть подгружен.');
+}
+
+class session{
+	private $user;
+
+	public function get_user(){
+		return $this->user;
+	}
+
+	public function set_user(data_user $user){
+		if(!isset($this->user))
+			$this->user = $user;
+		else
+			throw new exception('Нельзя дважды определить пользователя.');
+	}
+}
