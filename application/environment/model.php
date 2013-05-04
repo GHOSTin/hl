@@ -54,7 +54,7 @@ class model_environment{
 				self::create_batabase_connection();
 				list($component, $prefix, $method) = self::build_router();
 				model_session::set_user($_SESSION['user']);
-			}elseif(!empty($_POST)){
+			}elseif(!empty($_POST['login'])){
 				self::create_batabase_connection();
 				$user = model_auth::get_login();
 				if($user instanceof data_current_user){
