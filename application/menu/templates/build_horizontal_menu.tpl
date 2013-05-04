@@ -10,7 +10,7 @@
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle current_user" user_id="{{user_id}}" data-toggle="dropdown">
-                       {{user_name}}
+                       {{ user.firstname }} {{ user.lastname }}
                        <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">

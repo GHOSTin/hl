@@ -18,17 +18,12 @@ class model_profile{
 				if(array_search($profile['profile'], ['query', 'number']) !== false){
 					$rules[$profile['profile']] = json_decode($profile['rules']);
 					$restrictions[$profile['profile']] = json_decode($profile['restrictions']);
-					if($rules[$profile['profile']]->generalAccess === true){
-						$c = 'controller_'.$profile['profile'];
-						$links[] = ['href' => $profile['profile'], 'title' => $c::$name];
-					}
 				}
 			}
 		}
 		$stm->closeCursor();
 		model_session::set_rules($rules);
 		model_session::set_restrictions($restrictions);
-		model_session::set_links($links);
 	}
 	/**
 	* Проверяет права доступа пользователя.

@@ -1,23 +1,16 @@
 <?php
 class model_menu{
 
-	public static function build_hot_menu($component, $controller){
-		if(property_exists($controller, 'name')){
-			$hot_menu = [$component => $controller::$name];
-			$_SESSION['hot_menu'] = (array_merge((array)$_SESSION['hot_menu'], $hot_menu));
-		}
-	}
-	
-	public static function get_hot_menu($component, $controller){
-		if(property_exists($controller, 'name')){
-			$hot_menu = [$component => $controller::$name];
-			$_SESSION['hot_menu'] = (array_merge((array)$_SESSION['hot_menu'], $hot_menu));
-		}
-	}
-	
 	public static function build_menu(){
-		// model_menu::build_hot_menu($component, $controller);
-		// ['menu' => $_SESSION['menu'], 'hot_menu' => $_SESSION['hot_menu']]
+		$rules = model_session::get_rules();
+		if(!empty($rules))
+			foreach($rules as $profile => $rules)
+				if($rules->generalAccess === true){
+					$controller = 'controller_'.$profile;
+					if(property_exists($controller, 'name'))
+						$args['menu'][] = ['href' => $profile, 'title' => $controller::$name];
+				}
+		$args['user'] = model_session::get_user();
         return view_menu::build_horizontal_menu($args);
 	}
 }
