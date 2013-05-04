@@ -6,6 +6,10 @@ class model_session{
     private static $restrictions;
     private static $links;
 
+    public function get_restrictions(){
+        return self::$restrictions;
+    }
+
     public function get_rules(){
         return self::$rules;
     }
@@ -21,14 +25,7 @@ class model_session{
         }else
             throw new exception('Нельзя дважды определить пользователя.');
     }
-
-    public function set_links($links){
-        if(!isset(self::$links)){
-            self::$links = $links;
-        }else
-            throw new exception('Нельзя дважды определить ссылки меню.');
-    }
-
+    
     public function set_restrictions($restrictions){
         if(!isset(self::$restrictions)){
             self::$restrictions = $restrictions;
