@@ -22,6 +22,8 @@ class controller_profile{
 	public static function private_show_default_page(){
 		$user = $_SESSION['user'];
 		model_user::verify_id($user);
+		var_dump(model_user::get_users($user));
+		exit();
 		return ['users' => model_user::get_users($user)];
 	}
 

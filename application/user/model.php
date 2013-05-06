@@ -12,25 +12,22 @@ class model_user{
 		$user->company_id = $current_user->company_id;
 		$user->id = self::get_insert_id();
 		$user->status = true;
-		$sql = "INSERT INTO `users` (
-					`id`, `company_id`, `status`, `username`, `firstname`, `lastname`,
-					`midlename`, `password`, `telephone`, `cellphone`
-				) VALUES (
-					:user_id, :company_id, :status, :login, :firstname, :lastname, 
-					:middlename, :password, :telephone, :cellphone
-				);";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
-		$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
-		$stm->bindValue(':status', $user->status);
-		$stm->bindValue(':login', $user->login, PDO::PARAM_STR);
-		$stm->bindValue(':firstname', $user->firstname, PDO::PARAM_STR);
-		$stm->bindValue(':lastname', $user->lastname, PDO::PARAM_STR);
-		$stm->bindValue(':middlename', $user->middlename, PDO::PARAM_STR);
-		$stm->bindValue(':password', self::get_password_hash($user->password), PDO::PARAM_STR);
-		$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
-		$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
-		stm_execute($stm, 'Проблемы при создании пользователя.');
+		$sql = new sql();
+		$sql->exp("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
+				`firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`
+				) VALUES (:user_id, :company_id, :status, :login, :firstname, :lastname, 
+				:middlename, :password, :telephone, :cellphone)");
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+		$sql->bind(':status', $user->status);
+		$sql->bind(':login', $user->login, PDO::PARAM_STR);
+		$sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
+		$sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
+		$sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
+		$sql->bind(':password', self::get_password_hash($user->password), PDO::PARAM_STR);
+		$sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
+		$sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
+		$sql->execute('Проблемы при создании пользователя.');
 		return $user;
 	}
 	/**
@@ -38,13 +35,13 @@ class model_user{
 	* @return int
 	*/
 	private static function get_insert_id(){
-		$sql = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
-		$stm = db::get_handler()->query($sql);
-		stm_execute($stm, 'Проблема при опредении следующего user_id.');
-		if($stm->rowCount() !== 1)
+		$sql = new sql();
+		$sql->query("SELECT MAX(`id`) as `max_user_id` FROM `users`");
+		$sql->execute('Проблема при опредении следующего user_id.');
+		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего user_id.');
-		$user_id = (int) $stm->fetch()['max_user_id'] + 1;
-		$stm->closeCursor();
+		$user_id = (int) $sql->row()['max_user_id'] + 1;
+		$sql->close_cursor();
 		return $user_id;
 	}
 	/**
@@ -59,17 +56,16 @@ class model_user{
 	* @return array из data_user
 	*/
 	public static function get_users(data_user $user_params){
-		$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
+		$sql = new sql();
+		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
-				`users`.`cellphone`
-				FROM `users`";
-		if(!empty($user_params->id))
-			$sql .= " WHERE `id` = :id";
-		$stm = db::get_handler()->prepare($sql);
-		if(!empty($user_params->id))
-			$stm->bindValue(':id', $user_params->id, PDO::PARAM_INT);
-		return stm_map_result($stm, new data_user(), 'Проблема при выборке пользователей.');
+				`users`.`cellphone` FROM `users`");
+		if(!empty($user_params->id)){
+			$sql->query(" WHERE `id` = :id");
+			$sql->bind(':id', $user_params->id, PDO::PARAM_INT);
+		}
+		return $sql->result(new data_user(), 'Проблема при выборке пользователей.');
 	}
 	/**
 	* Верификация сотового телефона пользователя.

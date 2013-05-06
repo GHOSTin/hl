@@ -48,3 +48,56 @@ function stm_execute(PDOStatement $stm, $error){
 	if($stm->execute() == false)
 		throw new e_model($value);
 }
+class sql extends data_object{
+
+	private $sql = [];
+	private $params = [];
+	private $stm;
+
+	public function bind($param, $value, $type = PDO::PARAM_STR){
+		$this->params[] = [$param, $value, $type];
+	}
+
+	private function create_stm(){
+		$this->stm = db::get_handler()->prepare(implode(' ', $this->sql));
+	}
+
+	public function count(){
+		return $this->stm->rowCount();
+	}
+
+	public function row(){
+		return $this->stm->fetch();
+	}
+
+	public function close_cursor(){
+		return $this->stm->closeCursor();
+	}
+
+	public function query($sql){
+		$this->sql[] = (string) $sql;
+	}
+
+	public function result(data_object $data_object, $error){
+		$this->create_stm();
+		if(!empty($this->params))
+			foreach($this->params as $pr){
+				list($param, $value, $type) = $pr;
+				$this->stm->bindValue($param, $value, $type);
+			}
+		$this->execute($error);
+		$this->stm->setFetchMode(PDO::FETCH_CLASS, get_class($data_object));
+		$result = [];
+		while($object = $this->stm->fetch())
+			$result[] = $object;
+		$this->stm->closeCursor();
+		return $result;
+	}
+
+	public function execute($error){
+		if(empty($error))
+			throw new exception('Задайте вспомогательную фразу.');
+		if($this->stm->execute() == false)
+			throw new e_model($error);
+	}
+}
