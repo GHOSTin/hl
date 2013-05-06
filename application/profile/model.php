@@ -11,8 +11,7 @@ class model_profile{
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $user->company_id , PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при получении профиля.');
+		stm_execute($stm, 'Ошибка при получении профиля.');
 		if($stm->rowCount() > 0){
 			while($profile = $stm->fetch()){
 				if(array_search($profile['profile'], ['query', 'number']) !== false){
@@ -52,8 +51,7 @@ class model_profile{
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':password', $user->password, PDO::PARAM_STR);
 		$stm->bindValue(':id', $user->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при изменении пароля.');
+		stm_execute($stm, 'Ошибка при изменении пароля.');
 		return $user;
 	}
 	/**
@@ -67,8 +65,7 @@ class model_profile{
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
 		$stm->bindValue(':id', $user->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при изменении номера сотового телефона.');
+		stm_execute($stm, 'Ошибка при изменении номера сотового телефона.');
 		return $user;
 	}
 	/**
@@ -82,8 +79,7 @@ class model_profile{
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
 		$stm->bindValue(':id', $user->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при изменении номера телефона.');
+		stm_execute($stm, 'Ошибка при изменении номера телефона.');
 		return $user;
 	}
 }

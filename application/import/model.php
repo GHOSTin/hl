@@ -65,8 +65,7 @@ class model_import{
 			$stm = db::get_handler()->prepare($sql);
 			foreach($number_values as $key => $value)
 				$stm->bindParam(':number'.$key, $value, PDO::PARAM_STR);
-			if($stm->execute() == false)
-				throw new e_model('Проблема при выборке домов из базы данных.');
+			stm_execute($stm, 'Проблема при выборке домов из базы данных.');
 			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
 			$old_numbers = [];
 			while($number = $stm->fetch())

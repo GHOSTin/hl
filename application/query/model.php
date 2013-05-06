@@ -15,8 +15,7 @@ class model_query{
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':default', $default, PDO::PARAM_STR);
 		$stm->bindValue(':number_id', $number->id, PDO::PARAM_INT);
-		if($stm->execute() === false)
-			throw new e_model('Проблема при добавлении лицевого счета.');
+		stm_execute($stm, 'Проблема при добавлении лицевого счета.');
 	}
 	/*
 	* Зависимая функция.
@@ -36,8 +35,7 @@ class model_query{
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':user_id', $current_user->id, PDO::PARAM_INT);
 		$stm->bindValue(':class', $class, PDO::PARAM_STR);
-		if($stm->execute() === false)
-			throw new e_model('Проблема при добавлении пользователя.');
+		stm_execute($stm, 'Проблема при добавлении пользователя.');
 	}
 	/*
 	* Зависимая функция.
@@ -89,8 +87,7 @@ class model_query{
 		$stm->bindParam(':contact_cellphone', $query->contact_cellphone, PDO::PARAM_STR);
 		$stm->bindParam(':description', $query->description, PDO::PARAM_STR);
 		$stm->bindParam(':number', $query->number, PDO::PARAM_INT);
-		if($stm->execute() === false)
-			throw new e_model('Проблемы при создании заявки.');
+		stm_execute($stm, 'Проблемы при создании заявки.');
 		return $query;
 	}
 	/**
@@ -114,8 +111,7 @@ class model_query{
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':class', $class, PDO::PARAM_STR);
 		$stm->bindValue(':protect', 'false', PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при добавлении пользователя.');
+		stm_execute($stm, 'Ошибка при добавлении пользователя.');
 		return [$query];
 	}
 	/**
@@ -140,8 +136,7 @@ class model_query{
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':time_open', $begin_time, PDO::PARAM_INT);
 		$stm->bindValue(':time_close', $end_time, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при добавлении работы.');
+		stm_execute($stm, 'Ошибка при добавлении работы.');
 		return [$query];
 	}
 	/*
@@ -184,8 +179,7 @@ class model_query{
 		$stm->bindValue(':time_close', $query->time_close, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при закрытии заявки.');
+		stm_execute($stm, 'Ошибка при закрытии заявки.');
 		return [$query];
 	}
 	/**
@@ -206,8 +200,7 @@ class model_query{
 		$stm->bindValue(':time_work', $query->time_work, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при передачи в работу заявки.');
+		stm_execute($stm, 'Ошибка при передачи в работу заявки.');
 		return [$query];
 	}
 	/**
@@ -426,72 +419,7 @@ class model_query{
 				else
 					$stm->bindValue(':department_id0', $query->department_id, PDO::PARAM_INT);
 		}
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при выборке заявок.');
-		$result = [];
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query');
-		while($query = $stm->fetch())
-			$result[] = $query;
-		$stm->closeCursor();
-		return $result;
-	}
-	/**
-	* Возвращает материалы заявки.
-	* @return array
-	*/
-	public static function get_materials(data_query $query, data_current_user $current_user){
-		$_SESSION['filters']['query'] = $query = self::build_query_filter($query);
-		if(!empty($query->id)){
-			$sql = "SELECT `query2material`.`query_id`, `query2material`.`amount`,
-				`query2material`.`value`, `query2material`.`value`,
-				`materials`.`id`, `materials`.`name`
-				FROM `query2material`, `materials`
-				WHERE `query2material`.`company_id` = :company_id
-				AND `materials`.`company_id` = :company_id
-				AND `materials`.`id` = `query2material`.`material_id`
-				AND `query2material`.`query_id` = :id";
-		}else{
-			$sql = "SELECT `query2material`.`query_id`, `query2material`.`opentime` as `time_open`,
-				`query2material`.`closetime` as `time_close`, `query2material`.`value`,
-				`works`.`id`, `works`.`name`
-				FROM `queries`, `query2material`, `works`
-				WHERE `queries`.`company_id` = :company_id
-				AND `query2material`.`company_id` = :company_id
-				AND `works`.`id` = `query2material`.`work_id`
-				AND `queries`.`id` = `query2material`.`query_id`
-				AND `queries`.`opentime` > :time_open
-				AND `queries`.`opentime` <= :time_close";
-				if(!empty($query->status) AND $query->status !== 'all')
-					$sql .= " AND `queries`.`status` = :status";
-				$sql .= " ORDER BY `queries`.`opentime` DESC";
-		}
-		$stm = db::get_handler()->prepare($sql);
-		if(!empty($query->id)){
-			$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
-			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		}else{
-			$stm->bindValue(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
-			$stm->bindValue(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-			if(!empty($query->status) AND $query->status !== 'all')
-				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
-		}
-		if($stm->execute() == false)
-			throw new exception('Ошибка при выборке материалов.');
-		$result = ['structure' => [], 'materials' => []];
-		while($row = $stm->fetch()){
-			var_dump($row);
-			exit();
-			$work = new data_work();
-			$work->id = $row['id'];
-			$work->name = $row['name'];
-			$current = ['work_id' => $work->id, 'time_open' => $row['time_open'],
-				'time_close' => $row['time_close'], 'value' => $row['value']];
-			$result['structure'][$row['query_id']][] = $current;
-			$result['works'][$work->id] = $work ;
-		}
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_query(), 'Проблема при выборке пользователей.');
 	}
 	/**
 	* Возвращает лицевые счета заявки.
@@ -534,8 +462,7 @@ class model_query{
 			if(!empty($query->status) AND $query->status !== 'all')
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		}
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при выборке пользователей.');
+		stm_execute($stm, 'Ошибка при выборке пользователей.');
 		$result = ['structure' => [], 'numbers' => []];
 		while($row = $stm->fetch()){
 			$number = new data_number();
@@ -586,8 +513,7 @@ class model_query{
 			if(!empty($query->status) AND $query->status !== 'all')
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		}
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при выборке пользователей.');
+		stm_execute($stm, 'Ошибка при выборке пользователей.');
 		$result = ['structure' => [], 'users' => []];
 		while($row = $stm->fetch()){
 			$user = new data_user();
@@ -641,8 +567,7 @@ class model_query{
 			if(!empty($query->status) AND $query->status !== 'all')
 				$stm->bindValue(':status', $query->status, PDO::PARAM_STR);
 		}
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при выборке работ.');
+		stm_execute($stm, 'Ошибка при выборке работ.');
 		$result = ['structure' => [], 'works' => []];
 		while($row = $stm->fetch()){
 			$work = new data_work();
@@ -720,8 +645,7 @@ class model_query{
 		$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':class', $class, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при удалении пользователя и заявки.');
+		stm_execute($stm, 'Ошибка при удалении пользователя и заявки.');
 		return [$query];
 	}
 	/**
@@ -741,8 +665,7 @@ class model_query{
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
 		$stm->bindValue(':work_id', $work->id, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при удалении работы из заявки.');
+		stm_execute($stm, 'Ошибка при удалении работы из заявки.');
 		return [$query];
 	}
 	/**
@@ -757,8 +680,7 @@ class model_query{
 		$stm->bindValue(':description', $query->description, PDO::PARAM_STR);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при обновлении описания заявки.');
+		stm_execute($stm, 'Ошибка при обновлении описания заявки.');
 		return [$query];
 	}
 	/**
@@ -775,8 +697,7 @@ class model_query{
 		$stm->bindValue(':cellphone', $query->contact_cellphone, PDO::PARAM_STR);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':query_id', $query->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при обновлении описания заявки.');
+		stm_execute($stm, 'Ошибка при обновлении описания заявки.');
 		return [$query];
 	}
 	/**
@@ -795,8 +716,7 @@ class model_query{
 		$stm->bindValue(':payment_status', $query->payment_status, PDO::PARAM_STR);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при обновлении статуса оплаты заявки.');
+		stm_execute($stm, 'Ошибка при обновлении статуса оплаты заявки.');
 		return [$query];
 	}
 	/**
@@ -815,8 +735,7 @@ class model_query{
 		$stm->bindValue(':warning_status', $query->warning_status, PDO::PARAM_STR);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при обновлении статуса реакции.');
+		stm_execute($stm, 'Ошибка при обновлении статуса реакции.');
 		return [$query];
 	}
 	/**
@@ -839,8 +758,7 @@ class model_query{
 		$stm->bindValue(':work_type_id', $query->worktype_id, PDO::PARAM_STR);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindValue(':id', $query->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Ошибка при обновлении типа работ.');
+		stm_execute($stm, 'Ошибка при обновлении типа работ.');
 		return [$query];
 	}
 	/**

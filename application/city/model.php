@@ -18,8 +18,7 @@ class model_city{
 		$stm->bindValue(':company_id', $city->company_id);
 		$stm->bindValue(':status', $city->status);
 		$stm->bindValue(':name', $city->name);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании города.');
+		stm_execute($stm, 'Проблемы при создании города.');
 		$stm->closeCursor();
 		return $city;
 	}
@@ -53,8 +52,7 @@ class model_city{
 		$stm->bindValue(':city_id', $street->city_id, PDO::PARAM_INT);
 		$stm->bindValue(':status', $street->status, PDO::PARAM_STR);
 		$stm->bindValue(':name', $street->name, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при вставке улицы в базу данных.');
+		stm_execute($stm, 'Проблемы при вставке улицы в базу данных.');
 		$stm->closeCursor();
 		return $street;
 	}
@@ -65,8 +63,7 @@ class model_city{
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_city_id` FROM `cities`";
 		$stm = db::get_handler()->query($sql);
-		if($stm == false)
-			throw new e_model('Проблема при опредении следующего city_id.');
+		stm_execute($stm, 'Проблема при опредении следующего city_id.');
 		if($stm->rowCount() === 1)
 			throw new e_model('Проблема при опредении следующего city_id.');
 		$city_id = (int) $stm->fetch()['max_city_id'] + 1;
@@ -83,14 +80,7 @@ class model_city{
 		$stm = db::get_handler()->prepare($sql);
 		if(!empty($city_params->name))
 			$stm->bindValue(':name', $city_params->name, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке городов.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_city');
-		$result = [];
-		while($city = $stm->fetch())
-			$result[] = $city;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_city(), 'Проблема при выборке городов.');
 	}
 	/*
 	* Возвращает список улиц города
@@ -105,14 +95,7 @@ class model_city{
 		$stm->bindValue(':city_id', $city_params->id, PDO::PARAM_INT);
 		if(!empty($street_params->name))
 			$stm->bindValue(':name', $street_params->name, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке улиц города.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_street');
-		$result = [];
-		while($street = $stm->fetch())
-			$result[] = $street;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_street(), 'Проблема при выборке улиц города.');
 	}
 	/*
 	* Возвращает список улиц города
@@ -146,14 +129,7 @@ class model_city{
 		$stm->bindValue(':city_id', $city_params->id, PDO::PARAM_INT);
 		$stm->bindValue(':number', $number_params->number, PDO::PARAM_INT);
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке лицевых счетов.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
-		$result = [];
-		while($number = $stm->fetch())
-			$result[] = $number;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_number(), 'Проблема при выборке лицевых счетов.');
 	}
 	/**
 	* Верификация идентификатора компании.

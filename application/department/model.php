@@ -18,8 +18,7 @@ class model_department{
 		$stm->bindValue(':company_id', $department->company_id);
 		$stm->bindValue(':status', $department->status);
 		$stm->bindValue(':name', $department->name);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании нового участка.');
+		stm_execute($stm, 'Проблемы при создании нового участка.');
 		$stm->closeCursor();
 		return $department;
 	}
@@ -33,8 +32,7 @@ class model_department{
 				WHERE `company_id` = :company_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':company_id', $company->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при опредении следующего department_id.');
+		stm_execute($stm, 'Проблема при опредении следующего department_id.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при опредении следующего department_id.');
 		$department_id = (int) $stm->fetch()['max_department_id'] + 1;
@@ -70,14 +68,7 @@ class model_department{
 					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
 			else
 				$stm->bindValue(':department_id0', $department_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при выборке участков.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_department');
-		$result = [];
-		while($department = $stm->fetch())
-			$result[] = $department;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_department(), 'Проблема при выборке пользователей.');
 	}
 	/**
 	* Верификация идентификатора компании.

@@ -47,8 +47,7 @@ class model_number{
 		$stm->bindValue(':contact_fio', $number->contact_fio);
 		$stm->bindValue(':contact_telephone', $number->contact_telephone);
 		$stm->bindValue(':contact_cellphone', $number->contact_cellphone);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании нового лицевого счета.');
+		stm_execute($stm, 'Проблемы при создании нового лицевого счета.');
 		$stm->closeCursor();
 		return $number;
 	}
@@ -61,8 +60,7 @@ class model_number{
 			WHERE `city_id` = :city_id";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':city_id', $city->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при опредении следующего number_id.');
+		stm_execute($stm, 'Проблема при опредении следующего number_id.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при опредении следующего number_id.');
 		$number_id = (int) $stm->fetch()['max_number_id'] + 1;
@@ -95,8 +93,7 @@ class model_number{
 				AND `houses`.`street_id` = `streets`.`id`";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindParam(':number_id', $number->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при запросе лицевого счета.');
+		stm_execute($stm, 'Проблема при запросе лицевого счета.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при запросе лицевого счета.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
@@ -157,14 +154,7 @@ class model_number{
 		else
 			$stm->bindParam(':number', $number->number, PDO::PARAM_INT);
 		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при запросе лицевых счетов.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
-		$result = [];
-		while($number = $stm->fetch())
-			$result[] = $number;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_number(), 'Проблема при запросе лицевых счетов.');
 	}	
 	/*
 	* Возвращает список счетчиков лицевого счета
@@ -196,14 +186,7 @@ class model_number{
 		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		if(!is_null($meter_params))
 			$stm->bindParam(':meter_id', $meter_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при при выборке счетчиков.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_meter');
-		$result = [];
-		while($meter = $stm->fetch())
-			$result[] = $meter;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_meter(), 'Проблема при при выборке счетчиков.');
 	}
 	/*
 	* Возвращает данные счетчика
@@ -231,8 +214,7 @@ class model_number{
 		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		$stm->bindParam(':time_begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
 		$stm->bindParam(':time_end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при при выборки данных счетчика.');
+		stm_execute($stm, 'Проблема при при выборки данных счетчика.');
 		$result = [];
 		while($data = $stm->fetch())
 			$result[$data['time']] = json_decode($data['value']);
@@ -298,8 +280,7 @@ class model_number{
 			$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
 			$stm->bindParam(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
 			$stm->bindParam(':value', json_encode([round($tarif[0], 2), round($tarif[1], 2)]));
-			if($stm->execute() == false)
-				throw new e_model('Проблема при при выборки данных счетчика.');
+			stm_execute($stm, 'Проблема при при выборки данных счетчика.');
 			$stm->closeCursor();
 			db::get_handler()->commit();
 			return $tarif;
@@ -355,8 +336,7 @@ class model_number{
 			$stm->bindValue(':number_id', $number->id, PDO::PARAM_INT);
 			$stm->bindValue(':number', $number->number, PDO::PARAM_STR);
 			$stm->bindValue(':city_id', $number->city_id, PDO::PARAM_INT);
-			if($stm->execute() == false)
-				throw new e_model('Проблема при запросе лицевого счета.');
+			stm_execute($stm, 'Проблема при запросе лицевого счета.');
 			db::get_handler()->commit();
 			return $number;
 		}catch(exception $e){

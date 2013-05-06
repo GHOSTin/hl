@@ -7,8 +7,7 @@ class model_house{
 	public static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
 		$stm = db::get_handler()->query($sql);
-		if($stm == false)
-			throw new e_model('Проблема при опредении следующего house_id.');
+		stm_execute($stm, 'Проблема при опредении следующего house_id.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при опредении следующего house_id.');
 		$house_id = (int) $stm->fetch()['max_house_id'] + 1;
@@ -28,8 +27,7 @@ class model_house{
 				AND `houses`.`street_id` = `streets`.`id`";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':house_id', $house->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при выборке дома.');
+		stm_execute($stm, 'Проблемы при выборке дома.');
 		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
 		$house = $stm->fetch();
 		$stm->closeCursor();
@@ -60,14 +58,7 @@ class model_house{
 				AND `houses`.`street_id` = `streets`.`id`";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindParam(':house_id', $house->id, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при выборке номеров.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
-		$result = [];
-		while($user = $stm->fetch())
-			$result[] = $user;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_number(), 'Проблемы при выборке номеров.');
 	}
 	/**
 	* Верификация идентификатора города.

@@ -11,8 +11,7 @@ class model_auth{
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':login', htmlspecialchars($_POST['login']), PDO::PARAM_STR);
 		$stm->bindValue(':hash', model_user::get_password_hash($_POST['password']) , PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при авторизации.');
+		stm_execute($stm, 'Проблемы при авторизации.');
 		if($stm->rowCount() !== 1){
 			$stm->closeCursor();
 			throw new e_model('Проблемы при авторизации.');

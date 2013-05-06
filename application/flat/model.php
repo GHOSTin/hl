@@ -18,8 +18,7 @@ class model_flat{
 		$stm->bindValue(':house_id', $flat->house_id);
 		$stm->bindValue(':status', $flat->status);
 		$stm->bindValue(':number', $flat->number);
-		if($stm->execute() == false)
-			throw new e_model('Не все параметры заданы правильно.');
+		stm_execute($stm, 'Не все параметры заданы правильно.');
 		$stm->closeCursor();
 		return $flat;
 	}
@@ -30,8 +29,7 @@ class model_flat{
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
 		$stm = db::get_handler()->query($sql);
-		if($stm === false){
-			throw new e_model('Проблема при опредении следующего flat_id.');
+		stm_execute($stm, 'Проблема при опредении следующего flat_id.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при опредении следующего flat_id.');
 		$flat_id = (int) $stm->fetch()['max_flat_id'] + 1;

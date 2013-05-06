@@ -32,9 +32,7 @@ class model_street{
 		$stm->bindValue(':street_id', $house->street_id);
 		$stm->bindValue(':status', $house->status);
 		$stm->bindValue(':number', $house->number);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании нового дома.');
-		$stm->closeCursor();
+		stm_execute($stm, 'Проблемы при создании нового дома.');
 		return $house;
 	}
 	/**
@@ -44,8 +42,7 @@ class model_street{
 	public static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_street_id` FROM `streets`";
 		$stm = db::get_handler()->query($sql);
-		if($stm == false)
-			throw new e_model('Проблема при опредении следующего street_id.');
+		stm_execute($stm, 'Проблема при опредении следующего street_id.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при опредении следующего street_id.');
 		$street_id = (int) $stm->fetch()['max_street_id'] + 1;
@@ -88,14 +85,7 @@ class model_street{
 				$stm->bindValue(':department_id0', $street_params->department_id, PDO::PARAM_INT);
 		elseif(!empty($street_params->id))
 			$stm->bindValue(':id', $street_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке улиц из базы данных.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_street');
-		$result = [];
-		while($street = $stm->fetch())
-			$result[] = $street;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_street(), 'Проблема при выборке улиц из базы данных.');
 	}
 	/**
 	* Возвращает список домов
@@ -137,14 +127,7 @@ class model_street{
 			$stm->bindValue(':number', $house_params->number, PDO::PARAM_STR);
 		if(!empty($house_params->id))
 			$stm->bindValue(':house_id', $house_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке домов из базы данных.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
-		$result = [];
-		while($house = $stm->fetch())
-			$result[] = $house;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_house(), 'Проблема при выборке домов из базы данных.');
 	}
 	/**
 	* Верификация идентификатора компании.

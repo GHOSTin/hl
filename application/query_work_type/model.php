@@ -13,14 +13,7 @@ class model_query_work_type{
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		if(!empty($query_work_type_params->id))
 			$stm->bindValue(':id', $query_work_type_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборки типов заявки.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_query_work_type');
-		$result = [];
-		while($query_work_type = $stm->fetch())
-			$result[] = $query_work_type;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_query_work_type(), 'Проблема при выборки типов заявки.');
 	}
 	/**
 	* Верификация идентификатора компании.

@@ -14,14 +14,7 @@ class model_group{
 		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		if($group_params->id > 0)
 			$stm->bindValue(':id', $group_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке групп пользователей.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_group');
-		$result = [];
-		while($group = $stm->fetch())
-			$result[] = $group;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_group(), 'Проблема при выборке групп пользователей.');
 	}
 	/**
 	* Возвращает список пользователей группы
@@ -37,14 +30,7 @@ class model_group{
 				AND `users`.`id` = `group2user`.`user_id`";
 		$stm = db::get_handler()->prepare($sql);
 		$stm->bindValue(':group_id', $group_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборки пользователей группы.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
-		$result = [];
-		while($works = $stm->fetch())
-			$result[] = $works;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_user(), 'Проблема при выборки пользователей группы.');
 	}
 	/**
 	* Верификация идентификатора компании.

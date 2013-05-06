@@ -22,8 +22,7 @@ class model_company{
 		$stm->bindValue(':smslogin', $company->smslogin, PDO::PARAM_STR);
 		$stm->bindValue(':smspassword', $company->smspassword, PDO::PARAM_STR);
 		$stm->bindValue(':smssender', $company->smssender, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании компании.');
+		stm_execute($stm, 'Проблемы при создании компании.');
 		$stm->closeCursor();
 		return $company;
 	}
@@ -34,8 +33,7 @@ class model_company{
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_company_id` FROM `companies`";
 		$stm = db::get_handler()->query($sql);
-		if($stm == false)
-			throw new e_model('Проблема при опредении следующего company_id.');
+		stm_execute($stm, 'Проблема при опредении следующего company_id.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при опредении следующего company_id.');
 		$company_id = (int) $stm->fetch()['max_company_id'] + 1;
