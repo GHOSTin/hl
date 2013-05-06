@@ -4,7 +4,7 @@ class model_city{
 	* Создает новый дом.
 	* @return object data_city
 	*/
-	public static function create_city(data_city $city, data_user $current_user){
+	public static function create_city(data_city $city, data_current_user $current_user){
 		$city->company_id = $current_user->company_id;
 		$city->id = self::get_insert_id();
 		self::verify_city_status($city_params);
@@ -27,7 +27,7 @@ class model_city{
 	* Создает новую улицу.
 	* @return object data_street
 	*/
-	public static function create_street(data_city $city, data_street $street, data_user $current_user){
+	public static function create_street(data_city $city, data_street $street, data_current_user $current_user){
 		model_street::verify_street_status($street);
 		model_street::verify_street_name($street);
 		self::verify_city_id($city_params);
@@ -118,7 +118,7 @@ class model_city{
 	* Возвращает список улиц города
 	*/
 	public static function get_numbers(data_city $city_params,
-		data_number $number_params, data_user $current_user){
+		data_number $number_params, data_current_user $current_user){
 		self::verify_city_id($city_params);
 		model_number::verify_number_number($number_params);
 		model_user::verify_user_company_id($current_user);

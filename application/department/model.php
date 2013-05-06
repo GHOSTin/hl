@@ -4,7 +4,7 @@ class model_department{
 	* Создает новый участок в компании.
 	* @return object data_department
 	*/
-	public static function create_department(data_company $company, data_department $department, data_user $current_user){
+	public static function create_department(data_company $company, data_department $department, data_current_user $current_user){
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
 		self::verify_department_id($department);
@@ -45,7 +45,7 @@ class model_department{
 	* Возвращает список участков компании.
 	* @return array из object data_department
 	*/
-	public static function get_departments(data_department $department_params, data_user $current_user){
+	public static function get_departments(data_department $department_params, data_current_user $current_user){
 		$sql = "SELECT `id`, `company_id`, `status`, `name`
 				FROM `departments` WHERE `departments`.`company_id` = :company_id";
 		if(!empty($department_params->id)){

@@ -1,7 +1,7 @@
 <?php
 class model_flat{
 
-	public static function create_flat(data_house $house, data_flat $flat, data_user $current_user){
+	public static function create_flat(data_house $house, data_flat $flat, data_current_user $current_user){
 		self::verify_flat_status($flat);
 		self::verify_flat_number($flat);
 		$flat->company_id = $current_user->company_id;

@@ -4,7 +4,7 @@ class model_street{
 	* Создает новый дом.
 	* @return object data_city
 	*/
-	public static function create_house(data_street $street, data_house $house, data_user $current_user){
+	public static function create_house(data_street $street, data_house $house, data_current_user $current_user){
 		model_house::verify_house_status($house);
 		model_house::verify_house_number($house);
 		self::verify_street_id($street);

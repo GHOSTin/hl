@@ -5,7 +5,7 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function create_number(data_city $city, data_flat $flat,
-		data_number $number, data_user $current_user){
+		data_number $number, data_current_user $current_user){
 		model_city::verify_city_id($city);
 		$number->id = self::get_insert_id($city);
 		$number->company_id = $current_user->company_id;
@@ -13,15 +13,15 @@ class model_number{
 		$number->type = 'human';
 		$number->house_id = $flat->house_id;
 		$number->flat_id = $flat->id;
-		self::verify_number_id($number);
-		self::verify_number_company_id($number);
-		self::verify_number_city_id($number);
-		self::verify_number_house_id($number);
-		self::verify_number_flat_id($number);
-		self::verify_number_number($number);
-		self::verify_number_type($number);
-		self::verify_number_status($number);
-		self::verify_number_fio($number);
+		self::verify_id($number);
+		self::verify_company_id($number);
+		self::verify_city_id($number);
+		self::verify_house_id($number);
+		self::verify_flat_id($number);
+		self::verify_number($number);
+		self::verify_type($number);
+		self::verify_status($number);
+		self::verify_fio($number);
 		$sql = "INSERT INTO `numbers` (
 					`id`, `company_id`, `city_id`, `house_id`, `flat_id`, `number`, `type`, `status`,
 					`fio`, `telephone`, `cellphone`, `password`, `contact-fio`, `contact-telephone`,
@@ -108,7 +108,7 @@ class model_number{
 	* Возвращает список лицевых счетов.
 	* @return array object data_number
 	*/
-	public static function get_numbers(data_number $number, data_user $current_user){
+	public static function get_numbers(data_number $number, data_current_user $current_user){
 		if(!empty($number->id))
 			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
@@ -170,9 +170,9 @@ class model_number{
 	* Возвращает список счетчиков лицевого счета
 	*/
 	public static function get_meters(data_number $number_params,
-		data_user $current_user, data_meter $meter_params = null){
-		self::verify_number_id($number);
-		model_user::verify_user_company_id($current_user);
+		data_current_user $current_user, data_meter $meter_params = null){
+		self::verify_id($number_params);
+		model_user::verify_company_id($current_user);
 		if(!is_null($meter_params))
 			if(empty($meter_params->id))
 				throw new e_model('Идентификатор счетчики задан не верно.');
@@ -209,11 +209,11 @@ class model_number{
 	* Возвращает данные счетчика
 	*/
 	public static function get_meter_data(data_meter $meter,
-		data_number $number, data_user $current_user, $time){
-		model_meter::verify_meter_id($meter);
-		model_meter::verify_meter_serial($meter);
-		self::verify_number_id($number);
-		self::verify_user_company_id($current_user);
+		data_number $number, data_current_user $current_user, $time){
+		model_meter::verify_id($meter);
+		model_meter::verify_serial($meter);
+		self::verify_id($number);
+		model_user::verify_company_id($current_user);
 		if(empty($time))
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);
@@ -243,11 +243,11 @@ class model_number{
 	* Возвращает данные счетчика
 	*/
 	public static function update_meter_data(data_meter $meter,
-		data_number $number, data_user $current_user, $time, $tarif){
+		data_number $number, data_current_user $current_user, $time, $tarif){
 		try{
 			db::get_handler()->beginTransaction();
-			model_meter::verify_meter_id($meter);
-			model_meter::verify_meter_serial($meter);
+			model_meter::verify_id($meter);
+			model_meter::verify_serial($meter);
 			self::verify_number_id($number);
 			self::verify_user_company_id($current_user);
 			if(empty($time))
@@ -315,9 +315,9 @@ class model_number{
 	* Обнавляет номер лицевого счета
 	* @return object data_number
 	*/
-	public static function update_number(data_number $number_params, data_user $current_user){
-		self::verify_number_id($number_params);
-		self::verify_number_number($number_params);
+	public static function update_number(data_number $number_params, data_current_user $current_user){
+		self::verify_id($number_params);
+		self::verify_number($number_params);
 		$number = model_number::get_number($number_params);
 		self::is_data_number($number);
 		$number->number = $number_params->number;

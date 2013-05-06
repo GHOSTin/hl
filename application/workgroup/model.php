@@ -4,7 +4,7 @@ class model_workgroup{
 	* Возвращает список групп работ
 	* @return array из data_workgroup
 	*/
-	public static function get_workgroups(data_workgroup $workgroup_params, data_user $current_user){
+	public static function get_workgroups(data_workgroup $workgroup_params, data_current_user $current_user){
 		$sql = "SELECT `id`,`company_id`, `status`, `name`
 				FROM `workgroups`
 				WHERE `company_id` = :company_id";
@@ -27,7 +27,7 @@ class model_workgroup{
 	* Возвращает список работ группы
 	* @return array из data_work
 	*/
-	public static function get_works(data_workgroup $workgroup_params, data_user $current_user){
+	public static function get_works(data_workgroup $workgroup_params, data_current_user $current_user){
 		$sql = "SELECT `id`,`company_id`, `workgroup_id`, `status`, `name`
 				FROM `works`
 				WHERE `company_id` = :company_id";

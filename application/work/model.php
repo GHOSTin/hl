@@ -4,9 +4,8 @@ class model_work{
 	* Возвращает список работ заявки
 	* @return array из data_work
 	*/
-	public static function get_works(data_work $work_params, data_user $current_user){
-		$sql = "SELECT `id`,`company_id`, `status`, `name`
-				FROM `works`
+	public static function get_works(data_work $work_params, data_current_user $current_user){
+		$sql = "SELECT `id`,`company_id`, `status`, `name` FROM `works`
 				WHERE `company_id` = :company_id";
 				if(!empty($work_params->id))
 					$sql .= " AND `id` = :id";

@@ -4,7 +4,7 @@ class model_group{
 	* Возвращает список групп.
 	* @return array из data_group
 	*/
-	public static function get_groups(data_group $group_params, data_user $current_user){
+	public static function get_groups(data_group $group_params, data_current_user $current_user){
 		$sql = "SELECT `id`, `company_id`, `status`, `name`
 				FROM `groups` WHERE `company_id` = :company_id";
 		if($group_params->id > 0)
@@ -27,7 +27,7 @@ class model_group{
 	* Возвращает список пользователей группы
 	* @return array из data_user
 	*/
-	public static function get_users(data_group $group_params, data_user $current_user){
+	public static function get_users(data_group $group_params, data_current_user $current_user){
 		self::verify_group_id($group_params);
 		$sql = "SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
