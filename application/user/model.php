@@ -30,9 +30,7 @@ class model_user{
 		$stm->bindValue(':password', self::get_password_hash($user->password), PDO::PARAM_STR);
 		$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
 		$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
-		if($stm->execute() == false)
-			throw new e_model('Проблемы при создании пользователя.');
-		$stm->closeCursor();
+		stm_execute($stm, 'Проблемы при создании пользователя.');
 		return $user;
 	}
 	/**
@@ -42,8 +40,7 @@ class model_user{
 	private static function get_insert_id(){
 		$sql = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
 		$stm = db::get_handler()->query($sql);
-		if($stm == false)
-			throw new e_model('Проблема при опредении следующего user_id.');
+		stm_execute($stm, 'Проблема при опредении следующего user_id.');
 		if($stm->rowCount() !== 1)
 			throw new e_model('Проблема при опредении следующего user_id.');
 		$user_id = (int) $stm->fetch()['max_user_id'] + 1;
@@ -72,14 +69,7 @@ class model_user{
 		$stm = db::get_handler()->prepare($sql);
 		if(!empty($user_params->id))
 			$stm->bindValue(':id', $user_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборке пользователей.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_user');
-		$result = [];
-		while($user = $stm->fetch())
-			$result[] = $user;
-		$stm->closeCursor();
-		return $result;
+		return stm_map_result($stm, new data_user(), 'Проблема при выборке пользователей.');
 	}
 	/**
 	* Верификация сотового телефона пользователя.

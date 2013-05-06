@@ -4,23 +4,17 @@ class model_work{
 	* Возвращает список работ заявки
 	* @return array из data_work
 	*/
-	public static function get_works(data_work $work_params, data_current_user $current_user){
+	public static function get_works(data_work $work, data_current_user $user){
+		model_user::verify_company_id($user);
 		$sql = "SELECT `id`,`company_id`, `status`, `name` FROM `works`
 				WHERE `company_id` = :company_id";
-				if(!empty($work_params->id))
+				if(!empty($work->id))
 					$sql .= " AND `id` = :id";
 		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if(!empty($work_params->id))
-			$stm->bindValue(':id', $work_params->id, PDO::PARAM_INT);
-		if($stm->execute() == false)
-			throw new e_model('Проблема при выборки работ.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_work');
-		$result = [];
-		while($works = $stm->fetch())
-			$result[] = $works;
-		$stm->closeCursor();
-		return $result;
+		$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
+		if(!empty($work->id))
+			$stm->bindValue(':id', $work->id, PDO::PARAM_INT);
+		return stm_map_result($stm, new data_work(), 'Проблема при выборки работ.');
 	}
 	/**
 	* Верификация идентификатора компании.
