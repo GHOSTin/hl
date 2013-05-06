@@ -48,7 +48,7 @@ class model_department{
 	public static function get_departments(data_department $department_params, data_user $current_user){
 		$sql = "SELECT `id`, `company_id`, `status`, `name`
 				FROM `departments` WHERE `departments`.`company_id` = :company_id";
-		if($department_params->id > 0){
+		if(!empty($department_params->id)){
 			$sql .= ' AND `id` IN(';
 			if(is_array($department_params->id)){
 				$count = count($department_params->id);

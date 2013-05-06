@@ -13,8 +13,8 @@ class controller_query{
 		$user = new data_user();
 		$user->id = $_GET['user_id'];
 		$class = $_GET['type'];
-		return ['queries' => model_query::add_user($query, $user, $class, $_SESSION['user']),
-				'users' => model_query::get_users($query, $_SESSION['user'])];
+		return ['queries' => model_query::add_user($query, $user, $class, model_session::get_user()),
+				'users' => model_query::get_users($query, model_session::get_user())];
 	}
 
 	public static function private_add_work(){
@@ -30,8 +30,8 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
-		return ['queries' => model_query::add_work($query, $work, $begin_time, $end_time, $_SESSION['user']),
-				'works' => model_query::get_works($query, $_SESSION['user'])];
+		return ['queries' => model_query::add_work($query, $work, $begin_time, $end_time, model_session::get_user()),
+				'works' => model_query::get_works($query, model_session::get_user())];
 	}
 
 	public static function private_clear_filters(){
@@ -44,9 +44,9 @@ class controller_query{
 		$query->house_id = 'all';
 		$query->department_id = 'all';
 		$time = getdate();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user']),
+				'numbers' => model_query::get_numbers($query, model_session::get_user()),
 				'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 				'now' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year'])];
 	}
@@ -55,17 +55,17 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->close_reason = $_GET['reason'];
-		return ['queries' => model_query::close_query($query, $_SESSION['user']),
-			'users' => model_query::get_users($query, $_SESSION['user']),
-			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+		return ['queries' => model_query::close_query($query, model_session::get_user()),
+			'users' => model_query::get_users($query, model_session::get_user()),
+			'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_to_working_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		return ['queries' => model_query::to_working_query($query, $_SESSION['user']),
-			'users' => model_query::get_users($query, $_SESSION['user']),
-			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+		return ['queries' => model_query::to_working_query($query, model_session::get_user()),
+			'users' => model_query::get_users($query, model_session::get_user()),
+			'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_create_query(){
@@ -81,14 +81,14 @@ class controller_query{
 		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
 		$query_work_type = new data_query_work_type();
 		$query_work_type->id = $_GET['work_type'];
-		$queries[] = model_query::create_query($query, $initiator, $query_work_type, $_SESSION['user']);
+		$queries[] = model_query::create_query($query, $initiator, $query_work_type, model_session::get_user());
 		return ['queries' => $queries];
 	}
 
 	public static function private_get_documents(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		return ['queries' => model_query::get_queries($query, $_SESSION['user'])];
+		return ['queries' => model_query::get_queries($query, model_session::get_user())];
 	}
 
 	public static function private_get_day(){
@@ -96,33 +96,30 @@ class controller_query{
 		$query = new data_query();
 		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		return ['queries' => model_query::get_queries($query),
-			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+			'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_get_dialog_add_user(){
-		$id = (int) $_GET['id'];
 		$type = (string) $_GET['type'];
-		if(empty($id))
-			throw new e_model('Проблема с идентификатором заявки.');
 		if(array_search($type, ['manager', 'performer']) === false)
 			throw new e_model('Проблема с типом.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query),
-			'groups' => model_group::get_groups(new data_group(), $_SESSION['user']),
+			'groups' => model_group::get_groups(new data_group(), model_session::get_user()),
 			'type' => $type];
 	}
 
 	public static function private_get_dialog_add_work(){
 		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('id заявки задан не верно.');
 		$query = new data_query();
 		$query->id = $id;
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query),
-			'workgroups' => model_workgroup::get_workgroups(new data_workgroup(), $_SESSION['user'])];
+			'workgroups' => model_workgroup::get_workgroups(new data_workgroup(), model_session::get_user())];
 	}	
 
 	public static function private_get_dialog_create_query(){
@@ -130,72 +127,58 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_close_query(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('id заявки зада не верно.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query)];
 	}
 
 	public static function private_get_dialog_to_working_query(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('id заявки зада не верно.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query)];
 	}
 
 	public static function private_get_dialog_edit_description(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('Недостаточно параметров.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query)];
 	}
 
 	public static function private_get_dialog_edit_contact_information(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('Недостаточно параметров.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query)];
 	}
 
 	public static function private_get_dialog_edit_payment_status(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('Проблема с идентификатором заявки.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query)];
 	}
 
 	public static function private_get_dialog_edit_warning_status(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('Проблема с идентификатором заявки.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query)];
 	}
 
 	public static function private_get_dialog_edit_work_type(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('Проблема с идентификатором заявки.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		return ['queries' => model_query::get_queries($query),
-			'work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user'])];
+			'work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user())];
 	}
 
 	public static function private_get_dialog_initiator(){
 		$query = new data_query();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$street = new data_street();
 		$street->department_id = $query->department_id;
 		return ['streets' => model_street::get_streets($street),
@@ -203,41 +186,33 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_remove_user(){
-		$id = (int) $_GET['id'];
-		$user_id = (int) $_GET['user_id'];
 		$type = (string) $_GET['type'];
-		if(empty($id))
-			throw new e_model('id задан не верно.');
-		if(empty($user_id))
-			throw new e_model('user задан не верно.');
 		if(array_search($type, ['manager', 'performer']) === false)
 			throw new e_model('Проблема с типом.');
 		$query = new data_query();
-		$query->id = $id;
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		$user = new data_user();
-		$user->id = $user_id;
+		$user->id = $_GET['user_id'];
+		model_user::verify_id($user);
 		return ['queries' => model_query::get_queries($query),
 				'users' => model_user::get_users($user),
 				'type' => $type];
 	}	
 
 	public static function private_get_dialog_remove_work(){
-		$id = (int) $_GET['id'];
-		$work_id = (int) $_GET['work_id'];
-		if(empty($id))
-			throw new e_model('id заявки задан не верно.');
-		if(empty($work_id))
-			throw new e_model('id работы задан не верно.');
-				$query = new data_query();
-		$query->id = $id;
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		$work = new data_work();
-		$work->id = $work_id;
+		$work->id = $_GET['work_id'];
+		model_work::verify_id($work);
 		return ['queries' => model_query::get_queries($query),
-				'works' => model_work::get_works($work, $_SESSION['user'])];
+				'works' => model_work::get_works($work, model_session::get_user())];
 	}
 
 	public static function private_get_initiator(){
-		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user']);
+		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user());
 		switch($_GET['initiator']){
 			case 'number':
 				$number = new data_number();
@@ -260,7 +235,7 @@ class controller_query{
 
 	public static function private_get_houses(){
 		$query = new data_query();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$street = new data_street();
 		$street->id = $_GET['id'];
 		$street->department_id = $query->department_id;
@@ -277,44 +252,44 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
-			'users' => model_query::get_users($query, $_SESSION['user']),
-			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+			'users' => model_query::get_users($query, model_session::get_user()),
+			'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_get_query_content(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
-			'users' => model_query::get_users($query, $_SESSION['user']),
-			'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+			'users' => model_query::get_users($query, model_session::get_user()),
+			'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_get_query_title(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_get_query_numbers(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_get_query_users(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
-				'users' => model_query::get_users($query, $_SESSION['user'])];
+				'users' => model_query::get_users($query, model_session::get_user())];
 	}
 
 	public static function private_get_query_works(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		return ['queries' => model_query::get_queries($query),
-				'works' => model_query::get_works($query, $_SESSION['user'])];
+				'works' => model_query::get_works($query, model_session::get_user())];
 	}
 
 	public static function private_get_search(){
@@ -331,9 +306,9 @@ class controller_query{
 		$query = new data_query();
 		$query->status = $_GET['value'];
 		$query->department_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_set_street(){
@@ -341,12 +316,12 @@ class controller_query{
 		$query->street_id = $_GET['value'];
 		$query->department_id = 'all';
 		$query->house_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$street = new data_street();
 		$street->id = $_GET['value'];
 		$street->department_id = $query->department_id;
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user']),
+				'numbers' => model_query::get_numbers($query, model_session::get_user()),
 				'houses' => model_street::get_houses($street)];
 	}
 
@@ -354,9 +329,9 @@ class controller_query{
 		$query = new data_query();
 		$query->house_id = $_GET['value'];
 		$query->department_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
 
 	public static function private_set_department(){
@@ -364,9 +339,9 @@ class controller_query{
 		$query->department_id = $_GET['value'];
 		$query->street_id = 'all';
 		$query->house_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, $_SESSION['user'])];
+				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}	
 
 	public static function private_get_timeline(){
@@ -392,35 +367,30 @@ class controller_query{
 		}
 		$now = getdate();
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		return ['queries' => model_query::get_queries($query),
-			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
+			'numbers' => model_query::get_numbers($query, model_session::get_user()),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'timeline' => $timeline];
 	}
 
 	public static function private_get_user_options(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('id группы задан не верно.');
 		$group = new data_group();
-		$group->id = $id;
-		return ['users' => model_group::get_users($group, $_SESSION['user'])];
+		$group->id = $_GET['id'];
+		model_group::verify_id($group);
+		return ['users' => model_group::get_users($group, model_session::get_user())];
 	}
 
 	public static function private_get_work_options(){
-		$id = (int) $_GET['id'];
-		if(empty($id))
-			throw new e_model('id группы задан не верно.');
 		$work_group = new data_workgroup();
-		$work_group->id = $id;
-		return ['works' => model_workgroup::get_works($work_group, $_SESSION['user'])];
+		$work_group->id = $_GET['id'];
+		model_workgroup::verify_id($work_group);
+		return ['works' => model_workgroup::get_works($work_group, model_session::get_user())];
 	}
 
 	public static function private_show_default_page(){
 		$query = new data_query();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], $_SESSION['restrictions']['query']);
-		$time = getdate($query->time_open['begin']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);		$time = getdate($query->time_open['begin']);
 		$now = getdate();
 		$street = new data_street();
 		$street->department_id = $query->department_id;
@@ -429,16 +399,16 @@ class controller_query{
 			$houses = model_street::get_houses($street);
 		}
 		$department = new data_department();
-		$department->id = $_SESSION['restrictions']['query']->departments;
+		$department->id = model_session::get_restrictions()['query']->departments;
 		return ['queries' => model_query::get_queries($query),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),
 			'users' => model_user::get_users(new data_user()),
-			'departments' => model_department::get_departments($department, $_SESSION['user']),
-			'numbers' => model_query::get_numbers($query, $_SESSION['user']),
-			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), $_SESSION['user']),
+			'departments' => model_department::get_departments($department, model_session::get_user()),
+			'numbers' => model_query::get_numbers($query, model_session::get_user()),
+			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user()),
 			'houses' => $houses];
 	}
 
@@ -448,8 +418,8 @@ class controller_query{
 		$user = new data_user();
 		$user->id = $_GET['user_id'];
 		$type = $_GET['type'];
-		return ['queries' => model_query::remove_user($query, $user, $type, $_SESSION['user']),
-				'users' => model_query::get_users($query, $_SESSION['user'])];
+		return ['queries' => model_query::remove_user($query, $user, $type, model_session::get_user()),
+				'users' => model_query::get_users($query, model_session::get_user())];
 	}
 
 	public static function private_remove_work(){
@@ -457,15 +427,15 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
-		return ['queries' => model_query::remove_work($query, $work, $_SESSION['user']),
-				'works' => model_query::get_works($query, $_SESSION['user'])];
+		return ['queries' => model_query::remove_work($query, $work, model_session::get_user()),
+				'works' => model_query::get_works($query, model_session::get_user())];
 	}
 
 	public static function private_update_description(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->description = $_GET['description'];
-		return ['queries' => model_query::update_description($query, $_SESSION['user'])];
+		return ['queries' => model_query::update_description($query, model_session::get_user())];
 	}
 
 	public static function private_update_contact_information(){
@@ -474,27 +444,27 @@ class controller_query{
 		$query->contact_fio = $_GET['fio'];
 		$query->contact_telephone = $_GET['telephone'];
 		$query->contact_cellphone = $_GET['cellphone'];
-		return ['queries' => model_query::update_contact_information($query, $_SESSION['user'])];
+		return ['queries' => model_query::update_contact_information($query, model_session::get_user())];
 	}
 
 	public static function private_update_payment_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->payment_status = $_GET['status'];
-		return ['queries' => model_query::update_payment_status($query, $_SESSION['user'])];
+		return ['queries' => model_query::update_payment_status($query, model_session::get_user())];
 	}
 
 	public static function private_update_warning_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->warning_status = $_GET['status'];
-		return ['queries' => model_query::update_warning_status($query, $_SESSION['user'])];
+		return ['queries' => model_query::update_warning_status($query, model_session::get_user())];
 	}
 
 	public static function private_update_work_type(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->worktype_id = $_GET['type'];
-		return ['queries' => model_query::update_work_type($query, $_SESSION['user'])];
+		return ['queries' => model_query::update_work_type($query, model_session::get_user())];
 	}
 }

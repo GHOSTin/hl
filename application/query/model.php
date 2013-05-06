@@ -705,7 +705,7 @@ class model_query{
 	*/
 	public static function remove_user(data_query $query_params, data_user $user_params, $class, data_user $current_user){
 		self::verify_query_id($query_params);
-		model_user::verify_user_id($user_params)
+		model_user::verify_user_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
 		$query = self::get_queries($query_params)[0];
@@ -829,7 +829,7 @@ class model_query{
 		self::is_data_query($query);
 		$query_work_type_params = new data_query_work_type();
 		$query_work_type_params->id = $query_params->worktype_id;
-		$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, $_SESSION['user'])[0];
+		$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, model_session::get_user())[0];
 		model_query_work_type::is_data_query_work_type($query_work_type);
 		$query->worktype_id = $query_work_type->id;
 		$query->work_type_name = $query_work_type->name;

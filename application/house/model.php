@@ -40,7 +40,7 @@ class model_house{
 	* @return array из object data_number
 	*/
 	public static function get_numbers(data_house $house){
-		self::verify_house_id($house);
+		self::verify_id($house);
 		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
 					`numbers`.`flat_id`, `numbers`.`number`,
@@ -117,13 +117,6 @@ class model_house{
 	public static function verify_status(data_house $house){
 		if(empty($house->status))
 			throw new e_model('Статус дома задан не верно.');
-	}
-	/**
-	* Верификация идентификатора улицы.
-	*/
-	public static function verify_id(data_house $house){
-		if($house->street_id < 1)
-			throw new e_model('Идентификатор улицы задан не верно.');
 	}
 	/**
 	* Верификация названия улицы.

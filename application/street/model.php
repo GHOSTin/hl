@@ -102,7 +102,7 @@ class model_street{
 	* @return array из object data_house
 	*/
 	public static function get_houses(data_street $street_params, data_house $house_params = null){
-		self::verify_street_id($street_params);
+		self::verify_id($street_params);
 		$sql = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
 		 		`department_id`, `status`, `housenumber` as `number`
 				FROM `houses` WHERE `street_id` = :street_id";

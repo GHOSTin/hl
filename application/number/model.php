@@ -74,7 +74,7 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function get_number(data_number $number){
-		self::verify_number_id($number);
+		self::verify_id($number);
 		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
 					`numbers`.`flat_id`, `numbers`.`number`,
