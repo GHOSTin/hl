@@ -6,31 +6,30 @@ class model_workgroup{
 	*/
 	public static function get_workgroups(data_workgroup $workgroup, data_current_user $user){
 		model_user::verify_company_id($user);
-		$sql = "SELECT `id`,`company_id`, `status`, `name` FROM `workgroups`
-				WHERE `company_id` = :company_id";
-				if(!empty($workgroup->id))
-					$sql .= " AND `id` = :id";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
-		if(!empty($workgroup->id))
-			$stm->bindValue(':id', $workgroup->id, PDO::PARAM_INT);
-		return stm_map_result($stm, new data_workgroup(), 'Проблема при выборки групп работ.');
+		$sql = new sql();
+		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `workgroups`
+				WHERE `company_id` = :company_id");
+		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+		if(!empty($workgroup->id)){
+			$sql->query(" AND `id` = :id");
+			$sql->bind(':id', $workgroup->id, PDO::PARAM_INT);
+		}
+		return $sql->map(new data_workgroup(), 'Проблема при выборке групп работ.');
 	}
 	/**
 	* Возвращает список работ группы
 	* @return array из data_work
 	*/
 	public static function get_works(data_workgroup $workgroup, data_current_user $user){
-		model_user::verify_company_id($user);
-		$sql = "SELECT `id`,`company_id`, `workgroup_id`, `status`, `name`
-				FROM `works` WHERE `company_id` = :company_id";
-				if(!empty($workgroup->id))
-					$sql .= " AND `workgroup_id` = :workgroup_id";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':company_id', $user->company_id, PDO::PARAM_INT);
-		if(!empty($workgroup->id))
-			$stm->bindValue(':workgroup_id', $workgroup->id, PDO::PARAM_INT);
-		return stm_map_result($stm, new data_work(), 'Проблема при выборки работ группы.');
+		$sql = new sql();
+		$sql->query("SELECT `id`,`company_id`, `workgroup_id`, `status`, `name`
+					FROM `works` WHERE `company_id` = :company_id");
+		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+		if(!empty($workgroup->id)){
+			$sql->query(" AND `workgroup_id` = :workgroup_id");
+			$sql->bind(':workgroup_id', $workgroup->id, PDO::PARAM_INT);
+		}
+		return $sql->map(new data_work(), 'Проблема при выборки работ группы.');
 	}
 	/**
 	* Верификация идентификатора компании.

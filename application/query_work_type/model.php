@@ -5,15 +5,15 @@ class model_query_work_type{
 	* @return array из data_query_work_type
 	*/
 	public static function get_query_work_types(data_query_work_type $query_work_type_params, data_current_user $current_user){
-		$sql = "SELECT `id`,`company_id`, `status`, `name` FROM `query_worktypes`
-				WHERE `company_id` = :company_id";
-				if(!empty($query_work_type_params->id))
-					$sql .= " AND `id` = :id";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql = new sql();
+		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `query_worktypes`
+					WHERE `company_id` = :company_id");
+		$stm->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		if(!empty($query_work_type_params->id))
-			$stm->bindValue(':id', $query_work_type_params->id, PDO::PARAM_INT);
-		return stm_map_result($stm, new data_query_work_type(), 'Проблема при выборки типов заявки.');
+			$sql->query(" AND `id` = :id");
+			$stm->bind(':id', $query_work_type_params->id, PDO::PARAM_INT);
+		}
+		$sql->map(new data_query_work_type(), 'Проблема при выборке типов заявки.');
 	}
 	/**
 	* Верификация идентификатора компании.

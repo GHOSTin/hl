@@ -10,16 +10,15 @@ class model_flat{
 		self::verify_flat_id($flat);
 		self::verify_flat_company_id($flat);
 		self::verify_flat_house_id($house;
-		$sql = "INSERT INTO `flats` (`id`, `company_id`, `house_id`, `status`, 
-				`flatnumber`) VALUES (:flat_id, :company_id, :house_id, :status, :number)";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':flat_id', $flat->id);
-		$stm->bindValue(':company_id', $flat->company_id);
-		$stm->bindValue(':house_id', $flat->house_id);
-		$stm->bindValue(':status', $flat->status);
-		$stm->bindValue(':number', $flat->number);
-		stm_execute($stm, 'Не все параметры заданы правильно.');
-		$stm->closeCursor();
+		$sql = new sql();
+		$sql->query("INSERT INTO `flats` (`id`, `company_id`, `house_id`, `status`, 
+					`flatnumber`) VALUES (:flat_id, :company_id, :house_id, :status, :number)");
+		$sql->bind(':flat_id', $flat->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $flat->company_id, PDO::PARAM_INT);
+		$sql->bind(':house_id', $flat->house_id, PDO::PARAM_INT);
+		$sql->bind(':status', $flat->status, PDO::PARAM_STR);
+		$sql->bind(':number', $flat->number, PDO::PARAM_STR);
+		$sql->execute('Не все параметры заданы правильно.');
 		return $flat;
 	}
 	/**
@@ -27,14 +26,15 @@ class model_flat{
 	* @return int
 	*/
 	private static function get_insert_id(){
-		$sql = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
-		$stm = db::get_handler()->query($sql);
-		stm_execute($stm, 'Проблема при опредении следующего flat_id.');
-		if($stm->rowCount() !== 1)
+		$sql = new sql();
+		$sql->query("SELECT MAX(`id`) as `max_flat_id` FROM `flats`");
+		$sql->execute('Проблема при опредении следующего flat_id.');
+		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего flat_id.');
-		$flat_id = (int) $stm->fetch()['max_flat_id'] + 1;
-		$stm->closeCursor();
+		$flat_id = (int) $sql->row()['max_flat_id'] + 1;
+		$sql->close();
 		return $flat_id;
+
 	}
 	/**
 	* Верификация идентификатора компании.

@@ -5,13 +5,13 @@ class model_house{
 	* @return int
 	*/
 	public static function get_insert_id(){
-		$sql = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
-		$stm = db::get_handler()->query($sql);
-		stm_execute($stm, 'Проблема при опредении следующего house_id.');
-		if($stm->rowCount() !== 1)
+		$sql = new sql();
+		$sql->query("SELECT MAX(`id`) as `max_house_id` FROM `houses`");
+		$sql->execute('Проблема при опредении следующего house_id.');
+		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего house_id.');
-		$house_id = (int) $stm->fetch()['max_house_id'] + 1;
-		$stm->closeCursor();
+		$house_id = (int) $sql->row()['max_house_id'] + 1;
+		$sql->close();
 		return $house_id;
 	}
 	/**
@@ -20,17 +20,15 @@ class model_house{
 	*/
 	public static function get_house(data_house $house){
 		self::verify_house_id($house);
-		$sql = "SELECT `houses`.`id`, `houses`.`company_id`, `houses`.`city_id`,
-				`houses`.`street_id`, `houses`.`department_id`, `houses`.`status`, 
-				`houses`.`housenumber` as `number`, `streets`.`name` as `street_name`
-				FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
-				AND `houses`.`street_id` = `streets`.`id`";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':house_id', $house->id, PDO::PARAM_INT);
-		stm_execute($stm, 'Проблемы при выборке дома.');
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_house');
-		$house = $stm->fetch();
-		$stm->closeCursor();
+		$sql = new sql();
+		$sql->query("SELECT `houses`.`id`, `houses`.`company_id`, `houses`.`city_id`,
+					`houses`.`street_id`, `houses`.`department_id`, `houses`.`status`, 
+					`houses`.`housenumber` as `number`, `streets`.`name` as `street_name`
+					FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
+					AND `houses`.`street_id` = `streets`.`id`");
+		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
+		$house = $sql->map(new data_house(), 'Проблемы при выборке дома.');
+		$sql->close();
 		return $house;
 	}
 	/**
@@ -39,7 +37,8 @@ class model_house{
 	*/
 	public static function get_numbers(data_house $house){
 		self::verify_id($house);
-		$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
+		$sql = new sql();
+		$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
 					`numbers`.`flat_id`, `numbers`.`number`,
 					`numbers`.`type`, `numbers`.`status`,
@@ -55,10 +54,9 @@ class model_house{
 				WHERE `numbers`.`house_id` = :house_id
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `numbers`.`house_id` = `houses`.`id`
-				AND `houses`.`street_id` = `streets`.`id`";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':house_id', $house->id, PDO::PARAM_STR);
-		return stm_map_result($stm, new data_number(), 'Проблемы при выборке номеров.');
+				AND `houses`.`street_id` = `streets`.`id`");
+		$sql->bind(':house_id', $house->id, PDO::PARAM_STR);
+		return $sql->map(new data_number(), 'Проблемы при выборке номеров.');
 	}
 	/**
 	* Верификация идентификатора города.

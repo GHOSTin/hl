@@ -4,21 +4,20 @@ class model_auth{
 	* Возвращает пользователя для сессии data_cureent_user
 	*/
 	public static function auth_user(){
-		$sql = "SELECT `id`, `company_id`, `status`, `username` as `login`,
-				`firstname`, `lastname`, `midlename` as `middlename`,
-				`password`, `telephone`, `cellphone`
-				FROM `users` WHERE `username` = :login AND `password` = :hash";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':login', htmlspecialchars($_POST['login']), PDO::PARAM_STR);
-		$stm->bindValue(':hash', model_user::get_password_hash($_POST['password']) , PDO::PARAM_STR);
-		stm_execute($stm, 'Проблемы при авторизации.');
-		if($stm->rowCount() !== 1){
-			$stm->closeCursor();
+		$sql = new sql();
+		$sql->query("SELECT `id`, `company_id`, `status`, `username` as `login`,
+					`firstname`, `lastname`, `midlename` as `middlename`,
+					`password`, `telephone`, `cellphone`
+					FROM `users` WHERE `username` = :login AND `password` = :hash");
+		$sql->bind(':login', htmlspecialchars($_POST['login']), PDO::PARAM_STR);
+		$sql->bind(':hash', model_user::get_password_hash($_POST['password']) , PDO::PARAM_STR);
+		$sql->execute('Проблемы при авторизации.');
+		if($sql->count() !== 1){
+			$sql->close();
 			throw new e_model('Проблемы при авторизации.');
 		}
-		$stm->setFetchMode(PDO::FETCH_CLASS, 'data_current_user');
-		$user = $stm->fetch();
-		$stm->closeCursor();
-		return $user;
+		$users = $sql->map(new data_current_user(), 'Проблема при авторизации.');
+		$sql->close();
+		return $users[0];
 	}
 }

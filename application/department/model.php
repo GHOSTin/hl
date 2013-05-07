@@ -11,15 +11,15 @@ class model_department{
 		self::verify_department_company_id($department);
 		self::verify_department_status($department);
 		self::verify_department_name($department);
-		$sql = "INSERT INTO `departments` (`id`, `company_id`, `status`, `name`)
-				VALUES (:department_id, :company_id, :status, :name);";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':department_id', $department->id);
-		$stm->bindValue(':company_id', $department->company_id);
-		$stm->bindValue(':status', $department->status);
-		$stm->bindValue(':name', $department->name);
-		stm_execute($stm, 'Проблемы при создании нового участка.');
-		$stm->closeCursor();
+		$sql = new sql();
+		$sql->query("INSERT INTO `departments` (`id`, `company_id`, `status`, `name`)
+					VALUES (:department_id, :company_id, :status, :name)");
+		$sql->bind(':department_id', $department->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $department->company_id, PDO::PARAM_INT);
+		$sql->bind(':status', $department->status, PDO::PARAM_STR);
+		$sql->bind(':name', $department->name, PDO::PARAM_STR);
+		$sql->execute('Проблемы при создании нового участка.');
+		$$sql->close();
 		return $department;
 	}
 	/**
@@ -28,15 +28,15 @@ class model_department{
 	*/
 	private static function get_insert_id(data_company $company){
 		model_company::verify_company_id($company);
-		$sql = "SELECT MAX(`id`) as `max_department_id` FROM `departments`
-				WHERE `company_id` = :company_id";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':company_id', $company->id, PDO::PARAM_INT);
-		stm_execute($stm, 'Проблема при опредении следующего department_id.');
-		if($stm->rowCount() !== 1)
+		$sql = new sql();
+		$sql->query("SELECT MAX(`id`) as `max_department_id` FROM `departments`
+					WHERE `company_id` = :company_id");
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->execute('Проблема при опредении следующего department_id.');
+		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего department_id.');
-		$department_id = (int) $stm->fetch()['max_department_id'] + 1;
-		$stm->closeCursor();
+		$department_id = (int) $sql->row()['max_department_id'] + 1;
+		$sql->close();
 		return $department_id;
 	}
 	/**
@@ -44,31 +44,23 @@ class model_department{
 	* @return array из object data_department
 	*/
 	public static function get_departments(data_department $department_params, data_current_user $current_user){
-		$sql = "SELECT `id`, `company_id`, `status`, `name`
-				FROM `departments` WHERE `departments`.`company_id` = :company_id";
-		if(!empty($department_params->id)){
-			$sql .= ' AND `id` IN(';
-			if(is_array($department_params->id)){
-				$count = count($department_params->id);
-				$i = 1;
-				foreach($department_params->id as $key => $department){
-					$sql .= ':department_id'.$key;
-					if($i++ < $count)
-						$sql .= ',';
-				}
-			}else
-				$sql .= ':department_id0';
-			$sql .= ")";
-		}
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindParam(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if($department_params->id > 0)
+		$sql = new sql();
+		$sql->query("SELECT `id`, `company_id`, `status`, `name`
+					FROM `departments` WHERE `departments`.`company_id` = :company_id");
+		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		if($department_params->id > 0){
+			$params = [];
 			if(is_array($department_params->id))
-				foreach($department_params->id as $key => $department)
-					$stm->bindValue(':department_id'.$key, $department, PDO::PARAM_INT);
+				$departments = $department_params->id;
 			else
-				$stm->bindValue(':department_id0', $department_params->id, PDO::PARAM_INT);
-		return stm_map_result($stm, new data_department(), 'Проблема при выборке пользователей.');
+				$departments[] = $department_params->id;
+			foreach($departments as $key => $department){
+				$params[] = 'department'.$key;
+				$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
+			}
+			$sql->query(" AND `id` IN(".implode(',', $params).")");
+		}
+		return $sql->map(new data_department(), 'Проблема при выборке пользователей.');
 	}
 	/**
 	* Верификация идентификатора компании.

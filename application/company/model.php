@@ -12,18 +12,18 @@ class model_company{
 		self::verify_company_id($company);
 		self::verify_company_status($company);
 		self::verify_company_name($company);
-		$sql = "INSERT INTO `companies` (`id`, `status`, `name`, `smslogin`, 
-				`smspassword`, `smssender`) VALUES (:company_id, :status, :name,
-				:smslogin, :smspassword, :smssender)";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':company_id', $company->id, PDO::PARAM_INT);
-		$stm->bindValue(':status', $company->status, PDO::PARAM_STR);
-		$stm->bindValue(':name', $company->name, PDO::PARAM_STR);
-		$stm->bindValue(':smslogin', $company->smslogin, PDO::PARAM_STR);
-		$stm->bindValue(':smspassword', $company->smspassword, PDO::PARAM_STR);
-		$stm->bindValue(':smssender', $company->smssender, PDO::PARAM_STR);
-		stm_execute($stm, 'Проблемы при создании компании.');
-		$stm->closeCursor();
+		$sql = new sql();
+		$sql->query("INSERT INTO `companies` (`id`, `status`, `name`, `smslogin`, 
+					`smspassword`, `smssender`) VALUES (:company_id, :status, :name,
+					:smslogin, :smspassword, :smssender)");
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->bind(':status', $company->status, PDO::PARAM_STR);
+		$sql->bind(':name', $company->name, PDO::PARAM_STR);
+		$sql->bind(':smslogin', $company->smslogin, PDO::PARAM_STR);
+		$sql->bind(':smspassword', $company->smspassword, PDO::PARAM_STR);
+		$sql->bind(':smssender', $company->smssender, PDO::PARAM_STR);
+		$sql->execute('Проблемы при создании компании.');
+		$sql->close();
 		return $company;
 	}
 	/**
@@ -31,13 +31,13 @@ class model_company{
 	* @return int
 	*/
 	private static function get_insert_id(){
-		$sql = "SELECT MAX(`id`) as `max_company_id` FROM `companies`";
-		$stm = db::get_handler()->query($sql);
-		stm_execute($stm, 'Проблема при опредении следующего company_id.');
-		if($stm->rowCount() !== 1)
+		$sql = new sql();
+		$sql->query("SELECT MAX(`id`) as `max_company_id` FROM `companies`");
+		$sql->execute('Проблема при опредении следующего company_id.');
+		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего company_id.');
-		$company_id = (int) $stm->fetch()['max_company_id'] + 1;
-		$stm->closeCursor();
+		$company_id = (int) $sql->row()['max_company_id'] + 1;
+		$sql->close();
 		return $company_id;
 	}
 	/**

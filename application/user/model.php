@@ -14,8 +14,8 @@ class model_user{
 		$user->status = true;
 		$sql = new sql();
 		$sql->exp("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
-				`firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`
-				) VALUES (:user_id, :company_id, :status, :login, :firstname, :lastname, 
+				`firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`)
+				VALUES (:user_id, :company_id, :status, :login, :firstname, :lastname, 
 				:middlename, :password, :telephone, :cellphone)");
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
@@ -41,7 +41,7 @@ class model_user{
 		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего user_id.');
 		$user_id = (int) $sql->row()['max_user_id'] + 1;
-		$sql->close_cursor();
+		$sql->close();
 		return $user_id;
 	}
 	/**
@@ -65,7 +65,7 @@ class model_user{
 			$sql->query(" WHERE `id` = :id");
 			$sql->bind(':id', $user_params->id, PDO::PARAM_INT);
 		}
-		return $sql->result(new data_user(), 'Проблема при выборке пользователей.');
+		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');
 	}
 	/**
 	* Верификация сотового телефона пользователя.
