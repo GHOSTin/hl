@@ -6,21 +6,19 @@ class model_profile{
 	public static function get_user_profiles(data_user $user){
 		model_user::verify_id($user);
 		model_user::verify_company_id($user);
-		$sql = "SELECT `profile`, `rules`, `restrictions`, `settings`
-				FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id";
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':user_id', $user->id, PDO::PARAM_INT);
-		$stm->bindValue(':company_id', $user->company_id , PDO::PARAM_INT);
-		stm_execute($stm, 'Ошибка при получении профиля.');
-		if($stm->rowCount() > 0){
-			while($profile = $stm->fetch()){
+		$sql = new sql();
+		$sql->query("SELECT `profile`, `rules`, `restrictions`, `settings`
+					FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id");
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $user->company_id , PDO::PARAM_INT);
+		$sql->execute('Ошибка при получении профиля.');
+		if($sql->count() > 0)
+			while($profile = $sql->row())
 				if(array_search($profile['profile'], ['query', 'number']) !== false){
 					$rules[$profile['profile']] = json_decode($profile['rules']);
 					$restrictions[$profile['profile']] = json_decode($profile['restrictions']);
 				}
-			}
-		}
-		$stm->closeCursor();
+		$sql->close();
 		model_session::set_rules($rules);
 		model_session::set_restrictions($restrictions);
 	}
@@ -46,12 +44,11 @@ class model_profile{
 		if(strlen($new_password) < 6)
 			throw new e_model('Пароль не может быть длиной меньше 10 символов.');
 		$user->password = model_user::get_password_hash($new_password);
-		$sql = 'UPDATE `users` SET `password` = :password
-				WHERE `id` = :id';
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':password', $user->password, PDO::PARAM_STR);
-		$stm->bindValue(':id', $user->id, PDO::PARAM_INT);
-		stm_execute($stm, 'Ошибка при изменении пароля.');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
+		$sql->bind(':password', $user->password, PDO::PARAM_STR);
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->execute('Ошибка при изменении пароля.');
 		return $user;
 	}
 	/**
@@ -60,12 +57,11 @@ class model_profile{
 	*/
 	public static function update_cellphone(data_user $user, $cellphone){
 		$user->cellphone = (string) $cellphone;
-		$sql = 'UPDATE `users` SET `cellphone` = :cellphone
-				WHERE `id` = :id';
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':cellphone', $user->cellphone, PDO::PARAM_STR);
-		$stm->bindValue(':id', $user->id, PDO::PARAM_INT);
-		stm_execute($stm, 'Ошибка при изменении номера сотового телефона.');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `cellphone` = :cellphone WHERE `id` = :id");
+		$sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->execute('Ошибка при изменении номера сотового телефона.');
 		return $user;
 	}
 	/**
@@ -74,12 +70,11 @@ class model_profile{
 	*/
 	public static function update_telephone(data_user $user, $telephone){
 		$user->telephone = (string) $telephone;
-		$sql = 'UPDATE `users` SET `telephone` = :telephone
-				WHERE `id` = :id';
-		$stm = db::get_handler()->prepare($sql);
-		$stm->bindValue(':telephone', $user->telephone, PDO::PARAM_STR);
-		$stm->bindValue(':id', $user->id, PDO::PARAM_INT);
-		stm_execute($stm, 'Ошибка при изменении номера телефона.');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `telephone` = :telephone WHERE `id` = :id");
+		$sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->execute('Ошибка при изменении номера телефона.');
 		return $user;
 	}
 }

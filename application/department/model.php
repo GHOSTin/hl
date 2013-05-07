@@ -48,7 +48,7 @@ class model_department{
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
 					FROM `departments` WHERE `departments`.`company_id` = :company_id");
 		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if($department_params->id > 0){
+		if(!empty($department_params->id)){
 			$params = [];
 			if(is_array($department_params->id))
 				$departments = $department_params->id;

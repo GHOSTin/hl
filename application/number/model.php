@@ -89,7 +89,7 @@ class model_number{
 				AND `houses`.`street_id` = `streets`.`id`");
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		$number = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.');
-		if($sql->count !== 1)
+		if($sql->count() !== 1)
 			throw new e_model('Проблема при запросе лицевого счета.');
 		return $number;
 	}
@@ -120,7 +120,7 @@ class model_number{
 					AND `numbers`.`house_id` = `houses`.`id`
 					AND `houses`.`street_id` = `streets`.`id`");
 			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
-		}elseif(!empty($number->number))
+		}elseif(!empty($number->number)){
 			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
 						`numbers`.`flat_id`, `numbers`.`number`,
@@ -141,7 +141,7 @@ class model_number{
 					AND `numbers`.`house_id` = `houses`.`id`
 					AND `houses`.`street_id` = `streets`.`id`");
 			$sql->bind(':number', $number->number, PDO::PARAM_INT);
-		else
+		}else
 			throw new e_model('Не заданы нужные параметры.');
 		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		return $sql->map(new data_number(), 'Проблема при запросе лицевых счетов.');

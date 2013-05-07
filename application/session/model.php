@@ -6,19 +6,19 @@ class model_session{
     private static $restrictions;
     private static $links;
 
-    public function get_restrictions(){
+    public static function get_restrictions(){
         return self::$restrictions;
     }
 
-    public function get_rules(){
+    public static function get_rules(){
         return self::$rules;
     }
 
-    public function get_user(){
+    public static function get_user(){
         return self::$user;
     }
 
-    public function set_user(data_current_user $user){
+    public static function set_user(data_current_user $user){
         if(!isset(self::$user)){
             $_SESSION['user'] = $user;
             self::$user = $user;
@@ -26,14 +26,14 @@ class model_session{
             throw new exception('Нельзя дважды определить пользователя.');
     }
     
-    public function set_restrictions($restrictions){
+    public static function set_restrictions($restrictions){
         if(!isset(self::$restrictions)){
             self::$restrictions = $restrictions;
         }else
             throw new exception('Нельзя дважды определить ограничения доступа.');
     }
 
-    public function set_rules($rules){
+    public static function set_rules($rules){
         if(!isset(self::$rules)){
             self::$rules = $rules;
         }else

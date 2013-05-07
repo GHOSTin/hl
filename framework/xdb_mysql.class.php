@@ -74,23 +74,38 @@ class sql extends data_object{
                 list($param, $value, $type) = $pr;
                 $this->stm->bindValue($param, $value, $type);
             }
-        $this->execute($error);
-        $this->stm->setFetchMode(PDO::FETCH_CLASS, get_class($data_object));
-        $result = [];
-        while($object = $this->stm->fetch())
-            $result[] = $object;
-        $this->stm->closeCursor();
-        return $result;
-    }
-
-    public function execute($error){
         if(empty($error))
             throw new exception('Задайте вспомогательную фразу.');
         if($this->stm->execute() == false)
             throw new e_model($error);
+        $this->stm->setFetchMode(PDO::FETCH_CLASS, get_class($data_object));
+        $result = [];
+        while($object = $this->stm->fetch())
+            $result[] = $object;
+        $this->close();
+        return $result;
+    }
+
+    public function execute($error){
+        $this->create_stm();
+        if(!empty($this->params))
+            foreach($this->params as $pr){
+                list($param, $value, $type) = $pr;
+                $this->stm->bindValue($param, $value, $type);
+            }
+        if(empty($error))
+            throw new exception('Задайте вспомогательную фразу.');
+        if($this->stm->execute() == false)
+            throw new e_model($error);
+        $result = [];
+        while($array = $this->stm->fetch())
+            $result[] = $array;
+        $this->close();
+        return $result;
     }
 
     public function dump(){
         var_dump(implode(' ', $this->sql));
+        var_dump($this->params);
     }
 }

@@ -418,6 +418,8 @@ class model_query{
 				AND `numbers`.`id` = `query2number`.`number_id`
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `query2number`.`query_id` = :id");
+			$sql->bind(':id', $query->id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
 				`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
@@ -431,20 +433,15 @@ class model_query{
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close");
+			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
+			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
+			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);
 			}
 		}
-		if(!empty($query->id)){
-			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		}else{
-			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
-			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		}
-		$sql->execute('Ошибка при выборке пользователей.');
+		$sql->execute('Ошибка при выборке лицевых счетов.');
 		$result = ['structure' => [], 'numbers' => []];
 		while($row = $sql->row()){
 			$number = new data_number();

@@ -46,7 +46,7 @@ class model_environment{
 	}
 	public static function create_session(){
 		session_start();
-		if($_SESSION['user'] instanceof data_current_user){
+		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
 			self::create_batabase_connection();
 			model_session::set_user($_SESSION['user']);
 			return self::build_router();
@@ -64,6 +64,7 @@ class model_environment{
 			session_destroy();
 			return ['auth', 'public_', 'show_auth_form'];
 		}
+		exit();
 	}
 	/*
 	* Функция возвращает содержимое страницы
@@ -77,13 +78,16 @@ class model_environment{
 			if($user instanceof data_current_user){
 				model_profile::get_user_profiles($user);
 				$data['menu'] = model_menu::build_menu();
-				$data['rules'] = model_session::get_rules()[$component];
+				if(isset(model_session::get_rules()[$component]))
+					$data['rules'] = model_session::get_rules()[$component];
 				self::verify_general_access($component);
 			}
 			$data['file_prefix'] = $component;
 			$data['component'] = $controller::{$prefix.$method}();
 			return $view::{$prefix.$method}($data);
 		}catch(exception $e){
+			print_r($e);
+			exit();
 			return $e->getMessage();
 		}
 	}

@@ -8,10 +8,10 @@ class model_query_work_type{
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `query_worktypes`
 					WHERE `company_id` = :company_id");
-		$stm->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if(!empty($query_work_type_params->id))
+		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		if(!empty($query_work_type_params->id)){
 			$sql->query(" AND `id` = :id");
-			$stm->bind(':id', $query_work_type_params->id, PDO::PARAM_INT);
+			$sql->bind(':id', $query_work_type_params->id, PDO::PARAM_INT);
 		}
 		$sql->map(new data_query_work_type(), 'Проблема при выборке типов заявки.');
 	}

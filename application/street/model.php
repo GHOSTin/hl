@@ -64,7 +64,7 @@ class model_street{
 				$params[] = 'department_id'.$key;
 				$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
 			}
-			$sql->query("IN(".implode(',', $params)") ORDER BY `streets`.`name`");
+			$sql->query("IN(".implode(',', $params).") ORDER BY `streets`.`name`");
 		}elseif(!empty($street_params->id)){
 			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
 						FROM `streets` WHERE `id` = :id");

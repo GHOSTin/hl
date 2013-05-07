@@ -32,19 +32,7 @@ try{
 }catch(exception $e){
 	die('Шаблонизатор не может быть подгружен.');
 }
-
-function stm_map_result(PDOStatement $stm, data_object $data_object, $error){
-	stm_execute($stm, $error);
-	$stm->setFetchMode(PDO::FETCH_CLASS, get_class($data_object));
-	$result = [];
-	while($object = $stm->fetch())
-		$result[] = $object;
-	$stm->closeCursor();
-	return $result;
+/*function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
 }
-function stm_execute(PDOStatement $stm, $error){
-	if(empty($error))
-		throw new exception('Задайте вспомогательную фразу.');
-	if($stm->execute() == false)
-		throw new e_model($value);
-}
+set_error_handler("exception_error_handler");*/

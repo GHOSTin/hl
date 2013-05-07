@@ -394,6 +394,7 @@ class controller_query{
 		$now = getdate();
 		$street = new data_street();
 		$street->department_id = $query->department_id;
+		$houses = [];
 		if(!empty($query->street_id)){
 			$street->id = $query->street_id;
 			$houses = model_street::get_houses($street);
