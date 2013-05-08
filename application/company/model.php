@@ -4,14 +4,17 @@ class model_company{
 	* Создает новую компанию
 	* @return object data_company
 	*/
-	public static function create_company(data_company $company, data_user $current_user){
+	public static function create_company(data_company $company, data_current_user $user){
 		$company->id = self::get_insert_id();
 		$company->smslogin = 'smslogin';
 		$company->smspassword = 'smspassword';
 		$company->smssender = 'smssender';
-		self::verify_company_id($company);
-		self::verify_company_status($company);
-		self::verify_company_name($company);
+		self::verify_id($company);
+		self::verify_status($company);
+		self::verify_name($company);
+		self::verify_smslogin($company);
+		self::verify_smspassword($company);
+		self::verify_smssender($company);
 		$sql = new sql();
 		$sql->query("INSERT INTO `companies` (`id`, `status`, `name`, `smslogin`, 
 					`smspassword`, `smssender`) VALUES (:company_id, :status, :name,

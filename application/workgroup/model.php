@@ -4,7 +4,7 @@ class model_workgroup{
 	* Возвращает список групп работ
 	* @return array из data_workgroup
 	*/
-	public static function get_workgroups(data_workgroup $workgroup, data_current_user $user){
+	public static function get_workgroups(data_company $company, data_workgroup $workgroup){
 		model_user::verify_company_id($user);
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `workgroups`
@@ -20,7 +20,7 @@ class model_workgroup{
 	* Возвращает список работ группы
 	* @return array из data_work
 	*/
-	public static function get_works(data_workgroup $workgroup, data_current_user $user){
+	public static function get_works(data_company $company, data_workgroup $workgroup){
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `workgroup_id`, `status`, `name`
 					FROM `works` WHERE `company_id` = :company_id");

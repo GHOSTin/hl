@@ -4,13 +4,14 @@ class model_department{
 	* Создает новый участок в компании.
 	* @return object data_department
 	*/
-	public static function create_department(data_company $company, data_department $department, data_current_user $current_user){
+	public static function create_department(data_company $company, data_department $department,
+											data_current_user $user){
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
-		self::verify_department_id($department);
-		self::verify_department_company_id($department);
-		self::verify_department_status($department);
-		self::verify_department_name($department);
+		self::verify_id($department);
+		self::verify_company_id($department);
+		self::verify_status($department);
+		self::verify_name($department);
 		$sql = new sql();
 		$sql->query("INSERT INTO `departments` (`id`, `company_id`, `status`, `name`)
 					VALUES (:department_id, :company_id, :status, :name)");
@@ -27,7 +28,7 @@ class model_department{
 	* @return int
 	*/
 	private static function get_insert_id(data_company $company){
-		model_company::verify_company_id($company);
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT MAX(`id`) as `max_department_id` FROM `departments`
 					WHERE `company_id` = :company_id");
@@ -43,17 +44,18 @@ class model_department{
 	* Возвращает список участков компании.
 	* @return array из object data_department
 	*/
-	public static function get_departments(data_department $department_params, data_current_user $current_user){
+	public static function get_departments(data_company $company, data_department $department){
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
 					FROM `departments` WHERE `departments`.`company_id` = :company_id");
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if(!empty($department_params->id)){
+		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+		if(!empty($department->id)){
 			$params = [];
-			if(is_array($department_params->id))
-				$departments = $department_params->id;
+			if(is_array($department->id))
+				$departments = $department->id;
 			else
-				$departments[] = $department_params->id;
+				$departments[] = $department->id;
 			foreach($departments as $key => $department){
 				$params[] = ':department_id'.$key;
 				$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);

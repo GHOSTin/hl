@@ -3,15 +3,15 @@ class model_profile{
 	/**
 	* Записывает в сессию правила, ограничения, настройки, меню.
 	*/
-	public static function get_user_profiles(data_current_user $user){
+	public static function get_user_profiles(data_company $company, data_current_user $user){
 		// var_dump();
 		model_user::verify_id($user);
-		model_user::verify_company_id($user);
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `profile`, `rules`, `restrictions`, `settings`
 					FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id");
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $user->company_id , PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
 		$sql->execute('Ошибка при получении профиля.');
 		if($sql->count() > 0)
 			while($profile = $sql->row())
@@ -40,11 +40,11 @@ class model_profile{
 	* Обновляет пароль пользователя
 	* @return bolean
 	*/
-	public static function update_password(data_user $user, $new_password){
-		$new_password = (string) $new_password;
-		if(strlen($new_password) < 6)
+	public static function update_password(data_user $user, $password){
+		$password = (string) $password;
+		if(strlen($password) < 6)
 			throw new e_model('Пароль не может быть длиной меньше 10 символов.');
-		$user->password = model_user::get_password_hash($new_password);
+		$user->password = model_user::get_password_hash($password);
 		$sql = new sql();
 		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
 		$sql->bind(':password', $user->password, PDO::PARAM_STR);

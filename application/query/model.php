@@ -4,15 +4,16 @@ class model_query{
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-лицевой_счет.
 	*/
-	private static function __add_number(data_query $query, data_number $number, $default, data_current_user $current_user){
+	private static function __add_number(data_company $company, data_query $query,
+											data_number $number, $default){
 		self::verify_id($query);
-		model_user::verify_company_id($current_user);
+		model_company::verify_id($company);
 		model_number::verify_id($number);
 		$sql = new sql();
 		$sql->query("INSERT INTO `query2number` (`query_id`, `number_id`, `company_id`, `default`) 
 					VALUES (:query_id, :number_id, :company_id, :default)");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':default', $default, PDO::PARAM_STR);
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		$sql->execute('Проблема при добавлении лицевого счета.');
@@ -21,17 +22,17 @@ class model_query{
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
-	private static function __add_user(data_query $query, data_current_user $current_user, $class){
+	private static function __add_user(data_company $company, data_query $query, data_user $user,  $class){
 		self::verify_id($query);
-		model_user::verify_company_id($current_user);
-		model_user::verify_id($current_user);
+		model_company::verify_id($company);
+		model_user::verify_id($user);
 		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
 			throw new e_model('Не соответсвует тип пользователя.');
 		$sql = new sql();
 		$sql->query("INSERT INTO `query2user` (`query_id`, `user_id`, `company_id`, `class`)
 					VALUES (:query_id, :user_id, :company_id, :class)");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':user_id', $current_user->id, PDO::PARAM_INT);
 		$sql->bind(':class', $class, PDO::PARAM_STR);
 		$sql->execute('Проблема при добавлении пользователя.');
@@ -40,15 +41,15 @@ class model_query{
 	* Зависимая функция.
 	* Создает заявку и записывает в лог заявки.
 	*/
-	private static function __add_query(data_query $query, $initiator, data_current_user $current_user, $time){
-		model_user::verify_company_id($current_user);
+	private static function __add_query(data_company $company, data_query $query, $initiator, $time){
+		model_company::verify_id($company);
 		if(!($initiator instanceof data_house OR $initiator instanceof data_number))
 			throw new e_model('Инициатор не верного формата.');
 		if(empty($initiator->department_id))
 			throw new e_model('department_id не указан.');
 		if(!is_int($time))
 			throw new e_model('Неверная дата.');
-		$query->company_id = $current_user->company_id;
+		$query->company_id = $company->id;
 		$query->status = 'open';
 		$query->payment_status = 'unpaid';
 		$query->warning_status = 'normal';
@@ -86,7 +87,8 @@ class model_query{
 	/**
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
-	public static function add_user(data_query $query_params, data_user $user_params, $class, data_current_user $current_user){
+	public static function add_user(data_company $company, data_query $query_params,
+					data_user $user_params, $class, data_current_user $current_user){
 		self::verify_id($query_params);
 		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
@@ -110,7 +112,8 @@ class model_query{
 	/**
 	* Добавляет ассоциацию заявка-работа.
 	*/
-	public static function add_work(data_query $query_params, data_work $work_params, $begin_time, $end_time, data_current_user $current_user){
+	public static function add_work(data_company $company, data_query $query_params,
+										data_work $work_params, $begin_time, $end_time){
 		self::verify_id($query_params);
 		if(!is_int($begin_time) OR !is_int($end_time))
 			throw new e_model('Время задано не верно.');
@@ -126,7 +129,7 @@ class model_query{
 					 :time_open, :time_close)");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->bind(':work_id', $work_params->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':time_open', $begin_time, PDO::PARAM_INT);
 		$sql->bind(':time_close', $end_time, PDO::PARAM_INT);
 		$sql->execute('Ошибка при добавлении работы.');
@@ -136,7 +139,7 @@ class model_query{
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-лицевой_счет в зависимости от типа инициатора.
 	*/
-	private static function add_numbers(data_query $query, $initiator, data_current_user $current_user){
+	private static function add_numbers(data_company $company, data_query $query, $initiator){
 		if($initiator instanceof data_house){
 			$numbers = model_house::get_numbers($initiator);
 			$default = 'false';
@@ -154,7 +157,7 @@ class model_query{
 	/**
 	* Закрывает заявку.
 	*/
-	public static function close_query(data_query $query_params, data_current_user $current_user){
+	public static function close_query(data_company $company, data_query $query_params, data_current_user $current_user){
 		self::verify_id($query_params);
 		$query = self::get_queries($query_params)[0];
 		self::is_data_query($query);
@@ -178,7 +181,7 @@ class model_query{
 	/**
 	* Передает заявку в работу.
 	*/
-	public static function to_working_query(data_query $query_params, data_current_user $current_user){
+	public static function to_working_query(data_company $company, data_query $query_params, data_current_user $current_user){
 		self::verify_id($query_params);
 		$query = self::get_queries($query_params)[0];
 		self::is_data_query($query);
@@ -200,7 +203,7 @@ class model_query{
 	* Создает новую заявку.
 	* @retrun array из data_query
 	*/
-	public static function create_query(data_query $query, $initiator, 
+	public static function create_query(data_company $company, data_query $query, $initiator, 
 		data_query_work_type $query_work_type_params, data_current_user $current_user){
 		try{
 			sql::begin();
@@ -247,11 +250,12 @@ class model_query{
 	/*
 	* Возвращает следующий для вставки идентификатор заявки.
 	*/
-	private static function get_insert_id(data_user $user){
+	private static function get_insert_id(data_company $company){
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT MAX(`id`) as `max_query_id` FROM `queries`
 				WHERE `company_id` = :company_id");
-		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->execute('Проблема при опредении следующего query_id.');
 		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего query_id.');
@@ -262,13 +266,13 @@ class model_query{
 	/*
 	* Возвращает следующий для вставки номер заявки.
 	*/
-	private static function get_insert_query_number(data_user $user, $time){
+	private static function get_insert_query_number(data_company $company, $time){
 		$time = getdate($time);
 		$sql = new sql();
 		$sql->query("SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
-				WHERE `opentime` > :begin AND `opentime` <= :end
-				AND `company_id` = :company_id");
-		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+					WHERE `opentime` > :begin AND `opentime` <= :end
+					AND `company_id` = :company_id");
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
 		$sql->bind(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
 		$sql->execute('Проблема при опредении следующего querynumber.');
@@ -282,7 +286,7 @@ class model_query{
 	* Возвращает заявки.
 	* @return array
 	*/
-	public static function get_queries(data_query $query){
+	public static function get_queries(data_company $company, data_query $query){
  		$sql = new sql();
 		if(!empty($query->id)){
 			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
@@ -405,7 +409,7 @@ class model_query{
 	* Возвращает лицевые счета заявки.
 	* @return array
 	*/
-	public static function get_numbers(data_query $query, data_current_user $current_user){
+	public static function get_numbers(data_company $company, data_query $query){
 		$sql = new sql();
 		if(!empty($query->id)){
 			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
@@ -457,7 +461,7 @@ class model_query{
 	* Возвращает пользователей заявки.
 	* @return array
 	*/
-	public static function get_users(data_query $query, data_current_user $current_user){
+	public static function get_users(data_company $company, data_query $query){
 		$sql = new sql();
 		if(!empty($query->id)){
 			$sql->query("SELECT `query2user`.`query_id`, `query2user`.`class`, `users`.`id`,
@@ -505,7 +509,7 @@ class model_query{
 	* Возвращает работы.
 	* @return array
 	*/
-	public static function get_works(data_query $query, data_current_user $current_user){
+	public static function get_works(data_company $company, data_query $query){
 		$sql = new sql();
 		if(!empty($query->id)){
 			$sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
@@ -555,7 +559,7 @@ class model_query{
 	/*
 	* Учитывает сессионный фильтры.
 	*/
-	public static function build_query_params(data_query $query, data_query $query_filter = null, stdClass $restrictions){
+	public static function build_query_params(data_company $company, data_query $query, data_query $query_filter = null, stdClass $restrictions){
 		$time = getdate();
 		if(!$query_filter instanceof data_query){
 			$query = new data_query();
@@ -599,7 +603,7 @@ class model_query{
 	/**
 	* Удаляет пользователя из заявки.
 	*/
-	public static function remove_user(data_query $query_params, data_user $user_params, $class, data_current_user $current_user){
+	public static function remove_user(data_company $company, data_query $query_params, data_user $user_params, $class){
 		self::verify_id($query_params);
 		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
@@ -622,7 +626,7 @@ class model_query{
 	/**
 	* Обновляет работу из заявки.
 	*/
-	public static function remove_work(data_query $query_params, data_work $work_params, data_current_user $current_user){
+	public static function remove_work(data_company $company, data_query $query_params, data_work $work_params){
 		self::verify_id($query_params);
 		model_work::verify_id($work_params);
 		$query = self::get_queries($query_params)[0];
@@ -642,7 +646,7 @@ class model_query{
 	/**
 	* Обновляет описание заявки.
 	*/
-	public static function update_description(data_query $query, data_current_user $current_user){
+	public static function update_description(data_company $company, data_query $query){
 		self::verify_id($query);
 		self::verify_description($query);
 		$sql = new sql();
@@ -657,7 +661,7 @@ class model_query{
 	/**
 	* Обновляет контактную информацию.
 	*/
-	public static function update_contact_information(data_query $query, data_current_user $current_user){
+	public static function update_contact_information(data_company $company, data_query $query){
 		self::verify_id($query);
 		$sql = new sql();
 		$sql->query("UPDATE `queries` SET `addinfo-name` = :fio, 
@@ -674,7 +678,7 @@ class model_query{
 	/**
 	* Обновляет статус оплаты.
 	*/
-	public static function update_payment_status(data_query $query_params, data_current_user $current_user){
+	public static function update_payment_status(data_company $company, data_query $query_params){
 		self::verify_id($query_params);
 		if(array_search($query_params->payment_status, ['paid', 'unpaid', 'recalculation']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
@@ -693,7 +697,7 @@ class model_query{
 	/**
 	* Обновляет статус реакции.
 	*/
-	public static function update_warning_status(data_query $query_params, data_current_user $current_user){
+	public static function update_warning_status(data_company $company, data_query $query_params){
 		self::verify_id($query_params);
 		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
@@ -712,7 +716,7 @@ class model_query{
 	/**
 	* Обновляет тип работ.
 	*/
-	public static function update_work_type(data_query $query_params, data_current_user $current_user){
+	public static function update_work_type(data_company $company, data_query $query_params){
 		self::verify_id($query_params);
 		self::verify_work_type_id($query_params);
 		$query = self::get_queries($query_params)[0];

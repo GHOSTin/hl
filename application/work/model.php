@@ -4,7 +4,7 @@ class model_work{
 	* Возвращает список работ заявки
 	* @return array из data_work
 	*/
-	public static function get_works(data_work $work, data_current_user $user){
+	public static function get_works(data_company $company, data_work $work){
 		model_user::verify_company_id($user);
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `works`

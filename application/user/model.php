@@ -3,7 +3,7 @@ class model_user{
 	/*
 	* Создает пользователя
 	*/
-	public static function create_user(data_user $user, data_current_user $current_user){
+	public static function create_user(data_company $company, data_user $user){
 		self::verify_user_login($user);
 		self::verify_user_password($user);
 		self::verify_user_firstname($user);

@@ -4,14 +4,16 @@ class model_group{
 	* Возвращает список групп.
 	* @return array из data_group
 	*/
-	public static function get_groups(data_group $group_params, data_current_user $current_user){
+	public static function get_groups(data_company $company, data_group $group){
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
 					FROM `groups` WHERE `company_id` = :company_id");
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
-		if(!empty($group_params->id)){
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		if(!empty($group->id)){
+			self::verify_id($group);
 			$sql->query(" AND `id` = :id");
-			$sql->bind(':id', $group_params->id, PDO::PARAM_INT);
+			$sql->bind(':id', $group->id, PDO::PARAM_INT);
 		}
 		$sql->query(" ORDER BY `name`");
 		return $sql->map(new data_group(), 'Проблема при выборке групп пользователей.');
@@ -20,16 +22,19 @@ class model_group{
 	* Возвращает список пользователей группы
 	* @return array из data_user
 	*/
-	public static function get_users(data_group $group_params, data_current_user $current_user){
-		self::verify_id($group_params);
+	public static function get_users(data_company $company, data_group $group){
+		self::verify_id($group);
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
 					`users`.`cellphone`
 					FROM `users`, `group2user` WHERE `group2user`.`group_id` = :group_id
+					AND `group2user`.`company_id` = :company_id
 					AND `users`.`id` = `group2user`.`user_id`");
-		$sql->bind(':group_id', $group_params->id, PDO::PARAM_INT);
+		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		return $sql->map(new data_user(), 'Проблема при выборки пользователей группы.');
 	}
 	/**

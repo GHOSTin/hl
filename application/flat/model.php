@@ -1,15 +1,15 @@
 <?php
 class model_flat{
 
-	public static function create_flat(data_house $house, data_flat $flat, data_current_user $current_user){
-		self::verify_flat_status($flat);
-		self::verify_flat_number($flat);
-		$flat->company_id = $current_user->company_id;
+	public static function create_flat(data_house $house, data_flat $flat, data_current_user $user){
+		$flat->company_id = $user->company_id; // TODO: Убрать привязку квартиры к компании
 		$flat->house_id = $house->id;
 		$flat->id = self::get_insert_id();
-		self::verify_flat_id($flat);
-		self::verify_flat_company_id($flat);
-		self::verify_flat_house_id($house;
+		self::verify_id($flat);
+		self::verify_company_id($flat);
+		self::verify_house_id($flat);
+		self::verify_status($flat);
+		self::verify_number($flat);
 		$sql = new sql();
 		$sql->query("INSERT INTO `flats` (`id`, `company_id`, `house_id`, `status`, 
 					`flatnumber`) VALUES (:flat_id, :company_id, :house_id, :status, :number)");
