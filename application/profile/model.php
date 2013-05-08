@@ -3,7 +3,8 @@ class model_profile{
 	/**
 	* Записывает в сессию правила, ограничения, настройки, меню.
 	*/
-	public static function get_user_profiles(data_user $user){
+	public static function get_user_profiles(data_current_user $user){
+		// var_dump();
 		model_user::verify_id($user);
 		model_user::verify_company_id($user);
 		$sql = new sql();

@@ -55,7 +55,7 @@ class model_department{
 			else
 				$departments[] = $department_params->id;
 			foreach($departments as $key => $department){
-				$params[] = 'department'.$key;
+				$params[] = ':department_id'.$key;
 				$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
 			}
 			$sql->query(" AND `id` IN(".implode(',', $params).")");

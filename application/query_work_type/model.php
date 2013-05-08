@@ -13,7 +13,7 @@ class model_query_work_type{
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $query_work_type_params->id, PDO::PARAM_INT);
 		}
-		$sql->map(new data_query_work_type(), 'Проблема при выборке типов заявки.');
+		return $sql->map(new data_query_work_type(), 'Проблема при выборке типов заявки.');
 	}
 	/**
 	* Верификация идентификатора компании.

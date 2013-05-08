@@ -8,7 +8,8 @@ class model_group{
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
 					FROM `groups` WHERE `company_id` = :company_id");
-		if($group_params->id > 0){
+		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		if(!empty($group_params->id)){
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $group_params->id, PDO::PARAM_INT);
 		}
@@ -20,7 +21,7 @@ class model_group{
 	* @return array из data_user
 	*/
 	public static function get_users(data_group $group_params, data_current_user $current_user){
-		self::verify_group_id($group_params);
+		self::verify_id($group_params);
 		$sql = new sql();
 		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
@@ -29,7 +30,7 @@ class model_group{
 					FROM `users`, `group2user` WHERE `group2user`.`group_id` = :group_id
 					AND `users`.`id` = `group2user`.`user_id`");
 		$sql->bind(':group_id', $group_params->id, PDO::PARAM_INT);
-		return $Sql->map(new data_user(), 'Проблема при выборки пользователей группы.');
+		return $sql->map(new data_user(), 'Проблема при выборки пользователей группы.');
 	}
 	/**
 	* Верификация идентификатора компании.

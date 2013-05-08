@@ -86,9 +86,7 @@ class model_environment{
 			$data['component'] = $controller::{$prefix.$method}();
 			return $view::{$prefix.$method}($data);
 		}catch(exception $e){
-			print_r($e);
-			exit();
-			return $e->getMessage();
+			return $e;
 		}
 	}
 	/**

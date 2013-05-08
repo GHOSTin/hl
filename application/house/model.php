@@ -19,7 +19,7 @@ class model_house{
 	* @return object data_house
 	*/
 	public static function get_house(data_house $house){
-		self::verify_house_id($house);
+		self::verify_id($house);
 		$sql = new sql();
 		$sql->query("SELECT `houses`.`id`, `houses`.`company_id`, `houses`.`city_id`,
 					`houses`.`street_id`, `houses`.`department_id`, `houses`.`status`, 
@@ -27,7 +27,9 @@ class model_house{
 					FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
 					AND `houses`.`street_id` = `streets`.`id`");
 		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
-		$house = $sql->map(new data_house(), 'Проблемы при выборке дома.');
+		$house = $sql->map(new data_house(), 'Проблемы при выборке дома.')[0];
+		if($sql->count() !== 1)
+			throw new e_model('Проблемы при выборке дома.');
 		$sql->close();
 		return $house;
 	}

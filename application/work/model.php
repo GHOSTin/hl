@@ -10,7 +10,7 @@ class model_work{
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `works`
 				WHERE `company_id` = :company_id");
 		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
-		if(!empty($work->id)){}
+		if(!empty($work->id)){
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $work->id, PDO::PARAM_INT);
 		}

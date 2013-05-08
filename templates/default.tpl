@@ -6,6 +6,7 @@
 	<link rel="stylesheet" href="/templates/default/css/bootstrap.min.css" >
     <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css" >
     <link rel="stylesheet" href="/templates/default/css/default.css" >
+    <title>MSHC2</title>
     {% if anonymous == false %}
 	    <link rel="stylesheet" href="/templates/default/css/libs.css" >
 		<link rel="stylesheet" href="/?css=component.css&p={{ file_prefix }}" >

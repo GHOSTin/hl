@@ -12,7 +12,7 @@
 			{% endif %}
 		{% endif %}
 			fio: $('.dialog-fio').val(),
-			work_type: $('.dialog-worktype :selected').val(),
+			work_type: $('.dialog-worktype').val(),
 			telephone: $('.dialog-telephone').val(),
 			cellphone: $('.dialog-cellphone').val(),
 			description: $('.dialog-description').val()

@@ -25,7 +25,7 @@
     }
 }
 
-class sql extends data_object{
+class sql{
 
     private $sql = [];
     private $params = [];
@@ -39,15 +39,19 @@ class sql extends data_object{
         $this->stm = db::get_handler()->prepare(implode(' ', $this->sql));
     }
 
-    private function begin(){
+    public function get_stm(){
+        return $this->stm;
+    }
+
+    public static function begin(){
         db::get_handler()->beginTransaction();
     }
 
-    private function commit(){
+    public static function commit(){
         db::get_handler()->commit();
     }
 
-    private function rollback(){
+    public static function rollback(){
         db::get_handler()->rollBack();
     }
 
@@ -67,18 +71,16 @@ class sql extends data_object{
         $this->sql[] = (string) $sql;
     }
 
-    public function map(data_object $data_object, $error){
-        $this->create_stm();
-        if(!empty($this->params))
-            foreach($this->params as $pr){
-                list($param, $value, $type) = $pr;
-                $this->stm->bindValue($param, $value, $type);
-            }
+    public function map($object, $error){
+         if(!is_object($object))
+            throw new exception('Не является объектом.');
         if(empty($error))
             throw new exception('Задайте вспомогательную фразу.');
+        $this->create_stm();
+        $this->bind_params();
         if($this->stm->execute() == false)
             throw new e_model($error);
-        $this->stm->setFetchMode(PDO::FETCH_CLASS, get_class($data_object));
+        $this->stm->setFetchMode(PDO::FETCH_CLASS, get_class($object));
         $result = [];
         while($object = $this->stm->fetch())
             $result[] = $object;
@@ -87,21 +89,20 @@ class sql extends data_object{
     }
 
     public function execute($error){
+        if(empty($error))
+            throw new exception('Задайте вспомогательную фразу.');
         $this->create_stm();
+        $this->bind_params();
+        if($this->stm->execute() == false)
+            throw new e_model($error);
+    }
+
+    private function bind_params(){
         if(!empty($this->params))
             foreach($this->params as $pr){
                 list($param, $value, $type) = $pr;
                 $this->stm->bindValue($param, $value, $type);
             }
-        if(empty($error))
-            throw new exception('Задайте вспомогательную фразу.');
-        if($this->stm->execute() == false)
-            throw new e_model($error);
-        $result = [];
-        while($array = $this->stm->fetch())
-            $result[] = $array;
-        $this->close();
-        return $result;
     }
 
     public function dump(){

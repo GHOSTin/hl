@@ -5,9 +5,9 @@ class model_query{
 	* Добавляет ассоциацию заявка-лицевой_счет.
 	*/
 	private static function __add_number(data_query $query, data_number $number, $default, data_current_user $current_user){
-		self::verify_query_id($query);
-		model_user::verify_user_company_id($current_user);
-		model_number::verify_number_id($number);
+		self::verify_id($query);
+		model_user::verify_company_id($current_user);
+		model_number::verify_id($number);
 		$sql = new sql();
 		$sql->query("INSERT INTO `query2number` (`query_id`, `number_id`, `company_id`, `default`) 
 					VALUES (:query_id, :number_id, :company_id, :default)");
@@ -22,10 +22,9 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	private static function __add_user(data_query $query, data_current_user $current_user, $class){
-		self::verify_query_id($query);
-		model_user::verify_user_company_id($current_user);
-		model_user::verify_user_id($current_user);
-		model_number::verify_number_id($number);
+		self::verify_id($query);
+		model_user::verify_company_id($current_user);
+		model_user::verify_id($current_user);
 		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
 			throw new e_model('Не соответсвует тип пользователя.');
 		$sql = new sql();
@@ -42,7 +41,7 @@ class model_query{
 	* Создает заявку и записывает в лог заявки.
 	*/
 	private static function __add_query(data_query $query, $initiator, data_current_user $current_user, $time){
-		model_user::verify_user_company_id($current_user);
+		model_user::verify_company_id($current_user);
 		if(!($initiator instanceof data_house OR $initiator instanceof data_number))
 			throw new e_model('Инициатор не верного формата.');
 		if(empty($initiator->department_id))
@@ -88,8 +87,8 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public static function add_user(data_query $query_params, data_user $user_params, $class, data_current_user $current_user){
-		self::verify_query_id($query_params);
-		model_user::verify_user_id($user_params);
+		self::verify_id($query_params);
+		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
 		$query = self::get_queries($query_params)[0];
@@ -112,7 +111,7 @@ class model_query{
 	* Добавляет ассоциацию заявка-работа.
 	*/
 	public static function add_work(data_query $query_params, data_work $work_params, $begin_time, $end_time, data_current_user $current_user){
-		self::verify_query_id($query_params);
+		self::verify_id($query_params);
 		if(!is_int($begin_time) OR !is_int($end_time))
 			throw new e_model('Время задано не верно.');
 		if($begin_time > $end_time)
@@ -120,7 +119,7 @@ class model_query{
 		$query = self::get_queries($query_params)[0];
 		self::is_data_query($query);
 		$work = model_work::get_works($work_params, $current_user)[0];
-		self::is_data_work($work);
+		model_work::is_data_work($work);
 		$sql = new sql();
 		$sql->query("INSERT INTO `query2work` (`query_id`, `work_id`, `company_id`,
 					 `opentime`, `closetime`) VALUES (:query_id, :work_id, :company_id,
@@ -156,7 +155,7 @@ class model_query{
 	* Закрывает заявку.
 	*/
 	public static function close_query(data_query $query_params, data_current_user $current_user){
-		self::verify_query_id($query_params);
+		self::verify_id($query_params);
 		$query = self::get_queries($query_params)[0];
 		self::is_data_query($query);
 		if($query->status === 'close')
@@ -180,7 +179,7 @@ class model_query{
 	* Передает заявку в работу.
 	*/
 	public static function to_working_query(data_query $query_params, data_current_user $current_user){
-		self::verify_query_id($query_params);
+		self::verify_id($query_params);
 		$query = self::get_queries($query_params)[0];
 		self::is_data_query($query);
 		if($query->status !== 'open')
@@ -204,7 +203,7 @@ class model_query{
 	public static function create_query(data_query $query, $initiator, 
 		data_query_work_type $query_work_type_params, data_current_user $current_user){
 		try{
-			db::get_handler()->beginTransaction();
+			sql::begin();
 			if(empty($query->description))
 				throw new e_model('Пустое описание заявки.');
 			if($initiator instanceof data_house)
@@ -221,8 +220,7 @@ class model_query{
 				$query->house_id = $initiator->house_id;
 			}
 			$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, $current_user)[0];
-			if(!($query_work_type instanceof data_query_work_type))
-				throw new e_model('Тип работ заявки задан не верно.');
+			model_query_work_type::is_data_query_work_type($query_work_type);
 			$query->worktype_id = $query_work_type->id;
 			if(!is_int($query->id = self::get_insert_id($current_user)))
 				throw new e_model('Не был получени query_id для вставки.');
@@ -236,10 +234,10 @@ class model_query{
 			self::__add_user($query, $current_user, 'creator');
 			self::__add_user($query, $current_user, 'manager');
 			self::__add_user($query, $current_user, 'observer');
-			db::get_handler()->commit();
+			sql::commit();
 			return $query;
 		}catch(exception $e){
-			db::get_handler()->rollBack();
+			sql::rollback();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
 			else
@@ -602,8 +600,8 @@ class model_query{
 	* Удаляет пользователя из заявки.
 	*/
 	public static function remove_user(data_query $query_params, data_user $user_params, $class, data_current_user $current_user){
-		self::verify_query_id($query_params);
-		model_user::verify_user_id($user_params);
+		self::verify_id($query_params);
+		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
 		$query = self::get_queries($query_params)[0];
@@ -625,8 +623,8 @@ class model_query{
 	* Обновляет работу из заявки.
 	*/
 	public static function remove_work(data_query $query_params, data_work $work_params, data_current_user $current_user){
-		self::verify_query_id($query_params);
-		model_work::verify_work_id($work_params);
+		self::verify_id($query_params);
+		model_work::verify_id($work_params);
 		$query = self::get_queries($query_params)[0];
 		self::is_data_query($query);
 		$work = model_work::get_works($work_params, $current_user)[0];
@@ -645,8 +643,8 @@ class model_query{
 	* Обновляет описание заявки.
 	*/
 	public static function update_description(data_query $query, data_current_user $current_user){
-		self::verify_query_id($query);
-		self::verify_query_description($query);
+		self::verify_id($query);
+		self::verify_description($query);
 		$sql = new sql();
 		$sql->query("UPDATE `queries` SET `description-open` = :description
 					WHERE `company_id` = :company_id AND `id` = :query_id");
@@ -660,10 +658,10 @@ class model_query{
 	* Обновляет контактную информацию.
 	*/
 	public static function update_contact_information(data_query $query, data_current_user $current_user){
-		self::verify_query_id($query);
+		self::verify_id($query);
 		$sql = new sql();
 		$sql->query("UPDATE `queries` SET `addinfo-name` = :fio, 
-					addinfo-telephone` = :telephone, `addinfo-cellphone` = :cellphone 
+					`addinfo-telephone` = :telephone, `addinfo-cellphone` = :cellphone 
 					WHERE `company_id` = :company_id AND `id` = :query_id");
 		$sql->bind(':fio', $query->contact_fio, PDO::PARAM_STR);
 		$sql->bind(':telephone', $query->contact_telephone, PDO::PARAM_STR);
@@ -677,7 +675,7 @@ class model_query{
 	* Обновляет статус оплаты.
 	*/
 	public static function update_payment_status(data_query $query_params, data_current_user $current_user){
-		self::verify_query_id($query_params);
+		self::verify_id($query_params);
 		if(array_search($query_params->payment_status, ['paid', 'unpaid', 'recalculation']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
 		$query = self::get_queries($query_params)[0];
@@ -696,7 +694,7 @@ class model_query{
 	* Обновляет статус реакции.
 	*/
 	public static function update_warning_status(data_query $query_params, data_current_user $current_user){
-		self::verify_query_id($query_params);
+		self::verify_id($query_params);
 		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
 		$query = self::get_queries($query_params)[0];
@@ -715,8 +713,8 @@ class model_query{
 	* Обновляет тип работ.
 	*/
 	public static function update_work_type(data_query $query_params, data_current_user $current_user){
-		self::verify_query_id($query_params);
-		self::verify_query_work_type_id($query_params);
+		self::verify_id($query_params);
+		self::verify_work_type_id($query_params);
 		$query = self::get_queries($query_params)[0];
 		self::is_data_query($query);
 		$query_work_type_params = new data_query_work_type();
@@ -794,7 +792,7 @@ class model_query{
 	* Верификация идентификатора причины закрытия.
 	*/
 	public static function verify_work_type_id(data_query $query){
-		if($query->work_type_id < 1)
+		if($query->worktype_id < 1)
 			throw new e_model('Идентификатор типа заявки задан не верно.');
 	}
 	/**

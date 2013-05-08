@@ -61,7 +61,7 @@ class model_street{
 			else
 				$departments[] = $street_params->department_id;
 			foreach($departments as $key => $department){
-				$params[] = 'department_id'.$key;
+				$params[] = ':department_id'.$key;
 				$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
 			}
 			$sql->query("IN(".implode(',', $params).") ORDER BY `streets`.`name`");

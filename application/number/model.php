@@ -88,7 +88,7 @@ class model_number{
 				AND `numbers`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`");
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
-		$number = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.');
+		$number = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.')[0];
 		if($sql->count() !== 1)
 			throw new e_model('Проблема при запросе лицевого счета.');
 		return $number;
@@ -154,7 +154,7 @@ class model_number{
 		self::verify_id($number);
 		model_user::verify_company_id($user);
 		if(!is_null($meter))
-			model_meter::verify_id();
+			model_meter::verify_id($meter);
 		$sql = new sql();
 		$sql->query("SELECT `meters`.`id`,
 						`meters`.`name`,
@@ -220,8 +220,8 @@ class model_number{
 			$sql->begin();
 			model_meter::verify_id($meter);
 			model_meter::verify_serial($meter);
-			self::verify_number_id($number);
-			self::verify_user_company_id($current_user);
+			self::verify_id($number);
+			model_user::verify_company_id($current_user);
 			if(empty($time))
 				throw new e_model('Время выборки задано не верно.');
 			if(count($tarif) !== 2)
