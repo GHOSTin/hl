@@ -5,19 +5,17 @@ class model_environment{
 	*/
 	public static function build_router(){
 		try{
-			$url_array = parse_url($_SERVER['REQUEST_URI']);
-			$url = explode('/', substr($url_array['path'], 1));
-			$component = (string) $url[0];
-			if(empty($component)){
-				$component = 'default_page';
-				$method = 'show_default_page';
-			}else{
-				$method = (string) $url[1];
-				if(empty($method))
-					$method = 'show_default_page';
-			}
-			$route = [$component, 'private_', $method];
-			return $route;
+			$path = parse_url($_SERVER['REQUEST_URI']);
+			if($path['path'] === '/')
+				return ['default_page', 'show_default_page'];
+			elseif(preg_match_all('|^/[a-z_]+/$|', $path['path'], $arr, PREG_PATTERN_ORDER)){
+				$args = explode('/', $arr[0][0]);
+				return [$args[1], 'show_default_page'];
+			}elseif(preg_match_all('|^/[a-z_]+/[a-z_]+/$|', $path['path'], $arr, PREG_PATTERN_ORDER)){
+				$args = explode('/', $arr[0][0]);
+				return [$args[1], $args[2]];
+			}else
+				die('404');
 		}catch(exception $e){
 			throw new e_model('Ошибка постройки маршрута.');
 		}
@@ -64,16 +62,46 @@ class model_environment{
 			session_destroy();
 			return ['auth', 'public_', 'show_auth_form'];
 		}
-		exit();
+
+
+		// session_start();
+		// if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
+		// 	self::create_batabase_connection();
+		// 	model_session::set_user($_SESSION['user']);
+		// 	return self::build_router();
+		// }elseif(!empty($_POST['login'])){
+		// 	self::create_batabase_connection();
+		// 	$user = model_auth::auth_user();
+		// 	if($user instanceof data_current_user){
+		// 		model_session::set_user($user);
+		// 		return self::build_router();
+		// 	}else{
+		// 		session_destroy();
+		// 		return ['auth', 'public_', 'show_auth_form'];
+		// 	}
+		// }else{
+		// 	session_destroy();
+		// 	return ['auth', 'public_', 'show_auth_form'];
+		// }
+		// exit();
 	}
 	/*
 	* Функция возвращает содержимое страницы
 	*/
 	public static function get_page_content(){
 		try{
-			list($component, $prefix, $method) = self::create_session();
+			list($component, $method) = self::build_router();
+			var_dump($component, $method);
+			exit();
+			self::create_session();
+			exit();
+			
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
+
+
+			
+			exit();
 			$user = model_session::get_user();
 			if($user instanceof data_current_user){
 				model_profile::get_user_profiles($user);
