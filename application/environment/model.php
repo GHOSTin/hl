@@ -47,64 +47,38 @@ class model_environment{
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
 			self::create_batabase_connection();
 			model_session::set_user($_SESSION['user']);
-			return self::build_router();
+			$route = self::build_router();
+			$route[] = 'private_';
+			return $route;
 		}elseif(!empty($_POST['login'])){
 			self::create_batabase_connection();
 			$user = model_auth::auth_user();
 			if($user instanceof data_current_user){
 				model_session::set_user($user);
-				return self::build_router();
+				$route = self::build_router();
+				$route[] = 'private_';
+				return $route;
 			}else{
 				session_destroy();
-				return ['auth', 'public_', 'show_auth_form'];
+				return ['auth', 'show_auth_form', 'public_'];
 			}
 		}else{
-			session_destroy();
-			return ['auth', 'public_', 'show_auth_form'];
+			return ['auth', 'show_auth_form', 'public_'];
 		}
-
-
-		// session_start();
-		// if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
-		// 	self::create_batabase_connection();
-		// 	model_session::set_user($_SESSION['user']);
-		// 	return self::build_router();
-		// }elseif(!empty($_POST['login'])){
-		// 	self::create_batabase_connection();
-		// 	$user = model_auth::auth_user();
-		// 	if($user instanceof data_current_user){
-		// 		model_session::set_user($user);
-		// 		return self::build_router();
-		// 	}else{
-		// 		session_destroy();
-		// 		return ['auth', 'public_', 'show_auth_form'];
-		// 	}
-		// }else{
-		// 	session_destroy();
-		// 	return ['auth', 'public_', 'show_auth_form'];
-		// }
-		// exit();
 	}
 	/*
 	* Функция возвращает содержимое страницы
 	*/
 	public static function get_page_content(){
 		try{
-			list($component, $method) = self::build_router();
-			var_dump($component, $method);
-			exit();
-			self::create_session();
-			exit();
-			
+			list($component, $method, $prefix) = self::create_session();
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
-
-
-			
-			exit();
 			$user = model_session::get_user();
+			$company = new data_company();
+			$company->id = $user->id;
 			if($user instanceof data_current_user){
-				model_profile::get_user_profiles($user);
+				model_profile::get_user_profiles($company, $user);
 				$data['menu'] = model_menu::build_menu();
 				if(isset(model_session::get_rules()[$component]))
 					$data['rules'] = model_session::get_rules()[$component];
