@@ -49,26 +49,26 @@ class model_street{
 	* Возвращает список улиц.
 	* @return array из object data_street
 	*/
-	public static function get_streets(data_street $street_params){
+	public static function get_streets(data_street $street){
 		$sql = new sql();
-		if(!empty($street_params->department_id)){
+		if(!empty($street->department_id)){
 			$sql->query("SELECT DISTINCT`streets`.`id`, `streets`.`company_id`, 
 					`streets`.`city_id`, `streets`.`status`, `streets`.`name`
 					FROM `streets`, `houses` WHERE `houses`.`street_id` = `streets`.`id`
 					AND `houses`.`department_id` ");
-			if(is_array($street_params->department_id))
-				$departments = $street_params->department_id;
+			if(is_array($street->department_id))
+				$departments = $street->department_id;
 			else
-				$departments[] = $street_params->department_id;
+				$departments[] = $street->department_id;
 			foreach($departments as $key => $department){
 				$params[] = ':department_id'.$key;
 				$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
 			}
 			$sql->query("IN(".implode(',', $params).") ORDER BY `streets`.`name`");
-		}elseif(!empty($street_params->id)){
+		}elseif(!empty($street->id)){
 			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
 						FROM `streets` WHERE `id` = :id");
-			$sql->bind(':id', $street_params->id, PDO::PARAM_INT);
+			$sql->bind(':id', $street->id, PDO::PARAM_INT);
 		}else
 			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
 						FROM `streets` ORDER BY `name`");

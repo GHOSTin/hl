@@ -11,7 +11,7 @@ class model_environment{
 			elseif(preg_match_all('|^/[a-z_]+/$|', $path['path'], $arr, PREG_PATTERN_ORDER)){
 				$args = explode('/', $arr[0][0]);
 				return [$args[1], 'show_default_page'];
-			}elseif(preg_match_all('|^/[a-z_]+/[a-z_]+/$|', $path['path'], $arr, PREG_PATTERN_ORDER)){
+			}elseif(preg_match_all('|^/[a-z_]+/[a-z_]+$|', $path['path'], $arr, PREG_PATTERN_ORDER)){
 				$args = explode('/', $arr[0][0]);
 				return [$args[1], $args[2]];
 			}else
