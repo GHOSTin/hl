@@ -2,6 +2,7 @@
 class model_session{
 
     private static $user;
+    private static $company;
     private static $rules;
     private static $restrictions;
     private static $links;
@@ -17,6 +18,9 @@ class model_session{
     public static function get_user(){
         return self::$user;
     }
+    public static function get_company(){
+        return self::$company;
+    }
 
     public static function set_user(data_current_user $user){
         if(!isset(self::$user)){
@@ -24,6 +28,14 @@ class model_session{
             self::$user = $user;
         }else
             throw new exception('Нельзя дважды определить пользователя.');
+    }
+
+    public static function set_company(data_company $company){
+        if(!isset(self::$company)){
+            $_SESSION['company'] = $company;
+            self::$company = $company;
+        }else
+            throw new exception('Нельзя дважды определить компанию.');
     }
     
     public static function set_restrictions($restrictions){

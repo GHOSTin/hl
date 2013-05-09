@@ -47,6 +47,7 @@ class model_environment{
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
 			self::create_batabase_connection();
 			model_session::set_user($_SESSION['user']);
+			model_session::set_company($_SESSION['company']);
 			$route = self::build_router();
 			$route[] = 'private_';
 			return $route;
@@ -55,6 +56,10 @@ class model_environment{
 			$user = model_auth::auth_user();
 			if($user instanceof data_current_user){
 				model_session::set_user($user);
+				model_user::verify_company_id($user);
+				$company = new data_company();
+				$company->id = $user->company_id;
+				model_session::set_company($company);
 				$route = self::build_router();
 				$route[] = 'private_';
 				return $route;
@@ -63,6 +68,7 @@ class model_environment{
 				return ['auth', 'show_auth_form', 'public_'];
 			}
 		}else{
+			session_destroy();
 			return ['auth', 'show_auth_form', 'public_'];
 		}
 	}
@@ -75,10 +81,8 @@ class model_environment{
 			$controller = 'controller_'.$component;
 			$view = 'view_'.$component;
 			$user = model_session::get_user();
-			$company = new data_company();
-			$company->id = $user->id;
 			if($user instanceof data_current_user){
-				model_profile::get_user_profiles($company, $user);
+				model_profile::get_user_profiles(model_session::get_company(), $user);
 				$data['menu'] = model_menu::build_menu();
 				if(isset(model_session::get_rules()[$component]))
 					$data['rules'] = model_session::get_rules()[$component];

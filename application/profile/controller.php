@@ -2,9 +2,7 @@
 class controller_profile{
 
 	public static function private_get_dialog_edit_password(){
-		$user = $_SESSION['user'];
-		model_user::verify_id($user);
-		return ['users' => model_user::get_users($user)];
+		return ['users' => model_user::get_users(model_session::get_user())];
 	}
 
 	public static function private_get_dialog_edit_cellphone(){
@@ -20,22 +18,20 @@ class controller_profile{
 	}
 
 	public static function private_show_default_page(){
-		$user = $_SESSION['user'];
-		model_user::verify_id($user);
-		return ['users' => model_user::get_users($user)];
+		return ['users' => model_user::get_users(model_session::get_user())];
 	}
 
 	public static function private_update_password(){
 		if($_GET['new_password'] !== $_GET['confirm_password'])
 			throw new e_model('Введеные новый пароль и его подтверждение не совпадают.');
-		return ['user' => model_profile::update_password($_SESSION['user'], $_GET['new_password'])];
+		return ['user' => model_profile::update_password(model_session::get_user(), $_GET['new_password'])];
 	}
 
 	public static function private_update_cellphone(){
-		return ['user' => model_profile::update_cellphone($_SESSION['user'], $_GET['cellphone'])];
+		return ['user' => model_profile::update_cellphone(model_session::get_user(), $_GET['cellphone'])];
 	}
 
 	public static function private_update_telephone(){
-		return ['user' => model_profile::update_telephone($_SESSION['user'], $_GET['telephone'])];
+		return ['user' => model_profile::update_telephone(model_session::get_user(), $_GET['telephone'])];
 	}
 }
