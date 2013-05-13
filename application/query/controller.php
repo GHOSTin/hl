@@ -232,20 +232,22 @@ class controller_query{
 
 	public static function private_get_initiator(){
 		$company = model_session::get_company();
-		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user());
+		$types = model_query_work_type::get_query_work_types($company, new data_query_work_type());
 		switch($_GET['initiator']){
 			case 'number':
 				$number = new data_number();
 				$number->id = $_GET['id'];
+				model_number::verify_id($number);
 				return ['initiator' => 'number',
-						'number' => model_number::get_number($number),
+						'number' => model_number::get_numbers($company, $number)[0],
 						'query_work_types' => $types];
 			break;
 			case 'house':
 				$house = new data_house();
 				$house->id = $_GET['id'];
+				model_house::verify_id($house);
 				return ['initiator' => 'house',
-						'house' => model_house::get_house($house),
+						'house' => model_house::get_houses($house)[0],
 						'query_work_types' => $types];
 			break;
 			default:
@@ -266,8 +268,8 @@ class controller_query{
 	public static function private_get_numbers(){
 		$house = new data_house();
 		$house->id = $_GET['id'];
-		$company = model_session::get_company();
-		return ['numbers' => model_house::get_numbers($house)];
+		model_house::verify_id($house);
+		return ['numbers' => model_house::get_numbers(model_session::get_company(), $house)];
 	}
 
 	public static function private_print_query(){
@@ -339,8 +341,8 @@ class controller_query{
 		$query->department_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+				'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_set_street(){
@@ -353,8 +355,8 @@ class controller_query{
 		$street->id = $_GET['value'];
 		$street->department_id = $query->department_id;
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, model_session::get_user()),
+		return ['queries' => model_query::get_queries($company, $query),
+				'numbers' => model_query::get_numbers($company, $query),
 				'houses' => model_street::get_houses($street)];
 	}
 
@@ -364,8 +366,8 @@ class controller_query{
 		$query->department_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company , $query),
+				'numbers' => model_query::get_numbers($company , $query)];
 	}
 
 	public static function private_set_department(){
@@ -375,8 +377,8 @@ class controller_query{
 		$query->house_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+				'numbers' => model_query::get_numbers($company, $query)];
 	}	
 
 	public static function private_get_timeline(){

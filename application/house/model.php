@@ -15,6 +15,21 @@ class model_house{
 		return $house_id;
 	}
 	/**
+	* Возвращает список домов
+	* @return array из object data_house
+	*/
+	public static function get_houses(data_house $house){
+		$sql = new sql();
+		$sql->query("SELECT `id`, `company_id`, `city_id`, `street_id`, 
+			 		`department_id`, `status`, `housenumber` as `number`
+					FROM `houses`");
+		if(!empty($house->id)){
+			$sql->query(' WHERE `id` = :house_id');
+			$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
+		}
+		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
+	}
+	/**
 	* Возвращает лицевые счета дома.
 	* @return array из object data_number
 	*/

@@ -48,8 +48,8 @@ class model_department{
 		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
-					FROM `departments` WHERE `departments`.`company_id` = :company_id");
-		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+					FROM `departments` WHERE `company_id` = :company_id");
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!empty($department->id)){
 			$params = [];
 			if(is_array($department->id))

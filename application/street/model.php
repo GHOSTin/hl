@@ -82,8 +82,8 @@ class model_street{
 		self::verify_id($street);
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `city_id`, `street_id`, 
-		 		`department_id`, `status`, `housenumber` as `number`
-				FROM `houses` WHERE `street_id` = :street_id");
+			 		`department_id`, `status`, `housenumber` as `number`
+					FROM `houses` WHERE `street_id` = :street_id");
 		$sql->bind(':street_id', $street->id, PDO::PARAM_INT);
 		if(!empty($street->department_id)){
 			$sql->query(" AND `houses`.`department_id` IN(");
