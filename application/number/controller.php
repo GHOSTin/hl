@@ -41,7 +41,8 @@ class controller_number{
     public static function private_get_number_information(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        return model_number::get_number($number);
+        model_number::verify_id($number);
+        return ['numbers' => model_number::get_numbers(model_session::get_company(),$number)];
     }
 
     public static function private_get_meter_data(){
@@ -61,7 +62,8 @@ class controller_number{
     public static function private_get_dialog_edit_number(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        return model_number::get_number($number);
+        model_number::verify_id($number);
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
     public static function private_get_dialog_edit_meter_data(){
@@ -81,7 +83,9 @@ class controller_number{
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->number = $_GET['number'];
-        return model_number::update_number($number, model_session::get_user());
+        model_number::verify_id($number);
+        model_number::verify_number($number);
+        return model_number::update_number(model_session::get_company(), $number);
     }
     public static function private_update_meter_data(){
         $number = new data_number();

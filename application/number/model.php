@@ -253,11 +253,11 @@ class model_number{
 	* Обнавляет номер лицевого счета
 	* @return object data_number
 	*/
-	public static function update_number(data_company $company, data_number $number_params,
-											data_current_user $user){
+	public static function update_number(data_company $company, data_number $number_params){
 		self::verify_id($number_params);
 		self::verify_number($number_params);
-		$number = model_number::get_number($number_params);
+		model_company::verify_id($company);
+		$number = model_number::get_numbers($company, $number_params)[0];
 		self::is_data_number($number);
 		$number->number = $number_params->number;
 		try{
@@ -276,7 +276,7 @@ class model_number{
 						AND `numbers`.`id` = :number_id
 						AND `numbers`.`number` = :number
 					AND `numbers`.`city_id` = :city_id");
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 			$sql->bind(':number', $number->number, PDO::PARAM_STR);
 			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
@@ -287,7 +287,7 @@ class model_number{
 			$sql->query("UPDATE `numbers` SET `number` = :number 
 						WHERE `company_id` = :company_id AND `city_id` = :city_id
 						AND `id` = :number_id");
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 			$sql->bind(':number', $number->number, PDO::PARAM_STR);
 			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
