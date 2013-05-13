@@ -13,7 +13,8 @@ class controller_query{
 		$user = new data_user();
 		$user->id = $_GET['user_id'];
 		$class = $_GET['type'];
-		return ['queries' => model_query::add_user($query, $user, $class, model_session::get_user()),
+		$company = model_session::get_company();
+		return ['queries' => model_query::add_user($query, $user, $class),
 				'users' => model_query::get_users($query, model_session::get_user())];
 	}
 
@@ -30,6 +31,7 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::add_work($query, $work, $begin_time, $end_time, model_session::get_user()),
 				'works' => model_query::get_works($query, model_session::get_user())];
 	}
@@ -45,8 +47,9 @@ class controller_query{
 		$query->department_id = 'all';
 		$time = getdate();
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, model_session::get_user()),
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
+				'numbers' => model_query::get_numbers($company, $query),
 				'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 				'now' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year'])];
 	}
@@ -55,6 +58,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->close_reason = $_GET['reason'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::close_query($query, model_session::get_user()),
 			'users' => model_query::get_users($query, model_session::get_user()),
 			'numbers' => model_query::get_numbers($query, model_session::get_user())];
@@ -63,6 +67,7 @@ class controller_query{
 	public static function private_to_working_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::to_working_query($query, model_session::get_user()),
 			'users' => model_query::get_users($query, model_session::get_user()),
 			'numbers' => model_query::get_numbers($query, model_session::get_user())];
@@ -81,6 +86,7 @@ class controller_query{
 		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
 		$query_work_type = new data_query_work_type();
 		$query_work_type->id = $_GET['work_type'];
+		$company = model_session::get_company();
 		$queries[] = model_query::create_query($query, $initiator, $query_work_type, model_session::get_user());
 		return ['queries' => $queries];
 	}
@@ -88,6 +94,7 @@ class controller_query{
 	public static function private_get_documents(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query, model_session::get_user())];
 	}
 
@@ -97,8 +104,9 @@ class controller_query{
 		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		return ['queries' => model_query::get_queries($query),
-			'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
+			'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_get_dialog_add_user(){
@@ -118,6 +126,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $id;
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 			'workgroups' => model_workgroup::get_workgroups(new data_workgroup(), model_session::get_user())];
 	}	
@@ -130,6 +139,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query)];
 	}
 
@@ -137,6 +147,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query)];
 	}
 
@@ -144,6 +155,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query)];
 	}
 
@@ -151,6 +163,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query)];
 	}
 
@@ -158,6 +171,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query)];
 	}
 
@@ -165,6 +179,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query)];
 	}
 
@@ -172,6 +187,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 			'work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user())];
 	}
@@ -181,6 +197,7 @@ class controller_query{
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$street = new data_street();
 		$street->department_id = $query->department_id;
+		$company = model_session::get_company();
 		return ['streets' => model_street::get_streets($street),
 				'initiator' => $_GET['value']];
 	}
@@ -195,6 +212,7 @@ class controller_query{
 		$user = new data_user();
 		$user->id = $_GET['user_id'];
 		model_user::verify_id($user);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'users' => model_user::get_users($user),
 				'type' => $type];
@@ -207,11 +225,13 @@ class controller_query{
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
 		model_work::verify_id($work);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'works' => model_work::get_works($work, model_session::get_user())];
 	}
 
 	public static function private_get_initiator(){
+		$company = model_session::get_company();
 		$types = model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user());
 		switch($_GET['initiator']){
 			case 'number':
@@ -239,18 +259,21 @@ class controller_query{
 		$street = new data_street();
 		$street->id = $_GET['id'];
 		$street->department_id = $query->department_id;
+		$company = model_session::get_company();
 		return ['houses' => model_street::get_houses($street)];
 	}
 
 	public static function private_get_numbers(){
 		$house = new data_house();
 		$house->id = $_GET['id'];
+		$company = model_session::get_company();
 		return ['numbers' => model_house::get_numbers($house)];
 	}
 
 	public static function private_print_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 			'users' => model_query::get_users($query, model_session::get_user()),
 			'numbers' => model_query::get_numbers($query, model_session::get_user())];
@@ -259,21 +282,26 @@ class controller_query{
 	public static function private_get_query_content(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		return ['queries' => model_query::get_queries($query),
-			'users' => model_query::get_users($query, model_session::get_user()),
-			'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		model_query::verify_id($query);
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
+			'users' => model_query::get_users($company, $query),
+			'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_get_query_title(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		model_query::verify_id($query);
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
+				'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_get_query_numbers(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
@@ -281,6 +309,7 @@ class controller_query{
 	public static function private_get_query_users(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'users' => model_query::get_users($query, model_session::get_user())];
 	}
@@ -288,6 +317,7 @@ class controller_query{
 	public static function private_get_query_works(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'works' => model_query::get_works($query, model_session::get_user())];
 	}
@@ -299,7 +329,8 @@ class controller_query{
 	public static function private_get_search_result(){
 		$query = new data_query();
 		$query->number = $_GET['param'];
-		return ['queries' => model_query::get_queries($query)];
+		model_query::verify_number($query);
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_set_status(){
@@ -307,6 +338,7 @@ class controller_query{
 		$query->status = $_GET['value'];
 		$query->department_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
@@ -320,6 +352,7 @@ class controller_query{
 		$street = new data_street();
 		$street->id = $_GET['value'];
 		$street->department_id = $query->department_id;
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, model_session::get_user()),
 				'houses' => model_street::get_houses($street)];
@@ -330,6 +363,7 @@ class controller_query{
 		$query->house_id = $_GET['value'];
 		$query->department_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}
@@ -340,6 +374,7 @@ class controller_query{
 		$query->street_id = 'all';
 		$query->house_id = 'all';
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($query),
 				'numbers' => model_query::get_numbers($query, model_session::get_user())];
 	}	
@@ -368,8 +403,9 @@ class controller_query{
 		$now = getdate();
 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		return ['queries' => model_query::get_queries($query),
-			'numbers' => model_query::get_numbers($query, model_session::get_user()),
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
+			'numbers' => model_query::get_numbers($company, $query),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'timeline' => $timeline];
 	}
@@ -378,6 +414,7 @@ class controller_query{
 		$group = new data_group();
 		$group->id = $_GET['id'];
 		model_group::verify_id($group);
+		$company = model_session::get_company();
 		return ['users' => model_group::get_users($group, model_session::get_user())];
 	}
 
@@ -385,6 +422,7 @@ class controller_query{
 		$work_group = new data_workgroup();
 		$work_group->id = $_GET['id'];
 		model_workgroup::verify_id($work_group);
+		$company = model_session::get_company();
 		return ['works' => model_workgroup::get_works($work_group, model_session::get_user())];
 	}
 
@@ -401,15 +439,16 @@ class controller_query{
 		}
 		$department = new data_department();
 		$department->id = model_session::get_restrictions()['query']->departments;
-		return ['queries' => model_query::get_queries($query),
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),
 			'users' => model_user::get_users(new data_user()),
-			'departments' => model_department::get_departments($department, model_session::get_user()),
-			'numbers' => model_query::get_numbers($query, model_session::get_user()),
-			'query_work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user()),
+			'departments' => model_department::get_departments($company, $department),
+			'numbers' => model_query::get_numbers($company, $query),
+			'query_work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type()),
 			'houses' => $houses];
 	}
 
@@ -419,6 +458,7 @@ class controller_query{
 		$user = new data_user();
 		$user->id = $_GET['user_id'];
 		$type = $_GET['type'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::remove_user($query, $user, $type, model_session::get_user()),
 				'users' => model_query::get_users($query, model_session::get_user())];
 	}
@@ -428,6 +468,7 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::remove_work($query, $work, model_session::get_user()),
 				'works' => model_query::get_works($query, model_session::get_user())];
 	}
@@ -436,6 +477,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->description = $_GET['description'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::update_description($query, model_session::get_user())];
 	}
 
@@ -445,6 +487,7 @@ class controller_query{
 		$query->contact_fio = $_GET['fio'];
 		$query->contact_telephone = $_GET['telephone'];
 		$query->contact_cellphone = $_GET['cellphone'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::update_contact_information($query, model_session::get_user())];
 	}
 
@@ -452,6 +495,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->payment_status = $_GET['status'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::update_payment_status($query, model_session::get_user())];
 	}
 
@@ -459,6 +503,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->warning_status = $_GET['status'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::update_warning_status($query, model_session::get_user())];
 	}
 
@@ -466,6 +511,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->worktype_id = $_GET['type'];
+		$company = model_session::get_company();
 		return ['queries' => model_query::update_work_type($query, model_session::get_user())];
 	}
 }

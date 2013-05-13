@@ -559,7 +559,7 @@ class model_query{
 	/*
 	* Учитывает сессионный фильтры.
 	*/
-	public static function build_query_params(data_company $company, data_query $query, data_query $query_filter = null, stdClass $restrictions){
+	public static function build_query_params(data_query $query, data_query $query_filter = null, stdClass $restrictions){
 		$time = getdate();
 		if(!$query_filter instanceof data_query){
 			$query = new data_query();
