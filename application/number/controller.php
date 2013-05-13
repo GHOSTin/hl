@@ -18,7 +18,8 @@ class controller_number{
     public static function private_get_house_content(){
         $house = new data_house();
         $house->id = $_GET['id'];
-        return ['numbers' => model_house::get_numbers($house, model_session::get_user()),
+        model_house::verify_id($house);
+        return ['numbers' => model_house::get_numbers(model_session::get_company(), $house),
                 'house' => $house];
     }
 
@@ -32,7 +33,8 @@ class controller_number{
     public static function private_get_number_content(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        return model_number::get_number($number);
+        model_number::verify_id($number);
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
     public static function private_get_number_information(){

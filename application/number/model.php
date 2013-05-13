@@ -69,7 +69,7 @@ class model_number{
 	* Возвращает список лицевых счетов.
 	* @return array object data_number
 	*/
-	public static function get_numbers(data_number $number, data_company $company){
+	public static function get_numbers(data_company $company, data_number $number){
 		model_company::verify_id($company);
 		$sql = new sql();
 		if(!empty($number->id)){

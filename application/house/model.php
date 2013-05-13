@@ -18,8 +18,9 @@ class model_house{
 	* Возвращает лицевые счета дома.
 	* @return array из object data_number
 	*/
-	public static function get_numbers(data_house $house){
+	public static function get_numbers(data_company $company, data_house $house){
 		self::verify_id($house);
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
@@ -35,10 +36,12 @@ class model_house{
 					`streets`.`name` as `street_name`
 				FROM `numbers`, `flats`, `houses`, `streets`
 				WHERE `numbers`.`house_id` = :house_id
+				AND `numbers`.`company_id` = :company_id
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `numbers`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`");
-		$sql->bind(':house_id', $house->id, PDO::PARAM_STR);
+		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		return $sql->map(new data_number(), 'Проблемы при выборке номеров.');
 	}
 	/**

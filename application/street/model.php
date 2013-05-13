@@ -78,19 +78,19 @@ class model_street{
 	* Возвращает список домов
 	* @return array из object data_house
 	*/
-	public static function get_houses(data_street $street_params, data_house $house_params = null){
-		self::verify_id($street_params);
+	public static function get_houses(data_street $street, data_house $house = null){
+		self::verify_id($street);
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `city_id`, `street_id`, 
 		 		`department_id`, `status`, `housenumber` as `number`
 				FROM `houses` WHERE `street_id` = :street_id");
-		$sql->bind(':street_id', $street_params->id, PDO::PARAM_INT);
-		if(!empty($street_params->department_id)){
+		$sql->bind(':street_id', $street->id, PDO::PARAM_INT);
+		if(!empty($street->department_id)){
 			$sql->query(" AND `houses`.`department_id` IN(");
-			if(is_array($street_params->department_id)){
-				$count = count($street_params->department_id);
+			if(is_array($street->department_id)){
+				$count = count($street->department_id);
 				$i = 1;
-				foreach($street_params->department_id as $key => $department){
+				foreach($street->department_id as $key => $department){
 					$sql->query(':department_id'.$key);
 					if($i++ < $count)
 						$sql->query(',');
@@ -98,17 +98,17 @@ class model_street{
 				}
 			}else{
 				$sql->query(':department_id0');
-				$sql->bind(':department_id0', $street_params->department_id, PDO::PARAM_INT);
+				$sql->bind(':department_id0', $street->department_id, PDO::PARAM_INT);
 			}
 			$sql->query(")");
 		}
-		if(!empty($house_params->number)){
+		if(!empty($house->number)){
 			$sql->query(' AND `housenumber` = :number');
-			$sql->bind(':number', $house_params->number, PDO::PARAM_STR);
+			$sql->bind(':number', $house->number, PDO::PARAM_STR);
 		}
-		if(!empty($house_params->id)){
+		if(!empty($house->id)){
 			$sql->query(' AND `id` = :house_id');
-			$sql->bind(':house_id', $house_params->id, PDO::PARAM_INT);
+			$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		}
 		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
 	}
