@@ -198,9 +198,9 @@ class model_number{
 				throw new e_model('Время выборки задано не верно.');
 			if(count($tarif) !== 2)
 				throw new e_model('Показания заданы не верно.');
-			$number = self::get_number($number);
+			$number = self::get_numbers($company, $number)[0];
 			model_number::is_data_number($number);
-			$meters = self::get_meters($number, $current_user, $meter);
+			$meters = self::get_meters($company, $number, $meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
 			$meter = $meters[0];
@@ -254,6 +254,7 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function update_number(data_company $company, data_number $number_params){
+		die('DISABLED');
 		self::verify_id($number_params);
 		self::verify_number($number_params);
 		model_company::verify_id($company);

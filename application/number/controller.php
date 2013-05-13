@@ -56,7 +56,7 @@ class controller_number{
         else
             $time = getdate();
         return [ 'meter' => $meter, 'number' => $number, 'time' => mktime(12, 0, 0, 1, 1, $time['year']), 
-                'meter_data' =>model_number::get_meter_data($meter, $number, model_session::get_user(), mktime(12, 0, 0, 1, 1, $time['year']))];
+                'meter_data' =>model_number::get_meter_data(model_session::get_company(), $meter, $number, mktime(12, 0, 0, 1, 1, $time['year']))];
     }
 
     public static function private_get_dialog_edit_number(){
@@ -76,7 +76,7 @@ class controller_number{
 //        var_dump(model_number::get_meter_data($meter, $number, model_session::get_user(), mktime(12, 0, 0, 1, 1, getdate($time)['year'])));
 //        exit();
         return ['number' => $number, 'meter' => $meter, 'time' => $_GET['time'],
-                'meter_data' =>model_number::get_meter_data($meter, $number, model_session::get_user(), mktime(12, 0, 0, 1, 1, getdate($time)['year']))];
+                'meter_data' =>model_number::get_meter_data(model_session::get_company(), $meter, $number, mktime(12, 0, 0, 1, 1, getdate($time)['year']))];
     }
 
     public static function private_update_number(){
@@ -94,6 +94,6 @@ class controller_number{
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
         return ['number' => $number, 'meter' => $meter, 'time' => $_GET['time'],
-        'meter_data' => model_number::update_meter_data($meter, $number, model_session::get_user(), $_GET['time'], $_GET['tarif'])];
+        'meter_data' => model_number::update_meter_data(model_session::get_company(), $meter, $number, $_GET['time'], $_GET['tarif'])];
     }
 }
