@@ -26,8 +26,9 @@ class controller_number{
     public static function private_get_meters(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        return ['number' => model_number::get_number($number),
-                'meters' => model_number::get_meters($number, model_session::get_user())];
+        model_number::verify_id($number);
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number),
+                'meters' => model_number::get_meters(model_session::get_company(), $number)];
     }
 
     public static function private_get_number_content(){

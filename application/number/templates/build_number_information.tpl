@@ -11,12 +11,12 @@
 <li>
     <dl class="dl-horizontal">
         <dt>Владелец:</dt>
-        <dd>{{ component.fio }}</dd>
+        <dd>{{ number.fio }}</dd>
         <dt>Лицевой счет:</dt>
-        <dd>{{ component.number }} <a class="get_dialog_edit_number">изменить</a></dd>
+        <dd>{{ number.number }} <a class="get_dialog_edit_number">изменить</a></dd>
         <dt>Телефон:</dt>
-        <dd>{{ component.telephone }}</dd>
+        <dd>{{ number.telephone }}</dd>
         <dt>Сотовый телефон:</dt>
-        <dd>{{ component.cellphone }}</dd>
+        <dd>{{ number.cellphone }}</dd>
     </dl>
 </li>
