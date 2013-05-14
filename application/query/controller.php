@@ -86,8 +86,8 @@ class controller_query{
 		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
 		$query_work_type = new data_query_work_type();
 		$query_work_type->id = $_GET['work_type'];
-		$company = model_session::get_company();
-		$queries[] = model_query::create_query($query, $initiator, $query_work_type, model_session::get_user());
+		$queries[] = model_query::create_query(model_session::get_company(), $query, $initiator,
+								 $query_work_type, model_session::get_user());
 		return ['queries' => $queries];
 	}
 

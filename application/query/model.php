@@ -33,7 +33,7 @@ class model_query{
 					VALUES (:query_id, :user_id, :company_id, :class)");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':user_id', $current_user->id, PDO::PARAM_INT);
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
 		$sql->bind(':class', $class, PDO::PARAM_STR);
 		$sql->execute('Проблема при добавлении пользователя.');
 	}
@@ -141,17 +141,19 @@ class model_query{
 	*/
 	private static function add_numbers(data_company $company, data_query $query, $initiator){
 		if($initiator instanceof data_house){
-			$numbers = model_house::get_numbers($initiator);
+			model_house::verify_id($initiator);
+			$numbers = model_house::get_numbers($company, $initiator);
 			$default = 'false';
 		}elseif($initiator instanceof data_number){
-			$numbers[] = model_number::get_number($initiator);
+			model_number::verify_id($initiator);
+			$numbers[] = model_number::get_numbers($company, $initiator)[0];
 			$default = 'true';
 		}else
 			throw new e_model('Не подходящий тип инициатора.');
 		if(count($numbers) < 1)
 			throw new e_model('Не соответсвующее количество лицевых счетов.');
 		foreach($numbers as $number){
-			self::__add_number($query, $number, $default, $current_user);
+			self::__add_number($company, $query, $number, $default);
 		}
 	}
 	/**
@@ -209,10 +211,13 @@ class model_query{
 			sql::begin();
 			if(empty($query->description))
 				throw new e_model('Пустое описание заявки.');
-			if($initiator instanceof data_house)
-				$initiator = model_house::get_house($initiator);
-			elseif($initiator instanceof data_number)
-				$initiator = model_number::get_number($initiator);
+			if($initiator instanceof data_house){
+				model_house::verify_id($initiator);
+				$initiator = model_house::get_houses($initiator)[0];
+			}elseif($initiator instanceof data_number){
+				model_number::verify_id($initiator);
+				$initiator = model_number::get_numbers($company, $initiator)[0];
+			}
 			if(!($initiator instanceof data_number OR $initiator instanceof data_house))
 				throw new e_model('Инициатор не корректен.');
 			if($initiator instanceof data_house){
@@ -222,21 +227,21 @@ class model_query{
 				$query->initiator = 'number';
 				$query->house_id = $initiator->house_id;
 			}
-			$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, $current_user)[0];
+			$query_work_type = model_query_work_type::get_query_work_types($company, $query_work_type_params)[0];
 			model_query_work_type::is_data_query_work_type($query_work_type);
 			$query->worktype_id = $query_work_type->id;
-			if(!is_int($query->id = self::get_insert_id($current_user)))
+			if(!is_int($query->id = self::get_insert_id($company)))
 				throw new e_model('Не был получени query_id для вставки.');
 			$time = time();
-			if(!is_int($query->number = self::get_insert_query_number($current_user, $time)))
+			if(!is_int($query->number = self::get_insert_query_number($company, $time)))
 				throw new e_model('Инициатор не был сформирован.');
-			$query = self::__add_query($query, $initiator, $current_user, $time);
+			$query = self::__add_query($company, $query, $initiator, $time);
 			if(!($query instanceof data_query))
 				throw new e_model('Не корректный объект query');
-			self::add_numbers($query, $initiator, $current_user);
-			self::__add_user($query, $current_user, 'creator');
-			self::__add_user($query, $current_user, 'manager');
-			self::__add_user($query, $current_user, 'observer');
+			self::add_numbers($company, $query, $initiator);
+			self::__add_user($company, $query, $current_user, 'creator');
+			self::__add_user($company, $query, $current_user, 'manager');
+			self::__add_user($company, $query, $current_user, 'observer');
 			sql::commit();
 			return $query;
 		}catch(exception $e){
