@@ -13,8 +13,8 @@
     {{ y }}
 </div>
 <div class="btn-group pagination" data-toggle="buttons-radio">
-    <a class="timeline-control btn">
-        <i class="icon-chevron-left get_timeline" act="previous"></i>
+    <a class="timeline-control btn get_timeline" act="previous">
+        <i class="icon-chevron-left"></i>
     </a>
     {% for i in range(1, current_day_time|date('t')) %}
         <a class="timeline-day btn
@@ -41,7 +41,7 @@
         </a>
         {% set day = day|date_modify('+1 day') %}
     {% endfor %}
-    <a class="timeline-control btn">
-        <i class="icon-chevron-right get_timeline" act="next"></i>
+    <a class="timeline-control btn get_timeline" act="next">
+        <i class="icon-chevron-right"></i>
     </a>
 </div>

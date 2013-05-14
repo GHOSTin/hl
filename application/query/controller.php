@@ -94,8 +94,8 @@ class controller_query{
 	public static function private_get_documents(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query, model_session::get_user())];
+		model_query::verify_id($query);
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_day(){
@@ -139,24 +139,21 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_to_working_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_description(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_contact_information(){
