@@ -88,12 +88,12 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public static function add_user(data_company $company, data_query $query_params,
-					data_user $user_params, $class, data_current_user $current_user){
+							data_user $user_params, $class){
 		self::verify_id($query_params);
 		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
 		$user = model_user::get_users($user_params)[0];
 		model_user::is_data_user($user);
@@ -103,7 +103,7 @@ class model_query{
 				 :class, :protect)");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':class', $class, PDO::PARAM_STR);
 		$sql->bind(':protect', 'false', PDO::PARAM_STR);
 		$sql->execute('Ошибка при добавлении пользователя.');
@@ -119,9 +119,9 @@ class model_query{
 			throw new e_model('Время задано не верно.');
 		if($begin_time > $end_time)
 			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
-		$work = model_work::get_works($work_params, $current_user)[0];
+		$work = model_work::get_works($company, $work_params)[0];
 		model_work::is_data_work($work);
 		$sql = new sql();
 		$sql->query("INSERT INTO `query2work` (`query_id`, `work_id`, `company_id`,
@@ -610,7 +610,7 @@ class model_query{
 		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
 		$user = model_user::get_users($user_params)[0];
 		model_user::is_data_user($user);
@@ -620,7 +620,7 @@ class model_query{
 					AND `user_id` = :user_id AND `class` = :class");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_STR);
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':class', $class, PDO::PARAM_STR);
 		$sql->execute('Ошибка при удалении пользователя и заявки.');
 		return [$query];
@@ -631,9 +631,9 @@ class model_query{
 	public static function remove_work(data_company $company, data_query $query_params, data_work $work_params){
 		self::verify_id($query_params);
 		model_work::verify_id($work_params);
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
-		$work = model_work::get_works($work_params, $current_user)[0];
+		$work = model_work::get_works($company, $work_params)[0];
 		model_work::is_data_work($work);
 		$sql = new sql();
 		$sql->query("DELETE FROM `query2work`
@@ -641,7 +641,7 @@ class model_query{
 					AND `work_id` = :work_id");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->bind(':work_id', $work->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при удалении работы из заявки.');
 		return [$query];
 	}
@@ -655,7 +655,7 @@ class model_query{
 		$sql->query("UPDATE `queries` SET `description-open` = :description
 					WHERE `company_id` = :company_id AND `id` = :query_id");
 		$sql->bind(':description', $query->description, PDO::PARAM_STR);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при обновлении описания заявки.');
 		return [$query];

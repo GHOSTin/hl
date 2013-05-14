@@ -5,11 +5,11 @@ class model_work{
 	* @return array из data_work
 	*/
 	public static function get_works(data_company $company, data_work $work){
-		model_user::verify_company_id($user);
+		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `works`
 				WHERE `company_id` = :company_id");
-		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!empty($work->id)){
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $work->id, PDO::PARAM_INT);

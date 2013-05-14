@@ -14,8 +14,8 @@ class controller_query{
 		$user->id = $_GET['user_id'];
 		$class = $_GET['type'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::add_user($query, $user, $class),
-				'users' => model_query::get_users($query, model_session::get_user())];
+		return ['queries' => model_query::add_user($company, $query, $user, $class),
+				'users' => model_query::get_users($company, $query)];
 	}
 
 	public static function private_add_work(){
@@ -32,8 +32,8 @@ class controller_query{
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::add_work($query, $work, $begin_time, $end_time, model_session::get_user()),
-				'works' => model_query::get_works($query, model_session::get_user())];
+		return ['queries' => model_query::add_work($company, $query, $work, $begin_time, $end_time),
+				'works' => model_query::get_works($company, $query)];
 	}
 
 	public static function private_clear_filters(){
@@ -116,8 +116,9 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
-		return ['queries' => model_query::get_queries($query),
-			'groups' => model_group::get_groups(new data_group(), model_session::get_user()),
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
+			'groups' => model_group::get_groups($company, new data_group()),
 			'type' => $type];
 	}
 
@@ -127,8 +128,8 @@ class controller_query{
 		$query->id = $id;
 		model_query::verify_id($query);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-			'workgroups' => model_workgroup::get_workgroups(new data_workgroup(), model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+			'workgroups' => model_workgroup::get_workgroups($company, new data_workgroup())];
 	}	
 
 	public static function private_get_dialog_create_query(){
@@ -208,7 +209,7 @@ class controller_query{
 		$user->id = $_GET['user_id'];
 		model_user::verify_id($user);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
+		return ['queries' => model_query::get_queries($company, $query),
 				'users' => model_user::get_users($user),
 				'type' => $type];
 	}	
@@ -221,8 +222,8 @@ class controller_query{
 		$work->id = $_GET['work_id'];
 		model_work::verify_id($work);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'works' => model_work::get_works($work, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+				'works' => model_work::get_works($company, $work)];
 	}
 
 	public static function private_get_initiator(){
@@ -414,16 +415,14 @@ class controller_query{
 		$group = new data_group();
 		$group->id = $_GET['id'];
 		model_group::verify_id($group);
-		$company = model_session::get_company();
-		return ['users' => model_group::get_users($group, model_session::get_user())];
+		return ['users' => model_group::get_users(model_session::get_company(), $group)];
 	}
 
 	public static function private_get_work_options(){
 		$work_group = new data_workgroup();
 		$work_group->id = $_GET['id'];
 		model_workgroup::verify_id($work_group);
-		$company = model_session::get_company();
-		return ['works' => model_workgroup::get_works($work_group, model_session::get_user())];
+		return ['works' => model_workgroup::get_works(model_session::get_company(), $work_group)];
 	}
 
 	public static function private_show_default_page(){
@@ -459,8 +458,8 @@ class controller_query{
 		$user->id = $_GET['user_id'];
 		$type = $_GET['type'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::remove_user($query, $user, $type, model_session::get_user()),
-				'users' => model_query::get_users($query, model_session::get_user())];
+		return ['queries' => model_query::remove_user($company, $query, $user, $type),
+				'users' => model_query::get_users($company, $query)];
 	}
 
 	public static function private_remove_work(){
@@ -469,16 +468,15 @@ class controller_query{
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::remove_work($query, $work, model_session::get_user()),
-				'works' => model_query::get_works($query, model_session::get_user())];
+		return ['queries' => model_query::remove_work($company, $query, $work),
+				'works' => model_query::get_works($company, $query)];
 	}
 
 	public static function private_update_description(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->description = $_GET['description'];
-		$company = model_session::get_company();
-		return ['queries' => model_query::update_description($query, model_session::get_user())];
+		return ['queries' => model_query::update_description(model_session::get_company(), $query)];
 	}
 
 	public static function private_update_contact_information(){
