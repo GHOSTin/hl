@@ -419,9 +419,10 @@ class model_query{
 				AND `numbers`.`company_id` = :company_id
 				AND `numbers`.`id` = `query2number`.`number_id`
 				AND `numbers`.`flat_id` = `flats`.`id`
-				AND `query2number`.`query_id` = :id");
+				AND `query2number`.`query_id` = :id
+				ORDER BY (`flats`.`flatnumber` + 0)");
 			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
 				`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
@@ -434,10 +435,11 @@ class model_query{
 				AND `numbers`.`id` = `query2number`.`number_id`
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `opentime` > :time_open
-				AND `opentime` <= :time_close");
+				AND `opentime` <= :time_close
+				ORDER BY (`flats`.`flatnumber` + 0)");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);
@@ -471,7 +473,7 @@ class model_query{
 				AND `users`.`id` = `query2user`.`user_id`
 				AND `query2user`.`query_id` = :id");
 			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2user`.`query_id`,  `query2user`.`class`, `users`.`id`,
 				`users`.`firstname`, `users`.`lastname`, `users`.`midlename`
@@ -485,7 +487,7 @@ class model_query{
 			$sql->query(" ORDER BY `opentime` DESC");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);
@@ -521,7 +523,7 @@ class model_query{
 				AND `works`.`id` = `query2work`.`work_id`
 				AND `query2work`.`query_id` = :id");
 			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
 				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
@@ -535,7 +537,7 @@ class model_query{
 				AND `queries`.`opentime` <= :time_close");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);

@@ -300,25 +300,28 @@ class controller_query{
 	public static function private_get_query_numbers(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+				'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_get_query_users(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'users' => model_query::get_users($query, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+				'users' => model_query::get_users($company, $query)];
 	}
 
 	public static function private_get_query_works(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
+		model_query::verify_id($query);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-				'works' => model_query::get_works($query, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+				'works' => model_query::get_works($company, $query)];
 	}
 
 	public static function private_get_search(){
