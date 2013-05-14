@@ -59,18 +59,18 @@ class controller_query{
 		$query->id = $_GET['id'];
 		$query->close_reason = $_GET['reason'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::close_query($query, model_session::get_user()),
-			'users' => model_query::get_users($query, model_session::get_user()),
-			'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		return ['queries' => model_query::close_query($company, $query),
+				'users' => model_query::get_users($company, $query),
+				'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_to_working_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::to_working_query($query, model_session::get_user()),
-			'users' => model_query::get_users($query, model_session::get_user()),
-			'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		return ['queries' => model_query::to_working_query($company, $query),
+			'users' => model_query::get_users($company, $query),
+			'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_create_query(){
@@ -160,8 +160,7 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_payment_status(){
@@ -169,15 +168,14 @@ class controller_query{
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries($company, $query)];
 	}
 
 	public static function private_get_dialog_edit_warning_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query)];
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_work_type(){
@@ -185,8 +183,8 @@ class controller_query{
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-			'work_types' => model_query_work_type::get_query_work_types(new data_query_work_type(), model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+				'work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type())];
 	}
 
 	public static function private_get_dialog_initiator(){
@@ -273,9 +271,9 @@ class controller_query{
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($query),
-			'users' => model_query::get_users($query, model_session::get_user()),
-			'numbers' => model_query::get_numbers($query, model_session::get_user())];
+		return ['queries' => model_query::get_queries($company, $query),
+			'users' => model_query::get_users($company, $query),
+			'numbers' => model_query::get_numbers($company, $query)];
 	}
 
 	public static function private_get_query_content(){
@@ -489,31 +487,27 @@ class controller_query{
 		$query->contact_fio = $_GET['fio'];
 		$query->contact_telephone = $_GET['telephone'];
 		$query->contact_cellphone = $_GET['cellphone'];
-		$company = model_session::get_company();
-		return ['queries' => model_query::update_contact_information($query, model_session::get_user())];
+		return ['queries' => model_query::update_contact_information(model_session::get_company(), $query)];
 	}
 
 	public static function private_update_payment_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->payment_status = $_GET['status'];
-		$company = model_session::get_company();
-		return ['queries' => model_query::update_payment_status($query, model_session::get_user())];
+		return ['queries' => model_query::update_payment_status(model_session::get_company(), $query)];
 	}
 
 	public static function private_update_warning_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->warning_status = $_GET['status'];
-		$company = model_session::get_company();
-		return ['queries' => model_query::update_warning_status($query, model_session::get_user())];
+		return ['queries' => model_query::update_warning_status(model_session::get_company(), $query)];
 	}
 
 	public static function private_update_work_type(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		$query->worktype_id = $_GET['type'];
-		$company = model_session::get_company();
-		return ['queries' => model_query::update_work_type($query, model_session::get_user())];
+		return ['queries' => model_query::update_work_type(model_session::get_company(), $query)];
 	}
 }

@@ -157,9 +157,9 @@ class model_query{
 	/**
 	* Закрывает заявку.
 	*/
-	public static function close_query(data_company $company, data_query $query_params, data_current_user $current_user){
+	public static function close_query(data_company $company, data_query $query_params){
 		self::verify_id($query_params);
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
 		if($query->status === 'close')
 			throw new e_model('Заявка уже закрыта.');
@@ -173,7 +173,7 @@ class model_query{
 		$sql->bind(':reason', $query->close_reason, PDO::PARAM_STR);
 		$sql->bind(':status', $query->status, PDO::PARAM_STR);
 		$sql->bind(':time_close', $query->time_close, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при закрытии заявки.');
 		return [$query];
@@ -181,9 +181,9 @@ class model_query{
 	/**
 	* Передает заявку в работу.
 	*/
-	public static function to_working_query(data_company $company, data_query $query_params, data_current_user $current_user){
+	public static function to_working_query(data_company $company, data_query $query_params){
 		self::verify_id($query_params);
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
 		if($query->status !== 'open')
 			throw new e_model('Заявка имеет статус не позволяющий её передать в работу.');
@@ -194,7 +194,7 @@ class model_query{
 				WHERE `company_id` = :company_id AND `id` = :query_id");
 		$sql->bind(':status', $query->status, PDO::PARAM_STR);
 		$sql->bind(':time_work', $query->time_work, PDO::PARAM_INT);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при передачи в работу заявки.');
 		return [$query];
@@ -672,7 +672,7 @@ class model_query{
 		$sql->bind(':fio', $query->contact_fio, PDO::PARAM_STR);
 		$sql->bind(':telephone', $query->contact_telephone, PDO::PARAM_STR);
 		$sql->bind(':cellphone', $query->contact_cellphone, PDO::PARAM_STR);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при обновлении описания заявки.');
 		return [$query];
@@ -684,14 +684,14 @@ class model_query{
 		self::verify_id($query_params);
 		if(array_search($query_params->payment_status, ['paid', 'unpaid', 'recalculation']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
 		$query->payment_status = $query_params->payment_status;
 		$sql = new sql();
 		$sql->query("UPDATE `queries` SET `payment-status` = :payment_status
 					WHERE `company_id` = :company_id AND `id` = :id");
 		$sql->bind(':payment_status', $query->payment_status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':id', $query->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при обновлении статуса оплаты заявки.');
 		return [$query];
@@ -703,14 +703,14 @@ class model_query{
 		self::verify_id($query_params);
 		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
 		$query->warning_status = $query_params->warning_status;
 		$sql = new sql();
 		$sql->query("UPDATE `queries` SET `warning-type` = :warning_status
 					WHERE `company_id` = :company_id AND `id` = :id");
 		$sql->bind(':warning_status', $query->warning_status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':id', $query->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при обновлении статуса реакции.');
 		return [$query];
@@ -721,11 +721,11 @@ class model_query{
 	public static function update_work_type(data_company $company, data_query $query_params){
 		self::verify_id($query_params);
 		self::verify_work_type_id($query_params);
-		$query = self::get_queries($query_params)[0];
+		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
 		$query_work_type_params = new data_query_work_type();
 		$query_work_type_params->id = $query_params->worktype_id;
-		$query_work_type = model_query_work_type::get_query_work_types($query_work_type_params, model_session::get_user())[0];
+		$query_work_type = model_query_work_type::get_query_work_types($company, $query_work_type_params)[0];
 		model_query_work_type::is_data_query_work_type($query_work_type);
 		$query->worktype_id = $query_work_type->id;
 		$query->work_type_name = $query_work_type->name;
@@ -733,7 +733,7 @@ class model_query{
 		$sql->query("UPDATE `queries` SET `query_worktype_id` = :work_type_id
 					WHERE `company_id` = :company_id AND `id` = :id");
 		$sql->bind(':work_type_id', $query->worktype_id, PDO::PARAM_STR);
-		$sql->bind(':company_id', $current_user->company_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':id', $query->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при обновлении типа работ.');
 		return [$query];
