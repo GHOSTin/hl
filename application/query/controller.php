@@ -45,6 +45,7 @@ class controller_query{
 		$query->street_id = 'all';
 		$query->house_id = 'all';
 		$query->department_id = 'all';
+		$query->worktype_id = 'all';
 		$time = getdate();
 		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$company = model_session::get_company();
