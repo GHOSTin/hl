@@ -141,7 +141,7 @@ class model_query{
 		self::verify_id($query_params);
 		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
-		model_work::verify_id($query_params);
+		model_work::verify_id($work_params);
 		$work = model_work::get_works($company, $work_params)[0];
 		model_work::is_data_work($work);
 		$sql = new sql();

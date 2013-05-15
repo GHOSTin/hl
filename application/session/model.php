@@ -24,6 +24,7 @@ class model_session{
 
     public static function set_user(data_current_user $user){
         if(!isset(self::$user)){
+            self::set_cockies();
             $_SESSION['user'] = $user;
             self::$user = $user;
         }else
