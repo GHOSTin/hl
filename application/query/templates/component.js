@@ -124,6 +124,13 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});
+	$('.filter-content-select-work_type').change(function(){
+		$.get('set_work_type',{
+			value: $('.filter-content-select-work_type :selected').val()
+			},function(r){
+				$('.queries').html(r);
+			});
+	});
 	$('.filter-content-select-house').change(function(){
 		$.get('set_house',{
 			value: $('.filter-content-select-house :selected').val()

@@ -378,7 +378,16 @@ class controller_query{
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'numbers' => model_query::get_numbers($company, $query)];
-	}	
+	}
+
+	public static function private_set_work_type(){
+		$query = new data_query();
+		$query->worktype_id = $_GET['value'];
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		$company = model_session::get_company();
+		return ['queries' => model_query::get_queries($company, $query),
+				'numbers' => model_query::get_numbers($company, $query)];
+	}
 
 	public static function private_get_timeline(){
 		$time = (int) $_GET['time'];

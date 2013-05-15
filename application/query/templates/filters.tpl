@@ -66,11 +66,10 @@
         </select>
 	</div>
 	<!-- end filter street, begin filter worktype -->
-    {#
 	<div class="filter">
 	    <label>по типу работ</label>
-        <select class="filter-content-select-workType span12">
-            <option value="">Все типы</option>
+        <select class="filter-content-select-work_type span12">
+            <option value="all">Все типы</option>
             {% if component.query_work_types != false %}
                 {% for query_work_type in component.query_work_types %}
                     <option value="{{query_work_type.id}}">{{query_work_type.name}}</option>
@@ -78,6 +77,7 @@
             {% endif %}
         </select>
 	</div>
+     {#
 	<!-- end filter worktype, begin filter users -->
 	<div class="filter">
 	    <label>по пользователю</label>

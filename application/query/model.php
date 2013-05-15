@@ -420,6 +420,10 @@ class model_query{
 				$sql->query(" AND `queries`.`house_id` = :house_id");
 				$sql->bind(':house_id', $query->house_id, PDO::PARAM_INT);
 			}
+			if(!empty($query->worktype_id)){
+				$sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
+				$sql->bind(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
+			}
 			if(!empty($query->department_id)){
 				if(is_array($query->department_id))
 					$departments = $query->department_id;
@@ -628,6 +632,11 @@ class model_query{
 					if(array_search($query->department_id, $restrictions->departments) === false)
 						$query->department_id = $restrictions->departments;
 		}
+		// обработка типа работ
+		if($query->worktype_id === 'all')
+			$query->worktype_id = null;
+		elseif(empty($query->worktype_id))
+			$query->worktype_id = $query_filter->worktype_id;
 		return $query;
 	}
 	/**
