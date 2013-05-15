@@ -8,6 +8,7 @@
     $('.filter-content-select-house').val('all');
     $('.filter-content-select-house').attr('disabled', true);
     $('.filter-content-select-department').val('all');
+    $('.filter-content-select-work_type').val('all');
 {% endblock js %}
 {% block html %}
     <div class="_queries">
