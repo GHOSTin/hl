@@ -6,6 +6,7 @@ class model_department{
 	*/
 	public static function create_department(data_company $company, data_department $department,
 											data_current_user $user){
+		model_company::verify_id($company);
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
 		self::verify_id($department);

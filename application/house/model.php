@@ -24,6 +24,7 @@ class model_house{
 			 		`department_id`, `status`, `housenumber` as `number`
 					FROM `houses`");
 		if(!empty($house->id)){
+			self::verify_id($house);
 			$sql->query(' WHERE `id` = :house_id');
 			$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		}
@@ -34,8 +35,8 @@ class model_house{
 	* @return array из object data_number
 	*/
 	public static function get_numbers(data_company $company, data_house $house){
-		self::verify_id($house);
 		model_company::verify_id($company);
+		self::verify_id($house);
 		$sql = new sql();
 		$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
@@ -55,8 +56,8 @@ class model_house{
 				AND `numbers`.`flat_id` = `flats`.`id`
 				AND `numbers`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`");
-		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		return $sql->map(new data_number(), 'Проблемы при выборке номеров.');
 	}
 	/**

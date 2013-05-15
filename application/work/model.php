@@ -8,9 +8,10 @@ class model_work{
 		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `works`
-				WHERE `company_id` = :company_id");
+					WHERE `company_id` = :company_id");
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!empty($work->id)){
+			model_work::verify_id($work);
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $work->id, PDO::PARAM_INT);
 		}

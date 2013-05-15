@@ -57,8 +57,8 @@ class model_number{
 		$sql = new sql();
 		$sql->query("SELECT MAX(`id`) as `max_number_id` FROM `numbers`
 					WHERE `company_id` = :company_id AND `city_id` = :city_id");
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':city_id', $city->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->execute('Проблема при опредении следующего number_id.');
 		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего number_id.');
@@ -73,6 +73,7 @@ class model_number{
 		model_company::verify_id($company);
 		$sql = new sql();
 		if(!empty($number->id)){
+			self::verify_id($number);
 			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
 						`numbers`.`flat_id`, `numbers`.`number`,
@@ -94,6 +95,7 @@ class model_number{
 					AND `houses`.`street_id` = `streets`.`id`");
 			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		}elseif(!empty($number->number)){
+			self::verify_number($number);
 			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
 						`numbers`.`flat_id`, `numbers`.`number`,
@@ -124,8 +126,8 @@ class model_number{
 	*/
 	public static function get_meters(data_company $company, data_number $number,
 										data_meter $meter = null){
-		self::verify_id($number);
 		model_company::verify_id($company);
+		self::verify_id($number);
 		$sql = new sql();
 		$sql->query("SELECT `meters`.`id`,
 						`meters`.`name`,
@@ -154,10 +156,10 @@ class model_number{
 	*/
 	public static function get_meter_data(data_company $company, data_meter $meter,
 											data_number $number, $time){
+		model_company::verify_id($company);
 		model_meter::verify_id($meter);
 		model_meter::verify_serial($meter);
 		self::verify_id($number);
-		model_company::verify_id($company);
 		if(empty($time))
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);

@@ -53,9 +53,9 @@ class model_street{
 		$sql = new sql();
 		if(!empty($street->department_id)){
 			$sql->query("SELECT DISTINCT`streets`.`id`, `streets`.`company_id`, 
-					`streets`.`city_id`, `streets`.`status`, `streets`.`name`
-					FROM `streets`, `houses` WHERE `houses`.`street_id` = `streets`.`id`
-					AND `houses`.`department_id` ");
+						`streets`.`city_id`, `streets`.`status`, `streets`.`name`
+						FROM `streets`, `houses` WHERE `houses`.`street_id` = `streets`.`id`
+						AND `houses`.`department_id`");
 			if(is_array($street->department_id))
 				$departments = $street->department_id;
 			else
@@ -66,6 +66,7 @@ class model_street{
 			}
 			$sql->query("IN(".implode(',', $params).") ORDER BY `streets`.`name`");
 		}elseif(!empty($street->id)){
+			model_street::verify_id($street);
 			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
 						FROM `streets` WHERE `id` = :id");
 			$sql->bind(':id', $street->id, PDO::PARAM_INT);
@@ -79,7 +80,6 @@ class model_street{
 	* @return array из object data_house
 	*/
 	public static function get_houses(data_street $street, data_house $house = null){
-		self::verify_id($street);
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `city_id`, `street_id`, 
 			 		`department_id`, `status`, `housenumber` as `number`
@@ -110,6 +110,7 @@ class model_street{
 			$sql->query(' AND `id` = :house_id');
 			$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		}
+		$sql->query(" ORDER BY (`houses`.`housenumber` + 0)");
 		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
 	}
 	/**

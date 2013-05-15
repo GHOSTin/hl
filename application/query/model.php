@@ -9,6 +9,8 @@ class model_query{
 		self::verify_id($query);
 		model_company::verify_id($company);
 		model_number::verify_id($number);
+		if(array_search($default, ['true', 'false']) === false)
+			throw new e_model('Тип лицевого счета задан не верно.');
 		$sql = new sql();
 		$sql->query("INSERT INTO `query2number` (`query_id`, `number_id`, `company_id`, `default`) 
 					VALUES (:query_id, :number_id, :company_id, :default)");
@@ -41,7 +43,7 @@ class model_query{
 	* Зависимая функция.
 	* Создает заявку и записывает в лог заявки.
 	*/
-	private static function __add_query(data_company $company, data_query $query, $initiator, $time){
+	private static function __add_query(data_company $company, data_query $query, data_object $initiator, $time){
 		model_company::verify_id($company);
 		if(!($initiator instanceof data_house OR $initiator instanceof data_number))
 			throw new e_model('Инициатор не верного формата.');
@@ -55,6 +57,22 @@ class model_query{
 		$query->warning_status = 'normal';
 		$query->department_id = $initiator->department_id;
 		$query->time_open = $query->time_work = $time;
+		self::verify_id($query);
+		self::verify_company_id($query);
+		self::verify_status($query);
+		self::verify_initiator($query);
+		self::verify_payment_status($query);
+		self::verify_warning_status($query);
+		self::verify_department_id($query);
+		self::verify_house_id($query);
+		self::verify_work_type_id($query);
+		self::verify_time_open($query);
+		self::verify_time_work($query);
+		self::verify_contact_fio($query);
+		self::verify_contact_telephone($query);
+		self::verify_contact_cellphone($query);
+		self::verify_description($query);
+		self::verify_number($query);
 		$sql = new sql();
 		$sql->query("INSERT INTO `queries` (
 					`id`, `company_id`, `status`, `initiator-type`, `payment-status`,
@@ -88,7 +106,8 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public static function add_user(data_company $company, data_query $query_params,
-							data_user $user_params, $class){
+									data_user $user_params, $class){
+		model_company::verify_id($company);
 		self::verify_id($query_params);
 		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
@@ -114,13 +133,15 @@ class model_query{
 	*/
 	public static function add_work(data_company $company, data_query $query_params,
 										data_work $work_params, $begin_time, $end_time){
-		self::verify_id($query_params);
 		if(!is_int($begin_time) OR !is_int($end_time))
 			throw new e_model('Время задано не верно.');
 		if($begin_time > $end_time)
 			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
+		model_company::verify_id($company);
+		self::verify_id($query_params);
 		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
+		model_work::verify_id($query_params);
 		$work = model_work::get_works($company, $work_params)[0];
 		model_work::is_data_work($work);
 		$sql = new sql();
@@ -184,6 +205,7 @@ class model_query{
 	* Передает заявку в работу.
 	*/
 	public static function to_working_query(data_company $company, data_query $query_params){
+		model_company::verify_id($company);
 		self::verify_id($query_params);
 		$query = self::get_queries($company, $query_params)[0];
 		self::is_data_query($query);
@@ -193,7 +215,7 @@ class model_query{
 		$query->time_work = time();
 		$sql = new sql();
 		$sql->query("UPDATE `queries` SET `status` = :status, `worktime` = :time_work
-				WHERE `company_id` = :company_id AND `id` = :query_id");
+					 WHERE `company_id` = :company_id AND `id` = :query_id");
 		$sql->bind(':status', $query->status, PDO::PARAM_STR);
 		$sql->bind(':time_work', $query->time_work, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
@@ -206,7 +228,7 @@ class model_query{
 	* @retrun array из data_query
 	*/
 	public static function create_query(data_company $company, data_query $query, $initiator, 
-		data_query_work_type $query_work_type_params, data_current_user $current_user){
+				data_query_work_type $query_work_type_params, data_current_user $current_user){
 		try{
 			sql::begin();
 			if(empty($query->description))
@@ -272,6 +294,7 @@ class model_query{
 	* Возвращает следующий для вставки номер заявки.
 	*/
 	private static function get_insert_query_number(data_company $company, $time){
+		model_company::verify_id($company);
 		$time = getdate($time);
 		$sql = new sql();
 		$sql->query("SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
@@ -292,8 +315,10 @@ class model_query{
 	* @return array
 	*/
 	public static function get_queries(data_company $company, data_query $query){
+		model_company::verify_id($company);
  		$sql = new sql();
 		if(!empty($query->id)){
+			self::verify_id($query);
 			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
 				`queries`.`payment-status` as `payment_status`,
@@ -315,11 +340,14 @@ class model_query{
 				`streets`.`name` as `street_name`,
 				`query_worktypes`.`name` as `work_type_name`
 				FROM `queries`, `houses`, `streets`, `query_worktypes`
-				WHERE `queries`.`house_id` = `houses`.`id`
+				WHERE `queries`.`company_id` = :company_id
+				AND `queries`.`house_id` = `houses`.`id`
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `queries`.`id` = :id");
+			$sql->bind(':id', $query->id, PDO::PARAM_INT);
 		}elseif(!empty($query->number)){
+			self::verify_number($query);
 			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
 				`queries`.`payment-status` as `payment_status`,
@@ -341,11 +369,13 @@ class model_query{
 				`streets`.`name` as `street_name`,
 				`query_worktypes`.`name` as `work_type_name`
 				FROM `queries`, `houses`, `streets`, `query_worktypes`
-				WHERE `queries`.`house_id` = `houses`.`id`
+				WHERE `queries`.`company_id` = :company_id
+				AND `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `querynumber` = :number
 				ORDER BY `opentime` DESC");
+			$sql->bind(':number', $query->number, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -368,11 +398,14 @@ class model_query{
 				`streets`.`name` as `street_name`,
 				`query_worktypes`.`name` as `work_type_name`
 				FROM `queries`, `houses`, `streets`, `query_worktypes`
-				WHERE `queries`.`house_id` = `houses`.`id`
+				WHERE `queries`.`company_id` = :company_id
+				AND `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close");
+			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
+			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				if(!in_array($query->status, ['open', 'close', 'working', 'reopen']))
@@ -400,14 +433,7 @@ class model_query{
 			}
 			$sql->query(" ORDER BY `queries`.`opentime` DESC");
 		}
-		if(!empty($query->id))
-			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-		elseif(!empty($query->number))
-			$sql->bind(':number', $query->number, PDO::PARAM_INT);
-		else{
-			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
-			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-		}
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		return $sql->map(new data_query(), 'Проблема при выборке пользователей.');
 	}
 	/**
@@ -427,7 +453,6 @@ class model_query{
 				AND `query2number`.`query_id` = :id
 				ORDER BY (`flats`.`flatnumber` + 0)");
 			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
 				`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
@@ -444,12 +469,12 @@ class model_query{
 				ORDER BY (`flats`.`flatnumber` + 0)");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);
 			}
 		}
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при выборке лицевых счетов.');
 		$result = ['structure' => [], 'numbers' => []];
 		while($row = $sql->row()){
@@ -478,7 +503,6 @@ class model_query{
 				AND `users`.`id` = `query2user`.`user_id`
 				AND `query2user`.`query_id` = :id");
 			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2user`.`query_id`,  `query2user`.`class`, `users`.`id`,
 				`users`.`firstname`, `users`.`lastname`, `users`.`midlename`
@@ -492,12 +516,12 @@ class model_query{
 			$sql->query(" ORDER BY `opentime` DESC");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);
 			}
 		}
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при выборке пользователей.');
 		$result = ['structure' => [], 'users' => []];
 		while($row = $sql->row()){
@@ -528,7 +552,6 @@ class model_query{
 				AND `works`.`id` = `query2work`.`work_id`
 				AND `query2work`.`query_id` = :id");
 			$sql->bind(':id', $query->id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
 				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
@@ -542,13 +565,13 @@ class model_query{
 				AND `queries`.`opentime` <= :time_close");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);
 			}
 			$sql->query(" ORDER BY `queries`.`opentime` DESC");
 		}
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при выборке работ.');
 		$result = ['structure' => [], 'works' => []];
 		while($row = $sql->row()){
@@ -611,6 +634,7 @@ class model_query{
 	* Удаляет пользователя из заявки.
 	*/
 	public static function remove_user(data_company $company, data_query $query_params, data_user $user_params, $class){
+		model_company::verify_id($company);
 		self::verify_id($query_params);
 		model_user::verify_id($user_params);
 		if(array_search($class, ['manager', 'performer']) === false)
@@ -634,6 +658,7 @@ class model_query{
 	* Обновляет работу из заявки.
 	*/
 	public static function remove_work(data_company $company, data_query $query_params, data_work $work_params){
+		model_company::verify_id($company);
 		self::verify_id($query_params);
 		model_work::verify_id($work_params);
 		$query = self::get_queries($company, $query_params)[0];
@@ -654,6 +679,7 @@ class model_query{
 	* Обновляет описание заявки.
 	*/
 	public static function update_description(data_company $company, data_query $query){
+		model_company::verify_id($company);
 		self::verify_id($query);
 		self::verify_description($query);
 		$sql = new sql();
@@ -669,6 +695,7 @@ class model_query{
 	* Обновляет контактную информацию.
 	*/
 	public static function update_contact_information(data_company $company, data_query $query){
+		model_company::verify_id($company);
 		self::verify_id($query);
 		$sql = new sql();
 		$sql->query("UPDATE `queries` SET `addinfo-name` = :fio, 
@@ -686,6 +713,7 @@ class model_query{
 	* Обновляет статус оплаты.
 	*/
 	public static function update_payment_status(data_company $company, data_query $query_params){
+		model_company::verify_id($company);
 		self::verify_id($query_params);
 		if(array_search($query_params->payment_status, ['paid', 'unpaid', 'recalculation']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
@@ -705,6 +733,7 @@ class model_query{
 	* Обновляет статус реакции.
 	*/
 	public static function update_warning_status(data_company $company, data_query $query_params){
+		model_company::verify_id($company);
 		self::verify_id($query_params);
 		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
 			throw new e_model('Несоответствующие параметры: payment_status.');
@@ -724,6 +753,7 @@ class model_query{
 	* Обновляет тип работ.
 	*/
 	public static function update_work_type(data_company $company, data_query $query_params){
+		model_company::verify_id($company);
 		self::verify_id($query_params);
 		self::verify_work_type_id($query_params);
 		$query = self::get_queries($company, $query_params)[0];
@@ -838,8 +868,6 @@ class model_query{
 	* Верификация ФИО контакта заявки.
 	*/
 	public static function verify_contact_fio(data_query $query){
-		if(empty($query->contact_fio))
-			throw new e_model('ФИО контакта заявки заданы не верно.');
 	}
 	/**
 	* Верификация телефона контакта заявки.
