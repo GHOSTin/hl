@@ -65,6 +65,15 @@ class controller_query{
 				'numbers' => model_query::get_numbers($company, $query)];
 	}
 
+	public static function private_reopen_query(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$company = model_session::get_company();
+		return ['queries' => model_query::reopen_query($company, $query),
+				'users' => model_query::get_users($company, $query),
+				'numbers' => model_query::get_numbers($company, $query)];
+	}
+
 	public static function private_to_working_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
@@ -138,6 +147,13 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_close_query(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
+	}
+
+	public static function private_get_dialog_reopen_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
 		model_query::verify_id($query);

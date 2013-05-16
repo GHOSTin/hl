@@ -217,7 +217,15 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	})	
+	})
+
+	$('body').on('click', '.get_dialog_reopen_query', function(){
+		$.get('get_dialog_reopen_query',{
+			id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	})
 	
 	$('body').on('click', '.get_dialog_to_working_query', function(){
 		$.get('get_dialog_to_working_query',{

@@ -43,6 +43,9 @@
 	{% if query.status == 'open' %}
 		<li><a href="#" class="get_dialog_to_working_query">Передать в работу</a></li>
 	{% endif %}
+	{% if query.status == 'close' %}
+		<li><a href="#" class="get_dialog_reopen_query">Переоткрыть</a></li>
+	{% endif %}
 	</ul>
 	<ul class="query-general">
 		<li>Время открытия: {{query.time_open|date('H:i d.m.Y')}}</li>

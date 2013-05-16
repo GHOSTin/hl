@@ -202,6 +202,25 @@ class model_query{
 		return [$query];
 	}
 	/**
+	* Переоткрывает заявку.
+	*/
+	public static function reopen_query(data_company $company, data_query $query_params){
+		self::verify_id($query_params);
+		$query = self::get_queries($company, $query_params)[0];
+		self::is_data_query($query);
+		if($query->status !== 'close')
+			throw new e_model('Заявка не в том статусе чтобы её можно было переоткрыть.');
+		$query->status = 'reopen';
+		$sql = new sql();
+		$sql->query("UPDATE `queries` SET `status` = :status
+					WHERE `company_id` = :company_id AND `id` = :query_id");
+		$sql->bind(':status', $query->status, PDO::PARAM_STR);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
+		$sql->execute('Ошибка при переоткрытии заявки.');
+		return [$query];
+	}
+	/**
 	* Передает заявку в работу.
 	*/
 	public static function to_working_query(data_company $company, data_query $query_params){
