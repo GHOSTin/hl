@@ -37,8 +37,11 @@
 	{% if rules.showDocs == true %}
 		<li><a href="#" class="get_documents">Документы</a></li>
 	{% endif %}
-	{% if rules.closeQuery == true and query.status in ['open', 'working', 'reopen'] %}
+	{% if rules.closeQuery == true and query.status in ['open', 'working'] %}
 		<li><a href="#" class="get_dialog_close_query">Закрыть заявку</a></li>
+	{% endif %}
+	{% if rules.closeQuery == true and query.status == 'reopen' %}
+		<li><a href="#" class="get_dialog_reclose_query">Перезакрыть заявку</a></li>
 	{% endif %}
 	{% if query.status == 'open' %}
 		<li><a href="#" class="get_dialog_to_working_query">Передать в работу</a></li>
