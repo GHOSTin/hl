@@ -1,4 +1,5 @@
 <?php
+require_once 'lang.php';
 // common
 require_once 'framework_configuration.php';
 require_once 'framework_sugar.php';
