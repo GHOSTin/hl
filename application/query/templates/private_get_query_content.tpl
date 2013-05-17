@@ -93,7 +93,10 @@
 			<span class="cm get_dialog_edit_description">изменить</span>
 			{% endif %}</li>
 		{% if query.status in ['close', 'reopen'] %}
-			<li>Причина закрытия: {{query.close_reason}}</li>
+			<li>Причина закрытия: {{query.close_reason}}
+			{% if query.status == 'reopen' %}
+			<span class="cm get_dialog_edit_reason">изменить</span>
+			{% endif %}</li>
 		{% endif %}
 		<lo>
 			<div>Контактная информация

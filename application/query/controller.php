@@ -190,6 +190,13 @@ class controller_query{
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
+	public static function private_get_dialog_edit_reason(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		model_query::verify_id($query);
+		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
+	}
+
 	public static function private_get_dialog_edit_contact_information(){
 		$query = new data_query();
 		$query->id = $_GET['id'];

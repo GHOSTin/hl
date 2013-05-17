@@ -69,6 +69,10 @@ class view_query{
 		return load_template('query.private_get_dialog_edit_description', $args);
 	}
 
+	public static function private_get_dialog_edit_reason($args){
+		return load_template('query.private_get_dialog_edit_reason', $args);
+	}
+
 	public static function private_get_dialog_edit_contact_information($args){
 		return load_template('query.private_get_dialog_edit_contact_information', $args);
 	}
