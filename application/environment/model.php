@@ -52,18 +52,23 @@ class model_environment{
 			$route[] = 'private_';
 			return $route;
 		}elseif(!empty($_POST['login'])){
-			self::create_batabase_connection();
-			$user = model_auth::auth_user();
-			if($user instanceof data_current_user){
-				model_session::set_user($user);
-				model_user::verify_company_id($user);
-				$company = new data_company();
-				$company->id = $user->company_id;
-				model_session::set_company($company);
-				$route = self::build_router();
-				$route[] = 'private_';
-				return $route;
-			}else{
+			try{
+				self::create_batabase_connection();
+				$user = model_auth::auth_user();
+				if($user instanceof data_current_user){
+					model_session::set_user($user);
+					model_user::verify_company_id($user);
+					$company = new data_company();
+					$company->id = $user->company_id;
+					model_session::set_company($company);
+					$route = self::build_router();
+					$route[] = 'private_';
+					return $route;
+				}else{
+					session_destroy();
+					return ['auth', 'show_auth_form', 'public_'];
+				}
+			}catch(exception $e){
 				session_destroy();
 				return ['auth', 'show_auth_form', 'public_'];
 			}
