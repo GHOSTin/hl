@@ -15,9 +15,9 @@ class model_environment{
 				$args = explode('/', $arr[0][0]);
 				return [$args[1], $args[2]];
 			}else
-				die('404');
+				throw new e_controller('Нет такой страницы.');
 		}catch(exception $e){
-			throw new e_model('Ошибка постройки маршрута.');
+			throw new e_controller('Нет такой страницы.');
 		}
 	}
 	/**
@@ -84,6 +84,10 @@ class model_environment{
 		try{
 			list($component, $method, $prefix) = self::create_session();
 			$controller = 'controller_'.$component;
+			if(!class_exists($controller))
+				throw new e_controller('Нет такой страницы.');
+			if(!method_exists($controller, $prefix.$method))
+				throw new e_controller('Нет такой страницы.');
 			$view = 'view_'.$component;
 			$user = model_session::get_user();
 			if($user instanceof data_current_user){
@@ -94,10 +98,17 @@ class model_environment{
 				self::verify_general_access($component);
 			}
 			$data['file_prefix'] = $component;
+			
 			$data['component'] = $controller::{$prefix.$method}();
 			return $view::{$prefix.$method}($data);
 		}catch(exception $e){
-			return $e;
+			if($e instanceof e_model){
+				return view_error::show_error($e);
+			}elseif($e instanceof e_controller){
+				return view_error::show_404();
+			}else{
+				return view_error::show_error($e);
+			}
 		}
 	}
 	/**

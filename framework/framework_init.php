@@ -18,8 +18,6 @@ function framework_autoload($class_name){
 		$file_path = ROOT.'/'.framework_configuration::application_folder.'/'.$component.'/'.$folder.'.php';
 		if(file_exists($file_path))
 			require_once $file_path;
-		else
-			die('Class '.$class_name.' not found!');
 	}else
 		return;
 }

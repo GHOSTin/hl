@@ -12,6 +12,6 @@
 {% block html %}
 <h3>Импорт лицевых счетов</h3>
 <div>
-    <input id="fileupload" type="file" name="file" data-url="/import/import_numbers/" multiple>
+    <input id="fileupload" type="file" name="file" data-url="/import/import_numbers" multiple>
 </div>
 {% endblock html %}

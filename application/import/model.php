@@ -16,6 +16,7 @@ class model_import{
 			// проверка существования городв
 			$city = new data_city();
 			$city->name = (string) $house_node->city;
+			model_city::verify_name($city);
 			$cities = model_city::get_cities($city);
 			if(count($cities) !== 1 OR !($cities[0] instanceof data_city))
 				throw new e_model('Проблема при выборе города.');
@@ -23,6 +24,7 @@ class model_import{
 			// проверка существования улицы
 			$street = new data_street();
 			$street->name = (string) $house_node->street;
+			model_street::verify_name($street);
 			$streets = model_city::get_streets($city, $street);
 			if(count($streets) !== 1 OR !($streets[0] instanceof data_street))
 				throw new e_model('Проблема при выборе улицы.');
@@ -51,7 +53,8 @@ class model_import{
 					}
 			if(empty($numbers))
 				throw new e_model('Нечего импортировать.');
-			$sql = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
+			$sql = new sql();
+			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
 					`numbers`.`flat_id`, `numbers`.`number`,
 					`numbers`.`type`, `numbers`.`status`,
@@ -60,17 +63,14 @@ class model_import{
 					`numbers`.`contact-fio` as `contact_fio`,
 					`numbers`.`contact-telephone` as `contact_telephone`,
 					`numbers`.`contact-cellphone` as `contact_cellphone`
-				FROM `numbers`
-				WHERE `number` IN(".implode(',', $number_params).")";
-			$stm = db::get_handler()->prepare($sql);
+					FROM `numbers` WHERE `number` IN(".implode(',', $number_params).")");
 			foreach($number_values as $key => $value)
-				$stm->bindParam(':number'.$key, $value, PDO::PARAM_STR);
-			stm_execute($stm, 'Проблема при выборке домов из базы данных.');
-			$stm->setFetchMode(PDO::FETCH_CLASS, 'data_number');
-			$old_numbers = [];
-			while($number = $stm->fetch())
+				$sql->bind(':number'.$key, $value, PDO::PARAM_STR);
+			$old_numbers = $sql->map(new data_number, 'Проблема при выборке домов из базы данных.');
+			$sql->close();
+			$numbers = [];
+			foreach($old_numbers as $number)
 				$numbers[$number->number]['old'] = $number;
-			$stm->closeCursor();
 			return ['file' => $file_array, 'city' => $city, 'street' => $street, 'house' => $house,
 					'numbers' => $numbers];
 		}catch(exception $e){
