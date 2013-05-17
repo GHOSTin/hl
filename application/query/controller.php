@@ -469,7 +469,9 @@ class controller_query{
 
 	public static function private_show_default_page(){
 		$query = new data_query();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);		$time = getdate($query->time_open['begin']);
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query,
+				$_SESSION['filters']['query'], model_session::get_restrictions()['query']); 
+		$time = getdate($query->time_open['begin']);
 		$now = getdate();
 		$street = new data_street();
 		$street->department_id = $query->department_id;

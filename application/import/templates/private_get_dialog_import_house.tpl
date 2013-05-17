@@ -12,6 +12,6 @@
 {% block html %}
 <h3>Импорт дома</h3>
 <div>
-    <input id="fileupload" type="file" name="file" data-url="/import/analize_house/" multiple>
+    <input id="fileupload" type="file" name="file" data-url="/import/analize_house" multiple>
 </div>
 {% endblock html %}

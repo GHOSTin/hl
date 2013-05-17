@@ -54,7 +54,7 @@ class model_city{
 		$sql->bind(':status', $street->status, PDO::PARAM_STR);
 		$sql->bind(':name', $street->name, PDO::PARAM_STR);
 		$sql->execute('Проблемы при вставке улицы в базу данных.');
-		$stm->close();
+		$sql->close();
 		return $street;
 	}
 	/**
@@ -78,7 +78,7 @@ class model_city{
 		$sql = new sql();
 		$sql->query("SELECT `id`, `status`, `name` FROM `cities`");
 		if(!empty($city->name)){
-			self::verify_name($city)
+			self::verify_name($city);
 			$sql->query(" WHERE `name` = :name");
 			$sql->bind(':name', $city->name, PDO::PARAM_STR);
 		}
@@ -88,7 +88,7 @@ class model_city{
 	* Возвращает список улиц города
 	*/
 	public static function get_streets(data_city $city, data_street $street){
-		self::verify_city_id($city);
+		self::verify_id($city);
 		$sql = new sql();
 		$sql->query("SELECT `id`, `city_id`, `status`, `name`
 					FROM `streets` WHERE `city_id` = :city_id");

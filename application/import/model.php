@@ -94,6 +94,7 @@ class model_import{
 		// проверка существования городв
 		$city = new data_city();
 		$city->name = (string) $house_node->city;
+		model_city::verify_name($city);
 		$cities = model_city::get_cities($city);
 		if(count($cities) !== 1 OR !($cities[0] instanceof data_city))
 			throw new e_model('Проблема при выборе города.');
@@ -101,6 +102,7 @@ class model_import{
 		// проверка существования улицы
 		$street = new data_street();
 		$street->name = (string) $house_node->street;
+		model_street::verify_name($street);
 		$streets = model_city::get_streets($city, $street);
 		$count = count($streets);
 		if($count === 0)

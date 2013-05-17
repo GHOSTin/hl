@@ -4,10 +4,10 @@ class model_street{
 	* Создает новый дом.
 	* @return object data_city
 	*/
-	public static function create_house(data_company $company, data_street $street, data_house $house){
-		model_house::verify_house_status($house);
-		model_house::verify_house_number($house);
-		self::verify_street_id($street);
+	public static function create_house(data_street $street, data_house $house){
+		model_house::verify_status($house);
+		model_house::verify_number($house);
+		self::verify_id($street);
 		$street = model_street::get_streets($street)[0];
 		model_street::is_data_street($street);
 		$houses = model_street::get_houses($street, $house);
@@ -20,10 +20,9 @@ class model_street{
 		$sql = new sql();
 		$sql->query("INSERT INTO `houses` (`id`, `company_id`, `city_id`, `street_id`,
 				`department_id`, `status`, `housenumber`)
-				VALUES (:house_id, :company_id, :city_id, :street_id, 1,
+				VALUES (:house_id, 1, :city_id, :street_id, 1,
 				:status, :number)");
 		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $house->company_id, PDO::PARAM_INT);
 		$sql->bind(':city_id', $house->city_id, PDO::PARAM_INT);
 		$sql->bind(':street_id', $house->street_id, PDO::PARAM_INT);
 		$sql->bind(':status', $house->status, PDO::PARAM_STR);
