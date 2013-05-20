@@ -52,9 +52,21 @@ class controller_import{
         $house = new data_house();
         $house->id = $_POST['house_id'];
         model_import::load_numbers(model_session::get_company(), $city, $street,
-                                $house, $numbers);
+                                    $house, $numbers);
         exit();
 
+        return true;
+    }
+
+    public static function private_load_flats(){
+        $flats = $_POST['flats'];
+        $city = new data_city();
+        $city->id = $_POST['city_id'];
+        $street = new data_street();
+        $street->id = $_POST['street_id'];
+        $house = new data_house();
+        $house->id = $_POST['house_id'];
+        model_import::load_flats($city, $street, $house, $flats);
         return true;
     }
 

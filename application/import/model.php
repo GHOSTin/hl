@@ -280,4 +280,34 @@ class model_import{
 		}
 		exit();
 	}
+
+	public static function load_flats(data_city $city_params, data_street $street_params,
+										data_house $house_params, $flats){
+		if(empty($flats))
+			throw new e_model('Нечего импортировать.');
+		$cities = model_city::get_cities($city_params);
+		if(count($cities) !== 1)
+			throw new e_model('Возвращено неверное количество городов.');
+		$city = $cities[0];
+		if(!($city instanceof data_city))
+			throw new e_model('Проблема при запросе города.');
+		$streets = model_street::get_streets($street_params);
+		if(count($streets) !== 1)
+			throw new e_model('Возвращено неверное количество улиц.');
+		$street = $streets[0];
+		if(!($street instanceof data_street))
+			throw new e_model('Проблема при запросе улицы.');
+		$houses = model_street::get_houses($street_params, $house_params);
+		if(count($streets) !== 1)
+			throw new e_model('Возвращено неверное количество домов.');
+		$house = $houses[0];
+		if(!($house instanceof data_house))
+			throw new e_model('Проблема при запросе дома.');
+		foreach($flats as $flat_data){
+			$flat = new data_flat();
+			$flat->number = $flat_data;
+			$flat->status = 'true';
+			model_house::create_flat($house, $flat);
+		}
+	}
 }

@@ -48,4 +48,8 @@ class view_import{
     public static function private_create_house($args){
         return load_template('import.private_create_house', $args);
     }
+
+    public static function private_load_flats($args){
+        return load_template('import.private_load_flats', $args);
+    }
 }

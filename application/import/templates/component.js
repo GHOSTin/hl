@@ -47,8 +47,7 @@ $(document).ready(function(){
     });
     $(document).on('click', '#toggle_checkboxes', function(){
         $('tbody input[type=checkbox]').prop('checked', ($(this).is(':checked')));
-    });
-    $(document).on('click', '#send_import_numbers', function(){
+    }).on('click', '#send_import_numbers', function(){
         var data = [];
         $('table.table > tbody > tr').each(function(){
             if($(this).find('td:first-child input[type=checkbox]').is(':checked')){
@@ -66,6 +65,21 @@ $(document).ready(function(){
             'street_id': $('.dialog-street_id').attr('street_id'),
             'house_id': $('.dialog-house_id').attr('house_id'),
             'numbers': data
+        });
+    }).on('click', '#send_import_flats', function(){
+        var data = [];
+        $('table.table > tbody > tr').each(function(){
+            if($(this).find('td:first-child input[type=checkbox]').is(':checked')){
+                data.push($(this).find('td:nth-child(3)').text());
+            }
+        });
+        $.post('load_flats', {
+            'city_id': $('.dialog-city_id').attr('city_id'),
+            'street_id': $('.dialog-street_id').attr('street_id'),
+            'house_id': $('.dialog-house_id').attr('house_id'),
+            'flats': data
+        },function(r){
+                init_content(r);
         });
     });
 });

@@ -1,6 +1,29 @@
 <?php
 class model_house{
 	/**
+	* Создает новую квартиру.
+	* @return object data_flat
+	*/
+	public static function create_flat(data_house $house, data_flat $flat){
+		if(count(self::get_flats($house, $flat)) > 0)
+			throw new e_model('Квартира уже существует!');
+		$flat->house_id = $house->id;
+		$flat->id = model_flat::get_insert_id();
+		model_flat::verify_id($flat);
+		model_flat::verify_house_id($flat);
+		model_flat::verify_status($flat);
+		model_flat::verify_number($flat);
+		$sql = new sql();
+		$sql->query("INSERT INTO `flats` (`id`, `company_id`, `house_id`, `status`, 
+					`flatnumber`) VALUES (:flat_id, 1, :house_id, :status, :number)");
+		$sql->bind(':flat_id', $flat->id, PDO::PARAM_INT);
+		$sql->bind(':house_id', $flat->house_id, PDO::PARAM_INT);
+		$sql->bind(':status', $flat->status, PDO::PARAM_STR);
+		$sql->bind(':number', $flat->number, PDO::PARAM_STR);
+		$sql->execute('Не все параметры заданы правильно.');
+		return $flat;
+	}
+	/**
 	* Создает новую улицу.
 	* @return object data_street
 	*/

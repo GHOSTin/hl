@@ -1,31 +1,10 @@
 <?php
 class model_flat{
-
-	public static function create_flat(data_house $house, data_flat $flat, data_current_user $user){
-		$flat->company_id = $user->company_id; // TODO: Убрать привязку квартиры к компании
-		$flat->house_id = $house->id;
-		$flat->id = self::get_insert_id();
-		self::verify_id($flat);
-		self::verify_company_id($flat);
-		self::verify_house_id($flat);
-		self::verify_status($flat);
-		self::verify_number($flat);
-		$sql = new sql();
-		$sql->query("INSERT INTO `flats` (`id`, `company_id`, `house_id`, `status`, 
-					`flatnumber`) VALUES (:flat_id, :company_id, :house_id, :status, :number)");
-		$sql->bind(':flat_id', $flat->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $flat->company_id, PDO::PARAM_INT);
-		$sql->bind(':house_id', $flat->house_id, PDO::PARAM_INT);
-		$sql->bind(':status', $flat->status, PDO::PARAM_STR);
-		$sql->bind(':number', $flat->number, PDO::PARAM_STR);
-		$sql->execute('Не все параметры заданы правильно.');
-		return $flat;
-	}
 	/**
 	* Возвращает следующий для вставки идентификатор квартиры.
 	* @return int
 	*/
-	private static function get_insert_id(){
+	public static function get_insert_id(){
 		$sql = new sql();
 		$sql->query("SELECT MAX(`id`) as `max_flat_id` FROM `flats`");
 		$sql->execute('Проблема при опредении следующего flat_id.');
