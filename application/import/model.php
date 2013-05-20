@@ -52,11 +52,10 @@ class model_import{
 			return ['file' => $file_array, 'city' => $city, 'street' => $street, 'house' => $house,
 					'old_flats' => $old_flats, 'new_flats' => $new_flats];
 		}catch(exception $e){
-			die($e->getMessage());
 			if($e instanceof e_model)
-				return ['error' => $e->getMessage()];
+				throw new e_model($e->getMessage());
 			else
-				return ['error' => 'Неизвестная ошибка.'];
+				throw new e_model('Неизвестная ошибка!');
 		}
 	}
 	/*
