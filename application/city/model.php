@@ -103,7 +103,7 @@ class model_city{
 	/*
 	* Возвращает список улиц города
 	*/
-	public static function get_numbers(data_city $city, data_number $number, data_company $company){
+	public static function get_numbers(data_company $company, data_city $city, data_number $number){
 		self::verify_id($city);
 		model_number::verify_number($number);
 		model_company::verify_id($company);

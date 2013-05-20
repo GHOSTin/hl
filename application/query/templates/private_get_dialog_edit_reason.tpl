@@ -2,10 +2,10 @@
 {% set query = component.queries[0] %}
 {% block script %}
 	show_dialog(get_hidden_content());
-	$('.update_description').click(function(){
-		$.get('update_description',{
+	$('.update_reason').click(function(){
+		$.get('update_reason',{
 			id: {{query.id}},
-			description: $('.dialog-description').val()
+			reason: $('.dialog-description').val()
 			},function(r){
 				init_content(r);
 				$('.dialog').modal('hide');

@@ -27,6 +27,7 @@
                 {% if number|length > 1 %}
                     <td><input type="checkbox"></td>
                     <td><span style="color:red">UPD</span></td>
+                    <td>кв. №{{ number.old.flat_number }}</td>
                     <td>л/c №{{ number.old.number }}</td>
                     <td>
                         {% if number.old.fio != number.new.fio %}
@@ -42,12 +43,14 @@
                     {% if number.old|length > 0 %}
                         <td></td>
                         <td><span style="color:blue">OLD</span></td>
+                        <td>кв. №{{ number.old.flat_number }}</td>
                         <td>л/c №{{ number.old.number }}</td>
                         <td>{{ number.old.fio }}</td>
                     {% endif %}
                     {% if number.new|length > 0 %}
                         <td><input type="checkbox" checked="checked"></td>
                         <td><span style="color:green">NEW</span></td>
+                        <td>кв. №{{ number.new.flat_number }}</td>
                         <td>л/c №{{ number.new.number }}</td>
                         <td>{{ number.new.fio }}</td>
                     {% endif%}

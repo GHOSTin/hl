@@ -47,10 +47,11 @@ $(document).ready(function(){
         $('table.table > tbody > tr').each(function(){
             if($(this).find('td:first-child input[type=checkbox]').is(':checked')){
                 data.push({
-                    'number': $(this).find('td:nth-child(3)').text().replace('л/c №', ''),
-                    'fio': ($(this).find('td:nth-child(4) select').length)?
-                                $(this).find('td:nth-child(4) select').val():
-                                $(this).find('td:nth-child(4)').text()
+                    'flat': $(this).find('td:nth-child(3)').text().replace('кв. №', ''),
+                    'number': $(this).find('td:nth-child(4)').text().replace('л/c №', ''),
+                    'fio': ($(this).find('td:nth-child(5) select').length)?
+                                $(this).find('td:nth-child(5) select').val():
+                                $(this).find('td:nth-child(5)').text()
                 });
             }
         });

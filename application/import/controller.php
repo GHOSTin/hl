@@ -47,7 +47,8 @@ class controller_import{
         $street->id = $_POST['street_id'];
         $house = new data_house();
         $house->id = $_POST['house_id'];
-        model_import::load_numbers($city, $street, $house, $numbers, $_SESSION['user']);
+        model_import::load_numbers(model_session::get_company(), $city, $street,
+                                $house, $numbers);
         exit();
 
         return true;

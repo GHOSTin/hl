@@ -37,13 +37,17 @@ class model_import{
 				throw new e_model('Проблема при выборе дома.');
 			$house = $houses[0];
 			$i = 0;
-			foreach($xml->flat as $flat_node)
+			foreach($xml->flat as $flat_node){
+				$flat_number = (string) $flat_node->attributes()->number;
+				if(empty($flat_number))
+					throw new e_model('У лицевого нет номера квартиры.');
 				if(count($flat_node->number) > 0)
 					foreach($flat_node as $number_node){
 						$number_attr = $number_node->attributes();
 						$number = new data_number();
 						$number->fio = (string) $number_attr->fio;
 						$number->number = (string) $number_attr->number;
+						$number->flat_number = $flat_number;
 						if(isset($numbers[$number->number]))
 							throw new e_model('В xml файле повторются номера лицевых счетов.');
 						$numbers[$number->number]['new'] = $number;
@@ -51,6 +55,7 @@ class model_import{
 						$number_params[] = ':number'.$i;
 						$i++;
 					}
+			}
 			if(empty($numbers))
 				throw new e_model('Нечего импортировать.');
 			$sql = new sql();
@@ -62,13 +67,14 @@ class model_import{
 					`numbers`.`cellphone`, `numbers`.`password`,
 					`numbers`.`contact-fio` as `contact_fio`,
 					`numbers`.`contact-telephone` as `contact_telephone`,
-					`numbers`.`contact-cellphone` as `contact_cellphone`
-					FROM `numbers` WHERE `number` IN(".implode(',', $number_params).")");
+					`numbers`.`contact-cellphone` as `contact_cellphone`,
+					`flats`.`flatnumber` as `flat_number`
+					FROM `numbers`, `flats` WHERE `numbers`.`number` IN(".implode(',', $number_params).")
+					AND `numbers`.`flat_id` = `flats`.`id`");
 			foreach($number_values as $key => $value)
 				$sql->bind(':number'.$key, $value, PDO::PARAM_STR);
 			$old_numbers = $sql->map(new data_number, 'Проблема при выборке домов из базы данных.');
 			$sql->close();
-			$numbers = [];
 			foreach($old_numbers as $number)
 				$numbers[$number->number]['old'] = $number;
 			return ['file' => $file_array, 'city' => $city, 'street' => $street, 'house' => $house,
@@ -157,8 +163,9 @@ class model_import{
 		return ['file' => $file_array, 'city' => $city, 'street' => $street,
 		'house' => $house, 'house_number' => (string) $house_node->number];
 	}
-	public static function load_numbers(data_city $city_params, data_street $street_params,
-		data_house $house_params, $numbers, data_user $current_user){
+
+	public static function load_numbers(data_company $company, data_city $city_params,
+						data_street $street_params, data_house $house_params, $numbers){
 		if(empty($numbers))
 			throw new e_model('Нечего импортировать.');
 		$cities = model_city::get_cities($city_params);
@@ -180,20 +187,38 @@ class model_import{
 		if(!($house instanceof data_house))
 			throw new e_model('Проблема при запросе дома.');
 		foreach($numbers as $number_data){
-			$number = new data_number();
-			$number->number = $number_data['number'];
-			$number->fio = $number_data['fio'];
-			$numbers = model_city::get_numbers($city, $number, $_SESSION['user']);
-			if(count($numbers) > 1)
-				throw new e_model('Возвращается больше чем один лицевой счет.');
-			// лицевой счет существует нужно апдейтить
-			if(count($numbers) === 1)
-				$number = $numbers[0];
-				if(!($number instanceof data_number))
-					throw new e_model('Лицевой счет не найден.');
-			// лицевой счет отсутствует, нужно создавать
-			else
-			exit();
+			// print($number_data['flat']);
+			$flat = new data_flat();
+			$flat->number = $number_data['flat'];
+			$flats = model_house::get_flats($house, $flat);
+			$flat_count = count($flats);
+			if($flat_count > 1){
+				throw new e_model('Возвращается больше чем одна квартира!');
+			}elseif($flat_count === 0){
+				var_dump(model_house::create_flat($house, $flat));
+				exit();
+			}elseif($flat_count === 1){
+				$flat = $flats[0];
+			}else
+				throw new e_model('Проблема при проверке квартир!.');
+			model_flat::is_data_flat($flat);
+			// $number = new data_number();
+			// $number->number = $number_data['number'];
+			// $number->fio = $number_data['fio'];
+			// $numbers = model_city::get_numbers($company, $city, $number);
+			// if(count($numbers) > 1){
+			// 	throw new e_model('Возвращается больше чем один лицевой счет.');
+			// // лицевой счет существует нужно апдейтить
+			// }if(count($numbers) === 1){
+			// 	$number = $numbers[0];
+			// 	if(!($number instanceof data_number))
+			// 		throw new e_model('Лицевой счет не найден.');
+			// // лицевой счет отсутствует, нужно создавать
+			// }else{
+			// 	model_city::create_number($company, $city, $number);
+			// }
+			// exit();
 		}
+		exit();
 	}
 }

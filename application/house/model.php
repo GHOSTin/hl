@@ -1,6 +1,43 @@
 <?php
 class model_house{
 	/**
+	* Создает новую улицу.
+	* @return object data_street
+	*/
+	public static function create_street(data_house $house, data_flat $flat){
+		model_house::verify_id($house);
+		model_flat::verify_id($house);
+
+		exit();
+		$cities = self::get_cities($city);
+		if(count($cities) !== 1)
+			throw new e_model('Проблемы при выборке города.');
+		$city = $cities[0];
+		self::is_data_city($city);
+		$streets = self::get_streets($city, $street);
+		if(count($streets) > 0)
+			throw new e_model('Улица уже существует.');
+		$street->company_id = $user->company_id;
+		$street->city_id = $city->id;
+		$street->id = model_street::get_insert_id();
+		model_street::verify_company_id($street);
+		model_street::verify_id($street);
+		model_street::verify_city_id($street);
+		model_street::verify_status($street);
+		model_street::verify_name($street);
+		$sql = new sql();
+		$sql->query("INSERT INTO `streets` (`id`, `company_id`, `city_id`, `status`, `name`)
+					VALUES (:street_id, :company_id, :city_id, :status, :name)");
+		$sql->bind(':company_id', $street->company_id, PDO::PARAM_INT);
+		$sql->bind(':street_id', $street->id, PDO::PARAM_INT);
+		$sql->bind(':city_id', $street->city_id, PDO::PARAM_INT);
+		$sql->bind(':status', $street->status, PDO::PARAM_STR);
+		$sql->bind(':name', $street->name, PDO::PARAM_STR);
+		$sql->execute('Проблемы при вставке улицы в базу данных.');
+		$sql->close();
+		return $street;
+	}
+	/**
 	* Возвращает следующий для вставки идентификатор дома.
 	* @return int
 	*/
@@ -59,6 +96,23 @@ class model_house{
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		return $sql->map(new data_number(), 'Проблемы при выборке номеров.');
+	}
+	/**
+	* Возвращает лицевые счета дома.
+	* @return array из object data_flat
+	*/
+	public static function get_flats(data_house $house, data_flat $flat){
+		self::verify_id($house);
+		$sql = new sql();
+		$sql->query("SELECT `id`, `house_id`, `status`, `flatnumber` as `number`
+					FROM `flats` WHERE `house_id` = :house_id");
+		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
+		if(!empty($flat->number)){
+			model_flat::verify_number($flat);
+			$sql->query(" AND `id` = :flat_number");
+			$sql->bind(':flat_number', $flat->number, PDO::PARAM_INT);
+		}
+		return $sql->map(new data_flat(), 'Проблемы при выборке квартир.');
 	}
 	/**
 	* Верификация идентификатора города.
