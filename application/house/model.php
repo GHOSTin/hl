@@ -109,7 +109,7 @@ class model_house{
 		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		if(!empty($flat->number)){
 			model_flat::verify_number($flat);
-			$sql->query(" AND `id` = :flat_number");
+			$sql->query(" AND `flatnumber` = :flat_number");
 			$sql->bind(':flat_number', $flat->number, PDO::PARAM_INT);
 		}
 		return $sql->map(new data_flat(), 'Проблемы при выборке квартир.');

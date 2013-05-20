@@ -10,9 +10,9 @@
     });
 {% endblock js %}
 {% block html %}
-<h3>Импорт дома</h3>
-<p class="alert">Для создания дома в файле должны быть указаны название улицы и название города.</p>
+<h3>Импорт квартир</h3>
+<p class="alert">Для создания улиц в файле должны быть указаны название улицы, название города, номер дома.</p>
 <div>
-    <input id="fileupload" type="file" name="file" data-url="/import/analize_house" multiple>
+    <input id="fileupload" type="file" name="file" data-url="/import/analize_flats" multiple>
 </div>
 {% endblock html %}
