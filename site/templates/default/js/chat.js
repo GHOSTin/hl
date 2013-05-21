@@ -229,7 +229,7 @@ User.prototype.loadPreviousMessages = function (messages, status) {
         for (var id in messages) {
             var message = messages[id];
             var unread = (!message.unread) ? 0 : 1;
-            message.out = (message.uid !== parseInt($('.current_user').attr('user_id'))) ? 0 : 1;
+            message.out = (message.uid !== parseInt(get_cookie('uid'))) ? 0 : 1;
             var flags = unread + message.out * 2;
             var params = [
                 message._id,
@@ -369,7 +369,7 @@ History_dates.prototype.loadHistory = function (messages) {
         this.clear();
         for (var id in messages) {
             var message = messages[id];
-            message.out = (message.uid !== parseInt($('.current_user').attr('user_id'))) ? 0 : 1;
+            message.out = (message.uid !== parseInt(get_cookie('uid'))) ? 0 : 1;
             var flags = message.out;
             var params = [
                 message._id,
