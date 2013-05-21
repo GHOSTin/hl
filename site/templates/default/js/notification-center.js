@@ -61,6 +61,7 @@ $.extend($.expr[':'], {
             .indexOf((match[3] || "").toLowerCase()) >= 0;
     }
 });
+var uid = parseInt(get_cookie('uid'));
 /** тайтл страницы */
 var global_title = $(document).attr('title') || '';
 /** сокет-соединение для центра уведомлений */
@@ -89,8 +90,8 @@ var intervalID = setInterval(tryReconnect, 60000);
  */
 notify_center.on('connect', function(){
     if($('.current_user').length){
-        notify_center.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
-        chat.json.send({"type":"user_ready", "data":{'uid': parseInt($('.current_user').attr('user_id'))}});
+        notify_center.json.send({"type":"user_ready", "data":{'uid': uid}});
+        chat.json.send({"type":"user_ready", "data":{'uid': uid}});
     }
     clearInterval(intervalID);
 });
