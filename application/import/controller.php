@@ -53,8 +53,6 @@ class controller_import{
         $house->id = $_POST['house_id'];
         model_import::load_numbers(model_session::get_company(), $city, $street,
                                     $house, $numbers);
-        exit();
-
         return true;
     }
 

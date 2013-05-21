@@ -51,7 +51,7 @@ class model_number{
 	* Возвращает следующий для вставки идентификатор лицевого счета.
 	* @return int
 	*/
-	private static function get_insert_id(data_company $company, data_city $city){
+	public static function get_insert_id(data_company $company, data_city $city){
 		model_company::verify_id($company);
 		model_city::verify_id($city);
 		$sql = new sql();
@@ -63,7 +63,7 @@ class model_number{
 		if($sql->count() !== 1)
 			throw new e_model('Проблема при опредении следующего number_id.');
 		$number_id = (int) $sql->row()['max_number_id'] + 1;
-		return $nuber_id;
+		return $number_id;
 	}
 	/**
 	* Возвращает список лицевых счетов.

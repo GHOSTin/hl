@@ -65,6 +65,8 @@ $(document).ready(function(){
             'street_id': $('.dialog-street_id').attr('street_id'),
             'house_id': $('.dialog-house_id').attr('house_id'),
             'numbers': data
+        },function(r){
+                init_content(r);
         });
     }).on('click', '#send_import_flats', function(){
         var data = [];

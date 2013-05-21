@@ -52,4 +52,8 @@ class view_import{
     public static function private_load_flats($args){
         return load_template('import.private_load_flats', $args);
     }
+
+    public static function private_load_numbers($args){
+        return load_template('import.private_load_numbers', $args);
+    }
 }
