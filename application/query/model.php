@@ -739,6 +739,22 @@ class model_query{
 		return [$query];
 	}
 	/**
+	* Обновляет описание заявки.
+	*/
+	public static function update_reason(data_company $company, data_query $query){
+		model_company::verify_id($company);
+		self::verify_id($query);
+		self::verify_close_reason($query);
+		$sql = new sql();
+		$sql->query("UPDATE `queries` SET `description-close` = :reason
+					WHERE `company_id` = :company_id AND `id` = :query_id");
+		$sql->bind(':reason', $query->close_reason, PDO::PARAM_STR);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
+		$sql->execute('Ошибка при обновлении причины закрытия заявки.');
+		return [$query];
+	}
+	/**
 	* Обновляет контактную информацию.
 	*/
 	public static function update_contact_information(data_company $company, data_query $query){

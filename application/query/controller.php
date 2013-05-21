@@ -530,6 +530,13 @@ class controller_query{
 		return ['queries' => model_query::update_description(model_session::get_company(), $query)];
 	}
 
+	public static function private_update_reason(){
+		$query = new data_query();
+		$query->id = $_GET['id'];
+		$query->close_reason = $_GET['reason'];
+		return ['queries' => model_query::update_reason(model_session::get_company(), $query)];
+	}
+
 	public static function private_update_contact_information(){
 		$query = new data_query();
 		$query->id = $_GET['id'];

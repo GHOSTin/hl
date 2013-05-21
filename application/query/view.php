@@ -191,6 +191,10 @@ class view_query{
 		return load_template('query.private_update_description', $args);
 	}
 
+	public static function private_update_reason($args){
+		return load_template('query.private_update_reason', $args);
+	}
+
 	public static function private_update_contact_information($args){
 		return load_template('query.private_update_contact_information', $args);
 	}
