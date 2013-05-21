@@ -27,6 +27,7 @@ class model_session{
             self::set_cockies();
             $_SESSION['user'] = $user;
             self::$user = $user;
+            setcookie("uid", $user->id, 0);
         }else
             throw new exception('Нельзя дважды определить пользователя.');
     }
