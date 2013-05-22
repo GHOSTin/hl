@@ -1,4 +1,5 @@
 {% extends "dialog.tpl" %}
+{% set query = component.queries[0] %}
 {% block title %}Изменение причины закрытия{% endblock title %}
 {% block dialog %}
 	<textarea class="dialog-description" style="width:500px; height:100px;">{{query.close_reason}}</textarea>

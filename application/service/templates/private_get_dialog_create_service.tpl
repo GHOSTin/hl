@@ -1,18 +1,19 @@
 {% extends "dialog.tpl" %}
-{% set query = component.queries[0] %}
+{% block title %}Диалог создания новой услуги{% endblock title %}
+{% block dialog %}
+	<input type="input" class="dialog-input-name">
+	<p>В названии услуги могут быть использованы буквы русского алфавита, цифры, пробелы.</p>
+{% endblock dialog %}
+{% block buttons %}
+	<div class="btn create_service">Создать</div>
+{% endblock buttons %}
 {% block script %}
 	$('.create_service').click(function(){
 		$.get('create_service',{
+			name: $('.dialog-input-name').val()
 			},function(r){
 				init_content(r);
 				$('.dialog').modal('hide');
 			});
 	});
 {% endblock script %}
-{% block title %}Диалог создания новой услуги{% endblock title %}
-{% block dialog %}
-	<input type="dialog-input-name">
-{% endblock dialog %}
-{% block buttons %}
-	<div class="btn create_service">Создать</div>
-{% endblock buttons %}
