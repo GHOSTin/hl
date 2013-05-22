@@ -73,8 +73,6 @@ class controller_number{
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
         $time = $_GET['time'];
-//        var_dump(model_number::get_meter_data($meter, $number, model_session::get_user(), mktime(12, 0, 0, 1, 1, getdate($time)['year'])));
-//        exit();
         return ['number' => $number, 'meter' => $meter, 'time' => $_GET['time'],
                 'meter_data' =>model_number::get_meter_data(model_session::get_company(), $meter, $number, mktime(12, 0, 0, 1, 1, getdate($time)['year']))];
     }
