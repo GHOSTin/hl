@@ -31,12 +31,12 @@ class model_service{
             throw new e_model('Такая услуга уже существует.');
         $service->id = self::get_insert_id();
         $service->company_id = $company->id;
-        $sql = new sql();
-        $sql->query("INSERT INTO `services` (`id`, `company_id`, `name`)
-                    VALUES (:id, :company_id, :name)");
         self::verify_id($service);
         self::verify_company_id($service);
         self::verify_name($service);
+        $sql = new sql();
+        $sql->query("INSERT INTO `services` (`id`, `company_id`, `name`)
+                    VALUES (:id, :company_id, :name)");
         $sql->bind(':id', $service->id, PDO::PARAM_INT);
         $sql->bind(':company_id', $service->company_id, PDO::PARAM_STR);
         $sql->bind(':name', $service->name, PDO::PARAM_INT);

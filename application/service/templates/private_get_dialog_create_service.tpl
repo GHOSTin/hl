@@ -12,8 +12,8 @@
 		$.get('create_service',{
 			name: $('.dialog-input-name').val()
 			},function(r){
-				init_content(r);
 				$('.dialog').modal('hide');
+				init_content(r);
 			});
 	});
 {% endblock script %}
