@@ -13,6 +13,6 @@ class controller_service{
         $service = new data_service();
         $service->name = $_GET['name'];
         model_service::create_service(model_session::get_company(), $service);
-        return true;
+        return ['services' => model_service::get_services(model_session::get_company(), new data_service())];
     }
 }

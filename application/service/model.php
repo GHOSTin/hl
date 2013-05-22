@@ -13,13 +13,13 @@ class model_service{
         $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
         if(!empty($service->id)){
             self::verify_id($service);
-            $sql->query(" WHERE `id` = :id");
+            $sql->query(" AND `id` = :id");
             $sql->bind(':id', $service->id, PDO::PARAM_INT);
         }
         if(!empty($service->name)){
             self::verify_name($service);
-            $sql->query(" WHERE `name` = :name");
-            $sql->bind(':name', $service->name, PDO::PARAM_INT);
+            $sql->query(" AND `name` = :name");
+            $sql->bind(':name', $service->name, PDO::PARAM_STR);
         }
         return $sql->map(new data_service(), 'Проблема при выборке услуг.');
     }
@@ -32,7 +32,7 @@ class model_service{
         model_company::verify_id($company);
         if(count(self::get_services($company, $service)) > 0)
             throw new e_model('Такая услуга уже существует.');
-        $service->id = self::get_insert_id();
+        $service->id = self::get_insert_id($company);
         $service->company_id = $company->id;
         self::verify_id($service);
         self::verify_company_id($service);
@@ -41,8 +41,8 @@ class model_service{
         $sql->query("INSERT INTO `services` (`id`, `company_id`, `name`)
                     VALUES (:id, :company_id, :name)");
         $sql->bind(':id', $service->id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $service->company_id, PDO::PARAM_STR);
-        $sql->bind(':name', $service->name, PDO::PARAM_INT);
+        $sql->bind(':company_id', $service->company_id, PDO::PARAM_INT);
+        $sql->bind(':name', $service->name, PDO::PARAM_STR);
         $sql->execute('Проблемы при создании услуги.');
         $sql->close();
         return $service;
@@ -52,9 +52,12 @@ class model_service{
     * Возвращает следующий для вставки идентификатор услуги.
     * @return int
     */
-    private static function get_insert_id(){
+    private static function get_insert_id(data_company $company){
+        model_company::verify_id($company);
         $sql = new sql();
-        $sql->query("SELECT MAX(`id`) as `max_id` FROM `services`");
+        $sql->query("SELECT MAX(`id`) as `max_id` FROM `services`
+            WHERE `company_id` = :company_id");
+        $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
         $sql->execute('Проблема при опредении следующего service_id.');
         if($sql->count() !== 1)
             throw new e_model('Проблема при опредении следующего service_id.');
