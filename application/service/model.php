@@ -6,8 +6,11 @@ class model_service{
     * @return array из data_service
     */
     public static function get_services(data_company $company, data_service $service){
+        model_company::verify_id($company);
         $sql = new sql();
-        $sql->query("SELECT `id`, `company_id`, `name` FROM `services`");
+        $sql->query("SELECT `id`, `company_id`, `name` FROM `services`
+            WHERE `company_id` = :company_id");
+        $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
         if(!empty($service->id)){
             self::verify_id($service);
             $sql->query(" WHERE `id` = :id");
