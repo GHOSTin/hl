@@ -4,6 +4,11 @@ html,body{
     background-color: rgb(246,246,246);
 }
 .main{margin-top: 60px}
+
+.navbar .btn-navbar {
+    float: none;
+}
+
 #wrap{
     min-height: 100%;
     height: auto !important;

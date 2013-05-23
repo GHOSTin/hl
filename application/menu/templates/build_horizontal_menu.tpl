@@ -21,7 +21,12 @@
                 </li>
             </ul>
             <!-- end user, begin menu -->
-            <div class="nav-collapse">
+            <button type="button" class="btn btn-navbar pull-left" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <div class="nav-collapse collapse">
                 <ul class="nav">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
