@@ -5,7 +5,7 @@ html,body{
 }
 .main{margin-top: 60px}
 
-.navbar .btn-navbar {
+.navbar .btn-navbar.pull-left {
     float: none;
 }
 
