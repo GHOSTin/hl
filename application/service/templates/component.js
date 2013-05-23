@@ -1,11 +1,11 @@
 $(document).ready(function(){
-    
+    // выводит содержимое услуги
     $('body').on('click', '.get_service_content', function(){
-        if($(this).siblings().is('.houses')){
-            $(this).siblings('.houses').remove();
+        if($(this).siblings().is('.service_content')){
+            $(this).siblings('.service_content').remove();
         } else{
-            $.get('get_street_content',{
-                 id: $(this).parent().attr('street')
+            $.get('get_service_content',{
+                 id: get_service_id($(this))
                 },function(r){
                     init_content(r);
                 });

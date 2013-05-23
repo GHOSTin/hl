@@ -24,8 +24,9 @@ class model_service{
         return $sql->map(new data_service(), 'Проблема при выборке услуг.');
     }
 
-    /*
+    /**
     * Создает новую услугу
+    * @return data_service
     */
     public static function create_service(data_company $company, data_service $service){
         self::verify_name($service);
@@ -56,7 +57,7 @@ class model_service{
         model_company::verify_id($company);
         $sql = new sql();
         $sql->query("SELECT MAX(`id`) as `max_id` FROM `services`
-            WHERE `company_id` = :company_id");
+                    WHERE `company_id` = :company_id");
         $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
         $sql->execute('Проблема при опредении следующего service_id.');
         if($sql->count() !== 1)

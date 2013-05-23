@@ -1,7 +1,10 @@
 <?php
 class controller_service{
 
-    public static function private_show_default_page(){
+    public static function private_create_service(){
+        $service = new data_service();
+        $service->name = $_GET['name'];
+        model_service::create_service(model_session::get_company(), $service);
         return ['services' => model_service::get_services(model_session::get_company(), new data_service())];
     }
 
@@ -9,10 +12,13 @@ class controller_service{
         return true;
     }
 
-    public static function private_create_service(){
+    public static function private_get_service_content(){
         $service = new data_service();
-        $service->name = $_GET['name'];
-        model_service::create_service(model_session::get_company(), $service);
+        $service->id = $_GET['id'];
+        return ['services' => model_service::get_services(model_session::get_company(), $service)];
+    }
+
+    public static function private_show_default_page(){
         return ['services' => model_service::get_services(model_session::get_company(), new data_service())];
     }
 }

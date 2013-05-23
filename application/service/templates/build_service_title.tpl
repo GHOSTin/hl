@@ -1,1 +1,1 @@
-<li class="service" number="{{ service.id }}"><a class="get_service_content">{{ service.name }}</a></li>
+<li class="service" service="{{ service.id }}"><a class="get_service_content">{{ service.name }}</a></li>
