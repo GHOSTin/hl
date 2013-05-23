@@ -6,7 +6,7 @@
 {% block html %}
     <div class="service_content">
         <ul class="nav nav-pills">
-            <li><a>Переименовать</a></li>
+            <li><a class="get_dialog_rename_service">Переименовать</a></li>
         </ul>
     </div>
 {% endblock html %}

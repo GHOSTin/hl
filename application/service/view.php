@@ -9,8 +9,16 @@ class view_service{
         return load_template('service.private_get_dialog_create_service', $args);
     }
 
+    public static function private_get_dialog_rename_service($args){
+        return load_template('service.private_get_dialog_rename_service', $args);
+    }
+
     public static function private_get_service_content($args){
         return load_template('service.private_get_service_content', $args);
+    }
+
+    public static function private_rename_service($args){
+        return load_template('service.private_rename_service', $args);
     }
     
     public static function private_show_default_page($args){

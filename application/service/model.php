@@ -68,6 +68,36 @@ class model_service{
     }
 
     /**
+    * Создает новую услугу
+    * @return data_service
+    */
+    public static function rename_service(data_company $company, data_service $service){
+        self::verify_id($service);
+        self::verify_name($service);
+        $service_params = new data_service();
+        $service_params->name = $service->name;
+        if(count(self::get_services($company, $service_params)) > 0)
+            throw new e_model('Услуга с таким именем уже существует.');
+        $service_params = new data_service();
+        $service_params->id = $service->id;
+        $services = self::get_services($company, $service_params);
+        if(count($services) !== 1)
+            throw new e_model('Услуга с таким идентификатором не существует.');
+        $new_service = $services[0];
+        self::is_data_service($new_service);
+        $new_service->name = $service->name;
+        $sql = new sql();
+        $sql->query("UPDATE `services` SET `name` = :name
+                    WHERE `company_id` = :company_id AND `id` = :id");
+        $sql->bind(':id', $new_service->id, PDO::PARAM_INT);
+        $sql->bind(':company_id', $new_service->company_id, PDO::PARAM_INT);
+        $sql->bind(':name', $new_service->name, PDO::PARAM_STR);
+        $sql->execute('Проблема при переименовании услуги.');
+        $sql->close();
+        return $new_service;
+    }
+
+    /**
     * Верификация идентификатора компании.
     */
     public static function verify_company_id(data_service $service){
