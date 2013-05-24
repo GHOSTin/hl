@@ -1,5 +1,29 @@
 <?php
 class model_meter{
+
+	/**
+	* Возвращает список услуг
+	* @return array из data_service
+	*/
+	public static function get_meters(data_company $company, data_meter $meter){
+	    model_company::verify_id($company);
+	    $sql = new sql();
+	    $sql->query("SELECT `id`, `company_id`, `name` FROM `meters`
+	        WHERE `company_id` = :company_id");
+	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+	    if(!empty($meter->id)){
+	        self::verify_id($meter);
+	        $sql->query(" AND `id` = :id");
+	        $sql->bind(':id', $meter->id, PDO::PARAM_INT);
+	    }
+	    if(!empty($meter->name)){
+	        self::verify_name($meter);
+	        $sql->query(" AND `name` = :name");
+	        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
+	    }
+	    return $sql->map(new data_meter(), 'Проблема при выборке счетчиков.');
+	}
+
 	/**
 	* Верификация времени поверки счетчика.
 	*/
