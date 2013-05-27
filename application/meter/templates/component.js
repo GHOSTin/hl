@@ -12,6 +12,14 @@ $(document).ready(function(){
                 });
         }
 
+    // выводит диалог для добавления услуги
+    }).on('click', '.get_dialog_add_service', function(){
+        $.get('get_dialog_add_service',{
+            id: get_meter_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог для создания счетчика
     }).on('click', '.get_dialog_create_meter', function(){
         $.get('get_dialog_create_meter',{
