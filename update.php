@@ -24,6 +24,15 @@ try{
     $sql = new sql();
     $sql->query('ALTER TABLE `meters` add COLUMN `rates` TINYINT UNSIGNED NOT NULL DEFAULT 1');
     $sql->execute('Столбец rates не был создан.');
+
+    $sql = new sql();
+    $sql->query('CREATE TABLE `meter2service`(
+        `company_id` TINYINT(3) UNSIGNED NOT NULL,
+        `meter_id` MEDIUMINT(8) UNSIGNED NOT NULL,
+        `service_id` SMALLINT(5) UNSIGNED NOT NULL,
+        UNIQUE KEY `id` (`company_id`,`meter_id`, `service_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;');
+    $sql->execute('Таблица meter2service не была создана.');
 }catch(exception $e){
     die($e->getMessage());
 }
