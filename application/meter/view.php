@@ -17,6 +17,10 @@ class view_meter{
         return load_template('meter.private_get_dialog_create_meter', $args);
     }
 
+    public static function private_get_dialog_remove_service($args){
+        return load_template('meter.private_get_dialog_remove_service', $args);
+    }
+
     public static function private_get_dialog_rename_meter($args){
         return load_template('meter.private_get_dialog_rename_meter', $args);
     }

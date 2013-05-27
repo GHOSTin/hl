@@ -20,6 +20,15 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог для исключения услуги
+    }).on('click', '.get_dialog_remove_service', function(){
+        $.get('get_dialog_remove_service',{
+            meter_id: get_meter_id($(this)),
+            service_id: $(this).parent().attr('service'),
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог для создания счетчика
     }).on('click', '.get_dialog_create_meter', function(){
         $.get('get_dialog_create_meter',{

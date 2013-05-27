@@ -20,7 +20,7 @@
             <ul class="meter-services unstyled">
                 {% if services != false %}
                     {% for service in services %}
-                        <li>{{ service.name }}</li>
+                        <li service="{{ service.id }}">{{ service.name }} <a class="get_dialog_remove_service">исключить</a></li>
                     {% endfor %}
                 {% else %}
                     <li>Нет услуг</li>

@@ -1,7 +1,7 @@
 {% extends "dialog.tpl" %}
 {% set meter = component.meters[0] %}
 {% set services = component.services %}
-{% block title %}Диалог добавления службы{% endblock title %}
+{% block title %}Диалог добавления услуги{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-service">
 		<option value="0">Выберите услугу</option>
