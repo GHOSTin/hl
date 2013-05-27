@@ -36,6 +36,26 @@ class model_meter{
 	}
 
 	/**
+	* Возвращает список услуг
+	* @return array из data_service
+	*/
+	public static function get_services(data_company $company, data_meter $meter){
+	    model_company::verify_id($company);
+	    self::verify_id($meter);
+	    $sql = new sql();
+	    $sql->query("SELECT `services`.`name`
+	    	FROM `services`, `meter2service`
+	    	WHERE `services`.`company_id` = :company_id
+	    	AND `meter2service`.`company_id` = :company_id
+	    	AND `meter2service`.`service_id` = `services`.`id`
+	    	AND `meter2service`.`meter_id` = :meter_id");
+	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+	    $sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
+	    $sql->query(' ORDER BY `name`');
+	    return $sql->map(new data_service(), 'Проблема при выборке услуг.');
+	}
+
+	/**
 	* Создает новый счетчик
 	* @return data_meter
 	*/
