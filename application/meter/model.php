@@ -112,7 +112,7 @@ class model_meter{
 	* Верификация названия счетчика.
 	*/
 	public static function verify_name(data_meter $meter){
-		if(empty($meter->name))
+		if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]+$/u', $meter->name))
 			throw new e_model('Название счетчика задано не верно.');
 	}
 

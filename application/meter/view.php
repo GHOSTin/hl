@@ -9,6 +9,10 @@ class view_meter{
         return load_template('meter.private_get_dialog_create_meter', $args);
     }
 
+    public static function private_get_meter_content($args){
+        return load_template('meter.private_get_meter_content', $args);
+    }
+
     public static function private_show_default_page($args){
         return load_template('meter.private_show_default_page', $args);
     }

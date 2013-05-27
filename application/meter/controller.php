@@ -15,6 +15,13 @@ class controller_meter{
         return true;
     }
 
+    public static function private_get_meter_content(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        model_meter::verify_id($meter);
+        return ['meters' => model_meter::get_meters(model_session::get_company(), new data_meter())];
+    }
+
     public static function private_show_default_page(){
         return ['meters' => model_meter::get_meters(model_session::get_company(), new data_meter())];
     }
