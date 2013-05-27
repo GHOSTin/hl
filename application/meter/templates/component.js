@@ -2,8 +2,8 @@ $(document).ready(function(){
     
     // выводит содержимое счетчика
     $('body').on('click', '.get_meter_content', function(){
-        if($(this).siblings().is('.meter_content')){
-            $(this).siblings('.meter_content').remove();
+        if($(this).siblings().is('.meter-content')){
+            $(this).siblings('.meter-content').remove();
         } else{
             $.get('get_meter_content',{
                  id: get_meter_id($(this))

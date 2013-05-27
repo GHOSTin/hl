@@ -22,7 +22,21 @@ class controller_meter{
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
+    public static function private_get_dialog_rename_meter(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        model_meter::verify_id($meter);
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+    }
+
     public static function private_show_default_page(){
         return ['meters' => model_meter::get_meters(model_session::get_company(), new data_meter())];
+    }
+
+    public static function private_rename_meter(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        $meter->name = $_GET['name'];
+        return ['meter' => model_meter::rename_meter(model_session::get_company(), $meter)];
     }
 }

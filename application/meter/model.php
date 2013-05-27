@@ -85,6 +85,36 @@ class model_meter{
 	}
 
 	/**
+	* Создает новую услугу
+	* @return data_service
+	*/
+	public static function rename_meter(data_company $company, data_meter $meter){
+	    self::verify_id($meter);
+	    self::verify_name($meter);
+	    $meter_params = new data_meter();
+	    $meter_params->name = $meter->name;
+	    if(count(self::get_meters($company, $meter_params)) > 0)
+	        throw new e_model('Счетчик с таким именем уже существует.');
+	    $meter_params = new data_meter();
+	    $meter_params->id = $meter->id;
+	    $meters = self::get_meters($company, $meter_params);
+	    if(count($meters) !== 1)
+	        throw new e_model('Cчетчик с таким идентификатором не существует.');
+	    $new_meter = $meters[0];
+	    self::is_data_meter($new_meter);
+	    $new_meter->name = $meter->name;
+	    $sql = new sql();
+	    $sql->query("UPDATE `meters` SET `name` = :name
+	                WHERE `company_id` = :company_id AND `id` = :id");
+	    $sql->bind(':id', $new_meter->id, PDO::PARAM_INT);
+	    $sql->bind(':company_id', $new_meter->company_id, PDO::PARAM_INT);
+	    $sql->bind(':name', $new_meter->name, PDO::PARAM_STR);
+	    $sql->execute('Проблема при переименовании счетчика.');
+	    $sql->close();
+	    return $new_meter;
+	}
+
+	/**
 	* Верификация идентификатора счетчика.
 	*/
 	public static function verify_company_id(data_meter $meter){
