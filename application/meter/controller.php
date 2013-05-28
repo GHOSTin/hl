@@ -36,6 +36,13 @@ class controller_meter{
         return true;
     }
 
+    public static function private_get_dialog_edit_rates(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        model_meter::verify_id($meter);
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+    }
+
     public static function private_get_dialog_remove_service(){
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
@@ -83,5 +90,12 @@ class controller_meter{
 
     public static function private_show_default_page(){
         return ['meters' => model_meter::get_meters(model_session::get_company(), new data_meter())];
+    }
+
+    public static function private_update_rates(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        $meter->rates = $_GET['rates'];
+        return ['meter' => model_meter::update_rates(model_session::get_company(), $meter)];
     }
 }

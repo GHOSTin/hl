@@ -20,6 +20,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактирования тарифности счетчика
+    }).on('click', '.get_dialog_edit_rates', function(){
+        $.get('get_dialog_edit_rates',{
+            id: get_meter_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог для исключения услуги
     }).on('click', '.get_dialog_remove_service', function(){
         $.get('get_dialog_remove_service',{
