@@ -1,6 +1,7 @@
 {% extends "ajax.tpl" %}
 {% set meter = component.meters[0] %}
 {% set services = component.services %}
+{% set rates = ['однотарифный', 'двухтарифный', 'трехтарифнй'] %}
 {% block js %}
     $('.meter[meter = {{ meter.id }}]').append(get_hidden_content())
 {% endblock js %}
@@ -10,8 +11,8 @@
         <ul class="nav nav-pills">
             <li><a class="get_dialog_rename_meter">Переименовать</a></li>
         </ul>
-        <div>Разрядность: {{ meter.capacity }}</div>
-        <div>Тарифность: {{ meter.rates }}</div>
+        <div>Тарифность: <span class="meter-rates">{{ rates[meter.rates - 1] }}</span> <a class="get_dialog_edit_rates">изменить</a></div>
+        <div>Разрядность: <span class="meter-capacity">{{ meter.capacity }} <a class="get_dialog_edit_capacity">изменить</a></div>
         <div style="margin-top:50px">
             <h3>Услуги</h3>
             <ul class="nav nav-pills">
