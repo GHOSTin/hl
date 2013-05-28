@@ -17,8 +17,16 @@ class view_number{
         return load_template('number.private_get_number_content', $args);
     }
 
+    public static function private_get_dialog_add_meter($args){
+        return load_template('number.private_get_dialog_add_meter', $args);
+    }
+
     public static function private_get_dialog_edit_number($args){
         return load_template('number.private_get_dialog_edit_number', $args);
+    }
+
+    public static function private_get_meter_options($args){
+        return load_template('number.private_get_meter_options', $args);
     }
 
     public static function private_get_number_information($args){

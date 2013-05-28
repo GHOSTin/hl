@@ -44,7 +44,16 @@ $(document).ready(function(){
             $(this).parent().addClass('active');
             scrollTo($(this).parent());
         }
+
+    // выводит диалог для добавления счетчика
+    }).on('click', '.get_dialog_add_meter', function(){
+        $.get('get_dialog_add_meter',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
     });
+
     $('body').on('click', '.get_house_content', function(){
         if($(this).siblings().is('.numbers')) {
             $(this).siblings('.numbers').remove();

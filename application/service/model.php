@@ -2,6 +2,26 @@
 class model_service{
 
     /**
+    * Возвращает список счетчиков.
+    * @return array из data_meter
+    */
+    public static function get_meters(data_company $company, data_service $service){
+        model_company::verify_id($company);
+        model_service::verify_id($service);
+        $sql = new sql();
+        $sql->query("SELECT `meters`.`id`, `meters`.`company_id`, `meters`.`name`,
+                    `meters`.`rates`, `meters`.`capacity`
+                    FROM `meters`, `meter2service`
+                    WHERE `meters`.`company_id` = :company_id
+                    AND `meter2service`.`company_id` = :company_id
+                    AND `meter2service`.`meter_id` = `meters`.`id`
+                    AND `meter2service`.`service_id` = :id");
+        $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+        $sql->bind(':id', $service->id, PDO::PARAM_INT);
+        return $sql->map(new data_meter(), 'Проблема при выборке счетчиков.');
+    }
+
+    /**
     * Возвращает список услуг
     * @return array из data_service
     */
