@@ -300,6 +300,14 @@ class model_meter{
 	}
 
 	/**
+	* Верификация заводского номера счетчика.
+	*/
+	public static function verify_serial(data_meter $meter){
+		if(!preg_match('/^[а-яА-Я0-9]+$/u', $meter->serial))
+			throw new e_model('Заводской номер счетчика задано не верно.');
+	}
+
+	/**
 	* Проверка принадлежности объекта к классу data_meter.
 	*/
 	public static function is_data_meter($meter){
