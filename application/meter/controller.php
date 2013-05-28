@@ -69,10 +69,9 @@ class controller_meter{
         $service = new data_service();
         $service->id = $_GET['service_id'];
         $company = model_session::get_company();
-        var_dump(model_meter::remove_service($company, $meter, $service));
-        exit();
-        return ['meters' => model_meter::get_meters($company, $meter),
-                'services' => model_service::get_services($company, $service)];
+        model_meter::remove_service($company, $meter, $service);
+        return ['meter' => $meter, 
+                'services' => model_meter::get_services(model_session::get_company(), $meter, new data_service())];
     }
 
     public static function private_rename_meter(){

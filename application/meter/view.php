@@ -29,6 +29,10 @@ class view_meter{
         return load_template('meter.private_get_meter_content', $args);
     }
 
+    public static function private_remove_service($args){
+        return load_template('meter.private_remove_service', $args);
+    }
+
     public static function private_rename_meter($args){
         return load_template('meter.private_rename_meter', $args);
     }
