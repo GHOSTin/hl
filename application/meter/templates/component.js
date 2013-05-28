@@ -20,6 +20,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактирования разрядности счетчика
+    }).on('click', '.get_dialog_edit_capacity', function(){
+        $.get('get_dialog_edit_capacity',{
+            id: get_meter_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог редактирования тарифности счетчика
     }).on('click', '.get_dialog_edit_rates', function(){
         $.get('get_dialog_edit_rates',{

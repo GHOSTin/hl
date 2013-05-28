@@ -200,6 +200,32 @@ class model_meter{
 	}
 
 	/**
+	* Изменяет разрядность счетчика.
+	* @return object data_meter
+	*/
+	public static function update_capacity(data_company $company, data_meter $meter){
+	    self::verify_id($meter);
+	    self::verify_capacity($meter);
+	    $meter_params = new data_meter();
+	    $meter_params->id = $meter->id;
+	    $meters = self::get_meters($company, $meter_params);
+	    if(count($meters) !== 1)
+	        throw new e_model('Cчетчик с таким идентификатором не существует.');
+	    $new_meter = $meters[0];
+	    self::is_data_meter($new_meter);
+	    $new_meter->capacity = $meter->capacity;
+	    $sql = new sql();
+	    $sql->query("UPDATE `meters` SET `capacity` = :capacity
+	                WHERE `company_id` = :company_id AND `id` = :id");
+	    $sql->bind(':id', $new_meter->id, PDO::PARAM_INT);
+	    $sql->bind(':company_id', $new_meter->company_id, PDO::PARAM_INT);
+	    $sql->bind(':capacity', $new_meter->capacity, PDO::PARAM_INT);
+	    $sql->execute('Проблема при изменении разрядности счетчика.');
+	    $sql->close();
+	    return $new_meter;
+	}
+
+	/**
 	* Изменяет тарифность счетчика.
 	* @return object data_meter
 	*/
@@ -261,7 +287,7 @@ class model_meter{
 	* Верификация разрядности счетчика.
 	*/
 	public static function verify_capacity(data_meter $meter){
-		if($meter->capacity < 1)
+		if($meter->capacity < 1 OR $meter->capacity > 9)
 			throw new e_model('Разрядность задана не верно.');
 	}
 
