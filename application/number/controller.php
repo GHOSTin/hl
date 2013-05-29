@@ -22,6 +22,18 @@ class controller_number{
         return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
+    public static function private_get_dialog_add_meter_option(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        $meter->service[] = $_GET['service'];
+        model_meter::verify_id($meter);
+        model_meter::verify_service($meter);
+        $time = getdate();
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
+                'service' => $meter->service[0],
+                'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
+    }
+
     public static function private_get_house_content(){
         $house = new data_house();
         $house->id = $_GET['id'];

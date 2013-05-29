@@ -21,6 +21,10 @@ class view_number{
         return load_template('number.private_get_dialog_add_meter', $args);
     }
 
+    public static function private_get_dialog_add_meter_option($args){
+        return load_template('number.private_get_dialog_add_meter_option', $args);
+    }
+
     public static function private_get_dialog_edit_number($args){
         return load_template('number.private_get_dialog_edit_number', $args);
     }

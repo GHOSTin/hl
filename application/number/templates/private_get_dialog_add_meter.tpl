@@ -13,15 +13,17 @@
 	</select>
 {% endblock dialog %}
 {% block script %}
-	// добавляет счетчик
-	$('.add_meter').click(function(){
-		$.get('add_meter',{
-			id: {{ number.id }},
-			service_id: $('.dialog-select-service').val()
-			},function(r){
-				$('.dialog').modal('hide');
-				init_content(r);
-			});
+	// изменяет диалог
+	$('.dialog-select-meters').change(function(){
+		var id = $('.dialog-select-meters :selected').val();
+		if(id > 0){
+			$.get('get_dialog_add_meter_option',{
+				id: id,
+				service: $('.dialog-select-service :selected').val()
+				},function(r){
+					init_content(r);
+				});
+		}
 	});
 
 	// запрашивает счетчики
