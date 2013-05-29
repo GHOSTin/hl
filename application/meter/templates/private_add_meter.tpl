@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
 {% set meter = component.meters[0] %}
-{% set services = component.services %}
+{% set services = comzponent.services %}
 {% block js %}
     $('.meter[meter = {{ meter.id }}]').append(get_hidden_content())
 {% endblock js %}

@@ -5,30 +5,27 @@ class model_meter{
 	* Создает новую услугу
 	* @return data_service
 	*/
-	public static function add_service(data_company $company, data_meter $meter, data_service $service){
+	public static function add_service(data_company $company, data_meter $meter){
 	    self::verify_id($meter);
 	    model_company::verify_id($company);
-	    model_service::verify_id($service);
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
 	        throw new e_model('Cчетчик с таким идентификатором не существует.');
-	    $meter = $meters[0];
-	    self::is_data_meter($meter);
-	    $service = model_service::get_services($company, $service);
-	    if(count($service) !== 1)
-	        throw new e_model('Услуги с таким идентификатором не существует.');
-	    $service = $service[0];
-	    model_service::is_data_service($service);
-	    if(count(self::get_services($company, $meter, $service)) > 0)
-	    	throw new e_model('Такая служба уже добавлена в счетчик.');
+	    $new_meter = $meters[0];
+	    self::is_data_meter($new_meter);
+	    if(array_search($meter->service[0], ['cold_water', 'hot_water', 'electrical']) === false)
+	    	throw new e_model('Нет такой услуги.');
+	    if(array_search($meter->service[0], $new_meter->service) === false)
+	    	$new_meter->service[] = $meter->service[0];
 	    $sql = new sql();
-	    $sql->query("INSERT INTO `meter2service` (`company_id`, `meter_id`,
-	    			`service_id`) VALUES(:company_id, :meter_id, :service_id)");
+	    $sql->query("UPDATE `meters` SET `service` = :service
+	    	WHERE `company_id` = :company_id AND `id` = :meter_id");
 	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->bind(':service_id', $service->id, PDO::PARAM_INT);
-	    $sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
+	    $sql->bind(':service', implode(',', $new_meter->service), PDO::PARAM_STR);
+	    $sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
 	    $sql->execute('Проблема при добавлении услуги в счетчик.');
 	    $sql->close();
+	    return $new_meter;
 	}
 
 	/**

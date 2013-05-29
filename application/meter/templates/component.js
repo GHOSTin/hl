@@ -40,7 +40,7 @@ $(document).ready(function(){
     }).on('click', '.get_dialog_remove_service', function(){
         $.get('get_dialog_remove_service',{
             meter_id: get_meter_id($(this)),
-            service_id: $(this).parent().attr('service'),
+            service: $(this).parent().attr('service'),
             },function(r){
                 init_content(r);
             });

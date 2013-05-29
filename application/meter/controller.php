@@ -4,13 +4,10 @@ class controller_meter{
     public static function private_add_service(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
-        model_meter::verify_id($meter);
-        $service = new data_service();
-        $service->id = $_GET['service_id'];
-        $company =  model_session::get_company();
-        model_meter::add_service($company, $meter, $service);
-        return ['meter' => $meter, 
-                'services' => model_meter::get_services(model_session::get_company(), $meter, new data_service())];
+        $meter->service[] = $_GET['service'];
+        // var_dump( model_meter::add_service(model_session::get_company(), $meter));
+        // exit();
+        return ['meter' => model_meter::add_service(model_session::get_company(), $meter)];
     }
 
     public static function private_create_meter(){
@@ -27,9 +24,7 @@ class controller_meter{
         $meter = new data_meter();
         $meter->id = $_GET['id'];
         model_meter::verify_id($meter);
-        $company = model_session::get_company();
-        return ['meters' => model_meter::get_meters($company, $meter),
-                'services' => model_service::get_services($company, new data_service())];
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_get_dialog_create_meter(){

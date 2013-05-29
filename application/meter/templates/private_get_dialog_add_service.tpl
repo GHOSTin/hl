@@ -4,10 +4,10 @@
 {% block title %}Диалог добавления услуги{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-service">
-		<option value="0">Выберите услугу</option>
-	{% for service in services %}
-		<option value="{{ service.id }}">{{ service.name }}</opyion>
-	{% endfor %}
+		<option value="">Выберите услугу</option>
+		<option value="cold_water">Холодное водоснабжение</option>
+		<option value="hot_water">Горячее водоснабжение</option>
+		<option value="electrical">Электроэнергия</option>
 	</select>
 {% endblock dialog %}
 {% block buttons %}
@@ -17,7 +17,7 @@
 	$('.add_service').click(function(){
 		$.get('add_service',{
 			id: {{ meter.id }},
-			service_id: $('.dialog-select-service').val()
+			service: $('.dialog-select-service').val()
 			},function(r){
 				$('.dialog').modal('hide');
 				init_content(r);
