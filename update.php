@@ -30,13 +30,10 @@ try{
     $sql->execute('Столбец rates не был создан.');
 
     $sql = new sql();
-    $sql->query('CREATE TABLE `meter2service`(
-        `company_id` TINYINT(3) UNSIGNED NOT NULL,
-        `meter_id` MEDIUMINT(8) UNSIGNED NOT NULL,
-        `service_id` SMALLINT(5) UNSIGNED NOT NULL,
-        UNIQUE KEY `id` (`company_id`,`meter_id`, `service_id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8;');
-    $sql->execute('Таблица meter2service не была создана.');
+    $sql->query('DROP TABLE `accrualgroups`, `accrualgroups__log`, `accruals`, 
+        `accruals__log`, `numbersessions`, `receipts`, `receipts__log`, `services`');
+    $sql->execute('Таблицы не были удалены.');
+
 }catch(exception $e){
     die($e->getMessage());
 }
