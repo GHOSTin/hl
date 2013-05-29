@@ -73,8 +73,7 @@ class controller_meter{
         $meter = new data_meter();
         $meter->id = $_GET['id'];
         model_meter::verify_id($meter);
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
-                'services' => model_meter::get_services(model_session::get_company(), $meter, new data_service())];
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_remove_service(){

@@ -38,7 +38,7 @@ class model_meter{
 	public static function get_meters(data_company $company, data_meter $meter){
 	    model_company::verify_id($company);
 	    $sql = new sql();
-	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`
+	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`
 	    			FROM `meters` WHERE `company_id` = :company_id");
 	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 	    if(!empty($meter->id)){
@@ -66,9 +66,6 @@ class model_meter{
 	}
 
 	/**
-	* hot water
-	* cold water
-	* electric
 	* Возвращает список услуг
 	* @return array из data_service
 	*/

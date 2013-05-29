@@ -1,6 +1,7 @@
 {% extends "ajax.tpl" %}
 {% set meter = component.meters[0] %}
-{% set services = component.services %}
+{% set services = {'cold_water':'Холодное водоснабжение',
+    'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}
 {% block js %}
     $('.meter[meter = {{ meter.id }}]').append(get_hidden_content())
@@ -19,13 +20,11 @@
                 <li><a class="get_dialog_add_service">Добавить</a></li>
             </ul>
             <ul class="meter-services unstyled">
-                {% if services != false %}
-                    {% for service in services %}
-                        <li service="{{ service.id }}">{{ service.name }} <a class="get_dialog_remove_service">исключить</a></li>
-                    {% endfor %}
+                {% for service in meter.service %}
+                    <li service="{{ service }}">{{ services[service] }} <a class="get_dialog_remove_service">исключить</a></li>
                 {% else %}
                     <li>Нет услуг</li>
-                {% endif %}
+                {% endfor %}
             </ul>
         </div>
     </div>
