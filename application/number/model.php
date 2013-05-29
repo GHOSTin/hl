@@ -131,17 +131,14 @@ class model_number{
 		$sql = new sql();
 		$sql->query("SELECT `meters`.`id`,
 						`meters`.`name`,
-						`services`.`name` as `service`,
+						`number2meter`.`service`,
 						`number2meter`.`serial`,
 						`number2meter`.`checktime`
-					FROM `meters`, `number2meter`, `services`
+					FROM `meters`, `number2meter`
 					WHERE `number2meter`.`company_id` = :company_id
 					AND `meters`.`company_id` = :company_id
-					AND `services`.`company_id` = :company_id
-					AND `services`.`tag` = 'meter'
 					AND `number2meter`.`number_id` = :number_id
-					AND `meters`.`id` = `number2meter`.`meter_id`
-					AND `number2meter`.`service_id` = `services`.`id`");
+					AND `meters`.`id` = `number2meter`.`meter_id`");
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!is_null($meter)){
