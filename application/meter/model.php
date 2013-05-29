@@ -39,7 +39,7 @@ class model_meter{
 	    model_company::verify_id($company);
 	    $sql = new sql();
 	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`
-	    	FROM `meters` WHERE `company_id` = :company_id");
+	    			FROM `meters` WHERE `company_id` = :company_id");
 	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 	    if(!empty($meter->id)){
 	        self::verify_id($meter);
@@ -66,6 +66,9 @@ class model_meter{
 	}
 
 	/**
+	* hot water
+	* cold water
+	* electric
 	* Возвращает список услуг
 	* @return array из data_service
 	*/

@@ -22,6 +22,10 @@ try{
     $sql->execute('Столбец capacity не был создан.');
 
     $sql = new sql();
+    $sql->query("ALTER TABLE `meters` add COLUMN `service` SET('hot_water', 'cold_water', 'electrical') NOT NULL");
+    $sql->execute('Столбец service не был создан.');
+
+    $sql = new sql();
     $sql->query('ALTER TABLE `meters` add COLUMN `rates` TINYINT UNSIGNED NOT NULL DEFAULT 1');
     $sql->execute('Столбец rates не был создан.');
 
