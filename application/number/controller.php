@@ -19,9 +19,7 @@ class controller_number{
         $number = new data_number();
         $number->id = $_GET['id'];
         model_number::verify_id($number);
-        $company = model_session::get_company();
-        return ['numbers' => model_number::get_numbers($company, $number),
-                'services' => model_service::get_services($company, new data_service())];
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
     public static function private_get_house_content(){
@@ -69,10 +67,10 @@ class controller_number{
     }
     
     public static function private_get_meter_options(){
-        $service = new data_service();
-        $service->id = $_GET['id'];
-        model_service::verify_id($service);
-        return ['meters' => model_service::get_meters(model_session::get_company(), $service)];
+        $meter = new data_meter();
+        $meter->service[] = $_GET['service'];
+        model_meter::verify_service($meter);
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_get_dialog_edit_number(){

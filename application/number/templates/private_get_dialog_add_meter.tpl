@@ -1,13 +1,12 @@
 {% extends "dialog.tpl" %}
 {% set number = component.numbers[0] %}
-{% set services = component.services %}
 {% block title %}Диалог добавления счетчика{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-service">
-		<option value="0">Выберите услугу</option>
-	{% for service in services %}
-		<option value="{{ service.id }}">{{ service.name }}</opyion>
-	{% endfor %}
+		<option value="">Выберите услугу</option>
+		<option value="cold_water">Холодное водоснабжение</option>
+		<option value="hot_water">Горячее водоснабжение</option>
+		<option value="electrical">Электроэнергия</option>
 	</select>
 	<select class="dialog-select-meters" style="display:block" disabled>
 		<option>Ожидание...</option>
@@ -27,10 +26,10 @@
 
 	// запрашивает счетчики
 	$('.dialog-select-service').change(function(){
-		var service_id = $('.dialog-select-service :selected').val();
-		if(service_id > 0){
+		var service = $('.dialog-select-service :selected').val();
+		if(service.length > 0){
 			$.get('get_meter_options',{
-				id: service_id
+				service: service
 				},function(r){
 					init_content(r);
 				});

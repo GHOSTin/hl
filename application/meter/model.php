@@ -9,7 +9,9 @@ class model_meter{
 	    self::verify_id($meter);
 	    self::verify_service($meter);
 	    model_company::verify_id($company);
-	    $meters = self::get_meters($company, $meter);
+	    $meter_params = new data_meter();
+	    $meter_params->id = $meter->id;
+	    $meters = self::get_meters($company, $meter_params);
 	    if(count($meters) !== 1)
 	        throw new e_model('Cчетчик с таким идентификатором не существует.');
 	    $new_meter = $meters[0];
@@ -55,6 +57,11 @@ class model_meter{
 	        self::verify_rates($meter);
 	        $sql->query(" AND `rates` = :rates");
 	        $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
+	    }
+	    if(!empty($meter->service)){
+	        self::verify_service($meter);
+	        $sql->query(" AND FIND_IN_SET(:service, `service`) > 0");
+	        $sql->bind(':service', $meter->service[0], PDO::PARAM_INT);
 	    }
 	    $sql->query(' ORDER BY `name`');
 	    return $sql->map(new data_meter(), 'Проблема при выборке счетчиков.');
