@@ -30,6 +30,10 @@ try{
     $sql->execute('Столбец rates не был создан.');
 
     $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` CHANGE COLUMN `service_id` `service` ENUM('hot_water', 'cold_water', 'electrical') NOT NULL");
+    $sql->execute('Столбец rates не был создан.');
+
+    $sql = new sql();
     $sql->query('DROP TABLE `accrualgroups`, `accrualgroups__log`, `accruals`, 
         `accruals__log`, `numbersessions`, `receipts`, `receipts__log`, `services`');
     $sql->execute('Таблицы не были удалены.');
