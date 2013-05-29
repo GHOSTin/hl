@@ -1,9 +1,10 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
-{% set service = component.services[0] %}
+{% set meter = component.meter %}
+{% set services = {'cold_water':'Холодное водоснабжение',
+    'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% block title %}Диалог исключения услуги{% endblock title %}
 {% block dialog %}
-	Удалить услугу "{{ service.name }}" из счетчика "{{ meter.name }}"?
+	Удалить услугу "{{ services[meter.service[0]] }}" из счетчика?
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn remove_service">Исключить</div>
@@ -11,8 +12,8 @@
 {% block script %}
 	$('.remove_service').click(function(){
 		$.get('remove_service',{
-			meter_id: {{ meter.id }},
-			service_id: {{ service.id }}
+			id: {{ meter.id }},
+			service: '{{ meter.service[0] }}'
 			},function(r){
 				$('.dialog').modal('hide');
 				init_content(r);

@@ -47,14 +47,11 @@ class controller_meter{
 
     public static function private_get_dialog_remove_service(){
         $meter = new data_meter();
-        $meter->id = $_GET['meter_id'];
+        $meter->id = $_GET['id'];
+        $meter->service[0] = $_GET['service'];
         model_meter::verify_id($meter);
-        $service = new data_service();
-        $service->id = $_GET['service_id'];
-        model_service::verify_id($service);
-        $company = model_session::get_company();
-        return ['meters' => model_meter::get_meters($company, $meter),
-                'services' => model_service::get_services($company, $service)];
+        model_meter::verify_service($meter);
+        return ['meter' => $meter];
     }
 
     public static function private_get_dialog_rename_meter(){
@@ -73,13 +70,9 @@ class controller_meter{
 
     public static function private_remove_service(){
         $meter = new data_meter();
-        $meter->id = $_GET['meter_id'];
-        $service = new data_service();
-        $service->id = $_GET['service_id'];
-        $company = model_session::get_company();
-        model_meter::remove_service($company, $meter, $service);
-        return ['meter' => $meter, 
-                'services' => model_meter::get_services(model_session::get_company(), $meter, new data_service())];
+        $meter->id = $_GET['id'];
+        $meter->service[0] = $_GET['service'];
+        return ['meter' => model_meter::remove_service(model_session::get_company(), $meter)];
     }
 
     public static function private_rename_meter(){

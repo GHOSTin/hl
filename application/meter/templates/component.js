@@ -39,7 +39,7 @@ $(document).ready(function(){
     // выводит диалог для исключения услуги
     }).on('click', '.get_dialog_remove_service', function(){
         $.get('get_dialog_remove_service',{
-            meter_id: get_meter_id($(this)),
+            id: get_meter_id($(this)),
             service: $(this).parent().attr('service'),
             },function(r){
                 init_content(r);

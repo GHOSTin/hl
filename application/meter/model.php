@@ -7,14 +7,12 @@ class model_meter{
 	*/
 	public static function add_service(data_company $company, data_meter $meter){
 	    self::verify_id($meter);
+	    self::verify_service($meter);
 	    model_company::verify_id($company);
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
 	        throw new e_model('Cчетчик с таким идентификатором не существует.');
 	    $new_meter = $meters[0];
-	    self::is_data_meter($new_meter);
-	    if(array_search($meter->service[0], ['cold_water', 'hot_water', 'electrical']) === false)
-	    	throw new e_model('Нет такой услуги.');
 	    if(array_search($meter->service[0], $new_meter->service) === false)
 	    	$new_meter->service[] = $meter->service[0];
 	    $sql = new sql();
@@ -140,30 +138,28 @@ class model_meter{
 	* Исключает услугу
 	* @return data_service
 	*/
-	public static function remove_service(data_company $company, data_meter $meter, data_service $service){
+	public static function remove_service(data_company $company, data_meter $meter){
 	    self::verify_id($meter);
+	    self::verify_service($meter);
 	    model_company::verify_id($company);
-	    model_service::verify_id($service);
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
 	        throw new e_model('Cчетчик с таким идентификатором не существует.');
-	    $meter = $meters[0];
-	    self::is_data_meter($meter);
-	    $service = model_service::get_services($company, $service);
-	    if(count($service) !== 1)
-	        throw new e_model('Услуги с таким идентификатором не существует.');
-	    $service = $service[0];
-	    model_service::is_data_service($service);
-	    if(count(self::get_services($company, $meter, $service)) !== 1)
-	    	throw new e_model('Служба не привязана к счетчику.');
-	    $sql = new sql();
-	    $sql->query("DELETE FROM `meter2service` WHERE `company_id` = :company_id
-	    			AND `meter_id` = :meter_id AND `service_id` = :service_id");
+	    $new_meter = $meters[0];
+	    self::is_data_meter($new_meter);
+		$pos = array_search($meter->service[0], $new_meter->service);
+	    if($pos === false)
+	    	throw new e_model('Услуга не привязана к счетчику.');
+    	unset($new_meter->service[$pos]);
+    	$sql = new sql();
+	    $sql->query("UPDATE `meters` SET `service` = :service
+	    	WHERE `company_id` = :company_id AND `id` = :meter_id");
 	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->bind(':service_id', $service->id, PDO::PARAM_INT);
-	    $sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
-	    $sql->execute('Проблема при исключении услуги из счетчика.');
+	    $sql->bind(':service', implode(',', $new_meter->service), PDO::PARAM_STR);
+	    $sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
+	    $sql->execute('Проблема при удалении услуги из счетчика.');
 	    $sql->close();
+	    return $new_meter;
 	}
 
 	/**
@@ -302,6 +298,16 @@ class model_meter{
 	public static function verify_serial(data_meter $meter){
 		if(!preg_match('/^[а-яА-Я0-9]+$/u', $meter->serial))
 			throw new e_model('Заводской номер счетчика задано не верно.');
+	}
+
+	/**
+	* Верификация службы счетчика.
+	*/
+	public static function verify_service(data_meter $meter){
+		$services = ['cold_water', 'hot_water', 'electrical'];
+		foreach($meter->service as $service)
+			if(array_search($service, $services) === false)
+				throw new e_model('Услуга задана не верно.');
 	}
 
 	/**
