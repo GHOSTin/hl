@@ -38,7 +38,7 @@
 		<li>
 			<span>Место установки</span>
 			<select>
-				<option value="	bathroom">Ванна</option>
+				<option value="bathroom">Ванна</option>
 				<option value="kitchen">Кухня</option>
 				<option value="toilet" selected>Туалет</option>
 			</select>

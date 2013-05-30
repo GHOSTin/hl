@@ -14,3 +14,4 @@ require_once 'framework_init.php';
 require_once 'e_controller.php';
 require_once 'e_model.php';
 require_once 'e_view.php';
+require_once 'e_data.php';
