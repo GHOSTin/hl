@@ -12,6 +12,14 @@ $(document).ready(function(){
                 });
         }
 
+    // выводит диалог для добавления периода
+    }).on('click', '.get_dialog_add_period', function(){
+        $.get('get_dialog_add_period',{
+            id: get_meter_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог для добавления услуги
     }).on('click', '.get_dialog_add_service', function(){
         $.get('get_dialog_add_service',{

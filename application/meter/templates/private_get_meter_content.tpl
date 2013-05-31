@@ -14,6 +14,19 @@
         </ul>
         <div>Тарифность: <span class="meter-rates">{{ rates[meter.rates - 1] }}</span> <a class="get_dialog_edit_rates">изменить</a></div>
         <div>Разрядность: <span class="meter-capacity">{{ meter.capacity }} <a class="get_dialog_edit_capacity">изменить</a></div>
+        <div>Периоды поверки: <a class="get_dialog_add_period">добавить</a>
+            <ul class="meter-periods">
+                {% for period in meter.periods %}
+                <li>
+                    {% if period > 12 %}
+                        {{ period // 12 }} г {{ period % 12 }} месяц
+                    {% else %}
+                        {{ period }} мес.
+                    {% endif %}
+                <a class="get_dialog_remove_period">удалить</a></li>
+                {% endfor %}
+            </ul>
+        </div>
         <div style="margin-top:50px">
             <h3>Услуги</h3>
             <ul class="nav nav-pills">

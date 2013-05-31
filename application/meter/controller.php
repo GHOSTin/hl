@@ -1,12 +1,17 @@
 <?php
 class controller_meter{
 
+    public static function private_add_period(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        $meter->periods[] = $_GET['period'];
+        return ['meter' => model_meter::add_period(model_session::get_company(), $meter)];
+    }
+
     public static function private_add_service(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
         $meter->service[] = $_GET['service'];
-        // var_dump( model_meter::add_service(model_session::get_company(), $meter));
-        // exit();
         return ['meter' => model_meter::add_service(model_session::get_company(), $meter)];
     }
 
@@ -18,6 +23,13 @@ class controller_meter{
         $company = model_session::get_company();
         model_meter::create_meter($company, $meter);
         return ['meters' => model_meter::get_meters($company, new data_meter())];
+    }
+
+    public static function private_get_dialog_add_period(){
+        $meter = new data_meter();
+        $meter->id = $_GET['id'];
+        model_meter::verify_id($meter);
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_get_dialog_add_service(){

@@ -30,8 +30,8 @@ try{
     $sql->execute('Столбец rates не был создан.');
 
     $sql = new sql();
-    $sql->query("ALTER TABLE `meters` add COLUMN `time` VARCHAR(255) NOT NULL");
-    $sql->execute('Столбец time не был создан.');
+    $sql->query("ALTER TABLE `meters` add COLUMN `periods` VARCHAR(255) NOT NULL");
+    $sql->execute('Столбец periods не был создан.');
 
     $sql = new sql();
     $sql->query("ALTER TABLE `number2meter` CHANGE COLUMN `service_id` `service` ENUM('hot_water', 'cold_water', 'electrical') NOT NULL");

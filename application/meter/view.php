@@ -1,12 +1,20 @@
 <?php
 class view_meter{
 
+    public static function private_add_period($args){
+        return load_template('meter.private_add_period', $args);
+    }
+
     public static function private_add_service($args){
         return load_template('meter.private_add_service', $args);
     }
 
     public static function private_create_meter($args){
         return load_template('meter.private_create_meter', $args);
+    }
+
+    public static function private_get_dialog_add_period($args){
+        return load_template('meter.private_get_dialog_add_period', $args);
     }
 
     public static function private_get_dialog_add_service($args){

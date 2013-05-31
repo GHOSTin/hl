@@ -12,11 +12,14 @@ final class data_meter extends data_object{
     public $rates;
     public $serial;
     public $service;
+    public $periods;
 
     public function __construct(){
         if(empty($this->service))
             $this->service = [];
         else
             $this->service = explode(',', $this->service);
+
+        $this->periods = (empty($this->periods))? []: explode(';', $this->periods);
     }   
 }
