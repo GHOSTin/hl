@@ -27,12 +27,11 @@
 			<input type="text" class="dialog-input-date_install" value="{{ time }}">
 		</li>
 		<li>
-			<span>Дата поверки</span>
+			<span>Дата последней поверки</span>
 			<input type="text" class="dialog-input-date_checking" value="{{ time }}">
 		</li>
 		<li>
 			<span>Период поверки</span>
-			<input type="text">
 		</li>
 		{% if service in ['cold_water', 'hot_water'] %}
 		<li>
