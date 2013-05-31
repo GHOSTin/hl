@@ -148,6 +148,34 @@ class model_meter{
 	}
 
 	/**
+	* Исключает период
+	* @return data_meter
+	*/
+	public static function remove_period(data_company $company, data_meter $meter){
+	    self::verify_id($meter);
+	    self::verify_service($meter);
+	    model_company::verify_id($company);
+	    $meters = self::get_meters($company, $meter);
+	    if(count($meters) !== 1)
+	        throw new e_model('Cчетчик с таким идентификатором не существует.');
+	    $new_meter = $meters[0];
+	    self::is_data_meter($new_meter);
+		$pos = array_search($meter->periods[0], $new_meter->periods);
+	    if($pos === false)
+	    	throw new e_model('Период не привязан к счетчику.');
+    	unset($new_meter->periods[$pos]);
+    	$sql = new sql();
+	    $sql->query("UPDATE `meters` SET `periods` = :periods
+	    	WHERE `company_id` = :company_id AND `id` = :meter_id");
+	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+	    $sql->bind(':periods', implode(';', $new_meter->periods), PDO::PARAM_STR);
+	    $sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
+	    $sql->execute('Проблема при удалении периода из счетчика.');
+	    $sql->close();
+	    return $new_meter;
+	}
+
+	/**
 	* Исключает услугу
 	* @return data_service
 	*/

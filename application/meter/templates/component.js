@@ -44,6 +44,15 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог для исключения периода
+    }).on('click', '.get_dialog_remove_period', function(){
+        $.get('get_dialog_remove_period',{
+            id: get_meter_id($(this)),
+            period: $(this).parent().attr('period'),
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог для исключения услуги
     }).on('click', '.get_dialog_remove_service', function(){
         $.get('get_dialog_remove_service',{

@@ -17,7 +17,7 @@
         <div>Периоды поверки: <a class="get_dialog_add_period">добавить</a>
             <ul class="meter-periods">
                 {% for period in meter.periods %}
-                <li>
+                <li period="{{ period }}">
                     {% if period > 12 %}
                         {{ period // 12 }} г {{ period % 12 }} месяц
                     {% else %}

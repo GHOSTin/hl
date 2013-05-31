@@ -33,6 +33,10 @@ class view_meter{
         return load_template('meter.private_get_dialog_edit_rates', $args);
     }
 
+    public static function private_get_dialog_remove_period($args){
+        return load_template('meter.private_get_dialog_remove_period', $args);
+    }
+
     public static function private_get_dialog_remove_service($args){
         return load_template('meter.private_get_dialog_remove_service', $args);
     }
@@ -43,6 +47,10 @@ class view_meter{
 
     public static function private_get_meter_content($args){
         return load_template('meter.private_get_meter_content', $args);
+    }
+
+    public static function private_remove_period($args){
+        return load_template('meter.private_remove_period', $args);
     }
 
     public static function private_remove_service($args){
