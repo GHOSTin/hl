@@ -47,6 +47,47 @@ class model_number{
 		$sql->execute('Проблемы при создании нового лицевого счета.');
 		return $number;
 	}
+
+	public static function add_meter(data_company $company, data_number $number,
+										data_meter $meter){
+		model_company::verify_id($company);
+		self::verify_id($number);
+		model_meter::verify_id($meter);
+		$numbers = self::get_numbers($company, $number);
+		if(count($numbers) !== 1)
+			throw new e_model('Невереное количество лицевых счетов.');
+		$number = $numbers[0];
+		self::is_data_number($number);
+		$meters = model_meter::get_meters($company, $meter);
+		if(count($meters) !== 1)
+			throw new e_model('Неверное количество счетчиков.');
+		$new_meter = $meters[0];
+		model_meter::is_data_meter($new_meter);
+		$new_meter->service = $meter->service;
+		$new_meter->serial = $meter->serial;
+		$new_meter->date_release = $meter->date_release;
+		$new_meter->date_install = $meter->date_install;
+		$new_meter->date_checking = $meter->date_checking;
+		$new_meter->period = $meter->period;
+		model_meter::verify_id($new_meter);
+		model_meter::verify_capacity($new_meter);
+		model_meter::verify_rates($new_meter);
+		model_meter::verify_service($new_meter);
+		model_meter::verify_serial($new_meter);
+		model_meter::verify_period($new_meter);
+		model_meter::verify_date_release($new_meter);
+		model_meter::verify_date_install($new_meter);
+		model_meter::verify_date_checking($new_meter);
+
+		$sql = new sql();
+		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`
+			`meter_id`, `service`, `serial`)");
+
+		var_dump($new_meter);
+		die('sdf');
+
+	}
+
 	/**
 	* Возвращает следующий для вставки идентификатор лицевого счета.
 	* @return int

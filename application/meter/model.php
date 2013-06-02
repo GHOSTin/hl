@@ -116,14 +116,14 @@ class model_meter{
 	    self::verify_rates($meter);
 	    self::verify_capacity($meter);
 	    $sql = new sql();
-	    $sql->query("INSERT INTO `meters` (`id`, `company_id`, `name`, `rates`, `capacity`,`period`)
+	    $sql->query("INSERT INTO `meters` (`id`, `company_id`, `name`, `rates`, `capacity`,`periods`)
 	                VALUES (:id, :company_id, :name, :rates, :capacity, :periods)");
 	    $sql->bind(':id', $meter->id, PDO::PARAM_INT);
 	    $sql->bind(':company_id', $meter->company_id, PDO::PARAM_INT);
 	    $sql->bind(':name', $meter->name, PDO::PARAM_STR);
 	    $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
 	    $sql->bind(':capacity', $meter->capacity, PDO::PARAM_INT);
-	    $sql->bind(':periods', implode(';', $meter->period), PDO::PARAM_STR);
+	    $sql->bind(':periods', implode(';', $meter->periods), PDO::PARAM_STR);
 	    $sql->execute('Проблемы при создании счетчика.');
 	    $sql->close();
 	    return $meter;
@@ -302,6 +302,30 @@ class model_meter{
 	}
 
 	/**
+	* Верификация даты производства счетчика.
+	*/
+	public static function verify_date_release(data_meter $meter){
+		if($meter->date_release < 0)
+			throw new e_model('Время даты производства задано не верно.');
+	}
+
+	/**
+	* Верификация даты установки счетчика.
+	*/
+	public static function verify_date_install(data_meter $meter){
+		if($meter->date_install < 0)
+			throw new e_model('Время даты установки задано не верно.');
+	}
+
+	/**
+	* Верификация даты поверки счетчика.
+	*/
+	public static function verify_date_checking(data_meter $meter){
+		if($meter->date_checking < 0)
+			throw new e_model('Время даты поверки задано не верно.');
+	}
+
+	/**
 	* Верификация идентификатора счетчика.
 	*/
 	public static function verify_id(data_meter $meter){
@@ -349,6 +373,14 @@ class model_meter{
 			$period = (int) ($period);
 			if($period < 0 OR $period > 240)
 				throw new e_model('Период задан не верно.');
+	}
+
+	/**
+	* Верификация периода счетчика.
+	*/
+	public static function verify_period(data_meter $meter){
+		if($meter->period < 0 OR $meter->period > 240)
+			throw new e_model('Период задан не верно.');
 	}
 
 	/**

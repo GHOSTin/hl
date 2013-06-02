@@ -3,6 +3,24 @@ class controller_number{
 
 	static $name = 'Жилищный фонд';
 
+    public static function private_add_meter(){
+        $number = new data_number();
+        $number->id = $_GET['number_id'];
+        $meter = new data_meter();
+        $meter->id = $_GET['meter_id'];
+        $meter->service[] = $_GET['service'];
+        $meter->serial = $_GET['serial'];
+        $meter->period = $_GET['period'];
+        $date_release = explode('.', $_GET['date_release']);
+        $date_install = explode('.', $_GET['date_install']);
+        $date_checking = explode('.', $_GET['date_checking']);
+        $meter->date_release = mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]);
+        $meter->date_install = mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]);
+        $meter->date_checking = mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]);
+        return ['meter' => model_number::add_meter(model_session::get_company(),$number, $meter),
+                'number' => $number];
+    }
+
 	public static function private_show_default_page(){
         return ['streets' => model_street::get_streets(new data_street())];
 	}
@@ -23,14 +41,18 @@ class controller_number{
     }
 
     public static function private_get_dialog_add_meter_option(){
+        $number = new data_number();
+        $number->id = $_GET['number_id'];
+        model_number::verify_id($number);
         $meter = new data_meter();
-        $meter->id = $_GET['id'];
+        $meter->id = $_GET['meter_id'];
         $meter->service[] = $_GET['service'];
         model_meter::verify_id($meter);
         model_meter::verify_service($meter);
         $time = getdate();
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
                 'service' => $meter->service[0],
+                'number' => $number,
                 'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
     }
 

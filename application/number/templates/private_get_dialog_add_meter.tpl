@@ -18,7 +18,8 @@
 		var id = $('.dialog-select-meters :selected').val();
 		if(id > 0){
 			$.get('get_dialog_add_meter_option',{
-				id: id,
+				number_id: {{ number.id }},
+				meter_id: id,
 				service: $('.dialog-select-service :selected').val()
 				},function(r){
 					init_content(r);
