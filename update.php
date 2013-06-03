@@ -38,6 +38,26 @@ try{
     $sql->execute('Столбец rates не был создан.');
 
     $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` DROP COLUMN `checktime`");
+    $sql->execute('Столбец checktime не был удален.');
+
+    $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` add COLUMN `date_release` INT UNSIGNED NOT NULL");
+    $sql->execute('Столбец date_release не был создан.');
+
+    $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` add COLUMN `date_install` INT UNSIGNED NOT NULL");
+    $sql->execute('Столбец date_install не был создан.');
+
+    $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` add COLUMN `date_checking` INT UNSIGNED NOT NULL");
+    $sql->execute('Столбец date_checking не был создан.');
+
+    $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` add COLUMN `period` TINYINT UNSIGNED NOT NULL");
+    $sql->execute('Столбец period не был создан.');
+
+    $sql = new sql();
     $sql->query('DROP TABLE `accrualgroups`, `accrualgroups__log`, `accruals`, 
         `accruals__log`, `numbersessions`, `receipts`, `receipts__log`, `services`');
     $sql->execute('Таблицы не были удалены.');
