@@ -6,8 +6,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public static function add_period(data_company $company, data_meter $meter){
-	    self::verify_id($meter);
-	    self::verify_periods($meter);
+	    $meter->verify(['id', 'periods']);
 	    model_company::verify_id($company);
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
@@ -35,8 +34,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public static function add_service(data_company $company, data_meter $meter){
-	    self::verify_id($meter);
-	    self::verify_service($meter);
+	    $meter->verify(['id', 'service']);
 	    model_company::verify_id($company);
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
@@ -68,27 +66,27 @@ class model_meter{
 	    			FROM `meters` WHERE `company_id` = :company_id");
 	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 	    if(!empty($meter->id)){
-	        self::verify_id($meter);
+	        $meter->verify(['id']);
 	        $sql->query(" AND `id` = :id");
 	        $sql->bind(':id', $meter->id, PDO::PARAM_INT);
 	    }
 	    if(!empty($meter->name)){
-	        self::verify_name($meter);
+	        $meter->verify(['name']);
 	        $sql->query(" AND `name` = :name");
 	        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
 	    }
 	    if(!empty($meter->capacity)){
-	        self::verify_capacity($meter);
+	        $meter->verify(['capacity']);
 	        $sql->query(" AND `capacity` = :capacity");
 	        $sql->bind(':capacity', $meter->capacity, PDO::PARAM_INT);
 	    }
 	    if(!empty($meter->rates)){
-	        self::verify_rates($meter);
+	        $meter->verify(['rates']);
 	        $sql->query(" AND `rates` = :rates");
 	        $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
 	    }
 	    if(!empty($meter->service)){
-	        self::verify_service($meter);
+	        $meter->verify(['service']);
 	        $sql->query(" AND FIND_IN_SET(:service, `service`) > 0");
 	        $sql->bind(':service', $meter->service[0], PDO::PARAM_INT);
 	    }
@@ -104,17 +102,14 @@ class model_meter{
 	    self::verify_name($meter);
 	    self::verify_capacity($meter);
 	    self::verify_rates($meter);
+	    $meter->verify(['name', 'capacity', 'rates']);
 	    model_company::verify_id($company);
 	    if(count(self::get_meters($company, $meter)) > 0)
 	    	throw new e_model('Такой счетчик уже существует.');
 	    $meter->id = self::get_insert_id($company);
 	    $meter->company_id = $company->id;
 	    $meter->periods = [];
-	    self::verify_id($meter);
-	    self::verify_company_id($meter);
-	    self::verify_name($meter);
-	    self::verify_rates($meter);
-	    self::verify_capacity($meter);
+	    $meter->verify(['id', 'company_id', 'name', 'rates', 'capacity']);
 	    $sql = new sql();
 	    $sql->query("INSERT INTO `meters` (`id`, `company_id`, `name`, `rates`, `capacity`,`periods`)
 	                VALUES (:id, :company_id, :name, :rates, :capacity, :periods)");
@@ -152,8 +147,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public static function remove_period(data_company $company, data_meter $meter){
-	    self::verify_id($meter);
-	    self::verify_service($meter);
+	    $meter->verify(['id', 'service']);
 	    model_company::verify_id($company);
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
@@ -180,8 +174,7 @@ class model_meter{
 	* @return data_service
 	*/
 	public static function remove_service(data_company $company, data_meter $meter){
-	    self::verify_id($meter);
-	    self::verify_service($meter);
+	    $meter->verify(['id', 'service']);
 	    model_company::verify_id($company);
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
@@ -208,8 +201,7 @@ class model_meter{
 	* @return data_service
 	*/
 	public static function rename_meter(data_company $company, data_meter $meter){
-	    self::verify_id($meter);
-	    self::verify_name($meter);
+	    $meter->verify(['id', 'name']);
 	    $meter_params = new data_meter();
 	    $meter_params->name = $meter->name;
 	    if(count(self::get_meters($company, $meter_params)) > 0)
@@ -238,8 +230,7 @@ class model_meter{
 	* @return object data_meter
 	*/
 	public static function update_capacity(data_company $company, data_meter $meter){
-	    self::verify_id($meter);
-	    self::verify_capacity($meter);
+	    $meter->verify(['id', 'capacity']);
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
 	    $meters = self::get_meters($company, $meter_params);
@@ -264,8 +255,7 @@ class model_meter{
 	* @return object data_meter
 	*/
 	public static function update_rates(data_company $company, data_meter $meter){
-	    self::verify_id($meter);
-	    self::verify_rates($meter);
+	    $meter->verify(['id', 'rates']);
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
 	    $meters = self::get_meters($company, $meter_params);
@@ -286,86 +276,10 @@ class model_meter{
 	}
 
 	/**
-	* Верификация идентификатора счетчика.
-	*/
-	public static function verify_company_id(data_meter $meter){
-		if($meter->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
-	}
-
-	/**
-	* Верификация времени поверки счетчика.
-	*/
-	public static function verify_chektime(data_meter $meter){
-		if($meter->chektime < 0)
-			throw new e_model('Время поверки счетчика задано не верно.');
-	}
-
-	/**
-	* Верификация идентификатора счетчика.
-	*/
-	public static function verify_id(data_meter $meter){
-		if($meter->id < 1)
-			throw new e_model('Идентификатор счетчика задан не верно.');
-	}
-
-	/**
-	* Верификация названия счетчика.
-	*/
-	public static function verify_name(data_meter $meter){
-		if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]+$/u', $meter->name))
-			throw new e_model('Название счетчика задано не верно.');
-	}
-
-	/**
-	* Верификация разрядности счетчика.
-	*/
-	public static function verify_capacity(data_meter $meter){
-		if($meter->capacity < 1 OR $meter->capacity > 9)
-			throw new e_model('Разрядность задана не верно.');
-	}
-
-	/**
-	* Верификация тарифности счетчика.
-	*/
-	public static function verify_rates(data_meter $meter){
-		if($meter->rates < 1 OR $meter->rates > 3)
-			throw new e_model('Тарифность задана не верно.');
-	}
-
-	/**
-	* Верификация периодов счетчика.
-	*/
-	public static function verify_periods(data_meter $meter){
-		foreach($meter->periods as $period)
-			$period = (int) ($period);
-			if($period < 0 OR $period > 240)
-				throw new e_model('Период задан не верно.');
-	}
-
-	/**
-	* Верификация услуги счетчика.
-	*/
-	public static function verify_service(data_meter $meter){
-		$services = ['cold_water', 'hot_water', 'electrical'];
-		foreach($meter->service as $service)
-			if(array_search($service, $services) === false)
-				throw new e_model('Услуга задана не верно.');
-	}
-
-	/**
-    * Верификация заводского номера счетчика.
-    */
-    public static function verify_serial(data_meter $meter){
-        if(!preg_match('/^[а-яА-Я0-9]+$/u', $meter->serial))
-            throw new e_model('Заводской номер счетчика задано не верно.');
-    }
-
-	/**
 	* Проверка принадлежности объекта к классу data_meter.
 	*/
 	public static function is_data_meter($meter){
-		if(!($meter instanceof data_meter))
-			throw new e_model('Возвращеный объект не является счетчиком.');
+	    if(!($meter instanceof data_meter))
+	        throw new e_model('Возвращеный объект не является счетчиком.');
 	}
 }

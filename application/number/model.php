@@ -83,7 +83,9 @@ class model_number{
 								'serial', 'date_release', 'date_install',
 								'date_checking', 'period', 'service']);
 		if($number2meter->service === 'cold_water' OR $number2meter->service === 'hot_water')
-			verify_number2meter::place($number2meter);
+			$number2meter->verify(['place']);
+		else
+			$number2meter->place = '';
 		$sql = new sql();
 		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`,
 				`meter_id`, `service`, `serial`, `date_release`,`date_install`,

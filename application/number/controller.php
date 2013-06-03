@@ -49,8 +49,7 @@ class controller_number{
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->service[] = $_GET['service'];
-        model_meter::verify_id($meter);
-        model_meter::verify_service($meter);
+        $meter->verify(['id', 'service']);
         $time = getdate();
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
                 'service' => $meter->service[0],
@@ -105,7 +104,7 @@ class controller_number{
     public static function private_get_meter_options(){
         $meter = new data_meter();
         $meter->service[] = $_GET['service'];
-        model_meter::verify_service($meter);
+        $meter->verify(['service']);
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 

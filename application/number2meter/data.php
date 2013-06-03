@@ -22,8 +22,7 @@ final class data_number2meter extends data_object{
 	public function verify($args){
 		if(!is_array($args) OR empty($args))
 			throw e_data('Параметры верификации не были переданы.');
-		foreach($args as $value){
+		foreach($args as $value)
 			verify_number2meter::$value($this);
-		}
 	}
 }
