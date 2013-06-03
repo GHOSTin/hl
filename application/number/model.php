@@ -52,7 +52,7 @@ class model_number{
 										data_meter $meter){
 		model_company::verify_id($company);
 		self::verify_id($number);
-		model_meter::verify_id($meter);
+		$meter->verify(['id']);
 		$numbers = self::get_numbers($company, $number);
 		if(count($numbers) !== 1)
 			throw new e_model('Невереное количество лицевых счетов.');
@@ -64,7 +64,7 @@ class model_number{
 		$new_meter = $meters[0];
 		model_meter::is_data_meter($new_meter);
 		$new_meter->serial = $meter->serial;
-		model_meter::verify_serial($new_meter);
+		$new_meter->verify(['serial']);
 		if(count(model_number2meter::get_number2meters($company, $number, $new_meter)) !== 0)
 			throw new e_model('Счетчик уже существует.');
 		$number2meter = new data_number2meter();
@@ -213,8 +213,7 @@ class model_number{
 	public static function get_meter_data(data_company $company, data_meter $meter,
 											data_number $number, $time){
 		model_company::verify_id($company);
-		model_meter::verify_id($meter);
-		model_meter::verify_serial($meter);
+		$meter->verify(['id', 'serial']);
 		self::verify_id($number);
 		if(empty($time))
 			throw new e_model('Время выборки задано не верно.');

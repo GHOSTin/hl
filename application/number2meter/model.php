@@ -20,7 +20,7 @@ class model_number2meter{
         $sql->bind(':number_id', $number->id, PDO::PARAM_INT);
         $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
         if(!empty($meter->serial)){
-            model_meter::verify_serial($meter);
+            $meter->verify(['serial']);
             $sql->query("AND `number2meter`.`serial` = :serial");
             $sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
         }
