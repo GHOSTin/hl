@@ -78,14 +78,23 @@ class model_number{
 		model_meter::verify_date_release($new_meter);
 		model_meter::verify_date_install($new_meter);
 		model_meter::verify_date_checking($new_meter);
-
 		$sql = new sql();
-		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`
-			`meter_id`, `service`, `serial`)");
-
-		var_dump($new_meter);
-		die('sdf');
-
+		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`,
+			`meter_id`, `service`, `serial`, `date_release`,`date_install`,
+			`date_checking`, `period`) VALUES (:company_id, :number_id,
+			:meter_id, :service, :serial, :date_release, :date_install,
+			:date_checking, :period)");
+		$sql->bind(':company_id', $new_meter->company_id, PDO::PARAM_INT);
+		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+		$sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
+		$sql->bind(':service', $new_meter->service[0], PDO::PARAM_STR);
+		$sql->bind(':serial', $new_meter->serial, PDO::PARAM_STR);
+		$sql->bind(':date_release', $new_meter->date_release, PDO::PARAM_INT);
+		$sql->bind(':date_install', $new_meter->date_install, PDO::PARAM_INT);
+		$sql->bind(':date_checking', $new_meter->date_checking, PDO::PARAM_INT);
+		$sql->bind(':period', $new_meter->period, PDO::PARAM_INT);
+		$sql->execute('Проблемы при добавлении счетчика в лицевой счет.');
+		return $new_meter;
 	}
 
 	/**
