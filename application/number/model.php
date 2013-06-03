@@ -182,8 +182,7 @@ class model_number{
 		$sql->query("SELECT `meters`.`id`,
 						`meters`.`name`,
 						`number2meter`.`service`,
-						`number2meter`.`serial`,
-						`number2meter`.`checktime`
+						`number2meter`.`serial`
 					FROM `meters`, `number2meter`
 					WHERE `number2meter`.`company_id` = :company_id
 					AND `meters`.`company_id` = :company_id

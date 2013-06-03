@@ -1,5 +1,7 @@
 {% extends "ajax.tpl" %}
 {% set number = component.numbers[0] %}
+{% set services = {'cold_water':'Холодное водоснабжение',
+    'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% block js %}
     $('.number[number = {{number.id}}] .number-content').html(get_hidden_content())
 {% endblock js %}
@@ -19,7 +21,7 @@
         <ul style="padding:20px">
         {% for meter in component.meters %}
             <li class="meter" meter="{{ meter.id }}" serial="{{ meter.serial }}">
-                <p class="get_meter_data">{{ meter.service }} {{ meter.name }} №{{ meter.serial }}</p>
+                <p class="get_meter_data">{{ services[meter.service[0]] }} {{ meter.name }} №{{ meter.serial }}</p>
             </li>
         {% else %}
             <li>Ни одного счетчика еще не привязано.</li>
