@@ -17,6 +17,7 @@ final class data_meter extends data_object{
     public $date_release;
     public $date_install;
     public $date_checking;
+    public $place;
 
     public function __construct(){
         if(empty($this->service))

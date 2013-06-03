@@ -350,19 +350,19 @@ class model_meter{
 	}
 
 	/**
+	* Верификация места установки счетчика.
+	*/
+	public static function verify_place(data_meter $meter){
+		if(array_search($meter->place, ['bathroom', 'kitchen', 'toilet']) === false)
+			throw new e_model('Место установки задано не верно.');
+	}
+
+	/**
 	* Верификация тарифности счетчика.
 	*/
 	public static function verify_rates(data_meter $meter){
 		if($meter->rates < 1 OR $meter->rates > 3)
 			throw new e_model('Тарифность задана не верно.');
-	}
-
-	/**
-	* Верификация заводского номера счетчика.
-	*/
-	public static function verify_serial(data_meter $meter){
-		if(!preg_match('/^[а-яА-Я0-9]+$/u', $meter->serial))
-			throw new e_model('Заводской номер счетчика задано не верно.');
 	}
 
 	/**
@@ -392,6 +392,14 @@ class model_meter{
 			if(array_search($service, $services) === false)
 				throw new e_model('Услуга задана не верно.');
 	}
+
+	 /**
+    * Верификация заводского номера счетчика.
+    */
+    public static function verify_serial(data_meter $meter){
+        if(!preg_match('/^[а-яА-Я0-9]+$/u', $meter->serial))
+            throw new e_model('Заводской номер счетчика задано не верно.');
+    }
 
 	/**
 	* Проверка принадлежности объекта к классу data_meter.

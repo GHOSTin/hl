@@ -13,9 +13,9 @@ final class data_number2meter extends data_object{
 	public $name;
 	public $rates;
 	public $serial;
-	public $data_release;
-	public $data_install;
-	public $data_checking;
+	public $date_release;
+	public $date_install;
+	public $date_checking;
 	public $period;
 	public $place;
 }

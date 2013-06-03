@@ -64,28 +64,45 @@ class model_number{
 		$new_meter = $meters[0];
 		model_meter::is_data_meter($new_meter);
 		$new_meter->serial = $meter->serial;
+		model_meter::verify_serial($new_meter);
 		if(count(model_number2meter::get_number2meters($company, $number, $new_meter)) !== 0)
 			throw new e_model('Счетчик уже существует.');
-		$new_meter->service = $meter->service;
-		$new_meter->date_release = $meter->date_release;
-		$new_meter->date_install = $meter->date_install;
-		$new_meter->date_checking = $meter->date_checking;
-		$new_meter->period = $meter->period;
-		model_meter::verify_id($new_meter);
+		$number2meter = new data_number2meter();
+		$number2meter->company_id = $company->id;
+		$number2meter->number_id = $number->id;
+		$number2meter->meter_id = $new_meter->id;
+		$number2meter->meter_id = $new_meter->id;
+		$number2meter->serial = $meter->serial;
+		$number2meter->date_release = $meter->date_release;
+		$number2meter->date_install = $meter->date_install;
+		$number2meter->date_checking = $meter->date_checking;
+		$number2meter->period = $meter->period;
+		$number2meter->place = $meter->place;
+
+		verify_number2meter::company_id($number2meter);
+		verify_number2meter::number_id($number2meter);
+		verify_number2meter::meter_id($number2meter);
+		verify_number2meter::serial($number2meter);
+
+		model_number2meter::verify_date_release($number2meter);
+
 		model_meter::verify_capacity($new_meter);
 		model_meter::verify_rates($new_meter);
 		model_meter::verify_service($new_meter);
 		model_meter::verify_serial($new_meter);
 		model_meter::verify_period($new_meter);
-		model_meter::verify_date_release($new_meter);
+		
 		model_meter::verify_date_install($new_meter);
 		model_meter::verify_date_checking($new_meter);
+		exit();
+		if($new_meter->service[0] === 'cold_water' OR $new_meter->service[0] === 'hot_water')
+			model_meter::verify_place($new_meter);
 		$sql = new sql();
 		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`,
 			`meter_id`, `service`, `serial`, `date_release`,`date_install`,
-			`date_checking`, `period`) VALUES (:company_id, :number_id,
+			`date_checking`, `period`, `place`) VALUES (:company_id, :number_id,
 			:meter_id, :service, :serial, :date_release, :date_install,
-			:date_checking, :period)");
+			:date_checking, :period, :place)");
 		$sql->bind(':company_id', $new_meter->company_id, PDO::PARAM_INT);
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		$sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
@@ -95,6 +112,7 @@ class model_number{
 		$sql->bind(':date_install', $new_meter->date_install, PDO::PARAM_INT);
 		$sql->bind(':date_checking', $new_meter->date_checking, PDO::PARAM_INT);
 		$sql->bind(':period', $new_meter->period, PDO::PARAM_INT);
+		$sql->bind(':place', $new_meter->place, PDO::PARAM_STR);
 		$sql->execute('Проблемы при добавлении счетчика в лицевой счет.');
 		return $new_meter;
 	}

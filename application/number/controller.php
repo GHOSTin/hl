@@ -11,6 +11,7 @@ class controller_number{
         $meter->service[] = $_GET['service'];
         $meter->serial = $_GET['serial'];
         $meter->period = $_GET['period'];
+        $meter->place = $_GET['place'];
         $date_release = explode('.', $_GET['date_release']);
         $date_install = explode('.', $_GET['date_install']);
         $date_checking = explode('.', $_GET['date_checking']);

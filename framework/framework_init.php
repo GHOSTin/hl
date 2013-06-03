@@ -13,6 +13,7 @@ function framework_autoload($class_name){
 	 	OR (0 === strpos($class_name, 'view_')) 
 	 	OR (0 === strpos($class_name, 'controller_'))
 	 	OR (0 === strpos($class_name, 'data_'))
+	 	OR (0 === strpos($class_name, 'verify_'))
 	){
 		list($folder, $component) = explode('_', $class_name, 2);
 		$file_path = ROOT.'/'.framework_configuration::application_folder.'/'.$component.'/'.$folder.'.php';
