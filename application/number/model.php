@@ -181,6 +181,7 @@ class model_number{
 		$sql = new sql();
 		$sql->query("SELECT `meters`.`id`,
 						`meters`.`name`,
+						`meters`.`rates`,
 						`number2meter`.`service`,
 						`number2meter`.`serial`
 					FROM `meters`, `number2meter`
