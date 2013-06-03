@@ -8,7 +8,7 @@ class controller_number{
         $number->id = $_GET['number_id'];
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
-        $meter->service[] = $_GET['service'];
+        $meter->service[0] = $_GET['service'];
         $meter->serial = $_GET['serial'];
         $meter->period = $_GET['period'];
         $meter->place = $_GET['place'];

@@ -302,30 +302,6 @@ class model_meter{
 	}
 
 	/**
-	* Верификация даты производства счетчика.
-	*/
-	public static function verify_date_release(data_meter $meter){
-		if($meter->date_release < 0)
-			throw new e_model('Время даты производства задано не верно.');
-	}
-
-	/**
-	* Верификация даты установки счетчика.
-	*/
-	public static function verify_date_install(data_meter $meter){
-		if($meter->date_install < 0)
-			throw new e_model('Время даты установки задано не верно.');
-	}
-
-	/**
-	* Верификация даты поверки счетчика.
-	*/
-	public static function verify_date_checking(data_meter $meter){
-		if($meter->date_checking < 0)
-			throw new e_model('Время даты поверки задано не верно.');
-	}
-
-	/**
 	* Верификация идентификатора счетчика.
 	*/
 	public static function verify_id(data_meter $meter){
@@ -350,14 +326,6 @@ class model_meter{
 	}
 
 	/**
-	* Верификация места установки счетчика.
-	*/
-	public static function verify_place(data_meter $meter){
-		if(array_search($meter->place, ['bathroom', 'kitchen', 'toilet']) === false)
-			throw new e_model('Место установки задано не верно.');
-	}
-
-	/**
 	* Верификация тарифности счетчика.
 	*/
 	public static function verify_rates(data_meter $meter){
@@ -376,15 +344,7 @@ class model_meter{
 	}
 
 	/**
-	* Верификация периода счетчика.
-	*/
-	public static function verify_period(data_meter $meter){
-		if($meter->period < 0 OR $meter->period > 240)
-			throw new e_model('Период задан не верно.');
-	}
-
-	/**
-	* Верификация службы счетчика.
+	* Верификация услуги счетчика.
 	*/
 	public static function verify_service(data_meter $meter){
 		$services = ['cold_water', 'hot_water', 'electrical'];
@@ -393,7 +353,7 @@ class model_meter{
 				throw new e_model('Услуга задана не верно.');
 	}
 
-	 /**
+	/**
     * Верификация заводского номера счетчика.
     */
     public static function verify_serial(data_meter $meter){

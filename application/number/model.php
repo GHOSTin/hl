@@ -73,48 +73,35 @@ class model_number{
 		$number2meter->meter_id = $new_meter->id;
 		$number2meter->meter_id = $new_meter->id;
 		$number2meter->serial = $meter->serial;
+		$number2meter->service = $meter->service[0];
 		$number2meter->date_release = $meter->date_release;
 		$number2meter->date_install = $meter->date_install;
 		$number2meter->date_checking = $meter->date_checking;
 		$number2meter->period = $meter->period;
 		$number2meter->place = $meter->place;
-
-		verify_number2meter::company_id($number2meter);
-		verify_number2meter::number_id($number2meter);
-		verify_number2meter::meter_id($number2meter);
-		verify_number2meter::serial($number2meter);
-
-		model_number2meter::verify_date_release($number2meter);
-
-		model_meter::verify_capacity($new_meter);
-		model_meter::verify_rates($new_meter);
-		model_meter::verify_service($new_meter);
-		model_meter::verify_serial($new_meter);
-		model_meter::verify_period($new_meter);
-		
-		model_meter::verify_date_install($new_meter);
-		model_meter::verify_date_checking($new_meter);
-		exit();
-		if($new_meter->service[0] === 'cold_water' OR $new_meter->service[0] === 'hot_water')
-			model_meter::verify_place($new_meter);
+		$number2meter->verify(['company_id', 'number_id', 'meter_id',
+								'serial', 'date_release', 'date_install',
+								'date_checking', 'period', 'service']);
+		if($number2meter->service === 'cold_water' OR $number2meter->service === 'hot_water')
+			verify_number2meter::place($number2meter);
 		$sql = new sql();
 		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`,
-			`meter_id`, `service`, `serial`, `date_release`,`date_install`,
-			`date_checking`, `period`, `place`) VALUES (:company_id, :number_id,
-			:meter_id, :service, :serial, :date_release, :date_install,
-			:date_checking, :period, :place)");
-		$sql->bind(':company_id', $new_meter->company_id, PDO::PARAM_INT);
-		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
-		$sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
-		$sql->bind(':service', $new_meter->service[0], PDO::PARAM_STR);
-		$sql->bind(':serial', $new_meter->serial, PDO::PARAM_STR);
-		$sql->bind(':date_release', $new_meter->date_release, PDO::PARAM_INT);
-		$sql->bind(':date_install', $new_meter->date_install, PDO::PARAM_INT);
-		$sql->bind(':date_checking', $new_meter->date_checking, PDO::PARAM_INT);
-		$sql->bind(':period', $new_meter->period, PDO::PARAM_INT);
-		$sql->bind(':place', $new_meter->place, PDO::PARAM_STR);
+				`meter_id`, `service`, `serial`, `date_release`,`date_install`,
+				`date_checking`, `period`, `place`) VALUES (:company_id, :number_id,
+				:meter_id, :service, :serial, :date_release, :date_install,
+				:date_checking, :period, :place)");
+		$sql->bind(':company_id', $number2meter->company_id, PDO::PARAM_INT);
+		$sql->bind(':number_id', $number2meter->number_id, PDO::PARAM_INT);
+		$sql->bind(':meter_id', $number2meter->meter_id, PDO::PARAM_INT);
+		$sql->bind(':service', $number2meter->service, PDO::PARAM_STR);
+		$sql->bind(':serial', $number2meter->serial, PDO::PARAM_STR);
+		$sql->bind(':date_release', $number2meter->date_release, PDO::PARAM_INT);
+		$sql->bind(':date_install', $number2meter->date_install, PDO::PARAM_INT);
+		$sql->bind(':date_checking', $number2meter->date_checking, PDO::PARAM_INT);
+		$sql->bind(':period', $number2meter->period, PDO::PARAM_INT);
+		$sql->bind(':place', $number2meter->place, PDO::PARAM_STR);
 		$sql->execute('Проблемы при добавлении счетчика в лицевой счет.');
-		return $new_meter;
+		return ['meter' => $new_meter, 'number2meter' => $number2meter];
 	}
 
 	/**
