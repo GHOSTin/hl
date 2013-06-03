@@ -63,8 +63,10 @@ class model_number{
 			throw new e_model('Неверное количество счетчиков.');
 		$new_meter = $meters[0];
 		model_meter::is_data_meter($new_meter);
-		$new_meter->service = $meter->service;
 		$new_meter->serial = $meter->serial;
+		if(count(model_number2meter::get_number2meters($company, $number, $new_meter)) !== 0)
+			throw new e_model('Счетчик уже существует.');
+		$new_meter->service = $meter->service;
 		$new_meter->date_release = $meter->date_release;
 		$new_meter->date_install = $meter->date_install;
 		$new_meter->date_checking = $meter->date_checking;
