@@ -34,7 +34,6 @@
 		<li>
 			<span>Период поверки</span>
 			<select class="dialog-select-period">
-				<option>Выберите период</option>
                 {% for period in meter.periods %}
                		<option value="{{ period }}">
                     {% if period > 12 %}
@@ -88,8 +87,8 @@
 			date_release: $('.dialog-input-date_release').val(),
 			date_install: $('.dialog-input-date_install').val(),
 			date_checking: $('.dialog-input-date_checking').val(),
-			period: $('.dialog-select-period :selected').val(),
-			plase: $('.dialog-select-place').val(),
+			period: $('.dialog-select-period').val(),
+			place: $('.dialog-select-place').val(),
 			comment: $('.dialog-textarea-comment').val()
 			},function(r){
 				$('.dialog').modal('hide');

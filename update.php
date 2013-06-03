@@ -58,6 +58,10 @@ try{
     $sql->execute('Столбец period не был создан.');
 
     $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` add COLUMN `place` ENUM('bathroom', 'kitchen', 'toilet') NOT NULL");
+    $sql->execute('Столбец period не был создан.');
+
+    $sql = new sql();
     $sql->query('DROP TABLE `accrualgroups`, `accrualgroups__log`, `accruals`, 
         `accruals__log`, `numbersessions`, `receipts`, `receipts__log`, `services`');
     $sql->execute('Таблицы не были удалены.');
