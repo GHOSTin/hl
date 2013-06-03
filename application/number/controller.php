@@ -18,8 +18,9 @@ class controller_number{
         $meter->date_release = mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]);
         $meter->date_install = mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]);
         $meter->date_checking = mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]);
-        return ['meter' => model_number::add_meter(model_session::get_company(),$number, $meter),
-                'number' => $number];
+        model_number::add_meter(model_session::get_company(), $number, $meter);
+        return ['number' => $number,
+                'meters' => model_number::get_meters(model_session::get_company(), $number)];
     }
 
 	public static function private_show_default_page(){

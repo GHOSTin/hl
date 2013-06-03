@@ -18,7 +18,7 @@
         <a class="get_dialog_add_meter">Привязать счетчик</a>
     </div>
     <li>
-        <ul style="padding:20px">
+        <ul style="padding:20px" class="number-meters">
         {% for meter in component.meters %}
             <li class="meter" meter="{{ meter.id }}" serial="{{ meter.serial }}">
                 {% set period = meter.period %}
