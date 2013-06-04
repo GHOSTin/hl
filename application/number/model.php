@@ -206,8 +206,8 @@ class model_number{
 	/*
 	* Возвращает данные счетчика
 	*/
-	public static function get_meter_data(data_company $company, data_meter $meter,
-											data_number $number, $time){
+	public static function get_meter_data(data_company $company, data_number $number, 
+											data_meter $meter, $time){
 		model_company::verify_id($company);
 		$meter->verify('id', 'serial');
 		$number->verify('id');
@@ -228,42 +228,41 @@ class model_number{
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':time_begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
 		$sql->bind(':time_end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
-		$sql->execute('Проблема при при выборки данных счетчика.');
-		$result = [];
-		while($data = $sql->row())
-			$result[$data['time']] = json_decode($data['value']);
-		return $result;
-
+		return $sql->map(new data_meter2data(), 'Проблема при при выборки данных счетчика.');
 	}
 	/*
 	* Возвращает данные счетчика
 	*/
 	public static function update_meter_data(data_company $company, data_meter $meter,
-												data_number $number, $time, $tarif){
+												data_number $number, data_meter2data $data){
 		try{
 			$sql = new sql();
 			$sql->begin();
 			$meter->verify('id', 'serial');
 			$number->verify('id');
 			model_company::verify_id($company);
-			if(empty($time))
+			if(empty($data->time))
 				throw new e_model('Время выборки задано не верно.');
-			if(count($tarif) !== 2)
-				throw new e_model('Показания заданы не верно.');
-			$number = self::get_numbers($company, $number)[0];
+
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)			
+				throw new e_model('Проблема при выборке лицевого счета.');
+			$number = $numbers[0];
 			model_number::is_data_number($number);
 			$meters = self::get_meters($company, $number, $meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
 			$meter = $meters[0];
 			model_meter::is_data_meter($meter);
+			if(count($data->value) !== (int) $meter->rates)
+				throw new e_model('Количество тарифов показаний не соответствует количеству в счетчике.');
 			$sql->query("SELECT `time`, `value` FROM `meter2data`
 						WHERE `meter2data`.`company_id` = :company_id
 						AND `meter2data`.`number_id` = :number_id
 						AND `meter2data`.`meter_id` = :meter_id
 						AND `meter2data`.`serial` = :serial
 						AND `meter2data`.`time` = :time");
-			$time = getdate($time);
+			$time = getdate($data->time);
 			$sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
 			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
 			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
@@ -289,7 +288,7 @@ class model_number{
 			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
-			$sql->bind(':value', json_encode([round($tarif[0], 2), round($tarif[1], 2)]));
+			$sql->bind(':value', implode(';', $data->value), PDO::PARAM_STR);
 			$sql->execute('Проблема при при выборки данных счетчика.');
 			$sql->commit();
 			return $tarif;

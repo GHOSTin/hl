@@ -99,9 +99,12 @@ class controller_number{
             $time = getdate($_GET['time']);
         else
             $time = getdate();
-        return [ 'meters' => model_number::get_meters(model_session::get_company(), $number, $meter), 
-                'number' => $number, 'time' => mktime(12, 0, 0, 1, 1, $time['year']), 
-                'meter_data' =>model_number::get_meter_data(model_session::get_company(), $meter, $number, mktime(12, 0, 0, 1, 1, $time['year']))];
+        $time = mktime(12, 0, 0, 1, 1, $time['year']);
+        // var_dump(model_number::get_meter_data(model_session::get_company(), $number, $meter, $time));
+        // exit();
+        return ['meters' => model_number::get_meters(model_session::get_company(), $number, $meter), 
+                'number' => $number, 'time' => $time, 
+                'meter_data' => model_number::get_meter_data(model_session::get_company(), $number, $meter, $time)];
     }
     
     public static function private_get_meter_options(){
@@ -126,7 +129,7 @@ class controller_number{
         $meter->serial = $_GET['serial'];
         $time = $_GET['time'];
         return ['number' => $number, 'meter' => $meter, 'time' => $_GET['time'],
-                'meter_data' =>model_number::get_meter_data(model_session::get_company(), $meter, $number, mktime(12, 0, 0, 1, 1, getdate($time)['year']))];
+                'meter_data' =>model_number::get_meter_data(model_session::get_company(), $number, $meter, mktime(12, 0, 0, 1, 1, getdate($time)['year']))];
     }
 
     public static function private_update_number(){
@@ -136,13 +139,18 @@ class controller_number{
         $number->verify('id', 'number');
         return model_number::update_number(model_session::get_company(), $number);
     }
+
     public static function private_update_meter_data(){
         $number = new data_number();
         $number->id = $_GET['id'];
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
+        $meter2data = new data_meter2data();
+        $meter2data->time = $_GET['time'];
+        $meter2data->value = $_GET['tarif'];
         return ['number' => $number, 'meter' => $meter, 'time' => $_GET['time'],
-        'meter_data' => model_number::update_meter_data(model_session::get_company(), $meter, $number, $_GET['time'], $_GET['tarif'])];
+        'meter_data' => model_number::update_meter_data(model_session::get_company(),
+                                                        $meter, $number, $meter2data)];
     }
 }
