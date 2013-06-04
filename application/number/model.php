@@ -177,15 +177,13 @@ class model_number{
 	* Возвращает список счетчиков лицевого счета
 	*/
 	public static function get_meters(data_company $company, data_number $number,
-										data_meter $meter = null){
+										data_meter $meter){
 		model_company::verify_id($company);
 		$number->verify('id');
 		$sql = new sql();
-		$sql->query("SELECT `meters`.`id`,
-						`meters`.`name`,
-						`meters`.`rates`,
-						`number2meter`.`service`,
-						`number2meter`.`serial`
+		$sql->query("SELECT `meters`.`id`, `meters`.`name`, `meters`.`rates`,
+					`meters`.`capacity`, `number2meter`.`service`,
+					`number2meter`.`serial`
 					FROM `meters`, `number2meter`
 					WHERE `number2meter`.`company_id` = :company_id
 					AND `meters`.`company_id` = :company_id
@@ -193,10 +191,15 @@ class model_number{
 					AND `meters`.`id` = `number2meter`.`meter_id`");
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		if(!is_null($meter)){
+		if(!empty($meter->id)){
 			$meter->verify('id');
 			$sql->query(" AND `number2meter`.`meter_id` = :meter_id");
 			$sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
+		}
+		if(!empty($meter->serial)){
+			$meter->verify('serial');
+			$sql->query(" AND `number2meter`.`serial` = :serial");
+			$sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
 		}
 		return $sql->map(new data_meter(), 'Проблема при при выборке счетчиков.');
 	}

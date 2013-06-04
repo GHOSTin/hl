@@ -1,10 +1,11 @@
 {% extends "ajax.tpl" %}
+{% set meter = component.meters[0] %}
 {% set number = component.number %}
 {% set date = component.time %}
 {% set months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август',
     'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] %}
 {% block js %}
-    $('.number[number = {{ number.id }}] .meter[serial = {{ component.meter.serial }}][meter = {{ component.meter.id }}]').append(get_hidden_content())
+    $('.number[number = {{ number.id }}] .meter[serial = {{ meter.serial }}][meter = {{ meter.id }}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
 <div class="meter-data">
@@ -28,8 +29,14 @@
         {% set data = component.meter_data[date|date("U")] %}
         <tr class="month" time="{{ date|date("U") }}">
             <td>{{ months[i] }}</td>
-            <td><input type="text" value="{{ data[0] }}" class="tarif1 input-small"></td>
-            <td><input type="text" value="{{ data[1] }}" class="tarif2 input-small"></td>
+            <td><input type="text" value="{{ data[0] }}" class="tarif1 input-small" maxlength="{{ meter.capacity }}"></td>
+            {% if meter.rates == 2 %}
+            <td><input type="text" value="{{ data[1] }}" class="tarif2 input-small" maxlength="{{ meter.capacity }}"></td>
+            {% endif %}
+            {% if meter.rates == 3 %}
+            <td><input type="text" value="{{ data[1] }}" class="tarif2 input-small" maxlength="{{ meter.capacity }}"></td>
+            <td><input type="text" value="{{ data[2] }}" class="tarif3 input-small" maxlength="{{ meter.capacity }}"></td>
+            {% endif %}
             <td><a class="btn get_dialog_edit_meter_data">изменить</a></td>
         </tr>
         {% set date = date|date_modify("+1 month") %}

@@ -70,7 +70,7 @@ class controller_number{
         $number->id = $_GET['id'];
         $number->verify('id');
         return ['numbers' => model_number::get_numbers(model_session::get_company(), $number),
-                'meters' => model_number::get_meters(model_session::get_company(), $number)];
+                'meters' => model_number::get_meters(model_session::get_company(), $number, new data_meter())];
     }
 
     public static function private_get_number_content(){
@@ -90,14 +90,17 @@ class controller_number{
     public static function private_get_meter_data(){
         $number = new data_number();
         $number->id = $_GET['id'];
+        $number->verify('id');
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
+        $meter->verify('id', 'serial');
         if($_GET['time'] > 0)
             $time = getdate($_GET['time']);
         else
             $time = getdate();
-        return [ 'meter' => $meter, 'number' => $number, 'time' => mktime(12, 0, 0, 1, 1, $time['year']), 
+        return [ 'meters' => model_number::get_meters(model_session::get_company(), $number, $meter), 
+                'number' => $number, 'time' => mktime(12, 0, 0, 1, 1, $time['year']), 
                 'meter_data' =>model_number::get_meter_data(model_session::get_company(), $meter, $number, mktime(12, 0, 0, 1, 1, $time['year']))];
     }
     
