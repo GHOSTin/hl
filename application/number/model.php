@@ -13,15 +13,8 @@ class model_number{
 		$number->type = 'human';
 		$number->house_id = $flat->house_id;
 		$number->flat_id = $flat->id;
-		self::verify_id($number);
-		self::verify_company_id($number);
-		self::verify_city_id($number);
-		self::verify_house_id($number);
-		self::verify_flat_id($number);
-		self::verify_number($number);
-		self::verify_type($number);
-		self::verify_status($number);
-		self::verify_fio($number);
+		$number->verify('id', 'company_id', 'citu_id', 'house_id', 'flat_id', 'number',
+						'type', 'status', 'fio');
 		$sql = new sql();
 		$sql->query("INSERT INTO `numbers` (`id`, `company_id`, `city_id`, `house_id`,
 					`flat_id`, `number`, `type`, `status`, `fio`, `telephone`, `cellphone`,
@@ -51,8 +44,8 @@ class model_number{
 	public static function add_meter(data_company $company, data_number $number,
 										data_meter $meter){
 		model_company::verify_id($company);
-		self::verify_id($number);
-		$meter->verify(['id']);
+		$number->verify('id');
+		$meter->verify('id');
 		$numbers = self::get_numbers($company, $number);
 		if(count($numbers) !== 1)
 			throw new e_model('Невереное количество лицевых счетов.');
@@ -64,7 +57,7 @@ class model_number{
 		$new_meter = $meters[0];
 		model_meter::is_data_meter($new_meter);
 		$new_meter->serial = $meter->serial;
-		$new_meter->verify(['serial']);
+		$new_meter->verify('serial');
 		if(count(model_number2meter::get_number2meters($company, $number, $new_meter)) !== 0)
 			throw new e_model('Счетчик уже существует.');
 		$number2meter = new data_number2meter();
@@ -79,11 +72,11 @@ class model_number{
 		$number2meter->date_checking = $meter->date_checking;
 		$number2meter->period = $meter->period;
 		$number2meter->place = $meter->place;
-		$number2meter->verify(['company_id', 'number_id', 'meter_id',
+		$number2meter->verify('company_id', 'number_id', 'meter_id',
 								'serial', 'date_release', 'date_install',
-								'date_checking', 'period', 'service']);
+								'date_checking', 'period', 'service');
 		if($number2meter->service === 'cold_water' OR $number2meter->service === 'hot_water')
-			$number2meter->verify(['place']);
+			$number2meter->verify('place');
 		else
 			$number2meter->place = '';
 		$sql = new sql();
@@ -132,7 +125,7 @@ class model_number{
 		model_company::verify_id($company);
 		$sql = new sql();
 		if(!empty($number->id)){
-			self::verify_id($number);
+			$number->verify('id');
 			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
 						`numbers`.`flat_id`, `numbers`.`number`,
@@ -154,7 +147,7 @@ class model_number{
 					AND `houses`.`street_id` = `streets`.`id`");
 			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		}elseif(!empty($number->number)){
-			self::verify_number($number);
+			$number->verify('number');
 			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
 						`numbers`.`flat_id`, `numbers`.`number`,
@@ -186,7 +179,7 @@ class model_number{
 	public static function get_meters(data_company $company, data_number $number,
 										data_meter $meter = null){
 		model_company::verify_id($company);
-		self::verify_id($number);
+		$number->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `meters`.`id`,
 						`meters`.`name`,
@@ -201,7 +194,7 @@ class model_number{
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!is_null($meter)){
-			model_meter::verify_id($meter);
+			$meter->verify('id');
 			$sql->query(" AND `number2meter`.`meter_id` = :meter_id");
 			$sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
 		}
@@ -213,8 +206,8 @@ class model_number{
 	public static function get_meter_data(data_company $company, data_meter $meter,
 											data_number $number, $time){
 		model_company::verify_id($company);
-		$meter->verify(['id', 'serial']);
-		self::verify_id($number);
+		$meter->verify('id', 'serial');
+		$number->verify('id');
 		if(empty($time))
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);
@@ -247,9 +240,8 @@ class model_number{
 		try{
 			$sql = new sql();
 			$sql->begin();
-			model_meter::verify_id($meter);
-			model_meter::verify_serial($meter);
-			self::verify_id($number);
+			$meter->verify('id', 'serial');
+			$number->verify('id');
 			model_company::verify_id($company);
 			if(empty($time))
 				throw new e_model('Время выборки задано не верно.');
@@ -312,8 +304,7 @@ class model_number{
 	*/
 	public static function update_number(data_company $company, data_number $number_params){
 		die('DISABLED');
-		self::verify_id($number_params);
-		self::verify_number($number_params);
+		$number_params->verify('id', 'number');
 		model_company::verify_id($company);
 		$number = model_number::get_numbers($company, $number_params)[0];
 		self::is_data_number($number);
@@ -360,142 +351,12 @@ class model_number{
 				throw new e_model('Ошибка в PDO.');
 		}
 	}
-	/**
-	* Верификация сотового телефона лицевого счета.
-	*/
-	public static function verify_cellphone(data_number $number){
-	}
-	/**
-	* Верификация идентификатора города.
-	*/
-	public static function verify_city_id(data_number $number){
-		if($number->city_id < 1)
-			throw new e_model('Идентификатор города задан не верно.');
-	}
-	/**
-	* Верификация сотового телефона контактного лица.
-	*/
-	public static function verify_contact_cellphone(data_number $number){
-		if(empty($number->contact_cellphone))
-			throw new e_model('Сотовый телефон контактного лица задан не верно.');
-	}
-	/**
-	* Верификация ФИО контактного лица.
-	*/
-	public static function verify_contact_fio(data_number $number){
-		if(empty($number->contact_fio))
-			throw new e_model('ФИО контактного лица заданы не верно.');
-	}
-	/**
-	* Верификация телефона контактного лица.
-	*/
-	public static function verify_contact_telephone(data_number $number){
-		if(empty($number->contact_telephone))
-			throw new e_model('Телефон контактного лица задан не верно.');
-	}
-	/**
-	* Верификация идентификатора компании.
-	*/
-	public static function verify_company_id(data_number $number){
-		if($number->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
-	}
-	/**
-	* Верификация идентификатора участка.
-	*/
-	public static function verify_department_id(data_number $number){
-		if($number->department_id < 1)
-			throw new e_model('Идентификатор участка задан не верно.');
-	}
-	/**
-	* Верификация ФИО владельца лицевого счета.
-	*/
-	public static function verify_fio(data_number $number){
-		if(empty($number->fio))
-			throw new e_model('ФИО владельца лицевого счета заданы не верно.');
-	}
-	/**
-	* Верификация номера квартиры.
-	*/
-	public static function verify_flat_number(data_number $number){
-		if(empty($number->flat_number))
-			throw new e_model('Номер квартиры задан не верно.');
-	}
-	/**
-	* Верификация идентификатора квартиры.
-	*/
-	public static function verify_flat_id(data_number $number){
-		if($number->flat_id < 1)
-			throw new e_model('Идентификатор квартиры задан не верно.');
-	}
-	/**
-	* Верификация идентификатора дома.
-	*/
-	public static function verify_house_id(data_number $number){
-		if($number->house_id < 1)
-			throw new e_model('Идентификатор дома задан не верно.');
-	}
-	/**
-	* Верификация номера дома.
-	*/
-	public static function verify_house_number(data_number $number){
-		if(empty($number->house_number))
-			throw new e_model('Номер дома задан не верно.');
-	}
-	/**
-	* Верификация идентификатора лицевого счета.
-	*/
-	public static function verify_id(data_number $number){
-		if($number->id < 1)
-			throw new e_model('Идентификатор лицевого счета задан не верно.');
-	}
-	/**
-	* Верификация номера лицевого счета.
-	*/
-	public static function verify_number(data_number $number){
-		if(empty($number->number))
-			throw new e_model('Номер лицевого счета задан не верно.');
-	}
-	/**
-	* Верификация пароля лицевого счета.
-	*/
-	public static function verify_password(data_number $number){
-		if(empty($number->password))
-			throw new e_model('Пароль лицевого счета задан не верно.');
-	}
-	/**
-	* Верификация статуса лицевого счета.
-	*/
-	public static function verify_status(data_number $number){
-		if(empty($number->status))
-			throw new e_model('Статус лицевого счета задан не верно.');
-	}
-	/**
-	* Верификация названия улицы.
-	*/
-	public static function verify_street_name(data_number $number){
-		if(empty($number->street_name))
-			throw new e_model('Название улицы задано не верно.');
-	}
-	/**
-	* Верификация телефона владельца лицевого счета.
-	*/
-	public static function verify_telephone(data_number $number){
-		if(empty($number->telephone))
-			throw new e_model('Телефон владельца лицевого счета задан не верно.');
-	}
-	/**
-	* Верификация типа лицевого счета.
-	*/
-	public static function verify_number_type(data_number $number){
-		if(empty($number->type))
-			throw new e_model('Тип лицевого счета задан не верно.');
-	}
+
 	/**
 	* Проверка принадлежности объекта к классу data_number.
 	*/
 	public static function is_data_number($number){
-		if(!($number instanceof data_number))
-			throw new e_model('Возвращен объект не является лицевым счетом.');
+	    if(!($number instanceof data_number))
+	        throw new e_model('Возвращен объект не является лицевым счетом.');
 	}
 }

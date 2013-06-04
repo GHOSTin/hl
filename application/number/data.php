@@ -25,4 +25,11 @@ final class data_number extends data_object{
 	public $street_name;
 	public $telephone;
 	public $type;
+
+	public function verify(){
+        if(func_num_args() < 0)
+            throw new e_data('Параметры верификации не были переданы.');
+        foreach(func_get_args() as $value)
+            verify_number::$value($this);
+    }
 }

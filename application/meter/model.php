@@ -6,7 +6,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public static function add_period(data_company $company, data_meter $meter){
-	    $meter->verify(['id', 'periods']);
+	    $meter->verify('id', 'periods');
 	    model_company::verify_id($company);
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
@@ -34,7 +34,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public static function add_service(data_company $company, data_meter $meter){
-	    $meter->verify(['id', 'service']);
+	    $meter->verify('id', 'service');
 	    model_company::verify_id($company);
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
@@ -66,27 +66,27 @@ class model_meter{
 	    			FROM `meters` WHERE `company_id` = :company_id");
 	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 	    if(!empty($meter->id)){
-	        $meter->verify(['id']);
+	        $meter->verify('id');
 	        $sql->query(" AND `id` = :id");
 	        $sql->bind(':id', $meter->id, PDO::PARAM_INT);
 	    }
 	    if(!empty($meter->name)){
-	        $meter->verify(['name']);
+	        $meter->verify('name');
 	        $sql->query(" AND `name` = :name");
 	        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
 	    }
 	    if(!empty($meter->capacity)){
-	        $meter->verify(['capacity']);
+	        $meter->verify('capacity');
 	        $sql->query(" AND `capacity` = :capacity");
 	        $sql->bind(':capacity', $meter->capacity, PDO::PARAM_INT);
 	    }
 	    if(!empty($meter->rates)){
-	        $meter->verify(['rates']);
+	        $meter->verify('rates');
 	        $sql->query(" AND `rates` = :rates");
 	        $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
 	    }
 	    if(!empty($meter->service)){
-	        $meter->verify(['service']);
+	        $meter->verify('service');
 	        $sql->query(" AND FIND_IN_SET(:service, `service`) > 0");
 	        $sql->bind(':service', $meter->service[0], PDO::PARAM_INT);
 	    }
@@ -99,17 +99,14 @@ class model_meter{
 	* @return data_meter
 	*/
 	public static function create_meter(data_company $company, data_meter $meter){
-	    self::verify_name($meter);
-	    self::verify_capacity($meter);
-	    self::verify_rates($meter);
-	    $meter->verify(['name', 'capacity', 'rates']);
+	    $meter->verify('name', 'capacity', 'rates');
 	    model_company::verify_id($company);
 	    if(count(self::get_meters($company, $meter)) > 0)
 	    	throw new e_model('Такой счетчик уже существует.');
 	    $meter->id = self::get_insert_id($company);
 	    $meter->company_id = $company->id;
 	    $meter->periods = [];
-	    $meter->verify(['id', 'company_id', 'name', 'rates', 'capacity']);
+	    $meter->verify('id', 'company_id', 'name', 'rates', 'capacity');
 	    $sql = new sql();
 	    $sql->query("INSERT INTO `meters` (`id`, `company_id`, `name`, `rates`, `capacity`,`periods`)
 	                VALUES (:id, :company_id, :name, :rates, :capacity, :periods)");
@@ -147,7 +144,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public static function remove_period(data_company $company, data_meter $meter){
-	    $meter->verify(['id', 'service']);
+	    $meter->verify('id', 'service');
 	    model_company::verify_id($company);
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
@@ -174,7 +171,7 @@ class model_meter{
 	* @return data_service
 	*/
 	public static function remove_service(data_company $company, data_meter $meter){
-	    $meter->verify(['id', 'service']);
+	    $meter->verify('id', 'service');
 	    model_company::verify_id($company);
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
@@ -201,7 +198,7 @@ class model_meter{
 	* @return data_service
 	*/
 	public static function rename_meter(data_company $company, data_meter $meter){
-	    $meter->verify(['id', 'name']);
+	    $meter->verify('id', 'name');
 	    $meter_params = new data_meter();
 	    $meter_params->name = $meter->name;
 	    if(count(self::get_meters($company, $meter_params)) > 0)
@@ -230,7 +227,7 @@ class model_meter{
 	* @return object data_meter
 	*/
 	public static function update_capacity(data_company $company, data_meter $meter){
-	    $meter->verify(['id', 'capacity']);
+	    $meter->verify('id', 'capacity');
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
 	    $meters = self::get_meters($company, $meter_params);
@@ -255,7 +252,7 @@ class model_meter{
 	* @return object data_meter
 	*/
 	public static function update_rates(data_company $company, data_meter $meter){
-	    $meter->verify(['id', 'rates']);
+	    $meter->verify('id', 'rates');
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
 	    $meters = self::get_meters($company, $meter_params);

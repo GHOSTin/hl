@@ -19,10 +19,10 @@ final class data_number2meter extends data_object{
 	public $period;
 	public $place;
 
-	public function verify($args){
-		if(!is_array($args) OR empty($args))
-			throw e_data('Параметры верификации не были переданы.');
-		foreach($args as $value)
-			verify_number2meter::$value($this);
-	}
+	public function verify(){
+        if(func_num_args() < 0)
+            throw new e_data('Параметры верификации не были переданы.');
+        foreach(func_get_args() as $value)
+            verify_number2meter::$value($this);
+    }
 }

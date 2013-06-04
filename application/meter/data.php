@@ -28,10 +28,10 @@ final class data_meter extends data_object{
         $this->periods = (empty($this->periods))? []: explode(';', $this->periods);
     }
 
-    public function verify($args){
-        if(!is_array($args) OR empty($args))
-            throw e_data('Параметры верификации не были переданы.');
-        foreach($args as $value)
+    public function verify(){
+        if(func_num_args() < 0)
+            throw new e_data('Параметры верификации не были переданы.');
+        foreach(func_get_args() as $value)
             verify_meter::$value($this);
     }
 }

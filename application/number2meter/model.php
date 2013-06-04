@@ -7,7 +7,7 @@ class model_number2meter{
     public static function get_number2meters(data_company $company, data_number $number,
                                                 data_meter $meter){
         model_company::verify_id($company);
-        model_number::verify_id($number);
+        $number->verify('id');
         $sql = new sql();
         $sql->query("SELECT `meters`.`id` as `meter_id`,
                         `meters`.`name`, `meters`.`rates`,
@@ -20,7 +20,7 @@ class model_number2meter{
         $sql->bind(':number_id', $number->id, PDO::PARAM_INT);
         $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
         if(!empty($meter->serial)){
-            $meter->verify(['serial']);
+            $meter->verify('serial');
             $sql->query("AND `number2meter`.`serial` = :serial");
             $sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
         }

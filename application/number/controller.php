@@ -38,18 +38,18 @@ class controller_number{
     public static function private_get_dialog_add_meter(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        model_number::verify_id($number);
+        $number->verify('id');
         return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
     public static function private_get_dialog_add_meter_option(){
         $number = new data_number();
         $number->id = $_GET['number_id'];
-        model_number::verify_id($number);
+        $number->verify('id');
         $meter = new data_meter();
         $meter->id = $_GET['meter_id'];
         $meter->service[] = $_GET['service'];
-        $meter->verify(['id', 'service']);
+        $meter->verify('id', 'service');
         $time = getdate();
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
                 'service' => $meter->service[0],
@@ -68,7 +68,7 @@ class controller_number{
     public static function private_get_meters(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        model_number::verify_id($number);
+        $number->verify('id');
         return ['numbers' => model_number::get_numbers(model_session::get_company(), $number),
                 'meters' => model_number::get_meters(model_session::get_company(), $number)];
     }
@@ -76,14 +76,14 @@ class controller_number{
     public static function private_get_number_content(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        model_number::verify_id($number);
+        $number->verify('id');
         return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
     public static function private_get_number_information(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        model_number::verify_id($number);
+        $number->verify('id');
         return ['numbers' => model_number::get_numbers(model_session::get_company(),$number)];
     }
 
@@ -104,14 +104,14 @@ class controller_number{
     public static function private_get_meter_options(){
         $meter = new data_meter();
         $meter->service[] = $_GET['service'];
-        $meter->verify(['service']);
+        $meter->verify('service');
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_get_dialog_edit_number(){
         $number = new data_number();
         $number->id = $_GET['id'];
-        model_number::verify_id($number);
+        $number->verify('id');
         return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
@@ -130,8 +130,7 @@ class controller_number{
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->number = $_GET['number'];
-        model_number::verify_id($number);
-        model_number::verify_number($number);
+        $number->verify('id', 'number');
         return model_number::update_number(model_session::get_company(), $number);
     }
     public static function private_update_meter_data(){

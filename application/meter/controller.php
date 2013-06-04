@@ -28,14 +28,14 @@ class controller_meter{
     public static function private_get_dialog_add_period(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
-        $meter->verify(['id']);
+        $meter->verify('id');
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_get_dialog_add_service(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
-        $meter->verify(['id']);
+        $meter->verify('id');
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
@@ -46,14 +46,14 @@ class controller_meter{
     public static function private_get_dialog_edit_capacity(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
-        $meter->verify(['id']);
+        $meter->verify('id');
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_get_dialog_edit_rates(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
-        $meter->verify(['id']);
+        $meter->verify('id');
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
@@ -61,7 +61,7 @@ class controller_meter{
         $meter = new data_meter();
         $meter->id = $_GET['id'];
         $meter->periods[0] = $_GET['period'];
-        $meter->verify(['id', 'periods']);
+        $meter->verify('id', 'periods');
         return ['meter' => $meter];
     }
 
@@ -69,21 +69,21 @@ class controller_meter{
         $meter = new data_meter();
         $meter->id = $_GET['id'];
         $meter->service[0] = $_GET['service'];
-        $meter->verify(['id', 'service']);
+        $meter->verify('id', 'service');
         return ['meter' => $meter];
     }
 
     public static function private_get_dialog_rename_meter(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
-        $meter->verify(['id']);
+        $meter->verify('id');
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
     public static function private_get_meter_content(){
         $meter = new data_meter();
         $meter->id = $_GET['id'];
-        $meter->verify(['id']);
+        $meter->verify('id');
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
