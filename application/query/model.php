@@ -8,7 +8,7 @@ class model_query{
 											data_number $number, $default){
 		self::verify_id($query);
 		model_company::verify_id($company);
-		model_number::verify_id($number);
+		$number->verify('id');
 		if(array_search($default, ['true', 'false']) === false)
 			throw new e_model('Тип лицевого счета задан не верно.');
 		$sql = new sql();
@@ -166,7 +166,7 @@ class model_query{
 			$numbers = model_house::get_numbers($company, $initiator);
 			$default = 'false';
 		}elseif($initiator instanceof data_number){
-			model_number::verify_id($initiator);
+			$initiator->verify('id');
 			$numbers[] = model_number::get_numbers($company, $initiator)[0];
 			$default = 'true';
 		}else
@@ -275,7 +275,7 @@ class model_query{
 				model_house::verify_id($initiator);
 				$initiator = model_house::get_houses($initiator)[0];
 			}elseif($initiator instanceof data_number){
-				model_number::verify_id($initiator);
+				$initiator->verify('id');
 				$initiator = model_number::get_numbers($company, $initiator)[0];
 			}
 			if(!($initiator instanceof data_number OR $initiator instanceof data_house))

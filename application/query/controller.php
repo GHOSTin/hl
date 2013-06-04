@@ -273,7 +273,7 @@ class controller_query{
 			case 'number':
 				$number = new data_number();
 				$number->id = $_GET['id'];
-				model_number::verify_id($number);
+				$number->verify('id');
 				return ['initiator' => 'number',
 						'number' => model_number::get_numbers($company, $number)[0],
 						'query_work_types' => $types];
