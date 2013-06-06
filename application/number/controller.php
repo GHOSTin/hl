@@ -132,12 +132,10 @@ class controller_number{
         $meter->serial = $_GET['serial'];
         $time = $_GET['time'];
         $company = model_session::get_company();
-        var_dump(model_number::get_last_meter_data($company, $number, $meter));
-        exit();
         return ['number' => $number,
                 'meters' => model_number::get_meters($company, $number, $meter),
                 'time' => $_GET['time'],
-                'last_data' => model_number::get_last_meter_data($company, $number, $meter)];
+                'last_data' => model_number::get_last_meter_data($company, $number, $meter, $time)];
     }
 
     public static function private_update_number(){

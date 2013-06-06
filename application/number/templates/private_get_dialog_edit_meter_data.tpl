@@ -1,5 +1,6 @@
 {% extends "ajax.tpl" %}
 {% set meter = component.meters[0] %}
+{% set data = component.last_data[0] %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
     'сентябрь', 'октябрь', 'ноябрь', 'декабрь'] %}
 {% block js %}
@@ -28,25 +29,30 @@
         <h3>Данный счетчика за {{ months[component.time|date("m") - 1] }} {{ component.time|date("Y") }}</h3>
     </div>
     <div class="modal-body">
-        <div class="controls controls-row currents_meter_data">
-            <div class="input-prepend span2">
-                <span class="add-on">1 тариф</span>
+        <div class="row">
+            <div class="span2">
+                <div>1 тариф</div>
                 <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][0] }}" maxlength="{{ meter.capacity }}">
+                {{ data.value[0] }}
             </div>
             {% if meter.rates == 2 %}
-            <div class="input-prepend span2">
-                <span class="add-on">2 тариф</span>
+            <div class="span2">
+                <div class="">2 тариф</div>
                 <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
+                {{ data.value[1] }}
             </div>
             {% endif %}
             {% if meter.rates == 3 %}
-            <div class="input-prepend span2">
-                <span class="add-on">2 тариф</span>
+            <div class="span2">
+                <div>2 тариф</div>
                 <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
+                {{ data.value[1] }}
+
             </div>
-            <div class="input-prepend span2">
-                <span class="add-on">3 тариф</span>
+            <div class="span2">
+                <div class="">3 тариф</div>
                 <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
+                {{ data.value[2] }}
             </div>
             {% endif %}
         </div>
