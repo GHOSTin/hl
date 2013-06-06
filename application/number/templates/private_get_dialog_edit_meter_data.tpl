@@ -31,22 +31,22 @@
         <div class="controls controls-row currents_meter_data">
             <div class="input-prepend span2">
                 <span class="add-on">1 тариф</span>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][0] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][0] }}" maxlength="{{ meter.capacity }}">
             </div>
             {% if meter.rates == 2 %}
             <div class="input-prepend span2">
                 <span class="add-on">2 тариф</span>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
             </div>
             {% endif %}
             {% if meter.rates == 3 %}
             <div class="input-prepend span2">
                 <span class="add-on">2 тариф</span>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
             </div>
             <div class="input-prepend span2">
                 <span class="add-on">3 тариф</span>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
             </div>
             {% endif %}
         </div>
