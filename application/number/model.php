@@ -243,7 +243,6 @@ class model_number{
 			model_company::verify_id($company);
 			if(empty($data->time))
 				throw new e_model('Время выборки задано не верно.');
-
 			$numbers = self::get_numbers($company, $number);
 			if(count($numbers) !== 1)			
 				throw new e_model('Проблема при выборке лицевого счета.');

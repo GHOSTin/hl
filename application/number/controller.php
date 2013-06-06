@@ -152,8 +152,16 @@ class controller_number{
         $meter2data = new data_meter2data();
         $meter2data->time = $_GET['time'];
         $meter2data->value = $_GET['tarif'];
-        return ['number' => $number, 'meter' => $meter, 'time' => $_GET['time'],
-        'meter_data' => model_number::update_meter_data(model_session::get_company(),
-                                                        $meter, $number, $meter2data)];
+        model_number::update_meter_data(model_session::get_company(), $meter, $number, $meter2data);
+        $time = getdate();
+        $time = mktime(12, 0, 0, 1, 1, $time['year']);
+        $meter_data = [];
+        $da = model_number::get_meter_data(model_session::get_company(), $number, $meter, $time);
+        if(!empty($da))
+            foreach($da as $value)
+                $meter_data[$value->time] = $value;
+        return ['number' => $number, 'meters' => model_number::get_meters(model_session::get_company(), $number, $meter),
+                'time' => $time,
+                'meter_data' => $meter_data];
     }
 }
