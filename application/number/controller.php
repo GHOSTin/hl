@@ -131,8 +131,13 @@ class controller_number{
         $meter->id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
         $time = $_GET['time'];
-        return ['number' => $number, 'meters' => model_number::get_meters(model_session::get_company(), $number, $meter), 'time' => $_GET['time'],
-                'meter_data' =>model_number::get_meter_data(model_session::get_company(), $number, $meter, mktime(12, 0, 0, 1, 1, getdate($time)['year']))];
+        $company = model_session::get_company();
+        var_dump(model_number::get_last_meter_data($company, $number, $meter));
+        exit();
+        return ['number' => $number,
+                'meters' => model_number::get_meters($company, $number, $meter),
+                'time' => $_GET['time'],
+                'last_data' => model_number::get_last_meter_data($company, $number, $meter)];
     }
 
     public static function private_update_number(){
