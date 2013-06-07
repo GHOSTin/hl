@@ -24,90 +24,7 @@ $(document).ready(function(){
                 break;
         }
     };
-    $('body').on('click', '.get_street_content', function(){
-        if($(this).siblings().is('.houses')){
-            $(this).siblings('.houses').remove();
-            remove_badges('street');
-        } else{
-            $.get('get_street_content',{
-                 id: $(this).parent().attr('street')
-                },function(r){
-                    init_content(r);
-                });
-            $("#search-number")
-                .prop("disabled", false)
-                .attr('filter', 'houses');
-            $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
-            $('#filter-numbers')
-                .prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
-            $('.street.active').removeClass('active');
-            $(this).parent().addClass('active');
-            scrollTo($(this).parent());
-        }
 
-    // выводит диалог для добавления счетчика
-    }).on('click', '.get_dialog_add_meter', function(){
-        $.get('get_dialog_add_meter',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-    });
-
-    $('body').on('click', '.get_house_content', function(){
-        if($(this).siblings().is('.numbers')) {
-            $(this).siblings('.numbers').remove();
-            remove_badges('house');
-        } else{
-            $.get('get_house_content',{
-                id: $(this).parent().attr('house')
-            },function(r){
-                init_content(r);
-            });
-            $("#search-number")
-                .prop("disabled", false)
-                .attr('filter', 'flats');
-            $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
-            var street = $(this).closest('li.street');
-            $('#filter-numbers')
-                .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
-            $('#filter-numbers span.street')
-                .after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
-            $('.street.active, .house.active, .number.active').removeClass('active');
-            street.addClass('active');
-            $(this).parent().addClass('active');
-            scrollTo($(this).parent());
-        }
-    });
-    $('body').on('click', '.get_number_content', function(){
-        if($(this).siblings().is('.number-content')){
-            $(this).siblings('.number-content').remove();
-            remove_badges('flat');
-        } else{
-            $.get('get_number_content',{
-                id: $(this).parent().attr('number')
-            },function(r){
-                init_content(r);
-            });
-            $("#search-number")
-                .prop("disabled", true)
-                .attr('filter', 'flats');
-            $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
-            var street = $(this).closest('li.street');
-            $('#filter-numbers')
-                .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
-            var house = $(this).closest('li.house');
-            $('#filter-numbers span.street')
-                .after('<span class="label house" house-id="'+house.attr('house')+'">'+house.children('.get_house_content').text()+'<a class="close">&times;</a></span>');
-            $("#filter-numbers span.house")
-                .after('<span class="label flat" flat-id="'+$(this).parent().attr('number')+'">кв. '+$(this).text().split(' ')[1]+'<a class="close">&times;</a></span>');
-            $('.street.active, .house.active, .number.active').removeClass('active');
-            street.addClass('active');
-            house.addClass('active');
-            $(this).parent().addClass('active');
-            scrollTo($(this).parent());
-        }
-    });
     $(document).on('click', '#filter-numbers span a.close', function(){
         switch(true){
             case $(this).closest('.label').hasClass('street'):
@@ -124,6 +41,7 @@ $(document).ready(function(){
                 break;
         }
     });
+
     $("#search-number").typeahead({
         source: function(query, process) {
             objects = [];
@@ -170,6 +88,7 @@ $(document).ready(function(){
             return null;
         }
     });
+
     $(window).scroll(function(){
         if($(window).scrollTop() > 20){
             $('.main > .navbar').addClass('nav-fixed');
@@ -178,21 +97,111 @@ $(document).ready(function(){
             $('.nav-fixed').removeClass('nav-fixed');
         }
     });
-    $('body').on('click', '.get_meters', function(){
+    
+    // выводит содержимое улицы
+    $('body').on('click', '.get_street_content', function(){
+        if($(this).siblings().is('.houses')){
+            $(this).siblings('.houses').remove();
+            remove_badges('street');
+        } else{
+            $.get('get_street_content',{
+                 id: $(this).parent().attr('street')
+                },function(r){
+                    init_content(r);
+                });
+            $("#search-number")
+                .prop("disabled", false)
+                .attr('filter', 'houses');
+            $('#filter-numbers span.street,#filter-numbers span.house,#filter-numbers span.flat').remove();
+            $('#filter-numbers')
+                .prepend('<span class="label street" street-id="'+$(this).parent().attr('street')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+            $('.street.active').removeClass('active');
+            $(this).parent().addClass('active');
+            scrollTo($(this).parent());
+        }
+
+    // выводит диалог для добавления счетчика
+    }).on('click', '.get_dialog_add_meter', function(){
+        $.get('get_dialog_add_meter',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит содержимое дома
+    }).on('click', '.get_house_content', function(){
+        if($(this).siblings().is('.numbers')) {
+            $(this).siblings('.numbers').remove();
+            remove_badges('house');
+        } else{
+            $.get('get_house_content',{
+                id: $(this).parent().attr('house')
+            },function(r){
+                init_content(r);
+            });
+            $("#search-number")
+                .prop("disabled", false)
+                .attr('filter', 'flats');
+            $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
+            var street = $(this).closest('li.street');
+            $('#filter-numbers')
+                .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
+            $('#filter-numbers span.street')
+                .after('<span class="label house" house-id="'+$(this).parent().attr('house')+'">'+$(this).text()+'<a class="close">&times;</a></span>');
+            $('.street.active, .house.active, .number.active').removeClass('active');
+            street.addClass('active');
+            $(this).parent().addClass('active');
+            scrollTo($(this).parent());
+        }
+
+    // вывод содержимое лицевого счета
+    }).on('click', '.get_number_content', function(){
+        if($(this).siblings().is('.number-content')){
+            $(this).siblings('.number-content').remove();
+            remove_badges('flat');
+        } else{
+            $.get('get_number_content',{
+                id: $(this).parent().attr('number')
+            },function(r){
+                init_content(r);
+            });
+            $("#search-number")
+                .prop("disabled", true)
+                .attr('filter', 'flats');
+            $('#filter-numbers span.street, #filter-numbers span.house,#filter-numbers span.flat').remove();
+            var street = $(this).closest('li.street');
+            $('#filter-numbers')
+                .prepend('<span class="label street" street-id="'+street.attr('street')+'">'+street.children('.get_street_content').text()+'<a class="close">&times;</a></span>');
+            var house = $(this).closest('li.house');
+            $('#filter-numbers span.street')
+                .after('<span class="label house" house-id="'+house.attr('house')+'">'+house.children('.get_house_content').text()+'<a class="close">&times;</a></span>');
+            $("#filter-numbers span.house")
+                .after('<span class="label flat" flat-id="'+$(this).parent().attr('number')+'">кв. '+$(this).text().split(' ')[1]+'<a class="close">&times;</a></span>');
+            $('.street.active, .house.active, .number.active').removeClass('active');
+            street.addClass('active');
+            house.addClass('active');
+            $(this).parent().addClass('active');
+            scrollTo($(this).parent());
+        }
+
+    // выводит счетчики привязанные к лицевому счету
+    }).on('click', '.get_meters', function(){
         $.get('get_meters',{
             id: get_number_id($(this))
             },function(r){
                 init_content(r);
             });
-    });
-    $('body').on('click', '.get_number_information', function(){
+
+    // выводит информацию лицеого счета
+    }).on('click', '.get_number_information', function(){
         $.get('get_number_information',{
             id: get_number_id($(this))
             },function(r){
                 init_content(r);
             });
-    });    
-    $('body').on('click', '.get_meter_data', function(){
+
+    // выводит содержимое счетчика
+    }).on('click', '.get_meter_data', function(){
         if($(this).siblings().is('.meter-data'))
             $(this).siblings('.meter-data').remove();
         else
@@ -203,10 +212,9 @@ $(document).ready(function(){
                 },function(r){
                     init_content(r);
                 });
-    });
-
+    
     // возвращает показания счетчика привязаного к лицевому счету
-    $('body').on('click', '.get_meter_value', function(){
+    }).on('click', '.get_meter_value', function(){
         $.get('get_meter_value',{
             id: get_number_id($(this)),
             meter_id: get_meter_id($(this)),
@@ -214,10 +222,9 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-    });
 
     // возвращает информацию о счетчике привязаном к лицевому счету
-    $('body').on('click', '.get_meter_info', function(){
+    }).on('click', '.get_meter_info', function(){
         $.get('get_meter_info',{
             id: get_number_id($(this)),
             meter_id: get_meter_id($(this)),
@@ -225,9 +232,9 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-    });
 
-    $('body').on('click', '.get_dialog_edit_meter_data', function(){
+    // выводит диалог редактирования показания счетчика
+    }).on('click', '.get_dialog_edit_meter_data', function(){
         $.get('get_dialog_edit_meter_data',{
             id: get_number_id($(this)),
             meter_id: $(this).closest('.meter').attr('meter'),
@@ -236,15 +243,17 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-    });
-    $('body').on('click', '.get_dialog_edit_number', function(){
+
+    // выводит диалог редактирования счетчика
+    }).on('click', '.get_dialog_edit_number', function(){
         $.get('get_dialog_edit_number',{
             id: get_number_id($(this))
             },function(r){
                 init_content(r);
             });
-    });
-    $('body').on('click', '.get_meter_data_year', function(){
+
+    // выводит данные конкретного года
+    }).on('click', '.get_meter_data_year', function(){
         var self = $(this);
         $.get('get_meter_data', {
             id: get_number_id($(this)),
@@ -257,14 +266,18 @@ $(document).ready(function(){
             });
     });
 });
+
+// возвращает идентификатор лицевого счетча
 function get_number_id(obj){
     return obj.closest('.number').attr('number');
 }
 
+// возвращает идентификатор счетчика
 function get_meter_id(obj){
     return obj.closest('.meter').attr('meter');
 }
 
+// возвращает серийный номер счетчика
 function get_meter_serial(obj){
     return obj.closest('.meter').attr('serial');
 }
