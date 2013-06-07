@@ -204,6 +204,29 @@ $(document).ready(function(){
                     init_content(r);
                 });
     });
+
+    // возвращает показания счетчика привязаного к лицевому счету
+    $('body').on('click', '.get_meter_value', function(){
+        $.get('get_meter_value',{
+            id: get_number_id($(this)),
+            meter_id: get_meter_id($(this)),
+            serial: get_meter_serial($(this))
+            },function(r){
+                init_content(r);
+            });
+    });
+
+    // возвращает информацию о счетчике привязаном к лицевому счету
+    $('body').on('click', '.get_meter_info', function(){
+        $.get('get_meter_info',{
+            id: get_number_id($(this)),
+            meter_id: get_meter_id($(this)),
+            serial: get_meter_serial($(this))
+            },function(r){
+                init_content(r);
+            });
+    });
+
     $('body').on('click', '.get_dialog_edit_meter_data', function(){
         $.get('get_dialog_edit_meter_data',{
             id: get_number_id($(this)),
@@ -236,6 +259,14 @@ $(document).ready(function(){
 });
 function get_number_id(obj){
     return obj.closest('.number').attr('number');
+}
+
+function get_meter_id(obj){
+    return obj.closest('.meter').attr('meter');
+}
+
+function get_meter_serial(obj){
+    return obj.closest('.meter').attr('serial');
 }
 
 function scrollTo(el){

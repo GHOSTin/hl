@@ -109,6 +109,41 @@ class controller_number{
                 'number' => $number, 'time' => $time, 
                 'meter_data' => $meter_data];
     }
+
+    public static function private_get_meter_value(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->verify('id');
+        $meter = new data_meter();
+        $meter->id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        $meter->verify('id', 'serial');
+        if($_GET['time'] > 0)
+            $time = getdate($_GET['time']);
+        else
+            $time = getdate();
+        $time = mktime(12, 0, 0, 1, 1, $time['year']);
+        $meter_data = [];
+        $da = model_number::get_meter_data(model_session::get_company(), $number, $meter, $time);
+        if(!empty($da))
+            foreach($da as $value)
+                $meter_data[$value->time] = $value;
+        return ['meters' => model_number::get_meters(model_session::get_company(), $number, $meter), 
+                'number' => $number, 'time' => $time, 
+                'meter_data' => $meter_data];
+    }
+
+    public static function private_get_meter_info(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->verify('id');
+        $meter = new data_meter();
+        $meter->id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        $meter->verify('id', 'serial');
+        return ['meters' => model_number::get_meters(model_session::get_company(), $number, $meter), 
+                'number' => $number];
+    }
     
     public static function private_get_meter_options(){
         $meter = new data_meter();

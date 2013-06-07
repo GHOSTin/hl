@@ -9,22 +9,29 @@
 {% endblock js %}
 {% block html %}
 <div class="meter-data">
-    <ul class="pager">
-        <li class="previous">
-            <a class="get_meter_data_year" act='{{ component.time|date_modify("-1 year")|date("U")}}'><i class="icon-chevron-left"></i></a>
-        </li>
-        <li>
-            <h3>{{ component.time|date('Y')}}</h3>
-        </li>
-        {% if component.time|date('Y')!="now"|date('Y') %}
-        <li class="next">
-            <a class="get_meter_data_year" act='{{ component.time|date_modify("+1 year")|date("U")}}'><i class="icon-chevron-right"></i></a>
-        </li>
-        {% endif %}
-    </ul>
-    <div class="meter-data-value">
-    {% include '@number/build_meter_data.tpl' %}
+    <div>
+        <ul class="nav nav-pills" style="padding:20px 0px">
+            <li><a class="get_meter_value">Показания</a></li>
+            <li><a class="get_meter_info">Информация</a></li>
+        <ul>
     </div>
-    </table>
+    <div class="meter-data-content">
+        <ul class="inline">
+            <li class="previous">
+                <a class="get_meter_data_year" act='{{ component.time|date_modify("-1 year")|date("U")}}'><i class="icon-chevron-left"></i></a>
+            </li>
+            <li>
+                <h3>{{ component.time|date('Y')}}</h3>
+            </li>
+            {% if component.time|date('Y')!="now"|date('Y') %}
+            <li class="next">
+                <a class="get_meter_data_year" act='{{ component.time|date_modify("+1 year")|date("U")}}'><i class="icon-chevron-right"></i></a>
+            </li>
+            {% endif %}
+        </ul>
+        <div class="meter-data-value">
+        {% include '@number/build_meter_data.tpl' %}
+        </div>
+    </div>
 </div>
 {% endblock html %}

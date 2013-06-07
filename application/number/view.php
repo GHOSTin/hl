@@ -49,6 +49,14 @@ class view_number{
         return load_template('number.private_get_meter_data', $args);
     }
 
+    public static function private_get_meter_info($args){
+        return load_template('number.private_get_meter_info', $args);
+    }
+
+    public static function private_get_meter_value($args){
+        return load_template('number.private_get_meter_value', $args);
+    }
+
     public static function private_get_dialog_edit_meter_data($args){
         return load_template('number.private_get_dialog_edit_meter_data', $args);
     }
