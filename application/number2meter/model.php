@@ -10,7 +10,10 @@ class model_number2meter{
         $sql = new sql();
         $sql->query("SELECT `number2meter`.`meter_id`, `number2meter`.`number_id`,
                         `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
-                        `number2meter`.`service`, `number2meter`.`serial`
+                        `number2meter`.`service`, `number2meter`.`serial`,
+                        `number2meter`.`date_release`, `number2meter`.`date_install`,
+                        `number2meter`.`date_checking`, `number2meter`.`period`,
+                        `number2meter`.`place`, `number2meter`.`service`
                     FROM `meters`, `number2meter`
                     WHERE `number2meter`.`company_id` = :company_id
                     AND `meters`.`company_id` = :company_id
