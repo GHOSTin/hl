@@ -92,9 +92,6 @@ class controller_number{
     }
 
     public static function private_get_meter_data(){
-        // $number = new data_number();
-        // $number->id = $_GET['id'];
-        // $number->verify('id');
         $data = new data_number2meter();
         $data->meter_id = $_GET['meter_id'];
         $data->number_id = $_GET['id'];
@@ -104,15 +101,16 @@ class controller_number{
             $time = getdate($_GET['time']);
         else
             $time = getdate();
-        $time = mktime(12, 0, 0, 1, 1, $time['year']);
+        $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
+        $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
         $meter_data = [];
-        // $da = model_number::get_meter_data(model_session::get_company(), $number, $meter, $time);
+        $company = model_session::get_company();
+        $da = model_number::get_meter_data($company, $data, $time_begin, $time_end);
         if(!empty($da))
             foreach($da as $value)
                 $meter_data[$value->time] = $value;
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data), 
-                'number' => $number, 'time' => $time, 
-                'meter_data' => $meter_data];
+        return ['meters' => model_number2meter::get_number2meters($company, $data), 
+                'time' => $time_begin, 'meter_data' => $meter_data];
     }
 
     public static function private_get_meter_value(){

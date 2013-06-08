@@ -198,12 +198,11 @@ class model_number{
 	/*
 	* Возвращает данные счетчика
 	*/
-	public static function get_meter_data(data_company $company, data_number $number, 
-											data_meter $meter, $time){
+	public static function get_meter_data(data_company $company, data_number2meter $data, 
+											$time_begin, $time_end){
 		model_company::verify_id($company);
-		$meter->verify('id', 'serial');
-		$number->verify('id');
-		if(empty($time))
+		$data->verify('number_id', 'meter_id', 'serial');
+		if(empty($time_begin) OR empty($time_end))
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);
 		$sql = new sql();
@@ -214,12 +213,12 @@ class model_number{
 					AND `meter2data`.`serial` = :serial
 					AND `meter2data`.`time` >= :time_begin
 					AND `meter2data`.`time` <= :time_end");
-		$sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
-		$sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
-		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+		$sql->bind(':meter_id', $data->meter_id, PDO::PARAM_INT);
+		$sql->bind(':serial', $data->serial, PDO::PARAM_STR);
+		$sql->bind(':number_id', $data->number_id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':time_begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
-		$sql->bind(':time_end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
+		$sql->bind(':time_begin', $time_begin, PDO::PARAM_INT);
+		$sql->bind(':time_end', $time_end, PDO::PARAM_INT);
 		return $sql->map(new data_meter2data(), 'Проблема при при выборки данных счетчика.');
 	}
 	/*
