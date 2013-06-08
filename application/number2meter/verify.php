@@ -69,7 +69,7 @@ class verify_number2meter{
     * Верификация периода счетчика.
     */
     public static function period(data_number2meter $number2meter){
-        if($number2meter->period < 0 OR $number2meter->period > 240)
+        if($number2meter->period < 1 OR $number2meter->period > 240)
             throw new e_model('Период задан не верно.');
     }
 
