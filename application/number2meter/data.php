@@ -10,6 +10,7 @@ final class data_number2meter extends data_object{
 	public $number_id;
 	public $meter_id;
 	public $service;
+    public $capacity;
 	public $name;
 	public $rates;
 	public $serial;

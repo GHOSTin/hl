@@ -20,7 +20,7 @@
     <li>
         <ul style="padding:20px" class="number-meters">
         {% for meter in component.meters %}
-            <li class="meter" meter="{{ meter.id }}" serial="{{ meter.serial }}">
+            <li class="meter" meter="{{ meter.meter_id }}" serial="{{ meter.serial }}">
                 {% set period = meter.period %}
                 <p class="get_meter_data">{{ services[meter.service[0]] }} {{ meter.name }} №{{ meter.serial }} ({{ meter.date_checking|date('d.m.Y') }})</p>
             </li>

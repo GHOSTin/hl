@@ -66,11 +66,15 @@ class controller_number{
     }
 
     public static function private_get_meters(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['id'];
+        $data->verify('number_id');
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->verify('id');
-        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number),
-                'meters' => model_number::get_meters(model_session::get_company(), $number, new data_meter())];
+        $company = model_session::get_company();
+        return ['numbers' => model_number::get_numbers($company, $number),
+                'meters' => model_number2meter::get_number2meters($company, $data)];
     }
 
     public static function private_get_number_content(){
@@ -88,24 +92,25 @@ class controller_number{
     }
 
     public static function private_get_meter_data(){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        $number->verify('id');
-        $meter = new data_meter();
-        $meter->id = $_GET['meter_id'];
-        $meter->serial = $_GET['serial'];
-        $meter->verify('id', 'serial');
+        // $number = new data_number();
+        // $number->id = $_GET['id'];
+        // $number->verify('id');
+        $data = new data_number2meter();
+        $data->meter_id = $_GET['meter_id'];
+        $data->number_id = $_GET['id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('meter_id', 'number_id', 'serial');
         if($_GET['time'] > 0)
             $time = getdate($_GET['time']);
         else
             $time = getdate();
         $time = mktime(12, 0, 0, 1, 1, $time['year']);
         $meter_data = [];
-        $da = model_number::get_meter_data(model_session::get_company(), $number, $meter, $time);
+        // $da = model_number::get_meter_data(model_session::get_company(), $number, $meter, $time);
         if(!empty($da))
             foreach($da as $value)
                 $meter_data[$value->time] = $value;
-        return ['meters' => model_number::get_meters(model_session::get_company(), $number, $meter), 
+        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data), 
                 'number' => $number, 'time' => $time, 
                 'meter_data' => $meter_data];
     }
