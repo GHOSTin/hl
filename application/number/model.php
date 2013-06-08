@@ -219,7 +219,18 @@ class model_number{
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':time_begin', $time_begin, PDO::PARAM_INT);
 		$sql->bind(':time_end', $time_end, PDO::PARAM_INT);
-		return $sql->map(new data_meter2data(), 'Проблема при при выборки данных счетчика.');
+		$sql->execute( 'Проблема при при выборки данных счетчика.');
+		$result = [];
+		while($row = $sql->row()){
+			$data = new data_meter2data();
+			$data->time = $row['time'];
+			if(empty($row['value']))
+				$data->value = [];
+			else
+				$data->value = explode(';', $row['value']);
+			$result[$data->time] = $data;
+		}
+		return $result;
 	}
 	/*
 	* Возвращает данные счетчика

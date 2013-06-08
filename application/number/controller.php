@@ -103,14 +103,9 @@ class controller_number{
             $time = getdate();
         $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
         $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
-        $meter_data = [];
         $company = model_session::get_company();
-        $da = model_number::get_meter_data($company, $data, $time_begin, $time_end);
-        if(!empty($da))
-            foreach($da as $value)
-                $meter_data[$value->time] = $value;
         return ['meters' => model_number2meter::get_number2meters($company, $data), 
-                'time' => $time_begin, 'meter_data' => $meter_data];
+                'time' => $time_begin, 'meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
     }
 
     public static function private_get_meter_value(){
