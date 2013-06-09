@@ -60,6 +60,16 @@ class controller_number{
                 'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
     }
 
+
+    public static function private_get_dialog_edit_serial(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+    }
+
     public static function private_get_house_content(){
         $house = new data_house();
         $house->id = $_GET['id'];
@@ -182,6 +192,23 @@ class controller_number{
         $meter2data->time = $_GET['time'];
         $meter2data->value = $_GET['tarif'];
         model_number::update_meter_data(model_session::get_company(), $data, $meter2data);
+        $time = getdate();
+        $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
+        $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
+        $company = model_session::get_company();
+        return ['meters' => model_number2meter::get_number2meters($company, $data), 
+                'time' => $time_begin, 'meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
+    }
+
+    public static function private_update_serial(){
+        $old_data = new data_number2meter();
+        $old_data->number_id = $_GET['number_id'];
+        $old_data->meter_id = $_GET['meter_id'];
+        $old_data->serial = $_GET['serial'];
+        $new_data = new data_number2meter();
+        $new_data->serial = $_GET['new_serial'];
+        model_number::update_serial(model_session::get_company(), $old_data, $new_data);
+        exit();
         $time = getdate();
         $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
         $time_end = mktime(12, 0, 0, 12, 1, $time['year']);

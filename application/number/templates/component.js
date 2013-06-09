@@ -252,6 +252,16 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактирования серийного номера счетчика
+    }).on('click', '.get_dialog_edit_serial', function(){
+        $.get('get_dialog_edit_serial',{
+            id: get_number_id($(this)),
+            meter_id: $(this).closest('.meter').attr('meter'),
+            serial: $(this).closest('.meter').attr('serial')
+            },function(r){
+                init_content(r);
+            });
+
     // выводит данные конкретного года
     }).on('click', '.get_meter_data_year', function(){
         var self = $(this);

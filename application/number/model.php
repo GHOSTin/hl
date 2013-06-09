@@ -228,6 +228,7 @@ class model_number{
 		}
 		return $result;
 	}
+
 	/*
 	* Возвращает данные счетчика
 	*/
@@ -299,6 +300,59 @@ class model_number{
 				throw new e_model('Ошибка в PDO.');
 		}
 	}
+
+
+	/*
+	* Возвращает данные счетчика
+	*/
+	public static function update_serial(data_company $company,
+												data_number2meter $old_data,
+												data_number2meter $new_data){
+		try{
+			$old_data->verify('number_id', 'meter_id', 'serial');
+			$new_data->verify('serial');
+			$sql = new sql();
+			$sql->begin();
+			model_company::verify_id($company);
+			$number = new data_number();
+			$number->id = $old_data->number_id;
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)			
+				throw new e_model('Проблема при выборке лицевого счета.');
+			$number = $numbers[0];
+			model_number::is_data_number($number);
+			$meters = model_number2meter::get_number2meters($company, $old_data);
+			if(count($meters) !== 1)
+				throw new e_model('Проблема при выборке счетчика.');
+			$meter = $meters[0];
+			model_number2meter::is_data_number2meter($meter);
+
+
+			$new_data->number_id = $old_data->number_id;
+			$new_data->meter_id = $old_data->meter_id;
+			$new_data->verify('number_id', 'meter_id', 'serial');
+			if(count(model_number2meter::get_number2meters($company, $new_data)) !== 0)
+				throw new e_model('Счетчик с таким серийным номером уже существует.');
+			$sql = new sql();
+			$sql->query("UPDATE `number2meter` SET `serial` = :new_serial
+						WHERE `company_id` = :company_id AND `number_id` = :number_id
+						AND `meter_id` = :meter_id AND `serial` = :serial");
+			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
+			$sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
+			$sql->bind(':new_serial', $new_data->serial, PDO::PARAM_STR);
+			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновление серийного номера.');
+			$sql->commit();
+		}catch(exception $e){
+			$sql->rollback();
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
 	/**
 	* Обнавляет номер лицевого счета
 	* @return object data_number
