@@ -231,26 +231,29 @@ class model_number{
 	/*
 	* Возвращает данные счетчика
 	*/
-	public static function update_meter_data(data_company $company, data_meter $meter,
-												data_number $number, data_meter2data $data){
+	public static function update_meter_data(data_company $company,
+												data_number2meter $number2meter,
+												data_meter2data $data){
 		try{
 			$sql = new sql();
 			$sql->begin();
-			$meter->verify('id', 'serial');
-			$number->verify('id');
+			$number2meter->verify('number_id', 'meter_id', 'serial');
+
 			model_company::verify_id($company);
 			if(empty($data->time))
 				throw new e_model('Время выборки задано не верно.');
+			$number = new data_number();
+			$number->id = $number2meter->number_id;
 			$numbers = self::get_numbers($company, $number);
 			if(count($numbers) !== 1)			
 				throw new e_model('Проблема при выборке лицевого счета.');
 			$number = $numbers[0];
 			model_number::is_data_number($number);
-			$meters = self::get_meters($company, $number, $meter);
+			$meters = model_number2meter::get_number2meters($company, $number2meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
 			$meter = $meters[0];
-			model_meter::is_data_meter($meter);
+			model_number2meter::is_data_number2meter($meter);
 			if(count($data->value) !== (int) $meter->rates)
 				throw new e_model('Количество тарифов показаний не соответствует количеству в счетчике.');
 			$sql->query("SELECT `time`, `value` FROM `meter2data`
@@ -260,9 +263,9 @@ class model_number{
 						AND `meter2data`.`serial` = :serial
 						AND `meter2data`.`time` = :time");
 			$time = getdate($data->time);
-			$sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
+			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
 			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
-			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $meter->meter_id, PDO::PARAM_INT);
 			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
 			$sql->execute('Проблема при при выборки данных счетчика.');
@@ -280,15 +283,14 @@ class model_number{
 						AND `time` = :time");
 			else
 				throw new e_model('Не подходящее количество параметров.');
-			$sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
+			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
 			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
-			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
 			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
 			$sql->bind(':value', implode(';', $data->value), PDO::PARAM_STR);
 			$sql->execute('Проблема при при выборки данных счетчика.');
 			$sql->commit();
-			return $tarif;
 		}catch(exception $e){
 			$sql->rollback();
 			if($e instanceof e_model)

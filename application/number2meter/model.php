@@ -34,4 +34,12 @@ class model_number2meter{
         }
         return $sql->map(new data_number2meter(), 'Проблема при при выборке счетчиков лицевого счета.');
     }
+
+    /**
+    * Проверка принадлежности объекта к классу data_number.
+    */
+    public static function is_data_number2meter($number2meter){
+        if(!($number2meter instanceof data_number2meter))
+            throw new e_model('Возвращеный объект не является связью лицевой счет - счетчик.');
+    }
 }

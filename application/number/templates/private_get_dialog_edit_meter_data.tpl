@@ -11,8 +11,8 @@
            tarifs.push($(this).val());
         });
         $.get('update_meter_data',{
-            id: {{ component.number.id }},
-            meter_id: {{ meter.id }},
+            id: {{ meter.number_id }},
+            meter_id: {{ meter.meter_id }},
             serial: {{ meter.serial }},
             number: $('.dialog-number').val(),
             time: {{ component.time }},

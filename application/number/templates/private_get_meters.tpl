@@ -22,7 +22,7 @@
         {% for meter in component.meters %}
             <li class="meter" meter="{{ meter.meter_id }}" serial="{{ meter.serial }}">
                 {% set period = meter.period %}
-                <p class="get_meter_data">{{ services[meter.service[0]] }} {{ meter.name }} №{{ meter.serial }} ({{ meter.date_next_checking|date('d.m.Y') }})</p>
+                <p class="get_meter_data">{{ services[meter.service] }} {{ meter.name }} №{{ meter.serial }} ({{ meter.date_next_checking|date('d.m.Y') }})</p>
             </li>
         {% else %}
             <li>Ни одного счетчика еще не привязано.</li>
