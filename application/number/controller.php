@@ -60,6 +60,14 @@ class controller_number{
                 'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
     }
 
+    public static function private_get_dialog_edit_period(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+    }
 
     public static function private_get_dialog_edit_serial(){
         $data = new data_number2meter();
@@ -213,5 +221,17 @@ class controller_number{
         model_number::update_serial($company, $old_data, $new_data);
         return ['old_meter' => $old_data,
                 'new_meters' => model_number2meter::get_number2meters($company, $new_data)];
+    }
+
+    public static function private_update_period(){
+        $meter = new data_number2meter();
+        $meter->number_id = $_GET['number_id'];
+        $meter->meter_id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        $meter->period = $_GET['period'];
+        $company = model_session::get_company();
+        model_number::update_period($company, $meter);
+        unset($meter->period);
+        return ['meters' => model_number2meter::get_number2meters($company, $meter)];
     }
 }
