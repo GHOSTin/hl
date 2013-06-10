@@ -207,13 +207,11 @@ class controller_number{
         $old_data->serial = $_GET['serial'];
         $new_data = new data_number2meter();
         $new_data->serial = $_GET['new_serial'];
-        model_number::update_serial(model_session::get_company(), $old_data, $new_data);
-        exit();
-        $time = getdate();
-        $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
-        $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
+        $new_data->number_id = $_GET['number_id'];
+        $new_data->meter_id = $_GET['meter_id'];
         $company = model_session::get_company();
-        return ['meters' => model_number2meter::get_number2meters($company, $data), 
-                'time' => $time_begin, 'meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
+        model_number::update_serial($company, $old_data, $new_data);
+        return ['old_meter' => $old_data,
+                'new_meters' => model_number2meter::get_number2meters($company, $new_data)];
     }
 }
