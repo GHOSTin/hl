@@ -233,6 +233,16 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактирования времени производства счетчика
+    }).on('click', '.get_dialog_edit_date_release', function(){
+        $.get('get_dialog_edit_date_release',{
+            id: get_number_id($(this)),
+            meter_id: $(this).closest('.meter').attr('meter'),
+            serial: $(this).closest('.meter').attr('serial')
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог редактирования показания счетчика
     }).on('click', '.get_dialog_edit_meter_data', function(){
         $.get('get_dialog_edit_meter_data',{

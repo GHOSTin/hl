@@ -60,6 +60,15 @@ class controller_number{
                 'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
     }
 
+    public static function private_get_dialog_edit_date_release(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+    }
+
     public static function private_get_dialog_edit_period(){
         $data = new data_number2meter();
         $data->number_id = $_GET['id'];
@@ -180,6 +189,18 @@ class controller_number{
         return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data),
                 'time' => $_GET['time']];
                 // 'last_data' => model_number::get_last_meter_data($company, $number, $meter, $time)];
+    }
+
+    public static function private_update_date_release(){
+        $meter = new data_number2meter();
+        $meter->number_id = $_GET['number_id'];
+        $meter->meter_id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        $time = explode('.', $_GET['date']);
+        $time = mktime(12, 0, 0, $time[1], $time[0], $time[2]);
+        $company = model_session::get_company();
+        model_number::update_date_release($company, $meter, $time);
+        return ['meters' => model_number2meter::get_number2meters($company, $meter)];
     }
 
     public static function private_update_number(){
