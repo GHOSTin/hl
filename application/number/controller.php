@@ -26,6 +26,32 @@ class controller_number{
                 'meters' => model_number2meter::get_number2meters($company, $number2meter)];
     }
 
+    public static function private_change_meter(){
+        $old = new data_number2meter();
+        $old->number_id = $_GET['number_id'];
+        $old->meter_id = $_GET['meter_id'];
+        $old->serial = $_GET['serial'];
+        $date_release = explode('.', $_GET['date_release']);
+        $date_install = explode('.', $_GET['date_install']);
+        $date_checking = explode('.', $_GET['date_checking']);
+        $new = new data_number2meter();
+        $new->number_id = $_GET['number_id'];
+        $new->meter_id = $_GET['new_meter_id'];
+        $new->serial = $_GET['new_serial'];
+        $new->service = $_GET['service'];
+        $new->period = $_GET['period'];
+        $new->place = $_GET['place'];
+        $new->date_release = mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]);
+        $new->date_install = mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]);
+        $new->date_checking = mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]);
+        $company = model_session::get_company();
+        model_number::change_meter($company, $old, $new);
+        $per = new data_number2meter();
+        $per->number_id = $old->number_id;
+        return ['old_meter' => $old,
+                'meters' => model_number2meter::get_number2meters($company, $per)];
+    }
+
 	public static function private_show_default_page(){
         return ['streets' => model_street::get_streets(new data_street())];
 	}
@@ -58,6 +84,31 @@ class controller_number{
                 'service' => $meter->service[0],
                 'number' => $number,
                 'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
+    }
+
+    public static function private_get_dialog_change_meter(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        return ['meter' => $data];
+    }
+
+    public static function private_get_dialog_change_meter_option(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['number_id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        $meter = new data_meter();
+        $meter->id = $_GET['new_meter_id'];
+        $meter->service[] = $_GET['service'];
+        $meter->verify('id', 'service');
+        $time = getdate();
+        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
+                'service' => $meter->service[0],
+                'old_meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
     }
 
     public static function private_get_dialog_edit_date_checking(){

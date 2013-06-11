@@ -5,6 +5,10 @@ class view_number{
         return load_template('number.private_add_meter', $args);
     }
 
+    public static function private_change_meter($args){
+        return load_template('number.private_change_meter', $args);
+    }
+
 	public static function private_show_default_page($args){
 		return load_template('number.private_show_default_page', $args);
 	}
@@ -27,6 +31,14 @@ class view_number{
 
     public static function private_get_dialog_add_meter_option($args){
         return load_template('number.private_get_dialog_add_meter_option', $args);
+    }
+
+    public static function private_get_dialog_change_meter($args){
+        return load_template('number.private_get_dialog_change_meter', $args);
+    }
+
+    public static function private_get_dialog_change_meter_option($args){
+        return load_template('number.private_get_dialog_change_meter_option', $args);
     }
 
     public static function private_get_dialog_edit_date_checking($args){
