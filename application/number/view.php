@@ -29,6 +29,10 @@ class view_number{
         return load_template('number.private_get_dialog_add_meter_option', $args);
     }
 
+    public static function private_get_dialog_edit_date_checking($args){
+        return load_template('number.private_get_dialog_edit_date_checking', $args);
+    }
+
     public static function private_get_dialog_edit_date_install($args){
         return load_template('number.private_get_dialog_edit_date_install', $args);
     }
@@ -75,6 +79,10 @@ class view_number{
 
     public static function private_get_dialog_edit_meter_data($args){
         return load_template('number.private_get_dialog_edit_meter_data', $args);
+    }
+
+    public static function private_update_date_checking($args){
+        return load_template('number.private_update_date_checking', $args);
     }
 
     public static function private_update_date_install($args){
