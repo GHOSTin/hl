@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
 {% set meter = component.meters[0] %}
-{% block title %}Диалог редактирования времени установка счетчика{% endblock title %}
+{% block title %}Диалог редактирования времени производства счетчика{% endblock title %}
 {% block dialog %}
 	<input type="text" class="dialog-input-date_release" value="{{ meter.date_release|date('d.m.Y') }}">	
 {% endblock dialog %}
@@ -8,7 +8,7 @@
 	<div class="btn update_date_release">Изменить</div>
 {% endblock buttons %}
 {% block script %}
-	// Изменяет время установки счетчика привязанного к лицевому счету
+	// Изменяет время производства счетчика привязанного к лицевому счету
 	$('.update_date_release').click(function(){
 		$.get('update_date_release',{
 			number_id: {{ meter.number_id }},
