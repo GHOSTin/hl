@@ -286,8 +286,8 @@ class controller_number{
         $data->meter_id = $_GET['meter_id'];
         $data->serial = $_GET['serial'];
         $time = getdate($_GET['time']);
-        $time_begin = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
-        $time_end = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
+        $time_begin = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
+        $time_end = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
         $data->verify('number_id', 'meter_id', 'serial');
         $company = model_session::get_company();
         return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data),
@@ -349,6 +349,7 @@ class controller_number{
         $meter2data = new data_meter2data();
         $meter2data->time = $_GET['time'];
         $meter2data->value = $_GET['tarif'];
+        $meter2data->comment = $_GET['comment'];
         model_number::update_meter_data(model_session::get_company(), $data, $meter2data);
         $time = getdate();
         $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);

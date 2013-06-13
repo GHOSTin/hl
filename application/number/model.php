@@ -363,7 +363,7 @@ class model_number{
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);
 		$sql = new sql();
-		$sql->query("SELECT `time`, `value` FROM `meter2data`
+		$sql->query("SELECT `time`, `value`, `comment` FROM `meter2data`
 					WHERE `meter2data`.`company_id` = :company_id
 					AND `meter2data`.`number_id` = :number_id
 					AND `meter2data`.`meter_id` = :meter_id
@@ -550,28 +550,18 @@ class model_number{
 			model_number2meter::is_data_number2meter($meter);
 			if(count($data->value) !== (int) $meter->rates)
 				throw new e_model('Количество тарифов показаний не соответствует количеству в счетчике.');
-			$sql->query("SELECT `time`, `value` FROM `meter2data`
-						WHERE `meter2data`.`company_id` = :company_id
-						AND `meter2data`.`number_id` = :number_id
-						AND `meter2data`.`meter_id` = :meter_id
-						AND `meter2data`.`serial` = :serial
-						AND `meter2data`.`time` = :time");
 			$time = getdate($data->time);
-			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
-			$sql->bind(':number_id', $meter->meter_id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
-			$sql->execute('Проблема при при выборки данных счетчика.');
-			$count = $sql->count();
+			$time_begin = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
+			$count = count(self::get_meter_data($company, $number2meter, $time_begin, $time_begin));
 			$sql = new sql();
 			if($count === 0)
 				$sql->query("INSERT INTO `meter2data` (`company_id`, `number_id`,
-						`meter_id`, `serial`, `time`, `value`
+						`meter_id`, `serial`, `time`, `value`, `comment`
 						) VALUES (:company_id, :number_id, :meter_id, :serial,
-						:time, :value)");
+						:time, :value, :comment)");
 			elseif($count === 1)
-				$sql->query("UPDATE `meter2data` SET `time` = :time, `value` = :value
+				$sql->query("UPDATE `meter2data` SET `time` = :time, `value` = :value,
+						`comment` = :comment
 						WHERE `company_id` = :company_id AND `number_id` = :number_id
 						AND `meter_id` = :meter_id AND `serial` = :serial
 						AND `time` = :time");
@@ -583,6 +573,7 @@ class model_number{
 			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
 			$sql->bind(':value', implode(';', $data->value), PDO::PARAM_STR);
+			$sql->bind(':comment', $data->comment, PDO::PARAM_STR);
 			$sql->execute('Проблема при при выборки данных счетчика.');
 			$sql->commit();
 		}catch(exception $e){

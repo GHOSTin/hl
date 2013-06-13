@@ -17,7 +17,8 @@
             serial: {{ meter.serial }},
             number: $('.dialog-number').val(),
             time: {{ component.time }},
-            tarif: tarifs
+            tarif: tarifs,
+            comment: $('.dialog-textarea-comment').val()
             },function(r){
                 init_content(r);
                 $('.dialog').modal('hide');
@@ -58,7 +59,7 @@
             {% endif %}
         </div>
         <label>Комментарий</label>
-        <textarea style="width:90%"></textarea>
+        <textarea style="width:90%" class="dialog-textarea-comment" value="{{ current.comment }}"></textarea>
     </div>
     <div class="modal-footer">
         <div class="btn update_meter_data">Сохранить</div>
