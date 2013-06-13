@@ -14,6 +14,7 @@ class controller_number{
         $data->service = $_GET['service'];
         $data->period = $_GET['period'];
         $data->place = $_GET['place'];
+        $data->comment = $_GET['comment'];
         $data->date_release = mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]);
         $data->date_install = mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]);
         $data->date_checking = mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]);

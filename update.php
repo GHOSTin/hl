@@ -58,6 +58,14 @@ try{
     $sql->execute('Столбец period не был создан.');
 
     $sql = new sql();
+    $sql->query("ALTER TABLE `number2meter` add COLUMN `comment` TINYTEXT NOT NULL");
+    $sql->execute('Столбец comment не был создан.');
+
+    $sql = new sql();
+    $sql->query("ALTER TABLE `meter2data` add COLUMN `comment` TINYTEXT NOT NULL");
+    $sql->execute('Столбец comment не был создан.');
+
+    $sql = new sql();
     $sql->query("ALTER TABLE `number2meter` add COLUMN `place` ENUM('bathroom', 'kitchen', 'toilet') NOT NULL");
     $sql->execute('Столбец period не был создан.');
 

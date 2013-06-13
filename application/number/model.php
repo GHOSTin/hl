@@ -191,7 +191,7 @@ class model_number{
 			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
 			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->execute('Проблема при удалении показаний.');
-			// $sql->commit();
+			$sql->commit();
 		}catch(exception $e){
 			$sql->rollback();
 			if($e instanceof e_model)
@@ -238,9 +238,9 @@ class model_number{
 		$sql = new sql();
 		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`,
 				`meter_id`, `service`, `serial`, `date_release`,`date_install`,
-				`date_checking`, `period`, `place`) VALUES (:company_id, :number_id,
+				`date_checking`, `period`, `place`, `comment`) VALUES (:company_id, :number_id,
 				:meter_id, :service, :serial, :date_release, :date_install,
-				:date_checking, :period, :place)");
+				:date_checking, :period, :place, :comment)");
 		$sql->bind(':company_id', $data->company_id, PDO::PARAM_INT);
 		$sql->bind(':number_id', $data->number_id, PDO::PARAM_INT);
 		$sql->bind(':meter_id', $data->meter_id, PDO::PARAM_INT);
@@ -251,6 +251,7 @@ class model_number{
 		$sql->bind(':date_checking', $data->date_checking, PDO::PARAM_INT);
 		$sql->bind(':period', $data->period, PDO::PARAM_INT);
 		$sql->bind(':place', $data->place, PDO::PARAM_STR);
+		$sql->bind(':comment', $data->comment, PDO::PARAM_STR);
 		$sql->execute('Проблемы при добавлении счетчика в лицевой счет.');
 		return $data;
 	}

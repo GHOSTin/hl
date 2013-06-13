@@ -13,7 +13,7 @@ class model_number2meter{
                         `number2meter`.`service`, `number2meter`.`serial`,
                         `number2meter`.`date_release`, `number2meter`.`date_install`,
                         `number2meter`.`date_checking`, `number2meter`.`period`,
-                        `number2meter`.`place`, `number2meter`.`service`
+                        `number2meter`.`place`, `number2meter`.`comment`, `number2meter`.`service`
                     FROM `meters`, `number2meter`
                     WHERE `number2meter`.`company_id` = :company_id
                     AND `meters`.`company_id` = :company_id
