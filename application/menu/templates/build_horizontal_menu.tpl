@@ -3,11 +3,13 @@
         <div class="container-fluid">
             <!-- begin user -->
 			<ul class="nav pull-right">
+                {% if comp != 'default_page' %}
                 <li id="nt-center">
                     <a href="#">
                         <i class="icon-envelope notification-center-icon"></i>
                     </a>
                 </li>
+                {% endif %}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle current_user" user_id="{{user_id}}" data-toggle="dropdown">
                        {{ user.firstname }} {{ user.lastname }}
