@@ -2,6 +2,12 @@
 class verify_number2meter{
 
     /**
+    * Верификация коментария компании.
+    */
+    public static function comment(data_number2meter $number2meter){
+    }
+
+    /**
     * Верификация идентификатора компании.
     */
     public static function company_id(data_number2meter $number2meter){

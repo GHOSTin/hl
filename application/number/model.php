@@ -595,6 +595,56 @@ class model_number{
 	}
 
 	/*
+	* Изменяет комментария счтечика.
+	*/
+	public static function update_meter_comment(data_company $company,
+												data_number2meter $meter,
+												$comment){
+		try{
+			$meter->verify('number_id', 'meter_id', 'serial');
+			$sql = new sql();
+			$sql->begin();
+			model_company::verify_id($company);
+			$number = new data_number();
+			$number->id = $meter->number_id;
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)			
+				throw new e_model('Проблема при выборке лицевого счета.');
+			$number = $numbers[0];
+			model_number::is_data_number($number);
+			$meter_params = new data_number2meter();
+			$meter_params->number_id = $meter->number_id;
+			$meter_params->meter_id = $meter->meter_id;
+			$meter_params->serial = $meter->serial;
+			$meter_params->verify('number_id', 'meter_id', 'serial');
+			$meters = model_number2meter::get_number2meters($company, $meter_params);
+			if(count($meters) !== 1)
+				throw new e_model('Проблема при выборке счетчика.');
+			$old_meter = $meters[0];
+			model_number2meter::is_data_number2meter($old_meter);
+			$old_meter->comment = $comment;
+			$old_meter->verify('number_id', 'meter_id', 'serial', 'comment');
+			$sql = new sql();
+			$sql->query("UPDATE `number2meter` SET `comment` = :comment
+						WHERE `company_id` = :company_id AND `number_id` = :number_id
+						AND `meter_id` = :meter_id AND `serial` = :serial");
+			$sql->bind(':meter_id', $old_meter->meter_id, PDO::PARAM_INT);
+			$sql->bind(':serial', $old_meter->serial, PDO::PARAM_STR);
+			$sql->bind(':comment', $old_meter->comment, PDO::PARAM_STR);
+			$sql->bind(':number_id', $old_meter->number_id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновление комментария счетчика.');
+			$sql->commit();
+		}catch(exception $e){
+			$sql->rollback();
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/*
 	* Изменяет период поверки счетчика.
 	*/
 	public static function update_period(data_company $company,
