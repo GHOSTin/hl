@@ -67,8 +67,7 @@ class model_city{
 		model_city::verify_id($city);
 		model_street::verify_id($street);
 		model_flat::verify_id($flat);
-		model_number::verify_number($number);
-		model_number::verify_fio($number);
+		$number->verify('number', 'fio');
 		$cities = self::get_cities($city);
 		if(count($cities) !== 1)
 			throw new e_model('Проблемы при выборке города.');
@@ -96,13 +95,7 @@ class model_city{
 		$number->city_id = $city->id;
 		$number->house_id = $house->id;
 		$number->flat_id = $flat->id;
-		model_number::verify_id($number);
-		model_number::verify_company_id($number);
-		model_number::verify_city_id($number);
-		model_number::verify_house_id($number);
-		model_number::verify_flat_id($number);
-		model_number::verify_number($number);
-		model_number::verify_fio($number);
+		$number->verify('id', 'company_id', 'city_id', 'house_id', 'flat_id', 'number', 'fio');
 		$sql = new sql();
 		$sql->query("INSERT INTO `numbers` (`id`, `company_id`, `city_id`, `house_id`, 
 					`flat_id`, `number`, `type`, `status`, `fio`)
@@ -167,7 +160,7 @@ class model_city{
 	*/
 	public static function get_numbers(data_company $company, data_city $city, data_number $number){
 		self::verify_id($city);
-		model_number::verify_number($number);
+		$number->verify('number');
 		model_company::verify_id($company);
 		$sql = new sql();
 		$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
