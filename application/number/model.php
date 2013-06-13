@@ -381,6 +381,7 @@ class model_number{
 		while($row = $sql->row()){
 			$data = new data_meter2data();
 			$data->time = $row['time'];
+			$data->comment = $row['comment'];
 			if(empty($row['value']))
 				$data->value = [];
 			else

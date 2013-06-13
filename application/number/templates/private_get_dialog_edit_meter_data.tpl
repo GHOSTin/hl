@@ -40,26 +40,26 @@
             {% if meter.rates == 2 %}
             <div class="span2">
                 <div class="">2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}">
                 {{ data.value[1] }}
             </div>
             {% endif %}
             {% if meter.rates == 3 %}
             <div class="span2">
                 <div>2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}">
                 {{ data.value[1] }}
 
             </div>
             <div class="span2">
                 <div class="">3 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][1] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[2] }}" maxlength="{{ meter.capacity }}">
                 {{ data.value[2] }}
             </div>
             {% endif %}
         </div>
         <label>Комментарий</label>
-        <textarea style="width:90%" class="dialog-textarea-comment" value="{{ current.comment }}"></textarea>
+        <textarea style="width:90%" class="dialog-textarea-comment">{{ current.comment }}</textarea>
     </div>
     <div class="modal-footer">
         <div class="btn update_meter_data">Сохранить</div>
