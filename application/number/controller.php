@@ -285,10 +285,14 @@ class controller_number{
         $data->number_id = $_GET['id'];
         $data->meter_id = $_GET['meter_id'];
         $data->serial = $_GET['serial'];
+        $time = getdate($_GET['time']);
+        $time_begin = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
+        $time_end = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
         $data->verify('number_id', 'meter_id', 'serial');
         $company = model_session::get_company();
         return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data),
-                'time' => $_GET['time']];
+                'time' => $_GET['time'],
+                'current_meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
                 // 'last_data' => model_number::get_last_meter_data($company, $number, $meter, $time)];
     }
 

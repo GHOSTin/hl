@@ -1,5 +1,6 @@
 {% extends "ajax.tpl" %}
 {% set meter = component.meters[0] %}
+{% set current = component.current_meter_data[component.time] %}
 {% set data = component.last_data[0] %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
     'сентябрь', 'октябрь', 'ноябрь', 'декабрь'] %}
@@ -32,7 +33,7 @@
         <div class="row">
             <div class="span2">
                 <div>1 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ component.meter_data[component.time][0] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[0] }}" maxlength="{{ meter.capacity }}">
                 {{ data.value[0] }}
             </div>
             {% if meter.rates == 2 %}
@@ -56,6 +57,8 @@
             </div>
             {% endif %}
         </div>
+        <label>Комментарий</label>
+        <textarea style="width:90%"></textarea>
     </div>
     <div class="modal-footer">
         <div class="btn update_meter_data">Сохранить</div>
