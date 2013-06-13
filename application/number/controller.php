@@ -52,6 +52,19 @@ class controller_number{
                 'meters' => model_number2meter::get_number2meters($company, $per)];
     }
 
+    public static function private_delete_meter(){
+        $meter = new data_number2meter();
+        $meter->number_id = $_GET['number_id'];
+        $meter->meter_id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
+        $company = model_session::get_company();
+        model_number::delete_meter($company, $meter);
+        $per = new data_number2meter();
+        $per->number_id = $_GET['number_id'];
+        return ['meter' => $meter,
+                'meters' => model_number2meter::get_number2meters($company, $per)];
+    }
+
 	public static function private_show_default_page(){
         return ['streets' => model_street::get_streets(new data_street())];
 	}
@@ -109,6 +122,15 @@ class controller_number{
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
                 'service' => $meter->service[0],
                 'old_meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+    }
+
+    public static function private_get_dialog_delete_meter(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
     }
 
     public static function private_get_dialog_edit_date_checking(){

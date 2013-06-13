@@ -1,6 +1,7 @@
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}
+<button class="btn get_dialog_delete_meter">Удалить счетчик и показания</button>
 <ul>
     <li>Услуга: {{ services[meter.service] }}</li>
     <li>Название: {{ meter.name }} <a class="get_dialog_change_meter">заменить счетчик</a></li>

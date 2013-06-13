@@ -9,6 +9,10 @@ class view_number{
         return load_template('number.private_change_meter', $args);
     }
 
+    public static function private_delete_meter($args){
+        return load_template('number.private_delete_meter', $args);
+    }
+
 	public static function private_show_default_page($args){
 		return load_template('number.private_show_default_page', $args);
 	}
@@ -35,6 +39,10 @@ class view_number{
 
     public static function private_get_dialog_change_meter($args){
         return load_template('number.private_get_dialog_change_meter', $args);
+    }
+
+    public static function private_get_dialog_delete_meter($args){
+        return load_template('number.private_get_dialog_delete_meter', $args);
     }
 
     public static function private_get_dialog_change_meter_option($args){
