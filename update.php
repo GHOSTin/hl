@@ -70,6 +70,14 @@ try{
     $sql->execute('Столбец period не был создан.');
 
     $sql = new sql();
+    $sql->query("TRUNCATE TABLE `number2meter`");
+    $sql->execute('Очистка таблиц не была закончена.');
+
+    $sql = new sql();
+    $sql->query("TRUNCATE TABLE `meter2data`");
+    $sql->execute('Очистка таблиц не была закончена.');
+
+    $sql = new sql();
     $sql->query('DROP TABLE `accrualgroups`, `accrualgroups__log`, `accruals`, 
         `accruals__log`, `numbersessions`, `receipts`, `receipts__log`, `services`');
     $sql->execute('Таблицы не были удалены.');
