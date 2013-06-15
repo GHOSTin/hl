@@ -51,7 +51,7 @@ class verify_number2meter{
     * Верификация даты установки счетчика.
     */
     public static function date_install(data_number2meter $number2meter){
-        if($number2meter->date_install < 0)
+        if($number2meter->date_install < 1)
             throw new e_model('Время даты установки задано не верно.');
     }
 
@@ -59,7 +59,7 @@ class verify_number2meter{
     * Верификация даты поверки счетчика.
     */
     public static function date_checking(data_number2meter $number2meter){
-        if($number2meter->date_checking < 0)
+        if($number2meter->date_checking < 1)
             throw new e_model('Время даты поверки задано не верно.');
     }
 
@@ -75,16 +75,16 @@ class verify_number2meter{
     * Верификация периода счетчика.
     */
     public static function period(data_number2meter $number2meter){
-        if($number2meter->period < 1 OR $number2meter->period > 240)
+        if($number2meter->period < 1 OR $number2meter->period >= 240)
             throw new e_model('Период задан не верно.');
     }
 
     /**
-    * Верификация службы счетчика.
+    * Верификация услуги счетчика, привязанного к лицевому счету.
     */
     public static function service(data_number2meter $number2meter){
         $services = ['cold_water', 'hot_water', 'electrical'];
-            if(array_search($number2meter->service, $services) === false)
-                throw new e_model('Услуга задана не верно.');
+        if(array_search($number2meter->service, $services) === false)
+            throw new e_model('Услуга задана не верно.');
     }
 }
