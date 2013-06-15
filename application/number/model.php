@@ -49,6 +49,10 @@ class model_number{
 											data_number2meter $new_meter){
 		try{
 			$old_meter->verify('number_id', 'meter_id', 'serial');
+			if($new_meter->date_install < $new_meter->date_release)
+				throw new e_model('Дата установки должна быть больше чем дата производства счетчика');
+			if($new_meter->date_checking < $new_meter->date_install)
+				throw new e_model('Дата поверки должна быть больше чем дата установки счетчика');
 			$sql = new sql();
 			$sql->begin();
 			model_company::verify_id($company);
@@ -200,6 +204,10 @@ class model_number{
 		model_company::verify_id($company);
 		$data->verify('number_id', 'meter_id', 'serial', 'service', 'period',
 						'place', 'date_release', 'date_install', 'date_checking');
+		if($data->date_install < $data->date_release)
+			throw new e_model('Дата установки должна быть больше чем дата производства счетчика');
+		if($data->date_checking < $data->date_install)
+			throw new e_model('Дата поверки должна быть больше чем дата установки счетчика');
 		$number = new data_number();
 		$number->id = $data->number_id;
 		$number->verify('id');
@@ -409,6 +417,8 @@ class model_number{
 				throw new e_model('Проблема при выборке счетчика.');
 			$meter = $meters[0];
 			model_number2meter::is_data_number2meter($meter);
+			if($time < $meter->date_install)
+				throw new e_model('Время последней поверки не может быть меньше времени установки счетчика');
 			$meter->date_checking = $time;
 			$meter->verify('number_id', 'meter_id', 'serial', 'date_checking');
 			$sql = new sql();
