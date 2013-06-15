@@ -48,7 +48,6 @@ class model_number{
 											data_number2meter $old_meter, 
 											data_number2meter $new_meter){
 		try{
-
 			$old_meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
@@ -71,7 +70,6 @@ class model_number{
 				throw new e_model('Проблема при выборке счетчика.');
 			$old_meter = $meters[0];
 			model_number2meter::is_data_number2meter($old_meter);
-
 			// проверка существования ного счетчика в таблице `number2meter`
 			$meter_params = new data_number2meter();
 			$meter_params->number_id = $new_meter->number_id;
@@ -91,8 +89,6 @@ class model_number{
 				throw new e_model('Неверное количество счетчиков.');
 			$meter = $meters[0];
 			model_meter::is_data_meter($meter);
-
-
 			$old_meter->verify('number_id', 'meter_id', 'serial');
 			$new_meter->verify('number_id', 'meter_id',
 									'serial', 'date_release', 'date_install',
@@ -150,7 +146,6 @@ class model_number{
 	public static function delete_meter(data_company $company,
 											data_number2meter $meter){
 		try{
-
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
@@ -274,6 +269,7 @@ class model_number{
 		$number_id = (int) $sql->row()['max_number_id'] + 1;
 		return $number_id;
 	}
+	
 	/**
 	* Возвращает список лицевых счетов.
 	* @return array object data_number

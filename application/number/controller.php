@@ -22,7 +22,6 @@ class controller_number{
         model_number::add_meter($company, $data);
         $number2meter = new data_number2meter();
         $number2meter->number_id = $_GET['number_id'];
-        $number2meter->meter_id = $_GET['meter_id'];
         return ['data' => $data,
                 'meters' => model_number2meter::get_number2meters($company, $number2meter)];
     }
