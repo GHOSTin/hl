@@ -359,18 +359,14 @@ class controller_number{
     }
 
     public static function private_update_serial(){
-        $old_data = new data_number2meter();
-        $old_data->number_id = $_GET['number_id'];
-        $old_data->meter_id = $_GET['meter_id'];
-        $old_data->serial = $_GET['serial'];
-        $new_data = new data_number2meter();
-        $new_data->serial = $_GET['new_serial'];
-        $new_data->number_id = $_GET['number_id'];
-        $new_data->meter_id = $_GET['meter_id'];
+        $meter = new data_number2meter();
+        $meter->number_id = $_GET['number_id'];
+        $meter->meter_id = $_GET['meter_id'];
+        $meter->serial = $_GET['serial'];
         $company = model_session::get_company();
-        model_number::update_serial($company, $old_data, $new_data);
-        return ['old_meter' => $old_data,
-                'new_meters' => model_number2meter::get_number2meters($company, $new_data)];
+        $new_meter = model_number::update_serial($company, $meter, $_GET['new_serial']);
+        return ['old_meter' => $meter,
+                'new_meters' => [$new_meter]];
     }
 
     public static function private_update_meter_comment(){

@@ -686,29 +686,21 @@ class model_number{
 	*/
 	public static function update_serial(data_company $company,
 												data_number2meter $old_data,
-												data_number2meter $new_data){
+												$serial){
 		try{
 			$old_data->verify('number_id', 'meter_id', 'serial');
-			$new_data->verify('serial');
+			model_company::verify_id($company);
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
-			$number = new data_number();
-			$number->id = $old_data->number_id;
-			$numbers = self::get_numbers($company, $number);
-			if(count($numbers) !== 1)			
-				throw new e_model('Проблема при выборке лицевого счета.');
-			$number = $numbers[0];
-			model_number::is_data_number($number);
 			$meters = model_number2meter::get_number2meters($company, $old_data);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
 			$meter = $meters[0];
 			model_number2meter::is_data_number2meter($meter);
-
-
+			$new_data = new data_number2meter();
 			$new_data->number_id = $old_data->number_id;
 			$new_data->meter_id = $old_data->meter_id;
+			$new_data->serial = $serial;
 			$new_data->verify('number_id', 'meter_id', 'serial');
 			if(count(model_number2meter::get_number2meters($company, $new_data)) !== 0)
 				throw new e_model('Счетчик с таким серийным номером уже существует.');
@@ -723,6 +715,8 @@ class model_number{
 			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->execute('Проблема при обновление серийного номера.');
 			$sql->commit();
+			$meter->serial = $serial;
+			return $meter;
 		}catch(exception $e){
 			$sql->rollback();
 			if($e instanceof e_model)
