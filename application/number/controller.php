@@ -388,10 +388,8 @@ class controller_number{
         $meter->number_id = $_GET['number_id'];
         $meter->meter_id = $_GET['meter_id'];
         $meter->serial = $_GET['serial'];
-        $meter->period = $_GET['period'];
         $company = model_session::get_company();
-        model_number::update_period($company, $meter);
-        unset($meter->period);
+        model_number::update_period($company, $meter, $_GET['period']);
         return ['meters' => model_number2meter::get_number2meters($company, $meter)];
     }
 }
