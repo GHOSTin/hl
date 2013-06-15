@@ -269,7 +269,7 @@ class model_number{
 		$number_id = (int) $sql->row()['max_number_id'] + 1;
 		return $number_id;
 	}
-	
+
 	/**
 	* Возвращает список лицевых счетов.
 	* @return array object data_number
@@ -453,6 +453,8 @@ class model_number{
 				throw new e_model('Проблема при выборке счетчика.');
 			$meter = $meters[0];
 			model_number2meter::is_data_number2meter($meter);
+			if($time < $meter->date_release)
+				throw new e_model('Время установки не может быть меньше времени производства счетчика');
 			$meter->date_install = $time;
 			$meter->verify('number_id', 'meter_id', 'serial', 'date_install');
 			$sql = new sql();

@@ -14,7 +14,7 @@
 		<li>Тарифность: {{ rates[meter.rates - 1] }}</li>
 		<li>Разрядность: {{ meter.capacity }}</li>
 	</ul>
-	<ul>
+	<ul class="unstyled">
 		<li>
 			<span>Заводской номер</span>
 			<input type="text" class="dialog-input-serial">
