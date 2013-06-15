@@ -2,7 +2,7 @@
 {% set meter = component.meters[0] %}
 {% block title %}Диалог редактирования комментария счетчика{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-comment" value="{{ meter.comment }}">	
+	<textarea class="dialog-input-comment" style="width:90%">{{ meter.comment }}</textarea>
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn update_meter_comment">Изменить</div>
