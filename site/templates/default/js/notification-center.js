@@ -239,64 +239,68 @@ $('#nt-center').on('click', function(e){
         },function(r){
             /** создать блок с полученным контентом */
             create_notification_center($('#nt-center').parent(), r);
-            var users = [];
-            $('.chat-users li').each(function(){
-                users.push({"id": $(this).attr('user_id'), "name": $(this).text()});
-            });
-            /** передает список пользователей полученных из контента */
-            userList.load(users);
-            /** запрос на получение списка онлайн пользователей */
-            chat.json.send({'type':'get_users_list'});
-            /** запрос на получение кол-ва непрочитанных сообщений */
-            chat.json.send({'type':'get_unread_messages'});
-            /** подключение custom скролла */
-            $('.chat-user-list').mCustomScrollbar({
-                scrollButtons:{
-                    enable: true
-                },
-                theme: "dark-thick",
-                updateOnContentResize:true,
-                autoHideScrollbar: true,
-                scrollInertia: 0
-            });
-            $('.chat-feed').mCustomScrollbar({
-                scrollButtons:{
-                    enable: true
-                },
-                theme: "dark-thick",
-                updateOnContentResize:true,
-                autoHideScrollbar: true,
-                scrollInertia: 0,
-                callbacks:{
-                    /** реализация бесконечной прокрутки сообщений/истории по датам */
-                    onTotalScrollBack: function(){
-                        if($('.chat.active').length){
-                            var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
-                            var offset = 0;
-                            if($('#chat-dates').is(':visible')){
-                                offset = Object.keys(active_user.messages).length;
-                                active_user.first_message_id = $('.chat.active div.chat-feed blockquote:first').attr('id');
-                                chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
-                            }
-                            if($('#chat-history').is(':visible')){
-                                offset = Object.keys(active_user.history_dates).length;
-                                chat.json.send({'type':'get_history_list', 'data':{'uid':active_user.id, 'offset': offset}})
-                            }
-                        }
-                    }
-                }
-            });
-            $("#chat-user-filter").keyup( function() {
-                if($(this).val()!==''){
-                    $(".chat-users li").hide().filter(":containsi('"+ $(this).val() +"')").show();
-                } else {
-                    userList.renderMenu();
-                }
-                $('.chat-user-list').mCustomScrollbar("update");
-            });
+            build_chat_window();
         });
     }
 });
+
+var build_chat_window = function(){
+    var users = [];
+    $('.chat-users li').each(function(){
+        users.push({"id": $(this).attr('user_id'), "name": $(this).text()});
+    });
+    /** передает список пользователей полученных из контента */
+    userList.load(users);
+    /** запрос на получение списка онлайн пользователей */
+    chat.json.send({'type':'get_users_list'});
+    /** запрос на получение кол-ва непрочитанных сообщений */
+    chat.json.send({'type':'get_unread_messages'});
+    /** подключение custom скролла */
+    $('.chat-user-list').mCustomScrollbar({
+        scrollButtons:{
+            enable: true
+        },
+        theme: "dark-thick",
+        updateOnContentResize:true,
+        autoHideScrollbar: true,
+        scrollInertia: 0
+    });
+    $('.chat-feed').mCustomScrollbar({
+        scrollButtons:{
+            enable: true
+        },
+        theme: "dark-thick",
+        updateOnContentResize:true,
+        autoHideScrollbar: true,
+        scrollInertia: 0,
+        callbacks:{
+            /** реализация бесконечной прокрутки сообщений/истории по датам */
+            onTotalScrollBack: function(){
+                if($('.chat.active').length){
+                    var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
+                    var offset = 0;
+                    if($('#chat-dates').is(':visible')){
+                        offset = Object.keys(active_user.messages).length;
+                        active_user.first_message_id = $('.chat.active div.chat-feed blockquote:first').attr('id');
+                        chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
+                    }
+                    if($('#chat-history').is(':visible')){
+                        offset = Object.keys(active_user.history_dates).length;
+                        chat.json.send({'type':'get_history_list', 'data':{'uid':active_user.id, 'offset': offset}})
+                    }
+                }
+            }
+        }
+    });
+    $("#chat-user-filter").keyup( function() {
+        if($(this).val()!==''){
+            $(".chat-users li").hide().filter(":containsi('"+ $(this).val() +"')").show();
+        } else {
+            userList.renderMenu();
+        }
+        $('.chat-user-list').mCustomScrollbar("update");
+    });
+};
 /**
  * создает блок для центра уведомлений
  * @param selector - селектор к которому нужно привизать блок

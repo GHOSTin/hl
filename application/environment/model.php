@@ -92,13 +92,13 @@ class model_environment{
 			$user = model_session::get_user();
 			if($user instanceof data_current_user){
 				model_profile::get_user_profiles(model_session::get_company(), $user);
-				$data['menu'] = model_menu::build_menu();
+				$data['menu'] = model_menu::build_menu($component);
 				if(isset(model_session::get_rules()[$component]))
 					$data['rules'] = model_session::get_rules()[$component];
 				self::verify_general_access($component);
 			}
 			$data['file_prefix'] = $component;
-			
+
 			$data['component'] = $controller::{$prefix.$method}();
 			return $view::{$prefix.$method}($data);
 		}catch(exception $e){

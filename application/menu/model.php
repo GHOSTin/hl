@@ -1,7 +1,7 @@
 <?php
 class model_menu{
 
-	public static function build_menu(){
+	public static function build_menu($component){
 		$rules = model_session::get_rules();
 		if(!empty($rules))
 			foreach($rules as $profile => $rules)
@@ -11,6 +11,7 @@ class model_menu{
 						$args['menu'][] = ['href' => $profile, 'title' => $controller::$name];
 				}
 		$args['user'] = model_session::get_user();
+		$args['comp'] = $component;
         return view_menu::build_horizontal_menu($args);
 	}
 }
