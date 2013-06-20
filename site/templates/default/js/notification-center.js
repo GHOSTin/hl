@@ -221,6 +221,12 @@ $(document).on('click', '.chat.active ul#chat-history header', function(e){
         $(".chat.active .chat-feed").mCustomScrollbar("update");
     });
 });
+
+$(document).on('click', '#chat-user-filter-clear', function(e){
+    e.preventDefault();
+    $("#chat-user-filter").val("").focus();
+    userList.renderMenu();
+});
 /**
  * обработка события нажатия на кнопку центра уведомлений
  */
