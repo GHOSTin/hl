@@ -13,7 +13,7 @@ class timestamp{
 	
 	static public function print_html_report(){
 		if(empty(self::$timestamps))
-			$pr = 'No timestamps.';
+			print('No timestamps.');
 		else{
 			$pr = '<div>';
 			foreach(self::$timestamps as $timestamp){
@@ -22,7 +22,7 @@ class timestamp{
 				$previousTimestamp = $timestamp;
 			}
 			$pr .= '<div>'.self::get_timestamp_counter().' timestamps. Runnig time: '.round($timestamp - self::$timestamps[0], 4).' </div></div>';
+			print($pr);
 		}
-		print $pr;
 	}
 }
