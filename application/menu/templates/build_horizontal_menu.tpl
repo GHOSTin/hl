@@ -42,6 +42,7 @@
                            Меню <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <li><a tabindex="-1" href="/">Главная</a></li>
                             {% for link in menu %}
                                 <li><a tabindex="-1" href="/{{link.href}}/">{{link.title}}</a></li>
                             {% endfor %}
