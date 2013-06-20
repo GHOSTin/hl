@@ -1,7 +1,9 @@
 <?php
 class model_environment{
-	/*
-	* Строит роутер
+
+	/**
+	* Строит компоненты роутера.
+	* @return array
 	*/
 	public static function build_router(){
 		try{
@@ -20,8 +22,9 @@ class model_environment{
 			throw new e_controller('Нет такой страницы.');
 		}
 	}
+
 	/**
-	* Инициализирует соединение с базой данных
+	* Инициализирует соединения с базой данных.
 	* @return void
 	*/
 	public static function create_batabase_connection(){
@@ -42,6 +45,10 @@ class model_environment{
 			throw new e_model('Аттрибуты соединения с базой данных не применились.'); 
 		}
 	}
+
+	/**
+	* Строит роутер исходя из залогинености пользователя.
+	*/
 	public static function create_session(){
 		session_start();
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
@@ -77,8 +84,9 @@ class model_environment{
 			return ['auth', 'show_auth_form', 'public_'];
 		}
 	}
+
 	/*
-	* Функция возвращает содержимое страницы
+	* Возвращает содержимое страницы.
 	*/
 	public static function get_page_content(){
 		try{
@@ -98,21 +106,20 @@ class model_environment{
 				self::verify_general_access($component);
 			}
 			$data['file_prefix'] = $component;
-			
 			$data['component'] = $controller::{$prefix.$method}();
 			return $view::{$prefix.$method}($data);
 		}catch(exception $e){
-			if($e instanceof e_model){
+			if($e instanceof e_model)
 				return view_error::show_error($e);
-			}elseif($e instanceof e_controller){
+			elseif($e instanceof e_controller)
 				return view_error::show_404();
-			}else{
+			else
 				return view_error::show_error($e);
-			}
 		}
 	}
+
 	/**
-	* Верификация доступа к компоненту
+	* Верификация доступа к компоненту.
 	*/
 	public static function verify_general_access($component){
        /* if(model_session::get_user() instanceof data_current_user){
