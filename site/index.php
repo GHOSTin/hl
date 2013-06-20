@@ -8,4 +8,4 @@ if(!empty($_GET['js']))
 elseif(!empty($_GET['css']))
 	get_component_css();
 else
-	print model_environment::get_page_content();
+	print(model_environment::get_page_content());
