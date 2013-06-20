@@ -43,9 +43,12 @@
                         </a>
                         <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
                             <li><a tabindex="-1" href="/">Главная</a></li>
+                            <li class="divider"></li>
                             {% for link in menu %}
                                 <li><a tabindex="-1" href="/{{link.href}}/">{{link.title}}</a></li>
                             {% endfor %}
+                            <li class="divider"></li>
+                            <li><a tabindex="-1" href="/exit/">Выход</a></li>
                         </ul>
                     </li>
                     {% if hot_menu|length >0 %}
