@@ -4,6 +4,7 @@
             <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target="#usermenu">
                 <i class="icon-user icon-white"></i>
             </button>
+            {% if comp != 'default_page' %}
             <ul class="nav pull-right">
                 <li id="nt-center">
                     <a href="#">
@@ -11,6 +12,7 @@
                     </a>
                 </li>
             </ul>
+            {% endif %}
             <button type="button" class="btn btn-navbar pull-left" data-toggle="collapse" data-target="#mainmenu">
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
