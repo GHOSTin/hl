@@ -57,7 +57,7 @@
 		{% endif %}
 		<li>
 			<label>Коментарий</label>
-			<textarea style="width:90%" class="dialog-textarea-comment"></textarea>
+			<textarea style="width:90%" class="dialog-textarea-comment">{{ old_meter.comment }}</textarea>
 		</li>
 	</ul>
 {% endblock dialog %}

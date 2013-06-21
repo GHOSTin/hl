@@ -107,7 +107,7 @@ class model_number{
 						`service` = :new_service, `serial` = :new_serial, 
 						`date_release` = :new_date_release, `date_install` = :new_date_install,
 						`date_checking` = :new_date_checking, `period` = :new_period,
-						`place` = :new_place
+						`place` = :new_place, `comment` = :comment
 						WHERE `company_id` = :company_id AND `number_id` = :number_id
 						AND `meter_id` = :meter_id AND `serial` = :serial");
 			$sql->bind(':meter_id', $old_meter->meter_id, PDO::PARAM_INT);
@@ -122,6 +122,7 @@ class model_number{
 			$sql->bind(':new_date_checking', $new_meter->date_checking, PDO::PARAM_INT);
 			$sql->bind(':new_period', $new_meter->period, PDO::PARAM_INT);
 			$sql->bind(':new_place', $new_meter->place, PDO::PARAM_INT);
+			$sql->bind(':comment', $new_meter->comment, PDO::PARAM_STR);
 			$sql->execute('Проблема при перепривязке счетчика.');
 			$sql = new sql();
 			$sql->query("UPDATE `meter2data` SET `meter_id` = :new_meter_id,
