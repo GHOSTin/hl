@@ -265,6 +265,24 @@ class controller_number{
                 'time' => $time_begin, 'meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
     }
 
+    public static function private_get_meter_cart(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['number_id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+    }
+
+    public static function private_get_meter_docs(){
+        $data = new data_number2meter();
+        $data->number_id = $_GET['id'];
+        $data->meter_id = $_GET['meter_id'];
+        $data->serial = $_GET['serial'];
+        $data->verify('number_id', 'meter_id', 'serial');
+        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+    }
+
     public static function private_get_meter_info(){
         $data = new data_number2meter();
         $data->number_id = $_GET['id'];

@@ -12,6 +12,7 @@
         <ul class="nav nav-pills" style="padding:20px 0px">
             <li><a class="get_meter_value">Показания</a></li>
             <li><a class="get_meter_info">Информация</a></li>
+            <li><a class="get_meter_docs">Документы</a></li>
         <ul>
     </div>
     <div class="meter-data-content">

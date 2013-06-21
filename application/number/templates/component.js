@@ -233,6 +233,16 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // возвращает документы счетчика привязаном к лицевому счету
+    }).on('click', '.get_meter_docs', function(){
+        $.get('get_meter_docs',{
+            id: get_number_id($(this)),
+            meter_id: get_meter_id($(this)),
+            serial: get_meter_serial($(this))
+            },function(r){
+                init_content(r);
+            });
+
         
     // выводит диалог перепривязки счетчика
     }).on('click', '.get_dialog_change_meter', function(){

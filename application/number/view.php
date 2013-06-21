@@ -97,6 +97,14 @@ class view_number{
         return load_template('number.private_get_meter_data', $args);
     }
 
+    public static function private_get_meter_cart($args){
+        return load_template('number.private_get_meter_cart', $args);
+    }
+
+    public static function private_get_meter_docs($args){
+        return load_template('number.private_get_meter_docs', $args);
+    }
+
     public static function private_get_meter_info($args){
         return load_template('number.private_get_meter_info', $args);
     }
