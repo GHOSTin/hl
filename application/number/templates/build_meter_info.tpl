@@ -1,10 +1,14 @@
-{% set services = {'cold_water':'Холодное водоснабжение',
+    {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}
+{% set places = {'kitchen':'Кухня', 'toilet':'Туалет', 'bathroom':'Ванна'} %}
 <button class="btn get_dialog_delete_meter">Удалить счетчик и показания</button>
 <h5>Основные параметры счетчика</h5>
 <ul class="unstyled" style="padding-left:20px">
     <li>Услуга: {{ services[meter.service] }}</li>
+    {% if meter.service == 'cold_water' or meter.service == 'hot_water' %}
+    <li>Место установки: {{ places[meter.place] }} <a class="get_dialog_edit_meter_place">изменить</a></li>
+    {% endif %}
     <li>Название: {{ meter.name }} <a class="get_dialog_change_meter">заменить счетчик</a></li>
     <li>Серийный номер: {{ meter.serial }} <a class="get_dialog_edit_serial">изменить</a></li>
     <li>Тарифность: {{ rates[meter.rates - 1] }}</li>
