@@ -203,7 +203,7 @@ class model_number{
 	public static function add_meter(data_company $company, data_number2meter $data){
 		model_company::verify_id($company);
 		$data->verify('number_id', 'meter_id', 'serial', 'service', 'period',
-						'place', 'date_release', 'date_install', 'date_checking');
+						'date_release', 'date_install', 'date_checking');
 		if($data->date_install < $data->date_release)
 			throw new e_model('Дата установки должна быть больше чем дата производства счетчика');
 		if($data->date_checking < $data->date_install)
