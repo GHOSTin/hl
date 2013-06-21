@@ -89,6 +89,7 @@ class model_number{
 			$meter->service[0] = $new_meter->service;
 			$meter->verify('id', 'service');
 			$meters = model_meter::get_meters($company, $meter);
+
 			if(count($meters) !== 1)
 				throw new e_model('Неверное количество счетчиков.');
 			$meter = $meters[0];
@@ -103,7 +104,7 @@ class model_number{
 				$new_meter->place = '';
 			$sql = new sql();
 			$sql->query("UPDATE `number2meter` SET `meter_id` = :new_meter_id,
-						`serial` = :new_service, `serial` = :new_serial, 
+						`service` = :new_service, `serial` = :new_serial, 
 						`date_release` = :new_date_release, `date_install` = :new_date_install,
 						`date_checking` = :new_date_checking, `period` = :new_period,
 						`place` = :new_place
