@@ -541,7 +541,6 @@ class model_number{
 			$sql = new sql();
 			$sql->begin();
 			$number2meter->verify('number_id', 'meter_id', 'serial');
-
 			model_company::verify_id($company);
 			if(empty($data->time))
 				throw new e_model('Время выборки задано не верно.');
@@ -576,12 +575,16 @@ class model_number{
 						AND `time` = :time");
 			else
 				throw new e_model('Не подходящее количество параметров.');
+			$values = [];
+			if(!empty($data->value))
+				foreach($data->value as $value)
+					$values[] = (int) $value;
 			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
 			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
 			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
 			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
-			$sql->bind(':value', implode(';', $data->value), PDO::PARAM_STR);
+			$sql->bind(':value', implode(';', $values), PDO::PARAM_STR);
 			$sql->bind(':comment', $data->comment, PDO::PARAM_STR);
 			$sql->execute('Проблема при при выборки данных счетчика.');
 			$sql->commit();
