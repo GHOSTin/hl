@@ -2,7 +2,7 @@
 {% set meter = component.meters[0] %}
 {% set number = component.numbers[0] %}
 {% set services = {'cold_water':'холодного водоснабжения',
-    'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
+    'hot_water':'горячего водоснабжения', 'electrical':'электроэнергии'} %}
 {% set rates = ['Однотарифный', 'Двухтарифный', 'Трехтарифный'] %}
 {% set places = {'kitchen':'на кухне', 'toilet':'в туалете', 'bathroom':'в ванной'} %}
 {% block component %}
@@ -38,7 +38,7 @@
         </tr>
     {% for data in component.meter_data %} 
         <tr>
-            <td>{{data.time|date('d.m.Y')}}</td>
+            <td>{{data.time|date('m.Y')}}</td>
             {% if meter.rates == 1 %}
                 <td>{{ data.value[0] }}</td>
             {% endif %}
