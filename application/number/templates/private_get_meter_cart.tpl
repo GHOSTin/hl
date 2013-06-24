@@ -1,32 +1,60 @@
 {% extends "print.tpl" %}
 {% set meter = component.meters[0] %}
-{% set services = {'cold_water':'Холодное водоснабжение',
+{% set number = component.numbers[0] %}
+{% set services = {'cold_water':'холодного водоснабжения',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
-{% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}
-{% set places = {'kitchen':'Кухня', 'toilet':'Туалет', 'bathroom':'Ванна'} %}
+{% set rates = ['Однотарифный', 'Двухтарифный', 'Трехтарифный'] %}
+{% set places = {'kitchen':'на кухне', 'toilet':'в туалете', 'bathroom':'в ванной'} %}
 {% block component %}
 
-<h5>Основные параметры счетчика</h5>
-<ul class="unstyled" style="padding-left:20px">
-    <li>Услуга: {{ services[meter.service] }}</li>
-    {% if meter.service == 'cold_water' or meter.service == 'hot_water' %}
-    <li>Место установки: {{ places[meter.place] }} <a class="get_dialog_edit_meter_place">изменить</a></li>
-    {% endif %}
-    <li>Название: {{ meter.name }} <a class="get_dialog_change_meter">заменить счетчик</a></li>
-    <li>Серийный номер: {{ meter.serial }} <a class="get_dialog_edit_serial">изменить</a></li>
-    <li>Тарифность: {{ rates[meter.rates - 1] }}</li>
-    <li>Разрядность: {{ meter.capacity }}</li>
-</ul>
-<h5>Параметры поверки счетчика</h5>
-<ul class="unstyled" style="padding-left:20px">
-    <li>Дата производства: {{ meter.date_release|date('d.m.Y') }} <a class="get_dialog_edit_date_release">изменить</a></li>
-    <li>Дата установки: {{ meter.date_install|date('d.m.Y') }} <a class="get_dialog_edit_date_install">изменить</a></li>
-    <li>Дата последней поверки: {{ meter.date_checking|date('d.m.Y') }} <a class="get_dialog_edit_date_checking">изменить</a></li>
-    <li>Период: {{ meter.period // 12 }} г {{ meter.period % 12 }} мес. <a class="get_dialog_edit_period">изменить</a></li>
-    <li>Дата следующей поверки: {{ meter.date_next_checking|date('d.m.Y') }}</li>
-</ul>
-<h5>Дополнительное описание</h5>
-<div style="padding-left:20px">
-    Комментарий: {{ meter.comment }} <a class="get_dialog_edit_meter_comment">изменить</a>
-</div>
+
+<h5>{{ number.street_name }}, дом №{{ number.house_number }}, кв. №{{ number.flat_number }}, {{ number.fio }} (л/с №{{ number.number }})</h5>
+{{ rates[meter.rates - 1] }} счетчик {{ services[meter.service] }} {{ meter.name }} ( Заводской номер №{{ meter.serial }}, разрядность {{ meter.capacity }}).
+{% if meter.service == 'cold_water' or meter.service == 'hot_water' %}
+    Установлен {{ places[meter.place] }}.
+{% endif %}
+<p>
+    Дата производства: {{ meter.date_release|date('d.m.Y') }} Дата установки: {{ meter.date_install|date('d.m.Y') }}
+    Дата последней поверки: {{ meter.date_checking|date('d.m.Y') }}<br>
+    Период поверки: {{ meter.period // 12 }} г {{ meter.period % 12 }} мес.
+    Дата следующей поверки: {{ meter.date_next_checking|date('d.m.Y') }}
+</p>
+{% if component.meter_data|length >0 %}
+    <table>
+        <tr>
+            <td>Время</td>
+            {% if meter.rates == 1 %}
+                <td>1 тариф</td>
+            {% endif %}
+            {% if meter.rates == 2 %}
+                <td>1 тариф</td>
+                <td>2 тариф</td>
+            {% endif %}
+            {% if meter.rates == 3 %}
+                <td>1 тариф</td>
+                <td>2 тариф</td>
+                <td>3 тариф</td>
+            {% endif %}
+        </tr>
+    {% for data in component.meter_data %} 
+        <tr>
+            <td>{{data.time|date('d.m.Y')}}</td>
+            {% if meter.rates == 1 %}
+                <td>{{ data.value[0] }}</td>
+            {% endif %}
+            {% if meter.rates == 2 %}
+                <td>{{ data.value[0] }}</td>
+                <td>{{ data.value[1] }}</td>
+            {% endif %}
+            {% if meter.rates == 3 %}
+                <td>{{ data.value[0] }}</td>
+                <td>{{ data.value[1] }}</td>
+                <td>{{ data.value[2] }}</td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </table>
+{% else %}
+    Нет показаний
+{% endif %}
 {% endblock component %}

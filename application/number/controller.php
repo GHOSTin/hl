@@ -271,7 +271,16 @@ class controller_number{
         $data->meter_id = $_GET['meter_id'];
         $data->serial = $_GET['serial'];
         $data->verify('number_id', 'meter_id', 'serial');
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+        $number = new data_number();
+        $number->id = $_GET['number_id'];
+        $number->verify('id');
+        $company = model_session::get_company();
+        $time = getdate();
+        $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
+        $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
+        return ['meters' => model_number2meter::get_number2meters($company, $data),
+                'numbers' => model_number::get_numbers($company, $number), 'time' => $time_begin,
+                'meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
     }
 
     public static function private_get_meter_docs(){
