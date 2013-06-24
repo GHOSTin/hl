@@ -87,4 +87,12 @@ class verify_number2meter{
         if(array_search($number2meter->service, $services) === false)
             throw new e_model('Услуга задана не верно.');
     }
+
+    /**
+    * Верификация статуса счетчика.
+    */
+    public static function status(data_number2meter $number2meter){
+        if(array_search($number2meter->status, ['enabled', 'disabled']) === false)
+            throw new e_model('Статус счетчика задан не верно.');
+    }
 }

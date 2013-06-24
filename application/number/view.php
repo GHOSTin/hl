@@ -69,6 +69,10 @@ class view_number{
         return load_template('number.private_get_dialog_edit_period', $args);
     }
 
+    public static function private_get_dialog_edit_meter_status($args){
+        return load_template('number.private_get_dialog_edit_meter_status', $args);
+    }
+
     public static function private_get_dialog_edit_meter_place($args){
         return load_template('number.private_get_dialog_edit_meter_place', $args);
     }
@@ -139,6 +143,10 @@ class view_number{
 
     public static function private_update_period($args){
         return load_template('number.private_update_period', $args);
+    }
+
+    public static function private_update_meter_status($args){
+        return load_template('number.private_update_meter_status', $args);
     }
 
     public static function private_update_meter_place($args){

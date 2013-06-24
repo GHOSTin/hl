@@ -8,7 +8,7 @@ class model_number2meter{
         model_company::verify_id($company);
         $data->verify('number_id');
         $sql = new sql();
-        $sql->query("SELECT `number2meter`.`meter_id`, `number2meter`.`number_id`,
+        $sql->query("SELECT `number2meter`.`meter_id`, `number2meter`.`status`, `number2meter`.`number_id`,
                         `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
                         `number2meter`.`service`, `number2meter`.`serial`,
                         `number2meter`.`date_release`, `number2meter`.`date_install`,

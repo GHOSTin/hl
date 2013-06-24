@@ -21,6 +21,7 @@ final class data_number2meter extends data_object{
 	public $period;
 	public $place;
     public $comment;
+    public $status;
 
     public function __construct(){
         if(!empty($this->date_checking) AND !empty($this->period)){

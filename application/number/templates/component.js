@@ -353,6 +353,16 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактирования статуса счетчика
+    }).on('click', '.get_dialog_edit_meter_status', function(){
+        $.get('get_dialog_edit_meter_status',{
+            id: get_number_id($(this)),
+            meter_id: $(this).closest('.meter').attr('meter'),
+            serial: $(this).closest('.meter').attr('serial')
+            },function(r){
+                init_content(r);
+            });
+
     // выводит данные конкретного года
     }).on('click', '.get_meter_data_year', function(){
         var self = $(this);
