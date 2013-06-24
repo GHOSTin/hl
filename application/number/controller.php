@@ -222,8 +222,16 @@ class controller_number{
         $number->id = $_GET['id'];
         $number->verify('id');
         $company = model_session::get_company();
+        $meters = model_number2meter::get_number2meters($company, $data);
+        $enable_meters = $disable_meters = [];
+        if(!empty($meters))
+            foreach($meters as $meter)
+                if($meter->status == 'enabled')
+                    $enable_meters[] = $meter;
+                elseif($meter->status == 'enabled')
+                    $disable_meters[] = $meter;
         return ['numbers' => model_number::get_numbers($company, $number),
-                'meters' => model_number2meter::get_number2meters($company, $data)];
+                'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
 
     public static function private_get_number_content(){
