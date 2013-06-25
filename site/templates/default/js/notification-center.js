@@ -202,6 +202,7 @@ $(document).on('click', '.chat-history', function(e){
     });
     $('.chat.active ul#chat-history').toggle(10, function(){
         $('.chat.active .chat-feed').mCustomScrollbar("update");
+        $('.chat.active .chat-feed').mCustomScrollbar("scrollTo", "bottom");
     });
 });
 /**
@@ -220,6 +221,12 @@ $(document).on('click', '.chat.active ul#chat-history header', function(e){
     $(this).siblings('ul').toggle(10, function(){
         $(".chat.active .chat-feed").mCustomScrollbar("update");
     });
+});
+
+$(document).on('click', '#chat-user-filter-clear', function(e){
+    e.preventDefault();
+    $("#chat-user-filter").val("").focus();
+    userList.renderMenu();
 });
 /**
  * обработка события нажатия на кнопку центра уведомлений
@@ -262,7 +269,6 @@ var build_chat_window = function(){
         },
         theme: "dark-thick",
         updateOnContentResize:true,
-        autoHideScrollbar: true,
         scrollInertia: 0
     });
     $('.chat-feed').mCustomScrollbar({

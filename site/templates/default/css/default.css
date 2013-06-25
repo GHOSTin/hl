@@ -66,6 +66,21 @@ div[class^=chat-col-]{
     border-right: 1px solid rgba(0,0,0,.1);
 }
 
+#chat-user-filter{
+    padding-right: 24px;
+}
+
+#chat-user-filter::-ms-clear {
+    display: none;
+}
+
+#chat-user-filter-clear {
+    float: none;
+    position: absolute;
+    right: 15px;
+    top: 6px;
+}
+
 .chat-user-list{
     overflow: auto;
     height: 470px;
