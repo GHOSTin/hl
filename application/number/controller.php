@@ -22,8 +22,16 @@ class controller_number{
         model_number::add_meter($company, $data);
         $number2meter = new data_number2meter();
         $number2meter->number_id = $_GET['number_id'];
+        $meters = model_number2meter::get_number2meters($company, $number2meter);
+        $enable_meters = $disable_meters = [];
+        if(!empty($meters))
+            foreach($meters as $meter)
+                if($meter->status == 'enabled')
+                    $enable_meters[] = $meter;
+                elseif($meter->status == 'disabled')
+                    $disable_meters[] = $meter;
         return ['data' => $data,
-                'meters' => model_number2meter::get_number2meters($company, $number2meter)];
+                'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
 
     public static function private_change_meter(){
@@ -228,7 +236,7 @@ class controller_number{
             foreach($meters as $meter)
                 if($meter->status == 'enabled')
                     $enable_meters[] = $meter;
-                elseif($meter->status == 'enabled')
+                elseif($meter->status == 'disabled')
                     $disable_meters[] = $meter;
         return ['numbers' => model_number::get_numbers($company, $number),
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
