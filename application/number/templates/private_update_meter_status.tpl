@@ -1,8 +1,10 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.data %}
+{% set enable_meters = component.enable_meters %}
+{% set disable_meters = component.disable_meters %}
 {% block js %}
-    $('.number[number = {{ meter.number_id }}] .meter[serial = {{ meter.serial }}][meter = {{ meter.meter_id }}] .meter-data-content').html(get_hidden_content());
+    $('.number[number = {{ meter.number_id }}] .number-meters').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
-    {% include '@number/build_meter_info.tpl' %}
+    {% include '@number/build_meters.tpl' %}
 {% endblock html %}

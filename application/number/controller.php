@@ -459,7 +459,18 @@ class controller_number{
         $meter->serial = $_GET['serial'];
         $company = model_session::get_company();
         model_number::update_meter_status($company, $meter, $_GET['status']);
-        return ['meters' => model_number2meter::get_number2meters($company, $meter)];
+        $number2meter = new data_number2meter();
+        $number2meter->number_id = $_GET['number_id'];
+        $meters = model_number2meter::get_number2meters($company, $number2meter);
+        $enable_meters = $disable_meters = [];
+        if(!empty($meters))
+            foreach($meters as $meter)
+                if($meter->status == 'enabled')
+                    $enable_meters[] = $meter;
+                elseif($meter->status == 'disabled')
+                    $disable_meters[] = $meter;
+        return ['data' => $meter,
+                'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
 
     public static function private_update_meter_place(){
