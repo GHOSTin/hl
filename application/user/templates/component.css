@@ -1,0 +1,8 @@
+.letters ul li{
+    display: inline-block;
+}
+.letters ul li div{
+    width:15px;
+    height:15px;
+    border: 1px solid grey;
+}
