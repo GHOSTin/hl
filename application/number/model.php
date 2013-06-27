@@ -861,7 +861,7 @@ class model_number{
 	}
 
 	/**
-	* Обнавляет ФИО вла
+	* Обнавляет ФИО владельца лицевого счета
 	* @return object data_number
 	*/
 	public static function update_number_fio(data_company $company, data_number $number, $fio){
@@ -883,6 +883,38 @@ class model_number{
 			$sql->bind(':fio', $number->fio, PDO::PARAM_STR);
 			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
 			$sql->execute('Проблема при обновлении ФИО владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
+	* Обнавляет телефон владельца лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number_telephone(data_company $company, data_number $number, $telephone){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->telephone = $telephone;
+			$number->verify('id', 'telephone');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `telephone` = :telephone 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':telephone', $number->telephone, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении телефона владельца лицевого счета.');
 			return $number;
 		}catch(exception $e){
 			if($e instanceof e_model)
