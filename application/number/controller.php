@@ -354,6 +354,13 @@ class controller_number{
         return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
     }
 
+    public static function private_get_dialog_edit_number_cellphone(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->verify('id');
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+    }
+
     public static function private_get_dialog_edit_meter_data(){
         $time = $_GET['time'];
         $data = new data_number2meter();
@@ -419,6 +426,12 @@ class controller_number{
         $number = new data_number();
         $number->id = $_GET['id'];
         return ['number' => model_number::update_number_fio(model_session::get_company(), $number, $_GET['fio'])];
+    }
+
+    public static function private_update_number_cellphone(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return ['number' => model_number::update_number_cellphone(model_session::get_company(), $number, $_GET['cellphone'])];
     }
 
     public static function private_update_number_telephone(){

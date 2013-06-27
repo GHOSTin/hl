@@ -6,5 +6,5 @@
     <dt>Телефон:</dt>
     <dd>{{ number.telephone }} <a class="get_dialog_edit_number_telephone">изменить</a></dd>
     <dt>Сотовый телефон:</dt>
-    <dd>{{ number.cellphone }} <a class="get_dialog_edit_cellphone">изменить</a></dd>
+    <dd>{{ number.cellphone }} <a class="get_dialog_edit_number_cellphone">изменить</a></dd>
 </dl>
