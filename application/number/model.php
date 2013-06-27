@@ -861,6 +861,38 @@ class model_number{
 	}
 
 	/**
+	* Обнавляет ФИО вла
+	* @return object data_number
+	*/
+	public static function update_number_fio(data_company $company, data_number $number, $fio){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->fio = $fio;
+			$number->verify('id', 'fio');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `fio` = :fio 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':fio', $number->fio, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении ФИО владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
 	* Проверка принадлежности объекта к классу data_number.
 	*/
 	public static function is_data_number($number){

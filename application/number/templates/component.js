@@ -323,6 +323,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактирования ФИО владельца лицевого счета
+    }).on('click', '.get_dialog_edit_number_fio', function(){
+        $.get('get_dialog_edit_number_fio',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог редактирования серийного номера счетчика
     }).on('click', '.get_dialog_edit_serial', function(){
         $.get('get_dialog_edit_serial',{
