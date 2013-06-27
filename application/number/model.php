@@ -812,7 +812,6 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function update_number(data_company $company, data_number $number_params){
-		die('DISABLED');
 		$number_params->verify('id', 'number');
 		model_company::verify_id($company);
 		$number = model_number::get_numbers($company, $number_params)[0];

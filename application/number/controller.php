@@ -398,7 +398,7 @@ class controller_number{
         $number->id = $_GET['id'];
         $number->number = $_GET['number'];
         $number->verify('id', 'number');
-        return model_number::update_number(model_session::get_company(), $number);
+        return ['number' => model_number::update_number(model_session::get_company(), $number)];
     }
 
     public static function private_update_meter_data(){
