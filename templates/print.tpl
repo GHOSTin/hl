@@ -14,6 +14,7 @@
                         display:none;
                         visibility: hidden;
                     }
+                    .main {margin-top: 0;}
                 }
             </style>
     <link rel="stylesheet" href="/templates/default/css/bootstrap.min.css">
