@@ -6,6 +6,8 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+
+    // выводит информацию об пользователе
     }).on('click', '.get_user_content', function(){
         if($(this).siblings().is('.user-content')){
             $(this).siblings('.user-content').remove();
@@ -16,6 +18,14 @@ $(document).ready(function(){
                     init_content(r);
                 });
         }
+        
+    // выводит диалог редактирования ФИО пользователя
+    }).on('click', '.get_dialog_edit_fio', function(){
+        $.get('get_dialog_edit_fio',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
     });
 });
 

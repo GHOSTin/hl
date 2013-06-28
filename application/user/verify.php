@@ -14,13 +14,38 @@ class verify_user{
         if($number->company_id < 1)
             throw new e_model('Идентификатор компании задан не верно.');
     }
-    
+
+    /**
+    * Верификация имени пользователя.
+    */
+    public static function firstname(data_user $user){
+         if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->firstname))
+            throw new e_model('Имя пользователя задано не верно.');
+    }
+
+    /**
+    * Верификация отчества пользователя.
+    */
+    public static function middlename(data_user $user){
+        if(!empty($user->middlename))
+            if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->middlename))
+                throw new e_model('Отчество пользователя задано не верно.');
+    }
+
     /**
     * Верификация идентификатора лицевого счета.
     */
     public static function id(data_user $number){
         if($number->id < 1)
             throw new e_model('Идентификатор лицевого счета задан не верно.');
+    }
+
+    /**
+    * Верификация фамилии пользователя.
+    */
+    public static function lastname(data_user $user){
+         if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->lastname))
+            throw new e_model('Фамилия пользователя задана не верно.');
     }
 
     /**

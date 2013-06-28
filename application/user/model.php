@@ -51,6 +51,7 @@ class model_user{
 	public static function get_password_hash($password){
 		return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
 	}
+
 	/**
 	* Возвращает пользователей
 	* @return array из data_user
@@ -67,6 +68,33 @@ class model_user{
 		}
 		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');
 	}
+
+	/**
+	* Обновляет ФИО пользователя
+	* @return array из data_user
+	*/
+	public static function update_fio(data_user $user, $lastname, $firstname, $middlename){
+		$user->verify('id');
+		$users = self::get_users($user);
+		if(count($users) !== 1)
+			throw new e_model('Ожидаемое количество пользователей не верно.');
+		$user = $users[0];
+		self::is_data_user($user);
+		$user->lastname = $lastname;
+		$user->firstname = $firstname;
+		$user->middlename = $middlename;
+		$user->verify('id', 'lastname', 'firstname', 'middlename');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `lastname` = :lastname, `firstname` = :firstname,
+				 	`midlename` = :middlename WHERE `id` = :id");
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
+		$sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
+		$sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
+		$sql->execute('Проблема при обновлении ФИО пользоваля.');
+		return $user;
+	}
+
 	/**
 	* Верификация сотового телефона пользователя.
 	*/

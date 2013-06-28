@@ -10,7 +10,7 @@
                 <li><a class="get_user_profile">Профиль</a></li>
             </ul>
         </li>
-        <li class="number-information">
+        <li class="user-information">
             {% include '@user/build_user_content.tpl' %}
         </li>
     </ul>

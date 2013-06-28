@@ -3,6 +3,13 @@ class controller_user{
 
 	static $name = 'Пользователи';
 
+    public static function private_get_dialog_edit_fio(){
+        $user = new data_user();
+        $user->id = $_GET['id'];
+        $user->verify('id');
+        return ['users' => model_user::get_users($user)];
+    }
+
 	public static function private_show_default_page(){
         $letters = [];
         $users = model_user::get_users(new data_user());
@@ -32,5 +39,11 @@ class controller_user{
         $user->id = $_GET['id'];
         $user->verify('id');
         return ['users' => model_user::get_users($user)];
+    }
+
+    public static function private_update_fio(){
+        $user = new data_user();
+        $user->id = $_GET['id'];
+        return ['user' => model_user::update_fio($user, $_GET['lastname'], $_GET['firstname'], $_GET['middlename'])];
     }
 }
