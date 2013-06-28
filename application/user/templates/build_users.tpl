@@ -1,3 +1,5 @@
 {% for user in users %}
-    <li user="{{ user.id }}">{{ user.lastname }} {{ user.firstname }} {{ user.middlename }}</li>
+    <li class="user" user="{{ user.id }}">
+        <div class="user-fio get_user_content">{{ user.lastname }} {{ user.firstname }} {{ user.middlename }}</div>
+    </li>
 {% endfor %}
