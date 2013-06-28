@@ -8,4 +8,6 @@
     <div class="letters">
     {% include '@user/build_user_letters.tpl' %}
     </div>
+    <div class="letter-content">
+    </div>
 {% endblock component %}
