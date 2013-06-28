@@ -18,10 +18,18 @@ $(document).ready(function(){
                     init_content(r);
                 });
         }
-        
+
     // выводит диалог редактирования ФИО пользователя
     }).on('click', '.get_dialog_edit_fio', function(){
         $.get('get_dialog_edit_fio',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит диалог редактирования пароля пользователя
+    }).on('click', '.get_dialog_edit_password', function(){
+        $.get('get_dialog_edit_password',{
             id: get_user_id($(this))
             },function(r){
                 init_content(r);

@@ -4,5 +4,5 @@
     <li>Имя: {{ user.firstname }} <a class="get_dialog_edit_fio">изменить</a></li>
     <li>Отчество: {{ user.middlename }} <a class="get_dialog_edit_fio">изменить</a></li>
     <li>Логин: {{ user.login }}</li>
-    <li>Пароль: **********</li>
+    <li>Пароль: ********** <a class="get_dialog_edit_password">изменить</a></li>
 </ul>

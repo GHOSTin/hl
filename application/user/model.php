@@ -96,6 +96,32 @@ class model_user{
 	}
 
 	/**
+	* Обновляет пароль пользователя
+	* @return object data_user
+	*/
+	public static function update_password(data_user $user, $password, $confirm){
+		if($password !== $confirm)
+			throw new e_model('Пароль и подтверждение не идентичны.');
+		if(strlen($password) < 8)
+			throw new e_model('Пароль не удовлетворяет усливиям безопасности');
+		if(!preg_match('/^[а-яА-Яa-zA-Z0-9]+$/u', $password))
+            throw new e_model('Пароль не удовлетворяет а-яА-Яa-zA-Z0-9.');
+		$user->verify('id');
+		$users = self::get_users($user);
+		if(count($users) !== 1)
+			throw new e_model('Ожидаемое количество пользователей не верно.');
+		$user = $users[0];
+		self::is_data_user($user);
+		$user->verify('id', 'lastname', 'firstname', 'middlename');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':password', model_user::get_password_hash($password), PDO::PARAM_STR);
+		$sql->execute('Проблема при изменении пароля пользоваля.');
+		return $user;
+	}
+
+	/**
 	* Верификация сотового телефона пользователя.
 	*/
 	public static function verify_cellphone(data_user $user){
