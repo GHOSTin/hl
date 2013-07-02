@@ -65,6 +65,17 @@ class controller_user{
         return ['users' => model_user::get_users($user)];
     }
 
+    public static function private_get_user_letters(){
+        $letters = [];
+        $users = model_user::get_users(new data_user());
+        if(!empty($users))
+            foreach($users as $user){
+                $letter = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
+                $letters[$letter]++;
+            }
+        return ['letters' => $letters];
+    }
+
     public static function private_update_fio(){
         $user = new data_user();
         $user->id = $_GET['id'];

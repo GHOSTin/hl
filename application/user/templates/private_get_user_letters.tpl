@@ -2,9 +2,9 @@
 {% set letters = component.letters %}
 {% block js %}
     $('.letters').html(get_hidden_content())
-    $('.get_user_letters').removeClass('active');
-    $('.get_group_letters').addClass('active');
+    $('.get_group_letters').removeClass('active');
+    $('.get_user_letters').addClass('active');
 {% endblock js %}
 {% block html %}
-    {% include '@user/build_group_letters.tpl' %}
+    {% include '@user/build_user_letters.tpl' %}
 {% endblock html %}

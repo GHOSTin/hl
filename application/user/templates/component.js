@@ -49,6 +49,13 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+
+    // выводит буквы пользователей
+    }).on('click', '.get_user_letters', function(){
+        $.get('get_user_letters',{
+            },function(r){
+                init_content(r);
+            });
     });
 });
 
