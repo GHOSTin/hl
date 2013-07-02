@@ -42,6 +42,13 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+
+    // выводит буквы групп
+    }).on('click', '.get_group_letters', function(){
+        $.get('get_group_letters',{
+            },function(r){
+                init_content(r);
+            });
     });
 });
 

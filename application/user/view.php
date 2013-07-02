@@ -13,6 +13,10 @@ class view_user{
         return load_template('user.private_get_dialog_edit_login', $args);
     }
 
+    public static function private_get_group_letters($args){
+        return load_template('user.private_get_group_letters', $args);
+    }
+
     public static function private_get_user_content($args){
         return load_template('user.private_get_user_content', $args);
     }

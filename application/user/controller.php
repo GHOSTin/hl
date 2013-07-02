@@ -17,6 +17,17 @@ class controller_user{
         return ['users' => model_user::get_users($user)];
     }
 
+    public static function private_get_group_letters(){
+        $letters = [];
+        $groups = model_group::get_groups(model_session::get_company(), new data_group());
+        if(!empty($groups))
+            foreach($groups as $group){
+                $letter = mb_strtolower(mb_substr($group->name, 0 ,1, 'utf-8'), 'utf-8');
+                $letters[$letter]++;
+            }
+        return ['letters' => $letters];
+    }
+
     public static function private_get_dialog_edit_login(){
         $user = new data_user();
         $user->id = $_GET['id'];
@@ -32,7 +43,6 @@ class controller_user{
                 $letter = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
                 $letters[$letter]++;
             }
-        ksort($letters);
         return ['letters' => $letters];
 	}
 
