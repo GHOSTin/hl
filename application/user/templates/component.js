@@ -15,6 +15,18 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит информацию об группе
+    }).on('click', '.get_group_content', function(){
+        if($(this).siblings().is('.group-content')){
+            $(this).siblings('.group-content').remove();
+        }else{
+            $.get('get_group_content',{
+                id: get_group_id($(this))
+                },function(r){
+                    init_content(r);
+                });
+        }
+
     // выводит информацию об пользователе
     }).on('click', '.get_user_content', function(){
         if($(this).siblings().is('.user-content')){
@@ -70,4 +82,9 @@ $(document).ready(function(){
 // возвращает идентификатор пользователя
 function get_user_id(obj){
     return obj.closest('.user').attr('user');
+}
+
+// возвращает идентификатор группы
+function get_group_id(obj){
+    return obj.closest('.group').attr('group');
 }

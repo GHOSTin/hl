@@ -70,6 +70,13 @@ class controller_user{
         return ['users' => $letter_users];
     }
 
+    public static function private_get_group_content(){
+        $group = new data_group();
+        $group->id = $_GET['id'];
+        $group->verify('id');
+        return ['groups' => model_group::get_groups(model_session::get_company(), $group)];
+    }
+
     public static function private_get_user_content(){
         $user = new data_user();
         $user->id = $_GET['id'];
