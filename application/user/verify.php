@@ -49,6 +49,16 @@ class verify_user{
     }
 
     /**
+    * Верификация логина пользователя.
+    */
+    public static function login(data_user $user){
+         if(strlen($user->login) < 6)
+                throw new e_model('Логин имеет меньше 6 букв.');
+        if(!preg_match('/^[а-яА-Яa-zA-Z0-9]+$/u', $user->login))
+            throw new e_model('Логин не удовлетворяет а-яА-Яa-zA-Z0-9.');
+    }
+
+    /**
     * Верификация пароля лицевого счета.
     */
     public static function password(data_user $number){

@@ -34,6 +34,14 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+
+    // выводит диалог редактирования логина пользователя
+    }).on('click', '.get_dialog_edit_login', function(){
+        $.get('get_dialog_edit_login',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
     });
 });
 

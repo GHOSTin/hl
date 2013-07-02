@@ -9,6 +9,10 @@ class view_user{
         return load_template('user.private_get_dialog_edit_password', $args);
     }
 
+    public static function private_get_dialog_edit_login($args){
+        return load_template('user.private_get_dialog_edit_login', $args);
+    }
+
     public static function private_get_user_content($args){
         return load_template('user.private_get_user_content', $args);
     }
@@ -27,5 +31,9 @@ class view_user{
 
     public static function private_update_password($args){
         return load_template('user.private_update_password', $args);
+    }
+
+    public static function private_update_login($args){
+        return load_template('user.private_update_login', $args);
     }
 }
