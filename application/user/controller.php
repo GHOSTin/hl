@@ -46,6 +46,18 @@ class controller_user{
         return ['letters' => $letters];
 	}
 
+    public static function private_get_group_letter(){
+        $letters = [];
+        $groups = model_group::get_groups(model_session::get_company(), new data_group());
+        if(!empty($groups))
+            foreach($groups as $group){
+                $letter = mb_strtolower(mb_substr($group->name, 0 ,1, 'utf-8'), 'utf-8');
+                if($letter === $_GET['letter'])
+                    $letters[] = $group;
+            }
+        return ['groups' => $letters];
+    }
+
     public static function private_get_user_letter(){
         $letter_users = [];
         $users = model_user::get_users(new data_user());

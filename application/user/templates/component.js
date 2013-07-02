@@ -7,6 +7,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит соедржимое буквы группы
+    }).on('click', '.get_group_letter', function(){
+        $.get('get_group_letter',{
+            letter: $(this).text()
+            },function(r){
+                init_content(r);
+            });
+
     // выводит информацию об пользователе
     }).on('click', '.get_user_content', function(){
         if($(this).siblings().is('.user-content')){
