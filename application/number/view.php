@@ -85,6 +85,18 @@ class view_number{
         return load_template('number.private_get_dialog_edit_number', $args);
     }
 
+    public static function private_get_dialog_edit_number_fio($args){
+        return load_template('number.private_get_dialog_edit_number_fio', $args);
+    }
+
+    public static function private_get_dialog_edit_number_cellphone($args){
+        return load_template('number.private_get_dialog_edit_number_cellphone', $args);
+    }
+
+    public static function private_get_dialog_edit_number_telephone($args){
+        return load_template('number.private_get_dialog_edit_number_telephone', $args);
+    }
+
     public static function private_get_meter_options($args){
         return load_template('number.private_get_meter_options', $args);
     }
@@ -135,6 +147,18 @@ class view_number{
 
     public static function private_update_number($args){
         return load_template('number.private_update_number', $args);
+    }
+
+    public static function private_update_number_fio($args){
+        return load_template('number.private_update_number_fio', $args);
+    }
+
+    public static function private_update_number_cellphone($args){
+        return load_template('number.private_update_number_cellphone', $args);
+    }
+
+    public static function private_update_number_telephone($args){
+        return load_template('number.private_update_number_telephone', $args);
     }
 
     public static function private_update_meter_comment($args){

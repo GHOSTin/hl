@@ -51,6 +51,7 @@ class model_user{
 	public static function get_password_hash($password){
 		return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
 	}
+
 	/**
 	* Возвращает пользователей
 	* @return array из data_user
@@ -65,8 +66,92 @@ class model_user{
 			$sql->query(" WHERE `id` = :id");
 			$sql->bind(':id', $user_params->id, PDO::PARAM_INT);
 		}
+		$sql->query(" ORDER BY `users`.`lastname`");
 		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');
 	}
+
+	/**
+	* Обновляет ФИО пользователя
+	* @return array из data_user
+	*/
+	public static function update_fio(data_user $user, $lastname, $firstname, $middlename){
+		$user->verify('id');
+		$users = self::get_users($user);
+		if(count($users) !== 1)
+			throw new e_model('Ожидаемое количество пользователей не верно.');
+		$user = $users[0];
+		self::is_data_user($user);
+		$user->lastname = $lastname;
+		$user->firstname = $firstname;
+		$user->middlename = $middlename;
+		$user->verify('id', 'lastname', 'firstname', 'middlename');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `lastname` = :lastname, `firstname` = :firstname,
+				 	`midlename` = :middlename WHERE `id` = :id");
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
+		$sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
+		$sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
+		$sql->execute('Проблема при обновлении ФИО пользоваля.');
+		return $user;
+	}
+
+	/**
+	* Обновляет пароль пользователя
+	* @return object data_user
+	*/
+	public static function update_password(data_user $user, $password, $confirm){
+		if($password !== $confirm)
+			throw new e_model('Пароль и подтверждение не идентичны.');
+		if(strlen($password) < 8)
+			throw new e_model('Пароль не удовлетворяет усливиям безопасности');
+		if(!preg_match('/^[а-яА-Яa-zA-Z0-9]+$/u', $password))
+            throw new e_model('Пароль не удовлетворяет а-яА-Яa-zA-Z0-9.');
+		$user->verify('id');
+		$users = self::get_users($user);
+		if(count($users) !== 1)
+			throw new e_model('Ожидаемое количество пользователей не верно.');
+		$user = $users[0];
+		self::is_data_user($user);
+		$user->verify('id');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':password', model_user::get_password_hash($password), PDO::PARAM_STR);
+		$sql->execute('Проблема при изменении пароля пользоваля.');
+		return $user;
+	}
+
+	/**
+	* Обновляет логин пользователя
+	* @return object data_user
+	*/
+	public static function update_login(data_user $user, $login){
+		$user->verify('id');
+		// проверка существования обновляемого пользователя
+		$users = self::get_users($user);
+		if(count($users) !== 1)
+			throw new e_model('Ожидаемое количество пользователей не верно.');
+		$user = $users[0];
+		self::is_data_user($user);
+		$user->login = $login;
+		$user->verify('id', 'login');
+		// проверка на существование идентичного логина
+		$sql = new sql();
+		$sql->query("SELECT `id` FROM `users` WHERE `username` = :login");
+		$sql->bind(':login', $user->login, PDO::PARAM_STR);
+		$sql->execute("Ошибка при поиске идентичного логина.");
+		if($sql->count() !== 0)
+			throw new e_model('Такой логин уже существует.');
+		// обвноление логина пользователя в базе данных
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `username` = :login WHERE `id` = :id");
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':login', $user->login, PDO::PARAM_STR);
+		$sql->execute('Проблема при изменении логина пользоваля.');
+		return $user;
+	}
+
 	/**
 	* Верификация сотового телефона пользователя.
 	*/

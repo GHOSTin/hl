@@ -812,7 +812,6 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function update_number(data_company $company, data_number $number_params){
-		die('DISABLED');
 		$number_params->verify('id', 'number');
 		model_company::verify_id($company);
 		$number = model_number::get_numbers($company, $number_params)[0];
@@ -854,6 +853,102 @@ class model_number{
 			return $number;
 		}catch(exception $e){
 			$sql->rollback();
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
+	* Обнавляет ФИО владельца лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number_fio(data_company $company, data_number $number, $fio){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->fio = $fio;
+			$number->verify('id', 'fio');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `fio` = :fio 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':fio', $number->fio, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении ФИО владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
+	* Обновляет сотовый телефон владельца лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number_cellphone(data_company $company, data_number $number, $cellphone){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->cellphone = $cellphone;
+			$number->verify('id', 'cellphone');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `cellphone` = :cellphone 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':cellphone', $number->cellphone, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении сотового телефона владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
+	* Обнавляет телефон владельца лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number_telephone(data_company $company, data_number $number, $telephone){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->telephone = $telephone;
+			$number->verify('id', 'telephone');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `telephone` = :telephone 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':telephone', $number->telephone, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении телефона владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
 			else
