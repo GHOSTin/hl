@@ -5,6 +5,10 @@ class view_user{
         return load_template('user.private_get_dialog_edit_fio', $args);
     }
 
+    public static function private_get_dialog_edit_group_name($args){
+        return load_template('user.private_get_dialog_edit_group_name', $args);
+    }
+
     public static function private_get_dialog_edit_password($args){
         return load_template('user.private_get_dialog_edit_password', $args);
     }
@@ -48,6 +52,10 @@ class view_user{
 	public static function private_show_default_page($args){
 		return load_template('user.private_show_default_page', $args);
 	}
+
+    public static function private_update_group_name($args){
+        return load_template('user.private_update_group_name', $args);
+    }
 
     public static function private_update_fio($args){
         return load_template('user.private_update_fio', $args);

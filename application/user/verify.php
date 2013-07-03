@@ -19,7 +19,7 @@ class verify_user{
     * Верификация имени пользователя.
     */
     public static function firstname(data_user $user){
-         if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->firstname))
+         if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->firstname))
             throw new e_model('Имя пользователя задано не верно.');
     }
 

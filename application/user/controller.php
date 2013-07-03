@@ -116,6 +116,12 @@ class controller_user{
         return ['letters' => $letters];
     }
 
+    public static function private_update_group_name(){
+        $group = new data_group();
+        $group->id = $_GET['id'];
+        return ['group' => model_group::update_name(model_session::get_company(), $group, $_GET['name'])];
+    }
+
     public static function private_update_fio(){
         $user = new data_user();
         $user->id = $_GET['id'];

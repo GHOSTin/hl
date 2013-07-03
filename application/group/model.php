@@ -35,6 +35,33 @@ class model_group{
 		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
 		return $sql->map(new data_user(), 'Проблема при выборки пользователей группы.');
 	}
+
+	/**
+	* Обновляет название группы.
+	* @return object data_group
+	*/
+	public static function update_name(data_company $company, data_group $group, $name){
+		$group->verify('id');
+		model_company::verify_id($company);
+		// проверка существования группы
+		$groups = self::get_groups($company, $group);
+		if(count($groups) !== 1)
+			throw new e_model('Ожидаемое количество групп не верно.');
+		$group = $groups[0];
+		self::is_data_group($group);
+		$group->name = $name;
+		$group->verify('id', 'name');
+		// обвноление названия группы
+		$sql = new sql();
+		$sql->query("UPDATE `groups` SET `name` = :name WHERE `company_id` = :company_id
+					AND `id` = :id");
+		$sql->bind(':id', $group->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->bind(':name', $group->name, PDO::PARAM_STR);
+		$sql->execute('Проблема при изменении названия группы.');
+		return $group;
+	}
+
 	/**
 	* Верификация идентификатора компании.
 	*/
