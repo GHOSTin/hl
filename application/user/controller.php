@@ -14,6 +14,17 @@ class controller_user{
                 'users' => model_group::get_users($company, $group)];
     }
 
+    public static function private_exclude_user(){
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $group = new data_group();
+        $group->id = $_GET['group_id'];
+        $company = model_session::get_company();
+        model_group::exclude_user($company, $group, $user);
+        return ['group' => $group,
+                'users' => model_group::get_users($company, $group)];
+    }
+
     public static function private_get_dialog_add_user(){
         $group = new data_group();
         $group->id = $_GET['id'];
@@ -40,6 +51,17 @@ class controller_user{
         $user->id = $_GET['id'];
         $user->verify('id');
         return ['users' => model_user::get_users($user)];
+    }
+
+    public static function private_get_dialog_exclude_user(){
+        $group = new data_group();
+        $group->id = $_GET['group_id'];
+        $group->verify('id');
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        return ['users' => model_user::get_users($user),
+                'groups' => model_group::get_groups(model_session::get_company(), $group)];
     }
 
     public static function private_get_group_letters(){

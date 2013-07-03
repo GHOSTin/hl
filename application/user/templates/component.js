@@ -95,6 +95,15 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог исключения пользователя из группу
+    }).on('click', '.get_dialog_exclude_user', function(){
+        $.get('get_dialog_exclude_user',{
+            group_id: get_group_id($(this)),
+            user_id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит буквы групп
     }).on('click', '.get_group_letters', function(){
         $.get('get_group_letters',{

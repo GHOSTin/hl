@@ -5,6 +5,10 @@ class view_user{
         return load_template('user.private_add_user', $args);
     }
 
+    public static function private_exclude_user($args){
+        return load_template('user.private_add_user', $args);
+    }
+
     public static function private_get_dialog_add_user($args){
         return load_template('user.private_get_dialog_add_user', $args);
     }
@@ -23,6 +27,10 @@ class view_user{
 
     public static function private_get_dialog_edit_login($args){
         return load_template('user.private_get_dialog_edit_login', $args);
+    }
+
+    public static function private_get_dialog_exclude_user($args){
+        return load_template('user.private_get_dialog_exclude_user', $args);
     }
 
     public static function private_get_group_letters($args){

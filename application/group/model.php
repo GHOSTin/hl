@@ -33,6 +33,19 @@ class model_group{
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при добавлении пользователя в группу.');
 	}
+
+	/**
+	* Исключает из группы пользователя.
+	*/
+	public static function exclude_user(data_company $company, data_group $group, data_user $user){
+		$sql = new sql();
+		$sql->query("DELETE FROM `group2user` WHERE `group_id` = :group_id
+					AND `user_id` = :user_id");
+		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		$sql->execute('Ошибка при исключении пользователя из группы.');
+	}
+
 	/**
 	* Возвращает список групп.
 	* @return array из data_group
