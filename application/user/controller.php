@@ -3,6 +3,24 @@ class controller_user{
 
 	static $name = 'Пользователи';
 
+    public static function private_add_user(){
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $group = new data_group();
+        $group->id = $_GET['group_id'];
+        $company = model_session::get_company();
+        model_group::add_user($company, $group, $user);
+        return ['group' => $group,
+                'users' => model_group::get_users($company, $group)];
+    }
+
+    public static function private_get_dialog_add_user(){
+        $group = new data_group();
+        $group->id = $_GET['id'];
+        return ['users' => model_user::get_users(new data_user()),
+                'group' => $group];
+    }
+
     public static function private_get_dialog_edit_group_name(){
         $group = new data_group();
         $group->id = $_GET['id'];
@@ -46,7 +64,8 @@ class controller_user{
         $group = new data_group();
         $group->id = $_GET['id'];
         $group->verify('id');
-        return ['users' => model_group::get_users(model_session::get_company(), $group)];
+        return ['group' => $group,
+                'users' => model_group::get_users(model_session::get_company(), $group)];
     }
 
     public static function private_get_dialog_edit_login(){

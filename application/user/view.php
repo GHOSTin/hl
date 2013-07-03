@@ -1,6 +1,14 @@
 <?php
 class view_user{
 
+    public static function private_add_user($args){
+        return load_template('user.private_add_user', $args);
+    }
+
+    public static function private_get_dialog_add_user($args){
+        return load_template('user.private_get_dialog_add_user', $args);
+    }
+
     public static function private_get_dialog_edit_fio($args){
         return load_template('user.private_get_dialog_edit_fio', $args);
     }
