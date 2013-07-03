@@ -35,6 +35,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит профиль группы
+    }).on('click', '.get_group_profile', function(){
+        $.get('get_group_profile',{
+            id: get_group_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит информацию об пользователе
     }).on('click', '.get_user_content', function(){
         if($(this).siblings().is('.user-content')){

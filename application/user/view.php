@@ -21,6 +21,10 @@ class view_user{
         return load_template('user.private_get_group_content', $args);
     }
 
+    public static function private_get_group_profile($args){
+        return load_template('user.private_get_group_profile', $args);
+    }
+
     public static function private_get_group_users($args){
         return load_template('user.private_get_group_users', $args);
     }

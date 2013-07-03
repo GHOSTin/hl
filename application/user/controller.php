@@ -35,6 +35,13 @@ class controller_user{
         return ['letters' => $letters];
     }
 
+    public static function private_get_group_profile(){
+        $group = new data_group();
+        $group->id = $_GET['id'];
+        $group->verify('id');
+        return ['groups' => model_group::get_groups(model_session::get_company(), $group)];
+    }
+
     public static function private_get_group_users(){
         $group = new data_group();
         $group->id = $_GET['id'];
