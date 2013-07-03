@@ -77,7 +77,7 @@ class model_group{
 					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
 					`users`.`cellphone`
 					FROM `users`, `group2user` WHERE `group2user`.`group_id` = :group_id
-					AND `users`.`id` = `group2user`.`user_id`");
+					AND `users`.`id` = `group2user`.`user_id` ORDER BY `users`.`lastname`");
 		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
 		return $sql->map(new data_user(), 'Проблема при выборки пользователей группы.');
 	}

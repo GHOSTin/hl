@@ -66,6 +66,7 @@ class model_user{
 			$sql->query(" WHERE `id` = :id");
 			$sql->bind(':id', $user_params->id, PDO::PARAM_INT);
 		}
+		$sql->query(" ORDER BY `users`.`lastname`");
 		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');
 	}
 
