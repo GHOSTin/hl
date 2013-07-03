@@ -8,6 +8,7 @@
         <li>
             <ul class="nav nav-pills">
                 <li><a class="get_group_profile">Профиль</a></li>
+                <li><a class="get_group_users">Пользователи</a></li>
             </ul>
         </li>
         <li class="group-information">

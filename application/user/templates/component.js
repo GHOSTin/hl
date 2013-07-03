@@ -27,6 +27,14 @@ $(document).ready(function(){
                 });
         }
 
+    // выводит пользователей группы
+    }).on('click', '.get_group_users', function(){
+        $.get('get_group_users',{
+            id: get_group_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит информацию об пользователе
     }).on('click', '.get_user_content', function(){
         if($(this).siblings().is('.user-content')){
@@ -38,6 +46,14 @@ $(document).ready(function(){
                     init_content(r);
                 });
         }
+
+    // выводит диалог редактирования названия группы
+    }).on('click', '.get_dialog_edit_group_name', function(){
+        $.get('get_dialog_edit_group_name',{
+            id: get_group_id($(this))
+            },function(r){
+                init_content(r);
+            });
 
     // выводит диалог редактирования ФИО пользователя
     }).on('click', '.get_dialog_edit_fio', function(){

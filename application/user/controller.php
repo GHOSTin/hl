@@ -3,6 +3,13 @@ class controller_user{
 
 	static $name = 'Пользователи';
 
+    public static function private_get_dialog_edit_group_name(){
+        $group = new data_group();
+        $group->id = $_GET['id'];
+        $group->verify('id');
+        return ['groups' => model_group::get_groups(model_session::get_company(), $group)];
+    }
+
     public static function private_get_dialog_edit_fio(){
         $user = new data_user();
         $user->id = $_GET['id'];
@@ -26,6 +33,13 @@ class controller_user{
                 $letters[$letter]++;
             }
         return ['letters' => $letters];
+    }
+
+    public static function private_get_group_users(){
+        $group = new data_group();
+        $group->id = $_GET['id'];
+        $group->verify('id');
+        return ['users' => model_group::get_users(model_session::get_company(), $group)];
     }
 
     public static function private_get_dialog_edit_login(){
