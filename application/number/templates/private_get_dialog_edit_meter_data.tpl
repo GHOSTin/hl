@@ -4,6 +4,7 @@
 {% set data = component.last_data[0] %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
     'сентябрь', 'октябрь', 'ноябрь', 'декабрь'] %}
+{% set ways = {'answerphone':'Автоответчик', 'telephone':'Телефон', 'fax':'Факс', 'personally':'Лично'}%}
 {% block js %}
     show_dialog(get_hidden_content());
     $('.update_meter_data').click(function(){
@@ -18,11 +19,18 @@
             number: $('.dialog-number').val(),
             time: {{ component.time }},
             tarif: tarifs,
-            comment: $('.dialog-textarea-comment').val()
+            comment: $('.dialog-textarea-comment').val(),
+            way: $('.dialog-select-way').val(),
+            timestamp: $('.dialog-input-timestamp').val()
             },function(r){
                 init_content(r);
                 $('.dialog').modal('hide');
             });
+    });
+
+    // датапикер
+    $('.dialog-input-timestamp').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
+        $('.dialog-input-timestamp').datepicker('hide');
     });
 {% endblock js %}
 {% block html %}
@@ -58,8 +66,28 @@
             </div>
             {% endif %}
         </div>
-        <label>Комментарий</label>
-        <textarea style="width:90%" class="dialog-textarea-comment">{{ current.comment }}</textarea>
+        <div>
+            <label>Время передачи показания</label>
+            <input type="text" class="dialog-input-timestamp" value="
+            {% if current.timestamp < 1 %}
+                {{ "now"|date('d.m.Y') }}
+            {% else %}
+                {{ current.timestamp|date('d.m.Y') }}
+            {%endif%}
+            ">
+        </div>
+        <div>
+            <label>Способ передачи показания</label>
+            <select class="dialog-select-way">
+                {% for key, value in ways %}
+                <option value="{{ key }}" {% if current.way == key %} selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label>Комментарий</label>
+            <textarea style="width:90%" class="dialog-textarea-comment">{{ current.comment }}</textarea>
+        </div>
     </div>
     <div class="modal-footer">
         <div class="btn update_meter_data">Сохранить</div>

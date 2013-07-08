@@ -450,6 +450,9 @@ class controller_number{
         $meter2data->time = $_GET['time'];
         $meter2data->value = $_GET['tarif'];
         $meter2data->comment = $_GET['comment'];
+        $timestamp = explode('.', $_GET['timestamp']);
+        $meter2data->timestamp = mktime(12, 0, 0, $timestamp[1], $timestamp[0], $timestamp[2]);
+        $meter2data->way = $_GET['way'];
         model_number::update_meter_data(model_session::get_company(), $data, $meter2data);
         $time = getdate();
         $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);

@@ -369,7 +369,7 @@ class model_number{
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);
 		$sql = new sql();
-		$sql->query("SELECT `time`, `value`, `comment` FROM `meter2data`
+		$sql->query("SELECT `time`, `value`, `comment`, `way`, `timestamp` FROM `meter2data`
 					WHERE `meter2data`.`company_id` = :company_id
 					AND `meter2data`.`number_id` = :number_id
 					AND `meter2data`.`meter_id` = :meter_id
@@ -388,6 +388,8 @@ class model_number{
 			$data = new data_meter2data();
 			$data->time = $row['time'];
 			$data->comment = $row['comment'];
+			$data->way = $row['way'];
+			$data->timestamp = $row['timestamp'];
 			if(empty($row['value']))
 				$data->value = [];
 			else
@@ -546,6 +548,7 @@ class model_number{
 			model_company::verify_id($company);
 			if(empty($data->time))
 				throw new e_model('Время выборки задано не верно.');
+			// проверка существования лицевого счета
 			$number = new data_number();
 			$number->id = $number2meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -553,6 +556,7 @@ class model_number{
 				throw new e_model('Проблема при выборке лицевого счета.');
 			$number = $numbers[0];
 			model_number::is_data_number($number);
+			// проверка существования счетчика
 			$meters = model_number2meter::get_number2meters($company, $number2meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
@@ -566,12 +570,12 @@ class model_number{
 			$sql = new sql();
 			if($count === 0)
 				$sql->query("INSERT INTO `meter2data` (`company_id`, `number_id`,
-						`meter_id`, `serial`, `time`, `value`, `comment`
+						`meter_id`, `serial`, `time`, `value`, `comment`, `way`, `timestamp`
 						) VALUES (:company_id, :number_id, :meter_id, :serial,
-						:time, :value, :comment)");
+						:time, :value, :comment, :way, :timestamp)");
 			elseif($count === 1)
 				$sql->query("UPDATE `meter2data` SET `time` = :time, `value` = :value,
-						`comment` = :comment
+						`comment` = :comment, `way` = :way, `timestamp` = :timestamp
 						WHERE `company_id` = :company_id AND `number_id` = :number_id
 						AND `meter_id` = :meter_id AND `serial` = :serial
 						AND `time` = :time");
@@ -581,6 +585,7 @@ class model_number{
 			if(!empty($data->value))
 				foreach($data->value as $value)
 					$values[] = (int) $value;
+			$data->verify('way', 'timestamp');
 			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
 			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
 			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
@@ -588,9 +593,12 @@ class model_number{
 			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
 			$sql->bind(':value', implode(';', $values), PDO::PARAM_STR);
 			$sql->bind(':comment', $data->comment, PDO::PARAM_STR);
+			$sql->bind(':way', $data->way, PDO::PARAM_STR);
+			$sql->bind(':timestamp', $data->timestamp, PDO::PARAM_INT);
 			$sql->execute('Проблема при при выборки данных счетчика.');
 			$sql->commit();
 		}catch(exception $e){
+			// die($e->getMessage());
 			$sql->rollback();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
