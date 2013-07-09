@@ -2,7 +2,7 @@
 {% set centers = component.centers %}
 {% block component %}
     <div>
-        <a>Создать</a>
+        <a class="get_dialog_create_processing_center">Создать</a>
     </div>
     <ul class="unstyled processing-centers">
         {% include '@processing_center/build_centers.tpl' %}
