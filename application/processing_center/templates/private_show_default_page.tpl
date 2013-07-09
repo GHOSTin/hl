@@ -4,7 +4,7 @@
     <div>
         <a>Создать</a>
     </div>
-    <ul class="processing-centers">
+    <ul class="unstyled processing-centers">
         {% include '@processing_center/build_centers.tpl' %}
     </ul>
 {% endblock component %}
