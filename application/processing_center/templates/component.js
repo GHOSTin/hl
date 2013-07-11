@@ -6,6 +6,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактрирования названия расчетного центра
+    }).on('click', '.get_dialog_rename_processing_center', function(){
+        $.get('get_dialog_rename_processing_center',{
+            id: get_processing_center_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит информацию о процессинговом центре
     }).on('click', '.get_processing_center_content', function(){
         if($(this).siblings().is('.processing-center-content')){

@@ -53,4 +53,33 @@ class model_processing_center{
         $sql->query(" ORDER BY `name`");
         return $sql->map(new data_processing_center(), 'Проблема при выборке расчетных центров.');
     }
+
+    /*
+    * Переименование процессингового центра.
+    */
+    public static function rename_processing_center(data_processing_center $center, $name){
+        $center->verify('id');
+        $centers = self::get_processing_centers($center);
+        if(count($centers) !== 1)
+            throw new e_model('Неожиданное количество процессинговых центров');
+        $center = $centers[0];
+        self::is_data_processing_center($center);
+        $center->name = $name;
+        $center->verify('id', 'name');
+        $sql = new sql();
+        $sql->query("UPDATE `processing_centers` SET `name` = :name
+                    WHERE `id` = :id");
+        $sql->bind(':id', $center->id, PDO::PARAM_INT);
+        $sql->bind(':name', $center->name, PDO::PARAM_STR);
+        $sql->execute('Проблемы при переименовании процессингового центра.');
+        return $center;
+    }
+
+    /**
+    * Проверка принадлежности объекта к классу data_processing_center.
+    */
+    public static function is_data_processing_center($center){
+        if(!($center instanceof data_processing_center))
+            throw new e_model('Возвращеный объект не является процессинговым центром.');
+    }
 }
