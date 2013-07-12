@@ -129,6 +129,10 @@ class view_number{
         return load_template('number.private_get_meter_value', $args);
     }
 
+    public static function private_get_processing_centers($args){
+        return load_template('number.private_get_processing_centers', $args);
+    }
+
     public static function private_get_dialog_edit_meter_data($args){
         return load_template('number.private_get_dialog_edit_meter_data', $args);
     }

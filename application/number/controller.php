@@ -333,6 +333,15 @@ class controller_number{
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
+    public static function private_get_processing_centers(){
+        $c2n = new data_processing_center2number();
+        $c2n->number_id = $_GET['id'];
+        $c2n->verify('number_id');
+        $company = model_session::get_company();
+        return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
+                'data' => $c2n];
+    }
+
     public static function private_get_dialog_edit_number(){
         $number = new data_number();
         $number->id = $_GET['id'];

@@ -243,6 +243,13 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит процессинговые центры привязанные к лицевому счету
+    }).on('click', '.get_processing_centers', function(){
+        $.get('get_processing_centers',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
         
     // выводит диалог перепривязки счетчика
     }).on('click', '.get_dialog_change_meter', function(){
