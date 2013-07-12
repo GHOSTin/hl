@@ -20,6 +20,14 @@ try{
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
     $sql->execute('Таблица processing_centers не была создана.');
 
+    $sql = new sql();
+    $sql->query("CREATE TABLE `processing_center2number`(
+                    `processing_center_id` TINYINT UNSIGNED NOT NULL,
+                    `company_id` TINYINT UNSIGNED NOT NULL,
+                    `number_id` MEDIUMINT UNSIGNED NOT NULL,
+                    `identifier` VARCHAR(255) NOT NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8");
+    $sql->execute('Таблица processing_center2number не была создана.');
 
 }catch(exception $e){
     die($e->getMessage());
