@@ -42,26 +42,26 @@
         <div class="row">
             <div class="span2">
                 <div>1 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[0] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[0] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[0] }}">
                 {{ data.value[0] }}
             </div>
             {% if meter.rates == 2 %}
             <div class="span2">
                 <div class="">2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
             </div>
             {% endif %}
             {% if meter.rates == 3 %}
             <div class="span2">
                 <div>2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
 
             </div>
             <div class="span2">
                 <div class="">3 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[2] }}" maxlength="{{ meter.capacity }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.value[2] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[2] }}">
                 {{ data.value[2] }}
             </div>
             {% endif %}

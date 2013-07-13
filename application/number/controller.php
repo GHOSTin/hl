@@ -383,8 +383,8 @@ class controller_number{
         $company = model_session::get_company();
         return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data),
                 'time' => $_GET['time'],
-                'current_meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
-                // 'last_data' => model_number::get_last_meter_data($company, $number, $meter, $time)];
+                'current_meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end),
+                'last_data' => model_number::get_last_meter_data($company, $data, mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']))];
     }
 
     public static function private_update_date_checking(){
