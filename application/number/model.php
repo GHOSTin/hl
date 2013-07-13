@@ -585,6 +585,13 @@ class model_number{
 			if(!empty($data->value))
 				foreach($data->value as $value)
 					$values[] = (int) $value;
+			$last_data = self::get_last_meter_data($company, $meter, $time_begin)[0];
+			if($last_data instanceof data_meter2data AND !empty($values))
+				foreach($values as $key => $value)
+					if($value < $last_data->value[$key]){
+						$tarif = $key + 1;
+						throw new e_model($tarif.' тариф новое показание '.$value.' меньше предидущего '.$last_data->value[$key]);
+					}
 			$data->verify('way', 'timestamp');
 			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
 			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);

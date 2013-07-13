@@ -23,8 +23,8 @@
             way: $('.dialog-select-way').val(),
             timestamp: $('.dialog-input-timestamp').val()
             },function(r){
-                init_content(r);
                 $('.dialog').modal('hide');
+                init_content(r);
             });
     });
 
