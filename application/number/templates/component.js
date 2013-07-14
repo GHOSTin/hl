@@ -250,6 +250,15 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+
+    // выводит диалог добавления процессингового центра
+    }).on('click', '.get_dialog_add_processing_center', function(){
+        $.get('get_dialog_add_processing_center',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
         
     // выводит диалог перепривязки счетчика
     }).on('click', '.get_dialog_change_meter', function(){

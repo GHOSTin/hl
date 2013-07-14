@@ -5,6 +5,10 @@ class view_number{
         return load_template('number.private_add_meter', $args);
     }
 
+    public static function private_add_processing_center($args){
+        return load_template('number.private_add_processing_center', $args);
+    }
+
     public static function private_change_meter($args){
         return load_template('number.private_change_meter', $args);
     }
@@ -35,6 +39,10 @@ class view_number{
 
     public static function private_get_dialog_add_meter_option($args){
         return load_template('number.private_get_dialog_add_meter_option', $args);
+    }
+
+    public static function private_get_dialog_add_processing_center($args){
+        return load_template('number.private_get_dialog_add_processing_center', $args);
     }
 
     public static function private_get_dialog_change_meter($args){

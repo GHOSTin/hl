@@ -7,9 +7,10 @@
     $('.number[number = {{ data.number_id }}] .get_processing_centers').parent().addClass('active');
 {% endblock js %}
 {% block html %}
-        <div>
+    <div><a class="get_dialog_add_processing_center">Добавить идентификатор</a></div>
+    <ul>
         {% for center in centers %}
-            {{center.processing_center_name}}
+            <li>{{ center.processing_center_name }} ({{ center.identifier }}) <a>исключить</a></li>
         {% endfor %}
-    </div>
+    </ul>
 {% endblock html %}
