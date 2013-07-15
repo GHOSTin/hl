@@ -6,6 +6,7 @@ class model_session{
     private static $rules;
     private static $restrictions;
     private static $links;
+    private static $settings;
 
     public static function get_restrictions(){
         return self::$restrictions;
@@ -20,6 +21,14 @@ class model_session{
     }
     public static function get_company(){
         return self::$company;
+    }
+
+    public static function get_settings(){
+        return self::$settings;
+    }
+
+    public static function get_setting_param($component, $param){
+        return self::$settings[$component][$param];
     }
 
     public static function set_user(data_current_user $user){
@@ -53,6 +62,19 @@ class model_session{
         }else
             throw new exception('Нельзя дважды определить правила доступа.');
     }
+
+    public static function set_settings($settings){
+        if(!isset(self::$settings)){
+            self::$settings = $settings;
+        }else
+            throw new exception('Нельзя дважды определить настройки.');
+    }
+
+    public static function set_setting_param($component, $param, $value){
+        self::$settings[$component][$param] = $value;
+        $_SESSION['settings'] = self::$settings;
+    }
+
     /**
     * Настройка кук
     */

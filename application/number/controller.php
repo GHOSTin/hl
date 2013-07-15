@@ -285,6 +285,7 @@ class controller_number{
                     $enable_meters[] = $meter;
                 elseif($meter->status == 'disabled')
                     $disable_meters[] = $meter;
+        model_session::set_setting_param('number', 'number_content', 'meters');
         return ['numbers' => model_number::get_numbers($company, $number),
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
@@ -293,13 +294,49 @@ class controller_number{
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->verify('id');
-        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+        $switch = model_session::get_setting_param('number', 'number_content');
+        switch($switch){
+            case 'meters':
+                $data = new data_number2meter();
+                $data->number_id = $_GET['id'];
+                $data->verify('number_id');
+                $number = new data_number();
+                $number->id = $_GET['id'];
+                $number->verify('id');
+                $company = model_session::get_company();
+                $meters = model_number2meter::get_number2meters($company, $data);
+                $enable_meters = $disable_meters = [];
+                if(!empty($meters))
+                    foreach($meters as $meter)
+                        if($meter->status == 'enabled')
+                            $enable_meters[] = $meter;
+                        elseif($meter->status == 'disabled')
+                            $disable_meters[] = $meter;
+                return ['numbers' => model_number::get_numbers($company, $number),
+                        'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters,
+                        'setting' => $switch];
+            break;
+
+            case 'centers':
+                $c2n = new data_processing_center2number();
+                $c2n->number_id = $_GET['id'];
+                $c2n->verify('number_id');
+                $company = model_session::get_company();
+                return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
+                        'numbers' => [$number],
+                        'setting' => $switch];
+            break;
+
+            default:
+                return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+        }
     }
 
     public static function private_get_number_information(){
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->verify('id');
+        model_session::set_setting_param('number', 'number_content', 'information');
         return ['numbers' => model_number::get_numbers(model_session::get_company(),$number)];
     }
 
@@ -385,6 +422,7 @@ class controller_number{
         $c2n->number_id = $_GET['id'];
         $c2n->verify('number_id');
         $company = model_session::get_company();
+        model_session::set_setting_param('number', 'number_content', 'centers');
         return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
                 'data' => $c2n];
     }

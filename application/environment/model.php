@@ -56,6 +56,7 @@ class model_environment{
 			self::create_batabase_connection();
 			model_session::set_user($_SESSION['user']);
 			model_session::set_company($_SESSION['company']);
+			model_session::set_settings($_SESSION['settings']);
 			$route = self::build_router();
 			$route[] = 'private_';
 			return $route;
