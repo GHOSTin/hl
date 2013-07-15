@@ -259,6 +259,16 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог исключения процессингового центра
+    }).on('click', '.get_dialog_exclude_processing_center', function(){
+        $.get('get_dialog_exclude_processing_center',{
+            number_id: get_number_id($(this)),
+            center_id: $(this).parent().attr('center'),
+            identifier: $(this).parent().attr('identifier'),
+            },function(r){
+                init_content(r);
+            });
+
         
     // выводит диалог перепривязки счетчика
     }).on('click', '.get_dialog_change_meter', function(){

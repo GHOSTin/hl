@@ -17,6 +17,10 @@ class view_number{
         return load_template('number.private_delete_meter', $args);
     }
 
+    public static function private_exclude_processing_center($args){
+        return load_template('number.private_exclude_processing_center', $args);
+    }
+
 	public static function private_show_default_page($args){
 		return load_template('number.private_show_default_page', $args);
 	}
@@ -103,6 +107,10 @@ class view_number{
 
     public static function private_get_dialog_edit_number_telephone($args){
         return load_template('number.private_get_dialog_edit_number_telephone', $args);
+    }
+
+    public static function private_get_dialog_exclude_processing_center($args){
+        return load_template('number.private_get_dialog_exclude_processing_center', $args);
     }
 
     public static function private_get_meter_options($args){
