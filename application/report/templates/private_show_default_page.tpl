@@ -1,4 +1,12 @@
 {% extends "default.tpl" %}
 {% block component %}
-    {{component}}
+<div class="row-fluid">
+    <div class="span2">
+        <h4>Виды отчетов</h4>
+        <ul class="unstyled">
+            <li><a class="get_query_reports">Отчеты по заявкам</a></li>
+        </ul>
+    </div>
+    <div class="span10 report-content"></div>
+</div>
 {% endblock component %}
