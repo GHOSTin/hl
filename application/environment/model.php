@@ -106,6 +106,7 @@ class model_environment{
 				if(isset(model_session::get_rules()[$component]))
 					$data['rules'] = model_session::get_rules()[$component];
 				self::verify_general_access($component);
+				model_session::set_session(new component_session_manager(new php_session_storage(), $component));
 			}
 			$data['file_prefix'] = $component;
 

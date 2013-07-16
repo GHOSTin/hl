@@ -5,6 +5,11 @@
     // датапикер
     $('.query_time_begin').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
         $('.query_time_begin').datepicker('hide');
+        $.get('set_time_begin',{
+            time: $('.query_time_begin').val()
+            },function(r){
+                init_content(r);
+            });
     });
 
     $('.query_time_end').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){

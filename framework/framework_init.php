@@ -31,3 +31,35 @@ try{
 }catch(exception $e){
 	die('Шаблонизатор не может быть подгружен.');
 }
+
+class component_session_manager{
+
+	public $component;
+	public $storage;
+
+	public function __construct($storage, $component){
+		if(strlen($component) < 1)
+			throw new e_model('Проблема в сесси компонента.');
+		$this->component = $component;
+		$this->storage = $storage;
+	}
+
+	public function set($key, $value){
+		$this->storage->set($this, $key, $value);
+	}
+
+	public function get($key){
+		return $this->storage->get($this, $key);
+	}
+}
+
+class php_session_storage{
+
+	public function set($manager, $key, $value){
+		$_SESSION['components'][$manager->component][$key] = $value;
+	}
+
+	public function get($manager, $key){
+		return $_SESSION['components'][$manager->component][$key];
+	}
+}

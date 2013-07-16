@@ -7,6 +7,7 @@ class model_session{
     private static $restrictions;
     private static $links;
     private static $settings;
+    private static $session;
 
     public static function get_restrictions(){
         return self::$restrictions;
@@ -61,6 +62,17 @@ class model_session{
             self::$rules = $rules;
         }else
             throw new exception('Нельзя дважды определить правила доступа.');
+    }
+
+    public static function set_session(component_session_manager $session){
+        if(!isset(self::$session)){
+            self::$session = $session;
+        }else
+            throw new exception('Нельзя дважды определить сессию компонента.');
+    }
+
+    public static function get_session(){
+        return self::$session;
     }
 
     public static function set_settings($settings){
