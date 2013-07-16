@@ -10,3 +10,9 @@
     <div class="span10 report-content"></div>
 </div>
 {% endblock component %}
+{% block javascript %}
+    <script src="/templates/default/js/bootstrap-datepicker.js"></script>
+{% endblock javascript %}
+{% block css %}
+    <link rel="stylesheet" href="/templates/default/css/datepicker.css" >
+{% endblock css %}
