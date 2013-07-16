@@ -20,6 +20,7 @@
 {% block html %}
     <h4>Отчеты по заявкам</h4>
     <div class="row-fluid">
+        {{ component.filters.time_begin }}
         <div class="span3">Фильтры <a>сбросить</a>
             <ul class="unstyled">
                 <li>
