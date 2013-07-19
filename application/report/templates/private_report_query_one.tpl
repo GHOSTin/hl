@@ -2,6 +2,7 @@
 {% set queries = component.queries %}
 {% set users = component.users %}
 {% set works = component.works %}
+{% set numbers = component.numbers %}
 
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
@@ -48,7 +49,14 @@
         <td>ID:{{ query.department_id }}</td>
         <td>{{ query.street_name }}</td>
         <td>{{ query.house_number }}</td>
-        <td></td>
+        <td>
+            {% if query.initiator == 'number' %}
+                {% for number_id in numbers.structure[query.id]['true'] %}
+                    {% set number = numbers.numbers[number_id] %}
+                    {{ number.fio }} (№{{ number.number }}), кв. {{ number.flat_number }}
+                {% endfor %}
+            {% endif %}
+        </td>
         <td>{{ query.time_open|date("h.i d.m.Y") }}</td>
         <td>{% if query.status == 'close' or query.status == 'reclose' %}{{ query.time_close|date("h.i d.m.Y") }}{% endif %}</td>
         <td>{{ query.description }}</td>

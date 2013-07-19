@@ -27,7 +27,8 @@ class controller_report{
         $company = model_session::get_company();
         return ['queries' => model_query::get_queries($company, $query),
                 'users' => model_query::get_users($company, $query),
-                'works' => model_query::get_works($company, $query)];
+                'works' => model_query::get_works($company, $query),
+                'numbers' => model_query::get_numbers($company, $query)];
     }
 
     public static function private_set_time_begin(){
