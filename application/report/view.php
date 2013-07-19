@@ -5,6 +5,10 @@ class view_report{
         return load_template('report.private_get_query_reports', $args);
     }
 
+    public static function private_report_query_one($args){
+        return load_template('report.private_report_query_one', $args);
+    }
+
     public static function private_set_time_begin($args){
     }
 

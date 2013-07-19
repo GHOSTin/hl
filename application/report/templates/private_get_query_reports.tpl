@@ -1,4 +1,5 @@
 {% extends "ajax.tpl" %}
+{% set filters = component.filters %}
 {% block js %}
     $('.report-content').html(get_hidden_content());
 
@@ -14,19 +15,23 @@
 
     $('.query_time_end').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
         $('.query_time_end').datepicker('hide');
+        $.get('set_time_end',{
+            time: $('.query_time_end').val()
+            },function(r){
+                init_content(r);
+            });
     });
 
 {% endblock js %}
 {% block html %}
     <h4>Отчеты по заявкам</h4>
     <div class="row-fluid">
-        {{ component.filters.time_begin }}
         <div class="span3">Фильтры <a>сбросить</a>
             <ul class="unstyled">
                 <li>
                     <div>по дате</div>
-                    c <input type="text" class="input-small query_time_begin" value="{{ "now"|date('d.m.Y') }}"><br>
-                    по <input type="text" class="input-small query_time_end" value="{{ "now"|date('d.m.Y') }}">
+                    c <input type="text" class="input-small query_time_begin" value="{{ filters.time_begin|date('d.m.Y') }}"><br>
+                    по <input type="text" class="input-small query_time_end" value="{{ filters.time_end|date('d.m.Y') }}">
                 </li>
                 <li>
                     <div>по статусу заявки</div>
@@ -96,7 +101,7 @@
             <ul class="unstyled">
                 <li>Отчет №1 
                     <div>
-                        <a>Просмотреть</a> <a>Выгрузить</a>
+                        <a href="/report/report_query_one" target="_blink">Просмотреть</a> <a>Выгрузить</a>
                     </div>
                 </li>
             </ul>
