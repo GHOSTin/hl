@@ -1,51 +1,67 @@
 {% extends "print.tpl" %}
 {% set queries = component.queries %}
 {% set users = component.users %}
+{% set works = component.works %}
 
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
 {% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'} %}
 {% set user_roles = {'creator':'Диспетчер', 'manager':'Ответственный', 'performer': 'Исполнитель', 'observer': 'Наблюдатель'} %}
-
+{% block css %}
+<style>
+    table tr td{
+        border:1px solid black;
+        vertical-align: top;
+        white-space: nowrap;
+    }
+</style>
+{% endblock css %}
 {% block component %}
 <table>
     <tr>
-        <td style="border:1px solid black">№</td>
-        <td style="border:1px solid black">Статус</td>
-        <td style="border:1px solid black">Тип</td>
-        <td style="border:1px solid black">Работы</td>
-        <td style="border:1px solid black">Оплата</td>
-        <td style="border:1px solid black">Участок</td>
-        <td style="border:1px solid black">Улица</td>
-        <td style="border:1px solid black">Дом</td>
-        <td style="border:1px solid black">Лицевые счета</td>
-        <td style="border:1px solid black">Время открытия задачи</td>
-        <td style="border:1px solid black">Время закрытия задачи</td>
-        <td style="border:1px solid black">Описание открытия</td>
-        <td style="border:1px solid black">Описание закрытия</td>
-        <td style="border:1px solid black">Работы</td>
-        <td style="border:1px solid black">Суммарное время работ</td>
-        <td style="border:1px solid black">Сотрудники</td>
-        <td style="border:1px solid black">Материалы</td>
+        <td>№</td>
+        <td>Статус</td>
+        <td>Тип</td>
+        <td>Работы</td>
+        <td>Оплата</td>
+        <td>Участок</td>
+        <td>Улица</td>
+        <td>Дом</td>
+        <td>Лицевые счета</td>
+        <td>Время открытия</td>
+        <td>Время закрытия</td>
+        <td>Описание открытия</td>
+        <td>Описание закрытия</td>
+        <td>Работы</td>
+        <td>Суммарное время работ</td>
+        <td>Сотрудники</td>
+        <td>Материалы</td>
     </tr>
     {% for query in queries %}
+        {% set work_time = 0 %}
     <tr>
-        <td style="border:1px solid black">{{ query.number }}</td>
-        <td style="border:1px solid black">{{ statuses[query.status] }}</td>
-        <td style="border:1px solid black">{{ warning_statuses[query.warning_status] }}</td>
-        <td style="border:1px solid black">{{ query.work_type_name }}</td>
-        <td style="border:1px solid black">{{ payment_statuses[query.payment_status] }}</td>
-        <td style="border:1px solid black">ID:{{ query.department_id }}</td>
-        <td style="border:1px solid black">{{ query.street_name }}</td>
-        <td style="border:1px solid black">{{ query.house_number }}</td>
-        <td style="border:1px solid black"></td>
-        <td style="border:1px solid black">{{ query.time_open|date("h.i d.m.Y") }}</td>
-        <td style="border:1px solid black">{% if query.status == 'close' or query.status == 'reclose' %}{{ query.time_close|date("h.i d.m.Y") }}{% endif %}</td>
-        <td style="border:1px solid black">{{ query.description }}</td>
-        <td style="border:1px solid black">{{ query.close_reason }}</td>
-        <td style="border:1px solid black"></td>
-        <td style="border:1px solid black"></td>
-        <td style="border:1px solid black">
+        <td>{{ query.number }}</td>
+        <td>{{ statuses[query.status] }}</td>
+        <td>{{ warning_statuses[query.warning_status] }}</td>
+        <td>{{ query.work_type_name }}</td>
+        <td>{{ payment_statuses[query.payment_status] }}</td>
+        <td>ID:{{ query.department_id }}</td>
+        <td>{{ query.street_name }}</td>
+        <td>{{ query.house_number }}</td>
+        <td></td>
+        <td>{{ query.time_open|date("h.i d.m.Y") }}</td>
+        <td>{% if query.status == 'close' or query.status == 'reclose' %}{{ query.time_close|date("h.i d.m.Y") }}{% endif %}</td>
+        <td>{{ query.description }}</td>
+        <td>{{ query.close_reason }}</td>
+        <td>
+            {% for wstrct in works.structure[query.id] %}
+                {% set work = works.works[wstrct.work_id] %}
+                {{ work.name }}
+                {% set work_time = (work_time + (wstrct.time_close - wstrct.time_open)) // 60 %}
+            {% endfor %}
+        </td>
+        <td>{{ work_time }}</td>
+        <td>
             {% for class, user_ids in users.structure[query.id] %}
                 <div></div>
                 {% for user_id in user_ids %}
@@ -54,7 +70,7 @@
                 {% endfor %}
             {% endfor %}
         </td>
-        <td style="border:1px solid black"></td>
+        <td></td>
     </tr>
     {% endfor %}
 </table>
