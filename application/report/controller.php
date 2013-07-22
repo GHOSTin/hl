@@ -13,13 +13,20 @@ class controller_report{
                         ['time_begin' => mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']),
                         'time_end' => mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year'])]);
         }
+        $filters = $session->get('filters');
+        if($filters['street_id'] > 0){
+            $street = new data_street();
+            $street->id = $filters['street_id'];
+            model_street::verify_id($street);
+            $houses = model_street::get_houses($street);
+        }
         return [
             'streets' => model_street::get_streets(new data_street()),
             'users' => model_user::get_users(new data_user()),
             'departments' => model_department::get_departments($company, new data_department()),
             'query_work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type()),
             'houses' => $houses,
-            'filters' => $session->get('filters')];
+            'filters' => $filters];
     }
 
     public static function private_report_query_one(){
@@ -58,6 +65,10 @@ class controller_report{
             return ['houses' => model_street::get_houses($street)];
         }else
             return true;
+    }
+
+    public static function private_set_filter_query_house(){
+        model_report::set_filter_query_house($_GET['id']);
     }
 
     public static function private_set_filter_query_worktype(){

@@ -1,5 +1,6 @@
 {% extends "ajax.tpl" %}
 {% set filters = component.filters %}
+{% set houses = component.houses %}
 {% block js %}
     $('.report-content').html(get_hidden_content());
 
@@ -57,6 +58,15 @@
             init_content(r);
         });
     });
+
+    // изменяет фильтр домов
+    $('.filter-select-house').change(function(){
+        $.get('set_filter_query_house', {
+            id: $('.filter-select-house').val()
+        }, function(r){
+            init_content(r);
+        });
+    });
 {% endblock js %}
 {% block html %}
     <h4>Отчеты по заявкам</h4>
@@ -88,17 +98,23 @@
                         <option value="all">Все улицы</option>
                         {% if component.streets != false %}
                             {% for street in component.streets %}
-                                <option value="{{street.id}}"
-                                {% if street.id == filters.street_id %}
-                                    selected
-                                {% endif %}
-                                >{{street.name}}</option>
+                                <option value="{{street.id}}"{% if street.id == filters.street_id %} selected{% endif %}>{{street.name}}</option>
                             {% endfor %}
                         {% endif %}
                     </select>
-                    <select class="filter-select-house" disabled="disabled">
-                        <option value="all">Все дома</option>
-                    </select>
+                    {% if houses is not empty %}
+                        <select class="filter-select-house">
+                            <option value="all">Выберите дом...</option>
+                            {% for house in houses %}
+                            <option value="{{ house.id }}"{% if house.id == filters.house_id %} selected{% endif %}>дом №{{ house.number }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <select class="filter-select-house" disabled="disabled">
+                            <option>Ожидание...</option>
+                        </select>
+                    {% endif %}
+                    
                 </li>
                 <li>
                     <div>по участку</div>

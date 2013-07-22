@@ -32,6 +32,10 @@ class model_report{
             $query->street_id = $filters['street_id'];
         else
             $query->street_id = null;
+        if(!empty($filters['house_id']) AND $filters['house_id'] !== 'all')
+            $query->house_id = $filters['house_id'];
+        else
+            $query->house_id = null;
         return $query;
     }
 
@@ -71,6 +75,20 @@ class model_report{
             model_query::verify_street_id($query);
             $filters['street_id'] = $street_id;
             unset($filters['house_id']);
+        }
+        $session->set('filters', $filters);
+    }
+
+    public static function set_filter_query_house($house_id){
+        $session = model_session::get_session();
+        $filters = $session->get('filters');
+        if($house_id === 'all'){
+            unset($filters['house_id']);
+        }else{
+            $query = new data_query();
+            $query->house_id = $house_id;
+            model_query::verify_house_id($query);
+            $filters['house_id'] = $house_id;
         }
         $session->set('filters', $filters);
     }
