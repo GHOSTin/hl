@@ -555,13 +555,13 @@ class model_query{
 				AND `queries`.`id` = `query2user`.`query_id`
 				AND `opentime` > :time_open
 				AND `opentime` <= :time_close");
-			$sql->query(" ORDER BY `opentime` DESC");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
 				$sql->query(" AND `queries`.`status` = :status");
 				$sql->bind(':status', $query->status, PDO::PARAM_STR);
 			}
+			$sql->query(" ORDER BY `opentime` DESC");
 		}
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->execute('Ошибка при выборке пользователей.');

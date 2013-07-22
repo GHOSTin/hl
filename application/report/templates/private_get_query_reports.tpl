@@ -17,11 +17,18 @@
         $('.query_time_end').datepicker('hide');
         $.get('set_time_end',{
             time: $('.query_time_end').val()
-            },function(r){
+            }, function(r){
                 init_content(r);
             });
     });
 
+    $('.filter-status').change(function(){
+        $.get('set_filter_query_status', {
+            status: $('.filter-status').val()
+        }, function(r){
+            init_content(r);
+        });
+    });
 {% endblock js %}
 {% block html %}
     <h4>Отчеты по заявкам</h4>
@@ -35,7 +42,7 @@
                 </li>
                 <li>
                     <div>по статусу заявки</div>
-                    <select>
+                    <select class="filter-status">
                         <option value="all">Все заявки</option>
                         {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
                         {% for key, status in statuses %}

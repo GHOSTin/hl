@@ -41,6 +41,10 @@ class controller_report{
         model_report::set_filter('time_end', mktime(23, 59, 59, $time[1], $time[0], $time[2]));
     }
 
+    public static function private_set_filter_query_status(){
+        model_report::set_filter_query_status($_GET['status']);
+    }
+
 	public static function private_show_default_page(){
 		return true;
 	}
