@@ -48,6 +48,15 @@
             init_content(r);
         });
     });
+
+    // изменяет фильтр улиц
+    $('.filter-select-street').change(function(){
+        $.get('set_filter_query_street', {
+            id: $('.filter-select-street').val()
+        }, function(r){
+            init_content(r);
+        });
+    });
 {% endblock js %}
 {% block html %}
     <h4>Отчеты по заявкам</h4>
@@ -66,7 +75,7 @@
                         {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
                         {% for key, status in statuses %}
                             <option value="{{ key }}"
-                            {% if key == component.filters.status %}
+                            {% if key == filters.status %}
                              selected
                             {% endif %}
                             >{{status}}</option>
@@ -75,19 +84,19 @@
                 </li>
                 <li>
                     <div>по дому и улице</div>
-                    <select>
+                    <select class="filter-select-street">
                         <option value="all">Все улицы</option>
                         {% if component.streets != false %}
                             {% for street in component.streets %}
                                 <option value="{{street.id}}"
-                                {% if street.id == component.filters.street_id %}
+                                {% if street.id == filters.street_id %}
                                     selected
                                 {% endif %}
                                 >{{street.name}}</option>
                             {% endfor %}
                         {% endif %}
                     </select>
-                    <select>
+                    <select class="filter-select-house">
                         <option value="all">Все дома</option>
                     </select>
                 </li>
@@ -98,7 +107,7 @@
                         {% if component.departments != false %}
                             {% for department in component.departments %}
                                 <option value="{{ department.id }}"
-                                {% if department.id == component.filters.department_id %}
+                                {% if department.id == filters.department_id %}
                                 selected
                                 {% endif %}
                                 >{{ department.name }}</option>
@@ -113,7 +122,7 @@
                         {% if component.query_work_types != false %}
                             {% for query_work_type in component.query_work_types %}
                                 <option value="{{query_work_type.id}}"
-                                {% if query_work_type.id == component.filters.worktype_id %}
+                                {% if query_work_type.id == filters.worktype_id %}
                                 selected
                                 {% endif %}
                                 >{{query_work_type.name}}</option>

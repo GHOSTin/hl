@@ -25,6 +25,10 @@ class view_report{
         return load_template('report.empty_ajax_answer', $args);
     }
 
+    public static function private_set_filter_query_street($args){
+        return load_template('report.private_set_filter_query_street', $args);
+    }
+
     public static function private_set_filter_query_worktype($args){
         return load_template('report.empty_ajax_answer', $args);
     }

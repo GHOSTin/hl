@@ -49,6 +49,17 @@ class controller_report{
         model_report::set_filter_query_status($_GET['status']);
     }
 
+    public static function private_set_filter_query_street(){
+        model_report::set_filter_query_street($_GET['id']);
+        if($_GET['id'] !== 'all'){
+            $street = new data_street();
+            $street->id = $_GET['id'];
+            model_street::verify_id($street);
+            return ['houses' => model_street::get_houses($street)];
+        }else
+            return true;
+    }
+
     public static function private_set_filter_query_worktype(){
         model_report::set_filter_query_worktype($_GET['id']);
     }
