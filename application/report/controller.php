@@ -49,6 +49,10 @@ class controller_report{
         model_report::set_filter_query_status($_GET['status']);
     }
 
+    public static function private_set_filter_query_worktype(){
+        model_report::set_filter_query_worktype($_GET['id']);
+    }
+
 	public static function private_show_default_page(){
 		return true;
 	}

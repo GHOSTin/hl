@@ -25,6 +25,10 @@ class view_report{
         return load_template('report.empty_ajax_answer', $args);
     }
 
+    public static function private_set_filter_query_worktype($args){
+        return load_template('report.empty_ajax_answer', $args);
+    }
+
 	public static function private_show_default_page($args){
 		return load_template('report.private_show_default_page', $args);
 	}

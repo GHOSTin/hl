@@ -24,6 +24,10 @@ class model_report{
             $query->department_id = $filters['department_id'];
         else
             $query->department_id = null;
+        if(!empty($filters['worktype_id']) AND $filters['worktype_id'] !== 'all')
+            $query->worktype_id = $filters['worktype_id'];
+        else
+            $query->worktype_id = null;
         return $query;
     }
 
@@ -48,6 +52,20 @@ class model_report{
         $session = model_session::get_session();
         $filters = $session->get('filters');
         $filters['status'] = $status;
+        $session->set('filters', $filters);
+    }
+
+    public static function set_filter_query_worktype($worktype_id){
+        $session = model_session::get_session();
+        $filters = $session->get('filters');
+        if($worktype_id === 'all')
+            unset($filters['worktype_id']);
+        else{
+            $query = new data_query();
+            $query->worktype_id = $worktype_id;
+            model_query::verify_work_type_id($query);
+            $filters['worktype_id'] = $worktype_id;
+        }
         $session->set('filters', $filters);
     }
 }

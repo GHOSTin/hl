@@ -39,6 +39,15 @@
             init_content(r);
         });
     });
+
+    // изменяет фильтр типа работ
+    $('.filter-select-worktype').change(function(){
+        $.get('set_filter_query_worktype', {
+            id: $('.filter-select-worktype').val()
+        }, function(r){
+            init_content(r);
+        });
+    });
 {% endblock js %}
 {% block html %}
     <h4>Отчеты по заявкам</h4>
@@ -99,7 +108,7 @@
                 </li>
                 <li>
                     <div>по типу работ</div>
-                    <select>
+                    <select class="filter-select-worktype">
                         <option value="all">Все работы</option>
                         {% if component.query_work_types != false %}
                             {% for query_work_type in component.query_work_types %}
