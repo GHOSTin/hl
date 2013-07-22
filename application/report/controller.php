@@ -3,15 +3,16 @@ class controller_report{
 
 	static $name = 'Отчеты';
 
+    public static function private_clear_filter_query(){
+        model_report::clear_filter_query();
+    }
+
     public static function private_get_query_reports(){
         $company = model_session::get_company();
         $session = model_session::get_session();
         if($session->get('report') !== 'query'){
-            $time = getdate();
             $session->set('report', 'query');
-            $session->set('filters', 
-                        ['time_begin' => mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']),
-                        'time_end' => mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year'])]);
+            model_report::clear_filter_query();
         }
         $filters = $session->get('filters');
         if($filters['street_id'] > 0){

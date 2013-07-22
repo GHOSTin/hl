@@ -1,6 +1,10 @@
 <?php
 class view_report{
 
+    public static function private_clear_filter_query($args){
+        return load_template('report.empty_ajax_answer', $args);
+    }
+
     public static function private_get_query_reports($args){
         return load_template('report.private_get_query_reports', $args);
     }

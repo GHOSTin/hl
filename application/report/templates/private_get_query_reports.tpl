@@ -67,12 +67,20 @@
             init_content(r);
         });
     });
+
+    // сбрасывает фильтры
+    $('.clear_filter_query').click(function(){
+        $.get('clear_filter_query', {
+        }, function(r){
+            init_content(r);
+        });
+    });
 {% endblock js %}
 {% block html %}
     <h4>Отчеты по заявкам</h4>
     <div class="row-fluid">
-        <div class="span3">Фильтры <a>сбросить</a>
-            <ul class="unstyled">
+        <div class="span3">Фильтры <a class="clear_filter_query">сбросить</a>
+            <ul class="unstyled filters">
                 <li>
                     <div>по дате</div>
                     c <input type="text" class="input-small query_time_begin" value="{{ filters.time_begin|date('d.m.Y') }}"><br>

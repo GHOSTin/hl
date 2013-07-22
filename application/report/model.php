@@ -1,6 +1,13 @@
 <?php
 class model_report{
 
+    public static function clear_filter_query(){
+        $time = getdate();
+        $filters = ['time_begin' => mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']),
+                    'time_end' => mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year'])];
+        model_session::get_session()->set('filters', $filters);
+    }
+
     public static function set_filter($key, $value){
         $session = model_session::get_session();
         $filters = $session->get('filters');
