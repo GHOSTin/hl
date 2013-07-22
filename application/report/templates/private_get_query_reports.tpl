@@ -96,7 +96,7 @@
                             {% endfor %}
                         {% endif %}
                     </select>
-                    <select class="filter-select-house">
+                    <select class="filter-select-house" disabled="disabled">
                         <option value="all">Все дома</option>
                     </select>
                 </li>
