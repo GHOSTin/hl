@@ -20,9 +20,26 @@ class model_report{
                 $query->status = null;
             else
                 $query->status = $filters['status'];
+        if(!empty($filters['department_id']) AND $filters['department_id'] !== 'all')
+            $query->department_id = $filters['department_id'];
+        else
+            $query->department_id = null;
         return $query;
     }
 
+    public static function set_filter_query_department($department_id){
+        $session = model_session::get_session();
+        $filters = $session->get('filters');
+        if($department_id === 'all')
+            unset($filters['department_id']);
+        else{
+            $query = new data_query();
+            $query->department_id = $department_id;
+            model_query::verify_department_id($query);
+            $filters['department_id'] = $department_id;
+        }
+        $session->set('filters', $filters);
+    }
 
     public static function set_filter_query_status($status){
         $query = new data_query();

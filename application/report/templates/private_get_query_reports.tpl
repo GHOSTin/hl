@@ -21,10 +21,20 @@
                 init_content(r);
             });
     });
-
+    
+    // изменяет фильтр статуса
     $('.filter-status').change(function(){
         $.get('set_filter_query_status', {
             status: $('.filter-status').val()
+        }, function(r){
+            init_content(r);
+        });
+    });
+
+    // изменяет фильтр участка
+    $('.filter-select-department').change(function(){
+        $.get('set_filter_query_department', {
+            id: $('.filter-select-department').val()
         }, function(r){
             init_content(r);
         });
@@ -74,7 +84,7 @@
                 </li>
                 <li>
                     <div>по участку</div>
-                    <select>
+                    <select class="filter-select-department">
                         <option value="all">Все участки</option>
                         {% if component.departments != false %}
                             {% for department in component.departments %}

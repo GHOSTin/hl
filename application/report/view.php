@@ -10,9 +10,19 @@ class view_report{
     }
 
     public static function private_set_time_begin($args){
+        return load_template('report.empty_ajax_answer', $args);
+    }
+
+    public static function private_set_time_end($args){
+        return load_template('report.empty_ajax_answer', $args);
+    }
+
+    public static function private_set_filter_query_department($args){
+        return load_template('report.empty_ajax_answer', $args);
     }
 
     public static function private_set_filter_query_status($args){
+        return load_template('report.empty_ajax_answer', $args);
     }
 
 	public static function private_show_default_page($args){
