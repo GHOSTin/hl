@@ -46,7 +46,7 @@
         <td>{{ warning_statuses[query.warning_status] }}</td>
         <td>{{ query.work_type_name }}</td>
         <td>{{ payment_statuses[query.payment_status] }}</td>
-        <td>ID:{{ query.department_id }}</td>
+        <td>{{ query.department_name }}</td>
         <td>{{ query.street_name }}</td>
         <td>{{ query.house_number }}</td>
         <td>

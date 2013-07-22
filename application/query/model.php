@@ -376,13 +376,15 @@ class model_query{
 				`queries`.`query_inspection` as `inspection`, 
 				`houses`.`housenumber` as `house_number`,
 				`streets`.`name` as `street_name`,
-				`query_worktypes`.`name` as `work_type_name`
-				FROM `queries`, `houses`, `streets`, `query_worktypes`
+				`query_worktypes`.`name` as `work_type_name`,
+				`departments`.`name` as `department_name`
+				FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
 				WHERE `queries`.`company_id` = :company_id
 				AND `queries`.`house_id` = `houses`.`id`
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
-				AND `queries`.`id` = :id");
+				AND `queries`.`id` = :id AND `departments`.`company_id` = :company_id
+				AND `queries`.`department_id` = `departments`.`id`");
 			$sql->bind(':id', $query->id, PDO::PARAM_INT);
 		}elseif(!empty($query->number)){
 			self::verify_number($query);
@@ -405,13 +407,15 @@ class model_query{
 				`queries`.`query_inspection` as `inspection`, 
 				`houses`.`housenumber` as `house_number`,
 				`streets`.`name` as `street_name`,
-				`query_worktypes`.`name` as `work_type_name`
-				FROM `queries`, `houses`, `streets`, `query_worktypes`
+				`query_worktypes`.`name` as `work_type_name`,
+				`departments`.`name` as `department_name`
+				FROM `queries`, `houses`, `streets`, `query_worktypes` , `departments`
 				WHERE `queries`.`company_id` = :company_id
 				AND `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
-				AND `querynumber` = :number
+				AND `querynumber` = :number AND `departments`.`company_id` = :company_id
+				AND `queries`.`department_id` = `departments`.`id`
 				ORDER BY `opentime` DESC");
 			$sql->bind(':number', $query->number, PDO::PARAM_INT);
 		}else{
@@ -434,14 +438,16 @@ class model_query{
 				`queries`.`query_inspection` as `inspection`, 
 				`houses`.`housenumber` as `house_number`,
 				`streets`.`name` as `street_name`,
-				`query_worktypes`.`name` as `work_type_name`
-				FROM `queries`, `houses`, `streets`, `query_worktypes`
+				`query_worktypes`.`name` as `work_type_name`,
+				`departments`.`name` as `department_name`
+				FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
 				WHERE `queries`.`company_id` = :company_id
 				AND `queries`.`house_id` = `houses`.`id`
 				AND `houses`.`street_id` = `streets`.`id`
 				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
 				AND `opentime` > :time_open
-				AND `opentime` <= :time_close");
+				AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
+				AND `queries`.`department_id` = `departments`.`id`");
 			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
 			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
 			if(!empty($query->status) AND $query->status !== 'all'){
