@@ -160,7 +160,7 @@
             <ul class="unstyled">
                 <li>Отчет №1 
                     <div>
-                        <a href="/report/report_query_one" target="_blink">Просмотреть</a> <a>Выгрузить</a>
+                        <a href="/report/report_query_one" target="_blank">Просмотреть</a> <a href="/report/report_query_one_xls" target="_blank">Выгрузить</a>
                     </div>
                 </li>
             </ul>

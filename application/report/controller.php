@@ -39,6 +39,15 @@ class controller_report{
                 'numbers' => model_query::get_numbers($company, $query)];
     }
 
+    public static function private_report_query_one_xls(){
+        $query = model_report::build_query_param(model_session::get_session()->get('filters'));
+        $company = model_session::get_company();
+        return ['queries' => model_query::get_queries($company, $query),
+                'users' => model_query::get_users($company, $query),
+                'works' => model_query::get_works($company, $query),
+                'numbers' => model_query::get_numbers($company, $query)];
+    }
+
     public static function private_set_time_begin(){
         $time = explode('.', $_GET['time']);
         model_report::set_filter('time_begin', mktime(0, 0, 0, $time[1], $time[0], $time[2]));

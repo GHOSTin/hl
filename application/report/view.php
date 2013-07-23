@@ -13,6 +13,12 @@ class view_report{
         return load_template('report.private_report_query_one', $args);
     }
 
+    public static function private_report_query_one_xls($args){
+        header('Content-Disposition: attachment; filename=export.xml');
+        header('Content-type: application/octet-stream');
+        return load_template('report.private_report_query_one_xls', $args);
+    }
+
     public static function private_set_time_begin($args){
         return load_template('report.empty_ajax_answer', $args);
     }
