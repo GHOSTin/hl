@@ -45,6 +45,7 @@
 	    <script src="/templates/default/js/notification-center.js"></script>
 	    <script src="/templates/default/js/default.js"></script>
 	    <script src="/templates/default/js/chat.js"></script>
+        <script src="/templates/default/js/mshc_validate.js"></script>
 	    <script src="/?js=component.js&p={{ file_prefix }}"></script>
     {% endif %}
     {% block javascript %}{% endblock javascript %}

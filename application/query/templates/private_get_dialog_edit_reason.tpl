@@ -8,6 +8,7 @@
 	<div class="btn update_reason">Сохранить</div>
 {% endblock buttons %}
 {% block script %}
+    $('.dialog-description').verify();
 	$('.update_reason').click(function(){
 		$.get('update_reason',{
 			id: {{query.id}},
