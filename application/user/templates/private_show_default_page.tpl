@@ -9,5 +9,8 @@
     {% include '@user/build_user_letters.tpl' %}
     </div>
     <div class="letter-content">
+        <div>
+            <a class="get_dialog_create_user">Создать нового пользователя</a>
+        </div>
     </div>
 {% endblock component %}
