@@ -1,4 +1,5 @@
 <script>function _hidden_content(){show_dialog(get_hidden_content()); {% block script %}{% endblock script %} }</script>
+{% spaceless %}
 <div class="_hidden_content_html">
     <div class="modal">
         <div class="modal-header">
@@ -10,3 +11,4 @@
         </div>    
     </div>
 </div>
+{% endspaceless %}
