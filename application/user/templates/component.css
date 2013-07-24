@@ -3,6 +3,7 @@
 }
 .letters ul li{
     display: inline-block;
+    margin: 0px 2px;
 }
 .letters ul li div{
     width:15px;
