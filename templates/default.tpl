@@ -1,3 +1,4 @@
+{% spaceless %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,3 +50,4 @@
     {% endif %}
     {% block javascript %}{% endblock javascript %}
 </html>
+{% endspaceless %}
