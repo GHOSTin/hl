@@ -25,6 +25,10 @@ class controller_user{
                 'users' => model_group::get_users($company, $group)];
     }
 
+    public static function private_get_dialog_create_group(){
+        return true;
+    }
+
     public static function private_get_dialog_add_user(){
         $group = new data_group();
         $group->id = $_GET['id'];

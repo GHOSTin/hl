@@ -55,6 +55,13 @@ $(document).ready(function(){
                 });
         }
 
+    // выводит диалог создания группы
+    }).on('click', '.get_dialog_create_group', function(){
+        $.get('get_dialog_create_group', {
+            }, function(r){
+                init_content(r);
+            });
+
     // выводит диалог добавления пользователя в группу
     }).on('click', '.get_dialog_add_user', function(){
         $.get('get_dialog_add_user',{
