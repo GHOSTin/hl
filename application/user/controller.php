@@ -10,8 +10,24 @@ class controller_user{
         $group->id = $_GET['group_id'];
         $company = model_session::get_company();
         model_group::add_user($company, $group, $user);
-        return ['group' => $group,
-                'users' => model_group::get_users($company, $group)];
+        
+    }
+
+    public static function private_create_group(){
+        $group = new data_group();
+        $group->name = $_GET['name'];
+        $company = model_session::get_company();
+        $group = model_group::create_group($company, $group);
+        $letter_group = mb_strtolower(mb_substr($group->name, 0 ,1, 'utf-8'), 'utf-8');
+        $letters = [];
+        $groups = model_group::get_groups(model_session::get_company(), new data_group());
+        if(!empty($groups))
+            foreach($groups as $group){
+                $letter = mb_strtolower(mb_substr($group->name, 0 ,1, 'utf-8'), 'utf-8');
+                if($letter === $letter_group)
+                    $letters[] = $group;
+            }
+        return ['groups' => $letters];
     }
 
     public static function private_exclude_user(){

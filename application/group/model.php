@@ -1,6 +1,31 @@
 <?php
 class model_group{
 
+
+	/**
+	* Создает группу.
+	* @return object data_group
+	*/
+	public static function create_group(data_company $company, data_group $group){
+		model_company::verify_id($company);
+		$group->verify('name');
+		if(count(self::get_groups($company, $group)) !== 0)
+			throw new e_model('Группа с таким названием уже существует.');
+		$group->id = self::get_insert_id($company);
+		$group->company_id = $company->id;
+		$group->status = 'true';
+		$group->verify('id', 'name', 'status', 'company_id');
+		$sql = new sql();
+		$sql->query('INSERT INTO `groups` (`id`, `company_id`, `name`, `status`)
+					VALUES (:id, :company_id, :name, :status)');
+		$sql->bind(':id', $group->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $group->company_id, PDO::PARAM_INT);
+		$sql->bind(':name', $group->name, PDO::PARAM_STR);
+		$sql->bind(':status', $group->status, PDO::PARAM_STR);
+		$sql->execute('Проблемы при создании группы.');
+		return $group;
+	}
+
 	/**
 	* Добавляет в группу нового пользователя.
 	*/
@@ -47,6 +72,24 @@ class model_group{
 	}
 
 	/**
+	* Возвращает следующий для вставки идентификатор группы.
+	* @return int
+	*/
+	private static function get_insert_id(data_company $company){
+	    model_company::verify_id($company);
+	    $sql = new sql();
+	    $sql->query("SELECT MAX(`id`) as `max_id` FROM `groups`
+	                WHERE `company_id` = :company_id");
+	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+	    $sql->execute('Проблема при опредении следующего group_id.');
+	    if($sql->count() !== 1)
+	        throw new e_model('Проблема при опредении следующего group_id.');
+	    $id = (int) $sql->row()['max_id'] + 1;
+	    $sql->close();
+	    return $id;
+	}
+
+	/**
 	* Возвращает список групп.
 	* @return array из data_group
 	*/
@@ -60,6 +103,11 @@ class model_group{
 			self::verify_id($group);
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $group->id, PDO::PARAM_INT);
+		}
+		if(!empty($group->name)){
+			$group->verify('name');
+			$sql->query(" AND `name` = :name");
+			$sql->bind(':name', $group->name, PDO::PARAM_STR);
 		}
 		$sql->query(" ORDER BY `name`");
 		return $sql->map(new data_group(), 'Проблема при выборке групп пользователей.');
