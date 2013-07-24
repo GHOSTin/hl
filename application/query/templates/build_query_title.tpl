@@ -12,7 +12,7 @@
 		{% if query.initiator == 'number' %}
 			{% if component.numbers.numbers != false %}
 				{% set number = component.numbers.numbers[component.numbers.structure[query.id].true[0]] %}
-				, кв. {{number.flat_number}} (л/с №{{number.number}}, {{number.fio}})
+				, кв. {{number.flat_number}} ({{number.fio}})
 			{% endif %}
 		{% endif %}
 	</div>
