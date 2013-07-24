@@ -62,6 +62,13 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог создания пользователя
+    }).on('click', '.get_dialog_create_user', function(){
+        $.get('get_dialog_create_user', {
+            }, function(r){
+                init_content(r);
+            });
+
     // выводит диалог добавления пользователя в группу
     }).on('click', '.get_dialog_add_user', function(){
         $.get('get_dialog_add_user',{

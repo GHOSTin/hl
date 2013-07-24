@@ -1,25 +1,26 @@
 <?php
 class model_user{
+
 	/*
 	* Создает пользователя
 	*/
-	public static function create_user(data_company $company, data_user $user){
-		self::verify_user_login($user);
-		self::verify_user_password($user);
-		self::verify_user_firstname($user);
-		self::verify_user_lastname($user);
-		self::verify_user_company_id($current_user);
-		$user->company_id = $current_user->company_id;
+	public static function create_user(data_user $user){
+		$user->verify('login');
+		$chk_login = new data_user();
+		$chk_login->login = $user->login;
+		if(count(self::get_users($chk_login)) !== 0)
+			throw new e_model('Пользователь с таким логином уже существует.');
 		$user->id = self::get_insert_id();
-		$user->status = true;
+		$user->verify('id', 'firstname', 'lastname', 'middlename', 'login', 
+						'password', 'status', 'telephone', 'cellphone');
 		$sql = new sql();
-		$sql->exp("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
+		$sql->query("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
 				`firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`)
 				VALUES (:user_id, :company_id, :status, :login, :firstname, :lastname, 
 				:middlename, :password, :telephone, :cellphone)");
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $user->company_id, PDO::PARAM_INT);
-		$sql->bind(':status', $user->status);
+		$sql->bind(':company_id', 2, PDO::PARAM_INT);
+		$sql->bind(':status', $user->status, PDO::PARAM_STR);
 		$sql->bind(':login', $user->login, PDO::PARAM_STR);
 		$sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
 		$sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
@@ -30,6 +31,7 @@ class model_user{
 		$sql->execute('Проблемы при создании пользователя.');
 		return $user;
 	}
+
 	/**
 	* Возвращает следующий для вставки user_id.
 	* @return int
@@ -56,15 +58,21 @@ class model_user{
 	* Возвращает пользователей
 	* @return array из data_user
 	*/
-	public static function get_users(data_user $user_params){
+	public static function get_users(data_user $user){
 		$sql = new sql();
 		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
 				`users`.`cellphone` FROM `users`");
-		if(!empty($user_params->id)){
+		if(!empty($user->id)){
+			$user->verify('id');
 			$sql->query(" WHERE `id` = :id");
-			$sql->bind(':id', $user_params->id, PDO::PARAM_INT);
+			$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		}
+		if(!empty($user->login)){
+			$user->verify('login');
+			$sql->query(" WHERE `username` = :login");
+			$sql->bind(':login', $user->login, PDO::PARAM_STR);
 		}
 		$sql->query(" ORDER BY `users`.`lastname`");
 		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');

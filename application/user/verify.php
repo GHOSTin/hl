@@ -54,8 +54,8 @@ class verify_user{
     public static function login(data_user $user){
          if(strlen($user->login) < 6)
                 throw new e_model('Логин имеет меньше 6 букв.');
-        if(!preg_match('/^[а-яА-Яa-zA-Z0-9]+$/u', $user->login))
-            throw new e_model('Логин не удовлетворяет а-яА-Яa-zA-Z0-9.');
+        if(!preg_match('/^[a-zA-Z0-9]+$/u', $user->login))
+            throw new e_model('Логин не удовлетворяет a-zA-Z0-9.');
     }
 
     /**
@@ -65,12 +65,18 @@ class verify_user{
         if(empty($number->password))
             throw new e_model('Пароль лицевого счета задан не верно.');
     }
+
+    /**
+    * Верификация статуса пользователя.
+    */
+    public static function status(data_user $user){
+        if(!in_array($user->status, ['true', 'false']))
+            throw new e_model('Статус пользователя задан не верно.');
+    }
  
     /**
     * Верификация телефона владельца лицевого счета.
     */
     public static function telephone(data_user $number){
-        if(empty($number->telephone))
-            throw new e_model('Телефон владельца лицевого счета задан не верно.');
     }
 }

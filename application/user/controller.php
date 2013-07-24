@@ -30,6 +30,29 @@ class controller_user{
         return ['groups' => $letters];
     }
 
+    public static function private_create_user(){
+        if($_GET['password'] !== $_GET['confirm'])
+            throw new e_model('Пароль и подтверждение не равны.');
+        $user = new data_user();
+        $user->lastname = $_GET['lastname'];
+        $user->firstname = $_GET['firstname'];
+        $user->middlename = $_GET['middlename'];
+        $user->login = $_GET['login'];
+        $user->password = $_GET['password'];
+        $user->status = 'true';
+        $user = model_user::create_user($user);
+        $letter_user = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
+        $letter_users = [];
+        $users = model_user::get_users(new data_user());
+        if(!empty($users))
+            foreach($users as $user){
+                $letter = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
+                if($letter === $letter_user)
+                    $letter_users[] = $user;
+            }
+        return ['users' => $letter_users];
+    }
+
     public static function private_exclude_user(){
         $user = new data_user();
         $user->id = $_GET['user_id'];
@@ -42,6 +65,10 @@ class controller_user{
     }
 
     public static function private_get_dialog_create_group(){
+        return true;
+    }
+
+    public static function private_get_dialog_create_user(){
         return true;
     }
 
