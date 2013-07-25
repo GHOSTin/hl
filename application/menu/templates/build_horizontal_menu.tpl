@@ -47,6 +47,7 @@
                             {% for link in menu %}
                                 <li><a tabindex="-1" href="/{{link.href}}/">{{link.title}}</a></li>
                             {% endfor %}
+                            <li><a tabindex="-1" href="/report/">Отчеты</a></li>
                             <li class="divider"></li>
                             <li><a tabindex="-1" href="/exit/">Выход</a></li>
                         </ul>
