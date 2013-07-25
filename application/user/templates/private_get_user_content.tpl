@@ -7,7 +7,8 @@
     <ul class="user-content unstyled">
         <li>
             <ul class="nav nav-pills">
-                <li><a class="get_user_profile">Профиль</a></li>
+                <li><a class="get_user_profile">Информация</a></li>
+                <li><a class="get_user_profiles">Профили</a></li>
             </ul>
         </li>
         <li class="user-information">

@@ -23,6 +23,20 @@ class model_profile{
 		model_session::set_rules($rules);
 		model_session::set_restrictions($restrictions);
 	}
+
+	/**
+	* Возвращает список компаний для которых есть профиль пользователя.
+	*/
+	public static function get_companies(data_user $user){
+		$user->verify('id');
+		$sql = new sql();
+		$sql->query("SELECT DISTINCT `companies`.`id`, `companies`.`name`
+					FROM `companies`, `profiles` WHERE `profiles`.`user_id` = :user_id
+					AND `profiles`.`company_id` = `companies`.`id`");
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		return $sql->map(new data_company(), 'Проблемы при получении компаний в профиле.');
+	}
+
 	/**
 	* Проверяет права доступа пользователя.
 	* @return bolean

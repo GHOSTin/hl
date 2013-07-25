@@ -193,6 +193,14 @@ class controller_user{
         return ['users' => model_user::get_users($user)];
     }
 
+    public static function private_get_user_profiles(){
+        $user = new data_user();
+        $user->id = $_GET['id'];
+        $user->verify('id');
+        return ['users' => model_user::get_users($user),
+                'companies' => model_profile::get_companies($user)];
+    }
+
     public static function private_get_user_letters(){
         $letters = [];
         $users = model_user::get_users(new data_user());

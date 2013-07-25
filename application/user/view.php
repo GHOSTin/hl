@@ -69,6 +69,10 @@ class view_user{
         return load_template('user.private_get_user_content', $args);
     }
 
+    public static function private_get_user_profiles($args){
+        return load_template('user.private_get_user_profiles', $args);
+    }
+
     public static function private_get_group_letter($args){
         return load_template('user.private_get_group_letter', $args);
     }
