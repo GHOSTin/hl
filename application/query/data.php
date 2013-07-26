@@ -42,6 +42,10 @@ final class data_query extends data_object{
 	*/
 	public $department_id;
 	/*
+	* Название участка
+	*/
+	public $department_name;
+	/*
 	* Идентификатор дома.
 	*/
 	public $house_id;

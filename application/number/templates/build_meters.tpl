@@ -1,5 +1,7 @@
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
+{% set enable_meters = component.enable_meters %}
+{% set disable_meters = component.disable_meters %}
 <h5>Активные счетчики</h5>
 <ul>
 {% for meter in enable_meters %}

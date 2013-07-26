@@ -118,6 +118,7 @@ class model_house{
 				AND `houses`.`street_id` = `streets`.`id`");
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
+		$sql->query(" ORDER BY (`flats`.`flatnumber` + 0)");
 		return $sql->map(new data_number(), 'Проблемы при выборке номеров.');
 	}
 	/**
@@ -135,6 +136,7 @@ class model_house{
 			$sql->query(" AND `flatnumber` = :flat_number");
 			$sql->bind(':flat_number', $flat->number, PDO::PARAM_INT);
 		}
+		$sql->query("ORDER BY (`flatnumber` + 0)");
 		return $sql->map(new data_flat(), 'Проблемы при выборке квартир.');
 	}
 	/**

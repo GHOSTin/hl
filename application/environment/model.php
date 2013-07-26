@@ -34,6 +34,7 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
+			die($e->getMessage());
  			throw new e_model('Нет соединения с базой данных.');
 		}
 		// устанавливаем параметры по умолчанию
@@ -55,6 +56,7 @@ class model_environment{
 			self::create_batabase_connection();
 			model_session::set_user($_SESSION['user']);
 			model_session::set_company($_SESSION['company']);
+			model_session::set_settings($_SESSION['settings']);
 			$route = self::build_router();
 			$route[] = 'private_';
 			return $route;
@@ -104,6 +106,7 @@ class model_environment{
 				if(isset(model_session::get_rules()[$component]))
 					$data['rules'] = model_session::get_rules()[$component];
 				self::verify_general_access($component);
+				model_session::set_session(new component_session_manager(new php_session_storage(), $component));
 			}
 			$data['file_prefix'] = $component;
 

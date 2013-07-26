@@ -243,6 +243,32 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит процессинговые центры привязанные к лицевому счету
+    }).on('click', '.get_processing_centers', function(){
+        $.get('get_processing_centers',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит диалог добавления процессингового центра
+    }).on('click', '.get_dialog_add_processing_center', function(){
+        $.get('get_dialog_add_processing_center',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит диалог исключения процессингового центра
+    }).on('click', '.get_dialog_exclude_processing_center', function(){
+        $.get('get_dialog_exclude_processing_center',{
+            number_id: get_number_id($(this)),
+            center_id: $(this).parent().attr('center'),
+            identifier: $(this).parent().attr('identifier'),
+            },function(r){
+                init_content(r);
+            });
+
         
     // выводит диалог перепривязки счетчика
     }).on('click', '.get_dialog_change_meter', function(){
@@ -318,6 +344,31 @@ $(document).ready(function(){
     // выводит диалог редактирования счетчика
     }).on('click', '.get_dialog_edit_number', function(){
         $.get('get_dialog_edit_number',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит диалог редактирования ФИО владельца лицевого счета
+    }).on('click', '.get_dialog_edit_number_fio', function(){
+        $.get('get_dialog_edit_number_fio',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит диалог редактирования телефона владельца лицевого счета
+    }).on('click', '.get_dialog_edit_number_telephone', function(){
+        $.get('get_dialog_edit_number_telephone',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+
+    // выводит диалог редактирования сотового телефона владельца лицевого счета
+    }).on('click', '.get_dialog_edit_number_cellphone', function(){
+        $.get('get_dialog_edit_number_cellphone',{
             id: get_number_id($(this))
             },function(r){
                 init_content(r);

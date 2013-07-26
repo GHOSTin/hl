@@ -340,22 +340,22 @@ class model_number{
 	/*
 	* Возвращает данные счетчика
 	*/
-	public static function get_last_meter_data(data_company $company, data_number $number, 
-												data_meter $meter, $time){
+	public static function get_last_meter_data(data_company $company, data_number2meter $number, $time){
 		model_company::verify_id($company);
-		$meter->verify('id', 'serial');
-		$number->verify('id');
+		$number->verify('number_id', 'meter_id', 'serial');
 		$sql = new sql();
 		$sql->query("SELECT `time`, `value` FROM `meter2data`
 					WHERE `company_id` = :company_id AND `number_id` = :number_id
 				    AND `meter_id` = :meter_id AND `serial` = :serial
-					AND `time` < :time ORDER BY `time` DESC LIMIT 1");
-		$sql->bind(':meter_id', $meter->id, PDO::PARAM_INT);
-		$sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
-		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+				    AND `time` = (SELECT MAX(`time`) FROM `meter2data` WHERE 
+				    `company_id` = :company_id AND `number_id` = :number_id
+				    AND `meter_id` = :meter_id AND `serial` = :serial AND `time` < :time)");
+		$sql->bind(':meter_id', $number->meter_id, PDO::PARAM_INT);
+		$sql->bind(':serial', $number->serial, PDO::PARAM_STR);
+		$sql->bind(':number_id', $number->number_id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		$sql->bind(':time', $time, PDO::PARAM_INT);
-		return $sql->map(new data_meter2data(), 'Проблема при при выборки последних данных счетчика.');
+		return $sql->map(new data_meter2data(), 'Проблема при при выборке проверочных данных счетчика.');
 	}
 
 	/*
@@ -369,7 +369,7 @@ class model_number{
 			throw new e_model('Время выборки задано не верно.');
 		$time = getdate($time);
 		$sql = new sql();
-		$sql->query("SELECT `time`, `value`, `comment` FROM `meter2data`
+		$sql->query("SELECT `time`, `value`, `comment`, `way`, `timestamp` FROM `meter2data`
 					WHERE `meter2data`.`company_id` = :company_id
 					AND `meter2data`.`number_id` = :number_id
 					AND `meter2data`.`meter_id` = :meter_id
@@ -388,6 +388,8 @@ class model_number{
 			$data = new data_meter2data();
 			$data->time = $row['time'];
 			$data->comment = $row['comment'];
+			$data->way = $row['way'];
+			$data->timestamp = $row['timestamp'];
 			if(empty($row['value']))
 				$data->value = [];
 			else
@@ -546,6 +548,7 @@ class model_number{
 			model_company::verify_id($company);
 			if(empty($data->time))
 				throw new e_model('Время выборки задано не верно.');
+			// проверка существования лицевого счета
 			$number = new data_number();
 			$number->id = $number2meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -553,6 +556,7 @@ class model_number{
 				throw new e_model('Проблема при выборке лицевого счета.');
 			$number = $numbers[0];
 			model_number::is_data_number($number);
+			// проверка существования счетчика
 			$meters = model_number2meter::get_number2meters($company, $number2meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
@@ -566,12 +570,12 @@ class model_number{
 			$sql = new sql();
 			if($count === 0)
 				$sql->query("INSERT INTO `meter2data` (`company_id`, `number_id`,
-						`meter_id`, `serial`, `time`, `value`, `comment`
+						`meter_id`, `serial`, `time`, `value`, `comment`, `way`, `timestamp`
 						) VALUES (:company_id, :number_id, :meter_id, :serial,
-						:time, :value, :comment)");
+						:time, :value, :comment, :way, :timestamp)");
 			elseif($count === 1)
 				$sql->query("UPDATE `meter2data` SET `time` = :time, `value` = :value,
-						`comment` = :comment
+						`comment` = :comment, `way` = :way, `timestamp` = :timestamp
 						WHERE `company_id` = :company_id AND `number_id` = :number_id
 						AND `meter_id` = :meter_id AND `serial` = :serial
 						AND `time` = :time");
@@ -581,6 +585,14 @@ class model_number{
 			if(!empty($data->value))
 				foreach($data->value as $value)
 					$values[] = (int) $value;
+			$last_data = self::get_last_meter_data($company, $meter, $time_begin)[0];
+			if($last_data instanceof data_meter2data AND !empty($values))
+				foreach($values as $key => $value)
+					if($value < $last_data->value[$key]){
+						$tarif = $key + 1;
+						throw new e_model($tarif.' тариф новое показание '.$value.' меньше предидущего '.$last_data->value[$key]);
+					}
+			$data->verify('way', 'timestamp');
 			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
 			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
 			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
@@ -588,9 +600,12 @@ class model_number{
 			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
 			$sql->bind(':value', implode(';', $values), PDO::PARAM_STR);
 			$sql->bind(':comment', $data->comment, PDO::PARAM_STR);
+			$sql->bind(':way', $data->way, PDO::PARAM_STR);
+			$sql->bind(':timestamp', $data->timestamp, PDO::PARAM_INT);
 			$sql->execute('Проблема при при выборки данных счетчика.');
 			$sql->commit();
 		}catch(exception $e){
+			// die($e->getMessage());
 			$sql->rollback();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
@@ -812,7 +827,6 @@ class model_number{
 	* @return object data_number
 	*/
 	public static function update_number(data_company $company, data_number $number_params){
-		die('DISABLED');
 		$number_params->verify('id', 'number');
 		model_company::verify_id($company);
 		$number = model_number::get_numbers($company, $number_params)[0];
@@ -854,6 +868,102 @@ class model_number{
 			return $number;
 		}catch(exception $e){
 			$sql->rollback();
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
+	* Обнавляет ФИО владельца лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number_fio(data_company $company, data_number $number, $fio){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->fio = $fio;
+			$number->verify('id', 'fio');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `fio` = :fio 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':fio', $number->fio, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении ФИО владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
+	* Обновляет сотовый телефон владельца лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number_cellphone(data_company $company, data_number $number, $cellphone){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->cellphone = $cellphone;
+			$number->verify('id', 'cellphone');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `cellphone` = :cellphone 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':cellphone', $number->cellphone, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении сотового телефона владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
+			if($e instanceof e_model)
+				throw new e_model($e->getMessage());
+			else
+				throw new e_model('Ошибка в PDO.');
+		}
+	}
+
+	/**
+	* Обнавляет телефон владельца лицевого счета
+	* @return object data_number
+	*/
+	public static function update_number_telephone(data_company $company, data_number $number, $telephone){
+		try{
+			$number->verify('id');
+			$numbers = self::get_numbers($company, $number);
+			if(count($numbers) !== 1)
+				throw new e_model('Количество ожидаемых лицевых счетов не верно.');
+			$number = $numbers[0];
+			self::is_data_number($number);
+			$number->telephone = $telephone;
+			$number->verify('id', 'telephone');
+			$sql = new sql();
+			$sql->query("UPDATE `numbers` SET `telephone` = :telephone 
+						WHERE `company_id` = :company_id AND `city_id` = :city_id
+						AND `id` = :number_id");
+			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+			$sql->bind(':telephone', $number->telephone, PDO::PARAM_STR);
+			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
+			$sql->execute('Проблема при обновлении телефона владельца лицевого счета.');
+			return $number;
+		}catch(exception $e){
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
 			else

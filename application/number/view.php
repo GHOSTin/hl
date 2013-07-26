@@ -5,12 +5,20 @@ class view_number{
         return load_template('number.private_add_meter', $args);
     }
 
+    public static function private_add_processing_center($args){
+        return load_template('number.private_add_processing_center', $args);
+    }
+
     public static function private_change_meter($args){
         return load_template('number.private_change_meter', $args);
     }
 
     public static function private_delete_meter($args){
         return load_template('number.private_delete_meter', $args);
+    }
+
+    public static function private_exclude_processing_center($args){
+        return load_template('number.private_exclude_processing_center', $args);
     }
 
 	public static function private_show_default_page($args){
@@ -35,6 +43,10 @@ class view_number{
 
     public static function private_get_dialog_add_meter_option($args){
         return load_template('number.private_get_dialog_add_meter_option', $args);
+    }
+
+    public static function private_get_dialog_add_processing_center($args){
+        return load_template('number.private_get_dialog_add_processing_center', $args);
     }
 
     public static function private_get_dialog_change_meter($args){
@@ -85,6 +97,22 @@ class view_number{
         return load_template('number.private_get_dialog_edit_number', $args);
     }
 
+    public static function private_get_dialog_edit_number_fio($args){
+        return load_template('number.private_get_dialog_edit_number_fio', $args);
+    }
+
+    public static function private_get_dialog_edit_number_cellphone($args){
+        return load_template('number.private_get_dialog_edit_number_cellphone', $args);
+    }
+
+    public static function private_get_dialog_edit_number_telephone($args){
+        return load_template('number.private_get_dialog_edit_number_telephone', $args);
+    }
+
+    public static function private_get_dialog_exclude_processing_center($args){
+        return load_template('number.private_get_dialog_exclude_processing_center', $args);
+    }
+
     public static function private_get_meter_options($args){
         return load_template('number.private_get_meter_options', $args);
     }
@@ -117,6 +145,10 @@ class view_number{
         return load_template('number.private_get_meter_value', $args);
     }
 
+    public static function private_get_processing_centers($args){
+        return load_template('number.private_get_processing_centers', $args);
+    }
+
     public static function private_get_dialog_edit_meter_data($args){
         return load_template('number.private_get_dialog_edit_meter_data', $args);
     }
@@ -135,6 +167,18 @@ class view_number{
 
     public static function private_update_number($args){
         return load_template('number.private_update_number', $args);
+    }
+
+    public static function private_update_number_fio($args){
+        return load_template('number.private_update_number_fio', $args);
+    }
+
+    public static function private_update_number_cellphone($args){
+        return load_template('number.private_update_number_cellphone', $args);
+    }
+
+    public static function private_update_number_telephone($args){
+        return load_template('number.private_update_number_telephone', $args);
     }
 
     public static function private_update_meter_comment($args){

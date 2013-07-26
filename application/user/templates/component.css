@@ -1,0 +1,15 @@
+.letters{
+    margin:20px 0px 20px 0px;
+}
+.letters ul li{
+    display: inline-block;
+    margin: 0px 2px;
+}
+.letters ul li div{
+    width:15px;
+    height:15px;
+    border: 1px solid grey;
+}
+.letter-noempty{
+    background: grey;
+}

@@ -34,6 +34,20 @@ class controller_number{
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
 
+    public static function private_add_processing_center(){
+        $center = new data_processing_center2number();
+        $center->number_id = $_GET['number_id'];
+        $center->processing_center_id = $_GET['center_id'];
+        $center->identifier = $_GET['identifier'];
+        $company = model_session::get_company();
+        model_processing_center2number::add_identifier($company, $center);
+        $c2n = new data_processing_center2number();
+        $c2n->number_id = $_GET['number_id'];
+        $c2n->verify('number_id');
+        return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
+                'data' => $c2n];
+    }
+
     public static function private_change_meter(){
         $old = new data_number2meter();
         $old->number_id = $_GET['number_id'];
@@ -74,6 +88,20 @@ class controller_number{
                 'meters' => model_number2meter::get_number2meters($company, $per)];
     }
 
+    public static function private_exclude_processing_center(){
+        $center = new data_processing_center2number();
+        $center->number_id = $_GET['number_id'];
+        $center->processing_center_id = $_GET['center_id'];
+        $center->identifier = $_GET['identifier'];
+        $company = model_session::get_company();
+        model_processing_center2number::exclude_identifier($company, $center);
+        $c2n = new data_processing_center2number();
+        $c2n->number_id = $_GET['number_id'];
+        $c2n->verify('number_id');
+        return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
+                'data' => $c2n];
+    }
+
 	public static function private_show_default_page(){
         return ['streets' => model_street::get_streets(new data_street())];
 	}
@@ -106,6 +134,14 @@ class controller_number{
                 'service' => $meter->service[0],
                 'number' => $number,
                 'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
+    }
+
+    public static function private_get_dialog_add_processing_center(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->verify('id');
+        return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
+                'number' => $number];
     }
 
     public static function private_get_dialog_change_meter(){
@@ -214,6 +250,17 @@ class controller_number{
         return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
     }
 
+    public static function private_get_dialog_exclude_processing_center(){
+        $center = new data_processing_center();
+        $center->id = $_GET['center_id'];
+        $center->verify('id');
+        $number = new data_number();
+        $number->id = $_GET['number_id'];
+        return ['center' => model_processing_center::get_processing_centers($center)[0],
+                'number' => $number,
+                'identifier' => $_GET['identifier']];
+    }
+
     public static function private_get_house_content(){
         $house = new data_house();
         $house->id = $_GET['id'];
@@ -238,6 +285,7 @@ class controller_number{
                     $enable_meters[] = $meter;
                 elseif($meter->status == 'disabled')
                     $disable_meters[] = $meter;
+        model_session::set_setting_param('number', 'number_content', 'meters');
         return ['numbers' => model_number::get_numbers($company, $number),
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
@@ -246,13 +294,49 @@ class controller_number{
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->verify('id');
-        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+        $switch = model_session::get_setting_param('number', 'number_content');
+        switch($switch){
+            case 'meters':
+                $data = new data_number2meter();
+                $data->number_id = $_GET['id'];
+                $data->verify('number_id');
+                $number = new data_number();
+                $number->id = $_GET['id'];
+                $number->verify('id');
+                $company = model_session::get_company();
+                $meters = model_number2meter::get_number2meters($company, $data);
+                $enable_meters = $disable_meters = [];
+                if(!empty($meters))
+                    foreach($meters as $meter)
+                        if($meter->status == 'enabled')
+                            $enable_meters[] = $meter;
+                        elseif($meter->status == 'disabled')
+                            $disable_meters[] = $meter;
+                return ['numbers' => model_number::get_numbers($company, $number),
+                        'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters,
+                        'setting' => $switch];
+            break;
+
+            case 'centers':
+                $c2n = new data_processing_center2number();
+                $c2n->number_id = $_GET['id'];
+                $c2n->verify('number_id');
+                $company = model_session::get_company();
+                return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
+                        'numbers' => [$number],
+                        'setting' => $switch];
+            break;
+
+            default:
+                return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+        }
     }
 
     public static function private_get_number_information(){
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->verify('id');
+        model_session::set_setting_param('number', 'number_content', 'information');
         return ['numbers' => model_number::get_numbers(model_session::get_company(),$number)];
     }
 
@@ -333,7 +417,38 @@ class controller_number{
         return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
     }
 
+    public static function private_get_processing_centers(){
+        $c2n = new data_processing_center2number();
+        $c2n->number_id = $_GET['id'];
+        $c2n->verify('number_id');
+        $company = model_session::get_company();
+        model_session::set_setting_param('number', 'number_content', 'centers');
+        return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
+                'data' => $c2n];
+    }
+
     public static function private_get_dialog_edit_number(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->verify('id');
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+    }
+
+    public static function private_get_dialog_edit_number_fio(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->verify('id');
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+    }
+
+    public static function private_get_dialog_edit_number_telephone(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        $number->verify('id');
+        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+    }
+
+    public static function private_get_dialog_edit_number_cellphone(){
         $number = new data_number();
         $number->id = $_GET['id'];
         $number->verify('id');
@@ -353,8 +468,8 @@ class controller_number{
         $company = model_session::get_company();
         return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data),
                 'time' => $_GET['time'],
-                'current_meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
-                // 'last_data' => model_number::get_last_meter_data($company, $number, $meter, $time)];
+                'current_meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end),
+                'last_data' => model_number::get_last_meter_data($company, $data, $time_begin)];
     }
 
     public static function private_update_date_checking(){
@@ -398,7 +513,25 @@ class controller_number{
         $number->id = $_GET['id'];
         $number->number = $_GET['number'];
         $number->verify('id', 'number');
-        return model_number::update_number(model_session::get_company(), $number);
+        return ['number' => model_number::update_number(model_session::get_company(), $number)];
+    }
+
+    public static function private_update_number_fio(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return ['number' => model_number::update_number_fio(model_session::get_company(), $number, $_GET['fio'])];
+    }
+
+    public static function private_update_number_cellphone(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return ['number' => model_number::update_number_cellphone(model_session::get_company(), $number, $_GET['cellphone'])];
+    }
+
+    public static function private_update_number_telephone(){
+        $number = new data_number();
+        $number->id = $_GET['id'];
+        return ['number' => model_number::update_number_telephone(model_session::get_company(), $number, $_GET['telephone'])];
     }
 
     public static function private_update_meter_data(){
@@ -411,6 +544,9 @@ class controller_number{
         $meter2data->time = $_GET['time'];
         $meter2data->value = $_GET['tarif'];
         $meter2data->comment = $_GET['comment'];
+        $timestamp = explode('.', $_GET['timestamp']);
+        $meter2data->timestamp = mktime(12, 0, 0, $timestamp[1], $timestamp[0], $timestamp[2]);
+        $meter2data->way = $_GET['way'];
         model_number::update_meter_data(model_session::get_company(), $data, $meter2data);
         $time = getdate();
         $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);

@@ -8,7 +8,7 @@
                 body {font-size:10pt; margin: 0mm 0mm 0mm 0mm; padding: 0mm 0mm 0mm 0mm;}
                 .main-block table {border-collapse: collapse; border-spacing: 0mm;}
                 .ttle {font-size:14pt; font-weight:900;}
-                .main {border:1px solid grey; width:200mm; padding: 0mm 0mm 5mm 0mm;margin-top:60px;}
+                .main {width:200mm; padding: 0mm 0mm 5mm 0mm;margin-top:60px;}
                 @media print{
                     .navbar{
                         display:none;
@@ -19,6 +19,7 @@
             </style>
     <link rel="stylesheet" href="/templates/default/css/bootstrap.min.css">
     <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css">
+    {% block css %}{% endblock css %}
 </head>
 <body>
     <header>
