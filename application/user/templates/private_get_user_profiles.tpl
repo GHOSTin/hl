@@ -8,7 +8,7 @@
     {% if companies is not empty %}
         <ul>
         {% for company in companies %}
-            <li company_id="{{ company.id }}">
+            <li class="company" company="{{ company.id }}">
                 <div class="get_company_content">{{ company.name }}</div>
             </li>
         {% endfor %}

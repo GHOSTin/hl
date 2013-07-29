@@ -7,6 +7,19 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит информацию об группе
+    }).on('click', '.get_company_content', function(){
+        if($(this).siblings().is('.company-content')){
+            $(this).siblings('.company-content').remove();
+        }else{
+            $.get('get_company_content',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this))
+                },function(r){
+                    init_content(r);
+                });
+        }
+
     // выводит соедржимое буквы группы
     }).on('click', '.get_group_letter', function(){
         $.get('get_group_letter',{
@@ -150,4 +163,9 @@ function get_user_id(obj){
 // возвращает идентификатор группы
 function get_group_id(obj){
     return obj.closest('.group').attr('group');
+}
+
+// возвращает идентификатор компании
+function get_company_id(obj){
+    return obj.closest('.company').attr('company');
 }

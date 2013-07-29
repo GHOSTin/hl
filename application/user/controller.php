@@ -64,6 +64,17 @@ class controller_user{
                 'users' => model_group::get_users($company, $group)];
     }
 
+    public static function private_get_company_content(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        return ['user' => $user, 'company' => $company,
+                'profiles' => model_profile::get_profiles($company, $user)];
+    }
+
     public static function private_get_dialog_create_group(){
         return true;
     }

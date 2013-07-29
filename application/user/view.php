@@ -49,6 +49,10 @@ class view_user{
         return load_template('user.private_get_dialog_exclude_user', $args);
     }
 
+    public static function private_get_company_content($args){
+        return load_template('user.private_get_company_content', $args);
+    }
+
     public static function private_get_group_letters($args){
         return load_template('user.private_get_group_letters', $args);
     }
