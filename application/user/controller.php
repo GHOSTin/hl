@@ -252,6 +252,17 @@ class controller_user{
         return ['user' => model_user::update_password($user, $_GET['password'], $_GET['confirm'])];
     }
 
+    public static function private_update_rule(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'], 'rule' => $_GET['rule'],
+                'status' => model_profile::update_rule($company, $user, $_GET['profile'], $_GET['rule'])];
+    }
+
     public static function private_update_login(){
         $user = new data_user();
         $user->id = $_GET['id'];

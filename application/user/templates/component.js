@@ -34,6 +34,17 @@ $(document).ready(function(){
                 });
         }
 
+    // изменяет статус правила
+    }).on('click', '.rule', function(){
+        $.get('update_rule',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this)),
+                profile: get_profile_name($(this)),
+                rule: $(this).attr('rule')
+                },function(r){
+                    init_content(r);
+                });
+
     // выводит соедржимое буквы группы
     }).on('click', '.get_group_letter', function(){
         $.get('get_group_letter',{

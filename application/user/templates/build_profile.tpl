@@ -3,7 +3,7 @@
         <h4>Правила</h4>
         <ul class="unstyled">
         {% for rule, status  in profile.rules %}
-            <li rule="{{ rule }}"><input type="checkbox"{% if status == true %} checked=""{% endif %}> {{ rule }}</li>
+            <li class="rule" rule="{{ rule }}"><input type="checkbox"{% if status == true %} checked=""{% endif %}> {{ rule }}</li>
         {% endfor %}
         </ul>
     </div>

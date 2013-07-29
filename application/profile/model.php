@@ -113,6 +113,29 @@ class model_profile{
 		$sql->execute('Ошибка при изменении пароля.');
 		return $user;
 	}
+
+	/**
+	* Возвращает профиль пользователя в зависимости от компании и названия профиля.
+	*/
+	public static function update_rule(data_company $company, data_user $user, $profile, $rule){
+		$user->verify('id');
+		model_company::verify_id($company);
+		$rules = self::get_profile($company, $user, $profile)['rules'];
+		if(in_array($rule, $rules)){
+			$rules[$rule] = !$rules[$rule];
+			$sql = new sql();
+			$sql->query('UPDATE `profiles` SET `rules` = :rules WHERE `company_id` = :company_id
+				AND `user_id` = :user_id AND `profile` = :profile');
+			$sql->bind(':rules', (string) json_encode($rules), PDO::PARAM_STR);
+			$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+			$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+			$sql->execute('Проблема при обновлении правила.');
+		}else
+			throw new e_model('Правила '.$rule.' нет в профиле '.$profile);
+		return $rules[$rule];
+	}
+
 	/**
 	* Обновляет номер сотового телефона пользователя
 	* @return bolean
@@ -126,6 +149,7 @@ class model_profile{
 		$sql->execute('Ошибка при изменении номера сотового телефона.');
 		return $user;
 	}
+
 	/**
 	* Обновляет номер телефона пользователя
 	* @return bolean
