@@ -2,7 +2,7 @@
 {% set user = component.users[0] %}
 {% set companies = component.companies %}
 {% block js %}
-    $('.user[user = {{user.id}}] .user-information').html(get_hidden_content())
+    $('.user[user = {{user.id}}] .user-information').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
     {% if companies is not empty %}

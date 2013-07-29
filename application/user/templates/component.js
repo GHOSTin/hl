@@ -101,6 +101,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит информацию о пользователе
+    }).on('click', '.get_user_information', function(){
+        $.get('get_user_information',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог создания группы
     }).on('click', '.get_dialog_create_group', function(){
         $.get('get_dialog_create_group', {
