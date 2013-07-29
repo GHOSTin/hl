@@ -64,6 +64,28 @@ class controller_user{
                 'users' => model_group::get_users($company, $group)];
     }
 
+    public static function private_get_company_content(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        return ['user' => $user, 'company' => $company,
+                'profiles' => model_profile::get_profiles($company, $user)];
+    }
+
+    public static function private_get_profile_content(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'],
+                'profile' => model_profile::get_profile($company, $user, $_GET['profile'])];
+    }
+
     public static function private_get_dialog_create_group(){
         return true;
     }
@@ -193,6 +215,14 @@ class controller_user{
         return ['users' => model_user::get_users($user)];
     }
 
+    public static function private_get_user_profiles(){
+        $user = new data_user();
+        $user->id = $_GET['id'];
+        $user->verify('id');
+        return ['users' => model_user::get_users($user),
+                'companies' => model_profile::get_companies($user)];
+    }
+
     public static function private_get_user_letters(){
         $letters = [];
         $users = model_user::get_users(new data_user());
@@ -220,6 +250,17 @@ class controller_user{
         $user = new data_user();
         $user->id = $_GET['id'];
         return ['user' => model_user::update_password($user, $_GET['password'], $_GET['confirm'])];
+    }
+
+    public static function private_update_rule(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'], 'rule' => $_GET['rule'],
+                'status' => model_profile::update_rule($company, $user, $_GET['profile'], $_GET['rule'])];
     }
 
     public static function private_update_login(){

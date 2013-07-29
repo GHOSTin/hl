@@ -7,6 +7,44 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит информацию об группе
+    }).on('click', '.get_company_content', function(){
+        if($(this).siblings().is('.company-content')){
+            $(this).siblings('.company-content').remove();
+        }else{
+            $.get('get_company_content',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this))
+                },function(r){
+                    init_content(r);
+                });
+        }
+
+    // выводит информацию о профиле
+    }).on('click', '.get_profile_content', function(){
+        if($(this).siblings().is('.profile-content')){
+            $(this).siblings('.profile-content').remove();
+        }else{
+            $.get('get_profile_content',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this)),
+                profile: get_profile_name($(this))
+                },function(r){
+                    init_content(r);
+                });
+        }
+
+    // изменяет статус правила
+    }).on('click', '.rule', function(){
+        $.get('update_rule',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this)),
+                profile: get_profile_name($(this)),
+                rule: $(this).attr('rule')
+                },function(r){
+                    init_content(r);
+                });
+
     // выводит соедржимое буквы группы
     }).on('click', '.get_group_letter', function(){
         $.get('get_group_letter',{
@@ -54,6 +92,14 @@ $(document).ready(function(){
                     init_content(r);
                 });
         }
+
+    // выводит информацию о правилах
+    }).on('click', '.get_user_profiles', function(){
+        $.get('get_user_profiles',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
 
     // выводит диалог создания группы
     }).on('click', '.get_dialog_create_group', function(){
@@ -142,4 +188,14 @@ function get_user_id(obj){
 // возвращает идентификатор группы
 function get_group_id(obj){
     return obj.closest('.group').attr('group');
+}
+
+// возвращает идентификатор компании
+function get_company_id(obj){
+    return obj.closest('.company').attr('company');
+}
+
+// возвращает название профиля
+function get_profile_name(obj){
+    return obj.closest('.profile').attr('profile');
 }

@@ -4,7 +4,6 @@ class model_profile{
 	* Записывает в сессию правила, ограничения, настройки, меню.
 	*/
 	public static function get_user_profiles(data_company $company, data_current_user $user){
-		// var_dump();
 		model_user::verify_id($user);
 		model_company::verify_id($company);
 		$sql = new sql();
@@ -23,6 +22,68 @@ class model_profile{
 		model_session::set_rules($rules);
 		model_session::set_restrictions($restrictions);
 	}
+
+	/**
+	* Возвращает название профилей пользователя в зависимости от компании.
+	*/
+	public static function get_profiles(data_company $company, data_user $user){
+		$user->verify('id');
+		model_company::verify_id($company);
+		$sql = new sql();
+		$sql->query("SELECT `profile` FROM `profiles` 
+					WHERE  `user_id` = :user_id AND `company_id` = :company_id");
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+		$sql->execute('Ошибка при получении профиля.');
+		$profiles = [];
+		if($sql->count() > 0)
+			while($profile = $sql->row())
+				$profiles[] = $profile['profile'];
+		$sql->close();
+		return $profiles;
+	}
+
+	/**
+	* Возвращает профиль пользователя в зависимости от компании и названия профиля.
+	*/
+	public static function get_profile(data_company $company, data_user $user, $profile){
+		$user->verify('id');
+		model_company::verify_id($company);
+		$sql = new sql();
+		$sql->query("SELECT `rules`, `restrictions`, `settings` FROM `profiles` 
+					WHERE  `user_id` = :user_id AND `company_id` = :company_id
+					AND `profile` = :profile");
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+		$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+		$sql->execute('Ошибка при получении профиля.');
+		if($sql->count() === 0)
+			throw new e_model('Профиля не существует.');
+		if($sql->count() !== 1)
+			throw new e_model('Неверное количество профилей.');			
+		$row = $sql->row();
+		$profile = [];
+		$profile['rules'] = (array) json_decode($row['rules']);
+		$profile['restrictions'] = (array) json_decode($row['restrictions']);
+		$sql->close();
+		// var_dump($profile);
+		// exit();
+		return $profile;
+	}
+
+	/**
+	* Возвращает список компаний для которых есть профиль пользователя.
+	*/
+	public static function get_companies(data_user $user){
+		$user->verify('id');
+		$sql = new sql();
+		$sql->query("SELECT DISTINCT `companies`.`id`, `companies`.`name`
+					FROM `companies`, `profiles` WHERE `profiles`.`user_id` = :user_id
+					AND `profiles`.`company_id` = `companies`.`id`");
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		return $sql->map(new data_company(), 'Проблемы при получении компаний в профиле.');
+	}
+
 	/**
 	* Проверяет права доступа пользователя.
 	* @return bolean
@@ -52,6 +113,29 @@ class model_profile{
 		$sql->execute('Ошибка при изменении пароля.');
 		return $user;
 	}
+
+	/**
+	* Возвращает профиль пользователя в зависимости от компании и названия профиля.
+	*/
+	public static function update_rule(data_company $company, data_user $user, $profile, $rule){
+		$user->verify('id');
+		model_company::verify_id($company);
+		$rules = self::get_profile($company, $user, $profile)['rules'];
+		if(in_array($rule, $rules)){
+			$rules[$rule] = !$rules[$rule];
+			$sql = new sql();
+			$sql->query('UPDATE `profiles` SET `rules` = :rules WHERE `company_id` = :company_id
+				AND `user_id` = :user_id AND `profile` = :profile');
+			$sql->bind(':rules', (string) json_encode($rules), PDO::PARAM_STR);
+			$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+			$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+			$sql->execute('Проблема при обновлении правила.');
+		}else
+			throw new e_model('Правила '.$rule.' нет в профиле '.$profile);
+		return $rules[$rule];
+	}
+
 	/**
 	* Обновляет номер сотового телефона пользователя
 	* @return bolean
@@ -65,6 +149,7 @@ class model_profile{
 		$sql->execute('Ошибка при изменении номера сотового телефона.');
 		return $user;
 	}
+
 	/**
 	* Обновляет номер телефона пользователя
 	* @return bolean

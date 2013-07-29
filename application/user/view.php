@@ -49,6 +49,14 @@ class view_user{
         return load_template('user.private_get_dialog_exclude_user', $args);
     }
 
+    public static function private_get_company_content($args){
+        return load_template('user.private_get_company_content', $args);
+    }
+
+    public static function private_get_profile_content($args){
+        return load_template('user.private_get_profile_content', $args);
+    }
+
     public static function private_get_group_letters($args){
         return load_template('user.private_get_group_letters', $args);
     }
@@ -67,6 +75,10 @@ class view_user{
 
     public static function private_get_user_content($args){
         return load_template('user.private_get_user_content', $args);
+    }
+
+    public static function private_get_user_profiles($args){
+        return load_template('user.private_get_user_profiles', $args);
     }
 
     public static function private_get_group_letter($args){
@@ -95,6 +107,10 @@ class view_user{
 
     public static function private_update_password($args){
         return load_template('user.private_update_password', $args);
+    }
+
+    public static function private_update_rule($args){
+        return load_template('user.private_update_rule', $args);
     }
 
     public static function private_update_login($args){
