@@ -1,5 +1,21 @@
 <?php
 class model_profile{
+
+	/**
+	* Удаляет профиль.
+	*/
+	public static function delete_profile(data_company $company, data_user $user, $profile){
+		$user->verify('id');
+		model_company::verify_id($company);
+		$sql = new sql();
+		$sql->query("DELETE FROM `profiles` WHERE  `user_id` = :user_id
+					AND `company_id` = :company_id AND `profile` = :profile");
+		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+		$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+		$sql->execute('Ошибка при удалении профиля.');
+	}
+
 	/**
 	* Записывает в сессию правила, ограничения, настройки, меню.
 	*/

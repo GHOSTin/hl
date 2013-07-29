@@ -6,7 +6,7 @@
 {% endblock js %}
 {% block html %}
     {% if companies is not empty %}
-        <ul>
+        <ul class="unstyled">
         {% for company in companies %}
             <li class="company" company="{{ company.id }}">
                 <div class="get_company_content">{{ company.name }}</div>

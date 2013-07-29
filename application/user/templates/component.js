@@ -34,6 +34,16 @@ $(document).ready(function(){
                 });
         }
 
+    // выводит диалог удаления профиля
+    }).on('click', '.get_dialog_delete_profile', function(){
+        $.get('get_dialog_delete_profile',{
+            company_id: get_company_id($(this)),
+            user_id: get_user_id($(this)),
+            profile: get_profile_name($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // изменяет статус правила
     }).on('click', '.rule', function(){
         $.get('update_rule',{

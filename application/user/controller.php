@@ -53,6 +53,17 @@ class controller_user{
         return ['users' => $letter_users];
     }
 
+    public static function private_delete_profile(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        model_profile::delete_profile($company, $user, $_GET['profile']);
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile']];
+    }
+
     public static function private_exclude_user(){
         $user = new data_user();
         $user->id = $_GET['user_id'];
@@ -99,6 +110,16 @@ class controller_user{
         $group->id = $_GET['id'];
         return ['users' => model_user::get_users(new data_user()),
                 'group' => $group];
+    }
+
+    public static function private_get_dialog_delete_profile(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile']];
     }
 
     public static function private_get_dialog_edit_group_name(){

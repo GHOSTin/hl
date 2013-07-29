@@ -14,5 +14,5 @@
     background: grey;
 }
 .user-information, .company-content, .profile-content{
-    padding: 20px;
+    padding: 10px 0px 20px 20px;
 }
