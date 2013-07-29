@@ -30,18 +30,15 @@ class model_profile{
 		$user->verify('id');
 		model_company::verify_id($company);
 		$sql = new sql();
-		$sql->query("SELECT `profile`, `rules`, `restrictions`, `settings`
-					FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id");
+		$sql->query("SELECT `profile` FROM `profiles` 
+					WHERE  `user_id` = :user_id AND `company_id` = :company_id");
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
 		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
 		$sql->execute('Ошибка при получении профиля.');
 		$profiles = [];
 		if($sql->count() > 0)
-			while($profile = $sql->row()){
-				$name = $profile['profile'];
-				$profiles[$name]['rules'] = json_decode($profile['rules']);
-				$profiles[$name]['restrictions'] = json_decode($profile['restrictions']);
-			}
+			while($profile = $sql->row())
+				$profiles[] = $profile['profile'];
 		$sql->close();
 		return $profiles;
 	}
