@@ -20,6 +20,20 @@ $(document).ready(function(){
                 });
         }
 
+    // выводит информацию о профиле
+    }).on('click', '.get_profile_content', function(){
+        if($(this).siblings().is('.profile-content')){
+            $(this).siblings('.profile-content').remove();
+        }else{
+            $.get('get_profile_content',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this)),
+                profile: get_profile_name($(this))
+                },function(r){
+                    init_content(r);
+                });
+        }
+
     // выводит соедржимое буквы группы
     }).on('click', '.get_group_letter', function(){
         $.get('get_group_letter',{
@@ -168,4 +182,9 @@ function get_group_id(obj){
 // возвращает идентификатор компании
 function get_company_id(obj){
     return obj.closest('.company').attr('company');
+}
+
+// возвращает название профиля
+function get_profile_name(obj){
+    return obj.closest('.profile').attr('profile');
 }
