@@ -121,7 +121,7 @@ class model_profile{
 		$user->verify('id');
 		model_company::verify_id($company);
 		$rules = self::get_profile($company, $user, $profile)['rules'];
-		if(in_array($rule, $rules)){
+		if(in_array($rule, array_keys($rules))){
 			$rules[$rule] = !$rules[$rule];
 			$sql = new sql();
 			$sql->query('UPDATE `profiles` SET `rules` = :rules WHERE `company_id` = :company_id
