@@ -133,6 +133,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог добавления профиля
+    }).on('click', '.get_dialog_add_profile', function(){
+        $.get('get_dialog_add_profile',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог добавления пользователя в группу
     }).on('click', '.get_dialog_add_user', function(){
         $.get('get_dialog_add_user',{

@@ -43,6 +43,17 @@ class model_company{
 		$sql->close();
 		return $company_id;
 	}
+	
+	/**
+	* Возвращает компании
+	* @return array object data_company
+	*/
+	public static function get_companies(data_company $company){
+		$sql = new sql();
+		$sql->query("SELECT `id`, `name` FROM `companies`");
+		$sql->query(" ORDER BY `name`");
+		return $sql->map(new data_company(), 'Проблема при выборке компаний.');
+	}
 	/**
 	* Верификация идентификатора компании.
 	*/

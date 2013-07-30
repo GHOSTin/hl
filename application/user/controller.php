@@ -3,6 +3,18 @@ class controller_user{
 
 	static $name = 'Пользователи';
 
+    public static function private_add_profile(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        model_profile::add_profile($company, $user, $_GET['profile']);
+        exit();
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile']];
+    }
+
     public static function private_add_user(){
         $user = new data_user();
         $user->id = $_GET['user_id'];
@@ -103,6 +115,13 @@ class controller_user{
 
     public static function private_get_dialog_create_user(){
         return true;
+    }
+
+    public static function private_get_dialog_add_profile(){
+        $user = new data_user();
+        $user->id = $_GET['id'];
+        $user->verify('id');
+        return ['user' => $user, 'companies' => model_company::get_companies(new data_company())];
     }
 
     public static function private_get_dialog_add_user(){

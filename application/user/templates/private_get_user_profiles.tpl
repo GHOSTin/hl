@@ -5,8 +5,11 @@
     $('.user[user = {{user.id}}] .user-information').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
+    <div>
+        <a class="get_dialog_add_profile">Добавить профиль</a>
+    </div>
     {% if companies is not empty %}
-        <ul class="unstyled">
+        <ul class="unstyled user-profiles">
         {% for company in companies %}
             <li class="company" company="{{ company.id }}">
                 <div class="get_company_content">{{ company.name }}</div>

@@ -29,6 +29,10 @@ class view_user{
         return load_template('user.private_get_dialog_create_user', $args);
     }
 
+    public static function private_get_dialog_add_profile($args){
+        return load_template('user.private_get_dialog_add_profile', $args);
+    }
+
     public static function private_get_dialog_add_user($args){
         return load_template('user.private_get_dialog_add_user', $args);
     }
