@@ -162,6 +162,13 @@ class controller_user{
         return ['users' => model_user::get_users($user)];
     }
 
+    public static function private_get_dialog_edit_user_status(){
+        $user = new data_user();
+        $user->id = $_GET['id'];
+        $user->verify('id');
+        return ['users' => model_user::get_users($user)];
+    }
+
     public static function private_get_dialog_exclude_user(){
         $group = new data_group();
         $group->id = $_GET['group_id'];

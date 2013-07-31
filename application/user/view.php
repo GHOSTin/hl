@@ -61,6 +61,10 @@ class view_user{
         return load_template('user.private_get_dialog_edit_login', $args);
     }
 
+    public static function private_get_dialog_edit_user_status($args){
+        return load_template('user.private_get_dialog_edit_user_status', $args);
+    }
+
     public static function private_get_dialog_exclude_user($args){
         return load_template('user.private_get_dialog_exclude_user', $args);
     }

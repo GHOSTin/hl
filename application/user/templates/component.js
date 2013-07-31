@@ -181,6 +181,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог изменения статуса блокировки пользователя
+    }).on('click', '.get_dialog_edit_user_status', function(){
+        $.get('get_dialog_edit_user_status',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог исключения пользователя из группу
     }).on('click', '.get_dialog_exclude_user', function(){
         $.get('get_dialog_exclude_user',{
