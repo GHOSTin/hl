@@ -140,4 +140,8 @@ class view_user{
     public static function private_update_login($args){
         return load_template('user.private_update_login', $args);
     }
+
+    public static function private_update_user_status($args){
+        return load_template('user.private_get_user_information', $args);
+    }
 }

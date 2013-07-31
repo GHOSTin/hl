@@ -322,4 +322,10 @@ class controller_user{
         $user->id = $_GET['id'];
         return ['user' => model_user::update_login($user, $_GET['login'])];
     }
+
+    public static function private_update_user_status(){
+        $user = new data_user();
+        $user->id = $_GET['id'];
+        return ['users' => [model_user::update_user_status($user)]];
+    }
 }
