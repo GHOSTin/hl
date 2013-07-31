@@ -5,4 +5,5 @@
     <li>Отчество: {{ user.middlename }} <a class="get_dialog_edit_fio">изменить</a></li>
     <li>Логин: {{ user.login }} <a class="get_dialog_edit_login">изменить</a></li>
     <li>Пароль: ********** <a class="get_dialog_edit_password">изменить</a></li>
+    <li>Блокировка: {% if user.status == 'false' %}Заблокирован{% elseif user.status == 'true' %}Активен{% endif %} <a class="get_dialog_edit_status">изменить</a></li>
 </ul>
