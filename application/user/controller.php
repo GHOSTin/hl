@@ -11,8 +11,8 @@ class controller_user{
         $user->id = $_GET['user_id'];
         $user->verify('id');
         model_profile::add_profile($company, $user, $_GET['profile']);
-        exit();
-        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile']];
+        return ['users' => model_user::get_users($user),
+                'companies' => model_profile::get_companies($user)];
     }
 
     public static function private_add_user(){

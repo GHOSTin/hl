@@ -1,6 +1,10 @@
 <?php
 class view_user{
 
+    public static function private_add_profile($args){
+        return load_template('user.private_get_user_profiles', $args);
+    }
+
     public static function private_create_group($args){
         return load_template('user.private_get_group_letter', $args);
     }

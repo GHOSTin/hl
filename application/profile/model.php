@@ -142,7 +142,6 @@ class model_profile{
 		$sql->bind(':rules', json_encode($profiles[$profile]['rules']), PDO::PARAM_STR);
 		$sql->bind(':restrictions', json_encode($profiles[$profile]['restrictions']), PDO::PARAM_STR);
 		$sql->bind(':settings', json_encode($profiles[$profile]['settings']), PDO::PARAM_STR);
-
 		$sql->execute('Ошибка при добавлении профиля.');
 	}
 
