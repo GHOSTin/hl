@@ -125,7 +125,8 @@ class controller_user{
         if($restriction === 'departments')
             $items = model_department::get_departments($company, new data_department());
         return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'],
-                'restriction_name' => $restriction, 'items' => $items];
+                'restriction_name' => $restriction, 'items' => $items,
+                'profile' => model_profile::get_profile($company, $user, $_GET['profile'])];
     }
 
     public static function private_get_dialog_create_group(){
