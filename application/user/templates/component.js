@@ -70,6 +70,18 @@ $(document).ready(function(){
                     });
         }
 
+    // обновляет ограничения
+    }).on('click', '.restriction .item', function(){
+        $.get('update_restriction',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this)),
+                profile: get_profile_name($(this)),
+                restriction: get_restriction_name($(this)),
+                item: $(this).attr('item')
+                },function(r){
+                    init_content(r);
+                });
+
     // выводит соедржимое буквы группы
     }).on('click', '.get_group_letter', function(){
         $.get('get_group_letter',{
@@ -247,4 +259,9 @@ function get_company_id(obj){
 // возвращает название профиля
 function get_profile_name(obj){
     return obj.closest('.profile').attr('profile');
+}
+
+// возвращает название ограничения
+function get_restriction_name(obj){
+    return obj.closest('.restriction').attr('restriction');
 }
