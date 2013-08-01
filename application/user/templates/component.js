@@ -55,6 +55,21 @@ $(document).ready(function(){
                     init_content(r);
                 });
 
+    // раскрывает ограничения
+    }).on('click', '.get_restriction_content', function(){
+        if($(this).siblings().is('.restriction-content')){
+            $(this).siblings('.restriction-content').remove();
+        }else{
+            $.get('get_restriction_content',{
+                    company_id: get_company_id($(this)),
+                    user_id: get_user_id($(this)),
+                    profile: get_profile_name($(this)),
+                    restriction: $(this).parent().attr('restriction')
+                    },function(r){
+                        init_content(r);
+                    });
+        }
+
     // выводит соедржимое буквы группы
     }).on('click', '.get_group_letter', function(){
         $.get('get_group_letter',{

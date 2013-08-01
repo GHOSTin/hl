@@ -10,8 +10,8 @@
     <div class="span4">
         <h4>Ограничения</h4>
         <ul>
-        {% for restruction, status  in profile.restrictions %}
-            <li>{{ restruction }}</li>
+        {% for restriction, status  in profile.restrictions %}
+            <li class="restriction" restriction="{{ restriction }}"><div class="get_restriction_content">{{ restriction }}</div></li>
         {% endfor %}
         </ul>
     </div>

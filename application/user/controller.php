@@ -109,6 +109,25 @@ class controller_user{
                 'profile' => model_profile::get_profile($company, $user, $_GET['profile'])];
     }
 
+    public static function private_get_restriction_content(){
+        $company = new data_company();
+        $company->id = $_GET['company_id'];
+        model_company::verify_id($company);
+        $user = new data_user();
+        $user->id = $_GET['user_id'];
+        $user->verify('id');
+        $profile = $_GET['profile'];
+        $restriction = $_GET['restriction'];
+        if($profile !== 'query')
+            throw new e_model('Нет ограничения для профиля.');
+        if(!in_array($restriction, ['departments']))
+            throw new e_model('Нет ограничения для профиля.');
+        if($restriction === 'departments')
+            $items = model_department::get_departments($company, new data_department());
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'],
+                'restriction_name' => $restriction, 'items' => $items];
+    }
+
     public static function private_get_dialog_create_group(){
         return true;
     }
