@@ -141,6 +141,10 @@ class view_user{
         return load_template('user.private_update_rule', $args);
     }
 
+    public static function private_update_restriction($args){
+        return load_template('user.private_update_restriction', $args);
+    }
+
     public static function private_update_login($args){
         return load_template('user.private_update_login', $args);
     }

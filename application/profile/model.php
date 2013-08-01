@@ -304,20 +304,29 @@ class model_profile{
 		if(array_key_exists($restriction, $restrictions)){
 			$item = (int) $item;
 			$hndl = array_search($item, $restrictions[$restriction]);
-			if($hndl === false)
+			if($hndl === false){
 				$restrictions[$restriction][] = $item;
-			else
+				$status = true;
+			}else{
 				unset($restrictions[$restriction][$hndl]);
+				$status = false;
+			}
+			$rest = [];
+			if(!empty($restrictions[$restriction]))
+				foreach($restrictions[$restriction] as $value)
+					$rest[] = $value;
+			$restrictions[$restriction] = $rest;
 			$sql = new sql();
 			$sql->query('UPDATE `profiles` SET `restrictions` = :restrictions WHERE `company_id` = :company_id
 				AND `user_id` = :user_id AND `profile` = :profile');
-			$sql->bind(':restrictions', (string) json_encode($restrictions), PDO::PARAM_STR);
+			$sql->bind(':restrictions', (string) json_encode((array) $restrictions), PDO::PARAM_STR);
 			$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
 			$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
 			$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
 			$sql->execute('Проблема при обновлении правила.');
 		}else
 			throw new e_model('Нет ограничения '.$restriction.' в профиле '.$profile);
+		return $status;
 	}
 
 	/**

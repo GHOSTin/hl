@@ -344,9 +344,8 @@ class controller_user{
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
-        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'], 'rule' => $_GET['rule'],
-                'status' => model_profile::update_restriction($company, $user, $_GET['profile'], $_GET['restriction'], $_GET['item']),
-                'profile' => model_profile::get_profile($company, $user, $_GET['profile'])];
+        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'], 'restriction_name' => $_GET['restriction'], 'item' => $_GET['item'],
+                'status' => model_profile::update_restriction($company, $user, $_GET['profile'], $_GET['restriction'], $_GET['item'])];
     }
 
     public static function private_update_login(){
