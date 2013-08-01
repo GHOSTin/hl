@@ -295,6 +295,32 @@ class model_profile{
 	}
 
 	/**
+	* Обновляет ограничение.
+	*/
+	public static function update_restriction(data_company $company, data_user $user, $profile, $restriction, $item){
+		$user->verify('id');
+		model_company::verify_id($company);
+		$restrictions = self::get_profile($company, $user, $profile)['restrictions'];
+		if(array_key_exists($restriction, $restrictions)){
+			$item = (int) $item;
+			$hndl = array_search($item, $restrictions[$restriction]);
+			if($hndl === false)
+				$restrictions[$restriction][] = $item;
+			else
+				unset($restrictions[$restriction][$hndl]);
+			$sql = new sql();
+			$sql->query('UPDATE `profiles` SET `restrictions` = :restrictions WHERE `company_id` = :company_id
+				AND `user_id` = :user_id AND `profile` = :profile');
+			$sql->bind(':restrictions', (string) json_encode($restrictions), PDO::PARAM_STR);
+			$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+			$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+			$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+			$sql->execute('Проблема при обновлении правила.');
+		}else
+			throw new e_model('Нет ограничения '.$restriction.' в профиле '.$profile);
+	}
+
+	/**
 	* Обновляет номер сотового телефона пользователя
 	* @return bolean
 	*/
