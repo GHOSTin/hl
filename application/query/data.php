@@ -117,4 +117,11 @@ final class data_query extends data_object{
 	* Идентификатор улицы
 	*/
 	public $street_id;
+
+	public function verify(){
+        if(func_num_args() < 0)
+            throw new e_data('Параметры верификации не были переданы.');
+        foreach(func_get_args() as $value)
+            verify_query::$value($this);
+    }
 }
