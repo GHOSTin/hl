@@ -31,7 +31,8 @@ class verify_processing_center2number{
     * Верификация идентификатора процессингового центра.
     */
     public static function processing_center_id(data_processing_center2number $c2n){
-        if($c2n->processing_center_id < 1 OR $c2n->processing_center_id > 255)
-            throw new e_model('Идентификатор процессингового центра задан не верно.');
+        $center = new data_processing_center();
+        $center->id = $c2n->processing_center_id;
+        $center->verify('id');
     }
 }
