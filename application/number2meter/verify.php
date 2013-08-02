@@ -11,24 +11,27 @@ class verify_number2meter{
     * Верификация идентификатора компании.
     */
     public static function company_id(data_number2meter $number2meter){
-        if($number2meter->company_id < 1 OR $number2meter->company_id > 254)
-            throw new e_model('Идентификатор компании задан не верно.');
+        $company = new data_company();
+        $company->id = $number2meter->company_id;
+        $company->verify('id');
     }
 
     /**
     * Верификация идентификатора счетчика.
     */
     public static function meter_id(data_number2meter $number2meter){
-        if($number2meter->meter_id < 1)
-            throw new e_model('Идентификатор счетчика задан не верно.');
+        $meter = new data_meter();
+        $meter->id = $number2meter->meter_id;
+        $meter->verify('id');
     }
 
     /**
     * Верификация идентификатора лицевого счета.
     */
     public static function number_id(data_number2meter $number2meter){
-        if($number2meter->number_id < 1)
-            throw new e_model('Идентификатор лицевого счета задан не верно.');
+        $number = new data_number();
+        $number->id = $number2meter->number_id;
+        $number->verify('id');
     }
 
     /**
