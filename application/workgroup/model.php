@@ -34,34 +34,7 @@ class model_workgroup{
 		}
 		return $sql->map(new data_work(), 'Проблема при выборки работ группы.');
 	}
-	/**
-	* Верификация идентификатора компании.
-	*/
-	public static function verify_company_id(data_workgroup $workgroup){
-		if($workgroup->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
-	}
-	/**
-	* Верификация идентификатора группы работ.
-	*/
-	public static function verify_id(data_workgroup $workgroup){
-		if($workgroup->id < 1)
-			throw new e_model('Идентификатор группы работ задан не верно.');
-	}
-	/**
-	* Верификация названия группы работ.
-	*/
-	public static function verify_name(data_workgroup $workgroup){
-		if(empty($workgroup->name))
-			throw new e_model('Название группы работ задано не верно.');
-	}
-	/**
-	* Верификация статуса группы работ.
-	*/
-	public static function verify_status(data_workgroup $workgroup){
-		if(empty($workgroup->status))
-			throw new e_model('Статус группы работ задан не верно.');
-	}
+
 	/**
 	* Проверка принадлежности объекта к классу data_workgroup
 	*/

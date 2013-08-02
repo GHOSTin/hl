@@ -21,7 +21,7 @@ class verify_work{
     /**
     * Верификация названия работы.
     */
-    public static function verify_name(data_work $work){
+    public static function name(data_work $work){
         if(!preg_match('/^[а-яА-Я]+$/u', $work->name))
             throw new e_model('Название работы не удовлетворяет "а-яА-Я".');
     }
@@ -29,7 +29,7 @@ class verify_work{
     /**
     * Верификация статуса работы.
     */
-    public static function verify_status(data_work $work){
+    public static function status(data_work $work){
         if(in_array($work->status, ['true', 'false']))
             throw new e_model('Статус работы задан не верно.');
     }
@@ -37,7 +37,7 @@ class verify_work{
     /**
     * Верификация идентификатора группы работ.
     */
-    public static function verify_workgroup_id(data_work $work){
+    public static function workgroup_id(data_work $work){
         $worgroup = new data_workgroup();
         $worgroup->id = $work->workgroup_id;
         $worgroup->verify('id');
