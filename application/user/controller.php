@@ -120,10 +120,12 @@ class controller_user{
         $restriction = $_GET['restriction'];
         if($profile !== 'query')
             throw new e_model('Нет ограничения для профиля.');
-        if(!in_array($restriction, ['departments']))
+        if(!in_array($restriction, ['departments', 'worktypes']))
             throw new e_model('Нет ограничения для профиля.');
         if($restriction === 'departments')
             $items = model_department::get_departments($company, new data_department());
+        if($restriction === 'worktypes')
+            $items = model_query_work_type::get_query_work_types($company, new data_query_work_type());
         return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'],
                 'restriction_name' => $restriction, 'items' => $items,
                 'profile' => model_profile::get_profile($company, $user, $_GET['profile'])];
