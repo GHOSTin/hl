@@ -1,17 +1,21 @@
 <?php
 class verify_number{
+
     /**
     * Верификация сотового телефона лицевого счета.
     */
     public static function cellphone(data_number $number){
     }
+
     /**
     * Верификация идентификатора города.
     */
     public static function city_id(data_number $number){
-        if($number->city_id < 1)
-            throw new e_model('Идентификатор города задан не верно.');
+        $city = new data_city();
+        $city->id = $number->city_id;
+        $city->verify('id');
     }
+
     /**
     * Верификация сотового телефона контактного лица.
     */
@@ -19,6 +23,7 @@ class verify_number{
         if(empty($number->contact_cellphone))
             throw new e_model('Сотовый телефон контактного лица задан не верно.');
     }
+
     /**
     * Верификация ФИО контактного лица.
     */
@@ -26,6 +31,7 @@ class verify_number{
         if(empty($number->contact_fio))
             throw new e_model('ФИО контактного лица заданы не верно.');
     }
+
     /**
     * Верификация телефона контактного лица.
     */
@@ -33,20 +39,25 @@ class verify_number{
         if(empty($number->contact_telephone))
             throw new e_model('Телефон контактного лица задан не верно.');
     }
+
     /**
     * Верификация идентификатора компании.
     */
     public static function company_id(data_number $number){
-        if($number->company_id < 1)
-            throw new e_model('Идентификатор компании задан не верно.');
+        $company = new data_company();
+        $company->id = $number->company_id;
+        $company->verify('id');
     }
+
     /**
     * Верификация идентификатора участка.
     */
     public static function department_id(data_number $number){
-        if($number->department_id < 1)
-            throw new e_model('Идентификатор участка задан не верно.');
+        $department = new data_department();
+        $department->id = $number->department_id;
+        $department->verify();
     }
+
     /**
     * Верификация ФИО владельца лицевого счета.
     */
@@ -54,26 +65,32 @@ class verify_number{
         if(empty($number->fio))
             throw new e_model('ФИО владельца лицевого счета заданы не верно.');
     }
+
     /**
     * Верификация номера квартиры.
     */
     public static function flat_number(data_number $number){
-        if(empty($number->flat_number))
-            throw new e_model('Номер квартиры задан не верно.');
+        $flat = new data_flat();
+        $flat->id = $number->flat_number;
+        $flat->verify('number');
     }
+
     /**
     * Верификация идентификатора квартиры.
     */
     public static function flat_id(data_number $number){
-        if($number->flat_id < 1)
-            throw new e_model('Идентификатор квартиры задан не верно.');
+        $flat = new data_flat();
+        $flat->id = $number->flat_id;
+        $flat->verify('id');
     }
+
     /**
     * Верификация идентификатора дома.
     */
     public static function house_id(data_number $number){
-        if($number->house_id < 1)
-            throw new e_model('Идентификатор дома задан не верно.');
+        $house = new data_house();
+        $house->id = $number->house_id;
+        $house->verify('id');
     }
     /**
     * Верификация номера дома.
