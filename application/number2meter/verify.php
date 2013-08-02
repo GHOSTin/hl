@@ -86,9 +86,9 @@ class verify_number2meter{
     * Верификация услуги счетчика, привязанного к лицевому счету.
     */
     public static function service(data_number2meter $number2meter){
-        $services = ['cold_water', 'hot_water', 'electrical'];
-        if(array_search($number2meter->service, $services) === false)
-            throw new e_model('Услуга задана не верно.');
+        $meter = new data_meter();
+        $meter->service = $number2meter->service;
+        $meter->verify('service');
     }
 
     /**

@@ -5,8 +5,9 @@ class verify_meter{
     * Верификация идентификатора счетчика.
     */
     public static function company_id(data_meter $meter){
-        if($meter->company_id < 1)
-            throw new e_model('Идентификатор компании задан не верно.');
+        $company = new data_company();
+        $company->id = $meter->company_id;
+        $company->verify('id');
     }
 
     /**

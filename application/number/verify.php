@@ -67,15 +67,6 @@ class verify_number{
     }
 
     /**
-    * Верификация номера квартиры.
-    */
-    public static function flat_number(data_number $number){
-        $flat = new data_flat();
-        $flat->id = $number->flat_number;
-        $flat->verify('number');
-    }
-
-    /**
     * Верификация идентификатора квартиры.
     */
     public static function flat_id(data_number $number){
@@ -92,13 +83,7 @@ class verify_number{
         $house->id = $number->house_id;
         $house->verify('id');
     }
-    /**
-    * Верификация номера дома.
-    */
-    public static function house_number(data_number $number){
-        if(empty($number->house_number))
-            throw new e_model('Номер дома задан не верно.');
-    }
+
     /**
     * Верификация идентификатора лицевого счета.
     */
@@ -127,13 +112,7 @@ class verify_number{
         if(empty($number->status))
             throw new e_model('Статус лицевого счета задан не верно.');
     }
-    /**
-    * Верификация названия улицы.
-    */
-    public static function street_name(data_number $number){
-        if(empty($number->street_name))
-            throw new e_model('Название улицы задано не верно.');
-    }
+    
     /**
     * Верификация телефона владельца лицевого счета.
     */
