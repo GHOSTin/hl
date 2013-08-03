@@ -139,62 +139,7 @@ class model_house{
 		$sql->query("ORDER BY (`flatnumber` + 0)");
 		return $sql->map(new data_flat(), 'Проблемы при выборке квартир.');
 	}
-	/**
-	* Верификация идентификатора города.
-	*/
-	public static function verify_city_id(data_house $house){
-		if($house->city_id < 1)
-			throw new e_model('Идентификатор города задан не верно.');
-	}
-	/**
-	* Верификация названия города.
-	*/
-	public static function verify_city_name(data_house $house){
-		if(empty($house->city_name))
-			throw new e_model('Название города задано не верно.');
-	}
-	/**
-	* Верификация идентификатора компании.
-	*/
-	public static function verify_company_id(data_house $house){
-		if($house->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
-	}
-	/**
-	* Верификация идентификатора участка.
-	*/
-	public static function verify_department_id(data_house $house){
-		if($house->department_id < 1)
-			throw new e_model('Идентификатор участка задан не верно.');
-	}
-	/**
-	* Верификация идентификатора дома.
-	*/
-	public static function verify_id(data_house $house){
-		if($house->id < 1)
-			throw new e_model('Идентификатор дома задан не верно.');
-	}
-	/**
-	* Верификация номера дома.
-	*/
-	public static function verify_number(data_house $house){
-		if(empty($house->number))
-			throw new e_model('Номер дома задан не верно.');
-	}
-	/**
-	* Верификация статуса дома.
-	*/
-	public static function verify_status(data_house $house){
-		if(empty($house->status))
-			throw new e_model('Статус дома задан не верно.');
-	}
-	/**
-	* Верификация названия улицы.
-	*/
-	public static function verify_name(data_house $house){
-		if(empty($house->street_name))
-			throw new e_model('Название улицы задано не верно.');
-	}
+
 	/**
 	* Проверка принадлежности объекта к классу data_house.
 	*/
