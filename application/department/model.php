@@ -1,5 +1,6 @@
 <?php
 class model_department{
+
 	/**
 	* Создает новый участок в компании.
 	* @return object data_department
@@ -9,10 +10,7 @@ class model_department{
 		model_company::verify_id($company);
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
-		self::verify_id($department);
-		self::verify_company_id($department);
-		self::verify_status($department);
-		self::verify_name($department);
+		$department->verify('id'. 'company_id', 'status', 'name');
 		$sql = new sql();
 		$sql->query("INSERT INTO `departments` (`id`, `company_id`, `status`, `name`)
 					VALUES (:department_id, :company_id, :status, :name)");
@@ -24,6 +22,7 @@ class model_department{
 		$$sql->close();
 		return $department;
 	}
+
 	/**
 	* Возвращает следующий для вставки идентификатор участка.
 	* @return int
@@ -41,6 +40,7 @@ class model_department{
 		$sql->close();
 		return $department_id;
 	}
+	
 	/**
 	* Возвращает список участков компании.
 	* @return array из object data_department
