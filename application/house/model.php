@@ -1,5 +1,6 @@
 <?php
 class model_house{
+
 	/**
 	* Создает новую квартиру.
 	* @return object data_flat
@@ -9,10 +10,7 @@ class model_house{
 			throw new e_model('Квартира уже существует!');
 		$flat->house_id = $house->id;
 		$flat->id = model_flat::get_insert_id();
-		model_flat::verify_id($flat);
-		model_flat::verify_house_id($flat);
-		model_flat::verify_status($flat);
-		model_flat::verify_number($flat);
+		$flat->verify('id', 'house_id', 'status', 'number');
 		$sql = new sql();
 		$sql->query("INSERT INTO `flats` (`id`, `company_id`, `house_id`, `status`, 
 					`flatnumber`) VALUES (:flat_id, 1, :house_id, :status, :number)");
@@ -23,14 +21,14 @@ class model_house{
 		$sql->execute('Не все параметры заданы правильно.');
 		return $flat;
 	}
+
 	/**
 	* Создает новую улицу.
 	* @return object data_street
 	*/
 	public static function create_street(data_house $house, data_flat $flat){
-		model_house::verify_id($house);
-		model_flat::verify_id($house);
-
+		$house->verify('id');
+		$flat->verify('id');
 		exit();
 		$cities = self::get_cities($city);
 		if(count($cities) !== 1)
@@ -60,6 +58,7 @@ class model_house{
 		$sql->close();
 		return $street;
 	}
+
 	/**
 	* Возвращает следующий для вставки идентификатор дома.
 	* @return int
@@ -74,6 +73,7 @@ class model_house{
 		$sql->close();
 		return $house_id;
 	}
+
 	/**
 	* Возвращает список домов
 	* @return array из object data_house
@@ -84,19 +84,20 @@ class model_house{
 			 		`department_id`, `status`, `housenumber` as `number`
 					FROM `houses`");
 		if(!empty($house->id)){
-			self::verify_id($house);
+			$house->verify('id');
 			$sql->query(' WHERE `id` = :house_id');
 			$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		}
 		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
 	}
+
 	/**
 	* Возвращает лицевые счета дома.
 	* @return array из object data_number
 	*/
 	public static function get_numbers(data_company $company, data_house $house){
-		model_company::verify_id($company);
-		self::verify_id($house);
+		$company->verify('id');
+		$house->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 					`numbers`.`city_id`, `numbers`.`house_id`, 
@@ -121,6 +122,7 @@ class model_house{
 		$sql->query(" ORDER BY (`flats`.`flatnumber` + 0)");
 		return $sql->map(new data_number(), 'Проблемы при выборке номеров.');
 	}
+
 	/**
 	* Возвращает лицевые счета дома.
 	* @return array из object data_flat
@@ -132,7 +134,7 @@ class model_house{
 					FROM `flats` WHERE `house_id` = :house_id");
 		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
 		if(!empty($flat->number)){
-			model_flat::verify_number($flat);
+			$flat->verify('number');
 			$sql->query(" AND `flatnumber` = :flat_number");
 			$sql->bind(':flat_number', $flat->number, PDO::PARAM_INT);
 		}
