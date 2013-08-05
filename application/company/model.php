@@ -1,5 +1,6 @@
 <?php
 class model_company{
+
 	/**
 	* Создает новую компанию
 	* @return object data_company
@@ -9,12 +10,7 @@ class model_company{
 		$company->smslogin = 'smslogin';
 		$company->smspassword = 'smspassword';
 		$company->smssender = 'smssender';
-		self::verify_id($company);
-		self::verify_status($company);
-		self::verify_name($company);
-		self::verify_smslogin($company);
-		self::verify_smspassword($company);
-		self::verify_smssender($company);
+		$company->verify('id', 'status', 'name', 'smslogin', 'smspassword', 'smssender');
 		$sql = new sql();
 		$sql->query("INSERT INTO `companies` (`id`, `status`, `name`, `smslogin`, 
 					`smspassword`, `smssender`) VALUES (:company_id, :status, :name,
@@ -29,6 +25,7 @@ class model_company{
 		$sql->close();
 		return $company;
 	}
+	
 	/**
 	* Возвращает следующий для вставки идентификатор дома.
 	* @return int
