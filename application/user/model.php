@@ -234,4 +234,28 @@ class model_user{
 		if(!($user instanceof data_user))
 			throw new e_model('Возвращен объект не является пользователем');
 	}
+
+	/**
+	* Обновляет статус пользователя
+	* @return bolean
+	*/
+	public static function update_user_status(data_user $user){
+		$user->verify('id');
+		$users = self::get_users($user);
+		if(count($users) !== 1)
+			throw new e_model('Неожиданное число пользователей');
+		$user = $users[0];
+		self::is_data_user($user);
+		if($user->status === 'true')
+			$user->status = 'false';
+		else
+			$user->status = 'true';
+		$user->verify('id', 'status');
+		$sql = new sql();
+		$sql->query("UPDATE `users` SET `status` = :status WHERE `id` = :id");
+		$sql->bind(':status', $user->status, PDO::PARAM_STR);
+		$sql->bind(':id', $user->id, PDO::PARAM_INT);
+		$sql->execute('Ошибка при изменении статуса пользователя.');
+		return $user;
+	}
 }

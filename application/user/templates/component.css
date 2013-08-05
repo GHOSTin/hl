@@ -13,6 +13,6 @@
 .letter-noempty{
     background: grey;
 }
-.user-information{
-    padding: 20px;
+.user-information, .company-content, .profile-content{
+    padding: 10px 0px 20px 20px;
 }

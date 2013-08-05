@@ -34,6 +34,16 @@ $(document).ready(function(){
                 });
         }
 
+    // выводит диалог удаления профиля
+    }).on('click', '.get_dialog_delete_profile', function(){
+        $.get('get_dialog_delete_profile',{
+            company_id: get_company_id($(this)),
+            user_id: get_user_id($(this)),
+            profile: get_profile_name($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // изменяет статус правила
     }).on('click', '.rule', function(){
         $.get('update_rule',{
@@ -41,6 +51,33 @@ $(document).ready(function(){
                 user_id: get_user_id($(this)),
                 profile: get_profile_name($(this)),
                 rule: $(this).attr('rule')
+                },function(r){
+                    init_content(r);
+                });
+
+    // раскрывает ограничения
+    }).on('click', '.get_restriction_content', function(){
+        if($(this).siblings().is('.restriction-content')){
+            $(this).siblings('.restriction-content').remove();
+        }else{
+            $.get('get_restriction_content',{
+                    company_id: get_company_id($(this)),
+                    user_id: get_user_id($(this)),
+                    profile: get_profile_name($(this)),
+                    restriction: $(this).parent().attr('restriction')
+                    },function(r){
+                        init_content(r);
+                    });
+        }
+
+    // обновляет ограничения
+    }).on('click', '.restriction .item', function(){
+        $.get('update_restriction',{
+                company_id: get_company_id($(this)),
+                user_id: get_user_id($(this)),
+                profile: get_profile_name($(this)),
+                restriction: get_restriction_name($(this)),
+                item: $(this).attr('item')
                 },function(r){
                     init_content(r);
                 });
@@ -101,6 +138,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит информацию о пользователе
+    }).on('click', '.get_user_information', function(){
+        $.get('get_user_information',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог создания группы
     }).on('click', '.get_dialog_create_group', function(){
         $.get('get_dialog_create_group', {
@@ -112,6 +157,14 @@ $(document).ready(function(){
     }).on('click', '.get_dialog_create_user', function(){
         $.get('get_dialog_create_user', {
             }, function(r){
+                init_content(r);
+            });
+
+    // выводит диалог добавления профиля
+    }).on('click', '.get_dialog_add_profile', function(){
+        $.get('get_dialog_add_profile',{
+            id: get_user_id($(this))
+            },function(r){
                 init_content(r);
             });
 
@@ -150,6 +203,14 @@ $(document).ready(function(){
     // выводит диалог редактирования логина пользователя
     }).on('click', '.get_dialog_edit_login', function(){
         $.get('get_dialog_edit_login',{
+            id: get_user_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит диалог изменения статуса блокировки пользователя
+    }).on('click', '.get_dialog_edit_user_status', function(){
+        $.get('get_dialog_edit_user_status',{
             id: get_user_id($(this))
             },function(r){
                 init_content(r);
@@ -198,4 +259,9 @@ function get_company_id(obj){
 // возвращает название профиля
 function get_profile_name(obj){
     return obj.closest('.profile').attr('profile');
+}
+
+// возвращает название ограничения
+function get_restriction_name(obj){
+    return obj.closest('.restriction').attr('restriction');
 }

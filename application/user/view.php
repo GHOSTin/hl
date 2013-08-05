@@ -1,12 +1,20 @@
 <?php
 class view_user{
 
+    public static function private_add_profile($args){
+        return load_template('user.private_get_user_profiles', $args);
+    }
+
     public static function private_create_group($args){
         return load_template('user.private_get_group_letter', $args);
     }
 
     public static function private_create_user($args){
         return load_template('user.private_get_user_letter', $args);
+    }
+
+    public static function private_delete_profile($args){
+        return load_template('user.private_delete_profile', $args);
     }
 
     public static function private_add_user($args){
@@ -25,8 +33,16 @@ class view_user{
         return load_template('user.private_get_dialog_create_user', $args);
     }
 
+    public static function private_get_dialog_add_profile($args){
+        return load_template('user.private_get_dialog_add_profile', $args);
+    }
+
     public static function private_get_dialog_add_user($args){
         return load_template('user.private_get_dialog_add_user', $args);
+    }
+
+    public static function private_get_dialog_delete_profile($args){
+        return load_template('user.private_get_dialog_delete_profile', $args);
     }
 
     public static function private_get_dialog_edit_fio($args){
@@ -45,6 +61,10 @@ class view_user{
         return load_template('user.private_get_dialog_edit_login', $args);
     }
 
+    public static function private_get_dialog_edit_user_status($args){
+        return load_template('user.private_get_dialog_edit_user_status', $args);
+    }
+
     public static function private_get_dialog_exclude_user($args){
         return load_template('user.private_get_dialog_exclude_user', $args);
     }
@@ -55,6 +75,10 @@ class view_user{
 
     public static function private_get_profile_content($args){
         return load_template('user.private_get_profile_content', $args);
+    }
+
+    public static function private_get_restriction_content($args){
+        return load_template('user.private_get_restriction_content', $args);
     }
 
     public static function private_get_group_letters($args){
@@ -75,6 +99,10 @@ class view_user{
 
     public static function private_get_user_content($args){
         return load_template('user.private_get_user_content', $args);
+    }
+
+    public static function private_get_user_information($args){
+        return load_template('user.private_get_user_information', $args);
     }
 
     public static function private_get_user_profiles($args){
@@ -113,7 +141,15 @@ class view_user{
         return load_template('user.private_update_rule', $args);
     }
 
+    public static function private_update_restriction($args){
+        return load_template('user.private_update_restriction', $args);
+    }
+
     public static function private_update_login($args){
         return load_template('user.private_update_login', $args);
+    }
+
+    public static function private_update_user_status($args){
+        return load_template('user.private_get_user_information', $args);
     }
 }

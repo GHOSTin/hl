@@ -17,6 +17,8 @@ class model_auth{
 			throw new e_model('Проблемы при авторизации.');
 		}
 		$sql->close();
+		if($user->status !== 'true')
+			die('Вы заблокированы и не можете войти в систему.');
 		return $user;
 	}
 }

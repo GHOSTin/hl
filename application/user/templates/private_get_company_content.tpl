@@ -8,7 +8,7 @@
 {% block html %}
     <ul class="company-content unstyled">
         <li class="company-content-content">
-            <ul>
+            <ul class="unstyled">
                 {% include '@user/build_profiles.tpl' %}
             </ul>
         </li>

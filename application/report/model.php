@@ -6,6 +6,7 @@ class model_report{
         $filters = ['time_begin' => mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']),
                     'time_end' => mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year'])];
         model_session::get_session()->set('filters', $filters);
+        return ['filters' => $filters];
     }
 
     public static function set_filter($key, $value){
