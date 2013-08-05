@@ -5,9 +5,8 @@ class model_street{
 	* @return object data_city
 	*/
 	public static function create_house(data_street $street, data_house $house){
-		model_house::verify_status($house);
-		model_house::verify_number($house);
-		self::verify_id($street);
+		$house->verify('status', 'number');
+		$street->verify('id');
 		$street = model_street::get_streets($street)[0];
 		model_street::is_data_street($street);
 		$houses = model_street::get_houses($street, $house);
@@ -65,7 +64,7 @@ class model_street{
 			}
 			$sql->query("IN(".implode(',', $params).") ORDER BY `streets`.`name`");
 		}elseif(!empty($street->id)){
-			model_street::verify_id($street);
+			$street->verify('id');
 			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
 						FROM `streets` WHERE `id` = :id");
 			$sql->bind(':id', $street->id, PDO::PARAM_INT);
