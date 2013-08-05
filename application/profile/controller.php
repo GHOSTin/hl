@@ -18,7 +18,9 @@ class controller_profile{
 	}
 
 	public static function private_show_default_page(){
-		return ['users' => model_user::get_users(model_session::get_user())];
+		$user = new data_user();
+		$user->id = model_session::get_user()->id;
+		return ['users' => model_user::get_users($user)];
 	}
 
 	public static function private_update_password(){
