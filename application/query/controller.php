@@ -113,7 +113,7 @@ class controller_query{
 	public static function private_get_documents(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
@@ -134,7 +134,7 @@ class controller_query{
 			throw new e_model('Проблема с типом.');
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 			'groups' => model_group::get_groups($company, new data_group()),
@@ -145,7 +145,7 @@ class controller_query{
 		$id = (int) $_GET['id'];
 		$query = new data_query();
 		$query->id = $id;
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 			'workgroups' => model_workgroup::get_workgroups($company, new data_workgroup())];
@@ -158,56 +158,56 @@ class controller_query{
 	public static function private_get_dialog_close_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_reclose_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_reopen_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_to_working_query(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_description(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_reason(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_contact_information(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_payment_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query)];
 	}
@@ -215,14 +215,14 @@ class controller_query{
 	public static function private_get_dialog_edit_warning_status(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
 	public static function private_get_dialog_edit_work_type(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type())];
@@ -244,10 +244,10 @@ class controller_query{
 			throw new e_model('Проблема с типом.');
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$user = new data_user();
 		$user->id = $_GET['user_id'];
-		model_user::verify_id($user);
+		$user->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'users' => model_user::get_users($user),
@@ -257,10 +257,10 @@ class controller_query{
 	public static function private_get_dialog_remove_work(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$work = new data_work();
 		$work->id = $_GET['work_id'];
-		model_work::verify_id($work);
+		$work->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'works' => model_work::get_works($company, $work)];
@@ -281,7 +281,7 @@ class controller_query{
 			case 'house':
 				$house = new data_house();
 				$house->id = $_GET['id'];
-				model_house::verify_id($house);
+				$house->verify('id');
 				return ['initiator' => 'house',
 						'house' => model_house::get_houses($house)[0],
 						'query_work_types' => $types];
@@ -304,7 +304,7 @@ class controller_query{
 	public static function private_get_numbers(){
 		$house = new data_house();
 		$house->id = $_GET['id'];
-		model_house::verify_id($house);
+		$house->verify('id');
 		return ['numbers' => model_house::get_numbers(model_session::get_company(), $house)];
 	}
 
@@ -320,7 +320,7 @@ class controller_query{
 	public static function private_get_query_content(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 			'users' => model_query::get_users($company, $query),
@@ -330,7 +330,7 @@ class controller_query{
 	public static function private_get_query_title(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'numbers' => model_query::get_numbers($company, $query)];
@@ -339,7 +339,7 @@ class controller_query{
 	public static function private_get_query_numbers(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'numbers' => model_query::get_numbers($company, $query)];
@@ -348,7 +348,7 @@ class controller_query{
 	public static function private_get_query_users(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'users' => model_query::get_users($company, $query)];
@@ -357,7 +357,7 @@ class controller_query{
 	public static function private_get_query_works(){
 		$query = new data_query();
 		$query->id = $_GET['id'];
-		model_query::verify_id($query);
+		$query->verify('id');
 		$company = model_session::get_company();
 		return ['queries' => model_query::get_queries($company, $query),
 				'works' => model_query::get_works($company, $query)];
@@ -370,7 +370,7 @@ class controller_query{
 	public static function private_get_search_result(){
 		$query = new data_query();
 		$query->number = $_GET['param'];
-		model_query::verify_number($query);
+		$number->verify('id');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 
@@ -463,14 +463,14 @@ class controller_query{
 	public static function private_get_user_options(){
 		$group = new data_group();
 		$group->id = $_GET['id'];
-		model_group::verify_id($group);
+		$group->verify('id');
 		return ['users' => model_group::get_users(model_session::get_company(), $group)];
 	}
 
 	public static function private_get_work_options(){
 		$work_group = new data_workgroup();
 		$work_group->id = $_GET['id'];
-		model_workgroup::verify_id($work_group);
+		$work_group->verify('id');
 		return ['works' => model_workgroup::get_works(model_session::get_company(), $work_group)];
 	}
 
