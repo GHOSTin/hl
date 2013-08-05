@@ -6,7 +6,7 @@ class model_auth{
 	*/
 	public static function auth_user(){
 		$sql = new sql();
-		$sql->query("SELECT `id`, `company_id`, `status`, `username` as `login`,
+    	$sql->query("SELECT `id`, `company_id`, `status`, `username` as `login`,
 					`firstname`, `lastname`, `midlename` as `middlename`,
 					`password`, `telephone`, `cellphone`
 					FROM `users` WHERE `username` = :login AND `password` = :hash");
