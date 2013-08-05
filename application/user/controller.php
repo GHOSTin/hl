@@ -6,7 +6,7 @@ class controller_user{
     public static function private_add_profile(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -68,7 +68,7 @@ class controller_user{
     public static function private_delete_profile(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -90,7 +90,7 @@ class controller_user{
     public static function private_get_company_content(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -101,7 +101,7 @@ class controller_user{
     public static function private_get_profile_content(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -112,7 +112,7 @@ class controller_user{
     public static function private_get_restriction_content(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -156,7 +156,7 @@ class controller_user{
     public static function private_get_dialog_delete_profile(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -331,7 +331,7 @@ class controller_user{
     public static function private_update_rule(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -342,7 +342,7 @@ class controller_user{
     public static function private_update_restriction(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
