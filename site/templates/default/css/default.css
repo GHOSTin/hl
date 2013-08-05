@@ -36,6 +36,10 @@ footer, #push{
     max-height: 800px;
 }
 
+.icon-white{
+    color: white;
+}
+
 #_hidden_notification_center{
 	position:absolute;
 	top:50px;
@@ -52,13 +56,13 @@ footer, #push{
 
 div[class^=chat-col-]{
     position: relative;
-    height: 500px;
+    height: 480px;
     display: inline-block;
     vertical-align: top;
 }
 
 .chat-col-right{
-    width: 399px;
+    width: 379px;
 }
 
 .chat-col-left{
@@ -77,17 +81,18 @@ div[class^=chat-col-]{
 #chat-user-filter-clear {
     float: none;
     position: absolute;
-    right: 15px;
-    top: 6px;
+    right: 8px;
+    top: 8px;
 }
 
 .chat-user-list{
     overflow: auto;
-    height: 470px;
+    height: 450px;
 }
 
 .chat-users{
     margin: 0;
+    padding: 0;
 }
 
 .chat-users li{
@@ -97,6 +102,24 @@ div[class^=chat-col-]{
 
 .chat-users li a{
     padding: 5px;
+    margin-left: 15px;
+}
+
+.chat-users li a:before{
+    content: "\2022";
+    font-size: 2.2em;
+    height: 21px;
+    position: absolute;
+    left: 0;
+    margin-top: -12px;
+}
+
+.chat-users li.offline a:before{
+    color: palevioletred;
+}
+
+.chat-users li.online a:before{
+    color: greenyellow;
 }
 
 .chat-users li.offline a{
@@ -116,19 +139,12 @@ div[class^=chat-col-]{
     color: #7c7d7e !important;
 }
 
+
 .chat-users .status {
     font-size: 2.2em;
     vertical-align: middle;
     margin: 0 3px;
 
-}
-
-.chat-users .offline .status{
-    color: palevioletred;
-}
-
-.chat-users .online .status{
-    color: greenyellow;
 }
 
 form.well{
@@ -141,10 +157,11 @@ form.well{
 
 .chat {
     max-height: 500px;
-    padding: 0 10px;
+    padding: 0 0 0 10px;
 }
 
-.chat h6 {
+.chat h4 {
+    position: relative;
     text-align: center;
     background: #dedede;
     border-radius: 4px 4px 0 0;
@@ -154,6 +171,8 @@ form.well{
 .chat .chat-history{
     margin: 0;
     height: 20px;
+    position: absolute;
+    right: 0;
 }
 
 .chat textarea{
@@ -169,6 +188,7 @@ form.well{
 
 .chat-feed ul {
     margin: 0;
+    padding: 0;
 }
 
 .chat-feed header{

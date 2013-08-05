@@ -8,7 +8,6 @@
 }
 
 .query_controls{
-   margin-left: 6% !important;
    margin-top: 20px;
 }
 
@@ -48,6 +47,10 @@
 }
 ul.query-sub, ul.query-general{
     list-style:none;
+}
+
+.filters select {
+    margin-bottom: 10px;
 }
 
 @media (max-width: 768px){

@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, maximum-scale = 1, minimum-scale = 1">
 	<link rel="stylesheet" href="/templates/default/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css" >
+    <link rel="stylesheet" href="/templates/default/css/bootstrap-glyphicons.css" >
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     <title>MSHC2</title>
     {% if anonymous == false %}
@@ -23,13 +23,13 @@
             {% endautoescape %}
             </header>
         {% endif %}
-    	<div class="container-fluid">
-            <section class="main row-fluid">{% block component %}{% endblock component %}</section>
+    	<div class="container">
+            <section class="main row">{% block component %}{% endblock component %}</section>
             <section id="push"></section>
         </div>
     </div>
     <footer>
-        <div class="container-fluid">
+        <div class="container">
             <p class="muted credit">
                 Разработка компании <a href="http://mlsco.ru">mlsco</a>
             </p>

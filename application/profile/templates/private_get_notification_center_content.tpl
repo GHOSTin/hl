@@ -1,7 +1,7 @@
 {% if component.users != false %}
 <div class="chat-col-left">
-    <input id="chat-user-filter" class="input-medium search-query" type="text">
-    <a id="chat-user-filter-clear" class="close" href="#">&times;</a><br>
+    <input id="chat-user-filter" class="form-control" type="search">
+    <a id="chat-user-filter-clear" class="close" href="#">&times;</a>
     <div class='chat-user-list'>
         <ul class='chat-users'>
             {% for user in component.users %}

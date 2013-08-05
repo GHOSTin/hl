@@ -28,43 +28,22 @@
 
     $.extend($.validator, {
         defaults: {
-            messages: {},
-            groups: {},
             rules: {},
-            focusInvalid: true,
-            errorContainer: $([]),
-            errorLabelContainer: $([]),
-            onsubmit: true,
             ignore: ":hidden",
-            ignoreTitle: false,
             onfocusin: function( element, event ) {
                 console.log('onfocusin!');
-//                this.lastActive = element;
-//
-//                if ( this.settings.focusCleanup && !this.blockFocusCleanup ) {
-//                    this.addWrapper(this.errorsFor(element)).hide();
-//                }
             },
             onfocusout: function( element, event ) {
-//                if ( !this.checkable(element) && (element.name in this.submitted || !this.optional(element)) ) {
-//                    this.element(element);
-//                }
             },
             onkeyup: function( element, event ) {
-//                if ( event.which === 9 && this.elementValue(element) === "" ) {
-//                    return;
-//                } else if ( element.name in this.submitted || element === this.lastElement ) {
-//                    this.element(element);
-//                }
+                if ( event.which === 9 && this.elementValue(element) === "" ) {
+                    return;
+                } else {
+
+                }
                 console.log('keyup!');
             },
             onclick: function( element, event ) {
-//                if ( element.name in this.submitted ) {
-//                    this.element(element);
-//                }
-//                else if ( element.parentNode.name in this.submitted ) {
-//                    this.element(element.parentNode);
-//                }
             }
         },
         setDefaults: function( settings ) {
@@ -98,18 +77,37 @@
                             }
                         }
                     });
-            }
+            },
+            elementValue: function( element ) {
+                var type = $(element).attr("type"),
+                    val = $(element).val();
 
-        },
-        normalizeRule: function( data ) {
-            if ( typeof data === "string" ) {
-                var transformed = {};
-                $.each(data.split(/\s/), function() {
-                    transformed[this] = true;
-                });
-                data = transformed;
+                if ( type === "radio" || type === "checkbox" ) {
+                    return $("input[name='" + $(element).attr("name") + "']:checked").val();
+                }
+
+                if ( typeof val === "string" ) {
+                    return val.replace(/\r/g, "");
+                }
+                return val;
+            },
+            check: function( element ) {
+                element = this.validationTargetFor( this.clean( element ) );
+                return true;
+            },
+            validationTargetFor: function( element ) {
+                // if radio/checkbox, validate first element in group instead
+                if ( this.checkable(element) ) {
+                    element = $(element).not(this.settings.ignore)[0];
+                }
+                return element;
+            },
+            checkable: function( element ) {
+                return (/radio|checkbox/i).test(element.type);
+            },
+            clean: function( selector ) {
+                return $(selector)[0];
             }
-            return data;
         }
     });
 }(jQuery));

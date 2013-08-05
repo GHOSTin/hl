@@ -1,9 +1,9 @@
 <!-- begin filters -->
-<div class="filters span12">
+<div class="filters col-12">
 	<!-- begin filter status -->
 	<div class="filter">
 	    <label>по статусу заявки</label>
-        <select class="filter-content-select-status span12">
+        <select class="filter-content-select-status form-control">
             <option value="all">Все заявки</option>
             {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
             {% for key, status in statuses %}
@@ -18,7 +18,7 @@
     <!-- end filter status, begin filter department -->
     <div class="filter">
         <label>по участку</label>
-        <select class="filter-content-select-department span12">
+        <select class="filter-content-select-department form-control">
             <option value="all">Все участки</option>
             {% if component.departments != false %}
                 {% for department in component.departments %}
@@ -34,7 +34,7 @@
 	<!-- end filter department, begin filter street -->
 	<div class="filter">
 	    <label>по улице и дому</label>
-        <select class="filter-content-select-street span12">
+        <select class="filter-content-select-street form-control">
             <option value="all">Все улицы</option>
             {% if component.streets != false %}
                 {% for street in component.streets %}
@@ -46,7 +46,7 @@
                 {% endfor %}
             {% endif %}
         </select>
-        <select class="filter-content-select-house span12" 
+        <select class="filter-content-select-house form-control"
             {% if component.houses|length < 1 %}
                 disabled="disabled"
             {% endif %}
@@ -68,7 +68,7 @@
 	<!-- end filter street, begin filter worktype -->
 	<div class="filter">
 	    <label>по типу работ</label>
-        <select class="filter-content-select-work_type span12">
+        <select class="filter-content-select-work_type form-control">
             <option value="all">Все типы</option>
             {% if component.query_work_types != false %}
                 {% for query_work_type in component.query_work_types %}
@@ -85,7 +85,7 @@
 	<!-- end filter worktype, begin filter users -->
 	<div class="filter">
 	    <label>по пользователю</label>
-        <select class="filter-content-select-user span12">
+        <select class="filter-content-select-user form-control">
             <option value="all">Все пользователи</option>
             {% if component.users != false %}
                 {% for user in component.users %}
