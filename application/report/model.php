@@ -55,7 +55,7 @@ class model_report{
         else{
             $query = new data_query();
             $query->department_id = $department_id;
-            model_query::verify_department_id($query);
+            $query->verify('department_id');
             $filters['department_id'] = $department_id;
         }
         $session->set('filters', $filters);
@@ -64,7 +64,7 @@ class model_report{
     public static function set_filter_query_status($status){
         $query = new data_query();
         $query->status = $status;
-        model_query::verify_status($query);
+        $query->verify('status');
         $session = model_session::get_session();
         $filters = $session->get('filters');
         $filters['status'] = $status;
@@ -80,7 +80,7 @@ class model_report{
         }else{
             $query = new data_query();
             $query->street_id = $street_id;
-            model_query::verify_street_id($query);
+            $query->verify('street_id');
             $filters['street_id'] = $street_id;
             unset($filters['house_id']);
         }
@@ -95,7 +95,7 @@ class model_report{
         }else{
             $query = new data_query();
             $query->house_id = $house_id;
-            model_query::verify_house_id($query);
+            $query->verify('house_id');
             $filters['house_id'] = $house_id;
         }
         $session->set('filters', $filters);
@@ -109,7 +109,7 @@ class model_report{
         else{
             $query = new data_query();
             $query->worktype_id = $worktype_id;
-            model_query::verify_work_type_id($query);
+            $query->verify('work_type_id');
             $filters['worktype_id'] = $worktype_id;
         }
         $session->set('filters', $filters);
