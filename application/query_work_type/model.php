@@ -5,13 +5,13 @@ class model_query_work_type{
 	* @return array из data_query_work_type
 	*/
 	public static function get_query_work_types(data_company $company, data_query_work_type $query_work_type_params){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `query_worktypes`
 					WHERE `company_id` = :company_id");
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!empty($query_work_type_params->id)){
-			self::verify_id($query_work_type_params);
+			$query_work_type_params->verify('id');
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $query_work_type_params->id, PDO::PARAM_INT);
 		}
