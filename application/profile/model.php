@@ -150,7 +150,7 @@ class model_profile{
 	*/
 	public static function delete_profile(data_company $company, data_user $user, $profile){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("DELETE FROM `profiles` WHERE  `user_id` = :user_id
 					AND `company_id` = :company_id AND `profile` = :profile");
@@ -188,7 +188,7 @@ class model_profile{
 	*/
 	public static function get_profiles(data_company $company, data_user $user){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `profile` FROM `profiles` 
 					WHERE  `user_id` = :user_id AND `company_id` = :company_id");
@@ -208,7 +208,7 @@ class model_profile{
 	*/
 	public static function get_profile(data_company $company, data_user $user, $profile){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `rules`, `restrictions`, `settings` FROM `profiles` 
 					WHERE  `user_id` = :user_id AND `company_id` = :company_id
@@ -277,7 +277,7 @@ class model_profile{
 	*/
 	public static function update_rule(data_company $company, data_user $user, $profile, $rule){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$rules = self::get_profile($company, $user, $profile)['rules'];
 		if(in_array($rule, array_keys($rules))){
 			$rules[$rule] = !$rules[$rule];
@@ -299,7 +299,7 @@ class model_profile{
 	*/
 	public static function update_restriction(data_company $company, data_user $user, $profile, $restriction, $item){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$restrictions = self::get_profile($company, $user, $profile)['restrictions'];
 		if(array_key_exists($restriction, $restrictions)){
 			$item = (int) $item;
