@@ -109,7 +109,7 @@ class controller_number{
     public static function private_get_street_content(){
         $street = new data_street();
         $street->id = $_GET['id'];
-        model_street::verify_id($street);
+        $street->verify('id');
         return ['houses' => model_street::get_houses($street),
                 'street' => $street];
     }
@@ -264,7 +264,7 @@ class controller_number{
     public static function private_get_house_content(){
         $house = new data_house();
         $house->id = $_GET['id'];
-        model_house::verify_id($house);
+        $house->verify('id');
         return ['numbers' => model_house::get_numbers(model_session::get_company(), $house),
                 'house' => $house];
     }
