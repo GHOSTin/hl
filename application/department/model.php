@@ -7,7 +7,7 @@ class model_department{
 	*/
 	public static function create_department(data_company $company, data_department $department,
 											data_current_user $user){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
 		$department->verify('id'. 'company_id', 'status', 'name');
@@ -28,7 +28,7 @@ class model_department{
 	* @return int
 	*/
 	private static function get_insert_id(data_company $company){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT MAX(`id`) as `max_department_id` FROM `departments`
 					WHERE `company_id` = :company_id");
@@ -46,7 +46,7 @@ class model_department{
 	* @return array из object data_department
 	*/
 	public static function get_departments(data_company $company, data_department $department){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
 					FROM `departments` WHERE `company_id` = :company_id");
