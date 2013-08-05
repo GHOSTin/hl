@@ -5,13 +5,13 @@ class model_workgroup{
 	* @return array из data_workgroup
 	*/
 	public static function get_workgroups(data_company $company, data_workgroup $workgroup){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `workgroups`
 					WHERE `company_id` = :company_id");
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!empty($workgroup->id)){
-			model_workgroup::verify_id($workgroup);
+			$workgroup->verify('id');
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $workgroup->id, PDO::PARAM_INT);
 		}
@@ -22,13 +22,13 @@ class model_workgroup{
 	* @return array из data_work
 	*/
 	public static function get_works(data_company $company, data_workgroup $workgroup){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `workgroup_id`, `status`, `name`
 					FROM `works` WHERE `company_id` = :company_id");
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!empty($workgroup->id)){
-			model_workgroup::verify_id($workgroup);
+			$workgroup->verify('id');
 			$sql->query(" AND `workgroup_id` = :workgroup_id");
 			$sql->bind(':workgroup_id', $workgroup->id, PDO::PARAM_INT);
 		}

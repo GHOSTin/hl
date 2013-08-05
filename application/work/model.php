@@ -5,7 +5,7 @@ class model_work{
 	* @return array из data_work
 	*/
 	public static function get_works(data_company $company, data_work $work){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `id`,`company_id`, `status`, `name` FROM `works`
 					WHERE `company_id` = :company_id");
