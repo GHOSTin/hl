@@ -5,7 +5,7 @@ class model_processing_center2number{
     * Добавляет идентификатор.
     */
     public static function add_identifier(data_company $company, data_processing_center2number $c2n){
-        model_company::verify_id($company);
+        $company->verify('id');
         $number = new data_number();
         $number->id = $c2n->number_id;
         if(count(model_number::get_numbers($company, $number)) !== 1)
@@ -36,6 +36,7 @@ class model_processing_center2number{
     */
     public static function exclude_identifier(data_company $company, data_processing_center2number $c2n){
         model_company::verify_id($company);
+        $company->verify('id');
         $c2n->company_id = $company->id;
         $c2n->verify('number_id', 'identifier', 'processing_center_id', 'company_id');
         $sql = new sql();
@@ -53,7 +54,7 @@ class model_processing_center2number{
     * Возвращает связи процессингового центра и лицевого счтеа
     */
     public static function get_processing_centers(data_company $company, data_processing_center2number $c2n){
-        model_company::verify_id($company);
+        $company->verify('id');
         $sql = new sql();
         $sql->query("SELECT `processing_center2number`.`company_id`,
                     `processing_center2number`.`processing_center_id`,
