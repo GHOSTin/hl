@@ -7,7 +7,7 @@ class verify_group{
     public static function company_id(data_group $group){
         $company = new data_company();
         $company->id = $group->company_id;
-        model_company::verify_id($company);
+        $company->verify('id');
     }
 
     /**
