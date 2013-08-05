@@ -66,7 +66,7 @@ class model_environment{
 				$user = model_auth::auth_user();
 				if($user instanceof data_current_user){
 					model_session::set_user($user);
-					model_user::verify_company_id($user);
+					$user->verify('company_id');
 					$company = new data_company();
 					$company->id = $user->company_id;
 					model_session::set_company($company);

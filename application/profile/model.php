@@ -6,7 +6,7 @@ class model_profile{
 	*/
 	public static function add_profile(data_company $company, data_user $user, $profile){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$time 		= getdate();
 		$beginDay 	= mktime(0,0,0, $time['mon'],$time['mday'],$time['year']);
 		$endDay 	= $beginDay + 86400;
@@ -165,7 +165,7 @@ class model_profile{
 	*/
 	public static function get_user_profiles(data_company $company, data_current_user $user){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `profile`, `rules`, `restrictions`, `settings`
 					FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id");

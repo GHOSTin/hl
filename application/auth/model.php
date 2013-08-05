@@ -1,5 +1,6 @@
 <?php
 class model_auth{
+	
 	/**
 	* Возвращает пользователя для сессии data_cureent_user
 	*/
@@ -19,6 +20,7 @@ class model_auth{
 		$sql->close();
 		if($user->status !== 'true')
 			die('Вы заблокированы и не можете войти в систему.');
+		model_user::is_data_user($user);
 		return $user;
 	}
 }
