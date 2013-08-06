@@ -112,10 +112,8 @@ class model_user{
 	public static function update_password(data_user $user, $password, $confirm){
 		if($password !== $confirm)
 			throw new e_model('Пароль и подтверждение не идентичны.');
-		if(strlen($password) < 8)
-			throw new e_model('Пароль не удовлетворяет усливиям безопасности');
-		if(!preg_match('/^[а-яА-Яa-zA-Z0-9]+$/u', $password))
-            throw new e_model('Пароль не удовлетворяет а-яА-Яa-zA-Z0-9.');
+		if(!preg_match('/^[a-zA-Z0-9]{8,}$/u', $password))
+            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
 		$user->verify('id');
 		$users = self::get_users($user);
 		if(count($users) !== 1)
