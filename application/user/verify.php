@@ -6,7 +6,8 @@ class verify_user{
     */
     public static function cellphone(data_user $user){
         if(!empty($user->cellphone))
-            return;
+            if(!preg_match('/^\+7[0-9]{10}$/', $user->cellphone))
+                throw new e_model('Номер сотового телефона пользователя задан не верно.');
     }
 
     /**
@@ -22,7 +23,7 @@ class verify_user{
     * Верификация имени.
     */
     public static function firstname(data_user $user){
-         if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->firstname))
+         if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-я]+$/u', $user->firstname))
             throw new e_model('Имя пользователя задано не верно.');
     }
 
@@ -31,7 +32,7 @@ class verify_user{
     */
     public static function middlename(data_user $user){
         if(!empty($user->middlename))
-            if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->middlename))
+            if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-я]+$/u', $user->middlename))
                 throw new e_model('Отчество пользователя задано не верно.');
     }
 
@@ -47,7 +48,7 @@ class verify_user{
     * Верификация фамилии.
     */
     public static function lastname(data_user $user){
-         if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->lastname))
+         if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-я]+$/u', $user->lastname))
             throw new e_model('Фамилия пользователя задана не верно.');
     }
 
@@ -55,18 +56,17 @@ class verify_user{
     * Верификация логина.
     */
     public static function login(data_user $user){
-        if(strlen($user->login) < 6)
-            throw new e_model('Логин имеет меньше 6 букв.');
-        if(!preg_match('/^[a-zA-Z0-9]+$/u', $user->login))
-            throw new e_model('Логин не удовлетворяет a-zA-Z0-9.');
+        if(!preg_match('/^[a-zA-Z0-9]{6,}$/u', $user->login))
+            throw new e_model('Логин не удовлетворяет a-zA-Z0-9 или меньше 6 символов.');
     }
 
     /**
     * Верификация пароля.
     */
     public static function password(data_user $user){
-        if(empty($user->password))
-            throw new e_model('Пароль пользователя задан не верно.');
+        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/u', $user->password))
+            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 или больше 20 символов.');
+    }
     }
 
     /**
@@ -82,6 +82,7 @@ class verify_user{
     */
     public static function telephone(data_user $user){
         if(!empty($user->telephone))
-            return;
+            if(!preg_match('/^[0-9]{2,11}$/', $user->celltelephonephone))
+                throw new e_model('Номер телефона пользователя задан не верно.');
     }
 }

@@ -335,6 +335,7 @@ class model_profile{
 	*/
 	public static function update_cellphone(data_user $user, $cellphone){
 		$user->cellphone = (string) $cellphone;
+		$user->verify('id', 'cellphone');
 		$sql = new sql();
 		$sql->query("UPDATE `users` SET `cellphone` = :cellphone WHERE `id` = :id");
 		$sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
