@@ -5,7 +5,7 @@ class verify_work{
     * Верификация идентификатора работы.
     */
     public static function id(data_work $work){
-        if($work->id < 1)
+        if(!preg_match('/^[0-9]{1,5}$/u', $work->id))
             throw new e_model('Идентификатор работы задан не верно.');
     }
 
@@ -22,7 +22,7 @@ class verify_work{
     * Верификация названия работы.
     */
     public static function name(data_work $work){
-        if(!preg_match('/^[а-яА-Я]+$/u', $work->name))
+        if(!preg_match('/^[А-Я][а-я ]+$/u', $work->name))
             throw new e_model('Название работы не удовлетворяет "а-яА-Я".');
     }
 
@@ -30,7 +30,7 @@ class verify_work{
     * Верификация статуса работы.
     */
     public static function status(data_work $work){
-        if(in_array($work->status, ['true', 'false']))
+        if(!in_array($work->status, ['active', 'deactive']))
             throw new e_model('Статус работы задан не верно.');
     }
 
