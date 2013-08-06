@@ -5,7 +5,9 @@ class verify_company{
     * Верификация идентификатора компании.
     */
     public static function id(data_company $company){
-        if($company->id < 1)
+        if(!preg_match('/^[0-9]{1,3}$/', $company->id))
+            throw new e_model('Идентификатор компании задан не верно.');
+        if($company->id > 255 OR $company->id < 1)
             throw new e_model('Идентификатор компании задан не верно.');
     }
 
@@ -13,7 +15,7 @@ class verify_company{
     * Верификация названия компании.
     */
     public static function name(data_company $company){
-        if(empty($company->name))
+        if(!preg_match('/^[А-Я][а-я]{0,19}$/', $company->name))
             throw new e_model('Название компании задано не верно.');
     }
 
