@@ -1,6 +1,6 @@
 {% extends "default.tpl" %}
+{% set user = component.user %}
 {% block component %}
-	{% set user = component.users[0] %}
 	<div class="profile" user="{{ user.id }}">
 		<div>
 			ФИО: {{ user.lastname }} {{ user.firstname }} {{ user.middlename }} ( {{ user.id }} )

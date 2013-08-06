@@ -105,25 +105,25 @@ class verify_query{
     /**
     * Верификация ФИО контакта заявки.
     */
-    public static function verify_contact_fio(data_query $query){
+    public static function contact_fio(data_query $query){
     }
 
     /**
     * Верификация телефона контакта заявки.
     */
-    public static function verify_contact_telephone(data_query $query){
+    public static function contact_telephone(data_query $query){
     }
 
     /**
     * Верификация сотового телефона контакта заявки.
     */
-    public static function verify_contact_cellphone(data_query $query){
+    public static function contact_cellphone(data_query $query){
     }
 
     /**
     * Верификация описания заявки.
     */
-    public static function verify_description(data_query $query){
+    public static function description(data_query $query){
         if(empty($query->description))
             throw new e_model('Описание заявки заданы не верно.');
     }
@@ -131,7 +131,7 @@ class verify_query{
     /**
     * Верификация причины закрытия заявки.
     */
-    public static function verify_close_reason(data_query $query){
+    public static function close_reason(data_query $query){
         if(empty($query->close_reason))
             throw new e_model('Описание закрытия заявки заданы не верно.');
     }
@@ -139,7 +139,7 @@ class verify_query{
     /**
     * Верификация номера заявки.
     */
-    public static function verify_number(data_query $query){
+    public static function number(data_query $query){
         if($query->number < 0)
             throw new e_model('Номер заявки задан не верно.');
     }
@@ -147,7 +147,7 @@ class verify_query{
     /**
     * Верификация инспеции заявки.
     */
-    public static function verify_inspection(data_query $query){
+    public static function inspection(data_query $query){
         if(empty($query->inspection))
             throw new e_model('Инспекция заявки задана не верно.');
     }

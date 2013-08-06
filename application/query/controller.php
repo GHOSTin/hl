@@ -370,7 +370,7 @@ class controller_query{
 	public static function private_get_search_result(){
 		$query = new data_query();
 		$query->number = $_GET['param'];
-		$number->verify('id');
+		$query->verify('number');
 		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
 	}
 

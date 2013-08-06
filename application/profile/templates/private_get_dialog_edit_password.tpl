@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set user = component.users[0] %}
+{% set user = component.user %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.update_password').click(function(){
