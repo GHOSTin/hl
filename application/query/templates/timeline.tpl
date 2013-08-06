@@ -25,7 +25,7 @@
                 btn-info
             {% endif %}
             " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
-            <input type="radio" name="options" id="option2">
+            <input type="radio">
             <div>{{ i }}</div>
             <div class="timeline-day-wday">
                 {% set w = day|date('w') %}

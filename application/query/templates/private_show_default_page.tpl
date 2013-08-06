@@ -5,9 +5,9 @@
         <div class="row">
             <div class="btn-group col-12 query_controls">
                 {% if rules.createQuery == true %}
-                <div class="get_dialog_create_query cm btn btn-default col-8">Создать заявку</div>
+                <div class="get_dialog_create_query btn btn-default col-8">Создать заявку</div>
                 {% endif %}
-                <div class="get_search cm btn btn-default col-4">Поиск</div>
+                <div class="get_search btn btn-default col-4">Поиск</div>
             </div>
             <div  class="page-header col-10 col-lg-push-1">
                 <h4 class="view-toggle-filters">Фильтры
@@ -18,7 +18,6 @@
     </div>
     <!-- end left block, begin right block -->
     <div class="col-sm-9">
-        <div class="row">
             <!-- begin timeline -->
             <nav class="timeline row">
                 {% include '@query/timeline.tpl' %}
@@ -28,7 +27,6 @@
                 {% include '@query/query_titles.tpl' %}
             </div>
             <!-- end queries -->
-        </div>
     </div>
     <!-- end right block -->
 {% endblock component %}

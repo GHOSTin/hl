@@ -3,6 +3,11 @@ html,body{
 	height: 100%;
     background-color: rgb(246,246,246);
 }
+
+select {
+    margin-bottom: 10px;
+}
+
 .main{margin-top: 60px}
 
 .navbar .btn-navbar.pull-left {

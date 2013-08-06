@@ -10,7 +10,7 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Форма создания заявки</h3>
     </div>	
@@ -18,7 +18,7 @@
 		Выберите: <span class="cm get_dialog_initiator" param="number">заявка на лицевой счет</span> или <span class="cm get_dialog_initiator" param="house">заявка на дом</span>
 	</div>
 	<div class="modal-footer">
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}
