@@ -5,9 +5,8 @@ class verify_user{
     * Верификация сотового телефона.
     */
     public static function cellphone(data_user $user){
-        if(!empty($user->cellphone))
-            if(!preg_match('/^\+7[0-9]{10}$/', $user->cellphone))
-                throw new e_model('Номер сотового телефона пользователя задан не верно.');
+        if(!preg_match('/^\+7[0-9]{10}$/', $user->cellphone))
+            throw new e_model('Номер сотового телефона пользователя задан не верно.');
     }
 
     /**
@@ -67,7 +66,6 @@ class verify_user{
         if(!preg_match('/^[a-zA-Z0-9]{8,20}$/u', $user->password))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 или больше 20 символов.');
     }
-    }
 
     /**
     * Верификация статуса.
@@ -81,8 +79,7 @@ class verify_user{
     * Верификация телефона.
     */
     public static function telephone(data_user $user){
-        if(!empty($user->telephone))
-            if(!preg_match('/^[0-9]{2,11}$/', $user->celltelephonephone))
-                throw new e_model('Номер телефона пользователя задан не верно.');
+        if(!preg_match('/^[0-9]{2,11}$/', $user->celltelephonephone))
+            throw new e_model('Номер телефона пользователя задан не верно.');
     }
 }
