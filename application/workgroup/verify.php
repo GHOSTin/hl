@@ -16,13 +16,15 @@ class verify_workgroup{
     public static function id(data_workgroup $workgroup){
         if(!preg_match('/^[0-9]{1,5}$/', $workgroup->id))
             throw new e_model('Идентификатор группы работ задан не верно.');
+        if($workgroup->id > 65535 OR $workgroup->id < 1)
+            throw new e_model('Идентификатор группы работ задан не верно.');
     }
 
     /**
     * Верификация названия группы работ.
     */
     public static function name(data_workgroup $workgroup){
-        if(!preg_match('/^[А-Я][а-я ]+$/u', $workgroup->name))
+        if(!preg_match('/^[А-Я][а-я ]{2,99}$/u', $workgroup->name))
             throw new e_model('Название группы работ не удовлетворяет "а-яА-Я".');
     }
 

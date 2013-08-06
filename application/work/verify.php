@@ -7,6 +7,8 @@ class verify_work{
     public static function id(data_work $work){
         if(!preg_match('/^[0-9]{1,5}$/u', $work->id))
             throw new e_model('Идентификатор работы задан не верно.');
+        if($work->id > 65535 OR $work->id < 1)
+            throw new e_model('Идентификатор работы задан не верно.');
     }
 
     /**
@@ -22,7 +24,7 @@ class verify_work{
     * Верификация названия работы.
     */
     public static function name(data_work $work){
-        if(!preg_match('/^[А-Я][а-я ]+$/u', $work->name))
+        if(!preg_match('/^[А-Я][а-я ]{2,99}$/u', $work->name))
             throw new e_model('Название работы не удовлетворяет "а-яА-Я".');
     }
 
