@@ -22,7 +22,7 @@ class verify_group{
     * Верификация названия группы.
     */
     public static function name(data_group $group){
-        if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я0-9]+$/u', $group->name))
+        if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $group->name))
            throw new e_model('Название группы задано не верно.');
     }
 
