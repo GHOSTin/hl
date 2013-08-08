@@ -14,13 +14,13 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Тип оплаты заявки</h3>
     </div>	
 	<div class="modal-body">
 		<label>Тип оплаты:</label>
-		<select class="dialog-work_type">
+		<select class="dialog-work_type form-control">
 			{% for work_type in component.work_types %}
 				<option value="{{work_type.id}}"
 				{% if query.worktype_id == work_type.id %}
@@ -31,8 +31,8 @@
 		</select>
 	</div>
 	<div class="modal-footer">
-		<div class="btn update_work_type">Сохранить</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary update_work_type">Сохранить</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

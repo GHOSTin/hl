@@ -14,13 +14,13 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Тип оплаты заявки</h3>
     </div>	
 	<div class="modal-body">
 		<label>Тип оплаты:</label>
-		<select class="dialog-payment_status">
+		<select class="dialog-payment_status form-control">
 			{% for key, payment_status in payment_statuses %}
 				<option value="{{key}}"
 				{% if query.payment_status == key%}
@@ -31,8 +31,8 @@
 		</select>
 	</div>
 	<div class="modal-footer">
-		<div class="btn update_payment_status">Сохранить</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary update_payment_status">Сохранить</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

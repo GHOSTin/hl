@@ -52,6 +52,10 @@ ul.query-sub, ul.query-general{
     margin-bottom: 10px;
 }
 
+.datepicker{
+    z-index: 1060!important;
+}
+
 @media (max-width: 768px){
     .query_controls {margin: 0 !important;}
 }

@@ -14,7 +14,7 @@
 	{% endif %}
 	{% endblock js %} 
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Документы</h3>
     </div>	
@@ -28,7 +28,7 @@
 		">Напечатать наряд-заявку</a>
 	</div>
 	<div class="modal-footer">
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

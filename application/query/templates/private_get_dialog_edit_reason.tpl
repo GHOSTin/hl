@@ -2,10 +2,10 @@
 {% set query = component.queries[0] %}
 {% block title %}Изменение причины закрытия{% endblock title %}
 {% block dialog %}
-	<textarea class="dialog-description" style="width:500px; height:100px;">{{query.close_reason}}</textarea>
+	<textarea class="dialog-description form-control" rows="5">{{query.close_reason}}</textarea>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_reason">Сохранить</div>
+	<div class="btn btn-primary update_reason">Сохранить</div>
 {% endblock buttons %}
 {% block script %}
     $('.dialog-description').verify();

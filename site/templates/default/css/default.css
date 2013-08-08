@@ -4,10 +4,6 @@ html,body{
     background-color: rgb(246,246,246);
 }
 
-select {
-    margin-bottom: 10px;
-}
-
 .main{margin-top: 60px}
 
 .navbar .btn-navbar.pull-left {
@@ -30,6 +26,20 @@ footer, #push{
 .modal-body{
     max-height: 100%;
 }
+
+.modal-content select+select{
+    margin-top: 10px;
+}
+
+.modal-content .form-inline select+select{
+    margin-top: 0px;
+}
+
+.modal-content .form-inline select,
+.modal-content .form-inline input {
+    margin: 0 5px;
+}
+
 
 .cm{
 	color:#0088CC;

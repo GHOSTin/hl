@@ -48,41 +48,39 @@
 				</div>
 			{% endif %}
 		{% endif %}
-		<div class="row">
-			<div>Данные контактного лица по заявке</div>
-			<div class="row dialog-addinfo">
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">ФИО:</label>
-                    <div class="col-lg-5"><input type="text" class="form-control dialog-fio"></div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">Телефон:</label>
-                    <div class="col-lg-5"><input type="text" class="form-control dialog-telephone" /></div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-2 control-label">Сот. телефон:</label>
-                    <div class="col-lg-5"><input type="text" class="form-control dialog-cellphone" /></div>
-                </div>
-			</div>
-			<div>Выберите тип работ по заявке </div>
-			<select class="form-control dialog-worktype">
-				{% if component.query_work_types != false %}
-					{% for query_work_type in component.query_work_types %}
-						<option value="{{query_work_type.id}}">{{query_work_type.name}}</option>
-					{% endfor %}
-				{% endif %}
-			</select>
-			<div>
-				<div>Выберите тип заявки</div>
-				<select class="form-control dialog-warningtype">
-					<option value="hight">Аварийная заявка</option>
-					<option value="normal" selected>Заявка на участок</option>
-					<option value="planned">Плановая заявка</option>
-				</select>
-			</div>
-		</div>
-		<div class="dialog-trouble" style="padding: 20px 0px 0px 0px;">
-			<textarea class="form-control dialog-description" style="width:500px; height:100px;"></textarea>
+        <p><strong>Данные контактного лица по заявке</strong></p>
+        <div class="dialog-addinfo">
+            <div class="row form-group">
+                <label class="col-lg-3 control-label">ФИО:</label>
+                <div class="col-lg-5"><input type="text" class="form-control dialog-fio"></div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 control-label">Телефон:</label>
+                <div class="col-lg-5"><input type="text" class="form-control dialog-telephone" /></div>
+            </div>
+            <div class="row form-group">
+                <label class="col-lg-3 control-label">Сот. телефон:</label>
+                <div class="col-lg-5"><input type="text" class="form-control dialog-cellphone" /></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <p><strong>Выберите тип работ по заявке</strong></p>
+            <select class="form-control dialog-worktype">
+                {% if component.query_work_types != false %}
+                    {% for query_work_type in component.query_work_types %}
+                        <option value="{{query_work_type.id}}">{{query_work_type.name}}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+            <p><strong>Выберите тип заявки</strong></p>
+            <select class="form-control dialog-warningtype">
+                <option value="hight">Аварийная заявка</option>
+                <option value="normal" selected>Заявка на участок</option>
+                <option value="planned">Плановая заявка</option>
+            </select>
+        </div>
+		<div class="form-group dialog-trouble">
+			<textarea class="form-control dialog-description" rows="5"></textarea>
 		</div>
 
 	{% endif %}

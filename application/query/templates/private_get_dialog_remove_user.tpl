@@ -16,7 +16,7 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Удаление пользователя</h3>
     </div>	
@@ -24,8 +24,8 @@
 		Удалить из заявки пользователя "{{user.lastname}} {{user.firstname}} {{user.middlename}}"?
 	</div>
 	<div class="modal-footer">
-		<div class="btn remove_user">Сохранить</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary remove_user">Сохранить</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

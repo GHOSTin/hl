@@ -15,21 +15,29 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Контактная информация</h3>
     </div>	
-	<div class="modal-body">
-		<label>ФИО</label>
-		<input type="text" value="{{query.contact_fio}}" class="dialog-fio" />
-		<label>Телефон</label>
-		<input type="text" value="{{query.contact_telephone}}" class="dialog-telephone" />
-		<label>Сотовый телефон</label>
-		<input type="text" value="{{query.contact_cellphone}}" class="dialog-cellphone" />
+	<div class="modal-body row">
+        <div class="col-lg-8">
+            <div class="form-group">
+                <label  class="control-label">ФИО</label>
+                <input type="text" value="{{query.contact_fio}}" class="dialog-fio form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Телефон</label>
+                <input type="tel" value="{{query.contact_telephone}}" class="dialog-telephone form-control">
+            </div>
+            <div class="form-group">
+                <label class="control-label">Сотовый телефон</label>
+                <input type="tel" value="{{query.contact_cellphone}}" class="dialog-cellphone form-control">
+            </div>
+        </div>
 	</div>
 	<div class="modal-footer">
-		<div class="btn update_contact_information">Сохранить</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary update_contact_information">Сохранить</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}
