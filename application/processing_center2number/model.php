@@ -35,7 +35,6 @@ class model_processing_center2number{
     * Исключает идентификатор.
     */
     public static function exclude_identifier(data_company $company, data_processing_center2number $c2n){
-        model_company::verify_id($company);
         $company->verify('id');
         $c2n->company_id = $company->id;
         $c2n->verify('number_id', 'identifier', 'processing_center_id', 'company_id');

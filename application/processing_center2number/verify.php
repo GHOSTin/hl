@@ -14,7 +14,7 @@ class verify_processing_center2number{
     * Верификация идентификатора лицевого счета.
     */
     public static function identifier(data_processing_center2number $c2n){
-        if(!preg_match('/^[а-яА-Яa-zA-Z0-9]+$/u', $c2n->identifier))
+        if(!preg_match('/^[а-яА-Яa-zA-Z0-9]{0,20}$/u', $c2n->identifier))
             throw new e_model('Идентификатор лицевого счета задан не верно.');
     }
     

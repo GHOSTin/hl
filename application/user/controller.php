@@ -22,6 +22,8 @@ class controller_user{
         $group->id = $_GET['group_id'];
         $company = model_session::get_company();
         model_group::add_user($company, $group, $user);
+        return ['group' => $group,
+                'users' => model_group::get_users(model_session::get_company(), $group)];
         
     }
 

@@ -5,6 +5,8 @@ class verify_number2meter{
     * Верификация коментария компании.
     */
     public static function comment(data_number2meter $number2meter){
+        if(!preg_match('/^[А-Яа-я0-9\., ]$/u', $number2meter->comment))
+            throw new e_model('Комментарий задан не верно.');
     }
 
     /**
@@ -38,7 +40,7 @@ class verify_number2meter{
     * Верификация заводского номера счетчика.
     */
     public static function serial(data_number2meter $number2meter){
-        if(!preg_match('/^[а-яА-Я0-9]+$/u', $number2meter->serial))
+        if(!preg_match('/^[а-яА-Я0-9]{1,20}$/u', $number2meter->serial))
             throw new e_model('Заводской номер счетчика задано не верно.');
     }
 
@@ -70,7 +72,7 @@ class verify_number2meter{
     * Верификация места установки счетчика.
     */
     public static function place(data_number2meter $number2meter){
-        if(array_search($number2meter->place, ['bathroom', 'kitchen', 'toilet']) === false)
+        if(!in_array($number2meter->place, ['bathroom', 'kitchen', 'toilet']))
             throw new e_model('Место установки задано не верно.');
     }
 
@@ -78,7 +80,7 @@ class verify_number2meter{
     * Верификация периода счетчика.
     */
     public static function period(data_number2meter $number2meter){
-        if($number2meter->period < 1 OR $number2meter->period >= 240)
+        if($number2meter->period < 1 OR $number2meter->period > 241)
             throw new e_model('Период задан не верно.');
     }
 
@@ -95,7 +97,7 @@ class verify_number2meter{
     * Верификация статуса счетчика.
     */
     public static function status(data_number2meter $number2meter){
-        if(array_search($number2meter->status, ['enabled', 'disabled']) === false)
+        if(!in_array($number2meter->status, ['enabled', 'disabled']))
             throw new e_model('Статус счетчика задан не верно.');
     }
 }

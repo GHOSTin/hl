@@ -14,7 +14,9 @@ class verify_group{
     * Верификация идентификатора группы.
     */
     public static function id(data_group $group){
-        if($group->id < 1)
+        if(!preg_match('/^[0-9]{1,5}$/', $group->id))
+            throw new e_model('Идентификатор группы задан не верно.');
+        if($group->id > 65535 OR $group->id < 1)
             throw new e_model('Идентификатор группы задан не верно.');
     }
 
@@ -22,7 +24,7 @@ class verify_group{
     * Верификация названия группы.
     */
     public static function name(data_group $group){
-        if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $group->name))
+        if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-я]{1,19}$/u', $group->name))
            throw new e_model('Название группы задано не верно.');
     }
 

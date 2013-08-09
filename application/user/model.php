@@ -12,7 +12,7 @@ class model_user{
 			throw new e_model('Пользователь с таким логином уже существует.');
 		$user->id = self::get_insert_id();
 		$user->verify('id', 'firstname', 'lastname', 'middlename', 'login', 
-						'password', 'status', 'telephone', 'cellphone');
+						'password', 'status');
 		$sql = new sql();
 		$sql->query("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
 				`firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`)

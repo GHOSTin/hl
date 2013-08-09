@@ -14,7 +14,7 @@ class verify_meter2data{
     */
     public static function way(data_meter2data $data){
         $ways = ['answerphone', 'telephone', 'fax', 'personally'];
-        if(array_search($data->way, $ways) === false)
+        if(!in_array($data->way, $ways))
             throw new e_model('Спсоб передачи показания задан не верно.');
     }
 }

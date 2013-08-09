@@ -14,7 +14,6 @@ class verify_street{
     * Верификация идентификатора города.
     */
     public static function city_id(data_street $street){
-
         $city = new data_city();
         $city->id = $street->city_id;
         $city->verify('id');
@@ -33,7 +32,9 @@ class verify_street{
     * Верификация идентификатора улицы.
     */
     public static function id(data_street $street){
-        if($street->id < 1)
+        if(!preg_match('/^[0-9]{1,5}$/', $street->id))
+            throw new e_model('Идентификатор улицы задан не верно.');
+        if($street->id > 65535 OR $street->id < 1)
             throw new e_model('Идентификатор улицы задан не верно.');
     }
 

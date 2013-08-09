@@ -5,6 +5,9 @@ class verify_number{
     * Верификация сотового телефона лицевого счета.
     */
     public static function cellphone(data_number $number){
+        if(!empty($number->cellphone))
+            if(!preg_match('/^\+7[0-9]{10}$/', $number->cellphone))
+                throw new e_model('Номер сотового телефона задан не верно.');
     }
 
     /**
@@ -20,15 +23,16 @@ class verify_number{
     * Верификация сотового телефона контактного лица.
     */
     public static function contact_cellphone(data_number $number){
-        if(empty($number->contact_cellphone))
-            throw new e_model('Сотовый телефон контактного лица задан не верно.');
+        if(!empty($number->contact_cellphone))
+            if(!preg_match('/^\+7[0-9]{10}$/', $number->contact_cellphone))
+                throw new e_model('Номер сотового телефона задан не верно.');
     }
 
     /**
     * Верификация ФИО контактного лица.
     */
     public static function contact_fio(data_number $number){
-        if(empty($number->contact_fio))
+        if(!preg_match('/^[А-Яа-я0-9]{0,20}$/u', $number->contact_fio))
             throw new e_model('ФИО контактного лица заданы не верно.');
     }
 
@@ -36,8 +40,9 @@ class verify_number{
     * Верификация телефона контактного лица.
     */
     public static function contact_telephone(data_number $number){
-        if(empty($number->contact_telephone))
-            throw new e_model('Телефон контактного лица задан не верно.');
+        if(!empty($number->contact_telephone))
+            if(!preg_match('/^[0-9]{4,11}$/', $number->contact_telephone))
+                throw new e_model('Номер телефона пользователя задан не верно.');
     }
 
     /**
@@ -62,7 +67,7 @@ class verify_number{
     * Верификация ФИО владельца лицевого счета.
     */
     public static function fio(data_number $number){
-        if(empty($number->fio))
+        if(!preg_match('/^[А-Яа-я0-9\. ]{3,20}$/u', $number->fio))
             throw new e_model('ФИО владельца лицевого счета заданы не верно.');
     }
 
@@ -88,28 +93,33 @@ class verify_number{
     * Верификация идентификатора лицевого счета.
     */
     public static function id(data_number $number){
-        if($number->id < 1)
+        if(!preg_match('/^[0-9]{1,8}$/', $number->id))
+            throw new e_model('Идентификатор лицевого счета задан не верно.');
+        if($number->id > 16777215 OR $number->id < 1)
             throw new e_model('Идентификатор лицевого счета задан не верно.');
     }
+
     /**
     * Верификация номера лицевого счета.
     */
     public static function number(data_number $number){
-        if(empty($number->number))
+        if(!preg_match('/^[0-9]{1,20}$/', $number->number))
             throw new e_model('Номер лицевого счета задан не верно.');
     }
+
     /**
     * Верификация пароля лицевого счета.
     */
     public static function password(data_number $number){
-        if(empty($number->password))
+        if(!preg_match('/^[A-Za-z0-9]{6,20}$/', $number->password))
             throw new e_model('Пароль лицевого счета задан не верно.');
     }
+
     /**
     * Верификация статуса лицевого счета.
     */
     public static function status(data_number $number){
-        if(empty($number->status))
+        if(!in_array($number->status, ['true', 'false']))
             throw new e_model('Статус лицевого счета задан не верно.');
     }
     
@@ -117,14 +127,16 @@ class verify_number{
     * Верификация телефона владельца лицевого счета.
     */
     public static function telephone(data_number $number){
-        if(empty($number->telephone))
-            throw new e_model('Телефон владельца лицевого счета задан не верно.');
+        if(!empty($number->telephone))
+            if(!preg_match('/^[0-9]{2,11}$/', $number->telephone))
+                throw new e_model('Номер телефона пользователя задан не верно.');
     }
+
     /**
     * Верификация типа лицевого счета.
     */
     public static function number_type(data_number $number){
-        if(empty($number->type))
+        if(!$number->type !== 'human')
             throw new e_model('Тип лицевого счета задан не верно.');
     }
 }

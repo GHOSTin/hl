@@ -14,7 +14,9 @@ class verify_department{
     * Верификация идентификатора участка.
     */
     public static function id(data_department $department){
-        if($department->id < 1)
+        if(!preg_match('/^[0-9]{1,3}$/', $department->id)
+            throw new e_model('Идентификатор участка задан не верно.');
+        if($department->id > 255 OR $department->id < 1)
             throw new e_model('Идентификатор участка задан не верно.');
     }
 
@@ -22,15 +24,15 @@ class verify_department{
     * Верификация названия участка.
     */
     public static function name(data_department $department){
-        if(empty($department->name))
+        if(!preg_match('/^[А-Я][а-я0-9№ ]{1,19}$/', $department->name))
             throw new e_model('Название участка задано не верно.');
     }
 
     /**
     * Верификация статуса участка.
     */
-    public static function verify_status(data_department $department){
-        if(!in_array($department->status, ['true', 'false']))
+    public static function status(data_department $department){
+        if(!in_array($department->status, ['active', 'deactive']))
             throw new e_model('Статус участка задан не верно.');
     }
 }
