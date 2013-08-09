@@ -5,7 +5,7 @@ class verify_number2meter{
     * Верификация коментария компании.
     */
     public static function comment(data_number2meter $number2meter){
-        if(!preg_match('/^[А-Яа-я0-9\., ]$/u', $number2meter->comment))
+        if(!preg_match('/^[А-Яа-я0-9\., ]{0,255}$/u', $number2meter->comment))
             throw new e_model('Комментарий задан не верно.');
     }
 

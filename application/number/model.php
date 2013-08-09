@@ -155,7 +155,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$number = new data_number();
 			$number->id = $meter->number_id;
 			$numbers = self::get_numbers($company, $number);

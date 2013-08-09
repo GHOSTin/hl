@@ -15,7 +15,7 @@ class verify_processing_center{
     * Верификация названия процессингового центра.
     */
     public static function name(data_processing_center $center){
-        if(!preg_match('/^[А-Я][а-я0-9 -]{1,19}$/u', $center->name))
+        if(!preg_match('/^[А-Яа-я0-9 -]{2,20}$/u', $center->name))
             throw new e_model('Название процессингового центра задано не верно.');
     }
 }
