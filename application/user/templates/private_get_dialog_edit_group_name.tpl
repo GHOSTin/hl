@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set group = component.groups[0] %}
+{% set group = component.group %}
 {% block title %}Диалог редактирования названия группы{% endblock title %}
 {% block dialog %}
 	<label>Название группы</label>

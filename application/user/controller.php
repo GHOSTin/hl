@@ -169,28 +169,28 @@ class controller_user{
         $group = new data_group();
         $group->id = $_GET['id'];
         $group->verify('id');
-        return ['groups' => model_group::get_groups(model_session::get_company(), $group)];
+        return ['groups' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 
     public static function private_get_dialog_edit_fio(){
         $user = new data_user();
         $user->id = $_GET['id'];
         $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => model_user::get_users($user)[0]];
     }
 
     public static function private_get_dialog_edit_password(){
         $user = new data_user();
         $user->id = $_GET['id'];
         $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['users' => model_user::get_users($user)[0]];
     }
 
     public static function private_get_dialog_edit_user_status(){
         $user = new data_user();
         $user->id = $_GET['id'];
         $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => model_user::get_users($user)[0]];
     }
 
     public static function private_get_dialog_exclude_user(){
@@ -200,8 +200,8 @@ class controller_user{
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
-        return ['users' => model_user::get_users($user),
-                'groups' => model_group::get_groups(model_session::get_company(), $group)];
+        return ['user' => model_user::get_users($user)[0],
+                'group' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 
     public static function private_get_group_letters(){
@@ -234,7 +234,7 @@ class controller_user{
         $user = new data_user();
         $user->id = $_GET['id'];
         $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => model_user::get_users($user)[0]];
     }
 
 	public static function private_show_default_page(){
