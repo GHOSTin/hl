@@ -24,6 +24,22 @@ class mapper_user{
         }
     }
 
+    public function update(data_user $user){
+        $sql = new sql();
+        $sql->query('UPDATE `users` SET `firstname` = :firstname, `lastname` = :lastname,
+                    `midlename` = :middlename WHERE `id` = :id');
+        $user->verify('firstname');
+        $user->verify('middlename');
+        $user->verify('lastname');
+        $user->verify('id');
+
+        $sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
+        $sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
+        $sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
+        $sql->bind(':id', $user->id, PDO::PARAM_INT);
+        $sql->execute('Проблемы при обвнолении записи пользователя.');
+    }
+
     private function is_data_user($user){
         if(!($user instanceof data_user))
             throw new e_model('Возвращен объект не является пользователем');

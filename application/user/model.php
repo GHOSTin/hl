@@ -84,19 +84,12 @@ class model_user{
 	* @return array из data_user
 	*/
 	public static function update_fio(data_user $user, $lastname, $firstname, $middlename){
-		$user = new mapper_user->find($user->id);
+		$mapper = new mapper_user();
+		$user = $mapper->find($user->id);
 		$user->lastname = $lastname;
 		$user->firstname = $firstname;
 		$user->middlename = $middlename;
-		$user->verify('id', 'lastname', 'firstname', 'middlename');
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `lastname` = :lastname, `firstname` = :firstname,
-				 	`midlename` = :middlename WHERE `id` = :id");
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
-		$sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
-		$sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
-		$sql->execute('Проблема при обновлении ФИО пользоваля.');
+		$mapper->update($user);
 		return $user;
 	}
 
