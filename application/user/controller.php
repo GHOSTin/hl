@@ -183,7 +183,7 @@ class controller_user{
         $user = new data_user();
         $user->id = $_GET['id'];
         $user->verify('id');
-        return ['users' => model_user::get_users($user)[0]];
+        return ['user' => model_user::get_users($user)[0]];
     }
 
     public static function private_get_dialog_edit_user_status(){
