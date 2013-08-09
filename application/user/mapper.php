@@ -6,10 +6,9 @@ class mapper_user{
         $user->id = $id;
         $user->verify('id');
         $sql = new sql();
-        $sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
-                `users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
-                `users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
-                `users`.`cellphone` FROM `users` WHERE `id` = :id");
+        $sql->query("SELECT `id`, `company_id`, `status`, `username` as `login`,
+                    `firstname`, `lastname`, `midlename` as `middlename`, `password`,
+                    `telephone`, `cellphone` FROM `users` WHERE `id` = :id");
         $sql->bind(':id', $id, PDO::PARAM_INT);
         $users = $sql->map(new data_user(), 'Проблема при выборке пользователя.');
         if(count($users) === 0)
