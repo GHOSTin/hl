@@ -102,12 +102,10 @@ class model_user{
 			throw new e_model('Пароль и подтверждение не идентичны.');
 		if(!preg_match('/^[a-zA-Z0-9]{8,}$/u', $password))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-		$user = (new mapper_user)->find($user->id);
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':password', model_user::get_password_hash($password), PDO::PARAM_STR);
-		$sql->execute('Проблема при изменении пароля пользоваля.');
+        $mapper = new mapper_user();
+		$user = $mapper->find($user->id);
+		$user->password = model_user::get_password_hash($password);
+		$mapper->update($user);
 		return $user;
 	}
 
