@@ -16,7 +16,12 @@ class mapper_user{
         if(count($users) !== 1)
             throw new e_model('Неожиданное количество пользователей.');
         $user = $users[0];
-        model_user::is_data_user($user);
+        $this->is_data_user($user);
         return $user;
+    }
+
+    private function is_data_user($user){
+        if(!($user instanceof data_user))
+            throw new e_model('Возвращен объект не является пользователем');
     }
 }
