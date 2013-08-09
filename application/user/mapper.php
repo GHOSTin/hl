@@ -27,17 +27,19 @@ class mapper_user{
     public function update(data_user $user){
         $sql = new sql();
         $sql->query('UPDATE `users` SET `firstname` = :firstname, `lastname` = :lastname,
-                    `midlename` = :middlename, `status` = :status, `password` = :password WHERE `id` = :id');
+                    `midlename` = :middlename, `status` = :status, `password` = :password, `username` = :login WHERE `id` = :id');
         $user->verify('firstname');
         $user->verify('middlename');
         $user->verify('lastname');
         $user->verify('status');
+        $user->verify('login');
         $user->verify('id');
 
         $sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
         $sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
         $sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
         $sql->bind(':status', $user->status, PDO::PARAM_STR);
+        $sql->bind(':login', $user->login, PDO::PARAM_STR);
         $sql->bind(':password', $user->password, PDO::PARAM_STR);
         $sql->bind(':id', $user->id, PDO::PARAM_INT);
         $sql->execute('Проблемы при обвнолении записи пользователя.');

@@ -114,22 +114,18 @@ class model_user{
 	* @return object data_user
 	*/
 	public static function update_login(data_user $user, $login){
-		$user = (new mapper_user)->find($user->id);
-		$user->login = $login;
-		$user->verify('id', 'login');
 		// проверка на существование идентичного логина
 		$sql = new sql();
 		$sql->query("SELECT `id` FROM `users` WHERE `username` = :login");
-		$sql->bind(':login', $user->login, PDO::PARAM_STR);
+		$sql->bind(':login', $login, PDO::PARAM_STR);
 		$sql->execute("Ошибка при поиске идентичного логина.");
 		if($sql->count() !== 0)
 			throw new e_model('Такой логин уже существует.');
 		// обвноление логина пользователя в базе данных
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `username` = :login WHERE `id` = :id");
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':login', $user->login, PDO::PARAM_STR);
-		$sql->execute('Проблема при изменении логина пользоваля.');
+		$mapper = new mapper_user();
+		$user = $mapper->find($user->id);
+		$user->login = $login;
+		$mapper->update($user);
 		return $user;
 	}
 

@@ -219,9 +219,7 @@ class controller_user{
     }
 
     public static function private_get_dialog_edit_login(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => $user->mapper()->find($user->id)];
+        return ['user' => (new mapper_user)->find($_GET['id'])];
     }
 
 	public static function private_show_default_page(){
