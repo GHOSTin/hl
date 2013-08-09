@@ -173,30 +173,22 @@ class controller_user{
     }
 
     public static function private_get_dialog_edit_fio(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => $user->mapper()->find($user->id)];
+        return ['user' => (new mapper_user)->find($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_password(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => $user->mapper()->find($user->id)];
+        return ['user' => (new mapper_user)->find($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_user_status(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => $user->mapper()->find($user->id)];
+        return ['user' => (new mapper_user)->find($_GET['id'])];
     }
 
     public static function private_get_dialog_exclude_user(){
         $group = new data_group();
         $group->id = $_GET['group_id'];
         $group->verify('id');
-        $user = new data_user();
-        $user->id = $_GET['user_id'];
-        return ['user' => $user->mapper()->find($user->id),
+        return ['user' => (new mapper_user)->find($_GET['user_id']),
                 'group' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 

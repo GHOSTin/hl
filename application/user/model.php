@@ -84,7 +84,7 @@ class model_user{
 	* @return array из data_user
 	*/
 	public static function update_fio(data_user $user, $lastname, $firstname, $middlename){
-		$user = $user->mapper->find($user->id);
+		$user = new mapper_user->find($user->id);
 		$user->lastname = $lastname;
 		$user->firstname = $firstname;
 		$user->middlename = $middlename;
@@ -109,7 +109,7 @@ class model_user{
 			throw new e_model('Пароль и подтверждение не идентичны.');
 		if(!preg_match('/^[a-zA-Z0-9]{8,}$/u', $password))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-		$user = $user->mapper->find($user->id);
+		$user = (new mapper_user)->find($user->id);
 		$sql = new sql();
 		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
 		$sql->bind(':id', $user->id, PDO::PARAM_INT);
@@ -123,7 +123,7 @@ class model_user{
 	* @return object data_user
 	*/
 	public static function update_login(data_user $user, $login){
-		$user = $user->mapper->find($user->id);
+		$user = (new mapper_user)->find($user->id);
 		$user->login = $login;
 		$user->verify('id', 'login');
 		// проверка на существование идентичного логина
@@ -155,7 +155,7 @@ class model_user{
 	* @return bolean
 	*/
 	public static function update_user_status(data_user $user){
-		$user = $user->mapper->find($user->id);
+		$user = (new mapper_user)->find($user->id);
 		if($user->status === 'true')
 			$user->status = 'false';
 		else

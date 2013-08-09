@@ -24,8 +24,4 @@ class data_user extends data_object{
         foreach(func_get_args() as $value)
             verify_user::$value($this);
     }
-
-    public function mapper(){
-        return new mapper_user();
-    }
 }
