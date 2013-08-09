@@ -56,37 +56,6 @@ class model_user{
 	}
 
 	/**
-	* Возвращает пользователя
-	* @return data_user
-	*/
-	public static function get_user(data_user $user){
-		$sql = new sql();
-		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
-				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
-				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
-				`users`.`cellphone` FROM `users`");
-		if(!empty($user->id)){
-			$user->verify('id');
-			$sql->query(" WHERE `id` = :id");
-			$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		}
-		if(!empty($user->login)){
-			$user->verify('login');
-			$sql->query(" WHERE `username` = :login");
-			$sql->bind(':login', $user->login, PDO::PARAM_STR);
-		}
-		$users = $sql->map(new data_user(), 'Проблема при выборке пользователя.');
-		if(count($users) === 0)
-			throw new e_model('Пользователя не существует');
-		if(count($users) !== 1)
-			throw new e_model('Неожиданное количество пользователей.');
-		$user = $users[0];
-		self::is_data_user($user);
-		return $user;
-
-	}
-
-	/**
 	* Возвращает пользователей
 	* @return array из data_user
 	*/
@@ -115,8 +84,7 @@ class model_user{
 	* @return array из data_user
 	*/
 	public static function update_fio(data_user $user, $lastname, $firstname, $middlename){
-		$user->verify('id');
-		$user = self::get_user($user);
+		$user = $user->mapper->find($user->id);
 		$user->lastname = $lastname;
 		$user->firstname = $firstname;
 		$user->middlename = $middlename;
@@ -141,9 +109,7 @@ class model_user{
 			throw new e_model('Пароль и подтверждение не идентичны.');
 		if(!preg_match('/^[a-zA-Z0-9]{8,}$/u', $password))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-		$user->verify('id');
-		$users = self::get_user($user);
-		$user->verify('id');
+		$user = $user->mapper->find($user->id);
 		$sql = new sql();
 		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
 		$sql->bind(':id', $user->id, PDO::PARAM_INT);
@@ -157,9 +123,7 @@ class model_user{
 	* @return object data_user
 	*/
 	public static function update_login(data_user $user, $login){
-		$user->verify('id');
-		// проверка существования обновляемого пользователя
-		$user = self::get_user($user);
+		$user = $user->mapper->find($user->id);
 		$user->login = $login;
 		$user->verify('id', 'login');
 		// проверка на существование идентичного логина
@@ -191,8 +155,7 @@ class model_user{
 	* @return bolean
 	*/
 	public static function update_user_status(data_user $user){
-		$user->verify('id');
-		$user = self::get_user($user);
+		$user = $user->mapper->find($user->id);
 		if($user->status === 'true')
 			$user->status = 'false';
 		else

@@ -175,22 +175,19 @@ class controller_user{
     public static function private_get_dialog_edit_fio(){
         $user = new data_user();
         $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['user' => model_user::get_users($user)[0]];
+        return ['user' => $user->mapper()->find($user->id)];
     }
 
     public static function private_get_dialog_edit_password(){
         $user = new data_user();
         $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['user' => model_user::get_users($user)[0]];
+        return ['user' => $user->mapper()->find($user->id)];
     }
 
     public static function private_get_dialog_edit_user_status(){
         $user = new data_user();
         $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['user' => model_user::get_users($user)[0]];
+        return ['user' => $user->mapper()->find($user->id)];
     }
 
     public static function private_get_dialog_exclude_user(){
@@ -199,8 +196,7 @@ class controller_user{
         $group->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
-        $user->verify('id');
-        return ['user' => model_user::get_users($user)[0],
+        return ['user' => $user->mapper()->find($user->id),
                 'group' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 
@@ -233,8 +229,7 @@ class controller_user{
     public static function private_get_dialog_edit_login(){
         $user = new data_user();
         $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['user' => model_user::get_users($user)[0]];
+        return ['user' => $user->mapper()->find($user->id)];
     }
 
 	public static function private_show_default_page(){
