@@ -83,9 +83,9 @@ class model_user{
 	* Обновляет ФИО пользователя
 	* @return array из data_user
 	*/
-	public static function update_fio(data_user $user, $lastname, $firstname, $middlename){
+	public static function update_fio($id, $lastname, $firstname, $middlename){
 		$mapper = new mapper_user();
-		$user = $mapper->find($user->id);
+		$user = $mapper->find($id);
 		$user->lastname = $lastname;
 		$user->firstname = $firstname;
 		$user->middlename = $middlename;
@@ -148,17 +148,13 @@ class model_user{
 	* @return bolean
 	*/
 	public static function update_user_status(data_user $user){
-		$user = (new mapper_user)->find($user->id);
+		$mapper = new mapper_user();
+		$user = $mapper->find($user->id);
 		if($user->status === 'true')
 			$user->status = 'false';
 		else
 			$user->status = 'true';
-		$user->verify('id', 'status');
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `status` = :status WHERE `id` = :id");
-		$sql->bind(':status', $user->status, PDO::PARAM_STR);
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при изменении статуса пользователя.');
+		$mapper->update($user);
 		return $user;
 	}
 }

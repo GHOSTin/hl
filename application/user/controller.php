@@ -306,9 +306,7 @@ class controller_user{
     }
 
     public static function private_update_fio(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => model_user::update_fio($user, $_GET['lastname'], $_GET['firstname'], $_GET['middlename'])];
+        return ['user' => model_user::update_fio($_GET['id'], $_GET['lastname'], $_GET['firstname'], $_GET['middlename'])];
     }
 
     public static function private_update_password(){
@@ -348,6 +346,6 @@ class controller_user{
     public static function private_update_user_status(){
         $user = new data_user();
         $user->id = $_GET['id'];
-        return ['user' => [model_user::update_user_status($user)]];
+        return ['user' => model_user::update_user_status($user)];
     }
 }
