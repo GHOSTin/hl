@@ -20,6 +20,7 @@ class model_session{
     public static function get_user(){
         return self::$user;
     }
+    
     public static function get_company(){
         return self::$company;
     }

@@ -255,6 +255,7 @@ class model_profile{
 		}else
 			return true;
 	}
+	
 	/**
 	* Обновляет пароль пользователя
 	* @return bolean

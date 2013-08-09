@@ -1,5 +1,6 @@
 <?php
 class model_number{
+	
 	/**
 	* Создает новый лицевой ссчет уникальный для компании и для города.
 	* @return object data_number

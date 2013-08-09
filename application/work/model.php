@@ -1,5 +1,6 @@
 <?php
 class model_work{
+	
 	/**
 	* Возвращает список работ заявки
 	* @return array из data_work

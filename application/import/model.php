@@ -1,5 +1,6 @@
 <?php
 class model_import{
+
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
@@ -58,6 +59,7 @@ class model_import{
 				throw new e_model('Неизвестная ошибка!');
 		}
 	}
+
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
@@ -147,6 +149,7 @@ class model_import{
 				return ['error' => 'Неизвестная ошибка.'];
 		}
 	}
+
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
@@ -182,6 +185,7 @@ class model_import{
 			throw new e_model('Проблема при выборе улицы.');
 		return ['file' => $file_array, 'city' => $city, 'street' => $street, 'street_name' => (string) $house_node->street];
 	}
+	
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/

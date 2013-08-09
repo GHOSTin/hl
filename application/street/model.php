@@ -1,5 +1,6 @@
 <?php
 class model_street{
+
 	/**
 	* Создает новый дом.
 	* @return object data_city
@@ -29,6 +30,7 @@ class model_street{
 		$sql->execute('Проблемы при создании нового дома.');
 		return $house;
 	}
+
 	/**
 	* Возвращает следующий для вставки идентификатор улицы.
 	* @return int
@@ -43,6 +45,7 @@ class model_street{
 		$sql->close();
 		return $street_id;
 	}
+
 	/**
 	* Возвращает список улиц.
 	* @return array из object data_street
@@ -73,6 +76,7 @@ class model_street{
 						FROM `streets` ORDER BY `name`");
 		return $sql->map(new data_street(), 'Проблема при выборке улиц из базы данных.');
 	}
+	
 	/**
 	* Возвращает список домов
 	* @return array из object data_house

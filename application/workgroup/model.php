@@ -1,5 +1,6 @@
 <?php
 class model_workgroup{
+
 	/**
 	* Возвращает список групп работ
 	* @return array из data_workgroup
@@ -17,6 +18,7 @@ class model_workgroup{
 		}
 		return $sql->map(new data_workgroup(), 'Проблема при выборке групп работ.');
 	}
+	
 	/**
 	* Возвращает список работ группы
 	* @return array из data_work

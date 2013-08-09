@@ -1,5 +1,6 @@
 <?php
 class model_query{
+
 	/*
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-лицевой_счет.
@@ -20,6 +21,7 @@ class model_query{
 		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
 		$sql->execute('Проблема при добавлении лицевого счета.');
 	}
+
 	/*
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-пользователь.
@@ -39,6 +41,7 @@ class model_query{
 		$sql->bind(':class', $class, PDO::PARAM_STR);
 		$sql->execute('Проблема при добавлении пользователя.');
 	}
+
 	/*
 	* Зависимая функция.
 	* Создает заявку и записывает в лог заявки.
@@ -90,6 +93,7 @@ class model_query{
 		$sql->execute('Проблемы при создании заявки.');
 		return $query;
 	}
+
 	/**
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
@@ -116,6 +120,7 @@ class model_query{
 		$sql->execute('Ошибка при добавлении пользователя.');
 		return [$query];
 	}
+
 	/**
 	* Добавляет ассоциацию заявка-работа.
 	*/
@@ -144,6 +149,7 @@ class model_query{
 		$sql->execute('Ошибка при добавлении работы.');
 		return [$query];
 	}
+
 	/*
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-лицевой_счет в зависимости от типа инициатора.
@@ -165,6 +171,7 @@ class model_query{
 			self::__add_number($company, $query, $number, $default);
 		}
 	}
+
 	/**
 	* Закрывает заявку.
 	*/
@@ -189,6 +196,7 @@ class model_query{
 		$sql->execute('Ошибка при закрытии заявки.');
 		return [$query];
 	}
+
 	/**
 	* Закрывает заявку.
 	*/
@@ -208,6 +216,7 @@ class model_query{
 		$sql->execute('Ошибка при перезакрытии заявки.');
 		return [$query];
 	}
+
 	/**
 	* Переоткрывает заявку.
 	*/
@@ -227,6 +236,7 @@ class model_query{
 		$sql->execute('Ошибка при переоткрытии заявки.');
 		return [$query];
 	}
+
 	/**
 	* Передает заявку в работу.
 	*/
@@ -249,6 +259,7 @@ class model_query{
 		$sql->execute('Ошибка при передачи в работу заявки.');
 		return [$query];
 	}
+
 	/**
 	* Создает новую заявку.
 	* @retrun array из data_query
@@ -301,6 +312,7 @@ class model_query{
 				throw new e_model('Ошибка при создании заявки.');
 		}
 	}
+
 	/*
 	* Возвращает следующий для вставки идентификатор заявки.
 	*/
@@ -317,6 +329,7 @@ class model_query{
 		$sql->close();
 		return $query_id;
 	}
+
 	/*
 	* Возвращает следующий для вставки номер заявки.
 	*/
@@ -337,6 +350,7 @@ class model_query{
 		$sql->close();
 		return $query_number;
 	}
+
 	/**
 	* Возвращает заявки.
 	* @return array
@@ -473,6 +487,7 @@ class model_query{
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		return $sql->map(new data_query(), 'Проблема при выборке пользователей.');
 	}
+
 	/**
 	* Возвращает лицевые счета заявки.
 	* @return array
@@ -526,6 +541,7 @@ class model_query{
 		$sql->close();
 		return $result;
 	}
+
 	/**
 	* Возвращает пользователей заявки.
 	* @return array
@@ -573,6 +589,7 @@ class model_query{
 		$sql->close();
 		return $result;
 	}
+
 	/**
 	* Возвращает работы.
 	* @return array
@@ -623,6 +640,7 @@ class model_query{
 		$sql->close();
 		return $result;
 	}
+
 	/*
 	* Учитывает сессионный фильтры.
 	*/
@@ -672,6 +690,7 @@ class model_query{
 			$query->worktype_id = $query_filter->worktype_id;
 		return $query;
 	}
+
 	/**
 	* Удаляет пользователя из заявки.
 	*/
@@ -696,6 +715,7 @@ class model_query{
 		$sql->execute('Ошибка при удалении пользователя и заявки.');
 		return [$query];
 	}
+
 	/**
 	* Обновляет работу из заявки.
 	*/
@@ -717,6 +737,7 @@ class model_query{
 		$sql->execute('Ошибка при удалении работы из заявки.');
 		return [$query];
 	}
+
 	/**
 	* Обновляет описание заявки.
 	*/
@@ -732,6 +753,7 @@ class model_query{
 		$sql->execute('Ошибка при обновлении описания заявки.');
 		return [$query];
 	}
+
 	/**
 	* Обновляет описание заявки.
 	*/
@@ -747,6 +769,7 @@ class model_query{
 		$sql->execute('Ошибка при обновлении причины закрытия заявки.');
 		return [$query];
 	}
+
 	/**
 	* Обновляет контактную информацию.
 	*/
@@ -765,6 +788,7 @@ class model_query{
 		$sql->execute('Ошибка при обновлении описания заявки.');
 		return [$query];
 	}
+
 	/**
 	* Обновляет статус оплаты.
 	*/
@@ -785,6 +809,7 @@ class model_query{
 		$sql->execute('Ошибка при обновлении статуса оплаты заявки.');
 		return [$query];
 	}
+
 	/**
 	* Обновляет статус реакции.
 	*/
@@ -805,6 +830,7 @@ class model_query{
 		$sql->execute('Ошибка при обновлении статуса реакции.');
 		return [$query];
 	}
+	
 	/**
 	* Обновляет тип работ.
 	*/

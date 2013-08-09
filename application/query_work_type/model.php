@@ -1,5 +1,6 @@
 <?php
 class model_query_work_type{
+	
 	/**
 	* Возвращает список работ заявки
 	* @return array из data_query_work_type
