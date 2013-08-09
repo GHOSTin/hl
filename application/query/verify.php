@@ -108,8 +108,9 @@ class verify_query{
     * Верификация ФИО контакта заявки.
     */
     public static function contact_fio(data_query $query){
-        if(!preg_match('/^[А-Яа-я\. ]$/u', $query->contact_fio))
-            throw new e_model('ФИО контактного лица задано не верно.');
+        if(!empty($query->contact_fio))
+            if(!preg_match('/^[А-Яа-я\. ]$/u', $query->contact_fio))
+                throw new e_model('ФИО контактного лица задано не верно.');
     }
 
     /**
@@ -134,7 +135,7 @@ class verify_query{
     * Верификация описания заявки.
     */
     public static function description(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]$/u', $query->description))
+        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]{1,65535}$/u', $query->description))
             throw new e_model('Описание заявки заданы не верно.');
     }
 

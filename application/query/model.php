@@ -150,11 +150,11 @@ class model_query{
 	*/
 	private static function add_numbers(data_company $company, data_query $query, $initiator){
 		if($initiator instanceof data_house){
-			$initiator->verifty('id');
+			$initiator->verify('id');
 			$numbers = model_house::get_numbers($company, $initiator);
 			$default = 'false';
 		}elseif($initiator instanceof data_number){
-			$initiator->verifty('id');
+			$initiator->verify('id');
 			$numbers[] = model_number::get_numbers($company, $initiator)[0];
 			$default = 'true';
 		}else
@@ -293,6 +293,7 @@ class model_query{
 			sql::commit();
 			return $query;
 		}catch(exception $e){
+			die($e->getMessage());
 			sql::rollback();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());

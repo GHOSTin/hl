@@ -14,7 +14,7 @@ class verify_department{
     * Верификация идентификатора участка.
     */
     public static function id(data_department $department){
-        if(!preg_match('/^[0-9]{1,3}$/', $department->id)
+        if(!preg_match('/^[0-9]{1,3}$/', $department->id))
             throw new e_model('Идентификатор участка задан не верно.');
         if($department->id > 255 OR $department->id < 1)
             throw new e_model('Идентификатор участка задан не верно.');
