@@ -4,7 +4,7 @@ class model_user{
 	/*
 	* Создает пользователя
 	*/
-	public static function create_user(data_user $user){
+	public function create_user(data_user $user){
 		$mapper = new mapper_user();
 		return $mapper->insert($user);
 	}
@@ -15,6 +15,13 @@ class model_user{
 	*/
 	public function get_password_hash($password){
 		return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
+	}
+
+	/**
+	* Возвращает объект пользователя по идентификатору
+	*/
+	public function get_user($id){
+		return (new mapper_user)->find($id);
 	}
 
 	/**

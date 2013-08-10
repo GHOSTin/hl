@@ -54,7 +54,7 @@ class controller_user{
         $user->login = $_GET['login'];
         $user->password = $_GET['password'];
         $user->status = 'true';
-        $user = model_user::create_user($user);
+        $user = (new model_user)->create_user($user);
         $letter_user = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
         $letter_users = [];
         $users = model_user::get_users(new data_user());
@@ -173,22 +173,22 @@ class controller_user{
     }
 
     public static function private_get_dialog_edit_fio(){
-        return ['user' => (new mapper_user)->find($_GET['id'])];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_password(){
-        return ['user' => (new mapper_user)->find($_GET['id'])];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_user_status(){
-        return ['user' => (new mapper_user)->find($_GET['id'])];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_dialog_exclude_user(){
         $group = new data_group();
         $group->id = $_GET['group_id'];
         $group->verify('id');
-        return ['user' => (new mapper_user)->find($_GET['user_id']),
+        return ['user' => (new model_user)->get_user($_GET['user_id']),
                 'group' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 
@@ -219,7 +219,7 @@ class controller_user{
     }
 
     public static function private_get_dialog_edit_login(){
-        return ['user' => (new mapper_user)->find($_GET['id'])];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
 	public static function private_show_default_page(){
