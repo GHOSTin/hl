@@ -36,10 +36,12 @@ class controller_profile{
 	}
 
 	public static function private_update_cellphone(){
-		return ['user' => model_profile::update_cellphone(model_session::get_user(), $_GET['cellphone'])];
+		$id = model_session::get_user()->id;
+		return ['user' => (new model_user)->update_cellphone($id, $_GET['cellphone'])];
 	}
 
 	public static function private_update_telephone(){
-		return ['user' => model_profile::update_telephone(model_session::get_user(), $_GET['telephone'])];
+		$id = model_session::get_user()->id;
+		return ['user' => (new model_user)->update_telephone($id, $_GET['telephone'])];
 	}
 }

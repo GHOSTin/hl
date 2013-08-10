@@ -327,19 +327,4 @@ class model_profile{
 		$sql->execute('Ошибка при изменении номера сотового телефона.');
 		return $user;
 	}
-
-	/**
-	* Обновляет номер телефона пользователя
-	* @return bolean
-	*/
-	public static function update_telephone(data_user $user, $telephone){
-		$user->telephone = (string) $telephone;
-		$user->verify('id', 'telephone');
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `telephone` = :telephone WHERE `id` = :id");
-		$sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при изменении номера телефона.');
-		return $user;
-	}
 }

@@ -117,4 +117,16 @@ class model_user{
 		$mapper->update($user);
 		return $user;
 	}
+
+	/**
+	* Обновляет номер телефона пользователя
+	* @return bolean
+	*/
+	public function update_telephone($id, $telephone){
+		$mapper = new mapper_user();
+		$user = $mapper->find($id);
+		$user->telephone = $telephone;
+		$mapper->update($user);
+		return $user;
+	}
 }
