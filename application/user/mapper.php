@@ -28,13 +28,7 @@ class mapper_user{
         $sql = new sql();
         $sql->query('UPDATE `users` SET `firstname` = :firstname, `lastname` = :lastname,
                     `midlename` = :middlename, `status` = :status, `password` = :password, `username` = :login WHERE `id` = :id');
-        $user->verify('firstname');
-        $user->verify('middlename');
-        $user->verify('lastname');
-        $user->verify('status');
-        $user->verify('login');
-        $user->verify('id');
-
+        $user->verify('id', 'firstname', 'middlename', 'lastname', 'status', 'login');
         $sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
         $sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
         $sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);

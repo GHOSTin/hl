@@ -83,7 +83,7 @@ class model_user{
 	* Обновляет ФИО пользователя
 	* @return array из data_user
 	*/
-	public static function update_fio($id, $lastname, $firstname, $middlename){
+	public function update_fio($id, $lastname, $firstname, $middlename){
 		$mapper = new mapper_user();
 		$user = $mapper->find($id);
 		$user->lastname = $lastname;

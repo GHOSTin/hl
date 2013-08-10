@@ -304,7 +304,7 @@ class controller_user{
     }
 
     public static function private_update_fio(){
-        return ['user' => model_user::update_fio($_GET['id'], $_GET['lastname'], $_GET['firstname'], $_GET['middlename'])];
+        return ['user' => (new model_user)->update_fio($_GET['id'], $_GET['lastname'], $_GET['firstname'], $_GET['middlename'])];
     }
 
     public static function private_update_password(){
