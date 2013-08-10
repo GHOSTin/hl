@@ -308,9 +308,9 @@ class controller_user{
     }
 
     public static function private_update_password(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => model_user::update_password($user, $_GET['password'], $_GET['confirm'])];
+        if($_GET['password'] !== $_GET['confirm'])
+            throw new e_model('Пароль и подтверждение не идентичны.');
+        return ['user' => (new model_user)->update_password($_GET['id'], $_GET['password'])];
     }
 
     public static function private_update_rule(){
@@ -336,9 +336,7 @@ class controller_user{
     }
 
     public static function private_update_login(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => model_user::update_login($user, $_GET['login'])];
+        return ['user' => (new model_user)->update_login($_GET['id'], $_GET['login'])];
     }
 
     public static function private_update_user_status(){

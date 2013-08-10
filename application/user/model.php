@@ -97,13 +97,11 @@ class model_user{
 	* Обновляет пароль пользователя
 	* @return object data_user
 	*/
-	public static function update_password(data_user $user, $password, $confirm){
-		if($password !== $confirm)
-			throw new e_model('Пароль и подтверждение не идентичны.');
-		if(!preg_match('/^[a-zA-Z0-9]{8,}$/u', $password))
+	public function update_password($id, $password){
+		if(!preg_match('/^[a-zA-Z0-9]{8,20}$/u', $password))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
         $mapper = new mapper_user();
-		$user = $mapper->find($user->id);
+		$user = $mapper->find($id);
 		$user->password = model_user::get_password_hash($password);
 		$mapper->update($user);
 		return $user;
@@ -113,7 +111,7 @@ class model_user{
 	* Обновляет логин пользователя
 	* @return object data_user
 	*/
-	public static function update_login(data_user $user, $login){
+	public function update_login($id, $login){
 		// проверка на существование идентичного логина
 		$sql = new sql();
 		$sql->query("SELECT `id` FROM `users` WHERE `username` = :login");
@@ -123,7 +121,7 @@ class model_user{
 			throw new e_model('Такой логин уже существует.');
 		// обвноление логина пользователя в базе данных
 		$mapper = new mapper_user();
-		$user = $mapper->find($user->id);
+		$user = $mapper->find($id);
 		$user->login = $login;
 		$mapper->update($user);
 		return $user;
