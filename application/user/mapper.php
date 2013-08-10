@@ -24,6 +24,48 @@ class mapper_user{
         }
     }
 
+    private function get_insert_id(){
+        $sql = new sql();
+        $sql->query("SELECT MAX(`id`) as `max_user_id` FROM `users`");
+        $sql->execute('Проблема при опредении следующего user_id.');
+        if($sql->count() !== 1)
+            throw new e_model('Проблема при опредении следующего user_id.');
+        $user_id = (int) $sql->row()['max_user_id'] + 1;
+        $sql->close();
+        return $user_id;
+    }
+
+    public function insert(data_user $user){
+        $login = $user->login;
+        $sql = new sql();
+        $sql->query("SELECT `id` FROM `users` WHERE `username` = :login");
+        $sql->bind(':login', $login, PDO::PARAM_STR);
+        $sql->execute("Ошибка при поиске идентичного логина.");
+        if($sql->count() !== 0)
+            throw new e_model('Пользователь с таким логином уже существует.');
+        $user->id = $this->get_insert_id();
+        $user->verify('firstname', 'lastname', 'middlename', 'login', 'status');
+        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $user->password))
+            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
+        $sql = new sql();
+        $sql->query("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
+                `firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`)
+                VALUES (:user_id, :company_id, :status, :login, :firstname, :lastname, 
+                :middlename, :password, :telephone, :cellphone)");
+        $sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+        $sql->bind(':company_id', 2, PDO::PARAM_INT);
+        $sql->bind(':status', $user->status, PDO::PARAM_STR);
+        $sql->bind(':login', $user->login, PDO::PARAM_STR);
+        $sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
+        $sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
+        $sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
+        $sql->bind(':password', model_user::get_password_hash($user->password), PDO::PARAM_STR);
+        $sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
+        $sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
+        $sql->execute('Проблемы при создании пользователя.');
+        return $user;
+    }
+
     public function update(data_user $user){
         $sql = new sql();
         $sql->query('UPDATE `users` SET `firstname` = :firstname, `lastname` = :lastname,

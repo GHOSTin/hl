@@ -5,48 +5,10 @@ class model_user{
 	* Создает пользователя
 	*/
 	public static function create_user(data_user $user){
-		$user->verify('login');
-		$chk_login = new data_user();
-		$chk_login->login = $user->login;
-		if(count(self::get_users($chk_login)) !== 0)
-			throw new e_model('Пользователь с таким логином уже существует.');
-		$user->id = self::get_insert_id();
-		$user->verify('id', 'firstname', 'lastname', 'middlename', 'login', 
-						'password', 'status');
-		$sql = new sql();
-		$sql->query("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
-				`firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`)
-				VALUES (:user_id, :company_id, :status, :login, :firstname, :lastname, 
-				:middlename, :password, :telephone, :cellphone)");
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', 2, PDO::PARAM_INT);
-		$sql->bind(':status', $user->status, PDO::PARAM_STR);
-		$sql->bind(':login', $user->login, PDO::PARAM_STR);
-		$sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
-		$sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
-		$sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
-		$sql->bind(':password', self::get_password_hash($user->password), PDO::PARAM_STR);
-		$sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
-		$sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
-		$sql->execute('Проблемы при создании пользователя.');
-		return $user;
+		$mapper = new mapper_user();
+		$mapper->insert($user);
 	}
 
-	/**
-	* Возвращает следующий для вставки user_id.
-	* @return int
-	*/
-	private static function get_insert_id(){
-		$sql = new sql();
-		$sql->query("SELECT MAX(`id`) as `max_user_id` FROM `users`");
-		$sql->execute('Проблема при опредении следующего user_id.');
-		if($sql->count() !== 1)
-			throw new e_model('Проблема при опредении следующего user_id.');
-		$user_id = (int) $sql->row()['max_user_id'] + 1;
-		$sql->close();
-		return $user_id;
-	}
-	
 	/**
 	* Формирует хэш с солью
 	* @return string
@@ -98,7 +60,7 @@ class model_user{
 	* @return object data_user
 	*/
 	public function update_password($id, $password){
-		if(!preg_match('/^[a-zA-Z0-9]{8,20}$/u', $password))
+		if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $password))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
         $mapper = new mapper_user();
 		$user = $mapper->find($id);
