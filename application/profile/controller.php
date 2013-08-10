@@ -2,21 +2,18 @@
 class controller_profile{
 
 	public static function private_get_dialog_edit_password(){
-		$user = new data_user();
-		$user->id = model_session::get_user()->id;
-		return ['user' => model_user::get_users($user)[0]];
+		$id = model_session::get_user()->id;
+		return ['user' => (new model_user)->get_user($id)];
 	}
 
 	public static function private_get_dialog_edit_cellphone(){
-		$user = new data_user();
-		$user->id = model_session::get_user()->id;
-		return ['user' => model_user::get_users($user)[0]];
+		$id = model_session::get_user()->id;
+		return ['user' => (new model_user)->get_user($id)];
 	}
 
 	public static function private_get_dialog_edit_telephone(){
-		$user = new data_user();
-		$user->id = model_session::get_user()->id;
-		return ['user' => model_user::get_users($user)[0]];
+		$id = model_session::get_user()->id;
+		return ['user' => (new model_user)->get_user($id)];
 	}
 	
 	public static function private_get_notification_center_content(){
