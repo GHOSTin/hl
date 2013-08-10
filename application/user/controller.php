@@ -11,7 +11,7 @@ class controller_user{
         $user->id = $_GET['user_id'];
         $user->verify('id');
         model_profile::add_profile($company, $user, $_GET['profile']);
-        return ['users' => model_user::get_users($user),
+        return ['user' => $user,
                 'companies' => model_profile::get_companies($user)];
     }
 
