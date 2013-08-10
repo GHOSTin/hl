@@ -342,8 +342,6 @@ class controller_user{
     }
 
     public static function private_update_user_status(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => model_user::update_user_status($user)];
+        return ['user' => (new model_user)->update_user_status($_GET['id'])];
     }
 }

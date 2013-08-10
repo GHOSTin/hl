@@ -139,11 +139,10 @@ class model_user{
 
 	/**
 	* Обновляет статус пользователя
-	* @return bolean
 	*/
-	public static function update_user_status(data_user $user){
+	public function update_user_status($id){
 		$mapper = new mapper_user();
-		$user = $mapper->find($user->id);
+		$user = $mapper->find($id);
 		if($user->status === 'true')
 			$user->status = 'false';
 		else
