@@ -6,14 +6,14 @@ class model_user{
 	*/
 	public static function create_user(data_user $user){
 		$mapper = new mapper_user();
-		$mapper->insert($user);
+		return $mapper->insert($user);
 	}
 
 	/**
 	* Формирует хэш с солью
 	* @return string
 	*/
-	public static function get_password_hash($password){
+	public function get_password_hash($password){
 		return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
 	}
 
@@ -64,7 +64,7 @@ class model_user{
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
         $mapper = new mapper_user();
 		$user = $mapper->find($id);
-		$user->password = model_user::get_password_hash($password);
+		$user->password = $this->get_password_hash($password);
 		$mapper->update($user);
 		return $user;
 	}

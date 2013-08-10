@@ -59,7 +59,7 @@ class mapper_user{
         $sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
         $sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
         $sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
-        $sql->bind(':password', model_user::get_password_hash($user->password), PDO::PARAM_STR);
+        $sql->bind(':password', (new model_user)->get_password_hash($user->password), PDO::PARAM_STR);
         $sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
         $sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
         $sql->execute('Проблемы при создании пользователя.');
