@@ -171,7 +171,7 @@ class controller_user{
         $group = new data_group();
         $group->id = $_GET['id'];
         $group->verify('id');
-        return ['groups' => model_group::get_groups(model_session::get_company(), $group)[0]];
+        return ['group' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 
     public static function private_get_dialog_edit_fio(){
