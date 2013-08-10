@@ -255,22 +255,6 @@ class model_profile{
 		}else
 			return true;
 	}
-	
-	/**
-	* Обновляет пароль пользователя
-	* @return bolean
-	*/
-	public static function update_password(data_user $user, $password){
-		$password = (string) $password;
-		$user->verify('id', 'password');
-		$user->password = model_user::get_password_hash($password);
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
-		$sql->bind(':password', $user->password, PDO::PARAM_STR);
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при изменении пароля.');
-		return $user;
-	}
 
 	/**
 	* Возвращает профиль пользователя в зависимости от компании и названия профиля.

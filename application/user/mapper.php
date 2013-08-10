@@ -45,8 +45,6 @@ class mapper_user{
             throw new e_model('Пользователь с таким логином уже существует.');
         $user->id = $this->get_insert_id();
         $user->verify('firstname', 'lastname', 'middlename', 'login', 'status');
-        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $user->password))
-            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
         $sql = new sql();
         $sql->query("INSERT INTO `users` (`id`, `company_id`, `status`, `username`,
                 `firstname`, `lastname`, `midlename`, `password`, `telephone`, `cellphone`)

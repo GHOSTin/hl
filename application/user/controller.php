@@ -54,6 +54,8 @@ class controller_user{
         $user->login = $_GET['login'];
         $user->password = $_GET['password'];
         $user->status = 'true';
+        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $user->password))
+            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
         $user = (new model_user)->create_user($user);
         $letter_user = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
         $letter_users = [];

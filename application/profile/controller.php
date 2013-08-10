@@ -24,15 +24,15 @@ class controller_profile{
 	}
 
 	public static function private_show_default_page(){
-		$user = new data_user();
-		$user->id = model_session::get_user()->id;
-		return ['user' => model_user::get_users($user)[0]];
+		$id = model_session::get_user()->id;
+		return ['user' => (new model_user)->get_user($id)];
 	}
 
 	public static function private_update_password(){
 		if($_GET['new_password'] !== $_GET['confirm_password'])
 			throw new e_model('Введеные новый пароль и его подтверждение не совпадают.');
-		return ['user' => model_profile::update_password(model_session::get_user(), $_GET['new_password'])];
+		$id = model_session::get_user()->id;
+		return ['user' => (new model_user)->update_password($id, $_GET['new_password'])];
 	}
 
 	public static function private_update_cellphone(){
