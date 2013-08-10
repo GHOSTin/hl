@@ -312,19 +312,4 @@ class model_profile{
 			throw new e_model('Нет ограничения '.$restriction.' в профиле '.$profile);
 		return $status;
 	}
-
-	/**
-	* Обновляет номер сотового телефона пользователя
-	* @return bolean
-	*/
-	public static function update_cellphone(data_user $user, $cellphone){
-		$user->cellphone = (string) $cellphone;
-		$user->verify('id', 'cellphone');
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `cellphone` = :cellphone WHERE `id` = :id");
-		$sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при изменении номера сотового телефона.');
-		return $user;
-	}
 }
