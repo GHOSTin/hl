@@ -47,14 +47,16 @@ class mapper_meter{
 
     public function update(data_meter $meter){
         $this->company->verify('id');
-        $meter->verify('id', 'name', 'capacity');
+        $meter->verify('id', 'name', 'capacity', 'rates');
         $sql = new sql();
-        $sql->query('UPDATE `meters` SET `name` = :name, `capacity` = :capacity
+        $sql->query('UPDATE `meters` SET `name` = :name, `capacity` = :capacity,
+                    `rates` = :rates
                     WHERE `company_id` = :company_id AND `id` = :id');
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
         $sql->bind(':id', $meter->id, PDO::PARAM_INT);
         $sql->bind(':name', $meter->name, PDO::PARAM_STR);
         $sql->bind(':capacity', $meter->capacity, PDO::PARAM_INT);
+        $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
         $sql->execute('Проблема при обновлении счетчика.');
         return $meter;
     }

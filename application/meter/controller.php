@@ -105,9 +105,7 @@ class controller_meter{
     }
 
     public static function private_update_rates(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->rates = $_GET['rates'];
-        return ['meter' => model_meter::update_rates(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->update_rates($_GET['id'], $_GET['rates'])];
     }
 }

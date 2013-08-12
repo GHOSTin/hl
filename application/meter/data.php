@@ -39,4 +39,7 @@ final class data_meter extends data_object{
     public function set_capacity($capacity){
         $this->capacity = $capacity;
     }
+    public function set_rates($rates){
+        $this->rates = $rates;
+    }
 }
