@@ -80,15 +80,17 @@ class mapper_number{
     }
 
     public function update(data_number $number){
-        $number->verify('id', 'number', 'fio');
+        $number->verify('id', 'number', 'fio', 'cellphone');
         $this->company->verify('id');
         $sql = new sql();
-        $sql->query('UPDATE `numbers` SET `number` = :number, `fio` = :fio
+        $sql->query('UPDATE `numbers` SET `number` = :number, `fio` = :fio,
+            `cellphone` = :cellphone
             WHERE `company_id` = :company_id AND `id` = :id');
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
         $sql->bind(':id', $number->id, PDO::PARAM_INT);
         $sql->bind(':number', $number->number, PDO::PARAM_STR);
         $sql->bind(':fio', $number->fio, PDO::PARAM_STR);
+        $sql->bind(':cellphone', $number->cellphone, PDO::PARAM_STR);
         $sql->execute('Проблема при обнослении лицевого счета.');
         return $user;
     }

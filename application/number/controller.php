@@ -511,9 +511,8 @@ class controller_number{
     }
 
     public static function private_update_number_cellphone(){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        return ['number' => model_number::update_number_cellphone(model_session::get_company(), $number, $_GET['cellphone'])];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->update_number_cellphone($_GET['id'], $_GET['cellphone'])];
     }
 
     public static function private_update_number_telephone(){
