@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set number = component.numbers[0] %}
+{% set number = component.number %}
 {% block js %}
     show_dialog(get_hidden_content());
     $('.update_number').click(function(){

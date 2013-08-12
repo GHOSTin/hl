@@ -281,6 +281,13 @@ class model_number{
 		return $number_id;
 	}
 
+	public function get_number(data_company $company, $id){
+		$mapper = new mapper_number();
+		$number = $mapper->find($company, $id);
+		self::is_data_number($number);
+		return $number;
+	}
+
 	/**
 	* Возвращает список лицевых счетов.
 	* @return array object data_number
