@@ -7,7 +7,7 @@ class model_meter{
 	*/
 	public static function add_period(data_company $company, data_meter $meter){
 	    $meter->verify('id', 'periods');
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
 	    $meters = self::get_meters($company, $meter_params);
@@ -35,7 +35,7 @@ class model_meter{
 	*/
 	public static function add_service(data_company $company, data_meter $meter){
 	    $meter->verify('id', 'service');
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    $meter_params = new data_meter();
 	    $meter_params->id = $meter->id;
 	    $meters = self::get_meters($company, $meter_params);
@@ -60,7 +60,7 @@ class model_meter{
 	* @return array из data_service
 	*/
 	public static function get_meters(data_company $company, data_meter $meter){
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    $sql = new sql();
 	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
 	    			FROM `meters` WHERE `company_id` = :company_id");
@@ -100,7 +100,7 @@ class model_meter{
 	*/
 	public static function create_meter(data_company $company, data_meter $meter){
 	    $meter->verify('name', 'capacity', 'rates');
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    if(count(self::get_meters($company, $meter)) > 0)
 	    	throw new e_model('Такой счетчик уже существует.');
 	    $meter->id = self::get_insert_id($company);
@@ -126,7 +126,7 @@ class model_meter{
 	* @return int
 	*/
 	private static function get_insert_id(data_company $company){
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    $sql = new sql();
 	    $sql->query("SELECT MAX(`id`) as `max_id` FROM `meters`
 	                WHERE `company_id` = :company_id");
@@ -145,7 +145,7 @@ class model_meter{
 	*/
 	public static function remove_period(data_company $company, data_meter $meter){
 	    $meter->verify('id', 'service');
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
 	        throw new e_model('Cчетчик с таким идентификатором не существует.');
@@ -172,7 +172,7 @@ class model_meter{
 	*/
 	public static function remove_service(data_company $company, data_meter $meter){
 	    $meter->verify('id', 'service');
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    $meters = self::get_meters($company, $meter);
 	    if(count($meters) !== 1)
 	        throw new e_model('Cчетчик с таким идентификатором не существует.');

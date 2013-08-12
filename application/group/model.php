@@ -1,13 +1,12 @@
 <?php
 class model_group{
 
-
 	/**
 	* Создает группу.
 	* @return object data_group
 	*/
 	public static function create_group(data_company $company, data_group $group){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$group->verify('name');
 		if(count(self::get_groups($company, $group)) !== 0)
 			throw new e_model('Группа с таким названием уже существует.');
@@ -36,7 +35,7 @@ class model_group{
 			throw new e_model('Неверное число пользователей.');
 		$user = $users[0];
 		model_user::is_data_user($user);
-		model_company::verify_id($company);
+		$company->verify('id');
 		$group->verify('id');
 		$groups = model_group::get_groups($company, $group);
 		if(count($groups) !== 1)
@@ -76,7 +75,7 @@ class model_group{
 	* @return int
 	*/
 	private static function get_insert_id(data_company $company){
-	    model_company::verify_id($company);
+	    $company->verify('id');
 	    $sql = new sql();
 	    $sql->query("SELECT MAX(`id`) as `max_id` FROM `groups`
 	                WHERE `company_id` = :company_id");
@@ -94,13 +93,13 @@ class model_group{
 	* @return array из data_group
 	*/
 	public static function get_groups(data_company $company, data_group $group){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
 					FROM `groups` WHERE `company_id` = :company_id");
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		if(!empty($group->id)){
-			self::verify_id($group);
+			$group->verify('id');
 			$sql->query(" AND `id` = :id");
 			$sql->bind(':id', $group->id, PDO::PARAM_INT);
 		}
@@ -112,13 +111,14 @@ class model_group{
 		$sql->query(" ORDER BY `name`");
 		return $sql->map(new data_group(), 'Проблема при выборке групп пользователей.');
 	}
+	
 	/**
 	* Возвращает список пользователей группы
 	* @return array из data_user
 	*/
 	public static function get_users(data_company $company, data_group $group){
-		self::verify_id($group);
-		model_company::verify_id($company);
+		$group->verify('id');
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
@@ -136,7 +136,7 @@ class model_group{
 	*/
 	public static function update_name(data_company $company, data_group $group, $name){
 		$group->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		// проверка существования группы
 		$groups = self::get_groups($company, $group);
 		if(count($groups) !== 1)
@@ -156,34 +156,6 @@ class model_group{
 		return $group;
 	}
 
-	/**
-	* Верификация идентификатора компании.
-	*/
-	public static function verify_company_id(data_group $group){
-		if($group->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
-	}
-	/**
-	* Верификация идентификатора группы.
-	*/
-	public static function verify_id(data_group $group){
-		if($group->id < 1)
-			throw new e_model('Идентификатор группы задан не верно.');
-	}
-	/**
-	* Верификация названия группы.
-	*/
-	public static function verify_name(data_group $group){
-		if(empty($group->name))
-			throw new e_model('Название группы задано не верно.');
-	}
-	/**
-	* Верификация статуса группы.
-	*/
-	public static function verify_status(data_group $group){
-		if(empty($group->status))
-			throw new e_model('Статус группы задан не верно.');
-	}
 	/**
 	* Проверка принадлежности объекта к классу data_group.
 	*/

@@ -5,8 +5,9 @@ class verify_meter{
     * Верификация идентификатора счетчика.
     */
     public static function company_id(data_meter $meter){
-        if($meter->company_id < 1)
-            throw new e_model('Идентификатор компании задан не верно.');
+        $company = new data_company();
+        $company->id = $meter->company_id;
+        $company->verify('id');
     }
 
     /**
@@ -21,7 +22,9 @@ class verify_meter{
     * Верификация идентификатора счетчика.
     */
     public static function id(data_meter $meter){
-        if($meter->id < 1)
+        if(!preg_match('/^[0-9]{1,8}$/', $meter->id))
+            throw new e_model('Идентификатор счетчика задан не верно.');
+        if($meter->id > 16777215 OR $meter->id < 1)
             throw new e_model('Идентификатор счетчика задан не верно.');
     }
 
@@ -29,7 +32,7 @@ class verify_meter{
     * Верификация названия счетчика.
     */
     public static function name(data_meter $meter){
-        if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]+$/u', $meter->name))
+        if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]{1,20}$/u', $meter->name))
             throw new e_model('Название счетчика задано не верно.');
     }
 
@@ -65,15 +68,7 @@ class verify_meter{
     public static function service(data_meter $meter){
         $services = ['cold_water', 'hot_water', 'electrical'];
         foreach($meter->service as $service)
-            if(array_search($service, $services) === false)
+            if(!in_array($service, $services))
                 throw new e_model('Услуга задана не верно.');
-    }
-
-    /**
-    * Верификация заводского номера счетчика.
-    */
-    public static function serial(data_meter $meter){
-        if(!preg_match('/^[а-яА-Я0-9]+$/u', $meter->serial))
-            throw new e_model('Заводской номер счетчика задано не верно.');
     }
 }

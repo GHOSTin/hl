@@ -1,12 +1,13 @@
 <?php
 class model_number{
+	
 	/**
 	* Создает новый лицевой ссчет уникальный для компании и для города.
 	* @return object data_number
 	*/
 	public static function create_number(data_company $company, data_city $city, data_flat $flat,
 										data_number $number){
-		model_city::verify_city_id($city);
+		$city->verify('id');
 		$number->id = self::get_insert_id($city);
 		$number->company_id = $company->id;
 		$number->city_id = $city->id;
@@ -55,7 +56,7 @@ class model_number{
 				throw new e_model('Дата поверки должна быть больше чем дата установки счетчика');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$number = new data_number();
 			$number->id = $old_meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -155,7 +156,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$number = new data_number();
 			$number->id = $meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -203,7 +204,7 @@ class model_number{
 	}
 
 	public static function add_meter(data_company $company, data_number2meter $data){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$data->verify('number_id', 'meter_id', 'serial', 'service', 'period',
 						'date_release', 'date_install', 'date_checking');
 		if($data->date_install < $data->date_release)
@@ -266,8 +267,8 @@ class model_number{
 	* @return int
 	*/
 	public static function get_insert_id(data_company $company, data_city $city){
-		model_company::verify_id($company);
-		model_city::verify_id($city);
+		$company->verify('id');
+		$city->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT MAX(`id`) as `max_number_id` FROM `numbers`
 					WHERE `company_id` = :company_id AND `city_id` = :city_id");
@@ -280,12 +281,19 @@ class model_number{
 		return $number_id;
 	}
 
+	public function get_number(data_company $company, $id){
+		$mapper = new mapper_number();
+		$number = $mapper->find($company, $id);
+		self::is_data_number($number);
+		return $number;
+	}
+
 	/**
 	* Возвращает список лицевых счетов.
 	* @return array object data_number
 	*/
 	public static function get_numbers(data_company $company, data_number $number){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		if(!empty($number->id)){
 			$number->verify('id');
@@ -341,7 +349,7 @@ class model_number{
 	* Возвращает данные счетчика
 	*/
 	public static function get_last_meter_data(data_company $company, data_number2meter $number, $time){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$number->verify('number_id', 'meter_id', 'serial');
 		$sql = new sql();
 		$sql->query("SELECT `time`, `value` FROM `meter2data`
@@ -363,7 +371,7 @@ class model_number{
 	*/
 	public static function get_meter_data(data_company $company, data_number2meter $data, 
 											$time_begin, $time_end){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$data->verify('number_id', 'meter_id', 'serial');
 		if(empty($time_begin) OR empty($time_end))
 			throw new e_model('Время выборки задано не верно.');
@@ -408,7 +416,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$number = new data_number();
 			$number->id = $meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -454,7 +462,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$number = new data_number();
 			$number->id = $meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -500,7 +508,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$number = new data_number();
 			$number->id = $meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -545,7 +553,7 @@ class model_number{
 			$sql = new sql();
 			$sql->begin();
 			$number2meter->verify('number_id', 'meter_id', 'serial');
-			model_company::verify_id($company);
+			$company->verify('id');
 			if(empty($data->time))
 				throw new e_model('Время выборки задано не верно.');
 			// проверка существования лицевого счета
@@ -624,7 +632,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$number = new data_number();
 			$number->id = $meter->number_id;
 			$numbers = self::get_numbers($company, $number);
@@ -673,7 +681,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$meters = model_number2meter::get_number2meters($company, $meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
@@ -710,7 +718,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$meters = model_number2meter::get_number2meters($company, $meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
@@ -747,7 +755,7 @@ class model_number{
 			$meter->verify('number_id', 'meter_id', 'serial');
 			$sql = new sql();
 			$sql->begin();
-			model_company::verify_id($company);
+			$company->verify('id');
 			$meters = model_number2meter::get_number2meters($company, $meter);
 			if(count($meters) !== 1)
 				throw new e_model('Проблема при выборке счетчика.');
@@ -785,7 +793,7 @@ class model_number{
 												$serial){
 		try{
 			$old_data->verify('number_id', 'meter_id', 'serial');
-			model_company::verify_id($company);
+			$company->verify('id');
 			$sql = new sql();
 			$sql->begin();
 			$meters = model_number2meter::get_number2meters($company, $old_data);
@@ -828,7 +836,7 @@ class model_number{
 	*/
 	public static function update_number(data_company $company, data_number $number_params){
 		$number_params->verify('id', 'number');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$number = model_number::get_numbers($company, $number_params)[0];
 		self::is_data_number($number);
 		$number->number = $number_params->number;

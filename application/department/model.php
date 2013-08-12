@@ -1,18 +1,16 @@
 <?php
 class model_department{
+
 	/**
 	* Создает новый участок в компании.
 	* @return object data_department
 	*/
 	public static function create_department(data_company $company, data_department $department,
 											data_current_user $user){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);
-		self::verify_id($department);
-		self::verify_company_id($department);
-		self::verify_status($department);
-		self::verify_name($department);
+		$department->verify('id'. 'company_id', 'status', 'name');
 		$sql = new sql();
 		$sql->query("INSERT INTO `departments` (`id`, `company_id`, `status`, `name`)
 					VALUES (:department_id, :company_id, :status, :name)");
@@ -24,12 +22,13 @@ class model_department{
 		$$sql->close();
 		return $department;
 	}
+
 	/**
 	* Возвращает следующий для вставки идентификатор участка.
 	* @return int
 	*/
 	private static function get_insert_id(data_company $company){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT MAX(`id`) as `max_department_id` FROM `departments`
 					WHERE `company_id` = :company_id");
@@ -41,12 +40,13 @@ class model_department{
 		$sql->close();
 		return $department_id;
 	}
+	
 	/**
 	* Возвращает список участков компании.
 	* @return array из object data_department
 	*/
 	public static function get_departments(data_company $company, data_department $department){
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
 					FROM `departments` WHERE `company_id` = :company_id");
@@ -65,34 +65,7 @@ class model_department{
 		}
 		return $sql->map(new data_department(), 'Проблема при выборке пользователей.');
 	}
-	/**
-	* Верификация идентификатора компании.
-	*/
-	public static function verify_company_id(data_department $department){
-		if($department->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
-	}
-	/**
-	* Верификация идентификатора участка.
-	*/
-	public static function verify_id(data_department $department){
-		if($department->id < 1)
-			throw new e_model('Идентификатор участка задан не верно.');
-	}
-	/**
-	* Верификация названия участка.
-	*/
-	public static function verify_name(data_department $department){
-		if(empty($department->name))
-			throw new e_model('Название участка задано не верно.');
-	}
-	/**
-	* Верификация статуса участка.
-	*/
-	public static function verify_status(data_department $department){
-		if(empty($department->status))
-			throw new e_model('Статус участка задан не верно.');
-	}
+
 	/**
 	* Проверка принадлежности объекта к классу data_department.
 	*/

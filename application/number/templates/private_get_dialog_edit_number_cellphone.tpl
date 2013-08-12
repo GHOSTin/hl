@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set number = component.numbers[0] %}
+{% set number = component.number %}
 {% block title %}Диалог редактирования сотового телефона владельца{% endblock title %}
 {% block dialog %}
 	<input type="text" class="dialog-input-cellphone" value="{{ number.cellphone }}">

@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set user = component.users[0] %}
+{% set user = component.user %}
 {% block title %}Диалог редактирования ФИО пользователя{% endblock title %}
 {% block dialog %}
 	<ul class="unstyled">

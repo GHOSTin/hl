@@ -1,13 +1,13 @@
 <?php
 class model_street{
+
 	/**
 	* Создает новый дом.
 	* @return object data_city
 	*/
 	public static function create_house(data_street $street, data_house $house){
-		model_house::verify_status($house);
-		model_house::verify_number($house);
-		self::verify_id($street);
+		$house->verify('status', 'number');
+		$street->verify('id');
 		$street = model_street::get_streets($street)[0];
 		model_street::is_data_street($street);
 		$houses = model_street::get_houses($street, $house);
@@ -30,6 +30,7 @@ class model_street{
 		$sql->execute('Проблемы при создании нового дома.');
 		return $house;
 	}
+
 	/**
 	* Возвращает следующий для вставки идентификатор улицы.
 	* @return int
@@ -44,6 +45,7 @@ class model_street{
 		$sql->close();
 		return $street_id;
 	}
+
 	/**
 	* Возвращает список улиц.
 	* @return array из object data_street
@@ -65,7 +67,7 @@ class model_street{
 			}
 			$sql->query("IN(".implode(',', $params).") ORDER BY `streets`.`name`");
 		}elseif(!empty($street->id)){
-			model_street::verify_id($street);
+			$street->verify('id');
 			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
 						FROM `streets` WHERE `id` = :id");
 			$sql->bind(':id', $street->id, PDO::PARAM_INT);
@@ -74,6 +76,7 @@ class model_street{
 						FROM `streets` ORDER BY `name`");
 		return $sql->map(new data_street(), 'Проблема при выборке улиц из базы данных.');
 	}
+	
 	/**
 	* Возвращает список домов
 	* @return array из object data_house
@@ -112,48 +115,7 @@ class model_street{
 		$sql->query(" ORDER BY (`houses`.`housenumber` + 0)");
 		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
 	}
-	/**
-	* Верификация идентификатора компании.
-	*/
-	public static function verify_company_id(data_street $street){
-		if($street->company_id < 1)
-			throw new e_model('Идентификатор компании задан не верно.');
-	}
-	/**
-	* Верификация идентификатора города.
-	*/
-	public static function verify_city_id(data_street $street){
-		if($street->city_id < 1)
-			throw new e_model('Идентификатор города задан не верно.');
-	}
-	/**
-	* Верификация идентификатора участка.
-	*/
-	public static function verify_department_id(data_street $street){
-		if($street->department_id < 1)
-			throw new e_model('Идентификатор участка задан не верно.');
-	}
-	/**
-	* Верификация идентификатора улицы.
-	*/
-	public static function verify_id(data_street $street){
-		if($street->id < 1)
-			throw new e_model('Идентификатор улицы задан не верно.');
-	}
-	/**
-	* Верификация статуса улицы.
-	*/
-	public static function verify_status(data_street $street){
-		if(empty($street->status))
-			throw new e_model('Статус улицы задан не верно.');
-	}
-	/**
-	* Верификация названия улицы.
-	*/
-	public static function verify_name(data_street $street){
-		if(empty($street->name))
-			throw new e_model('Название улицы задан не верно.');
-	}
+	
 	/**
 	* Проверка принадлежности объекта к классу data_street.
 	*/

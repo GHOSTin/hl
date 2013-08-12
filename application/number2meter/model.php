@@ -5,7 +5,7 @@ class model_number2meter{
     * Возвращает список счетчиков лицевого счета
     */
     public static function get_number2meters(data_company $company, data_number2meter $data){
-        model_company::verify_id($company);
+        $company->verify('id');
         $data->verify('number_id');
         $sql = new sql();
         $sql->query("SELECT `number2meter`.`meter_id`, `number2meter`.`status`, `number2meter`.`number_id`,
