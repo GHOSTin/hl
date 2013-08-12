@@ -75,12 +75,12 @@ class model_meter{
 	* Возвращает список счетчиков
 	* @return array из data_service
 	*/
-	public static function get_meters(data_company $company, data_meter $meter){
-	    $company->verify('id');
+	public static function get_meters(data_meter $meter){
+	    $this->company->verify('id');
 	    $sql = new sql();
 	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
 	    			FROM `meters` WHERE `company_id` = :company_id");
-	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+	    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
 	    if(!empty($meter->id)){
 	        $meter->verify('id');
 	        $sql->query(" AND `id` = :id");

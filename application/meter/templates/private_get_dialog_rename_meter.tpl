@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% block title %}Диалог переименования счетчика{% endblock title %}
 {% block dialog %}
 	<input type="input" class="dialog-input-name" value="{{ meter.name }}">

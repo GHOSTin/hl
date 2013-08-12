@@ -26,17 +26,13 @@ class controller_meter{
     }
 
     public static function private_get_dialog_add_period(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_add_service(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_create_meter(){
@@ -44,17 +40,13 @@ class controller_meter{
     }
 
     public static function private_get_dialog_edit_capacity(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_rates(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_remove_period(){
@@ -74,10 +66,8 @@ class controller_meter{
     }
 
     public static function private_get_dialog_rename_meter(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_meter_content(){
@@ -107,7 +97,8 @@ class controller_meter{
     }
 
     public static function private_show_default_page(){
-        return ['meters' => model_meter::get_meters(model_session::get_company(), new data_meter())];
+        $model = new model_meter(model_session::get_company());
+        return ['meters' => $model->get_meters(new data_meter())];
     }
 
     public static function private_update_capacity(){

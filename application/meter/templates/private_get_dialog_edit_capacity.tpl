@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% block title %}Диалог редактирования разрядности{% endblock title %}
 {% block dialog %}
 	<select class="dialog-input-capacity">
