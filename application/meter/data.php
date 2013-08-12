@@ -27,4 +27,8 @@ final class data_meter extends data_object{
         foreach(func_get_args() as $value)
             verify_meter::$value($this);
     }
+
+    public function set_id($id){
+        $this->id = $id;
+    }
 }

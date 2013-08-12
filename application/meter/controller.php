@@ -81,10 +81,8 @@ class controller_meter{
     }
 
     public static function private_get_meter_content(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_remove_period(){

@@ -1,6 +1,12 @@
 <?php
 class model_meter{
 
+	private $company;
+
+	public function __construct(data_company $company){
+		$this->company = $company;
+	}
+
 	/**
 	* Создает новый период.
 	* @return data_meter
@@ -53,6 +59,16 @@ class model_meter{
 	    $sql->execute('Проблема при добавлении услуги в счетчик.');
 	    $sql->close();
 	    return $new_meter;
+	}
+
+	/*
+	* Возвращает объект счетчика ли падает с исключением что счетчик не существует.
+	*/
+	public function get_meter($id){
+		$mapper = new mapper_meter($this->company);
+		$meter = $mapper->find($id);
+		$this->is_data_meter($meter);
+		return $meter;
 	}
 
 	/**

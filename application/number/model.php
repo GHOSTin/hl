@@ -837,7 +837,7 @@ class model_number{
 	}
 
 	/**
-	* Обнавляет номер лицевого счета
+	* Обновляет номер лицевого счета
 	* @return object data_number
 	*/
 	public function update_number($id, $num){
@@ -853,7 +853,7 @@ class model_number{
 	}
 
 	/**
-	* Обнавляет ФИО владельца лицевого счета
+	* Обновляет ФИО владельца лицевого счета
 	* @return object data_number
 	*/
 	public function update_number_fio($id, $fio){
@@ -877,7 +877,7 @@ class model_number{
 	}
 
 	/**
-	* Обнавляет телефон владельца лицевого счета
+	* Обновляет телефон владельца лицевого счета
 	* @return object data_number
 	*/
 	public function update_number_telephone($id, $telephone){
