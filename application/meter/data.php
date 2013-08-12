@@ -28,6 +28,22 @@ final class data_meter extends data_object{
             verify_meter::$value($this);
     }
 
+    public function get_id(){
+        return $this->id;
+    }
+
+    public function get_name(){
+        return $this->name;
+    }
+
+    public function get_capacity(){
+        return $this->capacity;
+    }
+
+    public function get_rates(){
+        return $this->rates;
+    }
+
     public function set_id($id){
         $this->id = $id;
     }

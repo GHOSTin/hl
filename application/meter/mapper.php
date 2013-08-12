@@ -53,10 +53,10 @@ class mapper_meter{
                     `rates` = :rates
                     WHERE `company_id` = :company_id AND `id` = :id');
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':id', $meter->id, PDO::PARAM_INT);
-        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
-        $sql->bind(':capacity', $meter->capacity, PDO::PARAM_INT);
-        $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
+        $sql->bind(':id', $meter->get_id(), PDO::PARAM_INT);
+        $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
+        $sql->bind(':capacity', $meter->get_capacity(), PDO::PARAM_INT);
+        $sql->bind(':rates', $meter->get_rates(), PDO::PARAM_INT);
         $sql->execute('Проблема при обновлении счетчика.');
         return $meter;
     }
