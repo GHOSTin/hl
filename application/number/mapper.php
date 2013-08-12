@@ -69,7 +69,7 @@ class mapper_number{
                     AND `numbers`.`house_id` = `houses`.`id`
                     AND `houses`.`street_id` = `streets`.`id`");
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':number', $num, PDO::PARAM_INT);
+        $sql->bind(':number', $num, PDO::PARAM_STR);
         $numbers = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.');
         $count = count($numbers);
         if($count === 0)
@@ -77,5 +77,18 @@ class mapper_number{
         if($count !== 1)
             throw new e_model('Неожиданное количество возвращаемых лицевых счетов.');
         return  $numbers[0];
+    }
+
+    public function update(data_number $number){
+        $number->verify('id', 'number');
+        $this->company->verify('id');
+        $sql = new sql();
+        $sql->query('UPDATE `numbers` SET `number` = :number
+            WHERE `company_id` = :company_id AND `id` = :id');
+        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+        $sql->bind(':id', $number->id, PDO::PARAM_INT);
+        $sql->bind(':number', $number->number, PDO::PARAM_STR);
+        $sql->execute('Проблема при обнослении лицевого счета.');
+        return $user;
     }
 }
