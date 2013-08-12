@@ -100,10 +100,8 @@ class controller_meter{
     }
 
     public static function private_update_capacity(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->capacity = $_GET['capacity'];
-        return ['meter' => model_meter::update_capacity(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->update_capacity($_GET['id'], $_GET['capacity'])];
     }
 
     public static function private_update_rates(){

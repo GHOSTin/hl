@@ -35,4 +35,8 @@ final class data_meter extends data_object{
     public function set_name($name){
         $this->name = $name;
     }
+
+    public function set_capacity($capacity){
+        $this->capacity = $capacity;
+    }
 }
