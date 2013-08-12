@@ -32,6 +32,10 @@ final class data_meter extends data_object{
         return $this->id;
     }
 
+    public function get_company_id(){
+        return $this->company_id;
+    }
+
     public function get_name(){
         return $this->name;
     }
@@ -48,6 +52,10 @@ final class data_meter extends data_object{
         $this->id = $id;
     }
 
+    public function set_company_id($id){
+        $this->company_id = $id;
+    }
+
     public function set_name($name){
         $this->name = $name;
     }
@@ -55,7 +63,12 @@ final class data_meter extends data_object{
     public function set_capacity($capacity){
         $this->capacity = $capacity;
     }
+
     public function set_rates($rates){
         $this->rates = $rates;
+    }
+
+    public function get_periods(){
+        return $this->periods;
     }
 }

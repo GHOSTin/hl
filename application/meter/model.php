@@ -114,45 +114,15 @@ class model_meter{
 	* Создает новый счетчик
 	* @return data_meter
 	*/
-	public static function create_meter(data_company $company, data_meter $meter){
-	    $meter->verify('name', 'capacity', 'rates');
-	    $company->verify('id');
-	    if(count(self::get_meters($company, $meter)) > 0)
-	    	throw new e_model('Такой счетчик уже существует.');
-	    $meter->id = self::get_insert_id($company);
-	    $meter->company_id = $company->id;
-	    $meter->periods = [];
-	    $meter->verify('id', 'company_id', 'name', 'rates', 'capacity');
-	    $sql = new sql();
-	    $sql->query("INSERT INTO `meters` (`id`, `company_id`, `name`, `rates`, `capacity`,`periods`)
-	                VALUES (:id, :company_id, :name, :rates, :capacity, :periods)");
-	    $sql->bind(':id', $meter->id, PDO::PARAM_INT);
-	    $sql->bind(':company_id', $meter->company_id, PDO::PARAM_INT);
-	    $sql->bind(':name', $meter->name, PDO::PARAM_STR);
-	    $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
-	    $sql->bind(':capacity', $meter->capacity, PDO::PARAM_INT);
-	    $sql->bind(':periods', implode(';', $meter->periods), PDO::PARAM_STR);
-	    $sql->execute('Проблемы при создании счетчика.');
-	    $sql->close();
-	    return $meter;
-	}
-
-	/**
-	* Возвращает следующий для вставки идентификатор счетчика.
-	* @return int
-	*/
-	private static function get_insert_id(data_company $company){
-	    $company->verify('id');
-	    $sql = new sql();
-	    $sql->query("SELECT MAX(`id`) as `max_id` FROM `meters`
-	                WHERE `company_id` = :company_id");
-	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->execute('Проблема при опредении следующего meter_id.');
-	    if($sql->count() !== 1)
-	        throw new e_model('Проблема при опредении следующего meter_id.');
-	    $id = (int) $sql->row()['max_id'] + 1;
-	    $sql->close();
-	    return $id;
+	public function create_meter($name, $capacity, $rates){
+		$mapper = new mapper_meter($this->company);
+		if(!is_null($mapper->find_by_name($name)))
+			throw new e_model('Счетчик с таким именем уже существует');
+		$meter = new data_meter();
+		$meter->set_name($name);
+		$meter->set_capacity($capacity);
+		$meter->set_rates($rates);
+		return $mapper->create($meter);
 	}
 
 	/**
