@@ -90,10 +90,8 @@ class controller_meter{
     }
 
     public static function private_rename_meter(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->name = $_GET['name'];
-        return ['meter' => model_meter::rename_meter(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->rename_meter($_GET['id'], $_GET['name'])];
     }
 
     public static function private_show_default_page(){

@@ -25,4 +25,36 @@ class mapper_meter{
             throw new e_model('Неожиданное количество возвращаемых счетчиков.');
         return  $meters[0];
     }
+
+    public function find_by_name($name){
+        $this->company->verify('id');
+        $meter = new data_meter();
+        $meter->set_name($name);
+        $meter->verify('name');
+        $sql = new sql();
+        $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
+                    FROM `meters` WHERE `company_id` = :company_id AND `name` = :name");
+        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
+        $meters = $sql->map(new data_meter(), 'Проблема при запросе счетчика.');
+        $count = count($meters);
+        if($count === 0)
+            return null;
+        if($count !== 1)
+            throw new e_model('Неожиданное количество возвращаемых счетчиков.');
+        return  $meters[0];
+    }
+
+    public function update(data_meter $meter){
+        $this->company->verify('id');
+        $meter->verify('id', 'name');
+        $sql = new sql();
+        $sql->query('UPDATE `meters` SET `name` = :name
+                    WHERE `company_id` = :company_id AND `id` = :id');
+        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+        $sql->bind(':id', $meter->id, PDO::PARAM_INT);
+        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
+        $sql->execute('Проблема при обновлении счетчика.');
+        return $meter;
+    }
 }

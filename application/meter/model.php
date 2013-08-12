@@ -75,7 +75,7 @@ class model_meter{
 	* Возвращает список счетчиков
 	* @return array из data_service
 	*/
-	public static function get_meters(data_meter $meter){
+	public function get_meters(data_meter $meter){
 	    $this->company->verify('id');
 	    $sql = new sql();
 	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
@@ -213,29 +213,16 @@ class model_meter{
 	* Создает новую услугу
 	* @return data_service
 	*/
-	public static function rename_meter(data_company $company, data_meter $meter){
-	    $meter->verify('id', 'name');
-	    $meter_params = new data_meter();
-	    $meter_params->name = $meter->name;
-	    if(count(self::get_meters($company, $meter_params)) > 0)
-	        throw new e_model('Счетчик с таким именем уже существует.');
-	    $meter_params = new data_meter();
-	    $meter_params->id = $meter->id;
-	    $meters = self::get_meters($company, $meter_params);
-	    if(count($meters) !== 1)
-	        throw new e_model('Cчетчик с таким идентификатором не существует.');
-	    $new_meter = $meters[0];
-	    self::is_data_meter($new_meter);
-	    $new_meter->name = $meter->name;
-	    $sql = new sql();
-	    $sql->query("UPDATE `meters` SET `name` = :name
-	                WHERE `company_id` = :company_id AND `id` = :id");
-	    $sql->bind(':id', $new_meter->id, PDO::PARAM_INT);
-	    $sql->bind(':company_id', $new_meter->company_id, PDO::PARAM_INT);
-	    $sql->bind(':name', $new_meter->name, PDO::PARAM_STR);
-	    $sql->execute('Проблема при переименовании счетчика.');
-	    $sql->close();
-	    return $new_meter;
+	public function rename_meter($id, $name){
+		$meter = $this->get_meter($id);
+		$mapper = new mapper_meter($this->company);
+		$old_meter = $mapper->find_by_name($name);
+		if(!is_null($old_meter))
+			if($meter->id != $old_meter->id)
+				throw new e_model('Счетчик с таким именем уже существует.');
+		$meter->set_name($name);
+		$mapper->update($meter);
+		return $meter;
 	}
 
 	/**

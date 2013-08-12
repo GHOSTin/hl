@@ -31,4 +31,8 @@ final class data_meter extends data_object{
     public function set_id($id){
         $this->id = $id;
     }
+
+    public function set_name($name){
+        $this->name = $name;
+    }
 }
