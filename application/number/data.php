@@ -44,4 +44,8 @@ final class data_number extends data_object{
     public function set_number($number){
     	$this->number = $number;
     }
+
+    public function set_fio($fio){
+    	$this->fio = $fio;
+    }
 }

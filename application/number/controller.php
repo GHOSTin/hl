@@ -506,9 +506,8 @@ class controller_number{
     }
 
     public static function private_update_number_fio(){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        return ['number' => model_number::update_number_fio(model_session::get_company(), $number, $_GET['fio'])];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->update_number_fio($_GET['id'], $_GET['fio'])];
     }
 
     public static function private_update_number_cellphone(){
