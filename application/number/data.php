@@ -37,6 +37,10 @@ final class data_number extends data_object{
     	$this->cellphone = $cellphone;
     }
 
+    public function set_fio($fio){
+    	$this->fio = $fio;
+    }
+
     public function set_id($id){
     	$this->id = $id;
     }
@@ -45,7 +49,7 @@ final class data_number extends data_object{
     	$this->number = $number;
     }
 
-    public function set_fio($fio){
-    	$this->fio = $fio;
+    public function set_telephone($telephone){
+    	$this->telephone = $telephone;
     }
 }
