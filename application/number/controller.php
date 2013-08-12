@@ -428,19 +428,23 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_number(){
-        return ['number' => (new model_number)->get_number(model_session::get_company(), $_GET['id'])];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->get_number($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_number_fio(){
-        return ['number' => (new model_number)->get_number(model_session::get_company(), $_GET['id'])];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->get_number($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_number_telephone(){
-        return ['number' => (new model_number)->get_number(model_session::get_company(), $_GET['id'])];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->get_number($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_number_cellphone(){
-        return ['number' => (new model_number)->get_number(model_session::get_company(), $_GET['id'])];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->get_number($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_meter_data(){
@@ -497,11 +501,8 @@ class controller_number{
     }
 
     public static function private_update_number(){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        $number->number = $_GET['number'];
-        $number->verify('id', 'number');
-        return ['number' => model_number::update_number(model_session::get_company(), $number)];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->update_number($_GET['id'], $_GET['number'])];
     }
 
     public static function private_update_number_fio(){

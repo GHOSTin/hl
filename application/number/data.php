@@ -32,4 +32,16 @@ final class data_number extends data_object{
         foreach(func_get_args() as $value)
             verify_number::$value($this);
     }
+
+    public function set_cellphone($cellphone){
+    	$this->cellphone = $cellphone;
+    }
+
+    public function set_id($id){
+    	$this->id = $id;
+    }
+
+    public function set_number($number){
+    	$this->number = $number;
+    }
 }

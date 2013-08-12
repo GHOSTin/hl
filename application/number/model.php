@@ -1,5 +1,11 @@
 <?php
 class model_number{
+
+	private $company;
+
+	public function __construct(data_company $company){
+		$this->company = $company;
+	}
 	
 	/**
 	* Создает новый лицевой ссчет уникальный для компании и для города.
@@ -281,9 +287,9 @@ class model_number{
 		return $number_id;
 	}
 
-	public function get_number(data_company $company, $id){
-		$mapper = new mapper_number();
-		$number = $mapper->find($company, $id);
+	public function get_number($id){
+		$mapper = new mapper_number($this->company);
+		$number = $mapper->find($id);
 		self::is_data_number($number);
 		return $number;
 	}
@@ -834,53 +840,16 @@ class model_number{
 	* Обнавляет номер лицевого счета
 	* @return object data_number
 	*/
-	public static function update_number(data_company $company, data_number $number_params){
-		$number_params->verify('id', 'number');
-		$company->verify('id');
-		$number = model_number::get_numbers($company, $number_params)[0];
-		self::is_data_number($number);
-		$number->number = $number_params->number;
-		try{
-			$sql = new sql();
-			$sql->begin();
-			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
-							`numbers`.`city_id`, `numbers`.`house_id`, 
-							`numbers`.`flat_id`, `numbers`.`number`,
-							`numbers`.`type`, `numbers`.`status`,
-							`numbers`.`fio`, `numbers`.`telephone`,
-							`numbers`.`cellphone`, `numbers`.`password`,
-							`numbers`.`contact-fio` as `contact_fio`,
-							`numbers`.`contact-telephone` as `contact_telephone`,
-							`numbers`.`contact-cellphone` as `contact_cellphone`
-						FROM `numbers` WHERE `numbers`.`company_id` = :company_id
-						AND `numbers`.`id` = :number_id
-						AND `numbers`.`number` = :number
-					AND `numbers`.`city_id` = :city_id");
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
-			$sql->bind(':number', $number->number, PDO::PARAM_STR);
-			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
-			$sql->execute('Проблема при запросе лицевого счета.');
-			if($sql->count() > 0)
-				throw new e_model('Счет с таким лицевым уже существует в системе.');
-			$sql = new sql();
-			$sql->query("UPDATE `numbers` SET `number` = :number 
-						WHERE `company_id` = :company_id AND `city_id` = :city_id
-						AND `id` = :number_id");
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-			$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
-			$sql->bind(':number', $number->number, PDO::PARAM_STR);
-			$sql->bind(':city_id', $number->city_id, PDO::PARAM_INT);
-			$sql->execute('Проблема при запросе лицевого счета.');
-			$sql->commit();
-			return $number;
-		}catch(exception $e){
-			$sql->rollback();
-			if($e instanceof e_model)
-				throw new e_model($e->getMessage());
-			else
-				throw new e_model('Ошибка в PDO.');
-		}
+	public function update_number($id, $num){
+		$number = $this->get_number($id);
+		$mapper = new mapper_number($this->company);
+		$old_number = $mapper->find_by_number($num);
+		if(!is_null($old_number))
+			if($number->id != $old_number->id)
+				throw new e_model('В базе уже есть лицевой счет с таким номером.');
+		$number->number = $num;
+		$mapper->update($number);
+		return $number;
 	}
 
 	/**
