@@ -215,12 +215,8 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_period(){
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
-        $data->verify('number_id', 'meter_id', 'serial');
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
+        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
     }
 
     public static function private_get_dialog_edit_meter_status(){
@@ -543,14 +539,9 @@ class controller_number{
     }
 
     public static function private_update_period(){
-        $meter = new data_number2meter();
-        $meter->number_id = $_GET['number_id'];
-        $meter->meter_id = $_GET['meter_id'];
-        $meter->serial = $_GET['serial'];
-        $company = model_session::get_company();
         $period = ((int) $_GET['year']*12) + (int) $_GET['month'];
-        model_number::update_period($company, $meter, $period);
-        return ['meters' => model_number2meter::get_number2meters($company, $meter)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
+        return ['meter' => $model->update_period($_GET['meter_id'], $_GET['serial'], $period)];
     }
 
     public static function private_update_meter_status(){

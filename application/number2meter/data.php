@@ -35,4 +35,12 @@ final class data_number2meter extends data_object{
         foreach(func_get_args() as $value)
             verify_number2meter::$value($this);
     }
+
+    public function set_company_id($id){
+        $this->company_id = $id;
+    }
+
+    public function set_period($period){
+        $this->period = $period;
+    }
 }

@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% set year = meter.period // 12 %}
 {% set month = meter.period % 12 %}
 {% block title %}Диалог редактирования периода счетчика{% endblock title %}
