@@ -16,7 +16,7 @@ class model_meter2data{
     public function get_values($begin, $end){
         $this->company->verify('id');
         if(empty($begin) OR empty($end))
-            throw new e_model('Время выборки задано не верно.');
+            throw new e_model('Время начала выборки больше чем время конца выборки.');
         $sql = new sql();
         $sql->query("SELECT `time`, `value`, `comment`, `way`, `timestamp` FROM `meter2data`
                     WHERE `meter2data`.`company_id` = :company_id

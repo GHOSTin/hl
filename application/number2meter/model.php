@@ -39,16 +39,6 @@ class model_number2meter{
                     AND `meters`.`id` = `number2meter`.`meter_id`");
         $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        if(!empty($data->meter_id)){
-            $data->verify('meter_id');
-            $sql->query("AND `number2meter`.`meter_id` = :meter_id");
-            $sql->bind(':meter_id', $data->meter_id, PDO::PARAM_INT);
-        }
-        if(!empty($data->serial)){
-            $data->verify('serial');
-            $sql->query("AND `number2meter`.`serial` = :serial");
-            $sql->bind(':serial', $data->serial, PDO::PARAM_STR);
-        }
         return $sql->map(new data_number2meter(), 'Проблема при при выборке счетчиков лицевого счета.');
     }
 }
