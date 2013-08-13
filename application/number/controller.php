@@ -287,9 +287,6 @@ class controller_number{
     }
 
     public static function private_get_number_content(){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        $number->verify('id');
         $switch = model_session::get_setting_param('number', 'number_content');
         switch($switch){
             case 'meters':
@@ -315,12 +312,13 @@ class controller_number{
                 $c2n->verify('number_id');
                 $company = model_session::get_company();
                 return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
-                        'numbers' => [$number],
+                        'number' => $number,
                         'setting' => $switch];
             break;
 
             default:
-                return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+                $model = new model_number(model_session::get_company());
+                return ['number' => $model->get_number($_GET['id'])];
         }
     }
 
