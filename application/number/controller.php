@@ -325,11 +325,9 @@ class controller_number{
     }
 
     public static function private_get_number_information(){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        $number->verify('id');
         model_session::set_setting_param('number', 'number_content', 'information');
-        return ['numbers' => model_number::get_numbers(model_session::get_company(),$number)];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->get_number($_GET['id'])];
     }
 
     public static function private_get_meter_data(){
