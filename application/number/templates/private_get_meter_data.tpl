@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% set date = component.time %}
 {% set months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август',
     'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] %}
