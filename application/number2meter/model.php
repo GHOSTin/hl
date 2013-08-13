@@ -48,4 +48,14 @@ class model_number2meter{
         $mapper = new mapper_number2meter($this->company, $this->number_id);
         return $mapper->update($meter);
     }
+
+    public function update_status($meter_id, $serial){
+        $meter = $this->get_meter($meter_id, $serial);
+        if($meter->get_status() === 'enabled')
+            $meter->set_status('disabled');
+        else
+            $meter->set_status('enabled');
+        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        return $mapper->update($meter);
+    }
 }
