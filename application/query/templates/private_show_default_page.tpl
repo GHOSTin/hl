@@ -1,7 +1,7 @@
 {% extends "default.tpl" %}
 {% block component %}
     <!-- begin left block -->
-    <div class="col-sm-3">
+    <div class="col-sm-3 col-lg-3">
         <div class="row">
             <div class="btn-group col-12 query_controls">
                 {% if rules.createQuery == true %}
@@ -9,7 +9,7 @@
                 {% endif %}
                 <div class="get_search btn btn-default col-4">Поиск</div>
             </div>
-            <div  class="page-header col-10 col-lg-push-1">
+            <div  class="page-header col-12 col-lg-10 col-lg-push-1">
                 <h4 class="view-toggle-filters">Фильтры
                 <small class="pull-right cm clear_filters absolute_hide">сбросить</small></h4>
             </div>
@@ -17,7 +17,7 @@
         </div>
     </div>
     <!-- end left block, begin right block -->
-    <div class="col-sm-9">
+    <div class="col-sm-9 col-lg-9">
             <!-- begin timeline -->
             <nav class="timeline row">
                 {% include '@query/timeline.tpl' %}

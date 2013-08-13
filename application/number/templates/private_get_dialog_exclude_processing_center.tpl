@@ -7,7 +7,7 @@
 	Вы действительно хотите удалить идентификатор <b>{{ identifier }}</b> расчетного центра <b>{{ center.name }}</b>?
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn exclude_processing_center">Удалить</div>
+	<div class="btn btn-primary exclude_processing_center">Удалить</div>
 {% endblock buttons %}
 {% block script %}
 // Удаляет идентификатор в процессинговом центре

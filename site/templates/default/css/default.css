@@ -291,9 +291,9 @@ form.well{
     overflow: hidden;
 }
 
-@media (max-width: 979px){
-    .main {margin: 0;}
-}
+/*@media (max-width: 979px){*/
+    /*.main {margin: 0;}*/
+/*}*/
 
 @media print{
     #print{

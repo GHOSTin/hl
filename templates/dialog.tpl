@@ -7,7 +7,7 @@
         </div>  
         <div class="modal-body">{% block dialog %}{% endblock dialog %}</div>
         <div class="modal-footer">
-            {% block buttons %}{% endblock buttons %}<div class="btn close_dialog">Отмена</div>
+            {% block buttons %}{% endblock buttons %}<div class="btn btn-default close_dialog">Отмена</div>
         </div>    
     </div>
 </div>

@@ -4,19 +4,19 @@
 {% set month = meter.period % 12 %}
 {% block title %}Диалог редактирования периода счетчика{% endblock title %}
 {% block dialog %}
-	<select class="dialog-input-year" style="width:100px">
+	<select class="dialog-input-year col-3">
 		{% for i in 0..19 %}
 			<option{% if i == year %} selected{% endif %}>{{ i }}</option>
 		{% endfor %}
 	</select> г.
-	<select class="dialog-input-month" style="width:100px">
+	<select class="dialog-input-month col-3">
 		{% for i in 0..11 %}
 			<option{% if i == month %} selected{% endif %}>{{ i }}</option>
 		{% endfor %}
 	</select> мес.
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_period">Изменить</div>
+	<div class="btn btn-primary update_period">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет период поверки счетчика привязанного к лицевому счету

@@ -2,10 +2,10 @@
 {% set meter = component.meters[0] %}
 {% block title %}Диалог редактирования времени установка счетчика{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-date_install" value="{{ meter.date_install|date('d.m.Y') }}">	
+	<input type="text" class="dialog-input-date_install form-control" value="{{ meter.date_install|date('d.m.Y') }}">
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_date_install">Изменить</div>
+	<div class="btn btn-primary update_date_install">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет время установки счетчика привязанного к лицевому счету

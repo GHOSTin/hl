@@ -16,24 +16,24 @@
 	</ul>
 	<ul>
 		<li>
-			<span>Заводской номер</span>
-			<input type="text" class="dialog-input-serial" value="{{ old_meter.serial }}">
+			<label>Заводской номер</label>
+			<input type="text" class="dialog-input-serial form-control" value="{{ old_meter.serial }}">
 		</li>
 		<li>
-			<span>Дата выпуска</span>
-			<input type="text" class="dialog-input-date_release" value="{{ old_meter.date_release|date('d.m.Y') }}">
+			<label>Дата выпуска</label>
+			<input type="text" class="dialog-input-date_release form-control" value="{{ old_meter.date_release|date('d.m.Y') }}">
 		</li>
 		<li>
-			<span>Дата установки</span>
-			<input type="text" class="dialog-input-date_install" value="{{ old_meter.date_install|date('d.m.Y') }}">
+			<label>Дата установки</label>
+			<input type="text" class="dialog-input-date_install form-control" value="{{ old_meter.date_install|date('d.m.Y') }}">
 		</li>
 		<li>
-			<span>Дата последней поверки</span>
-			<input type="text" class="dialog-input-date_checking" value="{{ old_meter.date_checking|date('d.m.Y') }}">
+			<label>Дата последней поверки</label>
+			<input type="text" class="dialog-input-date_checking form-control" value="{{ old_meter.date_checking|date('d.m.Y') }}">
 		</li>
 		<li>
-			<span>Период поверки</span>
-			<select class="dialog-select-period">
+			<label>Период поверки</label>
+			<select class="dialog-select-period form-control">
                 {% for period in meter.periods %}
                		<option value="{{ period }}">
                     {% if period > 12 %}
@@ -47,8 +47,8 @@
 		</li>
 		{% if service in ['cold_water', 'hot_water'] %}
 		<li>
-			<span>Место установки</span>
-			<select class="dialog-select-place">
+			<label>Место установки</label>
+			<select class="dialog-select-place form-control">
 				<option value="bathroom">Ванна</option>
 				<option value="kitchen">Кухня</option>
 				<option value="toilet" selected>Туалет</option>
@@ -57,12 +57,12 @@
 		{% endif %}
 		<li>
 			<label>Коментарий</label>
-			<textarea style="width:90%" class="dialog-textarea-comment">{{ old_meter.comment }}</textarea>
+			<textarea class="dialog-textarea-comment form-control" rows="5">{{ old_meter.comment }}</textarea>
 		</li>
 	</ul>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn change_meter">Перепривязать</div>
+	<div class="btn btn-primary change_meter">Перепривязать</div>
 {% endblock buttons %}
 {% block script %}
 

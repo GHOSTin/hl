@@ -16,24 +16,24 @@
 	</ul>
 	<ul class="unstyled">
 		<li>
-			<span>Заводской номер</span>
-			<input type="text" class="dialog-input-serial">
+			<label>Заводской номер</label>
+			<input type="text" class="dialog-input-serial form-control">
 		</li>
 		<li>
-			<span>Дата выпуска</span>
-			<input type="text" class="dialog-input-date_release" value="{{ time }}">
+			<label>Дата выпуска</label>
+			<input type="text" class="dialog-input-date_release form-control" value="{{ time }}">
 		</li>
 		<li>
-			<span>Дата установки</span>
-			<input type="text" class="dialog-input-date_install" value="{{ time }}">
+			<label>Дата установки</label>
+			<input type="text" class="dialog-input-date_install form-control" value="{{ time }}">
 		</li>
 		<li>
-			<span>Дата последней поверки</span>
-			<input type="text" class="dialog-input-date_checking" value="{{ time }}">
+			<label>Дата последней поверки</label>
+			<input type="text" class="dialog-input-date_checking form-control" value="{{ time }}">
 		</li>
 		<li>
-			<span>Период поверки</span>
-			<select class="dialog-select-period">
+			<label>Период поверки</label>
+			<select class="dialog-select-period form-control">
                 {% for period in meter.periods %}
                		<option value="{{ period }}">
                     {% if period > 12 %}
@@ -47,8 +47,8 @@
 		</li>
 		{% if service in ['cold_water', 'hot_water'] %}
 		<li>
-			<span>Место установки</span>
-			<select class="dialog-select-place">
+			<label>Место установки</label>
+			<select class="dialog-select-place form-control">
 				<option value="bathroom">Ванна</option>
 				<option value="kitchen">Кухня</option>
 				<option value="toilet" selected>Туалет</option>
@@ -57,12 +57,12 @@
 		{% endif %}
 		<li>
 			<label>Коментарий</label>
-			<textarea style="width:90%" class="dialog-textarea-comment"></textarea>
+			<textarea class="dialog-textarea-comment form-control" rows="5"></textarea>
 		</li>
 	</ul>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn add_meter">Добавить</div>
+	<div class="btn btn-primary add_meter">Добавить</div>
 {% endblock buttons %}
 {% block script %}
 

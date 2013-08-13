@@ -5,7 +5,7 @@
 Вы действительно хотите удалить привязку счетчика к лицевому счете, а также показания?
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn delete_meter">Удалить</div>
+	<div class="btn btn-primary delete_meter">Удалить</div>
 {% endblock buttons %}
 {% block script %}
 	// Удаляет счетчик из лицевого счета

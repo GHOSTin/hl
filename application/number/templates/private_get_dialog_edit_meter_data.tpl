@@ -34,41 +34,41 @@
     });
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Данный счетчика за {{ months[component.time|date("m") - 1] }} {{ component.time|date("Y") }}</h3>
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="span2">
+            <div class="col-2">
                 <div>1 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[0] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[0] }}">
+                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[0] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[0] }}">
                 {{ data.value[0] }}
             </div>
             {% if meter.rates == 2 %}
-            <div class="span2">
+            <div class="col-2">
                 <div class="">2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
+                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
             </div>
             {% endif %}
             {% if meter.rates == 3 %}
-            <div class="span2">
+            <div class="col-2">
                 <div>2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
+                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
 
             </div>
-            <div class="span2">
+            <div class="col-2">
                 <div class="">3 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[2] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[2] }}">
+                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[2] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[2] }}">
                 {{ data.value[2] }}
             </div>
             {% endif %}
         </div>
         <div>
             <label>Время передачи показания</label>
-            <input type="text" class="dialog-input-timestamp" value="
+            <input type="text" class="dialog-input-timestamp form-control" value="
             {% if current.timestamp < 1 %}
                 {{ "now"|date('d.m.Y') }}
             {% else %}
@@ -78,7 +78,7 @@
         </div>
         <div>
             <label>Способ передачи показания</label>
-            <select class="dialog-select-way">
+            <select class="dialog-select-way  form-control">
                 {% for key, value in ways %}
                 <option value="{{ key }}" {% if current.way == key %} selected{% endif %}>{{ value }}</option>
                 {% endfor %}
@@ -86,7 +86,7 @@
         </div>
         <div>
             <label>Комментарий</label>
-            <textarea style="width:90%" class="dialog-textarea-comment">{{ current.comment }}</textarea>
+            <textarea class="dialog-textarea-comment form-control" rows="5">{{ current.comment }}</textarea>
         </div>
     </div>
     <div class="modal-footer">

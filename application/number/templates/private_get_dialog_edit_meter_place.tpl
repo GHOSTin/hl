@@ -3,7 +3,7 @@
 {% set places = {'kitchen':'Кухня', 'toilet':'Туалет', 'bathroom':'Ванна'} %}
 {% block title %}Диалог редактирования места установки счетчика{% endblock title %}
 {% block dialog %}
-	<select class="dialog-select-place">
+	<select class="dialog-select-place form-control">
 	{% for key, place in places %}
 		{% if meter.place == key %}
 			{% set selected = ' selected' %}
@@ -15,7 +15,7 @@
 	</select>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_meter_place">Изменить</div>
+	<div class="btn btn-primary update_meter_place">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет период поверки счетчика привязанного к лицевому счету

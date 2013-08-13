@@ -16,11 +16,6 @@
 .query_status_reopen {border-left:4px solid blue;}
 .query_status_working {border-left:4px solid black;}
 
-.query_controls + .page-header{
-    padding: 0;
-    margin: 10px 0;
-}
-
 .timeline .pagination{
     margin: 0;
 }
@@ -58,4 +53,11 @@ ul.query-sub, ul.query-general{
 
 @media (max-width: 768px){
     .query_controls {margin: 0 !important;}
+}
+
+@media (min-width: 768px){
+    .query_controls + .page-header{
+        padding: 0;
+        margin: 10px 0;
+    }
 }

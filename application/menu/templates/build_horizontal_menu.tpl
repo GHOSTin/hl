@@ -19,7 +19,7 @@
         </button>
         <a class="navbar-brand hidden-lg" href="#"></a>
         <!-- begin user -->
-        <div class="nav-collapse collapse navbar-responsive-collapse" id="usermenu">
+        <div class="nav-collapse collapse pull-right" id="usermenu">
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle current_user" user_id="{{user_id}}" data-toggle="dropdown">
@@ -35,7 +35,7 @@
             </ul>
         </div>
         <!-- end user, begin menu -->
-        <div class="nav-collapse collapse navbar-responsive-collapse" id="mainmenu">
+        <div class="nav-collapse collapse" id="mainmenu">
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
