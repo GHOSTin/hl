@@ -8,7 +8,7 @@ class model_meter{
 	}
 
 	/**
-	* Создает новый период.
+	* Добавляет в счетчик новую период поверки.
 	* @return data_meter
 	*/
 	public function add_period($id, $period){
@@ -19,7 +19,7 @@ class model_meter{
 	}
 
 	/**
-	* Создает новую услугу.
+	* Добавляет в счетчик новую услугу.
 	* @return data_meter
 	*/
 	public function add_service($id, $service){
@@ -30,7 +30,7 @@ class model_meter{
 	}
 
 	/*
-	* Возвращает объект счетчика ли падает с исключением что счетчик не существует.
+	* Возвращает объект счетчика или падает с исключением, что счетчик не существует.
 	*/
 	public function get_meter($id){
 		$mapper = new mapper_meter($this->company);
@@ -41,7 +41,7 @@ class model_meter{
 
 	/**
 	* Возвращает список счетчиков
-	* @return array из data_service
+	* @return array data_meter
 	*/
 	public function get_meters(data_meter $meter){
 	    $this->company->verify('id');
@@ -75,7 +75,7 @@ class model_meter{
 	}
 
 	/**
-	* Создает новый счетчик
+	* Создает новый счетчик.
 	* @return data_meter
 	*/
 	public function create_meter($name, $capacity, $rates){
@@ -101,8 +101,8 @@ class model_meter{
 	}
 
 	/**
-	* Исключает услугу
-	* @return data_service
+	* Удаляет привязку услуги к счетчику.
+	* @return data_meter
 	*/
 	public function remove_service($id, $service){
 	    $meter = $this->get_meter($id);
@@ -112,8 +112,8 @@ class model_meter{
 	}
 
 	/**
-	* Создает новую услугу
-	* @return data_service
+	* Переименовывает счетчик.
+	* @return data_meter
 	*/
 	public function rename_meter($id, $name){
 		$meter = $this->get_meter($id);
@@ -155,7 +155,6 @@ class model_meter{
 	* Проверка принадлежности объекта к классу data_meter.
 	*/
 	public static function is_data_meter($meter){
-	    if(!($meter instanceof data_meter))
-	        throw new e_model('Возвращеный объект не является счетчиком.');
+	    die('DISABLED');
 	}
 }
