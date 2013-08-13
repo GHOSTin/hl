@@ -35,7 +35,8 @@ class model_meter{
 	public function get_meter($id){
 		$mapper = new mapper_meter($this->company);
 		$meter = $mapper->find($id);
-		$this->is_data_meter($meter);
+		if(!($meter instanceof data_meter))
+			throw new e_model('Счетчика не существует.');
 		return $meter;
 	}
 
@@ -149,12 +150,5 @@ class model_meter{
 		$meter->set_rates($rates);
 		$mapper->update($meter);
 		return $meter;
-	}
-
-	/**
-	* Проверка принадлежности объекта к классу data_meter.
-	*/
-	public static function is_data_meter($meter){
-	    die('DISABLED');
 	}
 }
