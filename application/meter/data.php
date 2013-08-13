@@ -34,6 +34,12 @@ final class data_meter extends data_object{
         $this->periods[] = (int) $period;
     }
 
+    public function add_service($service){
+        if(in_array($service, $this->service))
+            throw new e_model('Такая служба уже привязана к счетчику.');
+        $this->service[] = $service;
+    }
+
     public function remove_period($period){
         $rs = array_search($period, $this->periods);
         if($rs === false)
@@ -63,6 +69,10 @@ final class data_meter extends data_object{
 
     public function set_id($id){
         $this->id = $id;
+    }
+
+    public function get_services(){
+        return $this->service;
     }
 
     public function set_company_id($id){

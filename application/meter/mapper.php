@@ -86,14 +86,15 @@ class mapper_meter{
         $meter->verify('id', 'name', 'capacity', 'rates', 'periods');
         $sql = new sql();
         $sql->query('UPDATE `meters` SET `name` = :name, `capacity` = :capacity,
-                    `rates` = :rates, `periods` = :periods
+                    `rates` = :rates, `periods` = :periods, `service` = :services
                     WHERE `company_id` = :company_id AND `id` = :id');
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
         $sql->bind(':id', $meter->get_id(), PDO::PARAM_INT);
         $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
         $sql->bind(':capacity', $meter->get_capacity(), PDO::PARAM_INT);
         $sql->bind(':rates', $meter->get_rates(), PDO::PARAM_INT);
-        $sql->bind(':periods', implode(';', $meter->get_periods()), PDO::PARAM_INT);
+        $sql->bind(':periods', implode(';', $meter->get_periods()), PDO::PARAM_STR);
+        $sql->bind(':services', implode(',', $meter->get_services()), PDO::PARAM_STR);
         $sql->execute('Проблема при обновлении счетчика.');
         return $meter;
     }

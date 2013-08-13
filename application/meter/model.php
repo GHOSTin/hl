@@ -22,26 +22,11 @@ class model_meter{
 	* Создает новую услугу.
 	* @return data_meter
 	*/
-	public static function add_service(data_company $company, data_meter $meter){
-	    $meter->verify('id', 'service');
-	    $company->verify('id');
-	    $meter_params = new data_meter();
-	    $meter_params->id = $meter->id;
-	    $meters = self::get_meters($company, $meter_params);
-	    if(count($meters) !== 1)
-	        throw new e_model('Cчетчик с таким идентификатором не существует.');
-	    $new_meter = $meters[0];
-	    if(array_search($meter->service[0], $new_meter->service) === false)
-	    	$new_meter->service[] = $meter->service[0];
-	    $sql = new sql();
-	    $sql->query("UPDATE `meters` SET `service` = :service
-	    	WHERE `company_id` = :company_id AND `id` = :meter_id");
-	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->bind(':service', implode(',', $new_meter->service), PDO::PARAM_STR);
-	    $sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
-	    $sql->execute('Проблема при добавлении услуги в счетчик.');
-	    $sql->close();
-	    return $new_meter;
+	public function add_service($id, $service){
+	    $meter = $this->get_meter($id);
+		$meter->add_service($service);
+		$mapper = new mapper_meter($this->company);
+		return $mapper->update($meter);
 	}
 
 	/*

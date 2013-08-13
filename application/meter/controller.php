@@ -7,10 +7,8 @@ class controller_meter{
     }
 
     public static function private_add_service(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->service[] = $_GET['service'];
-        return ['meter' => model_meter::add_service(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->add_service($_GET['id'], $_GET['service'])];
     }
 
     public static function private_create_meter(){
