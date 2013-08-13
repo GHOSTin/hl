@@ -16,29 +16,6 @@ class model_meter{
 		$meter->add_period($period);
 		$mapper = new mapper_meter($this->company);
 		return $mapper->update($meter);
-		var_dump($meter);
-		exit();
-	    $meter->verify('id', 'periods');
-	    $company->verify('id');
-	    $meter_params = new data_meter();
-	    $meter_params->id = $meter->id;
-	    $meters = self::get_meters($company, $meter_params);
-	    if(count($meters) !== 1)
-	        throw new e_model('Cчетчик с таким идентификатором не существует.');
-	    $new_meter = $meters[0];
-	    if(array_search($meter->periods[0], $new_meter->periods) === false){
-	    	$new_meter->periods[] = $meter->periods[0];
-	    	sort($new_meter->periods);
-	    }
-	    $sql = new sql();
-	    $sql->query("UPDATE `meters` SET `periods` = :periods
-	    	WHERE `company_id` = :company_id AND `id` = :meter_id");
-	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->bind(':periods', implode(';', $new_meter->periods), PDO::PARAM_STR);
-	    $sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
-	    $sql->execute('Проблема при добавлении периода в счетчик.');
-	    $sql->close();
-	    return $new_meter;
 	}
 
 	/**
@@ -88,9 +65,7 @@ class model_meter{
 	    			FROM `meters` WHERE `company_id` = :company_id");
 	    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
 	    if(!empty($meter->id)){
-	        $meter->verify('id');
-	        $sql->query(" AND `id` = :id");
-	        $sql->bind(':id', $meter->id, PDO::PARAM_INT);
+	        die('Disabled filtering by ID');
 	    }
 	    if(!empty($meter->name)){
 	        $meter->verify('name');
@@ -135,27 +110,11 @@ class model_meter{
 	* Исключает период
 	* @return data_meter
 	*/
-	public static function remove_period(data_company $company, data_meter $meter){
-	    $meter->verify('id', 'service');
-	    $company->verify('id');
-	    $meters = self::get_meters($company, $meter);
-	    if(count($meters) !== 1)
-	        throw new e_model('Cчетчик с таким идентификатором не существует.');
-	    $new_meter = $meters[0];
-	    self::is_data_meter($new_meter);
-		$pos = array_search($meter->periods[0], $new_meter->periods);
-	    if($pos === false)
-	    	throw new e_model('Период не привязан к счетчику.');
-    	unset($new_meter->periods[$pos]);
-    	$sql = new sql();
-	    $sql->query("UPDATE `meters` SET `periods` = :periods
-	    	WHERE `company_id` = :company_id AND `id` = :meter_id");
-	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->bind(':periods', implode(';', $new_meter->periods), PDO::PARAM_STR);
-	    $sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
-	    $sql->execute('Проблема при удалении периода из счетчика.');
-	    $sql->close();
-	    return $new_meter;
+	public function remove_period($id, $period){
+	    $meter = $this->get_meter($id);
+		$meter->remove_period($period);
+		$mapper = new mapper_meter($this->company);
+		return $mapper->update($meter);
 	}
 
 	/**
