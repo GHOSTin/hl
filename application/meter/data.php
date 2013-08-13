@@ -47,6 +47,13 @@ final class data_meter extends data_object{
         unset($this->periods[$rs]);
     }
 
+    public function remove_service($service){
+        $rs = array_search($service, $this->service);
+        if($rs === false)
+            throw new e_model('Службы не было в этом счетчике.');
+        unset($this->service[$rs]);
+    }
+
     public function get_id(){
         return $this->id;
     }

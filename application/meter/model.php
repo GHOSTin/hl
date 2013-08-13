@@ -106,27 +106,11 @@ class model_meter{
 	* Исключает услугу
 	* @return data_service
 	*/
-	public static function remove_service(data_company $company, data_meter $meter){
-	    $meter->verify('id', 'service');
-	    $company->verify('id');
-	    $meters = self::get_meters($company, $meter);
-	    if(count($meters) !== 1)
-	        throw new e_model('Cчетчик с таким идентификатором не существует.');
-	    $new_meter = $meters[0];
-	    self::is_data_meter($new_meter);
-		$pos = array_search($meter->service[0], $new_meter->service);
-	    if($pos === false)
-	    	throw new e_model('Услуга не привязана к счетчику.');
-    	unset($new_meter->service[$pos]);
-    	$sql = new sql();
-	    $sql->query("UPDATE `meters` SET `service` = :service
-	    	WHERE `company_id` = :company_id AND `id` = :meter_id");
-	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->bind(':service', implode(',', $new_meter->service), PDO::PARAM_STR);
-	    $sql->bind(':meter_id', $new_meter->id, PDO::PARAM_INT);
-	    $sql->execute('Проблема при удалении услуги из счетчика.');
-	    $sql->close();
-	    return $new_meter;
+	public function remove_service($id, $service){
+	    $meter = $this->get_meter($id);
+		$meter->remove_service($service);
+		$mapper = new mapper_meter($this->company);
+		return $mapper->update($meter);
 	}
 
 	/**
