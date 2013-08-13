@@ -28,6 +28,10 @@ final class data_meter extends data_object{
             verify_meter::$value($this);
     }
 
+    public function add_period($period){
+        $this->periods[] = (int) $period;
+    }
+
     public function get_id(){
         return $this->id;
     }

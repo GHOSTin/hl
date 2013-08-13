@@ -11,7 +11,13 @@ class model_meter{
 	* Создает новый период.
 	* @return data_meter
 	*/
-	public static function add_period(data_company $company, data_meter $meter){
+	public function add_period($id, $period){
+		$meter = $this->get_meter($id);
+		$meter->add_period($period);
+		$mapper = new mapper_meter($this->company);
+		return $mapper->update($meter);
+		var_dump($meter);
+		exit();
 	    $meter->verify('id', 'periods');
 	    $company->verify('id');
 	    $meter_params = new data_meter();

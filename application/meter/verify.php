@@ -56,10 +56,11 @@ class verify_meter{
     * Верификация периодов счетчика.
     */
     public static function periods(data_meter $meter){
-        foreach($meter->periods as $period)
-            $period = (int) ($period);
-            if($period < 0 OR $period > 240)
-                throw new e_model('Период задан не верно.');
+        if(!empty($meter->periods))
+            foreach($meter->periods as $period)
+                $period = (int) ($period);
+                if($period < 0 OR $period > 240)
+                    throw new e_model('Период задан не верно.');
     }
 
     /**

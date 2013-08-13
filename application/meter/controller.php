@@ -2,10 +2,8 @@
 class controller_meter{
 
     public static function private_add_period(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->periods[] = $_GET['period'];
-        return ['meter' => model_meter::add_period(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->add_period($_GET['id'], $_GET['period'])];
     }
 
     public static function private_add_service(){
