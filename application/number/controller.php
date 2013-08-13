@@ -311,8 +311,9 @@ class controller_number{
                 $c2n->number_id = $_GET['id'];
                 $c2n->verify('number_id');
                 $company = model_session::get_company();
+                $model = new model_number(model_session::get_company());
                 return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
-                        'number' => $number,
+                        'number' => $model->get_number($_GET['id']),
                         'setting' => $switch];
             break;
 
@@ -388,12 +389,8 @@ class controller_number{
     }
 
     public static function private_get_meter_info(){
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
-        $data->verify('number_id', 'meter_id', 'serial');
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
+        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
     }
     
     public static function private_get_meter_options(){
