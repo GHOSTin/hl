@@ -270,14 +270,9 @@ class controller_number{
     }
 
     public static function private_get_meters(){
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->verify('number_id');
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        $number->verify('id');
         $company = model_session::get_company();
-        $meters = model_number2meter::get_number2meters($company, $data);
+        $model = new model_number2meter($company, $_GET['id']);
+        $meters = $model->get_meters();
         $enable_meters = $disable_meters = [];
         if(!empty($meters))
             foreach($meters as $meter)
@@ -286,7 +281,8 @@ class controller_number{
                 elseif($meter->status == 'disabled')
                     $disable_meters[] = $meter;
         model_session::set_setting_param('number', 'number_content', 'meters');
-        return ['numbers' => model_number::get_numbers($company, $number),
+        $model = new model_number($company);
+        return ['number' => $model->get_number($_GET['id']),
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
 

@@ -1,12 +1,21 @@
 <?php
 class model_number2meter{
 
+    private $number_id;
+    private $company;
+
+    public function __construct(data_company $company, $id){
+        $this->company = $company;
+        $this->number_id = (int) $id;
+        if($number->id > 16777215 OR $this->number_id < 1)
+            throw new e_model('Идентификатор лицевого счета задан не верно.');
+    }
+
     /*
     * Возвращает список счетчиков лицевого счета
     */
-    public static function get_number2meters(data_company $company, data_number2meter $data){
-        $company->verify('id');
-        $data->verify('number_id');
+    public function get_meters(){
+        $this->company->verify('id');
         $sql = new sql();
         $sql->query("SELECT `number2meter`.`meter_id`, `number2meter`.`status`, `number2meter`.`number_id`,
                         `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
@@ -20,8 +29,8 @@ class model_number2meter{
                     AND `meters`.`company_id` = :company_id
                     AND `number2meter`.`number_id` = :number_id
                     AND `meters`.`id` = `number2meter`.`meter_id`");
-        $sql->bind(':number_id', $data->number_id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+        $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
         if(!empty($data->meter_id)){
             $data->verify('meter_id');
             $sql->query("AND `number2meter`.`meter_id` = :meter_id");
@@ -33,13 +42,5 @@ class model_number2meter{
             $sql->bind(':serial', $data->serial, PDO::PARAM_STR);
         }
         return $sql->map(new data_number2meter(), 'Проблема при при выборке счетчиков лицевого счета.');
-    }
-
-    /**
-    * Проверка принадлежности объекта к классу data_number.
-    */
-    public static function is_data_number2meter($number2meter){
-        if(!($number2meter instanceof data_number2meter))
-            throw new e_model('Возвращеный объект не является связью лицевой счет - счетчик.');
     }
 }
