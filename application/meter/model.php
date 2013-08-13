@@ -53,9 +53,7 @@ class model_meter{
 	        die('Disabled filtering by ID');
 	    }
 	    if(!empty($meter->name)){
-	        $meter->verify('name');
-	        $sql->query(" AND `name` = :name");
-	        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
+	        die('Disabled filtering by name');
 	    }
 	    if(!empty($meter->capacity)){
 	        $meter->verify('capacity');
