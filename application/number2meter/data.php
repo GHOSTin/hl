@@ -40,6 +40,10 @@ final class data_number2meter extends data_object{
         return $this->comment;
     }
 
+    public function get_date_release(){
+        return $this->date_release;
+    }
+
     public function get_place(){
         return $this->place;
     }
@@ -58,6 +62,10 @@ final class data_number2meter extends data_object{
 
     public function set_company_id($id){
         $this->company_id = $id;
+    }
+
+    public function set_date_release($time){
+        $this->date_release = $time;
     }
 
     public function set_period($period){
