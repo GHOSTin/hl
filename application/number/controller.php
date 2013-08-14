@@ -325,20 +325,18 @@ class controller_number{
     }
 
     public static function private_get_meter_value(){
-        $data = new data_number2meter();
-        $data->meter_id = $_GET['meter_id'];
-        $data->number_id = $_GET['id'];
-        $data->serial = $_GET['serial'];
-        $data->verify('meter_id', 'number_id', 'serial');
+        $company = model_session::get_company();
+        $model = new model_number2meter($company, $_GET['id']);
+        $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
         if($_GET['time'] > 0)
             $time = getdate($_GET['time']);
         else
             $time = getdate();
-        $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
-        $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
-        $company = model_session::get_company();
-        return ['meters' => model_number2meter::get_number2meters($company, $data), 
-                'time' => $time_begin, 'meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
+        $begin = mktime(12, 0, 0, 1, 1, $time['year']);
+        $end = mktime(12, 0, 0, 12, 1, $time['year']);
+        $model = new model_meter2data($company, $_GET['id'], $_GET['meter_id'], $_GET['serial']);
+        return ['meter' => $meter, 
+                'time' => $begin, 'meter_data' => $model->get_values($begin, $end)];
     }
 
     public static function private_get_meter_cart(){
