@@ -179,12 +179,8 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_date_checking(){
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
-        $data->verify('number_id', 'meter_id', 'serial');
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
+        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
     }
 
     public static function private_get_dialog_edit_date_install(){
@@ -414,15 +410,10 @@ class controller_number{
     }
 
     public static function private_update_date_checking(){
-        $meter = new data_number2meter();
-        $meter->number_id = $_GET['number_id'];
-        $meter->meter_id = $_GET['meter_id'];
-        $meter->serial = $_GET['serial'];
         $time = explode('.', $_GET['date']);
         $time = mktime(12, 0, 0, $time[1], $time[0], $time[2]);
-        $company = model_session::get_company();
-        model_number::update_date_checking($company, $meter, $time);
-        return ['meters' => model_number2meter::get_number2meters($company, $meter)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
+        return ['meter' => $model->update_date_checking($_GET['meter_id'], $_GET['serial'], $time)];
     }
 
     public static function private_update_date_install(){
