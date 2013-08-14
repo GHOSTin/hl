@@ -49,6 +49,13 @@ class model_number2meter{
         return $mapper->update($meter);
     }
 
+    public function update_date_install($meter_id, $serial, $time){
+        $meter = $this->get_meter($meter_id, $serial);
+        $meter->set_date_install($time);
+        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        return $mapper->update($meter);
+    }
+
     public function update_comment($meter_id, $serial, $comment){
         $meter = $this->get_meter($meter_id, $serial);
         $meter->set_comment($comment);

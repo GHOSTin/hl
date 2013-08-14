@@ -399,52 +399,6 @@ class model_number{
 	}
 
 	/*
-	* Изменяет время установки счетчика.
-	*/
-	public static function update_date_install(data_company $company,
-												data_number2meter $meter, $time){
-		try{
-			$meter->verify('number_id', 'meter_id', 'serial');
-			$sql = new sql();
-			$sql->begin();
-			$company->verify('id');
-			$number = new data_number();
-			$number->id = $meter->number_id;
-			$numbers = self::get_numbers($company, $number);
-			if(count($numbers) !== 1)			
-				throw new e_model('Проблема при выборке лицевого счета.');
-			$number = $numbers[0];
-			model_number::is_data_number($number);
-			$meters = model_number2meter::get_number2meters($company, $meter);
-			if(count($meters) !== 1)
-				throw new e_model('Проблема при выборке счетчика.');
-			$meter = $meters[0];
-			model_number2meter::is_data_number2meter($meter);
-			if($time < $meter->date_release)
-				throw new e_model('Время установки не может быть меньше времени производства счетчика');
-			$meter->date_install = $time;
-			$meter->verify('number_id', 'meter_id', 'serial', 'date_install');
-			$sql = new sql();
-			$sql->query("UPDATE `number2meter` SET `date_install` = :date_install
-						WHERE `company_id` = :company_id AND `number_id` = :number_id
-						AND `meter_id` = :meter_id AND `serial` = :serial");
-			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-			$sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
-			$sql->bind(':date_install', $meter->date_install, PDO::PARAM_INT);
-			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-			$sql->execute('Проблема при обновление времени установки.');
-			$sql->commit();
-		}catch(exception $e){
-			$sql->rollback();
-			if($e instanceof e_model)
-				throw new e_model($e->getMessage());
-			else
-				throw new e_model('Ошибка в PDO.');
-		}
-	}
-
-	/*
 	* Возвращает данные счетчика
 	*/
 	public static function update_meter_data(data_company $company,
