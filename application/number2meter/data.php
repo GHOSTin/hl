@@ -40,6 +40,10 @@ final class data_number2meter extends data_object{
         return $this->place;
     }
 
+    public function get_serial(){
+        return $this->serial;
+    }
+
     public function get_status(){
         return $this->status;
     }
@@ -54,6 +58,10 @@ final class data_number2meter extends data_object{
 
     public function set_place($place){
         $this->place = $place;
+    }
+
+    public function set_serial($serial){
+        $this->serial = $serial;
     }
 
     public function set_status($status){
