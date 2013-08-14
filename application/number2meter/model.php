@@ -49,6 +49,15 @@ class model_number2meter{
         return $mapper->update($meter);
     }
 
+    public function update_place($meter_id, $serial, $place){
+        $meter = $this->get_meter($meter_id, $serial);
+        if(!in_array($meter->service, ['cold_water', 'hot_water']))
+                throw new e_model('Вы не можете изменить место для счетчика с такой услугой.');
+        $meter->set_place($place);
+        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        return $mapper->update($meter);
+    }
+
     public function update_status($meter_id, $serial){
         $meter = $this->get_meter($meter_id, $serial);
         if($meter->get_status() === 'enabled')

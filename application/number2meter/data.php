@@ -36,6 +36,10 @@ final class data_number2meter extends data_object{
             verify_number2meter::$value($this);
     }
 
+    public function get_place(){
+        return $this->place;
+    }
+
     public function get_status(){
         return $this->status;
     }
@@ -46,6 +50,10 @@ final class data_number2meter extends data_object{
 
     public function set_period($period){
         $this->period = $period;
+    }
+
+    public function set_place($place){
+        $this->place = $place;
     }
 
     public function set_status($status){

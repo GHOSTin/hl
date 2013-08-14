@@ -43,9 +43,10 @@ class mapper_number2meter{
 
     public function update(data_number2meter $meter){
         $meter->set_company_id($this->company->id);
-        $meter->verify('company_id', 'number_id', 'meter_id', 'serial', 'period', 'status');
+        $meter->verify('company_id', 'number_id', 'meter_id', 'serial', 'period', 'status', 'place');
         $sql = new sql();
-        $sql->query("UPDATE `number2meter` SET `period` = :period, `status` = :status
+        $sql->query("UPDATE `number2meter` SET `period` = :period, `status` = :status,
+            `place` = :place
             WHERE `company_id` = :company_id AND `number_id` = :number_id
             AND `meter_id` = :meter_id AND `serial` = :serial");
         $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
@@ -54,6 +55,7 @@ class mapper_number2meter{
         $sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
         $sql->bind(':period', $meter->period, PDO::PARAM_INT);
         $sql->bind(':status', $meter->status, PDO::PARAM_STR);
+        $sql->bind(':place', $meter->get_place(), PDO::PARAM_STR);
         $sql->execute('Проблема при обновлении связи лицевого счета и счетчика');
         return $meter;
     }

@@ -225,12 +225,8 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_meter_place(){
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
-        $data->verify('number_id', 'meter_id', 'serial');
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
+        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
     }
 
     public static function private_get_dialog_edit_serial(){
@@ -557,12 +553,7 @@ class controller_number{
     }
 
     public static function private_update_meter_place(){
-        $meter = new data_number2meter();
-        $meter->number_id = $_GET['number_id'];
-        $meter->meter_id = $_GET['meter_id'];
-        $meter->serial = $_GET['serial'];
-        $company = model_session::get_company();
-        model_number::update_meter_place($company, $meter, $_GET['place']);
-        return ['meters' => model_number2meter::get_number2meters($company, $meter)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
+        return ['meter' => $model->update_place($_GET['meter_id'], $_GET['serial'], $_GET['place'])];
     }
 }
