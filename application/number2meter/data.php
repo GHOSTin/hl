@@ -36,6 +36,10 @@ final class data_number2meter extends data_object{
             verify_number2meter::$value($this);
     }
 
+    public function get_comment(){
+        return $this->comment;
+    }
+
     public function get_place(){
         return $this->place;
     }
@@ -46,6 +50,10 @@ final class data_number2meter extends data_object{
 
     public function get_status(){
         return $this->status;
+    }
+
+    public function set_comment($comment){
+        $this->comment = $comment;
     }
 
     public function set_company_id($id){

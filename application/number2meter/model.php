@@ -42,6 +42,13 @@ class model_number2meter{
         return $sql->map(new data_number2meter(), 'Проблема при при выборке счетчиков лицевого счета.');
     }
 
+    public function update_comment($meter_id, $serial, $comment){
+        $meter = $this->get_meter($meter_id, $serial);
+        $meter->set_comment($comment);
+        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        return $mapper->update($meter);
+    }
+
     public function update_period($meter_id, $serial, $period){
         $meter = $this->get_meter($meter_id, $serial);
         $meter->set_period($period);

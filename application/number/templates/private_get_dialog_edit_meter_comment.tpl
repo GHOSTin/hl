@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% block title %}Диалог редактирования комментария счетчика{% endblock title %}
 {% block dialog %}
 	<textarea class="dialog-input-comment" style="width:90%">{{ meter.comment }}</textarea>
