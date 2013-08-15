@@ -67,11 +67,24 @@ class model_meter{
 	        $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
 	    }
 	    if(!empty($meter->service)){
-	        $meter->verify('service');
-	        $sql->query(" AND FIND_IN_SET(:service, `service`) > 0");
-	        $sql->bind(':service', $meter->service[0], PDO::PARAM_INT);
+	        die('Disabled filtering by service');
 	    }
 	    $sql->query(' ORDER BY `name`');
+	    return $sql->map(new data_meter(), 'Проблема при выборке счетчиков.');
+	}
+
+	/**
+	* Возвращает список счетчиков
+	* @return array data_meter
+	*/
+	public function get_meters_by_service($service){
+	    $this->company->verify('id');
+	    $sql = new sql();
+	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
+	    			FROM `meters` WHERE `company_id` = :company_id AND FIND_IN_SET(:service, `service`) > 0
+	    		 	ORDER BY `name`");
+	    $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
+	    $sql->bind(':service', (string) $service, PDO::PARAM_STR);
 	    return $sql->map(new data_meter(), 'Проблема при выборке счетчиков.');
 	}
 

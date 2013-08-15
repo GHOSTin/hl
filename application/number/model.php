@@ -234,7 +234,8 @@ class model_number{
 	public function get_number($id){
 		$mapper = new mapper_number($this->company);
 		$number = $mapper->find($id);
-		self::is_data_number($number);
+		if(!($number instanceof data_number))
+			throw new e_model('Счетчика не существует.');			
 		return $number;
 	}
 

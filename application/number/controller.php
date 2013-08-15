@@ -112,25 +112,17 @@ class controller_number{
     }
 
     public static function private_get_dialog_add_meter(){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        $number->verify('id');
-        return ['numbers' => model_number::get_numbers(model_session::get_company(), $number)];
+        $model = new model_number(model_session::get_company());
+        return ['number' => $model->get_number($_GET['id'])];
     }
 
     public static function private_get_dialog_add_meter_option(){
         $number = new data_number();
         $number->id = $_GET['number_id'];
         $number->verify('id');
-        $meter = new data_meter();
-        $meter->id = $_GET['meter_id'];
-        $meter->service[] = $_GET['service'];
-        $meter->verify('id', 'service');
-        $time = getdate();
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter),
-                'service' => $meter->service[0],
-                'number' => $number,
-                'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['meter_id']),
+                'number' => $number, 'service' => $_GET['service']];
     }
 
     public static function private_get_dialog_add_processing_center(){
@@ -344,10 +336,8 @@ class controller_number{
     }
     
     public static function private_get_meter_options(){
-        $meter = new data_meter();
-        $meter->service[] = $_GET['service'];
-        $meter->verify('service');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meters' => $model->get_meters_by_service($_GET['service'])];
     }
 
     public static function private_get_processing_centers(){

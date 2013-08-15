@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% set number = component.number %}
 {% set service = component.service %}
 {% set time = component.time %}
