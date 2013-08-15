@@ -238,43 +238,6 @@ class model_number{
 		return $number;
 	}
 
-	/**
-	* Возвращает список лицевых счетов.
-	* @return array object data_number
-	*/
-	public static function get_numbers(data_company $company, data_number $number){
-		$company->verify('id');
-		$sql = new sql();
-		if(!empty($number->id)){
-			die('DISABLED');
-		}elseif(!empty($number->number)){
-			$number->verify('number');
-			$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
-						`numbers`.`city_id`, `numbers`.`house_id`, 
-						`numbers`.`flat_id`, `numbers`.`number`,
-						`numbers`.`type`, `numbers`.`status`,
-						`numbers`.`fio`, `numbers`.`telephone`,
-						`numbers`.`cellphone`, `numbers`.`password`,
-						`numbers`.`contact-fio` as `contact_fio`,
-						`numbers`.`contact-telephone` as `contact_telephone`,
-						`numbers`.`contact-cellphone` as `contact_cellphone`,
-						`flats`.`flatnumber` as `flat_number`,
-						`houses`.`housenumber` as `house_number`,
-						`houses`.`department_id`,
-						`streets`.`name` as `street_name`
-					FROM `numbers`, `flats`, `houses`, `streets`
-					WHERE `numbers`.`company_id` = :company_id
-					AND `numbers`.`number` = :number
-					AND `numbers`.`flat_id` = `flats`.`id`
-					AND `numbers`.`house_id` = `houses`.`id`
-					AND `houses`.`street_id` = `streets`.`id`");
-			$sql->bind(':number', $number->number, PDO::PARAM_INT);
-		}else
-			throw new e_model('Не заданы нужные параметры.');
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		return $sql->map(new data_number(), 'Проблема при запросе лицевых счетов.');
-	}
-
 	/*
 	* Возвращает данные счетчика
 	*/
@@ -425,13 +388,5 @@ class model_number{
 		$mapper = new mapper_number($this->company);
 		$mapper->update($number);
 		return $number;
-	}
-
-	/**
-	* Проверка принадлежности объекта к классу data_number.
-	*/
-	public static function is_data_number($number){
-	    if(!($number instanceof data_number))
-	        throw new e_model('Возвращен объект не является лицевым счетом.');
 	}
 }
