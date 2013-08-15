@@ -1,6 +1,6 @@
 {% extends "print.tpl" %}
-{% set meter = component.meters[0] %}
-{% set number = component.numbers[0] %}
+{% set meter = component.meter %}
+{% set number = component.number %}
 {% set services = {'cold_water':'холодного водоснабжения',
     'hot_water':'горячего водоснабжения', 'electrical':'электроэнергии'} %}
 {% set rates = ['Однотарифный', 'Двухтарифный', 'Трехтарифный'] %}
