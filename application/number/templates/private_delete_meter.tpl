@@ -1,9 +1,9 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meter %}
+{% set number = component.number %}
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% block js %}
-    $('.number[number = {{meter.number_id}}] .number-content').html(get_hidden_content())
+    $('.number[number = {{number.id}}] .number-content').html(get_hidden_content())
 {% endblock js %}
 {% block html %}
     <li>

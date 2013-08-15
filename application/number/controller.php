@@ -76,16 +76,13 @@ class controller_number{
     }
 
     public static function private_delete_meter(){
-        $meter = new data_number2meter();
-        $meter->number_id = $_GET['number_id'];
-        $meter->meter_id = $_GET['meter_id'];
-        $meter->serial = $_GET['serial'];
         $company = model_session::get_company();
-        model_number::delete_meter($company, $meter);
-        $per = new data_number2meter();
-        $per->number_id = $_GET['number_id'];
-        return ['meter' => $meter,
-                'meters' => model_number2meter::get_number2meters($company, $per)];
+        $model = new model_number2meter($company, $_GET['number_id']);
+        $model->remove_meter($_GET['meter_id'], $_GET['serial']);
+        $meters = $model->get_meters();
+        $model = new model_number($company);
+        return ['number' => $model->get_number($_GET['number_id']),
+                'meters' => $meters];
     }
 
     public static function private_exclude_processing_center(){
@@ -170,12 +167,8 @@ class controller_number{
     }
 
     public static function private_get_dialog_delete_meter(){
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
-        $data->verify('number_id', 'meter_id', 'serial');
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
+        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
     }
 
     public static function private_get_dialog_edit_date_checking(){

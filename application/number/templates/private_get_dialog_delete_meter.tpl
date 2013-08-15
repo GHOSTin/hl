@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% block title %}Диалог удаления привязки счетчика{% endblock title %}
 {% block dialog %}
 Вы действительно хотите удалить привязку счетчика к лицевому счете, а также показания?

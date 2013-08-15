@@ -153,62 +153,6 @@ class model_number{
 		}
 	}
 
-	/*
-	* Удаляет счетчик и его показания.
-	*/
-	public static function delete_meter(data_company $company,
-											data_number2meter $meter){
-		try{
-			$meter->verify('number_id', 'meter_id', 'serial');
-			$sql = new sql();
-			$sql->begin();
-			$company->verify('id');
-			$number = new data_number();
-			$number->id = $meter->number_id;
-			$numbers = self::get_numbers($company, $number);
-			if(count($numbers) !== 1)			
-				throw new e_model('Проблема при выборке лицевого счета.');
-			$number = $numbers[0];
-			model_number::is_data_number($number);
-			// проверка существования старого счетчика в таблице `number2meter`
-			$meter_params = new data_number2meter();
-			$meter_params->number_id = $meter->number_id;
-			$meter_params->meter_id = $meter->meter_id;
-			$meter_params->serial = $meter->serial;
-			$meter_params->verify('number_id', 'meter_id', 'serial');
-			$meters = model_number2meter::get_number2meters($company, $meter_params);
-			if(count($meters) !== 1)
-				throw new e_model('Проблема при выборке счетчика.');
-			$old_meter = $meters[0];
-			model_number2meter::is_data_number2meter($old_meter);
-			$sql = new sql();
-			$sql->query("DELETE FROM `number2meter`
-						WHERE `company_id` = :company_id AND `number_id` = :number_id
-						AND `meter_id` = :meter_id AND `serial` = :serial");
-			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-			$sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
-			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-			$sql->execute('Проблема при удалении счетчика.');
-			$sql = new sql();
-			$sql->query("DELETE FROM `meter2data`
-						WHERE `company_id` = :company_id AND `number_id` = :number_id
-						AND `meter_id` = :meter_id AND `serial` = :serial");
-			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-			$sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
-			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-			$sql->execute('Проблема при удалении показаний.');
-			$sql->commit();
-		}catch(exception $e){
-			$sql->rollback();
-			if($e instanceof e_model)
-				throw new e_model($e->getMessage());
-			else
-				throw new e_model('Ошибка в PDO.');
-		}
-	}
-
 	public static function add_meter(data_company $company, data_number2meter $data){
 		$company->verify('id');
 		$data->verify('number_id', 'meter_id', 'serial', 'service', 'period',

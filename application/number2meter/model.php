@@ -41,6 +41,12 @@ class model_number2meter{
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
         return $sql->map(new data_number2meter(), 'Проблема при при выборке счетчиков лицевого счета.');
     }
+
+    public function remove_meter($meter_id, $serial){
+        $meter = $this->get_meter($meter_id, $serial);
+        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        return $mapper->delete($meter);
+    }
     
     public function update_date_checking($meter_id, $serial, $time){
         $meter = $this->get_meter($meter_id, $serial);
