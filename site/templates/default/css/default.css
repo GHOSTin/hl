@@ -55,6 +55,10 @@ footer, #push{
     color: white;
 }
 
+.modal-content{
+    z-index: 1050;
+}
+
 #_hidden_notification_center{
 	position:absolute;
 	top:50px;
