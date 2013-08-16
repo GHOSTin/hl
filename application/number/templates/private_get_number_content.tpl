@@ -5,7 +5,7 @@
     $('.number[number = {{number.id}}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
-    <ul class="number-content unstyled">
+    <ul class="number-content list-unstyled">
         <li class="number-content-menu">
             <ul class="nav nav-pills">
                 <li {% if stn != 'meters' and stn != 'centers' %}class="active"{% endif %}>
@@ -15,7 +15,7 @@
                 <li{% if stn == 'centers' %} class="active"{% endif %}><a class="get_processing_centers">Расчетные центры</a></li>
             </ul>
         </li>
-        <li class="number-content-content">
+        <li class="number-content-content row">
         {% if stn == 'centers' %}
             {% include '@number/build_processing_centers.tpl' %}
         {% elseif stn == 'meters'%}

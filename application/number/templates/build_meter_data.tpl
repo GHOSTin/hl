@@ -1,21 +1,23 @@
+<table class="table table-hover">
 {% for i in 0..11 %}
     {% set data = component.meter_data[date|date("U")] %}
-    <div class="month row" time="{{ date|date("U") }}">
+    <tr class="month" time="{{ date|date("U") }}">
 
-        <div class="span2">{{ months[i] }}</div>
+        <td class="col-2">{{ months[i] }}</td>
         {% for val in data.value %}
-            <div class="span2">{{ val }}</div>
+            <td class="col-2">{{ val }}</td>
         {% else %}
-            <div class="span2"></div>
+            <td class="col-2"></td>
             {% if meter.rates == 2 %}
-            <div class="span2"></div>
+            <td class="col-2"></td>
             {% endif %}
             {% if meter.rates == 3 %}
-            <div class="span2"></div>
-            <div class="span2"></div>
+            <td class="col-2"></td>
+            <td class="col-2"></td>
             {% endif %}
         {% endfor %}
-        <div class="span2"><a class="btn get_dialog_edit_meter_data">изменить</a></div>
-    </div>
+        <td class="col-2"><a class="btn btn-default get_dialog_edit_meter_data">изменить</a></td>
+    </tr>
     {% set date = date|date_modify("+1 month") %}
 {% endfor %}
+</table>
