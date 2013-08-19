@@ -121,8 +121,10 @@ class controller_number{
         $number->id = $_GET['number_id'];
         $number->verify('id');
         $model = new model_meter(model_session::get_company());
+        $time = getdate();
         return ['meter' => $model->get_meter($_GET['meter_id']),
-                'number' => $number, 'service' => $_GET['service']];
+                'number' => $number, 'service' => $_GET['service'],
+                'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
     }
 
     public static function private_get_dialog_add_processing_center(){
