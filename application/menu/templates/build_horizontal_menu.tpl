@@ -22,15 +22,9 @@
             <div class="nav-collapse collapse" id="usermenu">
                 <ul class="nav pull-right">
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle current_user" user_id="{{user_id}}" data-toggle="dropdown">
+                        <a href="/profile/" class="current_user" user_id="{{user_id}}">
                            {{ user.firstname }} {{ user.lastname }}
-                           <b class="caret"></b>
                         </a>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                            <li><a tabindex="-1" href="/profile/">Профиль</a></li>
-                            <li class="divider"></li>
-                            <li><a tabindex="-1" href="/exit/">Выход</a></li>
-                        </ul>
                     </li>
                 </ul>
             </div>
