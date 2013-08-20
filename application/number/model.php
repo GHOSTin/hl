@@ -11,7 +11,7 @@ class model_number{
 	* Создает новый лицевой ссчет уникальный для компании и для города.
 	* @return object data_number
 	*/
-	public static function create_number(data_company $company, data_city $city, data_flat $flat,
+	public static function DELETE__create_number(data_company $company, data_city $city, data_flat $flat,
 										data_number $number){
 		$city->verify('id');
 		$number->id = self::get_insert_id($city);
@@ -216,7 +216,7 @@ class model_number{
 	* Возвращает следующий для вставки идентификатор лицевого счета.
 	* @return int
 	*/
-	public static function get_insert_id(data_company $company, data_city $city){
+	public static function DELETE__get_insert_id(data_company $company, data_city $city){
 		$company->verify('id');
 		$city->verify('id');
 		$sql = new sql();
@@ -237,85 +237,6 @@ class model_number{
 		if(!($number instanceof data_number))
 			throw new e_model('Счетчика не существует.');			
 		return $number;
-	}
-
-	/*
-	* Возвращает данные счетчика
-	*/
-	public static function update_meter_data(data_company $company,
-												data_number2meter $number2meter,
-												data_meter2data $data){
-		try{
-			$sql = new sql();
-			$sql->begin();
-			$number2meter->verify('number_id', 'meter_id', 'serial');
-			$company->verify('id');
-			if(empty($data->time))
-				throw new e_model('Время выборки задано не верно.');
-			// проверка существования лицевого счета
-			$number = new data_number();
-			$number->id = $number2meter->number_id;
-			$numbers = self::get_numbers($company, $number);
-			if(count($numbers) !== 1)			
-				throw new e_model('Проблема при выборке лицевого счета.');
-			$number = $numbers[0];
-			model_number::is_data_number($number);
-			// проверка существования счетчика
-			$meters = model_number2meter::get_number2meters($company, $number2meter);
-			if(count($meters) !== 1)
-				throw new e_model('Проблема при выборке счетчика.');
-			$meter = $meters[0];
-			model_number2meter::is_data_number2meter($meter);
-			if(count($data->value) !== (int) $meter->rates)
-				throw new e_model('Количество тарифов показаний не соответствует количеству в счетчике.');
-			$time = getdate($data->time);
-			$time_begin = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
-			$count = count(self::get_meter_data($company, $number2meter, $time_begin, $time_begin));
-			$sql = new sql();
-			if($count === 0)
-				$sql->query("INSERT INTO `meter2data` (`company_id`, `number_id`,
-						`meter_id`, `serial`, `time`, `value`, `comment`, `way`, `timestamp`
-						) VALUES (:company_id, :number_id, :meter_id, :serial,
-						:time, :value, :comment, :way, :timestamp)");
-			elseif($count === 1)
-				$sql->query("UPDATE `meter2data` SET `time` = :time, `value` = :value,
-						`comment` = :comment, `way` = :way, `timestamp` = :timestamp
-						WHERE `company_id` = :company_id AND `number_id` = :number_id
-						AND `meter_id` = :meter_id AND `serial` = :serial
-						AND `time` = :time");
-			else
-				throw new e_model('Не подходящее количество параметров.');
-			$values = [];
-			if(!empty($data->value))
-				foreach($data->value as $value)
-					$values[] = (int) $value;
-			$last_data = self::get_last_meter_data($company, $meter, $time_begin)[0];
-			if($last_data instanceof data_meter2data AND !empty($values))
-				foreach($values as $key => $value)
-					if($value < $last_data->value[$key]){
-						$tarif = $key + 1;
-						throw new e_model($tarif.' тариф новое показание '.$value.' меньше предидущего '.$last_data->value[$key]);
-					}
-			$data->verify('way', 'timestamp');
-			$sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-			$sql->bind(':serial', $meter->serial, PDO::PARAM_INT);
-			$sql->bind(':number_id', $meter->number_id, PDO::PARAM_INT);
-			$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-			$sql->bind(':time', mktime(12, 0, 0, $time['mon'], 1, $time['year']), PDO::PARAM_INT);
-			$sql->bind(':value', implode(';', $values), PDO::PARAM_STR);
-			$sql->bind(':comment', $data->comment, PDO::PARAM_STR);
-			$sql->bind(':way', $data->way, PDO::PARAM_STR);
-			$sql->bind(':timestamp', $data->timestamp, PDO::PARAM_INT);
-			$sql->execute('Проблема при при выборки данных счетчика.');
-			$sql->commit();
-		}catch(exception $e){
-			// die($e->getMessage());
-			$sql->rollback();
-			if($e instanceof e_model)
-				throw new e_model($e->getMessage());
-			else
-				throw new e_model('Ошибка в PDO.');
-		}
 	}
 
 	/**

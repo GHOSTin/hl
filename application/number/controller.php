@@ -374,8 +374,6 @@ class controller_number{
 
     public static function private_get_dialog_edit_meter_data(){
         $time = getdate($_GET['time']);
-        // $time_begin = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
-        // $time_end = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
         $company = model_session::get_company();
         $model = new model_number2meter($company, $_GET['id']);
         $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
