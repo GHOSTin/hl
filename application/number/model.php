@@ -153,65 +153,6 @@ class model_number{
 		}
 	}
 
-	public static function add_meter(data_company $company, data_number2meter $data){
-		$company->verify('id');
-		$data->verify('number_id', 'meter_id', 'serial', 'service', 'period',
-						'date_release', 'date_install', 'date_checking');
-		if($data->date_install < $data->date_release)
-			throw new e_model('Дата установки должна быть больше чем дата производства счетчика');
-		if($data->date_checking < $data->date_install)
-			throw new e_model('Дата поверки должна быть больше чем дата установки счетчика');
-		$number = new data_number();
-		$number->id = $data->number_id;
-		$number->verify('id');
-		$numbers = self::get_numbers($company, $number);
-		if(count($numbers) !== 1)
-			throw new e_model('Невереное количество лицевых счетов.');
-		$number = $numbers[0];
-		self::is_data_number($number);
-		$meter = new data_meter();
-		$meter->id = $data->meter_id;
-		$meter->verify('id');
-		$meters = model_meter::get_meters($company, $meter);
-		if(count($meters) !== 1)
-			throw new e_model('Неверное количество счетчиков.');
-		$meter = $meters[0];
-		model_meter::is_data_meter($meter);
-		$new_data = new data_number2meter();
-		$new_data->number_id = $data->number_id;
-		$new_data->meter_id = $data->meter_id;
-		$new_data->serial = $data->serial;
-		if(count(model_number2meter::get_number2meters($company, $new_data)) !== 0)
-			throw new e_model('Счетчик уже существует.');
-		$data->company_id = $company->id;
-		$data->verify('company_id', 'number_id', 'meter_id',
-								'serial', 'date_release', 'date_install',
-								'date_checking', 'period', 'service');
-		if($data->service === 'cold_water' OR $data->service === 'hot_water')
-			$data->verify('place');
-		else
-			$data->place = '';
-		$sql = new sql();
-		$sql->query("INSERT INTO `number2meter` (`company_id`, `number_id`,
-				`meter_id`, `service`, `serial`, `date_release`,`date_install`,
-				`date_checking`, `period`, `place`, `comment`) VALUES (:company_id, :number_id,
-				:meter_id, :service, :serial, :date_release, :date_install,
-				:date_checking, :period, :place, :comment)");
-		$sql->bind(':company_id', $data->company_id, PDO::PARAM_INT);
-		$sql->bind(':number_id', $data->number_id, PDO::PARAM_INT);
-		$sql->bind(':meter_id', $data->meter_id, PDO::PARAM_INT);
-		$sql->bind(':service', $data->service, PDO::PARAM_STR);
-		$sql->bind(':serial', $data->serial, PDO::PARAM_STR);
-		$sql->bind(':date_release', $data->date_release, PDO::PARAM_INT);
-		$sql->bind(':date_install', $data->date_install, PDO::PARAM_INT);
-		$sql->bind(':date_checking', $data->date_checking, PDO::PARAM_INT);
-		$sql->bind(':period', $data->period, PDO::PARAM_INT);
-		$sql->bind(':place', $data->place, PDO::PARAM_STR);
-		$sql->bind(':comment', $data->comment, PDO::PARAM_STR);
-		$sql->execute('Проблемы при добавлении счетчика в лицевой счет.');
-		return $data;
-	}
-
 	/**
 	* Возвращает следующий для вставки идентификатор лицевого счета.
 	* @return int
