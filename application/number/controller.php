@@ -22,7 +22,7 @@ class controller_number{
                     $enable_meters[] = $meter;
                 elseif($meter->status == 'disabled')
                     $disable_meters[] = $meter;
-        return ['data' => $data,
+        return ['number_id' => $_GET['number_id'],
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
 
