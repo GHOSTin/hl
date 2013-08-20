@@ -18,9 +18,9 @@ class controller_number{
         $enable_meters = $disable_meters = [];
         if(!empty($meters))
             foreach($meters as $meter)
-                if($meter->status == 'enabled')
+                if($meter->get_status() == 'enabled')
                     $enable_meters[] = $meter;
-                elseif($meter->status == 'disabled')
+                elseif($meter->get_status() == 'disabled')
                     $disable_meters[] = $meter;
         return ['number_id' => $_GET['number_id'],
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
@@ -223,9 +223,9 @@ class controller_number{
         $enable_meters = $disable_meters = [];
         if(!empty($meters))
             foreach($meters as $meter)
-                if($meter->status == 'enabled')
+                if($meter->get_status() == 'enabled')
                     $enable_meters[] = $meter;
-                elseif($meter->status == 'disabled')
+                elseif($meter->get_status() == 'disabled')
                     $disable_meters[] = $meter;
         model_session::set_setting_param('number', 'number_content', 'meters');
         $model = new model_number($company);
@@ -243,9 +243,9 @@ class controller_number{
                 $enable_meters = $disable_meters = [];
                 if(!empty($meters))
                     foreach($meters as $meter)
-                        if($meter->status == 'enabled')
+                        if($meter->get_status() == 'enabled')
                             $enable_meters[] = $meter;
-                        elseif($meter->status == 'disabled')
+                        elseif($meter->get_status() == 'disabled')
                             $disable_meters[] = $meter;
                 $model = new model_number($company);
                 return ['number' => $model->get_number($_GET['id']),

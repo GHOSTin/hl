@@ -4,24 +4,24 @@
 * Лицевые счета ассоциированы с компанией и с городом.
 * В одном городе у одной компании не может быть два одинаковых лицевых счета.
 */
-final class data_number2meter extends data_object{
+class data_number2meter extends data_object{
 
-	public $company_id;
-	public $number_id;
-	public $meter_id;
-	public $service;
-    public $capacity;
-	public $name;
-	public $rates;
-	public $serial;
-	public $date_release;
-	public $date_install;
-	public $date_checking;
-    public $date_next_checking;
-	public $period;
-	public $place;
-    public $comment;
-    public $status;
+	private $company_id;
+	private $number_id;
+	private $meter_id;
+	private $service;
+    private $capacity;
+	private $name;
+	private $rates;
+	private $serial;
+	private $date_release;
+	private $date_install;
+	private $date_checking;
+    private $date_next_checking;
+	private $period;
+	private $place;
+    private $comment;
+    private $status;
 
     public function __construct(){
         if(!empty($this->date_checking) AND !empty($this->period)){
@@ -58,6 +58,14 @@ final class data_number2meter extends data_object{
 
     public function get_meter_id(){
         return $this->meter_id;
+    }
+
+    public function get_name(){
+        return $this->name;
+    }
+
+    public function get_date_next_checking(){
+        return $this->date_next_checking;
     }
 
     public function get_number_id(){
@@ -123,6 +131,7 @@ final class data_number2meter extends data_object{
     public function set_serial($serial){
         $this->serial = $serial;
     }
+    
     public function set_service($service){
         $this->service = $service;
     }
