@@ -76,6 +76,6 @@ class model_meter2data{
             $mapper->insert($data);
         else
             $mapper->update($current);
-        exit();
+        return $meter;
     }
 }
