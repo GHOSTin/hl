@@ -64,7 +64,7 @@ final class data_meter2data extends data_object{
         return $this->way;
     }
 
-    public function set_comment(){
+    public function set_comment($comment){
         $this->comment = $comment;
     }
 

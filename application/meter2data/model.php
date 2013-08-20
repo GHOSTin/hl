@@ -54,10 +54,9 @@ class model_meter2data{
         $mapper = new mapper_meter2data($this->company, $this->number_id, $this->meter_id, $this->serial);
         $current = $mapper->find($time);
         if(!is_null($current)){
-            $data = $current->set_value($values);
-            $data->set_way($way);
-            $data->set_comment($comment);
-            $data->set_value($values);
+            $current->set_way($way);
+            $current->set_comment($comment);
+            $current->set_value($values);
             $new = false;
         }else{
             $data = new data_meter2data();
@@ -69,12 +68,12 @@ class model_meter2data{
             $new = true;
         }
         $last = $mapper->last($time);
-        if(!is_null($last))
-            die('CHECK');
+        // if(!is_null($last))
+        //     die('CHECK');
         if($new)
             $mapper->insert($data);
         else
-            $mapper->update($data);
+            $mapper->update($current);
         exit();
     }
 }

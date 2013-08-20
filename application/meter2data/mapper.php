@@ -97,4 +97,29 @@ class mapper_meter2data{
             throw new e_model('Неожиданное количество возвращаемых строк.');
         return  $data[0];
     }
+
+    public function update(data_meter2data $data){
+        $data->set_company_id($this->company->id);
+        $data->set_number_id($this->number_id);
+        $data->set_meter_id($this->meter_id);
+        $data->set_serial($this->serial);
+        $data->verify('company_id', 'number_id', 'meter_id', 'serial', 'time',
+                        'timestamp', 'value', 'way', 'comment');
+        $sql = new sql();
+        $sql->query("UPDATE`meter2data` SET `timestamp` = :timestamp, 
+                `value` = :value, `way` = :way, `comment` = :comment
+                WHERE `company_id` = :company_id AND `number_id` = :number_id
+                AND `meter_id` = :meter_id AND `serial` = :serial AND `time` = :time");
+        $sql->bind(':company_id', $data->get_company_id(), PDO::PARAM_INT);
+        $sql->bind(':number_id', $data->get_number_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $data->get_meter_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $data->get_serial(), PDO::PARAM_STR);
+        $sql->bind(':time', $data->get_time(), PDO::PARAM_INT);
+        $sql->bind(':timestamp', $data->get_timestamp(), PDO::PARAM_INT);
+        $sql->bind(':value', implode(';', $data->get_value()), PDO::PARAM_STR);
+        $sql->bind(':way', $data->get_way(), PDO::PARAM_STR);
+        $sql->bind(':comment', $data->get_comment(), PDO::PARAM_STR);
+        $sql->execute('Проблемы при обновлении показания.');
+        return $data;
+    }
 }
