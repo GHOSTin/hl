@@ -373,16 +373,9 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_meter_data(){
-        // $time = $_GET['time'];
-        // $data = new data_number2meter();
-        // $data->number_id = $_GET['id'];
-        // $data->meter_id = $_GET['meter_id'];
-        // $data->serial = $_GET['serial'];
         $time = getdate($_GET['time']);
         // $time_begin = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
         // $time_end = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
-        // $data->verify('number_id', 'meter_id', 'serial');
-
         $company = model_session::get_company();
         $model = new model_number2meter($company, $_GET['id']);
         $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
@@ -455,7 +448,7 @@ class controller_number{
         // $model = new model_number2meter($company, $_GET['id']);
         // $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
         $model = new model_meter2data($company, $_GET['id'], $_GET['meter_id'], $_GET['serial']);
-        $model->update_value($timestamp, $_GET['tarif'], $_GET['way'], $_GET['comment']);
+        $model->update_value($_GET['time'], $_GET['tarif'], $_GET['way'], $_GET['comment'], $timestamp);
 
         exit();
         return ['meters' => model_number2meter::get_number2meters($company, $data), 
