@@ -323,8 +323,11 @@ class controller_number{
         $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
         $model = new model_number($company);
         $number = $model->get_number($_GET['number_id']);
+        $model = new model_meter2data(model_session::get_company(), $_GET['number_id'],
+                                        $_GET['meter_id'], $_GET['serial']);
         return ['meter' => $meter,
-                'number' => $number, 'time' => $time_begin];
+                'number' => $number, 'time' => $time_begin,
+                'meter_data' => $model->get_values($time_begin, $time_end)];
     }
 
     public static function private_get_meter_docs(){
