@@ -93,8 +93,7 @@ final class data_meter2data extends data_object{
     }
 
     public function set_value(array $values){
-        foreach($values as $value)
-            $this->value[] = $value;
+        $this->value = $values;
     }
 
     public function set_way($way){

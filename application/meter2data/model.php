@@ -48,9 +48,11 @@ class model_meter2data{
         return $result;
     }
 
-    public function update_value($time, $values, $way, $comment){
+    public function update_value($time, array $values, $way, $comment){
         $model = new model_number2meter($this->company, $this->number_id);
-        $model->get_meter($this->meter_id, $this->serial);
+        $meter = $model->get_meter($this->meter_id, $this->serial);
+        if(count($values) !== (int) $meter->rates)
+            throw new e_model('Количество показаний не равно тарифности счетчика.');
         $mapper = new mapper_meter2data($this->company, $this->number_id, $this->meter_id, $this->serial);
         $current = $mapper->find($time);
         if(!is_null($current)){
