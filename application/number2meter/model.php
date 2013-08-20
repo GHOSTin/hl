@@ -11,6 +11,27 @@ class model_number2meter{
             throw new e_model('Идентификатор лицевого счета задан не верно.');
     }
 
+    public function add_meter($meter_id, $serial, $service, $place, $date_release,
+                                $date_install, $date_checking, $period, $comment){
+        $model = new model_meter($this->company);
+        $meter = $model->get_meter($meter_id);
+        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        if($mapper->find($meter_id, $serial) !== null)
+            throw new e_model('Счетчик с таким идентификатором и серийным номером уже существует.');
+        $n2m = new data_number2meter();
+        $n2m->set_meter_id($meter->id);
+        $n2m->set_serial($serial);
+        $n2m->set_status('enabled');
+        $n2m->set_service($service);
+        $n2m->set_place($place);
+        $n2m->set_date_release($date_release);
+        $n2m->set_date_install($date_install);
+        $n2m->set_date_checking($date_checking);
+        $n2m->set_period($period);
+        $n2m->set_comment($comment);
+        return $mapper->insert($n2m);
+    }
+
     public function get_meter($meter_id, $serial){
         $mapper = new mapper_number2meter($this->company, $this->number_id);
         $meter = $mapper->find($meter_id, $serial);

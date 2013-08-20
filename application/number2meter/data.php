@@ -40,6 +40,10 @@ final class data_number2meter extends data_object{
         return $this->comment;
     }
 
+    public function get_company_id(){
+        return $this->company_id;
+    }
+
     public function get_date_checking(){
         return $this->date_checking;
     }
@@ -52,12 +56,28 @@ final class data_number2meter extends data_object{
         return $this->date_release;
     }
 
+    public function get_meter_id(){
+        return $this->meter_id;
+    }
+
+    public function get_number_id(){
+        return $this->number_id;
+    }
+
+    public function get_period(){
+        return $this->period;
+    }
+
     public function get_place(){
         return $this->place;
     }
 
     public function get_serial(){
         return $this->serial;
+    }
+
+    public function get_service(){
+        return $this->service;
     }
 
     public function get_status(){
@@ -102,6 +122,9 @@ final class data_number2meter extends data_object{
 
     public function set_serial($serial){
         $this->serial = $serial;
+    }
+    public function set_service($service){
+        $this->service = $service;
     }
 
     public function set_status($status){

@@ -7,22 +7,14 @@ class controller_number{
         $date_release = explode('.', $_GET['date_release']);
         $date_install = explode('.', $_GET['date_install']);
         $date_checking = explode('.', $_GET['date_checking']);
-        $data = new data_number2meter();
-        $data->number_id = $_GET['number_id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
-        $data->service = $_GET['service'];
-        $data->period = $_GET['period'];
-        $data->place = $_GET['place'];
-        $data->comment = $_GET['comment'];
-        $data->date_release = mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]);
-        $data->date_install = mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]);
-        $data->date_checking = mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]);
         $company = model_session::get_company();
-        model_number::add_meter($company, $data);
-        $number2meter = new data_number2meter();
-        $number2meter->number_id = $_GET['number_id'];
-        $meters = model_number2meter::get_number2meters($company, $number2meter);
+        $model = new model_number2meter($company, $_GET['number_id']);
+        $model->add_meter($_GET['meter_id'], $_GET['serial'], $_GET['service'], $_GET['place'],
+            mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]),
+            mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]),
+            mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]),
+            $_GET['period'], $_GET['comment']);
+        $meters = $model->get_meters();
         $enable_meters = $disable_meters = [];
         if(!empty($meters))
             foreach($meters as $meter)

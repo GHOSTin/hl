@@ -55,6 +55,36 @@ class mapper_number2meter{
         return  $meters[0];
     }
 
+    public function insert(data_number2meter $n2m){
+        $n2m->set_company_id($this->company->id);
+        $n2m->set_number_id($this->number_id);
+        $n2m->verify('company_id', 'number_id', 'meter_id', 'serial', 'service',
+                    'status', 'place', 'date_release', 'date_install',
+                    'date_checking', 'period', 'comment');
+        $sql = new sql();
+        $sql->query('INSERT INTO `number2meter` (`company_id`, `number_id`,
+                    `meter_id`, `serial`, `status`, `service`, `place`,
+                    `date_release`, `date_install`, `date_checking`, `period`,
+                    `comment`) VALUES (:company_id, :number_id, :meter_id,
+                    :serial, :status, :service, :place, :date_release,
+                    :date_install, :date_checking, :period, :comment)');
+        $sql->bind(':number_id', $n2m->get_number_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $n2m->get_company_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $n2m->get_meter_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $n2m->get_serial(), PDO::PARAM_STR);
+        $sql->bind(':service', $n2m->get_service(), PDO::PARAM_STR);
+        $sql->bind(':status', $n2m->get_status(), PDO::PARAM_STR);
+        $sql->bind(':place', $n2m->get_place(), PDO::PARAM_STR);
+        $sql->bind(':date_release', $n2m->get_date_release(), PDO::PARAM_INT);
+        $sql->bind(':date_install', $n2m->get_date_install(), PDO::PARAM_INT);
+        $sql->bind(':date_checking', $n2m->get_date_checking(), PDO::PARAM_INT);
+        $sql->bind(':period', $n2m->get_period(), PDO::PARAM_INT);
+        $sql->bind(':comment', $n2m->get_comment(), PDO::PARAM_STR);
+        $sql->execute('Проблемы при вставке связи лицевой счет - счетчик.');
+        return  $n2m;
+
+    }
+
     public function update(data_number2meter $meter){
         $meter->set_company_id($this->company->id);
         $meter->verify('company_id', 'number_id', 'meter_id', 'serial', 'period',

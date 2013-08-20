@@ -89,7 +89,7 @@ class verify_number2meter{
     */
     public static function service(data_number2meter $number2meter){
         $meter = new data_meter();
-        $meter->service = $number2meter->service;
+        $meter->service[] = $number2meter->service;
         $meter->verify('service');
     }
 
