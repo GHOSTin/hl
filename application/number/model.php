@@ -242,27 +242,6 @@ class model_number{
 	/*
 	* Возвращает данные счетчика
 	*/
-	public static function get_last_meter_data(data_company $company, data_number2meter $number, $time){
-		$company->verify('id');
-		$number->verify('number_id', 'meter_id', 'serial');
-		$sql = new sql();
-		$sql->query("SELECT `time`, `value` FROM `meter2data`
-					WHERE `company_id` = :company_id AND `number_id` = :number_id
-				    AND `meter_id` = :meter_id AND `serial` = :serial
-				    AND `time` = (SELECT MAX(`time`) FROM `meter2data` WHERE 
-				    `company_id` = :company_id AND `number_id` = :number_id
-				    AND `meter_id` = :meter_id AND `serial` = :serial AND `time` < :time)");
-		$sql->bind(':meter_id', $number->meter_id, PDO::PARAM_INT);
-		$sql->bind(':serial', $number->serial, PDO::PARAM_STR);
-		$sql->bind(':number_id', $number->number_id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':time', $time, PDO::PARAM_INT);
-		return $sql->map(new data_meter2data(), 'Проблема при при выборке проверочных данных счетчика.');
-	}
-
-	/*
-	* Возвращает данные счетчика
-	*/
 	public static function update_meter_data(data_company $company,
 												data_number2meter $number2meter,
 												data_meter2data $data){

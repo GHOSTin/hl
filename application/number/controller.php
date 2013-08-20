@@ -373,20 +373,24 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_meter_data(){
-        $time = $_GET['time'];
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
+        // $time = $_GET['time'];
+        // $data = new data_number2meter();
+        // $data->number_id = $_GET['id'];
+        // $data->meter_id = $_GET['meter_id'];
+        // $data->serial = $_GET['serial'];
         $time = getdate($_GET['time']);
-        $time_begin = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
-        $time_end = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
-        $data->verify('number_id', 'meter_id', 'serial');
+        // $time_begin = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
+        // $time_end = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
+        // $data->verify('number_id', 'meter_id', 'serial');
+
         $company = model_session::get_company();
-        return ['meters' => model_number2meter::get_number2meters(model_session::get_company(), $data),
-                'time' => $_GET['time'],
-                'current_meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end),
-                'last_data' => model_number::get_last_meter_data($company, $data, $time_begin)];
+        $model = new model_number2meter($company, $_GET['id']);
+        $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
+        //$model = model_meter2data($company, $_GET['id'], $_GET['meter_id'], $_GET['serial']);
+        return ['meter' => $meter,
+            'time' => $_GET['time'],
+            'current_meter_data' => null,
+            'last_data' => null];
     }
 
     public static function private_update_date_checking(){
@@ -431,23 +435,29 @@ class controller_number{
     }
 
     public static function private_update_meter_data(){
-        $data = new data_number2meter();
-        $data->number_id = $_GET['id'];
-        $data->meter_id = $_GET['meter_id'];
-        $data->serial = $_GET['serial'];
-        $data->verify('number_id', 'meter_id', 'serial');
-        $meter2data = new data_meter2data();
-        $meter2data->time = $_GET['time'];
-        $meter2data->value = $_GET['tarif'];
-        $meter2data->comment = $_GET['comment'];
+        // $data = new data_number2meter();
+        // $data->number_id = $_GET['id'];
+        // $data->meter_id = $_GET['meter_id'];
+        // $data->serial = $_GET['serial'];
+        // $data->verify('number_id', 'meter_id', 'serial');
+        // $meter2data = new data_meter2data();
+        // $meter2data->time = $_GET['time'];
+        // $meter2data->value = $_GET['tarif'];
+        // $meter2data->comment = $_GET['comment'];
         $timestamp = explode('.', $_GET['timestamp']);
-        $meter2data->timestamp = mktime(12, 0, 0, $timestamp[1], $timestamp[0], $timestamp[2]);
-        $meter2data->way = $_GET['way'];
-        model_number::update_meter_data(model_session::get_company(), $data, $meter2data);
-        $time = getdate();
-        $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
-        $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
+        $timestamp = mktime(12, 0, 0, (int) $timestamp[1], (int) $timestamp[0], (int) $timestamp[2]);
+        // $meter2data->way = $_GET['way'];
+        // model_number::update_meter_data(model_session::get_company(), $data, $meter2data);
+        // $time = getdate();
+        // $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
+        // $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
         $company = model_session::get_company();
+        // $model = new model_number2meter($company, $_GET['id']);
+        // $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
+        $model = new model_meter2data($company, $_GET['id'], $_GET['meter_id'], $_GET['serial']);
+        $model->update_value($timestamp, $_GET['tarif'], $_GET['way'], $_GET['comment']);
+
+        exit();
         return ['meters' => model_number2meter::get_number2meters($company, $data), 
                 'time' => $time_begin, 'meter_data' => model_number::get_meter_data($company, $data, $time_begin, $time_end)];
     }

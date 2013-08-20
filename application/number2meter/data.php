@@ -84,6 +84,14 @@ final class data_number2meter extends data_object{
         $this->date_release = $time;
     }
 
+    public function set_meter_id($id){
+        $this->meter_id = $id;
+    }
+
+    public function set_number_id($id){
+        $this->number_id = $id;
+    }
+
     public function set_period($period){
         $this->period = $period;
     }

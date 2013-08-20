@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% set current = component.current_meter_data[component.time] %}
 {% set data = component.last_data[0] %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',

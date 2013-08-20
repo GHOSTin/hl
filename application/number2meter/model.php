@@ -7,7 +7,7 @@ class model_number2meter{
     public function __construct(data_company $company, $id){
         $this->company = $company;
         $this->number_id = (int) $id;
-        if($number->id > 16777215 OR $this->number_id < 1)
+        if($this->number_id > 16777215 OR $this->number_id < 1)
             throw new e_model('Идентификатор лицевого счета задан не верно.');
     }
 
