@@ -7,10 +7,10 @@
             <div class="span2">{{ val }}</div>
         {% else %}
             <div class="span2"></div>
-            {% if meter.rates == 2 %}
+            {% if meter.get_rates() == 2 %}
             <div class="span2"></div>
             {% endif %}
-            {% if meter.rates == 3 %}
+            {% if meter.get_rates() == 3 %}
             <div class="span2"></div>
             <div class="span2"></div>
             {% endif %}

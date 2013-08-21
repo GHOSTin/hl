@@ -26,7 +26,7 @@ class verify_meter2data{
 
     public static function serial(data_meter2data $data){
         $meter = new data_number2meter();
-        $meter->serial = $data->get_serial();
+        $meter->set_serial($data->get_serial());
         $meter->verify('serial');
     }
 

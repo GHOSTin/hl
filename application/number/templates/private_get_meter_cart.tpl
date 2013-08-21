@@ -9,28 +9,28 @@
 
 
 <h5>{{ number.street_name }}, дом №{{ number.house_number }}, кв. №{{ number.flat_number }}, {{ number.fio }} (л/с №{{ number.number }})</h5>
-{{ rates[meter.rates - 1] }} счетчик {{ services[meter.service] }} {{ meter.name }} ( Заводской номер №{{ meter.serial }}, разрядность {{ meter.capacity }}).
-{% if meter.service == 'cold_water' or meter.service == 'hot_water' %}
-    Установлен {{ places[meter.place] }}.
+{{ rates[meter.get_rates() - 1] }} счетчик {{ services[meter.get_service()] }} {{ meter.get_name() }} ( Заводской номер №{{ meter.get_serial() }}, разрядность {{ meter.get_capacity() }}).
+{% if meter.get_service() == 'cold_water' or meter.get_service() == 'hot_water' %}
+    Установлен {{ places[meter.get_place()] }}.
 {% endif %}
 <p>
-    Дата производства: {{ meter.date_release|date('d.m.Y') }} Дата установки: {{ meter.date_install|date('d.m.Y') }}
-    Дата последней поверки: {{ meter.date_checking|date('d.m.Y') }}<br>
-    Период поверки: {{ meter.period // 12 }} г {{ meter.period % 12 }} мес.
-    Дата следующей поверки: {{ meter.date_next_checking|date('d.m.Y') }}
+    Дата производства: {{ meter.get_date_release()|date('d.m.Y') }} Дата установки: {{ meter.get_date_install()|date('d.m.Y') }}
+    Дата последней поверки: {{ meter.get_date_checking()|date('d.m.Y') }}<br>
+    Период поверки: {{ meter.get_period() // 12 }} г {{ meter.get_period() % 12 }} мес.
+    Дата следующей поверки: {{ meter.get_date_next_checking()|date('d.m.Y') }}
 </p>
 {% if component.meter_data|length >0 %}
     <table>
         <tr>
             <td>Время</td>
-            {% if meter.rates == 1 %}
+            {% if meter.get_rates() == 1 %}
                 <td>1 тариф</td>
             {% endif %}
-            {% if meter.rates == 2 %}
+            {% if meter.get_rates() == 2 %}
                 <td>1 тариф</td>
                 <td>2 тариф</td>
             {% endif %}
-            {% if meter.rates == 3 %}
+            {% if meter.get_rates() == 3 %}
                 <td>1 тариф</td>
                 <td>2 тариф</td>
                 <td>3 тариф</td>
@@ -39,14 +39,14 @@
     {% for data in component.meter_data %} 
         <tr>
             <td>{{data.time|date('m.Y')}}</td>
-            {% if meter.rates == 1 %}
+            {% if meter.get_rates() == 1 %}
                 <td>{{ data.value[0] }}</td>
             {% endif %}
-            {% if meter.rates == 2 %}
+            {% if meter.get_rates() == 2 %}
                 <td>{{ data.value[0] }}</td>
                 <td>{{ data.value[1] }}</td>
             {% endif %}
-            {% if meter.rates == 3 %}
+            {% if meter.get_rates() == 3 %}
                 <td>{{ data.value[0] }}</td>
                 <td>{{ data.value[1] }}</td>
                 <td>{{ data.value[2] }}</td>

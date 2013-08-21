@@ -4,7 +4,7 @@
 {% set months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август',
     'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] %}
 {% block js %}
-    $('.number[number = {{ meter.number_id }}] .meter[serial = {{ meter.serial }}][meter = {{ meter.meter_id }}]').append(get_hidden_content())
+    $('.number[number = {{ meter.get_number_id() }}] .meter[serial = {{ meter.get_serial() }}][meter = {{ meter.get_meter_id() }}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
 <div class="meter-data">

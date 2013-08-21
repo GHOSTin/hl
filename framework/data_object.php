@@ -8,7 +8,7 @@ class data_object{
 	* При вызове неопределенного метода заканчивает работу скрита
 	*/
 	final public function __call($method, $args){
-		throw new e_data('Property $'.$property.' not exist!');
+		throw new e_data('Property $'.$method.' not exist!');
 	}
 	/*
 	* При запросе к неопределенному свойству заканчивает работу скрита

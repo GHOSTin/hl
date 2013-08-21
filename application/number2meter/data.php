@@ -36,6 +36,10 @@ class data_number2meter extends data_object{
             verify_number2meter::$value($this);
     }
 
+    public function get_capacity(){
+        return $this->capacity;
+    }
+
     public function get_comment(){
         return $this->comment;
     }
@@ -78,6 +82,10 @@ class data_number2meter extends data_object{
 
     public function get_place(){
         return $this->place;
+    }
+
+    public function get_rates(){
+        return $this->rates;
     }
 
     public function get_serial(){
