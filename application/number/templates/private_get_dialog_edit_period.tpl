@@ -1,7 +1,7 @@
 {% extends "dialog.tpl" %}
 {% set meter = component.meter %}
-{% set year = meter.period // 12 %}
-{% set month = meter.period % 12 %}
+{% set year = meter.get_period() // 12 %}
+{% set month = meter.get_period() % 12 %}
 {% block title %}Диалог редактирования периода счетчика{% endblock title %}
 {% block dialog %}
 	<select class="dialog-input-year" style="width:100px">
@@ -22,9 +22,9 @@
 	// Изменяет период поверки счетчика привязанного к лицевому счету
 	$('.update_period').click(function(){
 		$.get('update_period',{
-			number_id: {{ meter.number_id }},
-			meter_id: {{ meter.meter_id }},
-			serial: '{{ meter.serial }}',
+			number_id: {{ meter.get_number_id() }},
+			meter_id: {{ meter.get_meter_id() }},
+			serial: '{{ meter.get_serial() }}',
 			year: $('.dialog-input-year').val(),
 			month: $('.dialog-input-month').val()
 			},function(r){
