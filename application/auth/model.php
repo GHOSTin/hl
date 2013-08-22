@@ -11,7 +11,7 @@ class model_auth{
 					`password`, `telephone`, `cellphone`
 					FROM `users` WHERE `username` = :login AND `password` = :hash");
 		$sql->bind(':login', htmlspecialchars($_POST['login']), PDO::PARAM_STR);
-		$sql->bind(':hash', model_user::get_password_hash($_POST['password']) , PDO::PARAM_STR);
+		$sql->bind(':hash', (new model_user)->get_password_hash($_POST['password']) , PDO::PARAM_STR);
 		$user = $sql->map(new data_current_user(), 'Проблема при авторизации.')[0];
 		if($sql->count() !== 1){
 			$sql->close();
