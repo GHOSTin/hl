@@ -6,10 +6,8 @@ class model_processing_center2number{
     */
     public static function add_identifier(data_company $company, data_processing_center2number $c2n){
         $company->verify('id');
-        $number = new data_number();
-        $number->id = $c2n->number_id;
-        if(count(model_number::get_numbers($company, $number)) !== 1)
-            throw new e_model('Неожиданное количество лицевых счетов.');
+        $model = new model_number($company);
+        $model->get_number($c2n->number_id);
         $center = new data_processing_center();
         $center->id = $c2n->processing_center_id;
         if(count(model_processing_center::get_processing_centers($center)) !== 1)
