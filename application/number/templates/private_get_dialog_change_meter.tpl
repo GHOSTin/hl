@@ -18,9 +18,9 @@
 		var id = $('.dialog-select-meters :selected').val();
 		if(id > 0){
 			$.get('get_dialog_change_meter_option',{
-				number_id: {{ meter.number_id }},
-				meter_id: {{ meter.meter_id }},
-				serial: {{ meter.serial }},
+				number_id: {{ meter.get_number_id() }},
+				meter_id: {{ meter.get_meter_id() }},
+				serial: {{ meter.get_serial() }},
 				new_meter_id: id,
 				service: $('.dialog-select-service :selected').val()
 				},function(r){
