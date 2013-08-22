@@ -122,7 +122,7 @@ class mapper_number2meter{
         $sql = new sql();
         $sql->query("UPDATE `number2meter` SET `period` = :period, `status` = :status, `serial` = :new_serial,
             `place` = :place, `comment` = :comment, `date_release` = :date_release,
-            `date_install` = :date_install
+            `date_install` = :date_install, `date_checking` = :date_checking
             WHERE `company_id` = :company_id AND `number_id` = :number_id
             AND `meter_id` = :meter_id AND `serial` = :serial");
         $sql->bind(':number_id', $meter->get_number_id(), PDO::PARAM_INT);
