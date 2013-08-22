@@ -10,9 +10,9 @@ class controller_number{
         $company = model_session::get_company();
         $model = new model_number2meter($company, $_GET['number_id']);
         $model->add_meter($_GET['meter_id'], $_GET['serial'], $_GET['service'], $_GET['place'],
-            mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]),
-            mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]),
-            mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]),
+            mktime(12, 0, 0, $date_release[1], $date_release[0], $date_release[2]),
+            mktime(12, 0, 0, $date_install[1], $date_install[0], $date_install[2]),
+            mktime(12, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]),
             $_GET['period'], $_GET['comment']);
         $meters = $model->get_meters();
         $enable_meters = $disable_meters = [];
@@ -44,9 +44,9 @@ class controller_number{
         $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
         $model->change_meter($_GET['meter_id'], $_GET['serial'], $_GET['new_meter_id'],
             $_GET['new_serial'], $_GET['service'], $_GET['place'],
-            mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]),
-            mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]),
-            mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]),
+            mktime(12, 0, 0, $date_release[1], $date_release[0], $date_release[2]),
+            mktime(12, 0, 0, $date_install[1], $date_install[0], $date_install[2]),
+            mktime(12, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]),
             $_GET['period'], $_GET['comment']);
         return ['number_id' => $_GET['number_id'],
                 'meters' => $model->get_meters()];
