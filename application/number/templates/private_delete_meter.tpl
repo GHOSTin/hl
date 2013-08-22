@@ -20,9 +20,9 @@
     <li>
         <ul style="padding:20px" class="number-meters">
         {% for meter in component.meters %}
-            <li class="meter" meter="{{ meter.meter_id }}" serial="{{ meter.serial }}">
-                {% set period = meter.period %}
-                <p class="get_meter_data">{{ services[meter.service] }} {{ meter.name }} №{{ meter.serial }} ({{ meter.date_next_checking|date('d.m.Y') }})</p>
+            <li class="meter" meter="{{ meter.get_meter_id() }}" serial="{{ meter.get_serial() }}">
+                {% set period = meter.get_period() %}
+                <p class="get_meter_data">{{ services[meter.get_service()] }} {{ meter.get_name() }} №{{ meter.get_serial() }} ({{ meter.get_date_next_checking()|date('d.m.Y') }})</p>
             </li>
         {% else %}
             <li>Ни одного счетчика еще не привязано.</li>

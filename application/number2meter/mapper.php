@@ -11,15 +11,16 @@ class mapper_number2meter{
 
     public function delete(data_number2meter $meter){
         $meter->set_company_id($this->company->id);
+        $meter->set_number_id($this->number_id);
         $meter->verify('company_id', 'number_id', 'meter_id', 'serial');
         $sql = new sql();
         $sql->query("DELETE FROM `number2meter` 
             WHERE `company_id` = :company_id AND `number_id` = :number_id
             AND `meter_id` = :meter_id AND `serial` = :serial");
-        $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-        $sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
+        $sql->bind(':number_id', $meter->get_number_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $meter->get_company_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $meter->get_meter_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
         $sql->execute('Проблема при удалении связи лицевого счета и счетчика');
     }
 
