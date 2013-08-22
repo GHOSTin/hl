@@ -87,6 +87,7 @@ class mapper_number2meter{
 
     public function update(data_number2meter $meter){
         $meter->set_company_id($this->company->id);
+        $meter->set_number_id($this->number_id);
         $meter->verify('company_id', 'number_id', 'meter_id', 'serial', 'period',
                         'status', 'place', 'comment', 'date_release', 'date_install', 'date_checking');
         $sql = new sql();
@@ -95,12 +96,12 @@ class mapper_number2meter{
             `date_install` = :date_install, `date_checking` = :date_checking
             WHERE `company_id` = :company_id AND `number_id` = :number_id
             AND `meter_id` = :meter_id AND `serial` = :serial");
-        $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-        $sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
-        $sql->bind(':period', $meter->period, PDO::PARAM_INT);
-        $sql->bind(':status', $meter->status, PDO::PARAM_STR);
+        $sql->bind(':number_id', $meter->get_number_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $meter->get_company_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $meter->get_meter_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
+        $sql->bind(':period', $meter->get_period(), PDO::PARAM_INT);
+        $sql->bind(':status', $meter->get_status(), PDO::PARAM_STR);
         $sql->bind(':date_release', $meter->get_date_release(), PDO::PARAM_INT);
         $sql->bind(':date_install', $meter->get_date_install(), PDO::PARAM_INT);
         $sql->bind(':date_checking', $meter->get_date_checking(), PDO::PARAM_INT);
@@ -112,6 +113,7 @@ class mapper_number2meter{
 
     public function update_serial(data_number2meter $meter, $serial){
         $meter->set_company_id($this->company->id);
+        $meter->set_number_id($this->number_id);
         $meter->verify('company_id', 'number_id', 'meter_id', 'serial', 'period',
                         'status', 'place', 'comment', 'date_release', 'date_install', 'date_checking');
         $m = new data_number2meter();
@@ -123,12 +125,12 @@ class mapper_number2meter{
             `date_install` = :date_install
             WHERE `company_id` = :company_id AND `number_id` = :number_id
             AND `meter_id` = :meter_id AND `serial` = :serial");
-        $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':meter_id', $meter->meter_id, PDO::PARAM_INT);
-        $sql->bind(':serial', $meter->serial, PDO::PARAM_STR);
-        $sql->bind(':period', $meter->period, PDO::PARAM_INT);
-        $sql->bind(':status', $meter->status, PDO::PARAM_STR);
+        $sql->bind(':number_id', $meter->get_number_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $meter->get_company_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $meter->get_meter_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
+        $sql->bind(':period', $meter->get_period(), PDO::PARAM_INT);
+        $sql->bind(':status', $meter->get_status(), PDO::PARAM_STR);
         $sql->bind(':date_release', $meter->get_date_release(), PDO::PARAM_INT);
         $sql->bind(':date_install', $meter->get_date_install(), PDO::PARAM_INT);
         $sql->bind(':date_checking', $meter->get_date_checking(), PDO::PARAM_INT);

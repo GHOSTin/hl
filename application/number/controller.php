@@ -462,9 +462,9 @@ class controller_number{
         $enable_meters = $disable_meters = [];
         if(!empty($meters))
             foreach($meters as $meter)
-                if($meter->status == 'enabled')
+                if($meter->get_status() == 'enabled')
                     $enable_meters[] = $meter;
-                elseif($meter->status == 'disabled')
+                elseif($meter->get_status() == 'disabled')
                     $disable_meters[] = $meter;
         return ['data' => $meter,
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
