@@ -1,9 +1,9 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.old_meter %}
+{% set number_id = component.number_id %}
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% block js %}
-    $('.number[number = {{meter.number_id}}] .number-content').html(get_hidden_content())
+    $('.number[number = {{ number_id }}] .number-content').html(get_hidden_content())
 {% endblock js %}
 {% block html %}
     <li>
@@ -20,9 +20,9 @@
     <li>
         <ul style="padding:20px" class="number-meters">
         {% for meter in component.meters %}
-            <li class="meter" meter="{{ meter.meter_id }}" serial="{{ meter.serial }}">
-                {% set period = meter.period %}
-                <p class="get_meter_data">{{ services[meter.service] }} {{ meter.name }} №{{ meter.serial }} ({{ meter.date_next_checking|date('d.m.Y') }})</p>
+            <li class="meter" meter="{{ meter.get_meter_id() }}" serial="{{ meter.get_serial() }}">
+                {% set period = meter.get_period() %}
+                <p class="get_meter_data">{{ services[meter.get_service()] }} {{ meter.get_name() }} №{{ meter.get_serial() }} ({{ meter.get_date_next_checking()|date('d.m.Y') }})</p>
             </li>
         {% else %}
             <li>Ни одного счетчика еще не привязано.</li>

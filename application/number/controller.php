@@ -41,30 +41,15 @@ class controller_number{
     }
 
     public static function private_change_meter(){
-        $old = new data_number2meter();
-        $old->number_id = $_GET['number_id'];
-        $old->meter_id = $_GET['meter_id'];
-        $old->serial = $_GET['serial'];
-        $date_release = explode('.', $_GET['date_release']);
-        $date_install = explode('.', $_GET['date_install']);
-        $date_checking = explode('.', $_GET['date_checking']);
-        $new = new data_number2meter();
-        $new->number_id = $_GET['number_id'];
-        $new->meter_id = $_GET['new_meter_id'];
-        $new->serial = $_GET['new_serial'];
-        $new->service = $_GET['service'];
-        $new->period = $_GET['period'];
-        $new->place = $_GET['place'];
-        $new->comment = $_GET['comment'];
-        $new->date_release = mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]);
-        $new->date_install = mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]);
-        $new->date_checking = mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]);
-        $company = model_session::get_company();
-        model_number::change_meter($company, $old, $new);
-        $per = new data_number2meter();
-        $per->number_id = $old->number_id;
-        return ['old_meter' => $old,
-                'meters' => model_number2meter::get_number2meters($company, $per)];
+        $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
+        $model->change_meter($_GET['meter_id'], $_GET['serial'], $_GET['new_meter_id'],
+            $_GET['new_serial'], $_GET['service'], $_GET['place'],
+            mktime(0, 0, 0, $date_release[1], $date_release[0], $date_release[2]),
+            mktime(0, 0, 0, $date_install[1], $date_install[0], $date_install[2]),
+            mktime(0, 0, 0, $date_checking[1], $date_checking[0], $date_checking[2]),
+            $_GET['period'], $_GET['comment']);
+        return ['number_id' => $_GET['number_id'],
+                'meters' => $model->get_meters()];
     }
 
     public static function private_delete_meter(){
@@ -139,7 +124,7 @@ class controller_number{
     public static function private_get_dialog_change_meter_option(){
         $company = model_session::get_company();
         $model = new model_meter($company);
-        $meter = $model->get_meter($_GET['meter_id']);
+        $meter = $model->get_meter($_GET['new_meter_id']);
         $model = new model_number2meter($company, $_GET['number_id']);
         return ['meter' => $meter,
                 'service' => $_GET['service'],
