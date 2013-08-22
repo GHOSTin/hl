@@ -271,11 +271,9 @@ class controller_query{
 		$types = model_query_work_type::get_query_work_types($company, new data_query_work_type());
 		switch($_GET['initiator']){
 			case 'number':
-				$number = new data_number();
-				$number->id = $_GET['id'];
-				$number->verify('id');
+				$model = new model_number($company);
 				return ['initiator' => 'number',
-						'number' => model_number::get_numbers($company, $number)[0],
+						'number' => $model->get_number($_GET['id']),
 						'query_work_types' => $types];
 			break;
 			case 'house':
