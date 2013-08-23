@@ -53,6 +53,7 @@ class mapper_query2number{
             $number = new data_number();
             $number->id = $row['number_id'];
             $number->number = $row['number'];
+            $number->fio = $row['fio'];
             $numbers[$number->id] = $number;
         }
         $stmt->closeCursor();
@@ -67,7 +68,7 @@ class mapper_query2number{
             AND `numbers`.`company_id` = :company_id
             AND `query2number`.`query_id` = :query_id
             AND `query2number`.`number_id` = `numbers`.`id`");
-        $sql->bind(':query_id', $this->query_id, PDO::PARAM_INT);
+        $sql->bind(':query_id', $this->query->id, PDO::PARAM_INT);
         $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
         $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
         $stmt = $sql->get_stm();
@@ -75,6 +76,7 @@ class mapper_query2number{
             $number = new data_number();
             $number->id = $row['number_id'];
             $number->number = $row['number'];
+            $number->fio = $row['fio'];
             $this->query->add_number($number);
         }
         $stmt->closeCursor();

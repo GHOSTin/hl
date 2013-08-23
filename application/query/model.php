@@ -1,6 +1,13 @@
 <?php
 class model_query{
 
+	private $company;
+
+	public function __construct(data_company $company){
+		$this->company = $company;
+        $this->company->verify('id');
+	}
+
 	/*
 	* Зависимая функция.
 	* Добавляет ассоциацию заявка-пользователь.
@@ -332,6 +339,19 @@ class model_query{
 		return $query_number;
 	}
 
+	public function get_query($id){
+		$mapper = new mapper_query($this->company);
+		$query = $mapper->find($id);
+		if(!($query instanceof data_query))
+			throw new e_model('Проблема при выборке заявки');
+		return $query;
+	}
+
+	public function init_numbers(data_query $query){
+		$mapper = new mapper_query2number($this->company, $query);
+		return $mapper->init_numbers();
+	}
+
 	/**
 	* Возвращает заявки.
 	* @return array
@@ -340,36 +360,7 @@ class model_query{
 		$company->verify('id');
  		$sql = new sql();
 		if(!empty($query->id)){
-			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
-				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
-				`queries`.`payment-status` as `payment_status`,
-				`queries`.`warning-type` as `warning_status`,
-				`queries`.`department_id`, `queries`.`house_id`,
-				`queries`.`query_close_reason_id` as `close_reason_id`,
-				`queries`.`query_worktype_id` as `worktype_id`,
-				`queries`.`opentime` as `time_open`,
-				`queries`.`worktime` as `time_work`,
-				`queries`.`closetime` as `time_close`,
-				`queries`.`addinfo-name` as `contact_fio`,
-				`queries`.`addinfo-telephone` as `contact_telephone`,
-				`queries`.`addinfo-cellphone` as `contact_cellphone`,
-				`queries`.`description-open` as `description`,
-				`queries`.`description-close` as `close_reason`,
-				`queries`.`querynumber` as `number`,
-				`queries`.`query_inspection` as `inspection`, 
-				`houses`.`housenumber` as `house_number`,
-				`streets`.`name` as `street_name`,
-				`query_worktypes`.`name` as `work_type_name`,
-				`departments`.`name` as `department_name`
-				FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
-				WHERE `queries`.`company_id` = :company_id
-				AND `queries`.`house_id` = `houses`.`id`
-				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
-				AND `houses`.`street_id` = `streets`.`id`
-				AND `queries`.`id` = :id AND `departments`.`company_id` = :company_id
-				AND `queries`.`department_id` = `departments`.`id`");
-			$query->verify('id');
-			$sql->bind(':id', $query->id, PDO::PARAM_INT);
+			die('disabled query id');
 		}elseif(!empty($query->number)){
 			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,

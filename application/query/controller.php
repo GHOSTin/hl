@@ -335,12 +335,10 @@ class controller_query{
 	}
 
 	public static function private_get_query_numbers(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->verify('id');
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-				'numbers' => model_query::get_numbers($company, $query)];
+		$model = new model_query(model_session::get_company());
+		$query = $model->get_query($_GET['id']);
+		$model->init_numbers($query);
+		return ['query' => $query];
 	}
 
 	public static function private_get_query_users(){
