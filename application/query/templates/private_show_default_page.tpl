@@ -3,13 +3,13 @@
     <!-- begin left block -->
     <div class="col-sm-3 col-lg-3">
         <div class="row">
-            <div class="btn-group col-12 query_controls">
+            <div class="btn-group col-xs-12 query_controls">
                 {% if rules.createQuery == true %}
-                <div class="get_dialog_create_query btn btn-default col-8">Создать заявку</div>
+                <div class="get_dialog_create_query btn btn-default col-xs-8">Создать заявку</div>
                 {% endif %}
-                <div class="get_search btn btn-default col-4">Поиск</div>
+                <div class="get_search btn btn-default col-xs-4">Поиск</div>
             </div>
-            <div  class="page-header col-12 col-lg-10 col-lg-push-1">
+            <div  class="page-header col-xs-12 col-lg-10 col-lg-push-1">
                 <h4 class="view-toggle-filters">Фильтры
                 <small class="pull-right cm clear_filters absolute_hide">сбросить</small></h4>
             </div>

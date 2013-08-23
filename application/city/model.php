@@ -1,5 +1,6 @@
 <?php
 class model_city{
+
 	/**
 	* Создает новый дом.
 	* @return object data_city
@@ -7,28 +8,26 @@ class model_city{
 	public static function create_city(data_city $city, data_current_user $user){
 		$city->company_id = $user->company_id;
 		$city->id = self::get_insert_id();
-		self::verify_status($city);
-		self::verify_name($city);
-		self::verify_company_id($city);
-		self::verify_id($city);
+		$city->verify('id','name', 'company_id', 'status');
 		$sql = new sql();
 		$sql->query("INSERT INTO `cities` (`id`, `company_id`, `status`, `name`)
 					VALUES (:city_id, :company_id, :status, :name)");
 		$sql->bind(':city_id', $city->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $city->company_id, PDO::PARAM_STR);
-		$sql->bind(':status', $city->status, PDO::PARAM_INT);
-		$sql->bind(':name', $city->name, PDO::PARAM_INT);
+		$sql->bind(':company_id', $city->company_id, PDO::PARAM_INT);
+		$sql->bind(':status', $city->status, PDO::PARAM_STR);
+		$sql->bind(':name', $city->name, PDO::PARAM_STR);
 		$sql->execute('Проблемы при создании города.');
 		$stm->close();
 		return $city;
 	}
+
 	/**
 	* Создает новую улицу.
 	* @return object data_street
 	*/
 	public static function create_street(data_city $city, data_street $street, data_current_user $user){
-		model_street::verify_name($street);
-		self::verify_id($city);
+		$street->verify('name');
+		$city->verify('id');
 		$cities = self::get_cities($city);
 		if(count($cities) !== 1)
 			throw new e_model('Проблемы при выборке города.');
@@ -40,11 +39,7 @@ class model_city{
 		$street->company_id = $user->company_id;
 		$street->city_id = $city->id;
 		$street->id = model_street::get_insert_id();
-		model_street::verify_company_id($street);
-		model_street::verify_id($street);
-		model_street::verify_city_id($street);
-		model_street::verify_status($street);
-		model_street::verify_name($street);
+		$street->verify('id', 'company_id', 'city_id', 'name', 'status');
 		$sql = new sql();
 		$sql->query("INSERT INTO `streets` (`id`, `company_id`, `city_id`, `status`, `name`)
 					VALUES (:street_id, :company_id, :city_id, :status, :name)");
@@ -57,16 +52,17 @@ class model_city{
 		$sql->close();
 		return $street;
 	}
+
 	/**
 	* Создает новую улицу.
 	* @return object data_street
 	*/
 	public static function create_number(data_company $company, data_city $city,
 				 	data_street $street, data_house $house, data_flat $flat, data_number $number ){
-		model_company::verify_id($company);
-		model_city::verify_id($city);
-		model_street::verify_id($street);
-		model_flat::verify_id($flat);
+		$company->verify('id');
+		$city->verify('id');
+		$street->verify('id');
+		$flat->verify('id');
 		$number->verify('number', 'fio');
 		$cities = self::get_cities($city);
 		if(count($cities) !== 1)
@@ -112,6 +108,7 @@ class model_city{
 		$sql->close();
 		return $number;
 	}
+
 	/**
 	* Возвращает следующий для вставки идентификатор дома.
 	* @return int
@@ -126,6 +123,7 @@ class model_city{
 		$sql->close();
 		return $city_id;
 	}
+
 	/*
 	* Возвращает список городов
 	*/
@@ -133,12 +131,13 @@ class model_city{
 		$sql = new sql();
 		$sql->query("SELECT `id`, `status`, `name` FROM `cities`");
 		if(!empty($city->name)){
-			self::verify_name($city);
+			$city->verify('name');
 			$sql->query(" WHERE `name` = :name");
 			$sql->bind(':name', $city->name, PDO::PARAM_STR);
 		}
 		return $sql->map(new data_city(), 'Проблема при выборке городов.');
 	}
+
 	/*
 	* Возвращает список улиц города
 	*/
@@ -149,19 +148,20 @@ class model_city{
 					FROM `streets` WHERE `city_id` = :city_id");
 		$sql->bind(':city_id', $city->id, PDO::PARAM_STR);
 		if(!empty($street->name)){
-			model_street::verify_name($street);
+			$street->verify('name');
 			$sql->query(" AND `name` = :name");
 			$sql->bind(':name', $street->name, PDO::PARAM_STR);
 		}
 		return $sql->map(new data_street(), 'Проблема при выборке улиц города.');
 	}
+
 	/*
 	* Возвращает список улиц города
 	*/
 	public static function get_numbers(data_company $company, data_city $city, data_number $number){
-		self::verify_id($city);
+		$city->verify('id');
 		$number->verify('number');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
 						`numbers`.`city_id`, `numbers`.`house_id`, 
@@ -188,34 +188,7 @@ class model_city{
 		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
 		return $sql->map(new data_number(), 'Проблема при выборке лицевых счетов.');
 	}
-	/**
-	* Верификация идентификатора компании.
-	*/
-	public static function verify_company_id(data_city $city){
-		if($city->company_id < 1)
-			throw new e_model('Идентификатор компании города задан не верно.');
-	}
-	/**
-	* Верификация идентификатора города.
-	*/
-	public static function verify_id(data_city $city){
-		if($city->id < 1)
-			throw new e_model('Идентификатор города задан не верно.');
-	}
-	/**
-	* Верификация названия города.
-	*/
-	public static function verify_name(data_city $city){
-		if(empty($city->name))
-			throw new e_model('Название города задано не верно.');
-	}
-	/**
-	* Верификация статуса города.
-	*/
-	public static function verify_status(data_city $city){
-		if(empty($city->status))
-			throw new e_model('Статус города задан не верно.');
-	}
+	
 	/**
 	* Проверка принадлежности объекта к классу data_city.
 	*/

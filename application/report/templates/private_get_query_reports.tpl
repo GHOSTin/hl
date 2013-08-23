@@ -80,14 +80,14 @@
     <h4>Отчеты по заявкам</h4>
     <div class="row">
         <div class="col-sm-3 col-lg-3">
-            <div class="col-12">
-                <h4>Фильтры <a class="pull-right clear_filter_query">сбросить</a></h4>
+            <div class="col-xs-12">
+                <h4>Фильтры <small><a class="pull-right clear_filter_query">сбросить</a></small></h4>
             </div>
             <ul class="list-unstyled filters">
                 <li>
                     <label>по дате</label>
-                    <div class="row form-group"><label class="control-label col-1">с</label><div class="col-10"><input type="text" class="form-control query_time_begin" value="{{ filters.time_begin|date('d.m.Y') }}"></div></div>
-                    <div class="row form-group"><label class="control-label col-1">по</label><div class="col-10"><input type="text" class="form-control query_time_end" value="{{ filters.time_end|date('d.m.Y') }}"></div></div>
+                    <div class="row form-group"><label class="control-label col-xs-1">с</label><div class="col-xs-10"><input type="text" class="form-control query_time_begin" value="{{ filters.time_begin|date('d.m.Y') }}"></div></div>
+                    <div class="row form-group"><label class="control-label col-xs-1">по</label><div class="col-xs-10"><input type="text" class="form-control query_time_end" value="{{ filters.time_end|date('d.m.Y') }}"></div></div>
                 </li>
                 <li class="form-group">
                     <label>по статусу заявки</label>
@@ -159,7 +159,7 @@
                 </li>
             </ul>
         </div>
-        <div class="col-sm-9 col-lg-9">
+        <div class="col-xs-12 col-sm-9 col-lg-9">
             <ul class="list-unstyled">
                 <li>Отчет №1 
                     <div>

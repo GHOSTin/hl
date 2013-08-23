@@ -16,7 +16,7 @@
 			{% endif %}
 		{% endif %}
 	</div>
-	{% if component.numbers.numbers != false %}
+	{% if query.initiator == 'number' %}
 		кв. {{number.flat_number}}
 	{% endif %}
 	{{query.description}}

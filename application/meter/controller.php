@@ -2,41 +2,29 @@
 class controller_meter{
 
     public static function private_add_period(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->periods[] = $_GET['period'];
-        return ['meter' => model_meter::add_period(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->add_period($_GET['id'], $_GET['period'])];
     }
 
     public static function private_add_service(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->service[] = $_GET['service'];
-        return ['meter' => model_meter::add_service(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->add_service($_GET['id'], $_GET['service'])];
     }
 
     public static function private_create_meter(){
-        $meter = new data_meter();
-        $meter->name = $_GET['name'];
-        $meter->capacity = $_GET['capacity'];
-        $meter->rates = $_GET['rates'];
-        $company = model_session::get_company();
-        model_meter::create_meter($company, $meter);
-        return ['meters' => model_meter::get_meters($company, new data_meter())];
+        $model = new model_meter(model_session::get_company());
+        $model->create_meter($_GET['name'], $_GET['capacity'], $_GET['rates']);
+        return ['meters' => $model->get_meters(new data_meter())];
     }
 
     public static function private_get_dialog_add_period(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_add_service(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_create_meter(){
@@ -44,85 +32,68 @@ class controller_meter{
     }
 
     public static function private_get_dialog_edit_capacity(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_rates(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_dialog_remove_period(){
         $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->periods[0] = $_GET['period'];
+        $meter->set_id($_GET['id']);
+        $meter->add_period($_GET['period']);
         $meter->verify('id', 'periods');
         return ['meter' => $meter];
     }
 
     public static function private_get_dialog_remove_service(){
         $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->service[0] = $_GET['service'];
+        $meter->set_id($_GET['id']);
+        $meter->add_service($_GET['service']);
         $meter->verify('id', 'service');
         return ['meter' => $meter];
     }
 
     public static function private_get_dialog_rename_meter(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_get_meter_content(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->verify('id');
-        return ['meters' => model_meter::get_meters(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->get_meter($_GET['id'])];
     }
 
     public static function private_remove_period(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->periods[0] = $_GET['period'];
-        return ['meter' => model_meter::remove_period(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->remove_period($_GET['id'], $_GET['period'])];
     }
 
     public static function private_remove_service(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->service[0] = $_GET['service'];
-        return ['meter' => model_meter::remove_service(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->remove_service($_GET['id'], $_GET['service'])];
     }
 
     public static function private_rename_meter(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->name = $_GET['name'];
-        return ['meter' => model_meter::rename_meter(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->rename_meter($_GET['id'], $_GET['name'])];
     }
 
     public static function private_show_default_page(){
-        return ['meters' => model_meter::get_meters(model_session::get_company(), new data_meter())];
+        $model = new model_meter(model_session::get_company());
+        return ['meters' => $model->get_meters(new data_meter())];
     }
 
     public static function private_update_capacity(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->capacity = $_GET['capacity'];
-        return ['meter' => model_meter::update_capacity(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->update_capacity($_GET['id'], $_GET['capacity'])];
     }
 
     public static function private_update_rates(){
-        $meter = new data_meter();
-        $meter->id = $_GET['id'];
-        $meter->rates = $_GET['rates'];
-        return ['meter' => model_meter::update_rates(model_session::get_company(), $meter)];
+        $model = new model_meter(model_session::get_company());
+        return ['meter' => $model->update_rates($_GET['id'], $_GET['rates'])];
     }
 }

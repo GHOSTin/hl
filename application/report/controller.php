@@ -18,7 +18,7 @@ class controller_report{
         if($filters['street_id'] > 0){
             $street = new data_street();
             $street->id = $filters['street_id'];
-            model_street::verify_id($street);
+            $street->verify('id');
             $houses = model_street::get_houses($street);
         }
         return [
@@ -71,7 +71,7 @@ class controller_report{
         if($_GET['id'] !== 'all'){
             $street = new data_street();
             $street->id = $_GET['id'];
-            model_street::verify_id($street);
+            $street->verify('id');
             return ['houses' => model_street::get_houses($street)];
         }else
             return true;

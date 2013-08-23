@@ -2,72 +2,76 @@
 class verify_user{
 
     /**
-    * Верификация сотового телефона пользователя.
+    * Верификация сотового телефона.
     */
-    public static function cellphone(data_user $number){
+    public static function cellphone(data_user $user){
+        if(!empty($user->cellphone))
+            if(!preg_match('/^\+7[0-9]{10}$/', $user->cellphone))
+                throw new e_model('Номер сотового телефона пользователя задан не верно.');
     }
 
     /**
     * Верификация идентификатора компании.
     */
-    public static function company_id(data_user $number){
-        if($number->company_id < 1)
-            throw new e_model('Идентификатор компании задан не верно.');
+    public static function company_id(data_user $user){
+        $company = new data_company();
+        $company->id = $user->company_id;
+        $company->verify('id');
     }
 
     /**
-    * Верификация имени пользователя.
+    * Верификация имени.
     */
     public static function firstname(data_user $user){
-         if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->firstname))
+         if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-я]{0,19}+$/u', $user->firstname))
             throw new e_model('Имя пользователя задано не верно.');
     }
 
     /**
-    * Верификация отчества пользователя.
+    * Верификация отчества.
     */
     public static function middlename(data_user $user){
         if(!empty($user->middlename))
-            if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->middlename))
+            if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-я]{0,19}+$/u', $user->middlename))
                 throw new e_model('Отчество пользователя задано не верно.');
     }
 
     /**
-    * Верификация идентификатора лицевого счета.
+    * Верификация идентификатора.
     */
-    public static function id(data_user $number){
-        if($number->id < 1)
-            throw new e_model('Идентификатор лицевого счета задан не верно.');
+    public static function id(data_user $user){
+        if(!preg_match('/^[0-9]{1,5}$/', $user->id))
+            throw new e_model('Идентификатор пользователя задан не верно.');
+        if($user->id > 65535 OR $user->id < 1)
+            throw new e_model('Идентификатор пользователя задан не верно.');
     }
 
     /**
-    * Верификация фамилии пользователя.
+    * Верификация фамилии.
     */
     public static function lastname(data_user $user){
-         if(!preg_match('/^[АБВГДЕЖЗИКЛЬНОПРСТУФХЦЧШЩЭЮЯ][а-яА-Я]+$/u', $user->lastname))
+         if(!preg_match('/^[АБВГДЕЖЗИКЛМНОПРСТУФХЦЧШЩЭЮЯ][а-я]{0,19}+$/u', $user->lastname))
             throw new e_model('Фамилия пользователя задана не верно.');
     }
 
     /**
-    * Верификация логина пользователя.
+    * Верификация логина.
     */
     public static function login(data_user $user){
-         if(strlen($user->login) < 6)
-                throw new e_model('Логин имеет меньше 6 букв.');
-        if(!preg_match('/^[a-zA-Z0-9]+$/u', $user->login))
-            throw new e_model('Логин не удовлетворяет a-zA-Z0-9.');
+        if(!preg_match('/^[a-zA-Z0-9]{6,20}$/u', $user->login))
+            throw new e_model('Логин не удовлетворяет a-zA-Z0-9 или меньше 6 символов.');
     }
 
     /**
-    * Верификация пароля лицевого счета.
+    * Верификация пароля.
     */
-    public static function password(data_user $number){
-        if(empty($number->password))
-            throw new e_model('Пароль лицевого счета задан не верно.');
+    public static function password(data_user $user){
+        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $user->password))
+            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 или больше 20 символов.');
     }
 
     /**
-    * Верификация статуса пользователя.
+    * Верификация статуса.
     */
     public static function status(data_user $user){
         if(!in_array($user->status, ['true', 'false']))
@@ -75,8 +79,11 @@ class verify_user{
     }
  
     /**
-    * Верификация телефона владельца лицевого счета.
+    * Верификация телефона.
     */
-    public static function telephone(data_user $number){
+    public static function telephone(data_user $user){
+        if(!empty($user->telephone))
+            if(!preg_match('/^[0-9]{2,11}$/', $user->telephone))
+                throw new e_model('Номер телефона пользователя задан не верно.');
     }
 }

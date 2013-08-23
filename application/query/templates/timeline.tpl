@@ -12,7 +12,7 @@
     {% endif %}
     {{ y }}
 </div>
-<div class="btn-group col-12" data-toggle="buttons">
+<div class="btn-group" data-toggle="buttons">
     <a class="timeline-control btn btn-primary get_timeline" act="previous">
         <i class="glyphicon glyphicon-chevron-left"></i>
     </a>

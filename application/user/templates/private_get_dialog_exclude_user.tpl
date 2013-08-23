@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set user = component.users[0] %}
-{% set group = component.groups[0] %}
+{% set user = component.user %}
+{% set group = component.group %}
 {% block title %}Диалог исключения пользователя из группы{% endblock title %}
 {% block dialog %}
 	Исключить "{{ user.lastname }} {{ user.firstname }} {{ user.middlename }}" из группы "{{ group.name }}"

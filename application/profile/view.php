@@ -22,14 +22,14 @@ class view_profile{
 	}
 
 	public static function private_update_password($args){
-		return;
+		return load_template('profile.private_update_password', $args);
 	}
 
 	public static function private_update_cellphone($args){
-		return;
+		return load_template('profile.private_update_cellphone', $args);
 	}
 
 	public static function private_update_telephone($args){
-		return;
+		return load_template('profile.private_update_telephone', $args);
 	}
 }

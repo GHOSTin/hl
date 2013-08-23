@@ -6,12 +6,12 @@ class controller_user{
     public static function private_add_profile(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
         model_profile::add_profile($company, $user, $_GET['profile']);
-        return ['users' => model_user::get_users($user),
+        return ['user' => $user,
                 'companies' => model_profile::get_companies($user)];
     }
 
@@ -22,6 +22,8 @@ class controller_user{
         $group->id = $_GET['group_id'];
         $company = model_session::get_company();
         model_group::add_user($company, $group, $user);
+        return ['group' => $group,
+                'users' => model_group::get_users(model_session::get_company(), $group)];
         
     }
 
@@ -52,7 +54,9 @@ class controller_user{
         $user->login = $_GET['login'];
         $user->password = $_GET['password'];
         $user->status = 'true';
-        $user = model_user::create_user($user);
+        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $user->password))
+            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
+        $user = (new model_user)->create_user($user);
         $letter_user = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
         $letter_users = [];
         $users = model_user::get_users(new data_user());
@@ -68,7 +72,7 @@ class controller_user{
     public static function private_delete_profile(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -90,7 +94,7 @@ class controller_user{
     public static function private_get_company_content(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -101,7 +105,7 @@ class controller_user{
     public static function private_get_profile_content(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -112,7 +116,7 @@ class controller_user{
     public static function private_get_restriction_content(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -156,7 +160,7 @@ class controller_user{
     public static function private_get_dialog_delete_profile(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -167,39 +171,27 @@ class controller_user{
         $group = new data_group();
         $group->id = $_GET['id'];
         $group->verify('id');
-        return ['groups' => model_group::get_groups(model_session::get_company(), $group)];
+        return ['group' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 
     public static function private_get_dialog_edit_fio(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_password(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_dialog_edit_user_status(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_dialog_exclude_user(){
         $group = new data_group();
         $group->id = $_GET['group_id'];
         $group->verify('id');
-        $user = new data_user();
-        $user->id = $_GET['user_id'];
-        $user->verify('id');
-        return ['users' => model_user::get_users($user),
-                'groups' => model_group::get_groups(model_session::get_company(), $group)];
+        return ['user' => (new model_user)->get_user($_GET['user_id']),
+                'group' => model_group::get_groups(model_session::get_company(), $group)[0]];
     }
 
     public static function private_get_group_letters(){
@@ -229,10 +221,7 @@ class controller_user{
     }
 
     public static function private_get_dialog_edit_login(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
 	public static function private_show_default_page(){
@@ -278,24 +267,18 @@ class controller_user{
     }
 
     public static function private_get_user_content(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_user_information(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        $user->verify('id');
-        return ['users' => model_user::get_users($user)];
+        return ['user' => (new model_user)->get_user($_GET['id'])];
     }
 
     public static function private_get_user_profiles(){
         $user = new data_user();
         $user->id = $_GET['id'];
         $user->verify('id');
-        return ['users' => model_user::get_users($user),
+        return ['user' => (new model_user)->get_user($_GET['id']),
                 'companies' => model_profile::get_companies($user)];
     }
 
@@ -317,21 +300,19 @@ class controller_user{
     }
 
     public static function private_update_fio(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => model_user::update_fio($user, $_GET['lastname'], $_GET['firstname'], $_GET['middlename'])];
+        return ['user' => (new model_user)->update_fio($_GET['id'], $_GET['lastname'], $_GET['firstname'], $_GET['middlename'])];
     }
 
     public static function private_update_password(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => model_user::update_password($user, $_GET['password'], $_GET['confirm'])];
+        if($_GET['password'] !== $_GET['confirm'])
+            throw new e_model('Пароль и подтверждение не идентичны.');
+        return ['user' => (new model_user)->update_password($_GET['id'], $_GET['password'])];
     }
 
     public static function private_update_rule(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -342,7 +323,7 @@ class controller_user{
     public static function private_update_restriction(){
         $company = new data_company();
         $company->id = $_GET['company_id'];
-        model_company::verify_id($company);
+        $company->verify('id');
         $user = new data_user();
         $user->id = $_GET['user_id'];
         $user->verify('id');
@@ -351,14 +332,10 @@ class controller_user{
     }
 
     public static function private_update_login(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['user' => model_user::update_login($user, $_GET['login'])];
+        return ['user' => (new model_user)->update_login($_GET['id'], $_GET['login'])];
     }
 
     public static function private_update_user_status(){
-        $user = new data_user();
-        $user->id = $_GET['id'];
-        return ['users' => [model_user::update_user_status($user)]];
+        return ['user' => (new model_user)->update_user_status($_GET['id'])];
     }
 }

@@ -6,7 +6,7 @@ class model_profile{
 	*/
 	public static function add_profile(data_company $company, data_user $user, $profile){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$time 		= getdate();
 		$beginDay 	= mktime(0,0,0, $time['mon'],$time['mday'],$time['year']);
 		$endDay 	= $beginDay + 86400;
@@ -150,7 +150,7 @@ class model_profile{
 	*/
 	public static function delete_profile(data_company $company, data_user $user, $profile){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("DELETE FROM `profiles` WHERE  `user_id` = :user_id
 					AND `company_id` = :company_id AND `profile` = :profile");
@@ -164,8 +164,8 @@ class model_profile{
 	* Записывает в сессию правила, ограничения, настройки, меню.
 	*/
 	public static function get_user_profiles(data_company $company, data_current_user $user){
-		model_user::verify_id($user);
-		model_company::verify_id($company);
+		$user->verify('id');
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `profile`, `rules`, `restrictions`, `settings`
 					FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id");
@@ -188,7 +188,7 @@ class model_profile{
 	*/
 	public static function get_profiles(data_company $company, data_user $user){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `profile` FROM `profiles` 
 					WHERE  `user_id` = :user_id AND `company_id` = :company_id");
@@ -208,7 +208,7 @@ class model_profile{
 	*/
 	public static function get_profile(data_company $company, data_user $user, $profile){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$sql = new sql();
 		$sql->query("SELECT `rules`, `restrictions`, `settings` FROM `profiles` 
 					WHERE  `user_id` = :user_id AND `company_id` = :company_id
@@ -255,29 +255,13 @@ class model_profile{
 		}else
 			return true;
 	}
-	/**
-	* Обновляет пароль пользователя
-	* @return bolean
-	*/
-	public static function update_password(data_user $user, $password){
-		$password = (string) $password;
-		if(strlen($password) < 6)
-			throw new e_model('Пароль не может быть длиной меньше 10 символов.');
-		$user->password = model_user::get_password_hash($password);
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `password` = :password WHERE `id` = :id");
-		$sql->bind(':password', $user->password, PDO::PARAM_STR);
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при изменении пароля.');
-		return $user;
-	}
 
 	/**
 	* Возвращает профиль пользователя в зависимости от компании и названия профиля.
 	*/
 	public static function update_rule(data_company $company, data_user $user, $profile, $rule){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$rules = self::get_profile($company, $user, $profile)['rules'];
 		if(in_array($rule, array_keys($rules))){
 			$rules[$rule] = !$rules[$rule];
@@ -299,7 +283,7 @@ class model_profile{
 	*/
 	public static function update_restriction(data_company $company, data_user $user, $profile, $restriction, $item){
 		$user->verify('id');
-		model_company::verify_id($company);
+		$company->verify('id');
 		$restrictions = self::get_profile($company, $user, $profile)['restrictions'];
 		if(array_key_exists($restriction, $restrictions)){
 			$item = (int) $item;
@@ -327,33 +311,5 @@ class model_profile{
 		}else
 			throw new e_model('Нет ограничения '.$restriction.' в профиле '.$profile);
 		return $status;
-	}
-
-	/**
-	* Обновляет номер сотового телефона пользователя
-	* @return bolean
-	*/
-	public static function update_cellphone(data_user $user, $cellphone){
-		$user->cellphone = (string) $cellphone;
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `cellphone` = :cellphone WHERE `id` = :id");
-		$sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при изменении номера сотового телефона.');
-		return $user;
-	}
-
-	/**
-	* Обновляет номер телефона пользователя
-	* @return bolean
-	*/
-	public static function update_telephone(data_user $user, $telephone){
-		$user->telephone = (string) $telephone;
-		$sql = new sql();
-		$sql->query("UPDATE `users` SET `telephone` = :telephone WHERE `id` = :id");
-		$sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
-		$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при изменении номера телефона.');
-		return $user;
 	}
 }

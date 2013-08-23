@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% set services = component.services %}
 {% block title %}Диалог добавления услуги{% endblock title %}
 {% block dialog %}

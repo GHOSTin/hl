@@ -1,5 +1,5 @@
 <!-- begin filters -->
-<div class="filters col-12">
+<div class="filters col-xs-12">
 	<!-- begin filter status -->
 	<div class="filter">
 	    <label>по статусу заявки</label>

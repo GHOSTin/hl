@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set number = component.numbers[0] %}
+{% set number = component.number %}
 {% set stn = component.setting %}
 {% block js %}
     $('.number[number = {{number.id}}]').append(get_hidden_content())

@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}
 {% block title %}Диалог редактирования тарифности{% endblock title %}
 {% block dialog %}

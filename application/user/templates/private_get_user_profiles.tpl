@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set user = component.users[0] %}
+{% set user = component.user %}
 {% set companies = component.companies %}
 {% block js %}
     $('.user[user = {{user.id}}] .user-information').html(get_hidden_content());

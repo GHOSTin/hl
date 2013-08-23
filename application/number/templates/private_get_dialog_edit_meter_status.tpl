@@ -1,11 +1,11 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% block title %}Диалог редактирования статуса счетчика{% endblock title %}
 {% block dialog %}
-	{% if meter.status == 'enabled' %}
+	{% if meter.get_status() == 'enabled' %}
 		Вы действительно хотите закрыть счетчик?
 	{% endif %}
-	{% if meter.status == 'disabled' %}
+	{% if meter.get_status() == 'disabled' %}
 		Вы действительно хотите открыть счетчик?
 	{% endif %}
 {% endblock dialog %}
@@ -16,13 +16,13 @@
 	// Изменяет период поверки счетчика привязанного к лицевому счету
 	$('.update_meter_status').click(function(){
 		$.get('update_meter_status',{
-			number_id: {{ meter.number_id }},
-			meter_id: {{ meter.meter_id }},
-			serial: '{{ meter.serial }}',
-			{% if meter.status == 'enabled' %}
+			number_id: {{ meter.get_number_id() }},
+			meter_id: {{ meter.get_meter_id() }},
+			serial: '{{ meter.get_serial() }}',
+			{% if meter.get_status() == 'enabled' %}
 				status: 'disabled'
 			{% endif %}
-			{% if meter.status == 'disabled' %}
+			{% if meter.get_status() == 'disabled' %}
 				status: 'enabled'
 			{% endif %}
 			},function(r){

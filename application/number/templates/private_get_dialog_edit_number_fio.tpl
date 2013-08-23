@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set number = component.numbers[0] %}
+{% set number = component.number %}
 {% block title %}Диалог редактирования ФИО владельца{% endblock title %}
 {% block dialog %}
 	<input type="text" class="dialog-input-fio form-control" value="{{ number.fio }}">

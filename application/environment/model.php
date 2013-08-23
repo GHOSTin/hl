@@ -6,21 +6,15 @@ class model_environment{
 	* @return array
 	*/
 	public static function build_router(){
-		try{
-			$path = parse_url($_SERVER['REQUEST_URI']);
-			if($path['path'] === '/')
-				return ['default_page', 'show_default_page'];
-			elseif(preg_match_all('|^/[a-z_]+/$|', $path['path'], $arr, PREG_PATTERN_ORDER)){
-				$args = explode('/', $arr[0][0]);
-				return [$args[1], 'show_default_page'];
-			}elseif(preg_match_all('|^/[a-z_]+/[a-z_]+$|', $path['path'], $arr, PREG_PATTERN_ORDER)){
-				$args = explode('/', $arr[0][0]);
-				return [$args[1], $args[2]];
-			}else
-				throw new e_controller('Нет такой страницы.');
-		}catch(exception $e){
+		$path = parse_url($_SERVER['REQUEST_URI']);
+		if($path['path'] === '/')
+			return ['default_page', 'show_default_page'];
+		elseif(preg_match_all('|^/([a-z_]+)/$|', $path['path'], $args, PREG_PATTERN_ORDER)){
+			return [$args[1][0], 'show_default_page'];
+		}elseif(preg_match_all('|^/([a-z_]+)/([a-z_]+)$|', $path['path'], $args, PREG_PATTERN_ORDER)){
+			return [$args[1][0], $args[2][0]];
+		}else
 			throw new e_controller('Нет такой страницы.');
-		}
 	}
 
 	/**
@@ -66,7 +60,7 @@ class model_environment{
 				$user = model_auth::auth_user();
 				if($user instanceof data_current_user){
 					model_session::set_user($user);
-					model_user::verify_company_id($user);
+					$user->verify('company_id');
 					$company = new data_company();
 					$company->id = $user->company_id;
 					model_session::set_company($company);
