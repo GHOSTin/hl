@@ -3,27 +3,6 @@ class model_query{
 
 	/*
 	* Зависимая функция.
-	* Добавляет ассоциацию заявка-лицевой_счет.
-	*/
-	private static function __add_number(data_company $company, data_query $query,
-											data_number $number, $default){
-		$query->verify('id');
-		$company->verify('id');
-		$number->verify('id');
-		if(array_search($default, ['true', 'false']) === false)
-			throw new e_model('Тип лицевого счета задан не верно.');
-		$sql = new sql();
-		$sql->query("INSERT INTO `query2number` (`query_id`, `number_id`, `company_id`, `default`) 
-					VALUES (:query_id, :number_id, :company_id, :default)");
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':default', $default, PDO::PARAM_STR);
-		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
-		$sql->execute('Проблема при добавлении лицевого счета.');
-	}
-
-	/*
-	* Зависимая функция.
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	private static function __add_user(data_company $company, data_query $query, data_user $user,  $class){
@@ -158,18 +137,19 @@ class model_query{
 		if($initiator instanceof data_house){
 			$initiator->verify('id');
 			$numbers = model_house::get_numbers($company, $initiator);
-			$default = 'false';
 		}elseif($initiator instanceof data_number){
 			$initiator->verify('id');
-			$numbers[] = model_number::get_numbers($company, $initiator)[0];
-			$default = 'true';
+			$model = new model_number($company);
+			$numbers[] = $model->get_number($initiator->id);
 		}else
 			throw new e_model('Не подходящий тип инициатора.');
 		if(count($numbers) < 1)
 			throw new e_model('Не соответсвующее количество лицевых счетов.');
-		foreach($numbers as $number){
-			self::__add_number($company, $query, $number, $default);
-		}
+		$mapper = new mapper_query2number($company, $query);
+		$mapper->init_numbers();
+		foreach($numbers as $number)
+			$query->add_number($number);
+		$mapper->update();
 	}
 
 	/**
@@ -275,7 +255,8 @@ class model_query{
 				$initiator = model_house::get_houses($initiator)[0];
 			}elseif($initiator instanceof data_number){
 				$initiator->verify('id');
-				$initiator = model_number::get_numbers($company, $initiator)[0];
+				$model = new model_number($company);
+				$initiator = $model->get_number($initiator->id);
 			}
 			if(!($initiator instanceof data_number OR $initiator instanceof data_house))
 				throw new e_model('Инициатор не корректен.');

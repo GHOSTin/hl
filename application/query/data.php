@@ -143,6 +143,15 @@ final class data_query extends data_object{
 	*/
 	public $street_id;
 
+	private $numbers;
+
+	public function add_number(data_number $number){
+		$this->numbers[$number->id] = $number;
+	}
+	public function get_numbers(){
+		return $this->numbers;
+	}
+
 	public function verify(){
         if(func_num_args() < 0)
             throw new e_data('Параметры верификации не были переданы.');
