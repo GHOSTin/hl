@@ -23,7 +23,7 @@
 		{% else %}
 			<img src="/templates/default/images/icons/home-medium.png" />
 		{% endif %}
-		Заявка №{{component.queries[0].number}} (
+		Заявка №{{ query.number }} (
 		{% if query.status in statuses|keys %}
 			{{statuses[query.status]}}
 		{% else %}
