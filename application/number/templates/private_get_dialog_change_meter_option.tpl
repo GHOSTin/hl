@@ -16,20 +16,20 @@
 	</ul>
 	<ul>
 		<li>
-			<label>Заводской номер</label>
-			<input type="text" class="dialog-input-serial form-control" value="{{ old_meter.serial }}">
+			<span>Заводской номер</span>
+			<input type="text" class="dialog-input-serial form-control" value="{{ old_meter.get_serial() }}">
 		</li>
 		<li>
-			<label>Дата выпуска</label>
-			<input type="text" class="dialog-input-date_release form-control" value="{{ old_meter.date_release|date('d.m.Y') }}">
+			<span>Дата выпуска</span>
+			<input type="text" class="dialog-input-date_release form-control" value="{{ old_meter.get_date_release()|date('d.m.Y') }}">
 		</li>
 		<li>
-			<label>Дата установки</label>
-			<input type="text" class="dialog-input-date_install form-control" value="{{ old_meter.date_install|date('d.m.Y') }}">
+			<span>Дата установки</span>
+			<input type="text" class="dialog-input-date_install form-control" value="{{ old_meter.get_date_install()|date('d.m.Y') }}">
 		</li>
 		<li>
-			<label>Дата последней поверки</label>
-			<input type="text" class="dialog-input-date_checking form-control" value="{{ old_meter.date_checking|date('d.m.Y') }}">
+			<span>Дата последней поверки</span>
+			<input type="text" class="dialog-input-date_checking form-control" value="{{ old_meter.get_date_checking()|date('d.m.Y') }}">
 		</li>
 		<li>
 			<label>Период поверки</label>
@@ -57,7 +57,7 @@
 		{% endif %}
 		<li>
 			<label>Коментарий</label>
-			<textarea class="dialog-textarea-comment form-control" rows="5">{{ old_meter.comment }}</textarea>
+			<textarea class="dialog-textarea-comment form-control" rows="5">{{ old_meter.get_comment() }}</textarea>
 		</li>
 	</ul>
 {% endblock dialog %}
@@ -80,9 +80,9 @@
 	// Привязывает счетчик к лицевому счету с выбранными параметрами
 	$('.change_meter').click(function(){
 		$.get('change_meter',{
-			number_id: {{ old_meter.number_id }},
-			meter_id: {{ old_meter.meter_id }},
-			serial: {{ old_meter.serial }},
+			number_id: {{ old_meter.get_number_id() }},
+			meter_id: {{ old_meter.get_meter_id() }},
+			serial: {{ old_meter.get_serial() }},
 			service: '{{ service }}',
 			new_meter_id: {{ meter.id }},
 			new_serial: $('.dialog-input-serial').val(),

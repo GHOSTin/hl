@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meters[0] %}
+{% set meter = component.meter %}
 {% set current = component.current_meter_data[component.time] %}
 {% set data = component.last_data[0] %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
@@ -13,9 +13,9 @@
            tarifs.push($(this).val());
         });
         $.get('update_meter_data',{
-            id: {{ meter.number_id }},
-            meter_id: {{ meter.meter_id }},
-            serial: {{ meter.serial }},
+            id: {{ meter.get_number_id() }},
+            meter_id: {{ meter.get_meter_id() }},
+            serial: {{ meter.get_serial() }},
             number: $('.dialog-number').val(),
             time: {{ component.time }},
             tarif: tarifs,
@@ -40,28 +40,28 @@
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="col-2">
+            <div class="col-xs-2">
                 <div>1 тариф</div>
-                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[0] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[0] }}">
+                <input type="text" class="dialog-tarif form-control" value="{{ current.value[0] }}" maxlength="{{ meter.get_capacity() }}" min="{{ data.value[0] }}">
                 {{ data.value[0] }}
             </div>
-            {% if meter.rates == 2 %}
-            <div class="col-2">
+            {% if meter.get_rates() == 2 %}
+            <div class="col-xs-2">
                 <div class="">2 тариф</div>
-                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
+                <input type="text" class="dialog-tarif form-control" value="{{ current.value[1] }}" maxlength="{{ meter.get_capacity() }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
             </div>
             {% endif %}
-            {% if meter.rates == 3 %}
-            <div class="col-2">
+            {% if meter.get_rates() == 3 %}
+            <div class="col-xs-2">
                 <div>2 тариф</div>
-                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[1] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[1] }}">
+                <input type="text" class="dialog-tarif form-control" value="{{ current.value[1] }}" maxlength="{{ meter.get_capacity() }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
 
             </div>
-            <div class="col-2">
+            <div class="col-xs-2">
                 <div class="">3 тариф</div>
-                <input type="text" class="dialog-tarif input-small form-control" value="{{ current.value[2] }}" maxlength="{{ meter.capacity }}" min="{{ data.value[2] }}">
+                <input type="text" class="dialog-tarif form-control" value="{{ current.value[2] }}" maxlength="{{ meter.get_capacity() }}" min="{{ data.value[2] }}">
                 {{ data.value[2] }}
             </div>
             {% endif %}
