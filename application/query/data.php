@@ -157,6 +157,18 @@ final class data_query extends data_object{
 		return $this->company_id;
 	}
 
+	public function get_contact_cellphone(){
+		return $this->contact_cellphone;
+	}
+
+	public function get_contact_fio(){
+		return $this->contact_fio;
+	}
+
+	public function get_contact_telephone(){
+		return $this->contact_telephone;
+	}
+
 	public function get_id(){
 		return $this->id;
 	}
@@ -167,6 +179,18 @@ final class data_query extends data_object{
 
 	public function get_warning_status(){
 		return $this->warning_status;
+	}
+
+	public function set_contact_cellphone($cellphone){
+		$this->contact_cellphone = $cellphone;
+	}
+
+	public function set_contact_fio($fio){
+		$this->contact_fio = $fio;
+	}
+
+	public function set_contact_telephone($telephone){
+		$this->contact_telephone = $telephone;
 	}
 
 	public function set_payment_status($status){

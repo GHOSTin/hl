@@ -745,20 +745,13 @@ class model_query{
 	/**
 	* Обновляет контактную информацию.
 	*/
-	public static function update_contact_information(data_company $company, data_query $query){
-		$company->verify('id');
-		$query->verify('id');
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `addinfo-name` = :fio, 
-					`addinfo-telephone` = :telephone, `addinfo-cellphone` = :cellphone 
-					WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':fio', $query->contact_fio, PDO::PARAM_STR);
-		$sql->bind(':telephone', $query->contact_telephone, PDO::PARAM_STR);
-		$sql->bind(':cellphone', $query->contact_cellphone, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении описания заявки.');
-		return [$query];
+	public function update_contact_information($id, $fio, $telephone, $cellphone){
+		$query = $this->get_query($id);
+		$query->set_contact_fio($fio);
+		$query->set_contact_telephone($telephone);
+		$query->set_contact_cellphone($cellphone);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**

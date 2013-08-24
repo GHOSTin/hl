@@ -1,10 +1,10 @@
 {% extends "ajax.tpl" %}
-{% set query = component.queries[0] %}
+{% set query = component.query %}
 {% block js %}
-	$('.query[query_id = {{query.id}}] .query-general-contacts').html(get_hidden_content());
+	$('.query[query_id = {{ query.get_id() }}] .query-general-contacts').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
-	<li>ФИО: {{query.contact_fio}}</li>
-	<li>Телефон: {{query.contact_telephone}}</li>
-	<li>Сотовый: {{query.contact_cellphone}}</li>
+	<li>ФИО: {{ query.get_contact_fio() }}</li>
+	<li>Телефон: {{ query.get_contact_telephone() }}</li>
+	<li>Сотовый: {{ query.get_contact_cellphone() }}</li>
 {% endblock html %}

@@ -106,17 +106,17 @@ class verify_query{
     * Верификация ФИО контакта заявки.
     */
     public static function contact_fio(data_query $query){
-        // if(!empty($query->contact_fio))
-        //     if(!preg_match('/^[А-Яа-я\. ]$/u', $query->contact_fio))
-        //         throw new e_model('ФИО контактного лица задано не верно.');
+        if(!empty($query->get_contact_fio()))
+            if(!preg_match('/^[А-Яа-я\. ]$/u', $query->get_contact_fio()))
+                throw new e_model('ФИО контактного лица задано не верно.');
     }
 
     /**
     * Верификация телефона контакта заявки.
     */
     public static function contact_telephone(data_query $query){
-        if(!empty($query->contact_telephone))
-            if(!preg_match('/^[0-9]{2,11}$/', $query->contact_telephone))
+        if(!empty($query->get_contact_telephone()))
+            if(!preg_match('/^[0-9]{2,11}$/', $query->get_contact_telephone()))
                 throw new e_model('Номер телефона пользователя задан не верно.');
     }
 
@@ -124,8 +124,8 @@ class verify_query{
     * Верификация сотового телефона контакта заявки.
     */
     public static function contact_cellphone(data_query $query){
-        if(!empty($query->contact_cellphone))
-            if(!preg_match('/^\+7[0-9]{10}$/', $query->contact_cellphone))
+        if(!empty($query->get_contact_cellphone()))
+            if(!preg_match('/^\+7[0-9]{10}$/', $query->get_contact_cellphone()))
                 throw new e_model('Номер сотового телефона пользователя задан не верно.');
     }
 

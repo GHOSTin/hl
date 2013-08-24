@@ -514,12 +514,9 @@ class controller_query{
 	}
 
 	public static function private_update_contact_information(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->contact_fio = $_GET['fio'];
-		$query->contact_telephone = $_GET['telephone'];
-		$query->contact_cellphone = $_GET['cellphone'];
-		return ['queries' => model_query::update_contact_information(model_session::get_company(), $query)];
+		$model = new model_query(model_session::get_company());
+		return ['query' => $model->update_contact_information($_GET['id'],
+			 			$_GET['fio'], $_GET['telephone'], $_GET['cellphone'])];
 	}
 
 	public static function private_update_payment_status(){
