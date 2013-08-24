@@ -39,7 +39,7 @@ class verify_query{
     * Верификация ворнинга заявки.
     */
     public static function warning_status(data_query $query){
-        if(!in_array($query->warning_status, ['hight', 'normal', 'planned']))
+        if(!in_array($query->get_warning_status(), ['hight', 'normal', 'planned']))
             throw new e_model('Статус ворнинга заявки задан не верно.');
     }
 

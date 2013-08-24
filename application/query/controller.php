@@ -528,10 +528,8 @@ class controller_query{
 	}
 
 	public static function private_update_warning_status(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->warning_status = $_GET['status'];
-		return ['queries' => model_query::update_warning_status(model_session::get_company(), $query)];
+		$model = new model_query(model_session::get_company());
+		return ['query' => $model->update_warning_status($_GET['id'], $_GET['status'])];
 	}
 
 	public static function private_update_work_type(){

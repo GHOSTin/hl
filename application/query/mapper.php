@@ -52,11 +52,13 @@ class mapper_query{
     public function update(data_query $query){
         $query->verify('company_id', 'id', 'payment_status');
         $sql = new sql();
-        $sql->query("UPDATE `queries` SET `payment-status` = :payment_status
+        $sql->query("UPDATE `queries` SET `payment-status` = :payment_status,
+                    `warning-type` = :warning_status
                     WHERE `company_id` = :company_id AND `id` = :id");
         $sql->bind(':company_id', $query->get_company_id(), PDO::PARAM_INT);
         $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
         $sql->bind(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
+        $sql->bind(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
         $sql->execute('Ошибка при обновлении заявки.');
         return $query;
     }

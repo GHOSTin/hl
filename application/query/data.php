@@ -165,8 +165,16 @@ final class data_query extends data_object{
 		return $this->payment_status;
 	}
 
+	public function get_warning_status(){
+		return $this->warning_status;
+	}
+
 	public function set_payment_status($status){
 		$this->payment_status = $status;
+	}
+
+	public function set_warning_status($status){
+		$this->warning_status = $status;
 	}
 
 	public function verify(){

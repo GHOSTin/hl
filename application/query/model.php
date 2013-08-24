@@ -774,22 +774,11 @@ class model_query{
 	/**
 	* Обновляет статус реакции.
 	*/
-	public static function update_warning_status(data_company $company, data_query $query_params){
-		$company->verify('id');
-		$query_params->verify('id');
-		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
-			throw new e_model('Несоответствующие параметры: payment_status.');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		$query->warning_status = $query_params->warning_status;
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `warning-type` = :warning_status
-					WHERE `company_id` = :company_id AND `id` = :id");
-		$sql->bind(':warning_status', $query->warning_status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении статуса реакции.');
-		return [$query];
+	public function update_warning_status($id, $status){
+		$query = $this->get_query($id);
+		$query->set_warning_status($status);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 	
 	/**
