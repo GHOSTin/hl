@@ -189,6 +189,10 @@ final class data_query extends data_object{
 		return $this->status;
 	}
 
+	public function get_time_close(){
+		return $this->time_close;
+	}
+
 	public function get_time_work(){
 		return $this->time_work;
 	}
@@ -231,6 +235,10 @@ final class data_query extends data_object{
 
 	public function set_status($status){
 		$this->status = $status;
+	}
+
+	public function set_time_close($time){
+		$this->time_close = $time;
 	}
 
 	public function set_time_work($time){

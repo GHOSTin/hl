@@ -162,26 +162,15 @@ class model_query{
 	/**
 	* Закрывает заявку.
 	*/
-	public static function close_query(data_company $company, data_query $query_params){
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		if($query->status === 'close')
-			throw new e_model('Заявка уже закрыта.');
-		$query->status = 'close';
-		$query->close_reason = $query_params->close_reason;
-		$query->time_close = time();
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `description-close` = :reason,
-				`status` = :status, `closetime` = :time_close
-				WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':reason', $query->close_reason, PDO::PARAM_STR);
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':time_close', $query->time_close, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при закрытии заявки.');
-		return [$query];
+	public function close_query($id, $reason){
+		$query = $this->get_query($id);
+		if(!in_array($query->get_status(), ['working', 'open'], true))
+			throw new e_model('Заявка не может быть закрыта.');
+		$query->set_status('close');
+		$query->set_close_reason($reason);
+		$query->set_time_close(time());
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**

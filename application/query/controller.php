@@ -56,13 +56,12 @@ class controller_query{
 	}
 
 	public static function private_close_query(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->close_reason = $_GET['reason'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::close_query($company, $query),
-				'users' => model_query::get_users($company, $query),
-				'numbers' => model_query::get_numbers($company, $query)];
+		$model = new model_query($company);
+		$query = $model->close_query($_GET['id'], $_GET['reason']);
+		$model->init_numbers($query);
+		return ['query' => $query,
+						'users' => model_query::get_users($company, $query)];
 	}
 
 	public static function private_reclose_query(){
