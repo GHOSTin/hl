@@ -173,6 +173,10 @@ final class data_query extends data_object{
 		return $this->contact_telephone;
 	}
 
+	public function get_description(){
+		return $this->description;
+	}
+	
 	public function get_id(){
 		return $this->id;
 	}
@@ -199,6 +203,10 @@ final class data_query extends data_object{
 
 	public function set_contact_telephone($telephone){
 		$this->contact_telephone = $telephone;
+	}
+
+	public function set_description($description){
+		$this->description = $description;
 	}
 
 	public function set_payment_status($status){

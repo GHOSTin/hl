@@ -500,10 +500,8 @@ class controller_query{
 	}
 
 	public static function private_update_description(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->description = $_GET['description'];
-		return ['queries' => model_query::update_description(model_session::get_company(), $query)];
+		$model = new model_query(model_session::get_company());
+		return ['query' => $model->update_description($_GET['id'], $_GET['description'])];
 	}
 
 	public static function private_update_reason(){

@@ -133,7 +133,7 @@ class verify_query{
     * Верификация описания заявки.
     */
     public static function description(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]{1,65535}$/u', $query->description))
+        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{1,65535}$/u', $query->get_description()))
             throw new e_model('Описание заявки заданы не верно.');
     }
 
@@ -141,7 +141,7 @@ class verify_query{
     * Верификация причины закрытия заявки.
     */
     public static function close_reason(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]{0,255}$/u', $query->get_close_reason()))
+        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{0,65535}$/u', $query->get_close_reason()))
             throw new e_model('Описание заявки заданы не верно.');
     }
 

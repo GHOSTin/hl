@@ -713,17 +713,11 @@ class model_query{
 	/**
 	* Обновляет описание заявки.
 	*/
-	public static function update_description(data_company $company, data_query $query){
-		$company->verify('id');
-		$query->verify('id', 'description');
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `description-open` = :description
-					WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':description', $query->description, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении описания заявки.');
-		return [$query];
+	public function update_description($id, $description){
+		$query = $this->get_query($id);
+		$query->set_description($description);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
