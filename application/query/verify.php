@@ -141,7 +141,7 @@ class verify_query{
     * Верификация причины закрытия заявки.
     */
     public static function close_reason(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]$/', $query->close_reason))
+        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]{0,255}$/u', $query->get_close_reason()))
             throw new e_model('Описание заявки заданы не верно.');
     }
 

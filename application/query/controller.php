@@ -507,10 +507,8 @@ class controller_query{
 	}
 
 	public static function private_update_reason(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->close_reason = $_GET['reason'];
-		return ['queries' => model_query::update_reason(model_session::get_company(), $query)];
+		$model = new model_query(model_session::get_company());
+		return ['query' => $model->update_reason($_GET['id'], $_GET['reason'])];
 	}
 
 	public static function private_update_contact_information(){

@@ -153,6 +153,10 @@ final class data_query extends data_object{
 		return $this->numbers;
 	}
 
+	public function get_close_reason(){
+		return $this->close_reason;
+	}
+
 	public function get_company_id(){
 		return $this->company_id;
 	}
@@ -179,6 +183,10 @@ final class data_query extends data_object{
 
 	public function get_warning_status(){
 		return $this->warning_status;
+	}
+
+	public function set_close_reason($reason){
+		$this->close_reason = $reason;
 	}
 
 	public function set_contact_cellphone($cellphone){
