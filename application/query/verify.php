@@ -5,9 +5,9 @@ class verify_query{
     * Верификация идентификатора заявки.
     */
     public static function id(data_query $query){
-        if(!preg_match('/^[0-9]{1,10}$/', $query->id))
+        if(!preg_match('/^[0-9]{1,10}$/', $query->get_id()))
             throw new e_model('Идентификатор заявки задан не верно.');
-        if($query->id > 4294967295 OR $query->id < 1)
+        if($query->get_id() > 4294967295 OR $query->get_id() < 1)
             throw new e_model('Идентификатор заявки задан не верно.');
     }
 
@@ -31,7 +31,7 @@ class verify_query{
     * Верификация статуса оплаты заявки.
     */
     public static function payment_status(data_query $query){
-        if(!in_array($query->payment_status, ['paid', 'unpaid', 'recalculation']))
+        if(!in_array($query->get_payment_status(), ['paid', 'unpaid', 'recalculation']))
             throw new e_model('Статус оплаты заявки задан не верно.');
     }
 
@@ -166,7 +166,7 @@ class verify_query{
     */
     public static function company_id(data_query $query){
         $company = new data_company();
-        $company->id = $query->company_id;
+        $company->id = $query->get_company_id();
         $company->verify('id');
     }
 

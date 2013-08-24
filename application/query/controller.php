@@ -523,10 +523,8 @@ class controller_query{
 	}
 
 	public static function private_update_payment_status(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->payment_status = $_GET['status'];
-		return ['queries' => model_query::update_payment_status(model_session::get_company(), $query)];
+		$model = new model_query(model_session::get_company());
+		return ['query' => $model->update_payment_status($_GET['id'], $_GET['status'])];
 	}
 
 	public static function private_update_warning_status(){

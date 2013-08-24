@@ -148,8 +148,25 @@ final class data_query extends data_object{
 	public function add_number(data_number $number){
 		$this->numbers[$number->id] = $number;
 	}
+
 	public function get_numbers(){
 		return $this->numbers;
+	}
+
+	public function get_company_id(){
+		return $this->company_id;
+	}
+
+	public function get_id(){
+		return $this->id;
+	}
+
+	public function get_payment_status(){
+		return $this->payment_status;
+	}
+
+	public function set_payment_status($status){
+		$this->payment_status = $status;
 	}
 
 	public function verify(){
