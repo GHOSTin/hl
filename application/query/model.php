@@ -187,21 +187,13 @@ class model_query{
 	/**
 	* Закрывает заявку.
 	*/
-	public static function reclose_query(data_company $company, data_query $query_params){
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		if($query->status !== 'reopen')
+	public function reclose_query($id){
+		$query = $this->get_query($id);
+		if($query->get_status() !== 'reopen')
 			throw new e_model('Заявка не может быть перезакрыта.');
-		$query->status = 'close';
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `status` = :status
-				WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при перезакрытии заявки.');
-		return [$query];
+		$query->set_status('close');
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
@@ -210,7 +202,7 @@ class model_query{
 	public function reopen_query($id){
 		$query = $this->get_query($id);
 		if($query->get_status() !== 'close')
-			throw new e_model('Заявка не в том статусе чтобы её можно было переоткрыть..');
+			throw new e_model('Заявка не в том статусе чтобы её можно было переоткрыть.');
 		$query->set_status('reopen');
 		$mapper = new mapper_query($this->company);
 		return $mapper->update($query);
