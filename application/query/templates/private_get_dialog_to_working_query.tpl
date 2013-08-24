@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.queries[0] %}
+{% set query = component.query %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.to_working_query').click(function(){
