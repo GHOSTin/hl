@@ -52,14 +52,15 @@ class mapper_query{
     public function update(data_query $query){
         $query->verify('company_id', 'id', 'payment_status', 'warning_status',
                         'contact_fio', 'contact_telephone',
-                        'close_reason', 'description');
+                        'close_reason', 'description', 'work_type_id');
         $sql = new sql();
         $sql->query("UPDATE `queries` SET `payment-status` = :payment_status,
                     `warning-type` = :warning_status, `addinfo-name` = :fio,
                     `addinfo-telephone` = :telephone,
                     `addinfo-cellphone` = :cellphone,
                     `description-close` = :close_reason,
-                    `description-open` = :description
+                    `description-open` = :description,
+                    `query_worktype_id` = :work_type_id
                     WHERE `company_id` = :company_id AND `id` = :id");
         $sql->bind(':company_id', $query->get_company_id(), PDO::PARAM_INT);
         $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
@@ -70,6 +71,7 @@ class mapper_query{
         $sql->bind(':cellphone', $query->get_contact_cellphone(), PDO::PARAM_STR);
         $sql->bind(':close_reason', $query->get_close_reason(), PDO::PARAM_STR);
         $sql->bind(':description', $query->get_description(), PDO::PARAM_STR);
+        $sql->bind(':work_type_id', $query->get_work_type_id(), PDO::PARAM_INT);
         $sql->execute('Ошибка при обновлении заявки.');
         return $query;
     }

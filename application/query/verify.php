@@ -74,7 +74,7 @@ class verify_query{
     */
     public static function work_type_id(data_query $query){
         $work_type = new data_query_work_type();
-        $work_type->id = $query->worktype_id;
+        $work_type->id = $query->get_work_type_id();
         $work_type->verify('id');
     }
 

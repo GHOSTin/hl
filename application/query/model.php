@@ -765,26 +765,17 @@ class model_query{
 	/**
 	* Обновляет тип работ.
 	*/
-	public static function update_work_type(data_company $company, data_query $query_params){
-		$company->verify('id');
-		$query_params->verify('id', 'work_type_id');
-		$query_params->verify('work_type_id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
+	public function update_work_type($id, $type){
 		$query_work_type_params = new data_query_work_type();
-		$query_work_type_params->id = $query_params->worktype_id;
-		$query_work_type = model_query_work_type::get_query_work_types($company, $query_work_type_params)[0];
+		$query_work_type_params->id = $type;
+		$query_work_type = model_query_work_type::get_query_work_types($this->company,
+																										$query_work_type_params)[0];
 		model_query_work_type::is_data_query_work_type($query_work_type);
-		$query->worktype_id = $query_work_type->id;
-		$query->work_type_name = $query_work_type->name;
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `query_worktype_id` = :work_type_id
-					WHERE `company_id` = :company_id AND `id` = :id");
-		$sql->bind(':work_type_id', $query->worktype_id, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении типа работ.');
-		return [$query];
+		$query = $this->get_query($id);
+		$query->set_work_type_id($query_work_type->id);
+		$query->set_work_type_name($query_work_type->name);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**

@@ -176,7 +176,7 @@ final class data_query extends data_object{
 	public function get_description(){
 		return $this->description;
 	}
-	
+
 	public function get_id(){
 		return $this->id;
 	}
@@ -187,6 +187,14 @@ final class data_query extends data_object{
 
 	public function get_warning_status(){
 		return $this->warning_status;
+	}
+
+	public function get_work_type_id(){
+		return $this->worktype_id;
+	}
+
+	public function get_work_type_name(){
+		return $this->work_type_name;
 	}
 
 	public function set_close_reason($reason){
@@ -215,6 +223,14 @@ final class data_query extends data_object{
 
 	public function set_warning_status($status){
 		$this->warning_status = $status;
+	}
+
+	public function set_work_type_id($id){
+		$this->worktype_id = $id;
+	}
+
+	public function set_work_type_name($name){
+		$this->work_type_name = $name;
 	}
 
 	public function verify(){

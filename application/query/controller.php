@@ -526,9 +526,7 @@ class controller_query{
 	}
 
 	public static function private_update_work_type(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->worktype_id = $_GET['type'];
-		return ['queries' => model_query::update_work_type(model_session::get_company(), $query)];
+		$model = new model_query(model_session::get_company());
+		return ['query' => $model->update_work_type($_GET['id'], $_GET['type'])];
 	}
 }
