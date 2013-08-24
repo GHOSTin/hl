@@ -185,6 +185,14 @@ final class data_query extends data_object{
 		return $this->payment_status;
 	}
 
+	public function get_status(){
+		return $this->status;
+	}
+
+	public function get_time_work(){
+		return $this->time_work;
+	}
+
 	public function get_warning_status(){
 		return $this->warning_status;
 	}
@@ -219,6 +227,14 @@ final class data_query extends data_object{
 
 	public function set_payment_status($status){
 		$this->payment_status = $status;
+	}
+
+	public function set_status($status){
+		$this->status = $status;
+	}
+
+	public function set_time_work($time){
+		$this->time_work = $time;
 	}
 
 	public function set_warning_status($status){

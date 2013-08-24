@@ -15,7 +15,7 @@ class verify_query{
     * Верификация статуса заявки.
     */
     public static function status(data_query $query){
-        if(!in_array($query->status, ['open', 'close', 'working', 'reopen']))
+        if(!in_array($query->get_status(), ['open', 'close', 'working', 'reopen']))
             throw new e_model('Статус заявки задан не верно.');
     }
 
@@ -90,7 +90,7 @@ class verify_query{
     * Верификация времени передачи в работу заявки.
     */
     public static function time_work(data_query $query){
-        if($query->time_work < 1)
+        if($query->get_time_work() < 1)
             throw new e_model('Время передачи в работу заявки задано не верно.');
     }
 
@@ -107,7 +107,7 @@ class verify_query{
     */
     public static function contact_fio(data_query $query){
         if(!empty($query->get_contact_fio()))
-            if(!preg_match('/^[А-Яа-я\. ]$/u', $query->get_contact_fio()))
+            if(!preg_match('/^[А-Яа-я\. ]{0,255}$/u', $query->get_contact_fio()))
                 throw new e_model('ФИО контактного лица задано не верно.');
     }
 

@@ -227,24 +227,14 @@ class model_query{
 	/**
 	* Передает заявку в работу.
 	*/
-	public static function to_working_query(data_company $company, data_query $query_params){
-		$company->verify('id');
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		if($query->status !== 'open')
+	public function to_working_query($id){
+		$query = $this->get_query($id);
+		if($query->get_status() !== 'open')
 			throw new e_model('Заявка имеет статус не позволяющий её передать в работу.');
-		$query->status = 'working';
-		$query->time_work = time();
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `status` = :status, `worktime` = :time_work
-					 WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':time_work', $query->time_work, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при передачи в работу заявки.');
-		return [$query];
+		$query->set_status('working');
+		$query->set_time_work(time());
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
