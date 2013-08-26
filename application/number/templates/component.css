@@ -27,8 +27,12 @@
     list-style:none;
 }
 
-.houses, .numbers {
+.houses{
     margin: 0 0 10px 25px;
+}
+
+.house-content {
+    margin: 10px 0px 40px 20px;
 }
 
 .streets.nav-tabs>li>a, .houses.nav-tabs>li>a, .numbers.nav-tabs>li>a,

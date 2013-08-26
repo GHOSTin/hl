@@ -195,6 +195,13 @@ class controller_number{
                 'house' => $house];
     }
 
+    public static function private_get_house_information(){
+        $house = new data_house();
+        $house->id = $_GET['id'];
+        $house->verify('id');
+        return ['house' => model_house::get_houses($house)[0]];
+    }
+
     public static function private_get_meters(){
         $company = model_session::get_company();
         $model = new model_number2meter($company, $_GET['id']);

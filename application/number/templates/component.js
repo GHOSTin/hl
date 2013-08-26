@@ -201,8 +201,8 @@ $(document).ready(function(){
             });
 
     // выводит информацию дома
-    }).on('click', '.get_house_processing_centers', function(){
-        $.get('get_house_processing_centers',{
+    }).on('click', '.get_house_information', function(){
+        $.get('get_house_information',{
             id: get_house_id($(this))
             },function(r){
                 init_content(r);
