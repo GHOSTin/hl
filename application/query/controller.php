@@ -92,21 +92,25 @@ class controller_query{
 	}
 
 	public static function private_create_query(){
-		if($_GET['initiator'] === 'number')
-			$initiator = new data_number();
-		elseif($_GET['initiator'] === 'house')
-			$initiator = new data_house();
-		$initiator->id = (int) $_GET['id'];
-		$query = new data_query();
-		$query->description = htmlspecialchars($_GET['description']);
-		$query->contact_fio = htmlspecialchars($_GET['fio']);
-		$query->contact_telephone = htmlspecialchars($_GET['telephone']);
-		$query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
-		$query_work_type = new data_query_work_type();
-		$query_work_type->id = $_GET['work_type'];
-		$queries[] = model_query::create_query(model_session::get_company(), $query, $initiator,
-								 $query_work_type, model_session::get_user());
-		return ['queries' => $queries];
+		// if($_GET['initiator'] === 'number')
+		// 	$initiator = new data_number();
+		// elseif($_GET['initiator'] === 'house')
+		// 	$initiator = new data_house();
+		// $initiator->id = (int) $_GET['id'];
+		// $query = new data_query();
+		// $query->description = htmlspecialchars($_GET['description']);
+		// $query->contact_fio = htmlspecialchars($_GET['fio']);
+		// $query->contact_telephone = htmlspecialchars($_GET['telephone']);
+		// $query->contact_cellphone = htmlspecialchars($_GET['cellphone']);
+		// $query_work_type = new data_query_work_type();
+		// $query_work_type->id = $_GET['work_type'];
+		// $queries[] = model_query::create_query(model_session::get_company(), $query, $initiator,
+		// 						 $query_work_type, model_session::get_user());
+		$model = new model_query(model_session::get_company());
+		$model->create_query($_GET['initiator'], $_GET['id'], $_GET['description'],
+												$_GET['work_type'], $_GET['fio'], $_GET['telephone'],
+												$_GET['cellphone']);
+		return ['query' => $query];
 	}
 
 	public static function private_get_documents(){

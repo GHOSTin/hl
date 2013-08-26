@@ -214,44 +214,53 @@ class model_query{
 	* Создает новую заявку.
 	* @retrun array из data_query
 	*/
-	public static function create_query(data_company $company, data_query $query, $initiator, 
-				data_query_work_type $query_work_type_params, data_current_user $current_user){
+	public function create_query($initiator, $id, $description, $work_type,
+																			$contact_fio, $contact_telephone,
+																			$contact_cellphone){
 		try{
 			sql::begin();
-			if(empty($query->description))
-				throw new e_model('Пустое описание заявки.');
-			if($initiator instanceof data_house){
+			$time = time();
+			$query = new data_query();
+      $query->set_company_id($this->company->id);
+      $query->set_status('open');
+      $query->set_payment_status('unpaid');
+      $query->set_warning_status('normal');
+			$query->set_time_open($time);
+			$query->set_time_work($time);
+			$query->set_initiator($initiator);
+      $query->set_description($description);
+      $query->set_contact_fio($contact_fio);
+      $query->set_contact_telephone($contact_telephone);
+      $query->set_contact_cellphone($contact_cellphone);
+      // получение идентификатора дома
+			if($initiator === 'house'){
+				$initiator = new data_house();
+				$initiator->id = $id;
 				$initiator->verify('id');
 				$initiator = model_house::get_houses($initiator)[0];
-			}elseif($initiator instanceof data_number){
-				$initiator->verify('id');
-				$model = new model_number($company);
-				$initiator = $model->get_number($initiator->id);
-			}
-			if(!($initiator instanceof data_number OR $initiator instanceof data_house))
+				$query->set_house_id($initiator->id);
+        $query->set_department_id($initiator->department_id);
+			}elseif($initiator === 'number'){
+				$model = new model_number($this->company);
+				$initiator = $model->get_number($id);
+				$query->set_house_id($initiator->house_id);
+        $query->set_department_id($initiator->department_id);
+			}else
 				throw new e_model('Инициатор не корректен.');
-			if($initiator instanceof data_house){
-				$query->initiator = 'house';
-				$query->house_id = $initiator->id;
-			}else{
-				$query->initiator = 'number';
-				$query->house_id = $initiator->house_id;
-			}
-			$query_work_type = model_query_work_type::get_query_work_types($company, $query_work_type_params)[0];
+      // проверка на существование типа работ
+			$query_work_type_params = new data_query_work_type();
+			$query_work_type_params->id = $work_type;
+			$query_work_type = model_query_work_type::get_query_work_types($this->company, $query_work_type_params)[0];
 			model_query_work_type::is_data_query_work_type($query_work_type);
-			$query->worktype_id = $query_work_type->id;
-			if(!is_int($query->id = self::get_insert_id($company)))
-				throw new e_model('Не был получени query_id для вставки.');
-			$time = time();
-			if(!is_int($query->number = self::get_insert_query_number($company, $time)))
-				throw new e_model('Инициатор не был сформирован.');
-			$query = self::__add_query($company, $query, $initiator, $time);
-			if(!($query instanceof data_query))
-				throw new e_model('Не корректный объект query');
-			self::add_numbers($company, $query, $initiator);
-			self::__add_user($company, $query, $current_user, 'creator');
-			self::__add_user($company, $query, $current_user, 'manager');
-			self::__add_user($company, $query, $current_user, 'observer');
+      $query->set_work_type_id($query_work_type->id);
+			$mapper = new mapper_query($this->company);
+			$query->set_id($mapper->get_insert_id());
+			$query->set_number($mapper->get_insert_query_number($time));
+      $query = $mapper->insert($query);
+			self::add_numbers($this->company, $query, $initiator);
+			self::__add_user($this->company, $query, model_session::get_user(), 'creator');
+			self::__add_user($this->company, $query, model_session::get_user(), 'manager');
+			self::__add_user($this->company, $query, model_session::get_user(), 'observer');
 			sql::commit();
 			return $query;
 		}catch(exception $e){
@@ -262,44 +271,6 @@ class model_query{
 			else
 				throw new e_model('Ошибка при создании заявки.');
 		}
-	}
-
-	/*
-	* Возвращает следующий для вставки идентификатор заявки.
-	*/
-	private static function get_insert_id(data_company $company){
-		$company->verify('id');
-		$sql = new sql();
-		$sql->query("SELECT MAX(`id`) as `max_query_id` FROM `queries`
-				WHERE `company_id` = :company_id");
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->execute('Проблема при опредении следующего query_id.');
-		if($sql->count() !== 1)
-			throw new e_model('Проблема при опредении следующего query_id.');
-		$query_id = (int) $sql->row()['max_query_id'] + 1;
-		$sql->close();
-		return $query_id;
-	}
-
-	/*
-	* Возвращает следующий для вставки номер заявки.
-	*/
-	private static function get_insert_query_number(data_company $company, $time){
-		$company->verify('id');
-		$time = getdate($time);
-		$sql = new sql();
-		$sql->query("SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
-					WHERE `opentime` > :begin AND `opentime` <= :end
-					AND `company_id` = :company_id");
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
-		$sql->bind(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
-		$sql->execute('Проблема при опредении следующего querynumber.');
-		if($sql->count() !== 1)
-			throw new e_model('Проблема при опредении следующего querynumber.');
-		$query_number = (int) $sql->row()['querynumber'] + 1;
-		$sql->close();
-		return $query_number;
 	}
 
 	public function get_query($id){
