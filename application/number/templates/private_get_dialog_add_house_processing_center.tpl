@@ -21,7 +21,7 @@
 // Добавляет идентификатор в процессинговом центре
 $('.add_house_processing_center').click(function(){
 	$.get('add_house_processing_center',{
-		number_id: {{ house.id }},
+		house_id: {{ house.id }},
 		center_id: $('.dialog-select-centers').val(),
 		identifier: $('.dialog-input-identifier').val()
 		},function(r){

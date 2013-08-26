@@ -26,6 +26,15 @@ class controller_number{
                 'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
     }
 
+    public static function private_add_house_processing_center(){
+        $model = new model_house();
+        $model->add_processing_center(model_session::get_company(), 
+            $_GET['house_id'], $_GET['center_id'], $_GET['identifier']);
+        exit();
+        return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
+                'house' => $house];
+    }
+
     public static function private_add_processing_center(){
         $center = new data_processing_center2number();
         $center->number_id = $_GET['number_id'];

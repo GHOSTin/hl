@@ -15,6 +15,14 @@ final class data_house extends data_object{
 	public $street_id;
 	public $street_name;
 
+  public function set_id($id){
+    $this->id = $id;
+  }
+
+  public function get_id(){
+    return $this->id;
+  }
+
 	public function verify(){
         if(func_num_args() < 0)
             throw new e_data('Параметры верификации не были переданы.');

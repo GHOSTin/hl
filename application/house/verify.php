@@ -32,9 +32,9 @@ class verify_house{
     * Верификация идентификатора дома.
     */
     public static function id(data_house $house){
-        if(!preg_match('/^[0-9]{1,5}$/', $house->id))
+        if(!preg_match('/^[0-9]{1,5}$/', $house->get_id()))
             throw new e_model('Идентификатор дома задан не верно.');
-        if($house->id > 65535 OR $house->id < 1)
+        if($house->get_id() > 65535 OR $house->get_id() < 1)
             throw new e_model('Идентификатор дома задан не верно.');
     }
 
