@@ -93,6 +93,14 @@ class controller_number{
         return ['number' => $model->get_number($_GET['id'])];
     }
 
+    public static function private_get_dialog_add_house_processing_center(){
+        $house = new data_house();
+        $house->id = $_GET['id'];
+        $house->verify('id');
+        return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
+                'house' => $house];
+    }
+
     public static function private_get_dialog_add_meter_option(){
         $number = new data_number();
         $number->id = $_GET['number_id'];

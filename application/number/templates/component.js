@@ -215,6 +215,14 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+        
+    // выводит диалог добавление процессингового центра
+    }).on('click', '.get_dialog_add_house_processing_center', function(){
+        $.get('get_dialog_add_house_processing_center',{
+            id: get_house_id($(this))
+            },function(r){
+                init_content(r);
+            });
 
     // выводит содержимое счетчика
     }).on('click', '.get_meter_data', function(){
