@@ -98,8 +98,9 @@ class verify_query{
     * Верификация времени закрытия заявки.
     */
     public static function time_close(data_query $query){
-        if($query->get_time_close() < 1)
-            throw new e_model('Время закрытия заявки задано не верно.');
+        if(!empty($query->get_time_close()))
+            if($query->get_time_close() < 1)
+                throw new e_model('Время закрытия заявки задано не верно.');
     }
 
     /**
