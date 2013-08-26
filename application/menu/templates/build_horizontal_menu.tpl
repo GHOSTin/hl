@@ -21,8 +21,8 @@
         <!-- begin user -->
         <div class="navbar-collapse collapse pull-right" id="usermenu">
             <ul class="nav navbar-nav pull-right">
-                <li class="dropdown">
-                    <a href="/profile/" class="dropdown-toggle current_user" user_id="{{user_id}}" data-toggle="dropdown">
+                <li>
+                    <a href="/profile/" class="current_user" user_id="{{user_id}}">
                        {{ user.firstname }} {{ user.lastname }}
                     </a>
                 </li>
