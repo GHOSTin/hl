@@ -103,9 +103,8 @@ class model_environment{
 				model_session::set_session(new component_session_manager(new php_session_storage(), $component));
 			}
 			$data['file_prefix'] = $component;
-
 			$data['component'] = $controller::{$prefix.$method}();
-			return $view::{$prefix.$method}($data);
+			return load_template($component.'.'.$prefix.$method, $data);
 		}catch(exception $e){
 			if($e instanceof e_model)
 				return view_error::show_error($e);
