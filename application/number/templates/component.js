@@ -130,8 +130,8 @@ $(document).ready(function(){
 
     // выводит содержимое дома
     }).on('click', '.get_house_content', function(){
-        if($(this).siblings().is('.numbers')) {
-            $(this).siblings('.numbers').remove();
+        if($(this).siblings().is('.house-content')) {
+            $(this).siblings('.house-content').remove();
             remove_badges('house');
         } else{
             $.get('get_house_content',{
@@ -196,6 +196,14 @@ $(document).ready(function(){
     }).on('click', '.get_number_information', function(){
         $.get('get_number_information',{
             id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
+    // выводит информацию дома
+    }).on('click', '.get_house_processing_centers', function(){
+        $.get('get_house_processing_centers',{
+            id: get_house_id($(this))
             },function(r){
                 init_content(r);
             });
@@ -432,6 +440,11 @@ $(document).ready(function(){
 // возвращает идентификатор лицевого счетча
 function get_number_id(obj){
     return obj.closest('.number').attr('number');
+}
+
+// возвращает идентификатор дома
+function get_house_id(obj){
+    return obj.closest('.house').attr('house');
 }
 
 // возвращает идентификатор счетчика
