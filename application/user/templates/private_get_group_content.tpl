@@ -4,7 +4,7 @@
     $('.group[group = {{group.id}}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
-    <ul class="group-content unstyled">
+    <ul class="group-content list-unstyled">
         <li>
             <ul class="nav nav-pills">
                 <li><a class="get_group_profile">Профиль</a></li>

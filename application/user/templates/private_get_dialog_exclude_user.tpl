@@ -6,7 +6,7 @@
 	Исключить "{{ user.lastname }} {{ user.firstname }} {{ user.middlename }}" из группы "{{ group.name }}"
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn exclude_user">Исключить</div>
+	<div class="btn btn-primary exclude_user">Исключить</div>
 {% endblock buttons %}
 {% block script %}
 	//Исключает пользователя из группы

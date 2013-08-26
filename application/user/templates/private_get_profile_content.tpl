@@ -7,9 +7,9 @@
     $('.user[user = {{ user.id }}] .company[company = {{ company.id }}] .profile[profile = "{{ profile_name }}"]').append(get_hidden_content());
 {% endblock js %}
 {% block html %}
-    <ul class="profile-content unstyled">
+    <ul class="profile-content list-unstyled">
         <li class="profile-content-menu">
-            <a class="get_dialog_delete_profile">Удалить профиль</a>
+            <a class="btn btn-link get_dialog_delete_profile">Удалить профиль</a>
         </li>
         <li class="profile-content-content">{% include '@user/build_profile.tpl' %}</li>
     </ul>

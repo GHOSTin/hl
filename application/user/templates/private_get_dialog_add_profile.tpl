@@ -3,24 +3,22 @@
 {% set companies = component.companies %}
 {% block title %}Диалог добавления нового профиля{% endblock title %}
 {% block dialog %}
-	<select class="dialog-select-company">
+	<select class="dialog-select-company form-control">
 		<option value="">Выберите компанию...</option>
 		{% for company in companies %}
 		<option value="{{ company.id }}">{{ company.name }}</option>
 		{% endfor %}
 	</select>
-	<div>
-		<select class="dialog-select-profile">
-			<option value="">Выберите профиль...</option>
-			<option value="query">Заявки</option>
-			<option value="number">Жилой фонд</option>
-			<option value="user">Управление пользователями</option>
-			<option value="report">Отчеты</option>
-		</select>
-	</div>
+    <select class="dialog-select-profile form-control">
+        <option value="">Выберите профиль...</option>
+        <option value="query">Заявки</option>
+        <option value="number">Жилой фонд</option>
+        <option value="user">Управление пользователями</option>
+        <option value="report">Отчеты</option>
+    </select>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn add_profile">Добавить</div>
+	<div class="btn btn-primary add_profile">Добавить</div>
 {% endblock buttons %}
 {% block script %}
 	// Добавляет новый профиль

@@ -5,9 +5,9 @@
 {% endblock js %}
 {% block html %}
     <div>
-        <a class="get_dialog_create_group">Создать группу</a>
+        <a class="btn btn-link get_dialog_create_group">Создать группу</a>
     </div>
-    <ul class="unstyled">
+    <ul class="list-unstyled">
         {% include '@user/build_groups.tpl' %}
     </ul>
 {% endblock html %}

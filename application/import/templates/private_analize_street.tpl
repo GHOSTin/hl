@@ -25,7 +25,7 @@
         {% if component.street == false %}
             <button class="btn btn-success create_street">Залить</button>
         {% endif %}
-        <button class="btn get_dialog_import_street">Отменить</button>
+        <button class="btn btn-default get_dialog_import_street">Отменить</button>
     </div>
 {% endif %}
 {{ component.flats }}

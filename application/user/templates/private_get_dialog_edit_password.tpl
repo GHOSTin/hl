@@ -2,19 +2,19 @@
 {% set user = component.user %}
 {% block title %}Диалог редактирования пароля пользователя{% endblock title %}
 {% block dialog %}
-	<ul class="unstyled">
+	<ul class="list-unstyled">
 		<li>
 			<label>Пароль</label>
-			<input type="password" class="dialog-input-password">
+			<input type="password" class="dialog-input-password  form-control">
 		</li>
 		<li>
 			<label>Подтверждение пароля</label>
-			<input type="password" class="dialog-input-confirm">
+			<input type="password" class="dialog-input-confirm  form-control">
 		</li>
 	</ul>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_password">Изменить</div>
+	<div class="btn btn-primary update_password">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет пароля пользователя

@@ -1,9 +1,9 @@
 {% extends "default.tpl" %}
 {% block component %}
-    <div class="row-fluid">
-        <div class="span3">
+    <div class="row">
+        <div class="col-md-3">
             <h4>Виды импортов:</h4>
-            <ul class="unstyled">
+            <ul class="list-unstyled">
                 <li class="get_dialog_import_street"><a href="#">Импорт улицы</a></li>
                 <li class="get_dialog_import_house"><a href="#">Импорт дома</a></li>
                 <li class="get_dialog_import_flats"><a href="#">Импорт квартир</a></li>
@@ -11,7 +11,7 @@
                 {# <li class="get_dialog_import_meters"><a href="#">Импорт счетчиков</a></li> #}
             </ul>
         </div>
-        <div class="span9 import-form"></div>
+        <div class="col-md-9 import-form"></div>
     </div>
 {% endblock component %}
 {% block javascript %}

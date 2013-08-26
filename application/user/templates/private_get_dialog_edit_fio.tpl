@@ -2,23 +2,23 @@
 {% set user = component.user %}
 {% block title %}Диалог редактирования ФИО пользователя{% endblock title %}
 {% block dialog %}
-	<ul class="unstyled">
+	<ul class="list-unstyled">
 		<li>
 			<label>Фамилия</label>
-			<input type="text" class="dialog-input-lastname" value="{{ user.lastname }}">
+			<input type="text" class="dialog-input-lastname  form-control" value="{{ user.lastname }}">
 		</li>
 		<li>
 			<label>Имя</label>
-			<input type="text" class="dialog-input-firstname" value="{{ user.firstname }}">
+			<input type="text" class="dialog-input-firstname  form-control" value="{{ user.firstname }}">
 		</li>
 		<li>
 			<label>Отчество</label>
-			<input type="text" class="dialog-input-middlename" value="{{ user.middlename }}">
+			<input type="text" class="dialog-input-middlename  form-control" value="{{ user.middlename }}">
 		</li>
 	</ul>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_fio">Изменить</div>
+	<div class="btn btn-primary update_fio">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет ФИО пользователя

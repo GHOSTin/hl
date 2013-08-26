@@ -4,7 +4,7 @@
     $('.user[user = {{user.id}}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
-    <ul class="user-content unstyled">
+    <ul class="user-content list-unstyled">
         <li>
             <ul class="nav nav-pills">
                 <li><a class="get_user_information">Информация</a></li>

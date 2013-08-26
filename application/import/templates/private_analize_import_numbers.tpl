@@ -60,7 +60,7 @@
             </tbody>
         </table>
         <button class="btn btn-success" id="send_import_numbers">Залить</button>
-        <button class="btn get_dialog_import_numbers">Отменить</button>
+        <button class="btn btn-default get_dialog_import_numbers">Отменить</button>
     </div>
 {% endif %}
 {{ component.flats }}

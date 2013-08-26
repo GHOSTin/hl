@@ -3,7 +3,7 @@
 {% set group = component.group %}
 {% block title %}Диалог нового пользователя пользователя{% endblock title %}
 {% block dialog %}
-	<select class="dialog-select-user_id">
+	<select class="dialog-select-user_id form-control">
 		<option value="">Выберите пользователя...</option>
 		{% for user in users %}
 		<option value="{{ user.id }}">{{ user.lastname }} {{ user.firstname }} {{ user.lastname }}</option>
@@ -11,7 +11,7 @@
 	</select>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn add_user">Добавить</div>
+	<div class="btn btn-primary add_user">Добавить</div>
 {% endblock buttons %}
 {% block script %}
 	// Добавляет нового пользователя

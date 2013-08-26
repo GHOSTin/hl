@@ -26,7 +26,7 @@
         {% if component.house == false %}
             <button class="btn btn-success create_house">Залить</button>
         {% endif %}
-        <button class="btn get_dialog_import_house">Отменить</button>
+        <button class="btn btn-default get_dialog_import_house">Отменить</button>
     </div>
 {% endif %}
 {{ component.flats }}

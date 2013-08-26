@@ -5,9 +5,9 @@
 {% endblock js %}
 {% block html %}
     <div>
-        <a class="get_dialog_create_user">Создать нового пользователя</a>
+        <a class="btn btn-link get_dialog_create_user">Создать нового пользователя</a>
     </div>
-    <ul class="unstyled">
+    <ul class="list-unstyled">
         {% include '@user/build_users.tpl' %}
     </ul>
 {% endblock html %}
