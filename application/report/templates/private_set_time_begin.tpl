@@ -1,0 +1,1 @@
+{% include '@report/empty_ajax_answer.tpl' %}

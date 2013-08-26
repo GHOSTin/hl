@@ -1,0 +1,1 @@
+{% include '@user/private_get_group_letter.tpl' %}
