@@ -1,6 +1,5 @@
 {% extends "ajax.tpl" %}
-{% if component.queries != false %}
-	{%set query = component.queries[0] %}
+	{%set query = component.query %}
 	{% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'}%}
 	{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'}%}
 	{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'}%}
@@ -24,7 +23,7 @@
 		{% else %}
 			<img src="/templates/default/images/icons/home-medium.png" />
 		{% endif %}
-		Заявка №{{component.queries[0].number}} (
+		Заявка №{{ query.number }} (
 		{% if query.status in statuses|keys %}
 			{{statuses[query.status]}}
 		{% else %}
@@ -126,4 +125,3 @@
 	</ul>
 	</div>
 	{% endblock html %}
-{% endif %}

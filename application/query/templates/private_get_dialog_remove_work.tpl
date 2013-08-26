@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set query = component.queries[0] %}
-{% set work = component.works[0] %}
+{% set query = component.query %}
+{% set work = component.work %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.remove_work').click(function(){

@@ -1,25 +1,11 @@
 <?php
 class model_query{
 
-	/*
-	* Зависимая функция.
-	* Добавляет ассоциацию заявка-лицевой_счет.
-	*/
-	private static function __add_number(data_company $company, data_query $query,
-											data_number $number, $default){
-		$query->verify('id');
-		$company->verify('id');
-		$number->verify('id');
-		if(array_search($default, ['true', 'false']) === false)
-			throw new e_model('Тип лицевого счета задан не верно.');
-		$sql = new sql();
-		$sql->query("INSERT INTO `query2number` (`query_id`, `number_id`, `company_id`, `default`) 
-					VALUES (:query_id, :number_id, :company_id, :default)");
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':default', $default, PDO::PARAM_STR);
-		$sql->bind(':number_id', $number->id, PDO::PARAM_INT);
-		$sql->execute('Проблема при добавлении лицевого счета.');
+	private $company;
+
+	public function __construct(data_company $company){
+		$this->company = $company;
+        $this->company->verify('id');
 	}
 
 	/*
@@ -158,106 +144,70 @@ class model_query{
 		if($initiator instanceof data_house){
 			$initiator->verify('id');
 			$numbers = model_house::get_numbers($company, $initiator);
-			$default = 'false';
 		}elseif($initiator instanceof data_number){
 			$initiator->verify('id');
-			$numbers[] = model_number::get_numbers($company, $initiator)[0];
-			$default = 'true';
+			$model = new model_number($company);
+			$numbers[] = $model->get_number($initiator->id);
 		}else
 			throw new e_model('Не подходящий тип инициатора.');
 		if(count($numbers) < 1)
 			throw new e_model('Не соответсвующее количество лицевых счетов.');
-		foreach($numbers as $number){
-			self::__add_number($company, $query, $number, $default);
-		}
+		$mapper = new mapper_query2number($company, $query);
+		$mapper->init_numbers();
+		foreach($numbers as $number)
+			$query->add_number($number);
+		$mapper->update();
 	}
 
 	/**
 	* Закрывает заявку.
 	*/
-	public static function close_query(data_company $company, data_query $query_params){
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		if($query->status === 'close')
-			throw new e_model('Заявка уже закрыта.');
-		$query->status = 'close';
-		$query->close_reason = $query_params->close_reason;
-		$query->time_close = time();
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `description-close` = :reason,
-				`status` = :status, `closetime` = :time_close
-				WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':reason', $query->close_reason, PDO::PARAM_STR);
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':time_close', $query->time_close, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при закрытии заявки.');
-		return [$query];
+	public function close_query($id, $reason){
+		$query = $this->get_query($id);
+		if(!in_array($query->get_status(), ['working', 'open'], true))
+			throw new e_model('Заявка не может быть закрыта.');
+		$query->set_status('close');
+		$query->set_close_reason($reason);
+		$query->set_time_close(time());
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
 	* Закрывает заявку.
 	*/
-	public static function reclose_query(data_company $company, data_query $query_params){
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		if($query->status !== 'reopen')
+	public function reclose_query($id){
+		$query = $this->get_query($id);
+		if($query->get_status() !== 'reopen')
 			throw new e_model('Заявка не может быть перезакрыта.');
-		$query->status = 'close';
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `status` = :status
-				WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при перезакрытии заявки.');
-		return [$query];
+		$query->set_status('close');
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
 	* Переоткрывает заявку.
 	*/
-	public static function reopen_query(data_company $company, data_query $query_params){
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		if($query->status !== 'close')
+	public function reopen_query($id){
+		$query = $this->get_query($id);
+		if($query->get_status() !== 'close')
 			throw new e_model('Заявка не в том статусе чтобы её можно было переоткрыть.');
-		$query->status = 'reopen';
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `status` = :status
-					WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при переоткрытии заявки.');
-		return [$query];
+		$query->set_status('reopen');
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
 	* Передает заявку в работу.
 	*/
-	public static function to_working_query(data_company $company, data_query $query_params){
-		$company->verify('id');
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		if($query->status !== 'open')
+	public function to_working_query($id){
+		$query = $this->get_query($id);
+		if($query->get_status() !== 'open')
 			throw new e_model('Заявка имеет статус не позволяющий её передать в работу.');
-		$query->status = 'working';
-		$query->time_work = time();
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `status` = :status, `worktime` = :time_work
-					 WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':time_work', $query->time_work, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при передачи в работу заявки.');
-		return [$query];
+		$query->set_status('working');
+		$query->set_time_work(time());
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
@@ -275,7 +225,8 @@ class model_query{
 				$initiator = model_house::get_houses($initiator)[0];
 			}elseif($initiator instanceof data_number){
 				$initiator->verify('id');
-				$initiator = model_number::get_numbers($company, $initiator)[0];
+				$model = new model_number($company);
+				$initiator = $model->get_number($initiator->id);
 			}
 			if(!($initiator instanceof data_number OR $initiator instanceof data_house))
 				throw new e_model('Инициатор не корректен.');
@@ -351,6 +302,19 @@ class model_query{
 		return $query_number;
 	}
 
+	public function get_query($id){
+		$mapper = new mapper_query($this->company);
+		$query = $mapper->find($id);
+		if(!($query instanceof data_query))
+			throw new e_model('Проблема при выборке заявки');
+		return $query;
+	}
+
+	public function init_numbers(data_query $query){
+		$mapper = new mapper_query2number($this->company, $query);
+		return $mapper->init_numbers();
+	}
+
 	/**
 	* Возвращает заявки.
 	* @return array
@@ -359,36 +323,7 @@ class model_query{
 		$company->verify('id');
  		$sql = new sql();
 		if(!empty($query->id)){
-			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
-				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
-				`queries`.`payment-status` as `payment_status`,
-				`queries`.`warning-type` as `warning_status`,
-				`queries`.`department_id`, `queries`.`house_id`,
-				`queries`.`query_close_reason_id` as `close_reason_id`,
-				`queries`.`query_worktype_id` as `worktype_id`,
-				`queries`.`opentime` as `time_open`,
-				`queries`.`worktime` as `time_work`,
-				`queries`.`closetime` as `time_close`,
-				`queries`.`addinfo-name` as `contact_fio`,
-				`queries`.`addinfo-telephone` as `contact_telephone`,
-				`queries`.`addinfo-cellphone` as `contact_cellphone`,
-				`queries`.`description-open` as `description`,
-				`queries`.`description-close` as `close_reason`,
-				`queries`.`querynumber` as `number`,
-				`queries`.`query_inspection` as `inspection`, 
-				`houses`.`housenumber` as `house_number`,
-				`streets`.`name` as `street_name`,
-				`query_worktypes`.`name` as `work_type_name`,
-				`departments`.`name` as `department_name`
-				FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
-				WHERE `queries`.`company_id` = :company_id
-				AND `queries`.`house_id` = `houses`.`id`
-				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
-				AND `houses`.`street_id` = `streets`.`id`
-				AND `queries`.`id` = :id AND `departments`.`company_id` = :company_id
-				AND `queries`.`department_id` = `departments`.`id`");
-			$query->verify('id');
-			$sql->bind(':id', $query->id, PDO::PARAM_INT);
+			die('disabled query id');
 		}elseif(!empty($query->number)){
 			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
 				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -741,119 +676,69 @@ class model_query{
 	/**
 	* Обновляет описание заявки.
 	*/
-	public static function update_description(data_company $company, data_query $query){
-		$company->verify('id');
-		$query->verify('id', 'description');
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `description-open` = :description
-					WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':description', $query->description, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении описания заявки.');
-		return [$query];
+	public function update_description($id, $description){
+		$query = $this->get_query($id);
+		$query->set_description($description);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
 	* Обновляет описание заявки.
 	*/
-	public static function update_reason(data_company $company, data_query $query){
-		$company->verify('id');
-		$query->verify('id', 'close_reason');
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `description-close` = :reason
-					WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':reason', $query->close_reason, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении причины закрытия заявки.');
-		return [$query];
+	public function update_reason($id, $reason){
+		$query = $this->get_query($id);
+		$query->set_close_reason($reason);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
 	* Обновляет контактную информацию.
 	*/
-	public static function update_contact_information(data_company $company, data_query $query){
-		$company->verify('id');
-		$query->verify('id');
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `addinfo-name` = :fio, 
-					`addinfo-telephone` = :telephone, `addinfo-cellphone` = :cellphone 
-					WHERE `company_id` = :company_id AND `id` = :query_id");
-		$sql->bind(':fio', $query->contact_fio, PDO::PARAM_STR);
-		$sql->bind(':telephone', $query->contact_telephone, PDO::PARAM_STR);
-		$sql->bind(':cellphone', $query->contact_cellphone, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении описания заявки.');
-		return [$query];
+	public function update_contact_information($id, $fio, $telephone, $cellphone){
+		$query = $this->get_query($id);
+		$query->set_contact_fio($fio);
+		$query->set_contact_telephone($telephone);
+		$query->set_contact_cellphone($cellphone);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
 	* Обновляет статус оплаты.
 	*/
-	public static function update_payment_status(data_company $company, data_query $query_params){
-		$company->verify('id');
-		$query_params->verify('id');
-		if(array_search($query_params->payment_status, ['paid', 'unpaid', 'recalculation']) === false)
-			throw new e_model('Несоответствующие параметры: payment_status.');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		$query->payment_status = $query_params->payment_status;
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `payment-status` = :payment_status
-					WHERE `company_id` = :company_id AND `id` = :id");
-		$sql->bind(':payment_status', $query->payment_status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении статуса оплаты заявки.');
-		return [$query];
+	public function update_payment_status($id, $status){
+		$query = $this->get_query($id);
+		$query->set_payment_status($status);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**
 	* Обновляет статус реакции.
 	*/
-	public static function update_warning_status(data_company $company, data_query $query_params){
-		$company->verify('id');
-		$query_params->verify('id');
-		if(array_search($query_params->warning_status, ['hight', 'normal', 'planned']) === false)
-			throw new e_model('Несоответствующие параметры: payment_status.');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		$query->warning_status = $query_params->warning_status;
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `warning-type` = :warning_status
-					WHERE `company_id` = :company_id AND `id` = :id");
-		$sql->bind(':warning_status', $query->warning_status, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении статуса реакции.');
-		return [$query];
+	public function update_warning_status($id, $status){
+		$query = $this->get_query($id);
+		$query->set_warning_status($status);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 	
 	/**
 	* Обновляет тип работ.
 	*/
-	public static function update_work_type(data_company $company, data_query $query_params){
-		$company->verify('id');
-		$query_params->verify('id', 'work_type_id');
-		$query_params->verify('work_type_id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
+	public function update_work_type($id, $type){
 		$query_work_type_params = new data_query_work_type();
-		$query_work_type_params->id = $query_params->worktype_id;
-		$query_work_type = model_query_work_type::get_query_work_types($company, $query_work_type_params)[0];
+		$query_work_type_params->id = $type;
+		$query_work_type = model_query_work_type::get_query_work_types($this->company,
+																										$query_work_type_params)[0];
 		model_query_work_type::is_data_query_work_type($query_work_type);
-		$query->worktype_id = $query_work_type->id;
-		$query->work_type_name = $query_work_type->name;
-		$sql = new sql();
-		$sql->query("UPDATE `queries` SET `query_worktype_id` = :work_type_id
-					WHERE `company_id` = :company_id AND `id` = :id");
-		$sql->bind(':work_type_id', $query->worktype_id, PDO::PARAM_STR);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':id', $query->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при обновлении типа работ.');
-		return [$query];
+		$query = $this->get_query($id);
+		$query->set_work_type_id($query_work_type->id);
+		$query->set_work_type_name($query_work_type->name);
+		$mapper = new mapper_query($this->company);
+		return $mapper->update($query);
 	}
 
 	/**

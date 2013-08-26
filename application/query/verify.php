@@ -5,9 +5,9 @@ class verify_query{
     * Верификация идентификатора заявки.
     */
     public static function id(data_query $query){
-        if(!preg_match('/^[0-9]{1,10}$/', $query->id))
+        if(!preg_match('/^[0-9]{1,10}$/', $query->get_id()))
             throw new e_model('Идентификатор заявки задан не верно.');
-        if($query->id > 4294967295 OR $query->id < 1)
+        if($query->get_id() > 4294967295 OR $query->get_id() < 1)
             throw new e_model('Идентификатор заявки задан не верно.');
     }
 
@@ -15,7 +15,7 @@ class verify_query{
     * Верификация статуса заявки.
     */
     public static function status(data_query $query){
-        if(!in_array($query->status, ['open', 'close', 'working', 'reopen']))
+        if(!in_array($query->get_status(), ['open', 'close', 'working', 'reopen']))
             throw new e_model('Статус заявки задан не верно.');
     }
 
@@ -31,7 +31,7 @@ class verify_query{
     * Верификация статуса оплаты заявки.
     */
     public static function payment_status(data_query $query){
-        if(!in_array($query->payment_status, ['paid', 'unpaid', 'recalculation']))
+        if(!in_array($query->get_payment_status(), ['paid', 'unpaid', 'recalculation']))
             throw new e_model('Статус оплаты заявки задан не верно.');
     }
 
@@ -39,7 +39,7 @@ class verify_query{
     * Верификация ворнинга заявки.
     */
     public static function warning_status(data_query $query){
-        if(!in_array($query->warning_status, ['hight', 'normal', 'planned']))
+        if(!in_array($query->get_warning_status(), ['hight', 'normal', 'planned']))
             throw new e_model('Статус ворнинга заявки задан не верно.');
     }
 
@@ -74,7 +74,7 @@ class verify_query{
     */
     public static function work_type_id(data_query $query){
         $work_type = new data_query_work_type();
-        $work_type->id = $query->worktype_id;
+        $work_type->id = $query->get_work_type_id();
         $work_type->verify('id');
     }
 
@@ -90,7 +90,7 @@ class verify_query{
     * Верификация времени передачи в работу заявки.
     */
     public static function time_work(data_query $query){
-        if($query->time_work < 1)
+        if($query->get_time_work() < 1)
             throw new e_model('Время передачи в работу заявки задано не верно.');
     }
 
@@ -98,7 +98,7 @@ class verify_query{
     * Верификация времени закрытия заявки.
     */
     public static function time_close(data_query $query){
-        if($query->time_close < 1)
+        if($query->get_time_close() < 1)
             throw new e_model('Время закрытия заявки задано не верно.');
     }
 
@@ -106,8 +106,8 @@ class verify_query{
     * Верификация ФИО контакта заявки.
     */
     public static function contact_fio(data_query $query){
-        if(!empty($query->contact_fio))
-            if(!preg_match('/^[А-Яа-я\. ]$/u', $query->contact_fio))
+        if(!empty($query->get_contact_fio()))
+            if(!preg_match('/^[А-Яа-я\. ]{0,255}$/u', $query->get_contact_fio()))
                 throw new e_model('ФИО контактного лица задано не верно.');
     }
 
@@ -115,8 +115,8 @@ class verify_query{
     * Верификация телефона контакта заявки.
     */
     public static function contact_telephone(data_query $query){
-        if(!empty($query->contact_telephone))
-            if(!preg_match('/^[0-9]{2,11}$/', $query->contact_telephone))
+        if(!empty($query->get_contact_telephone()))
+            if(!preg_match('/^[0-9]{2,11}$/', $query->get_contact_telephone()))
                 throw new e_model('Номер телефона пользователя задан не верно.');
     }
 
@@ -124,8 +124,8 @@ class verify_query{
     * Верификация сотового телефона контакта заявки.
     */
     public static function contact_cellphone(data_query $query){
-        if(!empty($query->contact_cellphone))
-            if(!preg_match('/^\+7[0-9]{10}$/', $query->contact_cellphone))
+        if(!empty($query->get_contact_cellphone()))
+            if(!preg_match('/^\+7[0-9]{10}$/', $query->get_contact_cellphone()))
                 throw new e_model('Номер сотового телефона пользователя задан не верно.');
     }
 
@@ -133,7 +133,7 @@ class verify_query{
     * Верификация описания заявки.
     */
     public static function description(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]{1,65535}$/u', $query->description))
+        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{1,65535}$/u', $query->get_description()))
             throw new e_model('Описание заявки заданы не верно.');
     }
 
@@ -141,7 +141,7 @@ class verify_query{
     * Верификация причины закрытия заявки.
     */
     public static function close_reason(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№ ]$/', $query->close_reason))
+        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{0,65535}$/u', $query->get_close_reason()))
             throw new e_model('Описание заявки заданы не верно.');
     }
 
@@ -166,7 +166,7 @@ class verify_query{
     */
     public static function company_id(data_query $query){
         $company = new data_company();
-        $company->id = $query->company_id;
+        $company->id = $query->get_company_id();
         $company->verify('id');
     }
 

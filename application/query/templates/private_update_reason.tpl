@@ -1,8 +1,8 @@
 {% extends "ajax.tpl" %}
-{% set query = component.queries[0] %}
+{% set query = component.query %}
 {% block js %}
-	$('.query[query_id = {{query.id}}] .query-general-reason').html(get_hidden_content());
+	$('.query[query_id = {{ query.get_id() }}] .query-general-reason').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
-{{query.close_reason}}
+  {{ query.get_close_reason() }}
 {% endblock html %}
