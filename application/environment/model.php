@@ -103,16 +103,25 @@ class model_environment{
 				model_session::set_session(new component_session_manager(new php_session_storage(), $component));
 			}
 			$data['file_prefix'] = $component;
-
 			$data['component'] = $controller::{$prefix.$method}();
-			return $view::{$prefix.$method}($data);
+			return load_template($component.'.'.$prefix.$method, $data);
 		}catch(exception $e){
-			if($e instanceof e_model)
-				return view_error::show_error($e);
-			elseif($e instanceof e_controller)
-				return view_error::show_404();
-			else
-				return view_error::show_error($e);
+			if($e instanceof e_model){
+				$args['error'] = $e;
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+            return load_template('error.show_ajax_error', $args);
+        else
+            return load_template('error.show_html_error', $args);
+			}elseif($e instanceof e_controller){
+				header("HTTP/1.0 404 Not Found");
+				return load_template('error.show_404_error', []);
+			}else{
+				$args['error'] = $e;
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+            return load_template('error.show_ajax_error', $args);
+        else
+            return load_template('error.show_html_error', $args);
+			}
 		}
 	}
 

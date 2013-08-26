@@ -42,6 +42,8 @@ class controller_report{
     public static function private_report_query_one_xls(){
         $query = model_report::build_query_param(model_session::get_session()->get('filters'));
         $company = model_session::get_company();
+        header('Content-Disposition: attachment; filename=export.xml');
+        header('Content-type: application/octet-stream');
         return ['queries' => model_query::get_queries($company, $query),
                 'users' => model_query::get_users($company, $query),
                 'works' => model_query::get_works($company, $query),

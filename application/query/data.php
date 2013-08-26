@@ -189,6 +189,26 @@ final class data_query extends data_object{
 		return $this->status;
 	}
 
+	public function get_initiator(){
+		return $this->initiator;
+	}
+
+	public function get_department_id(){
+		return $this->department_id;
+	}
+
+	public function get_house_id(){
+		return $this->house_id;
+	}
+
+	public function get_number(){
+		return $this->number;
+	}
+
+	public function get_time_open(){
+		return $this->time_open;
+	}
+
 	public function get_time_close(){
 		return $this->time_close;
 	}
@@ -209,8 +229,36 @@ final class data_query extends data_object{
 		return $this->work_type_name;
 	}
 
+	public function set_id($id){
+		$this->id = $id;
+	}
+
+	public function set_company_id($id){
+		$this->company_id = $id;
+	}
+
+	public function set_number($number){
+		$this->number = $number;
+	}
+
+	public function set_time_open($time){
+		$this->time_open = $time;
+	}
+
 	public function set_close_reason($reason){
 		$this->close_reason = $reason;
+	}
+
+	public function set_department_id($id){
+		$this->department_id = $id;
+	}
+
+	public function set_initiator($initiator){
+		$this->initiator = $initiator;
+	}
+
+	public function set_house_id($id){
+		$this->house_id = $id;
 	}
 
 	public function set_contact_cellphone($cellphone){

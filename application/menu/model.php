@@ -12,6 +12,6 @@ class model_menu{
 				}
 		$args['user'] = model_session::get_user();
 		$args['comp'] = $component;
-        return view_menu::build_horizontal_menu($args);
+    return load_template('menu.build_horizontal_menu', $args);
 	}
 }

@@ -23,7 +23,7 @@ class verify_query{
     * Верификация инициатора заявки.
     */
     public static function initiator(data_query $query){
-        if(!in_array($query->initiator, ['number', 'house']))
+        if(!in_array($query->get_initiator(), ['number', 'house']))
             throw new e_model('Инициатор заявки задан не верно.');
     }
 
@@ -48,7 +48,7 @@ class verify_query{
     */
     public static function department_id(data_query $query){
         $department = new data_department();
-        $department->id = $query->department_id;
+        $department->id = $query->get_department_id();
         $department->verify('id');
     }
 
@@ -57,7 +57,7 @@ class verify_query{
     */
     public static function house_id(data_query $query){
         $house = new data_house();
-        $house->id = $query->house_id;
+        $house->id = $query->get_house_id();
         $house->verify('id');
     }
 
@@ -65,7 +65,7 @@ class verify_query{
     * Верификация идентификатора причины закрытия.
     */
     public static function close_reason_id(data_query $query){
-        if($query->close_reason_id < 1)
+        if($query->get_close_reason_id() < 1)
             throw new e_model('Идентификатор причины закрытия задан не верно.');
     }
 
@@ -82,7 +82,7 @@ class verify_query{
     * Верификация времени открытия заявки.
     */
     public static function time_open(data_query $query){
-        if($query->time_open < 1)
+        if($query->get_time_open() < 1)
             throw new e_model('Время открытия заявки задано не верно.');
     }
 
@@ -98,8 +98,9 @@ class verify_query{
     * Верификация времени закрытия заявки.
     */
     public static function time_close(data_query $query){
-        if($query->get_time_close() < 1)
-            throw new e_model('Время закрытия заявки задано не верно.');
+        if(!empty($query->get_time_close()))
+            if($query->get_time_close() < 1)
+                throw new e_model('Время закрытия заявки задано не верно.');
     }
 
     /**
@@ -149,7 +150,7 @@ class verify_query{
     * Верификация номера заявки.
     */
     public static function number(data_query $query){
-        if(!preg_match('/^[0-9]{1,6}$/', $query->number))
+        if(!preg_match('/^[0-9]{1,6}$/', $query->get_number()))
             throw new e_model('Номер заявки задан не верно.');
     }
 
@@ -157,7 +158,7 @@ class verify_query{
     * Верификация инспеции заявки.
     */
     public static function inspection(data_query $query){
-        if(empty($query->inspection))
+        if(empty($query->get_inspection()))
             throw new e_model('Инспекция заявки задана не верно.');
     }
 
@@ -175,7 +176,7 @@ class verify_query{
     */
     public static function street_id(data_query $query){
         $street = new data_street();
-        $street->id = $query->street_id;
+        $street->id = $query->get_street_id();
         $street->verify('id');
     }
 }
