@@ -208,6 +208,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит лицевые счета дома
+    }).on('click', '.get_house_numbers', function(){
+        $.get('get_house_numbers',{
+            id: get_house_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит содержимое счетчика
     }).on('click', '.get_meter_data', function(){
         if($(this).siblings().is('.meter-data'))
