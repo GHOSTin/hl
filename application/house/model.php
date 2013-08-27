@@ -20,7 +20,7 @@ class model_house{
 		$house = $houses[0];
 		$mapper = new mapper_house2processing_center($company, $house);
 		$mapper->init_processing_centers();
-		$house->add_processing_center($center->id, $identifier);
+		$house->add_processing_center($center, $identifier);
 		$mapper->update();
 		return $house;
 	}

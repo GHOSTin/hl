@@ -6,7 +6,7 @@
 final class data_house extends data_object{
 	
 	public $city_id;
-    public $city_name;
+  public $city_name;
 	public $company_id;
 	public $department_id;
 	public $id;
@@ -14,6 +14,7 @@ final class data_house extends data_object{
 	public $status;
 	public $street_id;
 	public $street_name;
+  private $centers = [];
 
   public function set_id($id){
     $this->id = $id;
@@ -23,10 +24,20 @@ final class data_house extends data_object{
     return $this->id;
   }
 
+  private function send_error($message){
+    throw new e_model($message);
+  }
+
+  public function add_processing_center(data_processing_center $center, $identifier){
+    if(array_key_exists($center->id, $this->centers))
+      $this->send_error('К счетчику уже привязан процессинговый центр.');
+    $this->centers[$center->id] = [$center, $identifier];
+  }
+
 	public function verify(){
-        if(func_num_args() < 0)
-            throw new e_data('Параметры верификации не были переданы.');
-        foreach(func_get_args() as $value)
-            verify_house::$value($this);
-    }
+    if(func_num_args() < 0)
+      $this->send_error('Параметры верификации не были переданы.');
+    foreach(func_get_args() as $value)
+        verify_house::$value($this);
+  }
 }
