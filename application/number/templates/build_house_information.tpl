@@ -6,4 +6,8 @@
 <h5>Процессинговые центры</h5>
 <a class="get_dialog_add_house_processing_center">Добавить</a>
 <ul class="house2pc">
+  {% for h2c in house.get_processing_centers() %}
+    {% set center = h2c[0] %}
+    <li center="{{ center.id }}">{{ center.name }}({{ h2c[1] }})</li>
+  {% endfor %}
 </ul>

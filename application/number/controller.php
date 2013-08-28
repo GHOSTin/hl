@@ -28,11 +28,9 @@ class controller_number{
 
     public static function private_add_house_processing_center(){
         $model = new model_house();
-        $model->add_processing_center(model_session::get_company(), 
+        $house = $model->add_processing_center(model_session::get_company(), 
             $_GET['house_id'], $_GET['center_id'], $_GET['identifier']);
-        exit();
-        return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
-                'house' => $house];
+        return ['house' => $house];
     }
 
     public static function private_add_processing_center(){
@@ -216,7 +214,10 @@ class controller_number{
         $house = new data_house();
         $house->id = $_GET['id'];
         $house->verify('id');
-        return ['house' => model_house::get_houses($house)[0]];
+        $house = model_house::get_houses($house)[0];
+        $mapper = new mapper_house2processing_center(model_session::get_company(), $house);
+        $mapper->init_processing_centers();
+        return ['house' => $house];
     }
 
     public static function private_get_house_numbers(){

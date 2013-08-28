@@ -34,6 +34,10 @@ final class data_house extends data_object{
     $this->centers[$center->id] = [$center, $identifier];
   }
 
+  public function get_processing_centers(){
+    return $this->centers;
+  }
+
 	public function verify(){
     if(func_num_args() < 0)
       $this->send_error('Параметры верификации не были переданы.');

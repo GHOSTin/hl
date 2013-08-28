@@ -13,35 +13,58 @@ class mapper_house2processing_center{
   }
 
   public function init_processing_centers(){
-    $this->centers = $this->get_processing_centers();
+    $centers = $this->get_processing_centers();
+    if(!empty($centers))
+      foreach($centers as $value)
+        $this->house->add_processing_center($value[0], $value[1]);
+  }
+
+  private function insert(data_processing_center $center, $identifier){
+      $center->verify('id');
+      $sql = new sql();
+      $sql->query("INSERT INTO `house2processing_center` (`company_id`, 
+                  `house_id`, `center_id`, `identifier`) 
+                  VALUES (:company_id, :house_id, :center_id, :identifier)");
+      $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
+      $sql->bind(':house_id', (int) $this->house->id, PDO::PARAM_INT);
+      $sql->bind(':center_id', (int) $center->id, PDO::PARAM_INT);
+      $sql->bind(':identifier', (string) $identifier, PDO::PARAM_STR);
+      $sql->execute('Проблема при добавлении связи.');
   }
 
   private function get_processing_centers(){
     $sql = new sql();
-        $sql->query("SELECT `query2number`.* , `numbers`.`number`,
-            `numbers`.`fio` FROM `query2number`, `numbers`
-            WHERE `query2number`.`company_id` = :company_id
-            AND `numbers`.`company_id` = :company_id
-            AND `query2number`.`query_id` = :query_id
-            AND `query2number`.`number_id` = `numbers`.`id`");
-        $sql->bind(':query_id', $this->query_id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
-        exit();
-        $stmt = $sql->get_stm();
-        $numbers = [];
-        while($row = $stmt->fetch()){
-            $number = new data_number();
-            $number->id = $row['number_id'];
-            $number->number = $row['number'];
-            $number->fio = $row['fio'];
-            $numbers[$number->id] = $number;
-        }
-        $stmt->closeCursor();
-        return  $numbers;
+    $sql->query("SELECT `house2processing_center`.`center_id`,
+                `house2processing_center`.`identifier`
+                FROM `house2processing_center`, `processing_centers`
+                WHERE `house2processing_center`.`company_id` = :company_id
+                AND `house2processing_center`.`house_id` = :house_id
+                AND `house2processing_center`.`center_id` = `processing_centers`.`id`");
+    $sql->bind(':house_id', $this->house->id, PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+    $sql->execute('Проблема при запросе связи дом-процессинговый центр.');
+    $stmt = $sql->get_stm();
+    $centers = [];
+    while($row = $stmt->fetch()){
+        $center = new data_processing_center();
+        $center->id = $row['center_id'];
+        $centers[$center->id] = [$center, $row['identifier']];
+    }
+    $stmt->closeCursor();
+    return  $centers;
   }
 
   public function update(){
-    exit();
+    $new = $this->house->get_processing_centers();
+    $old = $this->get_processing_centers();
+    $deleted = array_diff_key($old, $new);
+    $inserted = array_diff_key($new, $old);
+    if(!empty($inserted))
+        foreach($inserted as $center)
+            $this->insert($center[0], $center[1]);
+    if(!empty($deleted))
+        foreach($deleted as $center)
+            $this->delete($center[0], $center[1]);
+    return $this->house;
   }
 }
