@@ -35,7 +35,8 @@ class mapper_house2processing_center{
   private function get_processing_centers(){
     $sql = new sql();
     $sql->query("SELECT `house2processing_center`.`center_id`,
-                `house2processing_center`.`identifier`
+                `house2processing_center`.`identifier`,
+                `processing_centers`.`name`
                 FROM `house2processing_center`, `processing_centers`
                 WHERE `house2processing_center`.`company_id` = :company_id
                 AND `house2processing_center`.`house_id` = :house_id
@@ -48,6 +49,7 @@ class mapper_house2processing_center{
     while($row = $stmt->fetch()){
         $center = new data_processing_center();
         $center->id = $row['center_id'];
+        $center->name = $row['name'];
         $centers[$center->id] = [$center, $row['identifier']];
     }
     $stmt->closeCursor();
