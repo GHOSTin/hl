@@ -224,6 +224,15 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог удаления процессингового центра
+    }).on('click', '.get_dialog_remove_house_processing_center', function(){
+        $.get('get_dialog_remove_house_processing_center',{
+            house_id: get_house_id($(this)),
+            center_id: $(this).parent().attr('center')
+            },function(r){
+                init_content(r);
+            });
+
     // выводит содержимое счетчика
     }).on('click', '.get_meter_data', function(){
         if($(this).siblings().is('.meter-data'))

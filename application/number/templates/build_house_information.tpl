@@ -8,6 +8,6 @@
 <ul class="house2pc">
   {% for h2c in house.get_processing_centers() %}
     {% set center = h2c[0] %}
-    <li center="{{ center.id }}">{{ center.name }}({{ h2c[1] }})</li>
+    <li center="{{ center.id }}">{{ center.name }}({{ h2c[1] }}) <a class="get_dialog_remove_house_processing_center">удалить</a></li>
   {% endfor %}
 </ul>

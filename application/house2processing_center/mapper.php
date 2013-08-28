@@ -12,6 +12,18 @@ class mapper_house2processing_center{
       $this->house->verify('id');
   }
 
+  private function delete(data_processing_center $center){
+        $center->verify('id');
+        $sql = new sql();
+        $sql->query("DELETE FROM `house2processing_center` 
+                    WHERE `company_id` = :company_id AND `house_id` = :house_id
+                    AND `center_id` = :center_id");
+        $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
+        $sql->bind(':house_id', (int) $this->house->id, PDO::PARAM_INT);
+        $sql->bind(':center_id', (int) $center->id, PDO::PARAM_INT);
+        $sql->execute('Проблема при удалении связи.');
+    }
+
   public function init_processing_centers(){
     $centers = $this->get_processing_centers();
     if(!empty($centers))
@@ -53,7 +65,7 @@ class mapper_house2processing_center{
         $centers[$center->id] = [$center, $row['identifier']];
     }
     $stmt->closeCursor();
-    return  $centers;
+    return $centers;
   }
 
   public function update(){
@@ -66,7 +78,7 @@ class mapper_house2processing_center{
             $this->insert($center[0], $center[1]);
     if(!empty($deleted))
         foreach($deleted as $center)
-            $this->delete($center[0], $center[1]);
+            $this->delete($center[0]);
     return $this->house;
   }
 }

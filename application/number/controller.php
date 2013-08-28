@@ -33,6 +33,13 @@ class controller_number{
         return ['house' => $house];
     }
 
+    public static function private_remove_house_processing_center(){
+        $model = new model_house();
+        $house = $model->remove_processing_center(model_session::get_company(), 
+                                        $_GET['house_id'], $_GET['center_id']);
+        return ['house' => $house];
+    }
+
     public static function private_add_processing_center(){
         $center = new data_processing_center2number();
         $center->number_id = $_GET['number_id'];
@@ -106,6 +113,16 @@ class controller_number{
         $house->verify('id');
         return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
                 'house' => $house];
+    }
+
+    public static function private_get_dialog_remove_house_processing_center(){
+        $house = new data_house();
+        $house->id = $_GET['house_id'];
+        $house->verify('id');
+        $house = model_house::get_houses($house)[0];
+        $mapper = new mapper_house2processing_center(model_session::get_company(), $house);
+        $mapper->init_processing_centers();
+        return ['house' => $house, 'center_id' => $_GET['center_id']];
     }
 
     public static function private_get_dialog_add_meter_option(){
