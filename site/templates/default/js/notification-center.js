@@ -63,7 +63,7 @@ $.extend($.expr[':'], {
 });
 var uid = parseInt(get_cookie('uid'));
 /** тайтл страницы */
-var global_title = $(document).attr('title') || '';
+var global_title;
 /** сокет-соединение для центра уведомлений */
 var notify_center = io.connect('http://'+ get_cookie('chat_host') + ':' + get_cookie('chat_port') + '/notify');
 /** сокет-соединение для чата */
@@ -90,6 +90,7 @@ var intervalID = setInterval(tryReconnect, 60000);
  */
 notify_center.on('connect', function(){
     if($('.current_user').length){
+        global_title = $(document).attr('title') || ''
         notify_center.json.send({"type":"user_ready", "data":{'uid': uid}});
         chat.json.send({"type":"user_ready", "data":{'uid': uid}});
     }
