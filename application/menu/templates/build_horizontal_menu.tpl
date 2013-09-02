@@ -8,10 +8,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand hidden-lg" href="#"></a>
+        <a class="navbar-brand visible-xs" href="#"></a>
     </div>
     {% if comp != 'default_page' %}
-    <ul class="nav navbar-nav pull-right visible-lg">
+    <ul class="nav navbar-nav pull-right hidden-sm hidden-xs" style="position: relative">
         <li id="nt-center">
             <a href="#">
                 <i class="glyphicon glyphicon-envelope notification-center-icon"></i>
