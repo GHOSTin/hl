@@ -1,5 +1,5 @@
 {% if component.users != false %}
-<div class="chat-col-left">
+<div class="chat-col-left col-sm-4 col-xs-12">
     <input id="chat-user-filter" class="form-control" type="search">
     <a id="chat-user-filter-clear" class="close" href="#">&times;</a>
     <div class='chat-user-list'>

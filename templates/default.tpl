@@ -17,20 +17,22 @@
 <body>
     <div id="wrap">
         {% if anonymous == false %}
-            <header>
+            <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
             {% autoescape false %}
                     {{menu}}
             {% endautoescape %}
             </header>
         {% endif %}
     	<div class="container">
-            <section class="main row">{% block component %}{% endblock component %}</section>
+            <section class="row">
+                <section class="main col-xs-12">{% block component %}{% endblock component %}</section>
+            </section>
             <section id="push"></section>
         </div>
     </div>
     <footer>
         <div class="container">
-            <p class="muted credit">
+            <p class="col-xs-12 muted credit">
                 Разработка компании <a href="http://mlsco.ru">mlsco</a>
             </p>
         </div>
