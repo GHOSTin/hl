@@ -74,17 +74,13 @@ footer, #push{
 
 div[class^=chat-col-]{
     position: relative;
-    height: 480px;
+    height: 100%;
     display: inline-block;
     vertical-align: top;
-}
-
-.chat-col-right{
-    width: 379px;
+    padding: 10px;
 }
 
 .chat-col-left{
-    width: 195px;
     border-right: 1px solid rgba(0,0,0,.1);
 }
 
@@ -165,17 +161,14 @@ div[class^=chat-col-]{
 
 }
 
-form.well{
-    margin: 0;
-}
-
 .mCSB_container.mCS_no_scrollbar{
-    margin-right: 30px !important;
+    margin-right: 20px !important;
 }
 
 .chat {
-    max-height: 500px;
-    padding: 0 0 0 10px;
+    max-height: 480px;
+    margin: 0;
+    margin-bottom: 126px;
 }
 
 .chat h4 {
@@ -188,20 +181,14 @@ form.well{
 
 .chat .chat-history{
     margin: 0;
-    height: 20px;
     position: absolute;
-    right: 0;
-}
-
-.chat textarea{
-    width: 336px;
-    height: 40px;
+    right: 2px;
+    top: 2px;
 }
 
 .chat-feed{
-    height: 335px;
+    height: 310px;
     overflow: auto;
-    margin: 0 0 10px;
 }
 
 .chat-feed ul {

@@ -54,16 +54,16 @@ window.userList = {
         for (var i in this.list) {
             var user = this.list[i];
                 var pane = '';
-                pane += '<div class="chat tab-pane fade user" id="chat-user_' + user.id + '">';
-                pane += '<h4>' + user.name;
+                pane += '<div class="chat tab-pane fade user panel panel-default" id="chat-user_' + user.id + '">';
+                pane += '<h4 class="panel-heading">' + user.name;
                 pane += '<button type="button" class="chat-history btn btn-mini" data-toggle="button">';
                 pane += '<i class="glyphicon glyphicon-book"></i>';
                 pane += '</button></h4>';
-                pane += '<div class="chat-feed">';
+                pane += '<div class="chat-feed panel-body">';
                 pane += '<ul id="chat-dates"></ul>';
                 pane += '<ul id="chat-history" style="display:none;"></ul>';
                 pane += '</div>';
-                pane += '<form class="well message" data-user-id="' + user.id + '"><div class="form-group">';
+                pane += '<form class="panel-footer message" data-user-id="' + user.id + '"><div class="form-group">';
                 pane += '<textarea name="message" placeholder="Сообщение" class="form-control"></textarea></div>';
 //                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
                 pane += '<button class="btn btn-primary" type="submit">Отправить</button>';

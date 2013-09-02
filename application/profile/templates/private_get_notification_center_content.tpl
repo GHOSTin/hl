@@ -10,5 +10,5 @@
         </ul>
     </div>
 </div>
-<div class='chat-col-right tab-content chat-list' id='main'></div>
+<div class='chat-col-right tab-content chat-list col-sm-8 col-xs-12' id='main'></div>
 {% endif %}
