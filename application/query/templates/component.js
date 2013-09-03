@@ -36,9 +36,10 @@ $(document).ready(function(){
 	});	
 	// выводит лицевые счета заявки
 	$('body').on('click', '.query-numbers > h5', function(){
-		if($(this).siblings().is('.query-sub'))
-			$(this).siblings('.query-sub').remove();
-		else
+		if($(this).siblings().is('.query-numbers-content')){
+			$(this).siblings('.query-numbers-content').remove();
+			$(this).siblings('.query-numbers-menu').remove();
+		}else
 			$.get('get_query_numbers',{
 				 id: get_query_id($(this))
 				},function(r){
