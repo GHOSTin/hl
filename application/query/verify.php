@@ -107,9 +107,9 @@ class verify_query{
     * Верификация ФИО контакта заявки.
     */
     public static function contact_fio(data_query $query){
-        if(!empty($query->get_contact_fio()))
-            if(!preg_match('/^[А-Яа-я\. ]{0,255}$/u', $query->get_contact_fio()))
-                throw new e_model('ФИО контактного лица задано не верно.');
+        // if(!empty($query->get_contact_fio()))
+        //     if(!preg_match('/^[А-Яа-я\. ]{0,255}$/u', $query->get_contact_fio()))
+        //         throw new e_model('ФИО контактного лица задано не верно.');
     }
 
     /**

@@ -52,4 +52,8 @@ final class data_number extends data_object{
     public function set_telephone($telephone){
     	$this->telephone = $telephone;
     }
+
+    public function get_house_id(){
+      return $this->house_id;
+    }
 }

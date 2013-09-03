@@ -176,6 +176,35 @@ class model_query{
 	/**
 	* Закрывает заявку.
 	*/
+	public function change_initiator($id, $house_id = null, $number_id = null){
+		$sql = new sql();
+		$sql->begin();
+		try{
+			$company = model_session::get_company();
+			$query = $this->get_query($id);
+			$mapper_q2n = new mapper_query2number($company, $query);
+			if(!is_null($number_id)){
+				$query->set_initiator('number');
+				$number = (new model_number($company))->get_number($number_id);
+				$query->set_house_id($number->get_house_id());
+				$query->add_number($number);
+				$mapper_q2n->update();
+			}elseif(!is_null($house_id)){
+				$query->set_initiator('house');
+			}else
+				die('initiator wrong');
+			$mapper = new mapper_query($this->company);
+			$query = $mapper->update($query);
+			$sql->commit();
+		}catch(exception $e){
+			$sql->rallback();
+			die('Проблема');
+		}
+	}
+
+	/**
+	* Закрывает заявку.
+	*/
 	public function reclose_query($id){
 		$query = $this->get_query($id);
 		if($query->get_status() !== 'reopen')
