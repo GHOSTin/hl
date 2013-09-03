@@ -167,6 +167,17 @@ class controller_query{
 		return ['query' => $query];
 	}
 
+	public static function private_get_dialog_change_initiator(){
+		$_SESSION['filters']['query'] = $query = model_query::build_query_params(new data_query(), $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		$street = new data_street();
+		$street->department_id = $query->department_id;
+		$company = model_session::get_company();
+		$streets = model_street::get_streets($street);
+		$model = new model_query(model_session::get_company());
+		$query = $model->get_query($_GET['id']);
+		return ['query' => $query, 'streets' => $streets];
+	}
+
 	public static function private_get_dialog_edit_description(){
 		$model = new model_query(model_session::get_company());
 		$query = $model->get_query($_GET['id']);
