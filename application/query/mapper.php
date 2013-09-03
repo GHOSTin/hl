@@ -99,7 +99,8 @@ class mapper_query{
                   `query_worktype_id` = :work_type_id,
                   `status` = :status, `worktime` = :time_work,
                   `closetime` = :time_close,
-                  `house_id` = :house_id
+                  `house_id` = :house_id,
+                  `initiator-type` = :initiator
                   WHERE `company_id` = :company_id AND `id` = :id");
       $sql->bind(':company_id', $query->get_company_id(), PDO::PARAM_INT);
       $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
@@ -115,6 +116,7 @@ class mapper_query{
       $sql->bind(':time_work', $query->get_time_work(), PDO::PARAM_INT);
       $sql->bind(':time_close', $query->get_time_close(), PDO::PARAM_INT);
       $sql->bind(':house_id', $query->get_house_id(), PDO::PARAM_INT);
+      $sql->bind(':initiator', $query->get_initiator(), PDO::PARAM_STR);
       $sql->execute('Ошибка при обновлении заявки.');
       return $query;
   }

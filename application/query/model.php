@@ -191,12 +191,22 @@ class model_query{
 				$mapper_q2n->update();
 			}elseif(!is_null($house_id)){
 				$query->set_initiator('house');
+				$house = new data_house();
+				$house->id = $house_id;
+				if(count(model_house::get_houses($house)) !== 1)
+					throw new e_model('Нет такого дома');
+				$numbers = model_house::get_numbers($company, $house);
+				if(!empty($numbers))
+					foreach($numbers as $number)
+						$query->add_number($number);
+				$mapper_q2n->update();
 			}else
 				die('initiator wrong');
 			$mapper = new mapper_query($this->company);
 			$query = $mapper->update($query);
 			$sql->commit();
 		}catch(exception $e){
+			die($e);
 			$sql->rallback();
 			die('Проблема');
 		}
