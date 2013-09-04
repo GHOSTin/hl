@@ -24,13 +24,11 @@ class controller_query{
 		$end_date = (string) $_GET['end_date'];
 		$begin_time = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
 		$end_time = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$work = new data_work();
-		$work->id = $_GET['work_id'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::add_work($company, $query, $work, $begin_time, $end_time),
-				'works' => model_query::get_works($company, $query)];
+		$query = (new model_query($company))->add_work($_GET['id'],
+							$_GET['work_id'], $begin_time, $end_time);
+		return ['queries' => $query,
+						'works' => model_query::get_works($company, $query)];
 	}
 
 	public static function private_clear_filters(){
@@ -124,20 +122,15 @@ class controller_query{
 
 	public static function private_get_dialog_add_user(){
 		$company = model_session::get_company();
-		$model = new model_query($company);
-		return ['query' => $model->get_query($_GET['id']),
+		return ['query' => (new model_query($company))->get_query($_GET['id']),
 			'groups' => model_group::get_groups($company, new data_group()),
 			'type' => $_GET['type']];
 	}
 
 	public static function private_get_dialog_add_work(){
-		$id = (int) $_GET['id'];
-		$query = new data_query();
-		$query->id = $id;
-		$query->verify('id');
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-			'workgroups' => model_workgroup::get_workgroups($company, new data_workgroup())];
+		return ['query' => (new model_query($company))->get_query($_GET['id']),
+						'workgroups' => model_workgroup::get_workgroups($company, new data_workgroup())];
 	}	
 
 	public static function private_get_dialog_create_query(){

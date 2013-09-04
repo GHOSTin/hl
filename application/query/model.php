@@ -105,30 +105,28 @@ class model_query{
 	/**
 	* Добавляет ассоциацию заявка-работа.
 	*/
-	public static function add_work(data_company $company, data_query $query_params,
-										data_work $work_params, $begin_time, $end_time){
+	public function add_work($query_id, $work_id, $begin_time, $end_time){
 		if(!is_int($begin_time) OR !is_int($end_time))
 			throw new e_model('Время задано не верно.');
 		if($begin_time > $end_time)
 			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
-		$company->verify('id');
-		$query_params->verify('id');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		$work_params->verify('id');
-		$work = model_work::get_works($company, $work_params)[0];
+		$query = $this->get_query($query_id);
+		$work = new data_work();
+		$work->id = $work_id;
+		$work->verify(id);
+		$work = model_work::get_works($this->company, $work)[0];
 		model_work::is_data_work($work);
 		$sql = new sql();
 		$sql->query("INSERT INTO `query2work` (`query_id`, `work_id`, `company_id`,
 					 `opentime`, `closetime`) VALUES (:query_id, :work_id, :company_id,
 					 :time_open, :time_close)");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':work_id', $work_params->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->bind(':work_id', $work->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
 		$sql->bind(':time_open', $begin_time, PDO::PARAM_INT);
 		$sql->bind(':time_close', $end_time, PDO::PARAM_INT);
 		$sql->execute('Ошибка при добавлении работы.');
-		return [$query];
+		return $query;
 	}
 
 	/*
