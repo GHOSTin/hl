@@ -68,7 +68,6 @@ class controller_query{
 		$company = model_session::get_company();
 		$model = new model_query($company);
 		$query = $model->change_initiator($_GET['query_id'], $_GET['house_id'], $_GET['number_id']);
-		exit();
 		$model->init_numbers($query);
 		return ['query' => $query,
 						'users' => model_query::get_users($company, $query)];

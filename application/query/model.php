@@ -205,6 +205,7 @@ class model_query{
 			$mapper = new mapper_query($this->company);
 			$query = $mapper->update($query);
 			$sql->commit();
+			return $query;
 		}catch(exception $e){
 			die($e);
 			$sql->rallback();

@@ -82,19 +82,18 @@
 			});
 		}
 	});
-
 	
-		$('.dialog-select-house').change(function(){
-			if($('.dialog-select-initiator').val() == 'number'){
-				var house_id = $(this).val();
-				if(house_id > 0){
-					$.get('get_numbers', {
-						id: house_id
-					}, function(r){
-						$('.dialog-select-number').html(r);
-						$('.dialog-select-number').prop('disabled', false);
-					});
-				}
+	$('.dialog-select-house').change(function(){
+		if($('.dialog-select-initiator').val() == 'number'){
+			var house_id = $(this).val();
+			if(house_id > 0){
+				$.get('get_numbers', {
+					id: house_id
+				}, function(r){
+					$('.dialog-select-number').html(r);
+					$('.dialog-select-number').prop('disabled', false);
+				});
 			}
-		});
+		}
+	});
 {% endblock script %}
