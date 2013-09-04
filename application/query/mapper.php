@@ -88,7 +88,7 @@ class mapper_query{
       $query->verify('company_id', 'id', 'payment_status', 'warning_status',
                       'contact_fio', 'contact_telephone',
                       'close_reason', 'description', 'work_type_id', 'status',
-                      'time_work', 'time_close');
+                      'time_work', 'time_close', 'initiator', 'house_id');
       $sql = new sql();
       $sql->query("UPDATE `queries` SET `payment-status` = :payment_status,
                   `warning-type` = :warning_status, `addinfo-name` = :fio,
