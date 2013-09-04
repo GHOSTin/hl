@@ -5,7 +5,7 @@ class model_query{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-        $this->company->verify('id');
+    $this->company->verify('id');
 	}
 
 	/*
@@ -635,26 +635,22 @@ class model_query{
 	/**
 	* Удаляет пользователя из заявки.
 	*/
-	public static function remove_user(data_company $company, data_query $query_params, data_user $user_params, $class){
-		$company->verify('id');
-		$query_params->verify('id');
-		$user_params->verify('id');
+	public function remove_user($query_id, $user_id, $class){
 		if(array_search($class, ['manager', 'performer']) === false)
 			throw new e_model('Несоответствующие параметры: class.');
-		$query = self::get_queries($company, $query_params)[0];
-		self::is_data_query($query);
-		$user = model_user::get_users($user_params)[0];
-		model_user::is_data_user($user);
+		$query = $this->get_query($query_id);
+		$model = new model_user();
+		$user = $model->get_user($user_id);
 		$sql = new sql();
 		$sql->query("DELETE FROM `query2user`
 					WHERE `company_id` = :company_id AND `query_id` = :query_id
 					AND `user_id` = :user_id AND `class` = :class");
 		$sql->bind(':query_id', $query->id, PDO::PARAM_STR);
 		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
 		$sql->bind(':class', $class, PDO::PARAM_STR);
 		$sql->execute('Ошибка при удалении пользователя и заявки.');
-		return [$query];
+		return $query;
 	}
 
 	/**

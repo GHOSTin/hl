@@ -24,7 +24,7 @@
 		Удалить из заявки пользователя "{{user.lastname}} {{user.firstname}} {{user.middlename}}"?
 	</div>
 	<div class="modal-footer">
-		<div class="btn remove_user">Сохранить</div>
+		<div class="btn remove_user">Удалить</div>
 		<div class="btn close_dialog">Отмена</div>
 	</div>	  
 </div>

@@ -480,14 +480,11 @@ class controller_query{
 	}
 
 	public static function private_remove_user(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$user = new data_user();
-		$user->id = $_GET['user_id'];
-		$type = $_GET['type'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::remove_user($company, $query, $user, $type),
-				'users' => model_query::get_users($company, $query)];
+		$model = new model_query($company);
+		$query = $model->remove_user($_GET['id'], $_GET['user_id'], $_GET['type']);
+		return ['query' => $query,
+						'users' => model_query::get_users($company, $query)];
 	}
 
 	public static function private_remove_work(){
