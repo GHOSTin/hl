@@ -8,14 +8,11 @@ class controller_query{
 	static $rules = [];
 
 	public static function private_add_user(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$user = new data_user();
-		$user->id = $_GET['user_id'];
-		$class = $_GET['type'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::add_user($company, $query, $user, $class),
-				'users' => model_query::get_users($company, $query)];
+		$model = new model_query($company);
+		$query = $model->add_user($_GET['id'], $_GET['user_id'], $_GET['type']);
+		return ['query' => $query,
+						'users' => model_query::get_users($company, $query)];
 	}
 
 	public static function private_add_work(){
@@ -126,16 +123,11 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_add_user(){
-		$type = (string) $_GET['type'];
-		if(array_search($type, ['manager', 'performer']) === false)
-			throw new e_model('Проблема с типом.');
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$query->verify('id');
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
+		$model = new model_query($company);
+		return ['query' => $model->get_query($_GET['id']),
 			'groups' => model_group::get_groups($company, new data_group()),
-			'type' => $type];
+			'type' => $_GET['type']];
 	}
 
 	public static function private_get_dialog_add_work(){
