@@ -27,7 +27,7 @@ class controller_query{
 		$company = model_session::get_company();
 		$query = (new model_query($company))->add_work($_GET['id'],
 							$_GET['work_id'], $begin_time, $end_time);
-		return ['queries' => $query,
+		return ['query' => $query,
 						'works' => model_query::get_works($company, $query)];
 	}
 
@@ -481,13 +481,10 @@ class controller_query{
 	}
 
 	public static function private_remove_work(){
-		$query = new data_query();
-		$query->id = $_GET['id'];
-		$work = new data_work();
-		$work->id = $_GET['work_id'];
 		$company = model_session::get_company();
-		return ['queries' => model_query::remove_work($company, $query, $work),
-				'works' => model_query::get_works($company, $query)];
+		$query = (new model_query($company))->remove_work($_GET['id'], $_GET['work_id']);
+		return ['query' => $query,
+						'works' => model_query::get_works($company, $query)];
 	}
 
 	public static function private_update_description(){

@@ -22,7 +22,7 @@
 		Удалить из заявки работу "{{work.name}}"?
 	</div>
 	<div class="modal-footer">
-		<div class="btn remove_work">Сохранить</div>
+		<div class="btn remove_work">Удалить</div>
 		<div class="btn close_dialog">Отмена</div>
 	</div>	  
 </div>
