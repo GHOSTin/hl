@@ -116,34 +116,34 @@ class verify_query{
     * Верификация телефона контакта заявки.
     */
     public static function contact_telephone(data_query $query){
-        if(!empty($query->get_contact_telephone()))
-            if(!preg_match('/^[0-9]{2,11}$/', $query->get_contact_telephone()))
-                throw new e_model('Номер телефона пользователя задан не верно.');
+        // if(!empty($query->get_contact_telephone()))
+        //     if(!preg_match('/^[0-9]{2,11}$/', $query->get_contact_telephone()))
+        //         throw new e_model('Номер телефона пользователя задан не верно.');
     }
 
     /**
     * Верификация сотового телефона контакта заявки.
     */
     public static function contact_cellphone(data_query $query){
-        if(!empty($query->get_contact_cellphone()))
-            if(!preg_match('/^\+7[0-9]{10}$/', $query->get_contact_cellphone()))
-                throw new e_model('Номер сотового телефона пользователя задан не верно.');
+        // if(!empty($query->get_contact_cellphone()))
+        //     if(!preg_match('/^\+7[0-9]{10}$/', $query->get_contact_cellphone()))
+        //         throw new e_model('Номер сотового телефона пользователя задан не верно.');
     }
 
     /**
     * Верификация описания заявки.
     */
     public static function description(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{1,65535}$/u', $query->get_description()))
-            throw new e_model('Описание заявки заданы не верно.');
+        // if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{1,65535}$/u', $query->get_description()))
+        //     throw new e_model('Описание заявки заданы не верно.');
     }
 
     /**
     * Верификация причины закрытия заявки.
     */
     public static function close_reason(data_query $query){
-        if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{0,65535}$/u', $query->get_close_reason()))
-            throw new e_model('Описание заявки заданы не верно.');
+        // if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{0,65535}$/u', $query->get_close_reason()))
+        //     throw new e_model('Описание заявки заданы не верно.');
     }
 
     /**
