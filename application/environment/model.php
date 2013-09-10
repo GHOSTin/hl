@@ -2,22 +2,6 @@
 class model_environment{
 
 	/**
-	* Строит компоненты роутера.
-	* @return array
-	*/
-	public static function build_router(){
-		$path = parse_url($_SERVER['REQUEST_URI']);
-		if($path['path'] === '/')
-			return ['default_page', 'show_default_page'];
-		elseif(preg_match_all('|^/([a-z_]+)/$|', $path['path'], $args, PREG_PATTERN_ORDER)){
-			return [$args[1][0], 'show_default_page'];
-		}elseif(preg_match_all('|^/([a-z_]+)/([a-z_]+)$|', $path['path'], $args, PREG_PATTERN_ORDER)){
-			return [$args[1][0], $args[2][0]];
-		}else
-			throw new e_controller('Нет такой страницы.');
-	}
-
-	/**
 	* Инициализирует соединения с базой данных.
 	* @return void
 	*/
@@ -86,57 +70,53 @@ class model_environment{
 	*/
 	public static function get_page_content(){
 		try{
-			list($component, $method, $prefix) = self::create_session();
-			$controller = 'controller_'.$component;
-			if(!class_exists($controller))
-				throw new e_controller('Нет такой страницы.');
-			if(!method_exists($controller, $prefix.$method))
-				throw new e_controller('Нет такой страницы.');
-			$view = 'view_'.$component;
+			self::before();
+			$request = new model_request();
+			$resolver = new model_resolver();
+			list($controller, $method) = $resolver->get_controller($request);
+			$component = substr($controller, 11);
 			$user = model_session::get_user();
-			if($user instanceof data_current_user){
-				model_profile::get_user_profiles(model_session::get_company(), $user);
-				$data['menu'] = model_menu::build_menu($component);
-				if(isset(model_session::get_rules()[$component]))
-					$data['rules'] = model_session::get_rules()[$component];
-				self::verify_general_access($component);
-				model_session::set_session(new component_session_manager(new php_session_storage(), $component));
-			}
 			$data['file_prefix'] = $component;
-			$data['component'] = $controller::{$prefix.$method}();
-			return load_template($component.'.'.$prefix.$method, $data);
-		}catch(exception $e){
-			if($e instanceof e_model){
-				$args['error'] = $e;
-        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-            return load_template('error.show_ajax_error', $args);
-        else
-            return load_template('error.show_html_error', $args);
-			}elseif($e instanceof e_controller){
-				header("HTTP/1.0 404 Not Found");
-				return load_template('error.show_404_error', []);
+			$data['component'] = $controller::$method($request);
+			$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
+			if(file_exists($template)){
+				return load_template($component.'.'.$method, $data);
 			}else{
-				$args['error'] = $e;
-        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-            return load_template('error.show_ajax_error', $args);
-        else
-            return load_template('error.show_html_error', $args);
+				return load_template('error.no_template', $data);
 			}
+		}catch(exception $e){
+			die($e);
+			// if($e instanceof e_model){
+			// 	$args['error'] = $e;
+   //      if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+   //          return load_template('error.show_ajax_error', $args);
+   //      else
+   //          return load_template('error.show_html_error', $args);
+			// }elseif($e instanceof e_controller){
+			// 	header("HTTP/1.0 404 Not Found");
+			// 	return load_template('error.show_404_error', []);
+			// }else{
+			// 	$args['error'] = $e;
+   //      if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+   //          return load_template('error.show_ajax_error', $args);
+   //      else
+   //          return load_template('error.show_html_error', $args);
+			// }
 		}
 	}
 
-	/**
-	* Верификация доступа к компоненту.
-	*/
-	public static function verify_general_access($component){
-       /* if(model_session::get_user() instanceof data_current_user){
-            $access = (model_profile::check_general_access($controller, $component));
-            if($access !== true){
-                $controller = 'controller_error';
-                $view = 'view_error';
-                $prefix = 'private_';
-                $method = 'get_access_denied_message';
-            }
-        }*/
+	public static function before(){
+		self::create_batabase_connection();
+		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
+			// model_session::set_user($_SESSION['user']);
+			// model_session::set_company($_SESSION['company']);
+			// model_session::set_settings($_SESSION['settings']);
+			
+			// model_profile::get_user_profiles(model_session::get_company(), $user);
+			// 	$data['menu'] = model_menu::build_menu($component);
+			// 	if(isset(model_session::get_rules()[$component]))
+			// 		$data['rules'] = model_session::get_rules()[$component];
+			// 	model_session::set_session(new component_session_manager(new php_session_storage(), $component));
+		}
 	}
 }

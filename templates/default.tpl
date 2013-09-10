@@ -38,7 +38,7 @@
 </body>
     <script src="/templates/default/js/jquery.min.js"></script>
     <script src="/templates/default/js/bootstrap.min.js"></script>
-    {% if anonymous == false %}
+    {#{% if anonymous == false %}
         <script src="/templates/default/js/jcanvas.min.js"></script>
 	    <script src="/templates/default/js/ajaxupload.js"></script>
 	    <script src="/templates/default/js/socket.io.js"></script>
@@ -47,7 +47,7 @@
 	    <script src="/templates/default/js/default.js"></script>
 	    <script src="/templates/default/js/chat.js"></script>
 	    <script src="/?js=component.js&p={{ file_prefix }}"></script>
-    {% endif %}
+    {% endif %}#}
     {% block javascript %}{% endblock javascript %}
 </html>
 {% endspaceless %}
