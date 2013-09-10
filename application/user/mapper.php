@@ -24,6 +24,28 @@ class mapper_user{
         }
     }
 
+    public function find_by_login_and_password($login, $password){
+        try{
+            $sql = new sql();
+            $sql->query("SELECT `id`, `company_id`, `status`, `username` as `login`,
+                        `firstname`, `lastname`, `midlename` as `middlename`,
+                        `password`, `telephone`, `cellphone`
+                        FROM `users` WHERE `username` = :login AND `password` = :hash");
+            $sql->bind(':login', htmlspecialchars($login), PDO::PARAM_STR);
+            $sql->bind(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
+            $user = $sql->map(new data_current_user(), 'Проблема при авторизации.')[0];
+            if($sql->count() !== 1){
+                $sql->close();
+                throw new e_model('Проблемы при авторизации.');
+            }
+            $sql->close();
+            $this->is_data_user($user);
+            return $user;
+        }catch(exception $e){
+            return null;
+        }
+    }
+
     private function get_insert_id(){
         $sql = new sql();
         $sql->query("SELECT MAX(`id`) as `max_user_id` FROM `users`");

@@ -18,6 +18,10 @@ class data_user extends data_object{
 	public $status;
 	public $telephone;
 
+  public function get_status(){
+    return $this->status;
+  }
+
 	public function verify(){
         if(func_num_args() < 0)
             throw new e_data('Параметры верификации не были переданы.');

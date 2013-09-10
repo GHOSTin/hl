@@ -8,11 +8,11 @@ class controller_default_page{
   public static function public_show_default_page(model_request $request){
     if(!is_null($request->take_post('login'))
       AND !is_null($request->take_post('password'))){
-      $model = new model_auth();
-      $user = $model->get_user($request->take_post('login'),
+      $model = new mapper_user();
+      $user = $model->find_by_login_and_password($request->take_post('login'),
                               $request->take_post('password'));
-      var_dump($user);
-      exit();
+      if($user->get_status() !== 'true')
+        die('Вы заблокированы и не можете войти в систему.');
     }
     return true;
   }
