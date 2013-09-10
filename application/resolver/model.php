@@ -2,7 +2,6 @@
 class model_resolver{
 
   public function get_controller(model_request $request){
-    session_start();
     $path = parse_url($_SERVER['REQUEST_URI']);
     if($path['path'] === '/')
       $route = ['default_page', 'show_default_page'];
@@ -13,7 +12,7 @@ class model_resolver{
     }else
       $route = ['error', 'error404'];
 
-    if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user)
+    if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user)
       $prefix = 'private_';
     else
       $prefix = 'public_';

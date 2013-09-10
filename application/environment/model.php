@@ -25,59 +25,28 @@ class model_environment{
 		}
 	}
 
-	/**
-	* Строит роутер исходя из залогинености пользователя.
-	*/
-	public static function create_session(){
-		session_start();
-		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
-			self::create_batabase_connection();
-			model_session::set_user($_SESSION['user']);
-			model_session::set_company($_SESSION['company']);
-			model_session::set_settings($_SESSION['settings']);
-			$route = self::build_router();
-			$route[] = 'private_';
-			return $route;
-		}elseif(!empty($_POST['login'])){
-			try{
-				self::create_batabase_connection();
-				$user = model_auth::auth_user();
-				if($user instanceof data_current_user){
-					model_session::set_user($user);
-					$user->verify('company_id');
-					$company = new data_company();
-					$company->id = $user->company_id;
-					model_session::set_company($company);
-					$route = self::build_router();
-					$route[] = 'private_';
-					return $route;
-				}else{
-					session_destroy();
-					return ['auth', 'show_auth_form', 'public_'];
-				}
-			}catch(exception $e){
-				session_destroy();
-				return ['auth', 'show_auth_form', 'public_'];
-			}
-		}else{
-			session_destroy();
-			return ['auth', 'show_auth_form', 'public_'];
-		}
-	}
-
 	/*
 	* Возвращает содержимое страницы.
 	*/
 	public static function get_page_content(){
 		try{
+			session_start();
 			self::before();
 			$request = new model_request();
 			$resolver = new model_resolver();
 			list($controller, $method) = $resolver->get_controller($request);
 			$component = substr($controller, 11);
-			$user = model_session::get_user();
 			$data['file_prefix'] = $component;
 			$data['component'] = $controller::$method($request);
+			$data['request'] = $request;
+			if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
+			model_profile::get_user_profiles(model_session::get_company(),
+																				model_session::get_user());
+			$data['menu'] = model_menu::build_menu($component);
+			// if(isset(model_session::get_rules()[$component]))
+			// 	$data['rules'] = model_session::get_rules()[$component];
+			// model_session::set_session(new component_session_manager(new php_session_storage(), $component));
+		}
 			$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
 			if(file_exists($template)){
 				return load_template($component.'.'.$method, $data);
@@ -107,16 +76,10 @@ class model_environment{
 
 	public static function before(){
 		self::create_batabase_connection();
-		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_current_user){
-			// model_session::set_user($_SESSION['user']);
-			// model_session::set_company($_SESSION['company']);
-			// model_session::set_settings($_SESSION['settings']);
-			
-			// model_profile::get_user_profiles(model_session::get_company(), $user);
-			// 	$data['menu'] = model_menu::build_menu($component);
-			// 	if(isset(model_session::get_rules()[$component]))
-			// 		$data['rules'] = model_session::get_rules()[$component];
-			// 	model_session::set_session(new component_session_manager(new php_session_storage(), $component));
+		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
+			model_session::set_user($_SESSION['user']);
+			model_session::set_company($_SESSION['company']);
+			model_session::set_settings($_SESSION['settings']);
 		}
 	}
 }

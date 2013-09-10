@@ -33,7 +33,7 @@ class model_session{
         return self::$settings[$component][$param];
     }
 
-    public static function set_user(data_current_user $user){
+    public static function set_user(data_user $user){
         if(!isset(self::$user)){
             self::set_cockies();
             $_SESSION['user'] = $user;
