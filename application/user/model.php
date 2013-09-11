@@ -21,7 +21,10 @@ class model_user{
 	* Возвращает объект пользователя по идентификатору
 	*/
 	public function get_user($id){
-		return (new mapper_user)->find($id);
+		$user = (new mapper_user)->find($id);
+		if(!($user instanceof data_user))
+			throw new e_model('Нет пользователя');
+		return $user;
 	}
 
 	/**

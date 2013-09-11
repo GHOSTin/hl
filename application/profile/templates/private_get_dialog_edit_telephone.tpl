@@ -17,7 +17,7 @@
         <h3>Смена номера телефона</h3>
     </div>	
 	<div class="modal-body">
-		<input type="text" value="{{ user.telephone }}" class="dialog-telephone">
+		<input type="text" value="{{ user.get_telephone() }}" class="dialog-telephone">
 	</div>
 	<div class="modal-footer">
 		<div class="btn update_telephone">Сохранить</div>

@@ -5,7 +5,7 @@
     <div class='chat-user-list'>
         <ul class='chat-users'>
             {% for user in component.users %}
-                <li user_id="{{user.id}}">{{user.lastname}}</li>
+                <li user_id="{{ user.get_id() }}">{{ user.get_lastname() }}</li>
             {% endfor %}
         </ul>
     </div>

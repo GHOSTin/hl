@@ -44,10 +44,10 @@
 	    <script src="/templates/default/js/socket.io.js"></script>
 	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>
 	    <script src="/templates/default/js/notification-center.js"></script>
-	    <script src="/templates/default/js/default.js"></script>
-	    <script src="/templates/default/js/chat.js"></script>
-	    <script src="/?js=component.js&p={{ file_prefix }}"></script>
+        <script src="/templates/default/js/chat.js"></script>
     {% endif %}#}
+	<script src="/templates/default/js/default.js"></script>
+	<script src="/?js=component.js&p={{ file_prefix }}"></script>
     {% block javascript %}{% endblock javascript %}
 </html>
 {% endspaceless %}

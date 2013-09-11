@@ -25,7 +25,7 @@ class mapper_user{
     public function find($id){
         try{
             $user = new data_user();
-            $user->id = $id;
+            $user->set_id($id);
             $user->verify('id');
             $sql = new sql();
             $sql->query("SELECT `id`, `company_id`, `status`, `username` as `login`,

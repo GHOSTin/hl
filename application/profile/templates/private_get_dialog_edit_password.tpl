@@ -4,7 +4,6 @@
 	show_dialog(get_hidden_content());
 	$('.update_password').click(function(){
 		$.get('update_password',{
-			id: {{ user.id }},
 			new_password: $('.dialog-new_password').val(),
 			confirm_password: $('.dialog-confirm_password').val()
 			},function(r){
@@ -20,7 +19,7 @@
     </div>	
 	<div class="modal-body">
 		<p>
-			Сменить пароль пользователю "{{ user.lastname }} {{ user.firstname }} {{ user.middlename }}"?
+			Сменить пароль пользователю "{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}"?
 		</p>
 		<dl class="dl-horizontal">
 			<dt>Новый пароль</dt>
