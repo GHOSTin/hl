@@ -169,8 +169,8 @@ class model_profile{
 		$sql = new sql();
 		$sql->query("SELECT `profile`, `rules`, `restrictions`, `settings`
 					FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id");
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+		$sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
+		$sql->bind(':company_id', $company->get_id() , PDO::PARAM_INT);
 		$sql->execute('Ошибка при получении профиля.');
 		if($sql->count() > 0)
 			while($profile = $sql->row())

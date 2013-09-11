@@ -6,20 +6,57 @@
 */
 class data_user extends data_object{
 
-	public $cellphone;
-	public $company_id;
-	public $firstname;
-	public $id;
-	public $lastname;
-	public $login;
-	public $middlename;
-	public $password;
-	public $session;
-	public $status;
-	public $telephone;
+	private $cellphone;
+	private $company_id;
+	private $firstname;
+	private $id;
+	private $lastname;
+	private $login;
+	private $middlename;
+	private $password;
+	private $session;
+	private $status;
+	private $telephone;
+
+
+  public function get_cellphone(){
+    return $this->cellphone;
+  }
+
+  public function get_company_id(){
+    return $this->company_id;
+  }
+
+  public function get_firstname(){
+    return $this->firstname;
+  }
+
+  public function get_id(){
+    return $this->id;
+  }
+
+  public function get_lastname(){
+    return $this->lastname;
+  }
+
+  public function get_login(){
+    return $this->lastname;
+  }
+
+  public function get_middlename(){
+    return $this->middlename;
+  }
+
+  public function get_password(){
+    return $this->password;
+  }
 
   public function get_status(){
     return $this->status;
+  }
+
+  public function get_telephone(){
+    return $this->telephone;
   }
 
 	public function verify(){

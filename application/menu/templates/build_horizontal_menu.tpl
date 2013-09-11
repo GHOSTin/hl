@@ -23,7 +23,7 @@
                 <ul class="nav pull-right">
                     <li class="dropdown">
                         <a href="/profile/" class="current_user" user_id="{{user_id}}">
-                           {{ user.firstname }} {{ user.lastname }}
+                           {{ user.get_firstname() }} {{ user.get_lastname() }}
                         </a>
                     </li>
                 </ul>

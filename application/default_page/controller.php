@@ -16,7 +16,8 @@ class controller_default_page{
           die('Вы заблокированы и не можете войти в систему.');
         $user->verify('company_id');
         $company = new data_company();
-        $company->id = $user->company_id;
+        $company->set_id($user->get_company_id());
+        $company->verify('id');
         $_SESSION['user'] = $user;
         $_SESSION['company'] = $company;
         header('Location:/');
