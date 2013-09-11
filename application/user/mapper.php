@@ -1,6 +1,27 @@
 <?php
 class mapper_user{
 
+    private static $LOGIN = "SELECT `id`, `company_id`, `status`,
+        `username` as `login`, `firstname`, `lastname`,
+        `midlename` as `middlename`, `password`, 
+        `telephone`, `cellphone` FROM `users` WHERE `username` = :login
+        AND `password` = :hash";
+
+    public function create_object(array $row){
+        $user = new data_user();
+        $user->set_id($row['id']);
+        $user->set_company_id($row['company_id']);
+        $user->set_status($row['status']);
+        $user->set_login($row['login']);
+        $user->set_firstname($row['firstname']);
+        $user->set_lastname($row['lastname']);
+        $user->set_middlename($row['middlename']);
+        $user->set_hash($row['password']);
+        $user->set_telephone($row['telephone']);
+        $user->set_cellphone($row['cellphone']);
+        return $user;
+    }
+
     public function find($id){
         try{
             $user = new data_user();
@@ -27,19 +48,17 @@ class mapper_user{
     public function find_by_login_and_password($login, $password){
         try{
             $sql = new sql();
-            $sql->query("SELECT `id`, `company_id`, `status`, `username` as `login`,
-                        `firstname`, `lastname`, `midlename` as `middlename`,
-                        `password`, `telephone`, `cellphone`
-                        FROM `users` WHERE `username` = :login AND `password` = :hash");
+            $sql->query(self::$LOGIN);
             $sql->bind(':login', htmlspecialchars($login), PDO::PARAM_STR);
             $sql->bind(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
-            $user = $sql->map(new data_user(), 'Проблема при авторизации.')[0];
-            if($sql->count() !== 1){
+            $sql->execute('Проблема при авторизации');
+            $stm = $sql->get_stm();
+            if($stm->rowCount() !== 1){
                 $sql->close();
                 throw new e_model('Проблемы при авторизации.');
             }
+            $user = $this->create_object($stm->fetch());
             $sql->close();
-            $this->is_data_user($user);
             return $user;
         }catch(exception $e){
             return null;

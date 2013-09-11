@@ -12,7 +12,6 @@ class model_environment{
 						application_configuration::database_user,
 						application_configuration::database_password);
 		}catch(exception $e){
-			die($e->getMessage());
  			throw new e_model('Нет соединения с базой данных.');
 		}
 		// устанавливаем параметры по умолчанию

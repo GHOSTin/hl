@@ -17,6 +17,7 @@ class data_user extends data_object{
 	private $session;
 	private $status;
 	private $telephone;
+  private $hash;
 
 
   public function get_cellphone(){
@@ -57,6 +58,46 @@ class data_user extends data_object{
 
   public function get_telephone(){
     return $this->telephone;
+  }
+
+  public function set_cellphone($cellphone){
+    $this->cellphone = (string) $cellphone;
+  }
+
+  public function set_id($id){
+    $this->id = (int) $id;
+  }
+
+  public function set_company_id($id){
+    $this->company_id = (int) $id;
+  }
+
+  public function set_firstname($firstname){
+    $this->firstname = (string) $firstname;
+  }
+
+  public function set_hash($hash){
+    $this->hash = (string) $hash;
+  }
+
+  public function set_lastname($lastname){
+    $this->lastname = (string) $lastname;
+  }
+
+  public function set_login($login){
+    $this->login = (string) $login;
+  }
+
+  public function set_middlename($middlename){
+    $this->middlename = (string) $middlename;
+  }
+
+  public function set_status($status){
+    $this->status = (string) $status;
+  }
+
+  public function set_telephone($telephone){
+    $this->telephone = (string) $telephone;
   }
 
 	public function verify(){
