@@ -5,16 +5,56 @@
 */
 final class data_flat extends data_object{
 
-	public $company_id;
-	public $house_id;
-    public $id;
-    public $number;
-	public $status;
+  private $company_id;
+  private $house_id;
+  private $id;
+  private $number;
+  private $status;
 
-    public function verify(){
-        if(func_num_args() < 0)
-            throw new e_data('Параметры верификации не были переданы.');
-        foreach(func_get_args() as $value)
-            verify_flat::$value($this);
-    }
+  public function get_company_id(){
+    return $this->company_id;
+  }
+
+  public function get_house_id(){
+    return $this->house_id;
+  }
+
+  public function get_id(){
+    return $this->id;
+  }
+
+  public function get_number(){
+    return $this->number;
+  }
+
+  public function get_status(){
+    return $this->status;
+  }
+
+  public function set_company_id($id){
+    $this->company_id = (int) $id;
+  }
+
+  public function set_house_id($id){
+    $this->house_id = (int) $id;
+  }
+
+  public function set_id($id){
+    $this->id = (int) $id;
+  }
+
+  public function set_number($number){
+    $this->number = (string) $number;
+  }
+
+  public function set_status($status){
+    $this->status = (string) $status;
+  }
+
+  public function verify(){
+    if(func_num_args() < 0)
+      throw new e_data('Параметры верификации не были переданы.');
+    foreach(func_get_args() as $value)
+      verify_flat::$value($this);
+  }
 }

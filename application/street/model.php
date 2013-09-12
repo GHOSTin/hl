@@ -67,10 +67,7 @@ class model_street{
 			}
 			$sql->query("IN(".implode(',', $params).") ORDER BY `streets`.`name`");
 		}elseif(!empty($street->id)){
-			$street->verify('id');
-			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
-						FROM `streets` WHERE `id` = :id");
-			$sql->bind(':id', $street->id, PDO::PARAM_INT);
+			die('DISABLED STREET');
 		}else
 			$sql->query("SELECT `id`, `company_id`, `city_id`, `status`, `name`
 						FROM `streets` ORDER BY `name`");

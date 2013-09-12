@@ -113,10 +113,10 @@ class model_user{
 	public function update_user_status($id){
 		$mapper = new mapper_user();
 		$user = $mapper->find($id);
-		if($user->status === 'true')
-			$user->status = 'false';
+		if($user->get_status() === 'true')
+			$user->set_status('false');
 		else
-			$user->status = 'true';
+			$user->set_status('true');
 		$mapper->update($user);
 		return $user;
 	}
@@ -127,7 +127,7 @@ class model_user{
 	public static function update_cellphone($id, $cellphone){
 		$mapper = new mapper_user();
 		$user = $mapper->find($id);
-		$user->cellphone = $cellphone;
+		$user->set_cellphone($cellphone);
 		$mapper->update($user);
 		return $user;
 	}
@@ -138,7 +138,7 @@ class model_user{
 	public function update_telephone($id, $telephone){
 		$mapper = new mapper_user();
 		$user = $mapper->find($id);
-		$user->telephone = $telephone;
+		$user->set_telephone($telephone);
 		$mapper->update($user);
 		return $user;
 	}

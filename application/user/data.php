@@ -41,7 +41,7 @@ class data_user extends data_object{
   }
 
   public function get_login(){
-    return $this->lastname;
+    return $this->login;
   }
 
   public function get_middlename(){

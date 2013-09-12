@@ -6,7 +6,7 @@ class verify_street{
     */
     public static function company_id(data_street $street){
         $company = new data_company();
-        $company->id = $street->company_id;
+        $company->set_id($street->get_company_id());
         $company->verify('id');
     }
 
@@ -15,7 +15,7 @@ class verify_street{
     */
     public static function city_id(data_street $street){
         $city = new data_city();
-        $city->id = $street->city_id;
+        $city->set_id($street->get_city_id());
         $city->verify('id');
     }
 
@@ -24,7 +24,7 @@ class verify_street{
     */
     public static function department_id(data_street $street){
         $department = new data_department();
-        $department->id = $street->department_id;
+        $department->set_id($street->get_department_id());
         $department->verify('id');
     }
 
@@ -32,9 +32,9 @@ class verify_street{
     * Верификация идентификатора улицы.
     */
     public static function id(data_street $street){
-        if(!preg_match('/^[0-9]{1,5}$/', $street->id))
+        if(!preg_match('/^[0-9]{1,5}$/', $street->get_id()))
             throw new e_model('Идентификатор улицы задан не верно.');
-        if($street->id > 65535 OR $street->id < 1)
+        if($street->get_id() > 65535 OR $street->get_id() < 1)
             throw new e_model('Идентификатор улицы задан не верно.');
     }
 
@@ -42,7 +42,7 @@ class verify_street{
     * Верификация статуса улицы.
     */
     public static function status(data_street $street){
-        if(in_array($street->status, ['true', 'false']))
+        if(in_array($street->get_status(), ['true', 'false']))
             throw new e_model('Статус улицы задан не верно.');
     }
 
@@ -50,7 +50,7 @@ class verify_street{
     * Верификация названия улицы.
     */
     public static function verify_name(data_street $street){
-        if(!preg_match('/^[а-яА-Я]+$/u', $street->name))
+        if(!preg_match('/^[а-яА-Я]+$/u', $street->get_name()))
             throw new e_model('Название улицы задано не верно.');
     }
 }

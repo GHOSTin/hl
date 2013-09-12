@@ -5,12 +5,60 @@
 */
 final class data_street extends data_object{
 
-    public $company_id;
-    public $city_id;
-    public $department_id;
-    public $id;
-    public $name;
-	public $status;
+    private $company_id;
+    private $city_id;
+    private $department_id;
+    private $id;
+    private $name;
+    private $status;
+
+    public function get_company_id(){
+      return $this->company_id;
+    }
+
+    public function get_city_id(){
+      return $this->city_id;
+    }
+
+    public function get_department_id(){
+      return $this->department_id;
+    }
+
+    public function get_id(){
+      return $this->id;
+    }
+
+    public function get_name(){
+      return $this->name;
+    }
+
+    public function get_status(){
+      return $this->status;
+    }
+
+    public function set_company_id($id){
+      $this->company_id = (int) $id;
+    }
+
+    public function set_city_id($id){
+      $this->city_id = (int) $id;
+    }
+
+    public function set_department_id($id){
+      $this->department_id = (int) $id;
+    }
+
+    public function set_id($id){
+      $this->id = (int) $id;
+    }
+
+    public function set_name($name){
+      $this->name = (string) $name;
+    }
+
+    public function set_status($status){
+      $this->status = (string) $status;
+    }
 
     public function verify(){
         if(func_num_args() < 0)

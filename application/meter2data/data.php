@@ -4,11 +4,11 @@
 */
 final class data_meter2data extends data_object{
 
-	public $time;
-	public $value;
-    public $comment;
-    public $way;
-    public $timestamp;
+	private $time;
+	private $value;
+    private $comment;
+    private $way;
+    private $timestamp;
     private $company_id;
     private $number_id;
     private $meter_id;

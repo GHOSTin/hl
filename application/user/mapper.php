@@ -112,16 +112,16 @@ class mapper_user{
                     `telephone` = :telephone, `cellphone` = :cellphone,
                     `username` = :login WHERE `id` = :id');
         $user->verify('id', 'firstname', 'middlename', 'lastname', 'status',
-                    'login', 'telephone', 'cellphone');
-        $sql->bind(':firstname', $user->firstname, PDO::PARAM_STR);
-        $sql->bind(':lastname', $user->lastname, PDO::PARAM_STR);
-        $sql->bind(':middlename', $user->middlename, PDO::PARAM_STR);
-        $sql->bind(':status', $user->status, PDO::PARAM_STR);
-        $sql->bind(':login', $user->login, PDO::PARAM_STR);
-        $sql->bind(':telephone', $user->telephone, PDO::PARAM_STR);
-        $sql->bind(':cellphone', $user->cellphone, PDO::PARAM_STR);
-        $sql->bind(':password', $user->password, PDO::PARAM_STR);
-        $sql->bind(':id', $user->id, PDO::PARAM_INT);
+                    'login', 'telephone');
+        $sql->bind(':firstname', $user->get_firstname(), PDO::PARAM_STR);
+        $sql->bind(':lastname', $user->get_lastname(), PDO::PARAM_STR);
+        $sql->bind(':middlename', $user->get_middlename(), PDO::PARAM_STR);
+        $sql->bind(':status', $user->get_status(), PDO::PARAM_STR);
+        $sql->bind(':login', $user->get_login(), PDO::PARAM_STR);
+        $sql->bind(':telephone', $user->get_telephone(), PDO::PARAM_STR);
+        $sql->bind(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
+        $sql->bind(':password', $user->get_password(), PDO::PARAM_STR);
+        $sql->bind(':id', $user->get_id(), PDO::PARAM_INT);
         $sql->execute('Проблемы при обвнолении записи пользователя.');
     }
 

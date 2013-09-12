@@ -9,7 +9,7 @@ final class data_query extends data_object{
 	/*
 	* Идентификатор заявки уникален для компании.
 	*/
-	public $id;
+	private $id;
 
 	/*
 	* Статус заявки: 
@@ -18,14 +18,14 @@ final class data_query extends data_object{
 	* close - закрытая заявка,
 	* reopen - переоткрытая заявка.
 	*/
-	public $status;
+	private $status;
 
 	/*
 	* Тип ициниатора:
 	* number - лицевой счет,
 	* house - дом.
 	*/
-	public $initiator;
+	private $initiator;
 
 	/*
 	* Статус оплаты:
@@ -33,7 +33,7 @@ final class data_query extends data_object{
 	* unpaid - неоплаичваемая,
 	* recalculation - перерасчет.
 	*/
-	public $payment_status;
+	private $payment_status;
 
 	/*
 	* Статус реакции:
@@ -41,107 +41,107 @@ final class data_query extends data_object{
 	* normal - заявка на участок,
 	* planned - плановая заявка.
 	*/
-	public $warning_status;
+	private $warning_status;
 
 	/*
 	* Идентификатор участка.
 	*/
-	public $department_id;
+	private $department_id;
 
 	/*
 	* Название участка
 	*/
-	public $department_name;
+	private $department_name;
 
 	/*
 	* Идентификатор дома.
 	*/
-	public $house_id;
+	private $house_id;
 
 	/*
 	* Идентификатор причины закрытия.
 	*/
-	public $close_reason_id;
+	private $close_reason_id;
 
 	/*
 	* Идентификатор типа работ.
 	*/
-	public $worktype_id;
+	private $worktype_id;
 
 	/*
 	* Имя типа работ.
 	*/
-	public $work_type_name;
+	private $work_type_name;
 
 	/*
 	* Время открытия.
 	*/
-	public $time_open;
+	private $time_open;
 
 	/*
 	* Время когда заявка была передана в работу.
 	*/
-	public $time_work;
+	private $time_work;
 
 	/*
 	* Время закрытия.
 	*/
-	public $time_close;
+	private $time_close;
 
 	/*
 	* ФИО контактного лица.
 	*/
-	public $contact_fio;
+	private $contact_fio;
 
 	/*
 	* Телефон контактного лица.
 	*/
-	public $contact_telephone;
+	private $contact_telephone;
 
 	/*
 	* Сотовый телефон контактного лица.
 	*/
-	public $contact_cellphone;
+	private $contact_cellphone;
 
 	/*
 	* Описание заявки.
 	*/
-	public $description;
+	private $description;
 
 	/*
 	* Описания причины закрытия.
 	*/
-	public $close_reason;
+	private $close_reason;
 
 	/*
 	* Номер заявки.
 	*/
-	public $number;
+	private $number;
 
 	/*
 	* Данные инспекции.
 	*/
-	public $inspection;
+	private $inspection;
 
 	/*
 	* Номер дома.
 	*/
-	public $house_number;
+	private $house_number;
 
 	/*
 	* Имя улицы.
 	*/
-	public $street_name;
+	private $street_name;
 
 	/*
 	* Идентификатор компании.
 	*/
-	public $company_id;
+	private $company_id;
 
 	/*
 	* Идентификатор улицы
 	*/
-	public $street_id;
+	private $street_id;
 
 	private $numbers;
 

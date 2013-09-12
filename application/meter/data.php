@@ -4,13 +4,13 @@
 */
 final class data_meter extends data_object{
     
-    public $capacity;
-    public $company_id;
-    public $id;
-    public $name;
-    public $periods;
-    public $rates;
-    public $service;
+    private $capacity;
+    private $company_id;
+    private $id;
+    private $name;
+    private $periods;
+    private $rates;
+    private $service;
 
     public function __construct(){
         if(empty($this->service))

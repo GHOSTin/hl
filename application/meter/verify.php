@@ -6,7 +6,7 @@ class verify_meter{
     */
     public static function company_id(data_meter $meter){
         $company = new data_company();
-        $company->id = $meter->company_id;
+        $company->set_id($meter->get_company_id());
         $company->verify('id');
     }
 
@@ -14,7 +14,7 @@ class verify_meter{
     * Верификация времени поверки счетчика.
     */
     public static function chektime(data_meter $meter){
-        if($meter->chektime < 0)
+        if($meter->get_chektime() < 0)
             throw new e_model('Время поверки счетчика задано не верно.');
     }
 
@@ -22,9 +22,9 @@ class verify_meter{
     * Верификация идентификатора счетчика.
     */
     public static function id(data_meter $meter){
-        if(!preg_match('/^[0-9]{1,8}$/', $meter->id))
+        if(!preg_match('/^[0-9]{1,8}$/', $meter->get_id()))
             throw new e_model('Идентификатор счетчика задан не верно.');
-        if($meter->id > 16777215 OR $meter->id < 1)
+        if($meter->get_id() > 16777215 OR $meter->get_id() < 1)
             throw new e_model('Идентификатор счетчика задан не верно.');
     }
 
@@ -32,7 +32,7 @@ class verify_meter{
     * Верификация названия счетчика.
     */
     public static function name(data_meter $meter){
-        if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]{1,20}$/u', $meter->name))
+        if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]{1,20}$/u', $meter->get_name()))
             throw new e_model('Название счетчика задано не верно.');
     }
 
@@ -40,7 +40,7 @@ class verify_meter{
     * Верификация разрядности счетчика.
     */
     public static function capacity(data_meter $meter){
-        if($meter->capacity < 1 OR $meter->capacity > 9)
+        if($meter->get_capacity() < 1 OR $meter->get_capacity() > 9)
             throw new e_model('Разрядность задана не верно.');
     }
 
@@ -48,7 +48,7 @@ class verify_meter{
     * Верификация тарифности счетчика.
     */
     public static function rates(data_meter $meter){
-        if($meter->rates < 1 OR $meter->rates > 3)
+        if($meter->get_rates() < 1 OR $meter->get_rates() > 3)
             throw new e_model('Тарифность задана не верно.');
     }
 

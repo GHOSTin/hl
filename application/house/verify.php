@@ -6,7 +6,7 @@ class verify_house{
     */
     public static function city_id(data_house $house){
         $city = new data_city();
-        $city->id = $house->city_id;
+        $city->set_id($house->get_city_id());
         $city->verify('id');
     }
 
@@ -15,7 +15,7 @@ class verify_house{
     */
     public static function company_id(data_house $house){
         $company = new data_company();
-        $company->id = $house->company_id;
+        $company->set_id($house->get_company_id());
         $company->verify('id');
     }
 
@@ -24,7 +24,7 @@ class verify_house{
     */
     public static function department_id(data_house $house){
         $department = new data_department();
-        $department->id = $house->department_id;
+        $department->set_id($house->get_department_id());
         $department->verify('id');
     }
 
@@ -42,7 +42,7 @@ class verify_house{
     * Верификация номера дома.
     */
     public static function number(data_house $house){
-        if(!preg_match('/^[0-9]{1,3}[\/]{0,1}[А-Я]{0,1}$/', $house->number))
+        if(!preg_match('/^[0-9]{1,3}[\/]{0,1}[А-Я]{0,1}$/', $house->get_number()))
             throw new e_model('Номер дома задан не верно.');
     }
 
@@ -50,7 +50,7 @@ class verify_house{
     * Верификация статуса дома.
     */
     public static function status(data_house $house){
-        if(!in_array($house->status, ['true', 'false']))
+        if(!in_array($house->get_status(), ['true', 'false']))
             throw new e_model('Статус дома задан не верно.');
     }
 }

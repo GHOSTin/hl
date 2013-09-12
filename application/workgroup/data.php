@@ -5,10 +5,10 @@
 */
 final class data_workgroup extends data_object{
 
-	public $company_id;
-    public $id;
-    public $name;
-	public $status;
+	private $company_id;
+    private $id;
+    private $name;
+	private $status;
 
     public function verify(){
         if(func_num_args() < 0)
