@@ -31,23 +31,12 @@ class model_user{
 	* Возвращает пользователей
 	* @return array из data_user
 	*/
-	public static function get_users(data_user $user){
+	public function get_users(){
 		$sql = new sql();
 		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
 				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
 				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
-				`users`.`cellphone` FROM `users`");
-		if(!empty($user->id)){
-			$user->verify('id');
-			$sql->query(" WHERE `id` = :id");
-			$sql->bind(':id', $user->id, PDO::PARAM_INT);
-		}
-		if(!empty($user->login)){
-			$user->verify('login');
-			$sql->query(" WHERE `username` = :login");
-			$sql->bind(':login', $user->login, PDO::PARAM_STR);
-		}
-		$sql->query(" ORDER BY `users`.`lastname`");
+				`users`.`cellphone` FROM `users` ORDER BY `users`.`lastname`");
 		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');
 	}
 
@@ -58,9 +47,9 @@ class model_user{
 	public function update_fio($id, $lastname, $firstname, $middlename){
 		$mapper = new mapper_user();
 		$user = $mapper->find($id);
-		$user->lastname = $lastname;
-		$user->firstname = $firstname;
-		$user->middlename = $middlename;
+		$user->set_lastname($lastname);
+		$user->set_firstname($firstname);
+		$user->set_middlename($middlename);
 		$mapper->update($user);
 		return $user;
 	}
@@ -72,9 +61,9 @@ class model_user{
 	public function update_password($id, $password){
 		if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $password))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-        $mapper = new mapper_user();
+    $mapper = new mapper_user();
 		$user = $mapper->find($id);
-		$user->password = $this->get_password_hash($password);
+		$user->set_hash($this->get_password_hash($password));
 		$mapper->update($user);
 		return $user;
 	}
@@ -94,7 +83,7 @@ class model_user{
 		// обвноление логина пользователя в базе данных
 		$mapper = new mapper_user();
 		$user = $mapper->find($id);
-		$user->login = $login;
+		$user->set_login($login);
 		$mapper->update($user);
 		return $user;
 	}

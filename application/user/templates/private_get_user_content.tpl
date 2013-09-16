@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
 {% set user = component.user %}
 {% block js %}
-    $('.user[user = {{user.id}}]').append(get_hidden_content())
+    $('.user[user = {{ user.get_id() }}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
     <ul class="user-content unstyled">

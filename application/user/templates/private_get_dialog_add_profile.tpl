@@ -6,7 +6,7 @@
 	<select class="dialog-select-company">
 		<option value="">Выберите компанию...</option>
 		{% for company in companies %}
-		<option value="{{ company.id }}">{{ company.name }}</option>
+		<option value="{{ company.get_id() }}">{{ company.get_name() }}</option>
 		{% endfor %}
 	</select>
 	<div>
@@ -29,7 +29,7 @@
 		if(company > 0){
 			$.get('add_profile',{
 				company_id: company,
-				user_id: {{ user.id }},
+				user_id: {{ request.take_get('id') }},
 				profile: $('.dialog-select-profile').val()
 				},function(r){
 					$('.dialog').modal('hide');

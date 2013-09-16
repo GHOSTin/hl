@@ -1,8 +1,1 @@
-{% extends "ajax.tpl" %}
-{% set user = component.user %}
-{% block js %}
-    $('.user[user = {{user.id}}] .user-information').html(get_hidden_content())
-{% endblock js %}
-{% block html %}
-    {% include '@user/build_user_content.tpl' %}
-{% endblock html %}
+{% include '@user/private_update_fio.tpl' %}

@@ -2,7 +2,7 @@
 {% set user = component.user %}
 {% set companies = component.companies %}
 {% block js %}
-    $('.user[user = {{user.id}}] .user-information').html(get_hidden_content());
+    $('.user[user = {{ user.get_id() }}] .user-information').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
     <div>
@@ -11,8 +11,8 @@
     {% if companies is not empty %}
         <ul class="unstyled user-profiles">
         {% for company in companies %}
-            <li class="company" company="{{ company.id }}">
-                <div class="get_company_content">{{ company.name }}</div>
+            <li class="company" company="{{ company.get_id() }}">
+                <div class="get_company_content">{{ company.get_name() }}</div>
             </li>
         {% endfor %}
         </ul>

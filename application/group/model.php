@@ -1,6 +1,13 @@
 <?php
 class model_group{
 
+	private $company;
+
+	public function __construct(data_company $company){
+		$this->company = $company;
+		$this->company->verify('id');
+	}
+
 	/**
 	* Создает группу.
 	* @return object data_group
@@ -92,23 +99,11 @@ class model_group{
 	* Возвращает список групп.
 	* @return array из data_group
 	*/
-	public static function get_groups(data_company $company, data_group $group){
-		$company->verify('id');
+	public function get_groups(){
 		$sql = new sql();
 		$sql->query("SELECT `id`, `company_id`, `status`, `name`
-					FROM `groups` WHERE `company_id` = :company_id");
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		if(!empty($group->id)){
-			$group->verify('id');
-			$sql->query(" AND `id` = :id");
-			$sql->bind(':id', $group->id, PDO::PARAM_INT);
-		}
-		if(!empty($group->name)){
-			$group->verify('name');
-			$sql->query(" AND `name` = :name");
-			$sql->bind(':name', $group->name, PDO::PARAM_STR);
-		}
-		$sql->query(" ORDER BY `name`");
+					FROM `groups` WHERE `company_id` = :company_id  ORDER BY `name`");
+		$sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
 		return $sql->map(new data_group(), 'Проблема при выборке групп пользователей.');
 	}
 	

@@ -4,9 +4,9 @@ class model_profile{
 	/**
 	* Добавляет профиль.
 	*/
-	public static function add_profile(data_company $company, data_user $user, $profile){
-		$user->verify('id');
-		$company->verify('id');
+	public static function add_profile($company_id, $user_id, $profile){
+		// $user->verify('id');
+		// $company->verify('id');
 		$time 		= getdate();
 		$beginDay 	= mktime(0,0,0, $time['mon'],$time['mday'],$time['year']);
 		$endDay 	= $beginDay + 86400;
@@ -126,8 +126,8 @@ class model_profile{
 		$sql->query("SELECT `rules`, `restrictions`, `settings` FROM `profiles` 
 					WHERE  `user_id` = :user_id AND `company_id` = :company_id
 					AND `profile` = :profile");
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+		$sql->bind(':user_id', (int) $user_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', (int) $company_id , PDO::PARAM_INT);
 		$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
 		$sql->execute('Ошибка при получении профиля.');
 		if($sql->count() > 0)
@@ -136,8 +136,8 @@ class model_profile{
 		$sql->query("INSERT INTO `profiles` (`company_id`, `user_id`, `profile`,
 					`rules`, `restrictions`, `settings`) VALUES (:company_id, :user_id,
 					:profile, :rules, :restrictions, :settings)");
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
+		$sql->bind(':user_id', $user_id, PDO::PARAM_INT);
+		$sql->bind(':company_id', $company_id , PDO::PARAM_INT);
 		$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
 		$sql->bind(':rules', json_encode($profiles[$profile]['rules']), PDO::PARAM_STR);
 		$sql->bind(':restrictions', json_encode($profiles[$profile]['restrictions']), PDO::PARAM_STR);
@@ -232,13 +232,12 @@ class model_profile{
 	/**
 	* Возвращает список компаний для которых есть профиль пользователя.
 	*/
-	public static function get_companies(data_user $user){
-		$user->verify('id');
+	public static function get_companies($user_id){
 		$sql = new sql();
 		$sql->query("SELECT DISTINCT `companies`.`id`, `companies`.`name`
 					FROM `companies`, `profiles` WHERE `profiles`.`user_id` = :user_id
 					AND `profiles`.`company_id` = `companies`.`id`");
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+		$sql->bind(':user_id', (int) $user_id, PDO::PARAM_INT);
 		return $sql->map(new data_company(), 'Проблемы при получении компаний в профиле.');
 	}
 

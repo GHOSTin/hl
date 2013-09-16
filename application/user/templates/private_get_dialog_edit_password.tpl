@@ -20,7 +20,7 @@
 	// Изменяет пароля пользователя
 	$('.update_password').click(function(){
 		$.get('update_password',{
-			id: {{ user.id }},
+			id: {{ user.get_id() }},
 			password: $('.dialog-input-password').val(),
 			confirm: $('.dialog-input-confirm').val()
 			},function(r){

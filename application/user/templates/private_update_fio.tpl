@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
 {% set user = component.user %}
 {% block js %}
-    $('.user[user = {{user.id}}] .user-information').html(get_hidden_content())
+    $('.user[user = {{ user.get_id() }}] .user-information').html(get_hidden_content())
 {% endblock js %}
 {% block html %}
     {% include '@user/build_user_content.tpl' %}
