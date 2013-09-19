@@ -99,7 +99,7 @@ class mapper_group{
     $sql->bind(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
     $sql->bind(':name', (string) $group->get_name(), PDO::PARAM_STR);
     $sql->bind(':status', (string) $group->get_status(), PDO::PARAM_STR);
-    // $sql->execute('Проблемы при создании группы.');
+    $sql->execute('Проблемы при создании группы.');
     return $group;
   }
 
