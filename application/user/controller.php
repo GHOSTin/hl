@@ -22,16 +22,14 @@ class controller_user{
     }
 
     public static function private_create_group(model_request $request){
-        $group = new data_group();
-        $group->name = $_GET['name'];
-        $company = model_session::get_company();
-        $group = model_group::create_group($company, $group);
-        $letter_group = mb_strtolower(mb_substr($group->name, 0 ,1, 'utf-8'), 'utf-8');
+        $model = new model_group(model_session::get_company());
+        $group = $model->create_group($request->take_get('name'), 'true');
+        $letter_group = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
         $letters = [];
-        $groups = model_group::get_groups(model_session::get_company(), new data_group());
+        $groups = $model->get_groups();
         if(!empty($groups))
             foreach($groups as $group){
-                $letter = mb_strtolower(mb_substr($group->name, 0 ,1, 'utf-8'), 'utf-8');
+                $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
                 if($letter === $letter_group)
                     $letters[] = $group;
             }
@@ -39,24 +37,21 @@ class controller_user{
     }
 
     public static function private_create_user(model_request $request){
-        if($_GET['password'] !== $_GET['confirm'])
+        if($request->take_get('password') !== $request->take_get('confirm'))
             throw new e_model('Пароль и подтверждение не равны.');
-        $user = new data_user();
-        $user->lastname = $_GET['lastname'];
-        $user->firstname = $_GET['firstname'];
-        $user->middlename = $_GET['middlename'];
-        $user->login = $_GET['login'];
-        $user->password = $_GET['password'];
-        $user->status = 'true';
-        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $user->password))
+        if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $request->take_get('password')))
             throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-        $user = (new model_user)->create_user($user);
-        $letter_user = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
+        $user = (new model_user)->create_user($request->take_get('lastname'),
+                                        $request->take_get('firstname'),
+                                        $request->take_get('middlename'),
+                                        $request->take_get('login'),
+                                        $request->take_get('password'), 'true');
+        $letter_user = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
         $letter_users = [];
-        $users = model_user::get_users(new data_user());
+        $users = (new model_user)->get_users();
         if(!empty($users))
             foreach($users as $user){
-                $letter = mb_strtolower(mb_substr($user->lastname, 0 ,1, 'utf-8'), 'utf-8');
+                $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
                 if($letter === $letter_user)
                     $letter_users[] = $user;
             }
@@ -159,10 +154,8 @@ class controller_user{
     }
 
     public static function private_get_dialog_edit_group_name(model_request $request){
-        $group = new data_group();
-        $group->id = $_GET['id'];
-        $group->verify('id');
-        return ['group' => model_group::get_groups(model_session::get_company(), $group)[0]];
+        return ['group' => (new model_group(model_session::get_company()))
+                                        ->get_group($request->take_get('id'))];
     }
 
     public static function private_get_dialog_edit_fio(model_request $request){
@@ -197,18 +190,15 @@ class controller_user{
     }
 
     public static function private_get_group_profile(model_request $request){
-        $group = new data_group();
-        $group->id = $_GET['id'];
-        $group->verify('id');
-        return ['groups' => model_group::get_groups(model_session::get_company(), $group)];
+        return ['group' => (new model_group(
+            model_session::get_company()))->get_group($request->take_get('id'))];
     }
 
     public static function private_get_group_users(model_request $request){
         $group = new data_group();
-        $group->id = $_GET['id'];
-        $group->verify('id');
-        return ['group' => $group,
-                'users' => model_group::get_users(model_session::get_company(), $group)];
+        $group->set_id($request->take_get('id'));
+        (new model_group(model_session::get_company()))->init_users($group);
+        return ['group' => $group];
     }
 
     public static function private_get_dialog_edit_login(model_request $request){
@@ -251,10 +241,7 @@ class controller_user{
     }
 
     public static function private_get_group_content(model_request $request){
-        $group = new data_group();
-        $group->id = $_GET['id'];
-        $group->verify('id');
-        return ['groups' => model_group::get_groups(model_session::get_company(), $group)];
+        return ['group' => (new model_group(model_session::get_company()))->get_group($request->take_get('id'))];
     }
 
     public static function private_get_user_content(model_request $request){
@@ -283,9 +270,8 @@ class controller_user{
     }
 
     public static function private_update_group_name(model_request $request){
-        $group = new data_group();
-        $group->id = $_GET['id'];
-        return ['group' => model_group::update_name(model_session::get_company(), $group, $_GET['name'])];
+        return ['group' => (new model_group(model_session::get_company()))
+        ->update_name($request->take_get('id'), $request->take_get('name'))];
     }
 
     public static function private_update_fio(model_request $request){

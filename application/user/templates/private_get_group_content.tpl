@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set group = component.groups[0] %}
+{% set group = component.group %}
 {% block js %}
-    $('.group[group = {{group.id}}]').append(get_hidden_content())
+    $('.group[group = {{ group.get_id() }}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
     <ul class="group-content unstyled">

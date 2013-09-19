@@ -12,24 +12,16 @@ class model_group{
 	* Создает группу.
 	* @return object data_group
 	*/
-	public static function create_group(data_company $company, data_group $group){
-		$company->verify('id');
-		$group->verify('name');
-		if(count(self::get_groups($company, $group)) !== 0)
-			throw new e_model('Группа с таким названием уже существует.');
-		$group->id = self::get_insert_id($company);
-		$group->company_id = $company->id;
-		$group->status = 'true';
-		$group->verify('id', 'name', 'status', 'company_id');
-		$sql = new sql();
-		$sql->query('INSERT INTO `groups` (`id`, `company_id`, `name`, `status`)
-					VALUES (:id, :company_id, :name, :status)');
-		$sql->bind(':id', $group->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $group->company_id, PDO::PARAM_INT);
-		$sql->bind(':name', $group->name, PDO::PARAM_STR);
-		$sql->bind(':status', $group->status, PDO::PARAM_STR);
-		$sql->execute('Проблемы при создании группы.');
-		return $group;
+	public function create_group($name, $status){
+		$mapper = new mapper_group($this->company);
+		if(!is_null($mapper->find_by_name($name)))
+			throw new e_model('Группа с таким название уже существует.');
+		$group = new data_group();
+		$group->set_id($mapper->get_insert_id());
+		$group->set_company_id($mapper->get_company_id());
+		$group->set_name($name);
+		$group->set_status($status);
+		return $mapper->insert($group);
 	}
 
 	/**
@@ -78,21 +70,14 @@ class model_group{
 	}
 
 	/**
-	* Возвращает следующий для вставки идентификатор группы.
-	* @return int
+	* Возвращает список групп.
+	* @return array из data_group
 	*/
-	private static function get_insert_id(data_company $company){
-	    $company->verify('id');
-	    $sql = new sql();
-	    $sql->query("SELECT MAX(`id`) as `max_id` FROM `groups`
-	                WHERE `company_id` = :company_id");
-	    $sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-	    $sql->execute('Проблема при опредении следующего group_id.');
-	    if($sql->count() !== 1)
-	        throw new e_model('Проблема при опредении следующего group_id.');
-	    $id = (int) $sql->row()['max_id'] + 1;
-	    $sql->close();
-	    return $id;
+	public function get_group($id){
+		$group = (new mapper_group(model_session::get_company()))->find($id);
+		if(!($group instanceof data_group))
+			throw new e_model('Объект не является группой.');
+		return $group;
 	}
 
 	/**
@@ -111,25 +96,25 @@ class model_group{
 	* Возвращает список пользователей группы
 	* @return array из data_user
 	*/
-	public static function get_users(data_company $company, data_group $group){
-		$group->verify('id');
-		$company->verify('id');
-		$sql = new sql();
-		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
-					`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
-					`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
-					`users`.`cellphone`
-					FROM `users`, `group2user` WHERE `group2user`.`group_id` = :group_id
-					AND `users`.`id` = `group2user`.`user_id` ORDER BY `users`.`lastname`");
-		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
-		return $sql->map(new data_user(), 'Проблема при выборки пользователей группы.');
+	public function init_users(data_group $group){
+		$mapper = new mapper_group2user($this->company, $group);	
+		$users = $mapper->get_users();
+		if(!empty($users))
+			foreach($users as $user)
+				$group->add_user($user);
 	}
 
 	/**
 	* Обновляет название группы.
 	* @return object data_group
 	*/
-	public static function update_name(data_company $company, data_group $group, $name){
+	public function update_name($id, $name){
+		$group = $this->get_group($id);
+		$group->set_name($name);
+		$mapper = new mapper_group($this->company);		
+		return $mapper->update($group);
+		var_dump($group);
+		exit();
 		$group->verify('id');
 		$company->verify('id');
 		// проверка существования группы
@@ -139,16 +124,9 @@ class model_group{
 		$group = $groups[0];
 		self::is_data_group($group);
 		$group->name = $name;
-		$group->verify('id', 'name');
+		
 		// обвноление названия группы
-		$sql = new sql();
-		$sql->query("UPDATE `groups` SET `name` = :name WHERE `company_id` = :company_id
-					AND `id` = :id");
-		$sql->bind(':id', $group->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':name', $group->name, PDO::PARAM_STR);
-		$sql->execute('Проблема при изменении названия группы.');
-		return $group;
+		
 	}
 
 	/**

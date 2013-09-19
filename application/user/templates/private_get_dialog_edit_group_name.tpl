@@ -3,7 +3,7 @@
 {% block title %}Диалог редактирования названия группы{% endblock title %}
 {% block dialog %}
 	<label>Название группы</label>
-	<input type="text" class="dialog-input-name" value="{{ group.name }}">
+	<input type="text" class="dialog-input-name" value="{{ group.get_name() }}">
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn update_group_name">Изменить</div>
@@ -12,7 +12,7 @@
 	// Изменяет название группы
 	$('.update_group_name').click(function(){
 		$.get('update_group_name',{
-			id: {{ group.id }},
+			id: {{ group.get_id() }},
 			name: $('.dialog-input-name').val()
 			},function(r){
 				$('.dialog').modal('hide');

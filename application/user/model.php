@@ -4,7 +4,14 @@ class model_user{
 	/*
 	* Создает пользователя
 	*/
-	public function create_user(data_user $user){
+	public function create_user($lastname, $firstname, $middlename, $login, $password, $status){
+		$user = new data_user();
+		$user->set_lastname($lastname);
+		$user->set_firstname($firstname);
+		$user->set_middlename($middlename);
+		$user->set_login($login);
+		$user->set_hash($this->get_password_hash($password));
+		$user->set_status($status);
 		$mapper = new mapper_user();
 		return $mapper->insert($user);
 	}

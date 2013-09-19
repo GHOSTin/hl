@@ -31,6 +31,9 @@ class data_user extends data_object{
   public function get_firstname(){
     return $this->firstname;
   }
+  public function get_hash(){
+    return $this->hash;
+  }
 
   public function get_id(){
     return $this->id;

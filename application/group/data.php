@@ -9,6 +9,13 @@ class data_group extends data_object{
   private $id;
   private $name;
   private $status;
+  private $users = [];
+
+  public function add_user(data_user $user){
+    if(in_array($user->get_id(), $this->users, true))
+      throw new e_model('Пользователь уже добавлен в группу.');
+    $this->users[$user->get_id()] = $user;
+  }
 
   public function get_company_id(){
     return $this->company_id;
@@ -24,6 +31,10 @@ class data_group extends data_object{
 
   public function get_status(){
     return $this->status;
+  }
+
+  public function get_users(){
+    return $this->users;
   }
 
   public function set_company_id($id){
