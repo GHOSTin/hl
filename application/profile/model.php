@@ -184,26 +184,6 @@ class model_profile{
 	}
 
 	/**
-	* Возвращает название профилей пользователя в зависимости от компании.
-	*/
-	public static function get_profiles(data_company $company, data_user $user){
-		$user->verify('id');
-		$company->verify('id');
-		$sql = new sql();
-		$sql->query("SELECT `profile` FROM `profiles` 
-					WHERE  `user_id` = :user_id AND `company_id` = :company_id");
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
-		$sql->execute('Ошибка при получении профиля.');
-		$profiles = [];
-		if($sql->count() > 0)
-			while($profile = $sql->row())
-				$profiles[] = $profile['profile'];
-		$sql->close();
-		return $profiles;
-	}
-
-	/**
 	* Возвращает профиль пользователя в зависимости от компании и названия профиля.
 	*/
 	public static function get_profile(data_company $company, data_user $user, $profile){

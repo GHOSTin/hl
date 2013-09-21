@@ -3,7 +3,7 @@
 {% set company = component.company %}
 {% set profiles = component.profiles %}
 {% block js %}
-    $('.user[user = {{ user.id }}] .company[company = {{ company.id }}]').append(get_hidden_content());
+    $('.user[user = {{ user.get_id() }}] .company[company = {{ company.get_id() }}]').append(get_hidden_content());
 {% endblock js %}
 {% block html %}
     <ul class="company-content unstyled">

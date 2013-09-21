@@ -70,14 +70,12 @@ class controller_user{
     }
 
     public static function private_get_company_content(model_request $request){
-        $company = new data_company();
-        $company->id = $_GET['company_id'];
-        $company->verify('id');
         $user = new data_user();
-        $user->id = $_GET['user_id'];
-        $user->verify('id');
-        return ['user' => $user, 'company' => $company,
-                'profiles' => model_profile::get_profiles($company, $user)];
+        $user->set_id($request->take_get('user_id'));
+        $company = new data_company();
+        $company->set_id($request->take_get('user_id'));
+        $profiles = (new model_user2profile($company, $user))->get_profiles();
+        return ['user' => $user, 'company' => $company, 'profiles' => $profiles];
     }
 
     public static function private_get_profile_content(model_request $request){
@@ -239,7 +237,7 @@ class controller_user{
     public static function private_get_user_profiles(model_request $request){
         $user = (new model_user)->get_user($request->take_get('id'));
         return ['user' => $user,
-                'companies' => model_profile::get_companies($user)];
+                'companies' => model_profile::get_companies($request->take_get('id'))];
     }
 
     public static function private_get_user_letters(model_request $request){
