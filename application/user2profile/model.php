@@ -15,4 +15,12 @@ class model_user2profile{
     $mapper = new mapper_user2profile($this->company, $this->user);
     return $mapper->find_all();
   }
+
+  public function get_profile($name){
+    $mapper = new mapper_user2profile($this->company, $this->user);
+    $profile = $mapper->find($name);
+    if(!($profile instanceof data_profile))
+      throw new e_model('Нет профиля.');
+    return $profile;
+  }
 }

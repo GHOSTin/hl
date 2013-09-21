@@ -184,32 +184,6 @@ class model_profile{
 	}
 
 	/**
-	* Возвращает профиль пользователя в зависимости от компании и названия профиля.
-	*/
-	public static function get_profile(data_company $company, data_user $user, $profile){
-		$user->verify('id');
-		$company->verify('id');
-		$sql = new sql();
-		$sql->query("SELECT `rules`, `restrictions`, `settings` FROM `profiles` 
-					WHERE  `user_id` = :user_id AND `company_id` = :company_id
-					AND `profile` = :profile");
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id , PDO::PARAM_INT);
-		$sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
-		$sql->execute('Ошибка при получении профиля.');
-		if($sql->count() === 0)
-			throw new e_model('Профиля не существует.');
-		if($sql->count() !== 1)
-			throw new e_model('Неверное количество профилей.');			
-		$row = $sql->row();
-		$profile = [];
-		$profile['rules'] = (array) json_decode($row['rules']);
-		$profile['restrictions'] = (array) json_decode($row['restrictions']);
-		$sql->close();
-		return $profile;
-	}
-
-	/**
 	* Возвращает список компаний для которых есть профиль пользователя.
 	*/
 	public static function get_companies($user_id){

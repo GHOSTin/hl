@@ -4,7 +4,7 @@
 {% set profile = component.profile %}
 {% set profile_name = component.profile_name %}
 {% block js %}
-    $('.user[user = {{ user.id }}] .company[company = {{ company.id }}] .profile[profile = "{{ profile_name }}"]').append(get_hidden_content());
+    $('.user[user = {{ user.get_id() }}] .company[company = {{ company.get_id() }}] .profile[profile = "{{ profile }}"]').append(get_hidden_content());
 {% endblock js %}
 {% block html %}
     <ul class="profile-content unstyled">
