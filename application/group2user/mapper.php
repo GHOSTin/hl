@@ -20,6 +20,16 @@ class mapper_group2user{
     return $user;
   }
 
+  public function insert(data_user $user){
+    $user->verify('id');
+    $sql = new sql();
+    $sql->query("INSERT INTO `group2user` (`group_id`, `user_id`)
+          VALUES (:group_id, :user_id)");
+    $sql->bind(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
+    $sql->bind(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
+    $sql->execute('Ошибка при добавлении пользователя в группу.');
+  }
+
   public function delete(data_user $user){
     $user->verify('id');
     $sql = new sql();
@@ -47,6 +57,13 @@ class mapper_group2user{
       $users[$user->get_id()] = $user;
     }
     return $users;
+  }
+
+  public function init_users(){
+    $users = $this->get_users();
+    if(!empty($users))
+      foreach($users as $user)
+        $this->group->add_user($user);
   }
 
   public function update(){

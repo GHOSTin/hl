@@ -10,15 +10,9 @@ class controller_user{
     }
 
     public static function private_add_user(model_request $request){
-        $user = new data_user();
-        $user->id = $_GET['user_id'];
-        $group = new data_group();
-        $group->id = $_GET['group_id'];
-        $company = model_session::get_company();
-        model_group::add_user($company, $group, $user);
-        return ['group' => $group,
-                'users' => model_group::get_users(model_session::get_company(), $group)];
-        
+        return ['group' => (new model_group(model_session::get_company()))
+                                    ->add_user($request->take_get('group_id'),
+                                            $request->take_get('user_id'))];
     }
 
     public static function private_create_group(model_request $request){
@@ -132,10 +126,7 @@ class controller_user{
     }
 
     public static function private_get_dialog_add_user(model_request $request){
-        $group = new data_group();
-        $group->id = $_GET['id'];
-        return ['users' => model_user::get_users(new data_user()),
-                'group' => $group];
+        return ['users' => (new model_user())->get_users()];
     }
 
     public static function private_get_dialog_delete_profile(model_request $request){

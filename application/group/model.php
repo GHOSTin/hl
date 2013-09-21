@@ -27,34 +27,14 @@ class model_group{
 	/**
 	* Добавляет в группу нового пользователя.
 	*/
-	public static function add_user(data_company $company, data_group $group, data_user $user){
-		$user->verify('id');
-		$users = model_user::get_users($user);
-		if(count($users) !== 1)
-			throw new e_model('Неверное число пользователей.');
-		$user = $users[0];
-		model_user::is_data_user($user);
-		$company->verify('id');
-		$group->verify('id');
-		$groups = model_group::get_groups($company, $group);
-		if(count($groups) !== 1)
-			throw new e_model('Неверное число пользователей');
-		$group = $groups[0];
-		self::is_data_group($group);
-		$sql = new sql();
-		$sql->query('SELECT * FROM `group2user` WHERE `group_id` = :group_id
-					AND `user_id` = :user_id');
-		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при проверке дубликата связи.');
-		if($sql->count() > 0)
-			throw new e_model('Такой пользователь уже существует.');
-		$sql = new sql();
-		$sql->query("INSERT INTO `group2user` (`group_id`, `user_id`)
-					VALUES (:group_id, :user_id)");
-		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при добавлении пользователя в группу.');
+	public function add_user($group_id, $user_id){
+		$group = new data_group();
+		$group->set_id($group_id);
+		$user = (new model_user)->get_user($user_id);
+		$mapper = new mapper_group2user($this->company, $group);
+		$mapper->init_users();
+		$group->add_user($user);
+		return $mapper->update();
 	}
 
 	/**
@@ -66,10 +46,7 @@ class model_group{
 		$user = new data_user();
 		$user->set_id($user_id);
 		$mapper = new mapper_group2user($this->company, $group);
-		$users = $mapper->get_users();
-		if(!empty($users))
-			foreach($users as $us)
-				$group->add_user($us);
+		$mapper->init_users();
 		$group->exclude_user($user);
 		return $mapper->update();
 	}
