@@ -13,14 +13,11 @@ class mapper_query2number{
 
     private function delete(data_number $number){
         $number->verify('id');
-        $sql = new sql();
-        $sql->query("DELETE FROM `query2number` WHERE `company_id` = :company_id
-            AND `query_id` = :query_id AND `number_id` = :number_id");
-        $sql->bind(':query_id', (int) $this->query->id, PDO::PARAM_INT);
-        $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':number_id', (int) $number->id, PDO::PARAM_INT);
-        $sql->execute('Проблема при удалении связи заявка-лицевой счет.');
-        return $number;
+        $sql->query("DELETE FROM `group2user` WHERE `group_id` = :group_id
+                    AND `user_id` = :user_id");
+        $sql->bind(':group_id', $group->id, PDO::PARAM_INT);
+        $sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+        $sql->execute('Ошибка при исключении пользователя из группы.');
     }
 
     private function insert(data_number $number){

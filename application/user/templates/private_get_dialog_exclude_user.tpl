@@ -3,7 +3,7 @@
 {% set group = component.group %}
 {% block title %}Диалог исключения пользователя из группы{% endblock title %}
 {% block dialog %}
-	Исключить "{{ user.lastname }} {{ user.firstname }} {{ user.middlename }}" из группы "{{ group.name }}"
+	Исключить "{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}" из группы "{{ group.get_name() }}"
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn exclude_user">Исключить</div>
@@ -12,8 +12,8 @@
 	//Исключает пользователя из группы
 	$('.exclude_user').click(function(){
 		$.get('exclude_user',{
-			group_id: {{ group.id }},
-			user_id: {{ user.id }}
+			group_id: {{ group.get_id() }},
+			user_id: {{ user.get_id() }}
 			},function(r){
 				$('.dialog').modal('hide');
 				init_content(r);

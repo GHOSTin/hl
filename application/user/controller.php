@@ -70,14 +70,9 @@ class controller_user{
     }
 
     public static function private_exclude_user(model_request $request){
-        $user = new data_user();
-        $user->id = $_GET['user_id'];
-        $group = new data_group();
-        $group->id = $_GET['group_id'];
-        $company = model_session::get_company();
-        model_group::exclude_user($company, $group, $user);
-        return ['group' => $group,
-                'users' => model_group::get_users($company, $group)];
+        return ['group' => (new model_group(model_session::get_company()))
+                            ->exclude_user($request->take_get('group_id'),
+                                            $request->take_get('user_id'))];
     }
 
     public static function private_get_company_content(model_request $request){
@@ -171,11 +166,9 @@ class controller_user{
     }
 
     public static function private_get_dialog_exclude_user(model_request $request){
-        $group = new data_group();
-        $group->id = $_GET['group_id'];
-        $group->verify('id');
-        return ['user' => (new model_user)->get_user($_GET['user_id']),
-                'group' => model_group::get_groups(model_session::get_company(), $group)[0]];
+        return ['user' => (new model_user)->get_user($request->take_get('user_id')),
+                'group' => (new model_group(model_session::get_company()))
+                            ->get_group($request->take_get('group_id'))];
     }
 
     public static function private_get_group_letters(model_request $request){

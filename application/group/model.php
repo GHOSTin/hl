@@ -60,13 +60,18 @@ class model_group{
 	/**
 	* Исключает из группы пользователя.
 	*/
-	public static function exclude_user(data_company $company, data_group $group, data_user $user){
-		$sql = new sql();
-		$sql->query("DELETE FROM `group2user` WHERE `group_id` = :group_id
-					AND `user_id` = :user_id");
-		$sql->bind(':group_id', $group->id, PDO::PARAM_INT);
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при исключении пользователя из группы.');
+	public function exclude_user($group_id, $user_id){
+		$group = new data_group();
+		$group->set_id($group_id);
+		$user = new data_user();
+		$user->set_id($user_id);
+		$mapper = new mapper_group2user($this->company, $group);
+		$users = $mapper->get_users();
+		if(!empty($users))
+			foreach($users as $us)
+				$group->add_user($us);
+		$group->exclude_user($user);
+		return $mapper->update();
 	}
 
 	/**
@@ -113,20 +118,6 @@ class model_group{
 		$group->set_name($name);
 		$mapper = new mapper_group($this->company);		
 		return $mapper->update($group);
-		var_dump($group);
-		exit();
-		$group->verify('id');
-		$company->verify('id');
-		// проверка существования группы
-		$groups = self::get_groups($company, $group);
-		if(count($groups) !== 1)
-			throw new e_model('Ожидаемое количество групп не верно.');
-		$group = $groups[0];
-		self::is_data_group($group);
-		$group->name = $name;
-		
-		// обвноление названия группы
-		
 	}
 
 	/**

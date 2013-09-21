@@ -11,6 +11,25 @@ class mapper_group2user{
     $this->group->verify('id');
   }
 
+  public function create_object(array $row){
+    $user = new data_user();
+    $user->set_id($row['id']);
+    $user->set_firstname($row['firstname']);
+    $user->set_lastname($row['lastname']);
+    $user->set_middlename($row['middlename']);
+    return $user;
+  }
+
+  public function delete(data_user $user){
+    $user->verify('id');
+    $sql = new sql();
+    $sql->query("DELETE FROM `group2user` WHERE `group_id` = :group_id
+          AND `user_id` = :user_id");
+    $sql->bind(':group_id', $this->group->get_id(), PDO::PARAM_INT);
+    $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
+    $sql->execute('Ошибка при исключении пользователя из группы.');
+  }
+
   public function get_users(){
     $sql = new sql();
     $sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
@@ -20,6 +39,27 @@ class mapper_group2user{
           FROM `users`, `group2user` WHERE `group2user`.`group_id` = :group_id
           AND `users`.`id` = `group2user`.`user_id` ORDER BY `users`.`lastname`");
     $sql->bind(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
-    return $sql->map(new data_user(), 'Проблема при выборки пользователей группы.');
+    $sql->execute('Проблема при выборки пользователей группы.');
+    $stmt = $sql->get_stm();
+    $users = [];
+    while($row = $stmt->fetch()){
+      $user = $this->create_object($row);
+      $users[$user->get_id()] = $user;
+    }
+    return $users;
+  }
+
+  public function update(){
+    $new = $this->group->get_users();
+    $old = $this->get_users();
+    $deleted = array_diff_key($old, $new);
+    $inserted = array_diff_key($new, $old);
+    if(!empty($inserted))
+      foreach($inserted as $user)
+        $this->insert($user);
+    if(!empty($deleted))
+      foreach($deleted as $user)
+        $this->delete($user);
+    return $this->group;
   }
 }

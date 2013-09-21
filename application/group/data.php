@@ -12,9 +12,15 @@ class data_group extends data_object{
   private $users = [];
 
   public function add_user(data_user $user){
-    if(in_array($user->get_id(), $this->users, true))
+    if(array_key_exists($user->get_id(), $this->users))
       throw new e_model('Пользователь уже добавлен в группу.');
     $this->users[$user->get_id()] = $user;
+  }
+
+  public function exclude_user(data_user $user){
+    if(!array_key_exists($user->get_id(), $this->users))
+      throw new e_model('Пользователя нет в группе.');
+    unset($this->users[$user->get_id()]);
   }
 
   public function get_company_id(){
