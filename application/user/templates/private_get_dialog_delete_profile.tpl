@@ -1,8 +1,4 @@
 {% extends "dialog.tpl" %}
-{% set user = component.user %}
-{% set company = component.company %}
-{% set profile = component.profile %}
-{% set profile_name = component.profile_name %}
 {% block title %}Диалог удаления профиля{% endblock title %}
 {% block dialog %}
 	Вы действительно хотите удалить профиль?
@@ -14,9 +10,9 @@
 	// Удаляет профиль
 	$('.delete_profile').click(function(){
 		$.get('delete_profile',{
-			user_id: {{ user.id }},
-			company_id: {{ company.id }},
-			profile: '{{ profile_name }}'
+			user_id: {{ request.take_get('user_id') }},
+			company_id: {{ request.take_get('company_id') }},
+			profile: '{{ request.take_get('profile') }}'
 			},function(r){
 				$('.dialog').modal('hide');
 				init_content(r);

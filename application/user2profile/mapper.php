@@ -7,9 +7,12 @@ class mapper_user2profile{
   private static $sql_find_all = "SELECT `profile` FROM `profiles` 
           WHERE  `user_id` = :user_id AND `company_id` = :company_id";
 
-  private static $sql_find = "SELECT `rules`, `restrictions`, `settings`
+  private static $sql_find = "SELECT `profile`, `rules`, `restrictions`, `settings`
     FROM `profiles` WHERE  `user_id` = :user_id 
     AND `company_id` = :company_id AND `profile` = :profile";
+
+  private static $sql_delete = "DELETE FROM `profiles` WHERE  `user_id` = :user_id
+          AND `company_id` = :company_id AND `profile` = :profile";
 
   public function __construct(data_company $company, data_user $user){
     $this->company = $company;
@@ -28,6 +31,15 @@ class mapper_user2profile{
     $profile->set_rules($rule_collection);
     // $profile['restrictions'] = (array) json_decode($row['restrictions']);
     return $profile;
+  }
+
+  public function delete(data_profile $profile){
+    $sql = new sql();
+    $sql->query(self::$sql_delete);
+    $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+    $sql->execute('Ошибка при удалении профиля.');
   }
 
   public function find_all(){

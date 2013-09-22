@@ -11,6 +11,12 @@ class model_user2profile{
     $this->user->verify('id');
   }
 
+  public function delete($profile){
+    $profile = new data_profile($profile);
+    $mapper = new mapper_user2profile($this->company, $this->user);
+    $mapper->delete($profile);
+  }
+
   public function get_profiles(){
     $mapper = new mapper_user2profile($this->company, $this->user);
     return $mapper->find_all();
@@ -22,5 +28,9 @@ class model_user2profile{
     if(!($profile instanceof data_profile))
       throw new e_model('Нет профиля.');
     return $profile;
+  }
+
+  public function update_rule($profile, $rule){
+    
   }
 }

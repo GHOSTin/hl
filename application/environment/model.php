@@ -39,8 +39,8 @@ class model_environment{
 			$data['component'] = $controller::$method($request);
 			$data['request'] = $request;
 			if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
-			model_profile::get_user_profiles(model_session::get_company(),
-																				model_session::get_user());
+			// model_profile::get_user_profiles(model_session::get_company(),
+			// 																	model_session::get_user());
 			$data['menu'] = model_menu::build_menu($component);
 			// if(isset(model_session::get_rules()[$component]))
 			// 	$data['rules'] = model_session::get_rules()[$component];

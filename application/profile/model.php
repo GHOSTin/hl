@@ -163,7 +163,7 @@ class model_profile{
 	/**
 	* Записывает в сессию правила, ограничения, настройки, меню.
 	*/
-	public static function get_user_profiles(data_company $company, data_user $user){
+	public static function DELETE__get_user_profiles(data_company $company, data_user $user){
 		$user->verify('id');
 		$company->verify('id');
 		$sql = new sql();
@@ -193,20 +193,6 @@ class model_profile{
 					AND `profiles`.`company_id` = `companies`.`id`");
 		$sql->bind(':user_id', (int) $user_id, PDO::PARAM_INT);
 		return $sql->map(new data_company(), 'Проблемы при получении компаний в профиле.');
-	}
-
-	/**
-	* Проверяет права доступа пользователя.
-	* @return bolean
-	*/
-	public static function check_general_access($controller, $component){
-		if(property_exists($controller, 'rules')){
-			if($_SESSION['rules'][$component]->generalAccess !== true)
-				return false;
-			else
-				return true;
-		}else
-			return true;
 	}
 
 	/**

@@ -54,13 +54,11 @@ class controller_user{
 
     public static function private_delete_profile(model_request $request){
         $company = new data_company();
-        $company->id = $_GET['company_id'];
-        $company->verify('id');
+        $company->set_id($request->take_get('company_id'));
         $user = new data_user();
-        $user->id = $_GET['user_id'];
-        $user->verify('id');
-        model_profile::delete_profile($company, $user, $_GET['profile']);
-        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile']];
+        $user->set_id($request->take_get('user_id'));
+        (new model_user2profile($company, $user))->delete($request->take_get('profile'));
+        return true;
     }
 
     public static function private_exclude_user(model_request $request){
@@ -127,13 +125,7 @@ class controller_user{
     }
 
     public static function private_get_dialog_delete_profile(model_request $request){
-        $company = new data_company();
-        $company->id = $_GET['company_id'];
-        $company->verify('id');
-        $user = new data_user();
-        $user->id = $_GET['user_id'];
-        $user->verify('id');
-        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile']];
+        return true;
     }
 
     public static function private_get_dialog_edit_group_name(model_request $request){
@@ -270,13 +262,12 @@ class controller_user{
 
     public static function private_update_rule(model_request $request){
         $company = new data_company();
-        $company->id = $_GET['company_id'];
-        $company->verify('id');
+        $company->set_id($request->take_get('company_id'));
         $user = new data_user();
-        $user->id = $_GET['user_id'];
-        $user->verify('id');
-        return ['user' => $user, 'company' => $company, 'profile_name' => $_GET['profile'], 'rule' => $_GET['rule'],
-                'status' => model_profile::update_rule($company, $user, $_GET['profile'], $_GET['rule'])];
+        $user->set_id($request->take_get('user_id'));
+        (new model_user2profile($company, $user))->update_rule($request->take_get('profile'), $request->take_get('rule'));
+        exit();
+        return ['user' => $user, 'company' => $company];
     }
 
     public static function private_update_restriction(model_request $request){
