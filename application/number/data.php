@@ -25,12 +25,20 @@ final class data_number extends data_object{
 	private $street_name;
 	private $telephone;
 	private $type;
+    private $meters = [];
 
 	public function verify(){
         if(func_num_args() < 0)
             throw new e_data('Параметры верификации не были переданы.');
         foreach(func_get_args() as $value)
             verify_number::$value($this);
+    }
+
+    public function add_meter(data_number2meter $n2m){
+      $id = $n2m->get_meter()->get_id().'_'.$n2m->get_serial();
+      if(array_key_exists($id, $this->meters))
+        throw new e_model('Счетчик уже добавлен.');
+      $this->meters[$id] = $n2m;
     }
 
     public function get_id(){
@@ -43,6 +51,10 @@ final class data_number extends data_object{
 
     public function get_flat_number(){
         return $this->flat_number;
+    }
+
+    public function get_meters(){
+        return $this->meters;
     }
 
     public function get_number(){

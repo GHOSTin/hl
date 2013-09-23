@@ -6,13 +6,7 @@
 */
 class data_number2meter extends data_object{
 
-	private $company_id;
-	private $number_id;
-	private $meter_id;
 	private $service;
-    private $capacity;
-	private $name;
-	private $rates;
 	private $serial;
 	private $date_release;
 	private $date_install;
@@ -22,11 +16,10 @@ class data_number2meter extends data_object{
 	private $place;
     private $comment;
     private $status;
+    private $meter;
 
-    public function __construct(){
-        if(!empty($this->date_checking) AND !empty($this->period)){
-            $this->date_next_checking = strtotime('+'.$this->period.' month', $this->date_checking);
-        }
+    public function __construct(data_meter $meter){
+        $this->meter = $meter;
     }
 
 	public function verify(){
@@ -36,17 +29,10 @@ class data_number2meter extends data_object{
             verify_number2meter::$value($this);
     }
 
-    public function get_capacity(){
-        return $this->capacity;
-    }
-
     public function get_comment(){
         return $this->comment;
     }
 
-    public function get_company_id(){
-        return $this->company_id;
-    }
 
     public function get_date_checking(){
         return $this->date_checking;
@@ -60,20 +46,12 @@ class data_number2meter extends data_object{
         return $this->date_release;
     }
 
-    public function get_meter_id(){
-        return $this->meter_id;
-    }
-
-    public function get_name(){
-        return $this->name;
-    }
-
     public function get_date_next_checking(){
         return $this->date_next_checking;
     }
 
-    public function get_number_id(){
-        return $this->number_id;
+    public function get_meter(){
+        return $this->meter;
     }
 
     public function get_period(){
@@ -82,10 +60,6 @@ class data_number2meter extends data_object{
 
     public function get_place(){
         return $this->place;
-    }
-
-    public function get_rates(){
-        return $this->rates;
     }
 
     public function get_serial(){
@@ -104,10 +78,6 @@ class data_number2meter extends data_object{
         $this->comment = $comment;
     }
 
-    public function set_company_id($id){
-        $this->company_id = $id;
-    }
-
     public function set_date_checking($time){
         $this->date_checking = $time;
     }
@@ -118,14 +88,6 @@ class data_number2meter extends data_object{
 
     public function set_date_release($time){
         $this->date_release = $time;
-    }
-
-    public function set_meter_id($id){
-        $this->meter_id = $id;
-    }
-
-    public function set_number_id($id){
-        $this->number_id = $id;
     }
 
     public function set_period($period){

@@ -241,11 +241,18 @@ class controller_number{
 
     public static function private_get_meters(model_request $request){
         $company = model_session::get_company();
-        $model = new model_number2meter($company, $_GET['id']);
-        $meters = $model->get_meters();
+        $number = new data_number();
+        $number->set_id($request->GET('id'));
+        $model = new model_number2meter($company, $number);
+        $model->init_meters();
+
+
+
         $enable_meters = $disable_meters = [];
-        if(!empty($meters))
-            foreach($meters as $meter)
+        // var_dump($number->get_meters());
+        // exit();
+        if(!empty($number->get_meters()))
+            foreach($number->get_meters() as $meter)
                 if($meter->get_status() == 'enabled')
                     $enable_meters[] = $meter;
                 elseif($meter->get_status() == 'disabled')

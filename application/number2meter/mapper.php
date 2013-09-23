@@ -1,12 +1,46 @@
 <?php
 class mapper_number2meter{
 
+    private $number;
     private $company;
-    private $number_id;
+    private static $sql_get_meters = "SELECT `number2meter`.`meter_id`, 
+            `number2meter`.`status`,
+            `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
+            `number2meter`.`service`, `number2meter`.`serial`,
+            `number2meter`.`date_release`, `number2meter`.`date_install`,
+            `number2meter`.`date_checking`, `number2meter`.`period`,
+            `number2meter`.`place`, `number2meter`.`comment`
+        FROM `meters`, `number2meter`
+        WHERE `number2meter`.`company_id` = :company_id
+        AND `meters`.`company_id` = :company_id
+        AND `meters`.`company_id` = :company_id
+        AND `number2meter`.`number_id` = :number_id
+        AND `meters`.`id` = `number2meter`.`meter_id`";
 
-    public function __construct($company, $number_id){
+    public function __construct(data_company $company, data_number $number){
         $this->company = $company;
-        $this->number_id = $number_id;
+        $this->number = $number;
+        $this->company->verify('id');
+        $this->number->verify('id');
+    }
+
+    public function create_object(array $row){
+        $meter = new data_meter();
+        $meter->set_id($row['meter_id']);
+        $meter->set_name($row['name']);
+        $meter->set_capacity($row['capacity']);
+        $meter->set_rates($row['rates']);
+        $n2m = new data_number2meter($meter);
+        $n2m->set_serial($row['serial']);
+        $n2m->set_service($row['service']);
+        $n2m->set_status($row['status']);
+        $n2m->set_date_release($row['date_release']);
+        $n2m->set_date_install($row['date_install']);
+        $n2m->set_date_checking($row['date_checking']);
+        $n2m->set_period($row['period']);
+        $n2m->set_place($row['place']);
+        $n2m->set_comment($row['comment']);
+        return $n2m;
     }
 
     public function delete(data_number2meter $meter){
@@ -22,6 +56,28 @@ class mapper_number2meter{
         $sql->bind(':meter_id', $meter->get_meter_id(), PDO::PARAM_INT);
         $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
         $sql->execute('Проблема при удалении связи лицевого счета и счетчика');
+    }
+
+    public function init_numbers(){
+        $meters = $this->get_meters();
+        if(!empty($meters))
+            foreach($meters as $meter)
+                $this->number->add_meter($meter);
+    }
+
+    /*
+    * Возвращает список счетчиков лицевого счета
+    */
+    private function get_meters(){
+        $sql = new sql();
+        $sql->query(self::$sql_get_meters);
+        $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+        $sql->execute('Проблема при при выборке счетчиков лицевого счета.');
+        $stmt = $sql->get_stm();
+        while($row = $stmt->fetch())
+            $meters[] = $this->create_object($row);
+        return $meters;
     }
 
     public function find($meter_id, $serial){
