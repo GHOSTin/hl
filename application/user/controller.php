@@ -71,7 +71,7 @@ class controller_user{
         $user = new data_user();
         $user->set_id($request->take_get('user_id'));
         $company = new data_company();
-        $company->set_id($request->take_get('user_id'));
+        $company->set_id($request->take_get('company_id'));
         $profiles = (new model_user2profile($company, $user))->get_profiles();
         return ['user' => $user, 'company' => $company, 'profiles' => $profiles];
     }
