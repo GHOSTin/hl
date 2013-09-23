@@ -293,7 +293,7 @@ class controller_number{
     public static function private_get_number_information(model_request $request){
         model_session::set_setting_param('number', 'number_content', 'information');
         $model = new model_number(model_session::get_company());
-        return ['number' => $model->get_number($_GET['id'])];
+        return ['number' => $model->get_number($request->GET('id'))];
     }
 
     public static function private_get_meter_data(model_request $request){
