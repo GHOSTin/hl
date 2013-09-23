@@ -18,9 +18,9 @@ class mapper_house2processing_center{
         $sql->query("DELETE FROM `house2processing_center` 
                     WHERE `company_id` = :company_id AND `house_id` = :house_id
                     AND `center_id` = :center_id");
-        $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':house_id', (int) $this->house->id, PDO::PARAM_INT);
-        $sql->bind(':center_id', (int) $center->id, PDO::PARAM_INT);
+        $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
+        $sql->bind(':center_id', (int) $center->get_id(), PDO::PARAM_INT);
         $sql->execute('Проблема при удалении связи.');
     }
 
@@ -37,9 +37,9 @@ class mapper_house2processing_center{
       $sql->query("INSERT INTO `house2processing_center` (`company_id`, 
                   `house_id`, `center_id`, `identifier`) 
                   VALUES (:company_id, :house_id, :center_id, :identifier)");
-      $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
-      $sql->bind(':house_id', (int) $this->house->id, PDO::PARAM_INT);
-      $sql->bind(':center_id', (int) $center->id, PDO::PARAM_INT);
+      $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+      $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
+      $sql->bind(':center_id', (int) $center->get_id(), PDO::PARAM_INT);
       $sql->bind(':identifier', (string) $identifier, PDO::PARAM_STR);
       $sql->execute('Проблема при добавлении связи.');
   }
@@ -53,16 +53,16 @@ class mapper_house2processing_center{
                 WHERE `house2processing_center`.`company_id` = :company_id
                 AND `house2processing_center`.`house_id` = :house_id
                 AND `house2processing_center`.`center_id` = `processing_centers`.`id`");
-    $sql->bind(':house_id', $this->house->id, PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+    $sql->bind(':house_id', $this->house->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при запросе связи дом-процессинговый центр.');
     $stmt = $sql->get_stm();
     $centers = [];
     while($row = $stmt->fetch()){
         $center = new data_processing_center();
-        $center->id = $row['center_id'];
-        $center->name = $row['name'];
-        $centers[$center->id] = [$center, $row['identifier']];
+        $center->set_id($row['center_id']);
+        $center->set_name($row['name']);
+        $centers[$center->get_id()] = [$center, $row['identifier']];
     }
     $stmt->closeCursor();
     return $centers;

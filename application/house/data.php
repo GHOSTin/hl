@@ -104,9 +104,9 @@ final class data_house extends data_object{
   }
 
   public function add_processing_center(data_processing_center $center, $identifier){
-    if(array_key_exists($center->id, $this->centers))
+    if(array_key_exists($center->get_id(), $this->centers))
       $this->send_error('К дому уже привязан процессинговый центр.');
-    $this->centers[$center->id] = [$center, $identifier];
+    $this->centers[$center->get_id()] = [$center, $identifier];
   }
 
   public function remove_processing_center(data_processing_center $center){

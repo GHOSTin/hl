@@ -121,6 +121,13 @@ class model_house{
 		return $house_id;
 	}
 
+	public function get_house($id){
+		$house = (new mapper_house())->find($id);
+		if(!($house instanceof data_house))
+			throw new e_model('Дом не существует.');
+		return $house;
+	}
+
 	/**
 	* Возвращает список домов
 	* @return array из object data_house

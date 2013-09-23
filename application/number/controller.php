@@ -226,10 +226,7 @@ class controller_number{
     }
 
     public static function private_get_house_information(model_request $request){
-        $house = new data_house();
-        $house->id = $_GET['id'];
-        $house->verify('id');
-        $house = model_house::get_houses($house)[0];
+        $house = (new model_house)->get_house($request->GET('id'));
         $mapper = new mapper_house2processing_center(model_session::get_company(), $house);
         $mapper->init_processing_centers();
         return ['house' => $house];

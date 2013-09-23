@@ -8,6 +8,10 @@ class model_request{
       return null;
   }
 
+  public function GET($key){
+    return $this->take_get($key);
+  }
+
   public function take_post($key){
     if(isset($_POST[$key]))
       return $_POST[$key];
