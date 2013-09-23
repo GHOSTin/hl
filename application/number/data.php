@@ -33,6 +33,22 @@ final class data_number extends data_object{
             verify_number::$value($this);
     }
 
+    public function get_id(){
+        return $this->id;
+    }
+
+    public function get_fio(){
+        return $this->fio;
+    }
+
+    public function get_flat_number(){
+        return $this->flat_number;
+    }
+
+    public function get_number(){
+        return $this->number;
+    }
+
     public function set_cellphone($cellphone){
     	$this->cellphone = $cellphone;
     }
@@ -41,12 +57,40 @@ final class data_number extends data_object{
     	$this->fio = $fio;
     }
 
+    public function set_flat_number($number){
+        $this->flat_number = (string) $number;
+    }
+
     public function set_id($id){
     	$this->id = $id;
     }
 
     public function set_number($number){
     	$this->number = $number;
+    }
+
+    public function set_company_id($id){
+        $this->company_id = (int) $id;
+    }
+
+    public function set_city_id($id){
+        $this->city_id = (int) $id;
+    }
+
+    public function set_house_id($id){
+        $this->house_id = (int) $id;
+    }
+
+    public function set_flat_id($id){
+        $this->flat_id = (int) $id;
+    }
+
+    public function set_type($type){
+        $this->type = (string) $type;
+    }
+
+    public function set_status($status){
+        $this->status = (string) $status;
     }
 
     public function set_telephone($telephone){

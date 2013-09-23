@@ -15,6 +15,13 @@ final class data_house extends data_object{
 	private $street_id;
 	private $street_name;
   private $centers = [];
+  private $numbers = [];
+
+  public function add_number(data_number $number){
+    if(array_key_exists($number->get_id(), $this->numbers))
+      throw new e_model('Дом уже добавлен в улицу.');
+    $this->numbers[$number->get_id()] = $number;
+  }
 
   public function get_city_id(){
     return $this->city_id;
@@ -38,6 +45,10 @@ final class data_house extends data_object{
 
   public function get_number(){
     return $this->number;
+  }
+
+  public function get_numbers(){
+    return $this->numbers;
   }
 
   public function get_status(){

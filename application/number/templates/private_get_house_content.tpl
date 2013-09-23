@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set numbers = component.numbers %}
+{% set house = component.house %}
 {% block js %}
-    $('.house[house = {{component.house.id}}]').append(get_hidden_content())
+    $('.house[house = {{ house.get_id() }}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
   <div class="house-content">

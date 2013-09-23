@@ -219,11 +219,10 @@ class controller_number{
     }
 
     public static function private_get_house_content(model_request $request){
-        $house = new data_house();
-        $house->id = $_GET['id'];
-        $house->verify('id');
-        return ['numbers' => model_house::get_numbers(model_session::get_company(), $house),
-                'house' => $house];
+      $house = new data_house();
+      $house->set_id($request->take_get('id'));
+      (new model_house2number(model_session::get_company(), $house))->init_numbers();
+      return ['house' => $house];
     }
 
     public static function private_get_house_information(model_request $request){
