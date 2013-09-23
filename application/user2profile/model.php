@@ -31,6 +31,20 @@ class model_user2profile{
   }
 
   public function update_rule($profile, $rule){
-    
+    $profile = $this->get_profile($profile);
+    $rules = $profile->get_rules()->get_rules();
+    if(in_array($rule, array_keys($rules))){
+      $rules[$rule] = !$rules[$rule];
+      $sql = new sql();
+      $sql->query('UPDATE `profiles` SET `rules` = :rules WHERE `company_id` = :company_id
+        AND `user_id` = :user_id AND `profile` = :profile');
+      $sql->bind(':rules', (string) json_encode($rules), PDO::PARAM_STR);
+      $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+      $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+      $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+      $sql->execute('Проблема при обновлении правила.');
+    }else
+      throw new e_model('Правила '.$rule.' нет в профиле '.$profile);
+    return $rules[$rule];
   }
 }
