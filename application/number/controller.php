@@ -260,38 +260,33 @@ class controller_number{
 
     public static function private_get_number_content(model_request $request){
         $switch = model_session::get_setting_param('number', 'number_content');
+        $company = model_session::get_company();
+        $number = (new model_number(model_session::get_company()))
+                  ->get_number($request->GET('id'));
         switch($switch){
-            case 'meters':
-                $company = model_session::get_company();
-                $model = new model_number2meter($company, $_GET['id']);
-                $meters = $model->get_meters();
-                $enable_meters = $disable_meters = [];
-                if(!empty($meters))
-                    foreach($meters as $meter)
-                        if($meter->get_status() == 'enabled')
-                            $enable_meters[] = $meter;
-                        elseif($meter->get_status() == 'disabled')
-                            $disable_meters[] = $meter;
-                $model = new model_number($company);
-                return ['number' => $model->get_number($request->GET('id')),
-                        'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters,
-                        'setting' => $switch];
-            break;
+          case 'meters':
+            $model = new model_number2meter($company, $number);
+            $model->init_meters();
+            $enable_meters = $disable_meters = [];
+            if(!empty($number->get_meters()))
+              foreach($number->get_meters() as $meter)
+                if($meter->get_status() == 'enabled')
+                  $enable_meters[] = $meter;
+                elseif($meter->get_status() == 'disabled')
+                  $disable_meters[] = $meter;
+            model_session::set_setting_param('number', 'number_content', 'meters');
+            return ['number' => $number,
+              'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters,
+              'setting' => $switch];
+          break;
 
-            case 'centers':
-                $c2n = new data_processing_center2number();
-                $c2n->number_id = $_GET['id'];
-                $c2n->verify('number_id');
-                $company = model_session::get_company();
-                $model = new model_number(model_session::get_company());
-                return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
-                        'number' => $model->get_number($request->GET('id')),
-                        'setting' => $switch];
-            break;
+          case 'centers':
+              (new model_number2processing_center($company, $number))->init_processing_centers();
+              return ['number' => $number, 'setting' => $switch];
+          break;
 
-            default:
-              $model = new model_number(model_session::get_company());
-              return ['number' => $model->get_number($request->GET('id'))];
+          default:
+            return ['number' => $number];
         }
     }
 
