@@ -26,6 +26,7 @@ final class data_number extends data_object{
 	private $telephone;
 	private $type;
     private $meters = [];
+    private $centers = [];
 
 	public function verify(){
         if(func_num_args() < 0)
@@ -41,6 +42,12 @@ final class data_number extends data_object{
       $this->meters[$id] = $n2m;
     }
 
+    public function add_processing_center(data_number2processing_center $n2c){
+      if(array_key_exists($n2c->get_center()->get_id(), $this->centers))
+        throw new e_model('Центр уже добавлен.');
+      $this->centers[$n2c->get_center()->get_id()] = $n2c;
+    }
+
     public function get_id(){
         return $this->id;
     }
@@ -51,6 +58,10 @@ final class data_number extends data_object{
 
     public function get_flat_number(){
         return $this->flat_number;
+    }
+
+    public function get_processing_centers(){
+        return $this->centers;
     }
 
     public function get_meters(){

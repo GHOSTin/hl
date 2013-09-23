@@ -245,12 +245,7 @@ class controller_number{
         $number->set_id($request->GET('id'));
         $model = new model_number2meter($company, $number);
         $model->init_meters();
-
-
-
         $enable_meters = $disable_meters = [];
-        // var_dump($number->get_meters());
-        // exit();
         if(!empty($number->get_meters()))
             foreach($number->get_meters() as $meter)
                 if($meter->get_status() == 'enabled')
@@ -368,13 +363,11 @@ class controller_number{
     }
 
     public static function private_get_processing_centers(model_request $request){
-        $c2n = new data_processing_center2number();
-        $c2n->number_id = $_GET['id'];
-        $c2n->verify('number_id');
-        $company = model_session::get_company();
-        model_session::set_setting_param('number', 'number_content', 'centers');
-        return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
-                'data' => $c2n];
+      $number = new data_number();
+      $number->set_id($request->GET('id'));
+      (new model_number2processing_center(model_session::get_company(), $number))->init_processing_centers();
+      model_session::set_setting_param('number', 'number_content', 'centers');
+      return ['number' => $number];
     }
 
     public static function private_get_dialog_edit_number(model_request $request){

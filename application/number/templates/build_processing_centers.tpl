@@ -1,7 +1,5 @@
-{% set centers = component.centers %}
 <div><a class="get_dialog_add_processing_center">Добавить идентификатор</a></div>
 <ul>
-    {% for center in centers %}
-        <li center="{{ center.processing_center_id}}" identifier="{{ center.identifier}}">{{ center.processing_center_name }} ({{ center.identifier }}) <a class="get_dialog_exclude_processing_center">исключить</a></li>
-    {% endfor %}
-</ul>
+{% for center in number.get_processing_centers() %}
+  <li center="{{ center.get_center().get_id() }}" identifier="{{ center.get_identifier() }}">{{ center.get_center().get_name() }} ({{ center.get_identifier() }}) <a class="get_dialog_exclude_processing_center">исключить</a></li>
+{% endfor %}
