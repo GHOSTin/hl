@@ -91,7 +91,7 @@ class controller_number{
     }
 
 	public static function private_show_default_page(){
-    return ['streets' => model_street::get_streets(new data_street())];
+    return ['streets' => (new model_street)->get_streets()];
 	}
 
     public static function private_get_street_content(){
