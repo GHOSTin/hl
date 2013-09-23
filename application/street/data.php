@@ -11,6 +11,17 @@ final class data_street extends data_object{
     private $id;
     private $name;
     private $status;
+    private $houses = [];
+
+    public function add_house(data_house $house){
+      if(array_key_exists($house->get_id(), $this->houses))
+        throw new e_model('Дом уже добавлен в улицу.');
+      $this->houses[$house->get_id()] = $house;
+    }
+
+    public function get_houses(){
+      return $this->houses;
+    }
 
     public function get_company_id(){
       return $this->company_id;
