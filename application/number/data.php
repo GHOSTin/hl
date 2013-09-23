@@ -49,6 +49,14 @@ final class data_number extends data_object{
         return $this->number;
     }
 
+    public function get_telephone(){
+        return $this->telephone;
+    }
+
+    public function get_cellphone(){
+        return $this->cellphone;
+    }
+
     public function set_cellphone($cellphone){
     	$this->cellphone = $cellphone;
     }

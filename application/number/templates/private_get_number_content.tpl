@@ -2,7 +2,7 @@
 {% set number = component.number %}
 {% set stn = component.setting %}
 {% block js %}
-    $('.number[number = {{number.id}}]').append(get_hidden_content())
+    $('.number[number = {{ number.get_id() }}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
     <ul class="number-content unstyled">

@@ -271,7 +271,7 @@ class controller_number{
                         elseif($meter->get_status() == 'disabled')
                             $disable_meters[] = $meter;
                 $model = new model_number($company);
-                return ['number' => $model->get_number($_GET['id']),
+                return ['number' => $model->get_number($request->GET('id')),
                         'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters,
                         'setting' => $switch];
             break;
@@ -283,13 +283,13 @@ class controller_number{
                 $company = model_session::get_company();
                 $model = new model_number(model_session::get_company());
                 return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
-                        'number' => $model->get_number($_GET['id']),
+                        'number' => $model->get_number($request->GET('id')),
                         'setting' => $switch];
             break;
 
             default:
-                $model = new model_number(model_session::get_company());
-                return ['number' => $model->get_number($_GET['id'])];
+              $model = new model_number(model_session::get_company());
+              return ['number' => $model->get_number($request->GET('id'))];
         }
     }
 

@@ -93,9 +93,9 @@ class verify_number{
     * Верификация идентификатора лицевого счета.
     */
     public static function id(data_number $number){
-        if(!preg_match('/^[0-9]{1,8}$/', $number->id))
+        if(!preg_match('/^[0-9]{1,8}$/', $number->get_id()))
             throw new e_model('Идентификатор лицевого счета задан не верно.');
-        if($number->id > 16777215 OR $number->id < 1)
+        if($number->get_id() > 16777215 OR $number->get_id() < 1)
             throw new e_model('Идентификатор лицевого счета задан не верно.');
     }
 

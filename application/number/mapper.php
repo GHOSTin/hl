@@ -10,7 +10,7 @@ class mapper_number{
     public function find($id){
         $this->company->verify('id');
         $number = new data_number();
-        $number->id = $id;
+        $number->set_id($id);
         $number->verify('id');
         $sql = new sql();
         $sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
@@ -32,8 +32,8 @@ class mapper_number{
                     AND `numbers`.`flat_id` = `flats`.`id`
                     AND `numbers`.`house_id` = `houses`.`id`
                     AND `houses`.`street_id` = `streets`.`id`");
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':number_id', $number->id, PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':number_id', $number->get_id(), PDO::PARAM_INT);
         $numbers = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.');
         $count = count($numbers);
         if($count === 0)

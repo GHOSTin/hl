@@ -1,7 +1,6 @@
 <?php
 class model_house{
 
-
 	public function add_processing_center(data_company $company, $house_id,
 																				$center_id, $identifier){
 		$house = new data_house();
@@ -138,9 +137,7 @@ class model_house{
 			 		`department_id`, `status`, `housenumber` as `number`
 					FROM `houses`");
 		if(!empty($house->id)){
-			$house->verify('id');
-			$sql->query(' WHERE `id` = :house_id');
-			$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
+			die('DISABLED');
 		}
 		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
 	}
@@ -162,13 +159,5 @@ class model_house{
 		}
 		$sql->query("ORDER BY (`flatnumber` + 0)");
 		return $sql->map(new data_flat(), 'Проблемы при выборке квартир.');
-	}
-
-	/**
-	* Проверка принадлежности объекта к классу data_house.
-	*/
-	public static function is_data_house($house){
-		if(!($house instanceof data_house))
-			throw new e_model('Возвращеный объект не является домом.');
 	}
 }
