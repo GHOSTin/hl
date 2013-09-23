@@ -227,8 +227,8 @@ class controller_number{
 
     public static function private_get_house_information(model_request $request){
       $house = (new model_house)->get_house($request->GET('id'));
-      $mapper = new mapper_house2processing_center(model_session::get_company(), $house);
-      $mapper->init_processing_centers();
+      $model = new model_house2processing_center(model_session::get_company(), $house);
+      $model->init_processing_centers();
       return ['house' => $house];
     }
 

@@ -12,6 +12,13 @@ class mapper_house2processing_center{
       $this->house->verify('id');
   }
 
+  public function create_object(array $row){
+    $center = new data_processing_center();
+    $center->set_id($row['center_id']);
+    $center->set_name($row['name']);
+    return [$center, $row['identifier']];
+  }
+
   private function delete(data_processing_center $center){
         $center->verify('id');
         $sql = new sql();
@@ -58,12 +65,9 @@ class mapper_house2processing_center{
     $sql->execute('Проблема при запросе связи дом-процессинговый центр.');
     $stmt = $sql->get_stm();
     $centers = [];
-    while($row = $stmt->fetch()){
-        $center = new data_processing_center();
-        $center->set_id($row['center_id']);
-        $center->set_name($row['name']);
-        $centers[$center->get_id()] = [$center, $row['identifier']];
-    }
+    if($stmt->rowCount() > 0)
+    while($row = $stmt->fetch())
+      $centers[] = $this->create_object($row);
     $stmt->closeCursor();
     return $centers;
   }
