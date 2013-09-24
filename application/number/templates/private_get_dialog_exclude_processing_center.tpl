@@ -1,10 +1,8 @@
 {% extends "dialog.tpl" %}
 {% set center = component.center %}
-{% set number = component.number %}
-{% set identifier = component.identifier %}
 {% block title %}Диалог исключения процессингового центра{% endblock title %}
 {% block dialog %}
-	Вы действительно хотите удалить идентификатор <b>{{ identifier }}</b> расчетного центра <b>{{ center.name }}</b>?
+	Вы действительно хотите удалить идентификатор <b>{{ request.GET('identifier') }}</b> расчетного центра <b>{{ center.get_name() }}</b>?
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn exclude_processing_center">Удалить</div>
@@ -13,9 +11,8 @@
 // Удаляет идентификатор в процессинговом центре
 $('.exclude_processing_center').click(function(){
 	$.get('exclude_processing_center',{
-		number_id: {{ number.id }},
-		center_id: {{ center.id }},
-		identifier: {{ identifier }}
+		number_id: {{ request.GET('number_id') }},
+		center_id: {{ center.get_id() }},
 		},function(r){
 			$('.dialog').modal('hide');
 			init_content(r);

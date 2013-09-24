@@ -44,8 +44,8 @@ class controller_number{
     $number = new data_number();
     $number->set_id($request->GET('number_id'));
     (new model_number2processing_center(model_session::get_company(), $number))
-                          ->add_processing_center($request->GET('center_id'),
-                                                  $request->GET('identifier'));
+      ->add_processing_center($request->GET('center_id'),
+        $request->GET('identifier'));
     return ['number' => $number];
   }
 
@@ -71,19 +71,12 @@ class controller_number{
                 'meters' => $meters];
     }
 
-    public static function private_exclude_processing_center(model_request $request){
-        $center = new data_processing_center2number();
-        $center->number_id = $_GET['number_id'];
-        $center->processing_center_id = $_GET['center_id'];
-        $center->identifier = $_GET['identifier'];
-        $company = model_session::get_company();
-        model_processing_center2number::exclude_identifier($company, $center);
-        $c2n = new data_processing_center2number();
-        $c2n->number_id = $_GET['number_id'];
-        $c2n->verify('number_id');
-        return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
-                'data' => $c2n];
-    }
+  public static function private_exclude_processing_center(model_request $request){
+    $number = new data_number($request->GET('number_id'));
+    (new model_number2processing_center(model_session::get_company(), $number))
+      ->delete_processing_center($request->GET('center_id'));
+    return ['number' => $number];
+  }
 
 	public static function private_show_default_page(model_request $request){
     return ['streets' => (new model_street)->get_streets()];
@@ -199,14 +192,8 @@ class controller_number{
     }
 
     public static function private_get_dialog_exclude_processing_center(model_request $request){
-        $center = new data_processing_center();
-        $center->id = $_GET['center_id'];
-        $center->verify('id');
-        $number = new data_number();
-        $number->id = $_GET['number_id'];
-        return ['center' => model_processing_center::get_processing_centers($center)[0],
-                'number' => $number,
-                'identifier' => $_GET['identifier']];
+      return ['center' => (new model_processing_center)
+                          ->get_processing_center($request->GET('center_id'))];
     }
 
     public static function private_get_house_content(model_request $request){

@@ -16,8 +16,7 @@ class mapper_number2processing_center{
             `number_id`, `identifier`) VALUES (:company_id, :processing_center_id, :number_id, :identifier)";
   
   private static $sql_delete = "DELETE FROM `processing_center2number` WHERE `company_id` = :company_id
-                AND `number_id` = :number_id AND `processing_center_id` = :processing_center_id
-                AND `identifier` = :identifier";
+                AND `number_id` = :number_id AND `processing_center_id` = :processing_center_id";
 
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;

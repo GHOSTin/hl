@@ -28,6 +28,10 @@ final class data_number extends data_object{
     private $meters = [];
     private $centers = [];
 
+    public function __construct($id = null){
+        $this->id = (int) $id;
+    }
+
 	public function verify(){
         if(func_num_args() < 0)
             throw new e_data('Параметры верификации не были переданы.');
@@ -46,6 +50,12 @@ final class data_number extends data_object{
       if(array_key_exists($n2c->get_center()->get_id(), $this->centers))
         throw new e_model('Центр уже добавлен.');
       $this->centers[$n2c->get_center()->get_id()] = $n2c;
+    }
+
+    public function delete_processing_center(data_number2processing_center $n2c){
+      if(!array_key_exists($n2c->get_center()->get_id(), $this->centers))
+        throw new e_model('Центр не привязан к лицевому счету.');
+      unset($this->centers[$n2c->get_center()->get_id()]);
     }
 
     public function get_id(){
