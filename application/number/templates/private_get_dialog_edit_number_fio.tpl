@@ -2,7 +2,7 @@
 {% set number = component.number %}
 {% block title %}Диалог редактирования ФИО владельца{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-fio" value="{{ number.fio }}">
+	<input type="text" class="dialog-input-fio" value="{{ number.get_fio() }}">
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn update_number_fio">Изменить</div>
@@ -11,7 +11,7 @@
 	// Изменяет ФИО владельца лицевого счета
 	$('.update_number_fio').click(function(){
 		$.get('update_number_fio',{
-			id: {{ number.id }},
+			id: {{ number.get_id() }},
 			fio: $('.dialog-input-fio').val()
 			},function(r){
 				$('.dialog').modal('hide');

@@ -371,8 +371,8 @@ class controller_number{
     }
 
     public static function private_get_dialog_edit_number_fio(model_request $request){
-        $model = new model_number(model_session::get_company());
-        return ['number' => $model->get_number($_GET['id'])];
+      $model = new model_number(model_session::get_company());
+      return ['number' => $model->get_number($request->GET('id'))];
     }
 
     public static function private_get_dialog_edit_number_telephone(model_request $request){
@@ -425,7 +425,7 @@ class controller_number{
 
     public static function private_update_number_fio(model_request $request){
         $model = new model_number(model_session::get_company());
-        return ['number' => $model->update_number_fio($_GET['id'], $_GET['fio'])];
+        return ['number' => $model->update_number_fio($request->GET('id'), $request->GET('fio'))];
     }
 
     public static function private_update_number_cellphone(model_request $request){

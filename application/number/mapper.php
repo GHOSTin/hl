@@ -5,10 +5,10 @@ class mapper_number{
 
     public function __construct(data_company $company){
         $this->company = $company;
+        $this->company->verify('id');
     }
 
     public function find($id){
-        $this->company->verify('id');
         $number = new data_number();
         $number->set_id($id);
         $number->verify('id');
@@ -44,7 +44,6 @@ class mapper_number{
     }
 
     public function find_by_number($num){
-        $this->company->verify('id');
         $number = new data_number();
         $number->set_number($num);
         $number->verify('number');
@@ -81,17 +80,16 @@ class mapper_number{
 
     public function update(data_number $number){
         $number->verify('id', 'number', 'fio', 'telephone');
-        $this->company->verify('id');
         $sql = new sql();
         $sql->query('UPDATE `numbers` SET `number` = :number, `fio` = :fio,
             `cellphone` = :cellphone, `telephone` = :telephone
             WHERE `company_id` = :company_id AND `id` = :id');
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':id', $number->id, PDO::PARAM_INT);
-        $sql->bind(':number', $number->number, PDO::PARAM_STR);
-        $sql->bind(':fio', $number->fio, PDO::PARAM_STR);
-        $sql->bind(':telephone', $number->telephone, PDO::PARAM_STR);
-        $sql->bind(':cellphone', $number->cellphone, PDO::PARAM_STR);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':id', $number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':number', $number->get_number(), PDO::PARAM_STR);
+        $sql->bind(':fio', $number->get_fio(), PDO::PARAM_STR);
+        $sql->bind(':telephone', $number->get_telephone(), PDO::PARAM_STR);
+        $sql->bind(':cellphone', $number->get_cellphone(), PDO::PARAM_STR);
         $sql->execute('Проблема при обнослении лицевого счета.');
         return $user;
     }
