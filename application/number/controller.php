@@ -365,25 +365,25 @@ class controller_number{
       return ['number' => $number];
     }
 
-    public static function private_get_dialog_edit_number(model_request $request){
-        $model = new model_number(model_session::get_company());
-        return ['number' => $model->get_number($_GET['id'])];
-    }
+  public static function private_get_dialog_edit_number(model_request $request){
+    return ['number' => (new model_number(model_session::get_company()))
+                        ->get_number($request->GET('id'))];
+  }
 
-    public static function private_get_dialog_edit_number_fio(model_request $request){
-      $model = new model_number(model_session::get_company());
-      return ['number' => $model->get_number($request->GET('id'))];
-    }
+  public static function private_get_dialog_edit_number_fio(model_request $request){
+    return ['number' => (new model_number(model_session::get_company()))
+                        ->get_number($request->GET('id'))];;
+  }
 
-    public static function private_get_dialog_edit_number_telephone(model_request $request){
-        return ['number' => (new model_number(model_session::get_company()))
-                            ->get_number($_GET['id'])];
-    }
+  public static function private_get_dialog_edit_number_telephone(model_request $request){
+    return ['number' => (new model_number(model_session::get_company()))
+                        ->get_number($request->GET('id'))];
+  }
 
-    public static function private_get_dialog_edit_number_cellphone(model_request $request){
-        return ['number' => (new model_number(model_session::get_company()))
-                            ->get_number($_GET['id'])];
-    }
+  public static function private_get_dialog_edit_number_cellphone(model_request $request){
+    return ['number' => (new model_number(model_session::get_company()))
+                        ->get_number($request->GET('id'))];
+  }
 
     public static function private_get_dialog_edit_meter_data(model_request $request){
         $time = getdate($_GET['time']);
@@ -418,10 +418,10 @@ class controller_number{
         return ['meter' => $model->update_date_release($_GET['meter_id'], $_GET['serial'], $time)];
     }
 
-    public static function private_update_number(model_request $request){
-        $model = new model_number(model_session::get_company());
-        return ['number' => $model->update_number($_GET['id'], $_GET['number'])];
-    }
+  public static function private_update_number(model_request $request){
+    return ['number' => (new model_number(model_session::get_company()))
+                ->update_number($request->GET('id'), $request->GET('number'))];
+  }
 
   public static function private_update_number_fio(model_request $request){
     return ['number' => (new model_number(model_session::get_company()))

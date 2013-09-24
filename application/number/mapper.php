@@ -67,8 +67,8 @@ class mapper_number{
                     AND `numbers`.`flat_id` = `flats`.`id`
                     AND `numbers`.`house_id` = `houses`.`id`
                     AND `houses`.`street_id` = `streets`.`id`");
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':number', $num, PDO::PARAM_STR);
+        $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':number', (string) $num, PDO::PARAM_STR);
         $numbers = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.');
         $count = count($numbers);
         if($count === 0)

@@ -4,7 +4,7 @@
     show_dialog(get_hidden_content());
     $('.update_number').click(function(){
         $.get('update_number',{
-            id: {{number.id}},
+            id: {{ number.get_id() }},
             number: $('.dialog-number').val()
             },function(r){
                 init_content(r);
@@ -18,7 +18,7 @@
         <h3>Изменение номера лицевого счета</h3>
     </div>  
     <div class="modal-body">
-        <input type="text" value="{{ number.number }}" class="dialog-number">
+        <input type="text" value="{{ number.get_number() }}" class="dialog-number">
     </div>
     <div class="modal-footer">
         <div class="btn update_number ">Сохранить</div>

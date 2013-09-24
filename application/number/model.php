@@ -84,9 +84,9 @@ class model_number{
 		$mapper = new mapper_number($this->company);
 		$old_number = $mapper->find_by_number($num);
 		if(!is_null($old_number))
-			if($number->id != $old_number->id)
+			if($number->get_id() != $old_number->get_id())
 				throw new e_model('В базе уже есть лицевой счет с таким номером.');
-		$number->number = $num;
+		$number->set_number($num);
 		$mapper->update($number);
 		return $number;
 	}
