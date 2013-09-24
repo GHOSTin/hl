@@ -2,52 +2,6 @@
 class model_processing_center2number{
 
     /*
-    * Добавляет идентификатор.
-    */
-    public static function add_identifier(data_company $company, data_processing_center2number $c2n){
-        $company->verify('id');
-        $model = new model_number($company);
-        $model->get_number($c2n->number_id);
-        $center = new data_processing_center();
-        $center->id = $c2n->processing_center_id;
-        if(count(model_processing_center::get_processing_centers($center)) !== 1)
-            throw new e_model('Неожиданное количество процессинговых центров.');
-        $center = new data_processing_center2number();
-        $center->number_id = $c2n->number_id;
-        $center->processing_center_id = $c2n->processing_center_id;
-        if(count(self::get_processing_centers($company, $center)) > 0)
-            throw new e_model('Уже есть идентификатор на этом расчетном центре.');
-        $c2n->company_id = $company->id;
-        $c2n->verify('number_id', 'identifier', 'processing_center_id', 'company_id');
-        $sql = new sql();
-        $sql->query("INSERT INTO `processing_center2number`(`company_id`, `processing_center_id`,
-            `number_id`, `identifier`) VALUES (:company_id, :processing_center_id, :number_id, :identifier)");
-        $sql->bind(':company_id', $c2n->company_id, PDO::PARAM_INT);
-        $sql->bind(':processing_center_id', $c2n->processing_center_id, PDO::PARAM_INT);
-        $sql->bind(':number_id', $c2n->number_id, PDO::PARAM_INT);
-        $sql->bind(':identifier', $c2n->identifier, PDO::PARAM_STR);
-        return $sql->execute('Проблема при добавлении идентификатора расчетного центра.');
-    }
-
-    /*
-    * Исключает идентификатор.
-    */
-    public static function exclude_identifier(data_company $company, data_processing_center2number $c2n){
-        $company->verify('id');
-        $c2n->company_id = $company->id;
-        $c2n->verify('number_id', 'identifier', 'processing_center_id', 'company_id');
-        $sql = new sql();
-        $sql->query("DELETE FROM `processing_center2number` WHERE `company_id` = :company_id
-                    AND `number_id` = :number_id AND `processing_center_id` = :processing_center_id
-                    AND `identifier` = :identifier");
-        $sql->bind(':company_id', $c2n->company_id, PDO::PARAM_INT);
-        $sql->bind(':processing_center_id', $c2n->processing_center_id, PDO::PARAM_INT);
-        $sql->bind(':number_id', $c2n->number_id, PDO::PARAM_INT);
-        $sql->bind(':identifier', $c2n->identifier, PDO::PARAM_STR);
-        return $sql->execute('Проблема при ислючении идентификатора расчетного центра.');
-    }
-
-    /*
     * Возвращает связи процессингового центра и лицевого счтеа
     */
     public static function get_processing_centers(data_company $company, data_processing_center2number $c2n){

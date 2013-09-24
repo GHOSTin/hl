@@ -40,19 +40,14 @@ class controller_number{
         return ['house' => $house];
     }
 
-    public static function private_add_processing_center(model_request $request){
-        $center = new data_processing_center2number();
-        $center->number_id = $_GET['number_id'];
-        $center->processing_center_id = $_GET['center_id'];
-        $center->identifier = $_GET['identifier'];
-        $company = model_session::get_company();
-        model_processing_center2number::add_identifier($company, $center);
-        $c2n = new data_processing_center2number();
-        $c2n->number_id = $_GET['number_id'];
-        $c2n->verify('number_id');
-        return ['centers' => model_processing_center2number::get_processing_centers($company, $c2n),
-                'data' => $c2n];
-    }
+  public static function private_add_processing_center(model_request $request){
+    $number = new data_number();
+    $number->set_id($request->GET('number_id'));
+    (new model_number2processing_center(model_session::get_company(), $number))
+                          ->add_processing_center($request->GET('center_id'),
+                                                  $request->GET('identifier'));
+    return ['number' => $number];
+  }
 
     public static function private_change_meter(model_request $request){
         $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
@@ -135,13 +130,9 @@ class controller_number{
                 'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
     }
 
-    public static function private_get_dialog_add_processing_center(model_request $request){
-        $number = new data_number();
-        $number->id = $_GET['id'];
-        $number->verify('id');
-        return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
-                'number' => $number];
-    }
+  public static function private_get_dialog_add_processing_center(model_request $request){
+    return ['centers' => (new model_processing_center)->get_processing_centers()];
+  }
 
     public static function private_get_dialog_change_meter(model_request $request){
         $data = new data_number2meter();
