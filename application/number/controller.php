@@ -429,14 +429,14 @@ class controller_number{
     }
 
     public static function private_update_number_cellphone(model_request $request){
-        $model = new model_number(model_session::get_company());
-        return ['number' => $model->update_number_cellphone($_GET['id'], $_GET['cellphone'])];
+      $model = new model_number(model_session::get_company());
+      return ['number' => $model->update_number_cellphone($_GET['id'], $_GET['cellphone'])];
     }
 
-    public static function private_update_number_telephone(model_request $request){
-        $model = new model_number(model_session::get_company());
-        return ['number' => $model->update_number_telephone($_GET['id'], $_GET['telephone'])];
-    }
+  public static function private_update_number_telephone(model_request $request){
+    return ['number' => (new model_number(model_session::get_company()))
+    ->update_number_telephone($request->GET('id'), $request->GET('telephone'))];
+  }
 
     public static function private_update_meter_data(model_request $request){
         $timestamp = explode('.', $_GET['timestamp']);
