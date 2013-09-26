@@ -8,18 +8,12 @@ final class data_meter extends data_object{
     private $company_id;
     private $id;
     private $name;
-    private $periods;
     private $rates;
-    private $service;
+    private $periods = [];
+    private $services = [];
     private static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
     public function __construct(){
-        if(empty($this->service))
-            $this->service = [];
-        else
-            $this->service = explode(',', $this->service);
-
-        $this->periods = (empty($this->periods))? []: explode(';', $this->periods);
     }
 
     public function verify(){
@@ -36,9 +30,9 @@ final class data_meter extends data_object{
     }
 
     public function add_service($service){
-        if(in_array($service, $this->service))
+        if(in_array($service, $this->services, true))
             throw new e_model('Такая служба уже привязана к счетчику.');
-        $this->service[] = $service;
+        $this->services[] = $service;
     }
 
     public function remove_period($period){
@@ -49,7 +43,7 @@ final class data_meter extends data_object{
     }
 
     public function remove_service($service){
-        $rs = array_search($service, $this->service);
+        $rs = array_search($service, $this->services);
         if($rs === false)
             throw new e_model('Службы не было в этом счетчике.');
         unset($this->service[$rs]);

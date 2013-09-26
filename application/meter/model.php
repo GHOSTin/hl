@@ -23,7 +23,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public function add_service($id, $service){
-	    $meter = $this->get_meter($id);
+	  $meter = $this->get_meter($id);
 		$meter->add_service($service);
 		$mapper = new mapper_meter($this->company);
 		return $mapper->update($meter);
@@ -44,32 +44,7 @@ class model_meter{
 	* @return array data_meter
 	*/
 	public function get_meters(data_meter $meter){
-	    $this->company->verify('id');
-	    $sql = new sql();
-	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
-	    			FROM `meters` WHERE `company_id` = :company_id");
-	    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-	    if(!empty($meter->id)){
-	        die('Disabled filtering by ID');
-	    }
-	    if(!empty($meter->name)){
-	        die('Disabled filtering by name');
-	    }
-	    if(!empty($meter->capacity)){
-	        $meter->verify('capacity');
-	        $sql->query(" AND `capacity` = :capacity");
-	        $sql->bind(':capacity', $meter->capacity, PDO::PARAM_INT);
-	    }
-	    if(!empty($meter->rates)){
-	        $meter->verify('rates');
-	        $sql->query(" AND `rates` = :rates");
-	        $sql->bind(':rates', $meter->rates, PDO::PARAM_INT);
-	    }
-	    if(!empty($meter->service)){
-	        die('Disabled filtering by service');
-	    }
-	    $sql->query(' ORDER BY `name`');
-	    return $sql->map(new data_meter(), 'Проблема при выборке счетчиков.');
+		return (new mapper_meter($this->company))->get_meters();
 	}
 
 	/**
@@ -150,7 +125,7 @@ class model_meter{
 	* @return object data_meter
 	*/
 	public function update_rates($id, $rates){
-	    $mapper = new mapper_meter($this->company);
+	  $mapper = new mapper_meter($this->company);
 		$meter = $this->get_meter($id);
 		$meter->set_rates($rates);
 		$mapper->update($meter);

@@ -1,1 +1,1 @@
-<li class="meter" meter="{{ meter.id }}"><a class="get_meter_content">{{ meter.name }}</a></li>
+<li class="meter" meter="{{ meter.get_id() }}"><a class="get_meter_content">{{ meter.get_name() }}</a></li>

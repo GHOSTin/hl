@@ -11,6 +11,9 @@ class mapper_meter{
       WHERE `company_id` = :company_id AND FIND_IN_SET(:service, `service`) > 0
       ORDER BY `name`";
 
+    private static $sql_get_meters = "SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
+          FROM `meters` WHERE `company_id` = :company_id ORDER BY `name`";
+
     public function __construct(data_company $company){
         $this->company = $company;
         $this->company->verify('id');
@@ -128,21 +131,33 @@ class mapper_meter{
     return $meters;
   }
 
-    public function update(data_meter $meter){
-        $this->company->verify('id');
-        $meter->verify('id', 'name', 'capacity', 'rates', 'periods');
-        $sql = new sql();
-        $sql->query('UPDATE `meters` SET `name` = :name, `capacity` = :capacity,
-                    `rates` = :rates, `periods` = :periods, `service` = :services
-                    WHERE `company_id` = :company_id AND `id` = :id');
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':id', $meter->get_id(), PDO::PARAM_INT);
-        $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
-        $sql->bind(':capacity', $meter->get_capacity(), PDO::PARAM_INT);
-        $sql->bind(':rates', $meter->get_rates(), PDO::PARAM_INT);
-        $sql->bind(':periods', implode(';', $meter->get_periods()), PDO::PARAM_STR);
-        $sql->bind(':services', implode(',', $meter->get_services()), PDO::PARAM_STR);
-        $sql->execute('Проблема при обновлении счетчика.');
-        return $meter;
-    }
+  public function update(data_meter $meter){
+    $this->company->verify('id');
+    $meter->verify('id', 'name', 'capacity', 'rates', 'periods');
+    $sql = new sql();
+    $sql->query('UPDATE `meters` SET `name` = :name, `capacity` = :capacity,
+                `rates` = :rates, `periods` = :periods, `service` = :services
+                WHERE `company_id` = :company_id AND `id` = :id');
+    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+    $sql->bind(':id', $meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
+    $sql->bind(':capacity', $meter->get_capacity(), PDO::PARAM_INT);
+    $sql->bind(':rates', $meter->get_rates(), PDO::PARAM_INT);
+    $sql->bind(':periods', implode(';', $meter->get_periods()), PDO::PARAM_STR);
+    $sql->bind(':services', implode(',', $meter->get_services()), PDO::PARAM_STR);
+    $sql->execute('Проблема при обновлении счетчика.');
+    return $meter;
+  }
+
+  public function get_meters(){
+    $sql = new sql();
+    $sql->query(self::$sql_get_meters);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->execute('Проблема при выборке счетчиков.');
+    $stmt = $sql->get_stm();
+    $meters = [];
+    while($row = $stmt->fetch())
+      $meters[] = $this->create_object($row);
+    return $meters;    
+  }
 }
