@@ -11,6 +11,7 @@ final class data_meter extends data_object{
     private $periods;
     private $rates;
     private $service;
+    private static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
     public function __construct(){
         if(empty($this->service))
@@ -76,6 +77,12 @@ final class data_meter extends data_object{
 
     public function set_id($id){
         $this->id = $id;
+    }
+
+    public function set_service($service){
+        if(!in_array($service, self::$service_list, true))
+            throw new e_model('Недопустимая служба');
+        $this->service[] = (string) $service;
     }
 
     public function get_services(){

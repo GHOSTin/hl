@@ -17,9 +17,11 @@ class data_number2meter extends data_object{
     private $comment;
     private $status;
     private $meter;
+    private $number;
 
-    public function __construct(data_meter $meter){
+    public function __construct(data_number $number, data_meter $meter){
         $this->meter = $meter;
+        $this->number = $number;
     }
 
 	public function verify(){

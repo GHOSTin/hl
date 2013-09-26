@@ -68,7 +68,7 @@ class verify_meter{
     */
     public static function service(data_meter $meter){
         $services = ['cold_water', 'hot_water', 'electrical'];
-        foreach($meter->service as $service)
+        foreach($meter->get_services() as $service)
             if(!in_array($service, $services))
                 throw new e_model('Услуга задана не верно.');
     }

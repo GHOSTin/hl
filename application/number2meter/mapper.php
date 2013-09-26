@@ -30,7 +30,7 @@ class mapper_number2meter{
         $meter->set_name($row['name']);
         $meter->set_capacity($row['capacity']);
         $meter->set_rates($row['rates']);
-        $n2m = new data_number2meter($meter);
+        $n2m = new data_number2meter($this->number, $meter);
         $n2m->set_serial($row['serial']);
         $n2m->set_service($row['service']);
         $n2m->set_status($row['status']);
@@ -58,7 +58,7 @@ class mapper_number2meter{
         $sql->execute('Проблема при удалении связи лицевого счета и счетчика');
     }
 
-    public function init_numbers(){
+    public function init_meters(){
         $meters = $this->get_meters();
         if(!empty($meters))
             foreach($meters as $meter)
@@ -75,6 +75,7 @@ class mapper_number2meter{
         $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
         $sql->execute('Проблема при при выборке счетчиков лицевого счета.');
         $stmt = $sql->get_stm();
+        $meters = [];
         while($row = $stmt->fetch())
             $meters[] = $this->create_object($row);
         return $meters;
@@ -114,11 +115,10 @@ class mapper_number2meter{
     }
 
     public function insert(data_number2meter $n2m){
-        $n2m->set_company_id($this->company->id);
-        $n2m->set_number_id($this->number_id);
-        $n2m->verify('company_id', 'number_id', 'meter_id', 'serial', 'service',
-                    'status', 'place', 'date_release', 'date_install',
-                    'date_checking', 'period', 'comment');
+        $n2m->verify('serial', 'service', 'status', 'place', 'date_release',
+            'date_install', 'date_checking', 'period', 'comment');
+
+        exit();
         $sql = new sql();
         $sql->query('INSERT INTO `number2meter` (`company_id`, `number_id`,
                     `meter_id`, `serial`, `status`, `service`, `place`,
@@ -227,5 +227,23 @@ class mapper_number2meter{
         $sql->bind(':old_serial', (string) $old_serial, PDO::PARAM_STR);
         $sql->execute('Проблема при обновлении связи лицевого счета и счетчика');
         return $meter;
+    }
+
+    public function update_meter_list(){
+      $new = $this->number->get_meters();
+      $old = [];
+      $meters = $this->get_meters();
+      if(!empty($meters))
+        foreach($meters as $meter)
+          $old[$meter->get_meter()->get_id().'_'.$meter->get_serial()] = $meter;
+      $deleted = array_diff_key($old, $new);
+      $inserted = array_diff_key($new, $old);
+      if(!empty($inserted))
+        foreach($inserted as $meter)
+          $this->insert($meter);
+      if(!empty($deleted))
+        foreach($deleted as $meter)
+          $this->delete($meter);
+      return $this->number;
     }
 }
