@@ -8,6 +8,15 @@ class mapper_number{
         $this->company->verify('id');
     }
 
+    public function create_object(array $row){
+        $number = new data_number();
+        $number->set_id($row['id']);
+        $number->set_fio($row['fio']);
+        $number->set_number($row['number']);
+        $number->set_status($row['status']);
+        return $number;
+    }
+
     public function find($id){
         $number = new data_number();
         $number->set_id($id);
@@ -34,13 +43,15 @@ class mapper_number{
                     AND `houses`.`street_id` = `streets`.`id`");
         $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
         $sql->bind(':number_id', $number->get_id(), PDO::PARAM_INT);
-        $numbers = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.');
-        $count = count($numbers);
+        $sql->execute('Проблема при запросе лицевого счета.');
+        $stmt = $sql->get_stm();
+        $count = $stmt->rowCount();
         if($count === 0)
             return null;
+        elseif($count === 1)
+            return $this->create_object($stmt->fetch());
         if($count !== 1)
             throw new e_model('Неожиданное количество возвращаемых лицевых счетов.');
-        return  $numbers[0];
     }
 
     public function find_by_number($num){
@@ -69,13 +80,15 @@ class mapper_number{
                     AND `houses`.`street_id` = `streets`.`id`");
         $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
         $sql->bind(':number', (string) $num, PDO::PARAM_STR);
-        $numbers = $sql->map(new data_number(), 'Проблема при запросе лицевого счета.');
-        $count = count($numbers);
+        $sql->execute('Проблема при запросе лицевого счета.');
+        $stmt = $sql->get_stm();
+        $count = $stmt->rowCount();
         if($count === 0)
             return null;
+        elseif($count === 1)
+            return $this->create_object($stmt->fetch());
         if($count !== 1)
             throw new e_model('Неожиданное количество возвращаемых лицевых счетов.');
-        return  $numbers[0];
     }
 
     public function update(data_number $number){
