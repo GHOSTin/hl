@@ -4,7 +4,7 @@
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}
 {% block js %}
-    $('.meter[meter = {{ meter.id }}]').append(get_hidden_content())
+    $('.meter[meter = {{ meter.get_id() }}]').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
     <div class="meter-content">
@@ -12,11 +12,11 @@
         <ul class="nav nav-pills">
             <li><a class="get_dialog_rename_meter">Переименовать</a></li>
         </ul>
-        <div>Тарифность: <span class="meter-rates">{{ rates[meter.rates - 1] }}</span> <a class="get_dialog_edit_rates">изменить</a></div>
-        <div>Разрядность: <span class="meter-capacity">{{ meter.capacity }} <a class="get_dialog_edit_capacity">изменить</a></div>
+        <div>Тарифность: <span class="meter-rates">{{ rates[meter.get_rates() - 1] }}</span> <a class="get_dialog_edit_rates">изменить</a></div>
+        <div>Разрядность: <span class="meter-capacity">{{ meter.get_capacity() }} <a class="get_dialog_edit_capacity">изменить</a></div>
         <div>Периоды поверки: <a class="get_dialog_add_period">добавить</a>
             <ul class="meter-periods">
-                {% for period in meter.periods %}
+                {% for period in meter.get_periods() %}
                 <li period="{{ period }}">
                     {% if period > 12 %}
                         {{ period // 12 }} г {{ period % 12 }} месяц
@@ -33,7 +33,7 @@
                 <li><a class="get_dialog_add_service">Добавить</a></li>
             </ul>
             <ul class="meter-services unstyled">
-                {% for service in meter.service %}
+                {% for service in meter.get_services() %}
                     <li service="{{ service }}">{{ services[service] }} <a class="get_dialog_remove_service">исключить</a></li>
                 {% else %}
                     <li>Нет услуг</li>

@@ -62,10 +62,10 @@ class controller_meter{
         return ['meter' => $model->get_meter($_GET['id'])];
     }
 
-    public static function private_get_meter_content(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->get_meter($_GET['id'])];
-    }
+  public static function private_get_meter_content(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->get_meter($request->GET('id'))];
+  }
 
     public static function private_remove_period(model_request $request){
         $model = new model_meter(model_session::get_company());

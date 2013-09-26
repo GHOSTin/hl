@@ -80,7 +80,7 @@ final class data_meter extends data_object{
     }
 
     public function get_services(){
-        return $this->service;
+        return $this->services;
     }
 
     public function set_company_id($id){
