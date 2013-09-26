@@ -6,7 +6,7 @@
 	<select class="dialog-input-rates">
 		{% for key, rate in rates %}
 			<option value="{{ key + 1 }}"
-			{% if meter.rates == (key + 1)%} selected{% endif %}
+			{% if meter.get_rates() == (key + 1)%} selected{% endif %}
 			>{{ rate }}</option>
 		{% endfor %}
 	</select>
@@ -17,7 +17,7 @@
 {% block script %}
 	$('.update_rates').click(function(){
 		$.get('update_rates',{
-			id: {{ meter.id }},
+			id: {{ meter.get_id() }},
 			rates: $('.dialog-input-rates').val()
 			},function(r){
 				$('.dialog').modal('hide');

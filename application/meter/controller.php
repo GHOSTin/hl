@@ -36,10 +36,10 @@ class controller_meter{
         return ['meter' => $model->get_meter($_GET['id'])];
     }
 
-    public static function private_get_dialog_edit_rates(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->get_meter($_GET['id'])];
-    }
+  public static function private_get_dialog_edit_rates(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->get_meter($_GET['id'])];
+  }
 
     public static function private_get_dialog_remove_period(model_request $request){
         $meter = new data_meter();
@@ -92,8 +92,8 @@ class controller_meter{
         return ['meter' => $model->update_capacity($_GET['id'], $_GET['capacity'])];
     }
 
-    public static function private_update_rates(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->update_rates($_GET['id'], $_GET['rates'])];
-    }
+  public static function private_update_rates(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->update_rates($request->GET('id'), $request->GET('rates'))];
+  }
 }
