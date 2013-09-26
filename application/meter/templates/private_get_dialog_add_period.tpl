@@ -10,7 +10,7 @@
 {% block script %}
 	$('.add_period').click(function(){
 		$.get('add_period',{
-			id: {{ meter.id }},
+			id: {{ meter.get_id() }},
 			period: $('.dialog-input-month').val()
 			},function(r){
 				$('.dialog').modal('hide');

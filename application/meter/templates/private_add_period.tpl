@@ -1,10 +1,10 @@
 {% extends "ajax.tpl" %}
 {% set meter = component.meter %}
 {% block js %}
-    $('.meter[meter = {{ meter.id }}] .meter-periods').html(get_hidden_content())
+    $('.meter[meter = {{ meter.get_id() }}] .meter-periods').html(get_hidden_content())
 {% endblock js %}
 {% block html %}
-    {% for period in meter.periods %}
+    {% for period in meter.get_periods() %}
     <li period="{{ period }}">
         {% if period > 12 %}
             {{ period // 12 }} г {{ period % 12 }} месяц
