@@ -46,7 +46,7 @@ final class data_meter extends data_object{
         $rs = array_search($service, $this->services);
         if($rs === false)
             throw new e_model('Службы не было в этом счетчике.');
-        unset($this->service[$rs]);
+        unset($this->services[$rs]);
     }
 
     public function get_id(){

@@ -4,7 +4,7 @@
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% block title %}Диалог исключения услуги{% endblock title %}
 {% block dialog %}
-	Удалить услугу "{{ services[meter.service[0]] }}" из счетчика?
+	Удалить услугу "{{ services[request.GET('service')] }}" из счетчика?
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn remove_service">Исключить</div>
@@ -12,8 +12,8 @@
 {% block script %}
 	$('.remove_service').click(function(){
 		$.get('remove_service',{
-			id: {{ meter.id }},
-			service: '{{ meter.service[0] }}'
+			id: {{ request.GET('id') }},
+			service: '{{ request.GET('service') }}'
 			},function(r){
 				$('.dialog').modal('hide');
 				init_content(r);

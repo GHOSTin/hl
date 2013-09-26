@@ -16,7 +16,7 @@
 {% block script %}
 	$('.add_service').click(function(){
 		$.get('add_service',{
-			id: {{ meter.id }},
+			id: {{ meter.get_id() }},
 			service: $('.dialog-select-service').val()
 			},function(r){
 				$('.dialog').modal('hide');

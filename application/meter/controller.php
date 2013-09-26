@@ -45,13 +45,9 @@ class controller_meter{
     return true;
   }
 
-    public static function private_get_dialog_remove_service(model_request $request){
-        $meter = new data_meter();
-        $meter->set_id($_GET['id']);
-        $meter->add_service($_GET['service']);
-        $meter->verify('id', 'service');
-        return ['meter' => $meter];
-    }
+  public static function private_get_dialog_remove_service(model_request $request){
+    return true;
+  }
 
   public static function private_get_dialog_rename_meter(model_request $request){
     return ['meter' => (new model_meter(model_session::get_company()))
