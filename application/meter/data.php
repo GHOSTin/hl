@@ -70,7 +70,7 @@ final class data_meter extends data_object{
     }
 
     public function set_id($id){
-        $this->id = $id;
+        $this->id = (int) $id;
     }
 
     public function set_service($service){
@@ -88,7 +88,7 @@ final class data_meter extends data_object{
     }
 
     public function set_name($name){
-        $this->name = $name;
+        $this->name = (string) $name;
     }
 
     public function set_capacity($capacity){

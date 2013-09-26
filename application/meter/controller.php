@@ -57,10 +57,10 @@ class controller_meter{
         return ['meter' => $meter];
     }
 
-    public static function private_get_dialog_rename_meter(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->get_meter($_GET['id'])];
-    }
+  public static function private_get_dialog_rename_meter(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->get_meter($request->GET('id'))];
+  }
 
   public static function private_get_meter_content(model_request $request){
     return ['meter' => (new model_meter(model_session::get_company()))
@@ -77,10 +77,10 @@ class controller_meter{
         return ['meter' => $model->remove_service($_GET['id'], $_GET['service'])];
     }
 
-    public static function private_rename_meter(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->rename_meter($_GET['id'], $_GET['name'])];
-    }
+  public static function private_rename_meter(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->rename_meter($request->GET('id'), $request->GET('name'))];
+  }
 
   public static function private_show_default_page(model_request $request){
     return ['meters' => (new model_meter(model_session::get_company()))

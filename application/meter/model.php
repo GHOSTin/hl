@@ -101,7 +101,7 @@ class model_meter{
 		$mapper = new mapper_meter($this->company);
 		$old_meter = $mapper->find_by_name($name);
 		if(!is_null($old_meter))
-			if($meter->id != $old_meter->id)
+			if($meter->get_id() != $old_meter->get_id())
 				throw new e_model('Счетчик с таким именем уже существует.');
 		$meter->set_name($name);
 		$mapper->update($meter);

@@ -77,24 +77,25 @@ class mapper_meter{
       throw new e_model('Неожиданное количество возвращаемых счетчиков.');
   }
 
-    public function find_by_name($name){
-        $this->company->verify('id');
-        $meter = new data_meter();
-        $meter->set_name($name);
-        $meter->verify('name');
-        $sql = new sql();
-        $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
-                    FROM `meters` WHERE `company_id` = :company_id AND `name` = :name");
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':name', $meter->name, PDO::PARAM_STR);
-        $meters = $sql->map(new data_meter(), 'Проблема при запросе счетчика.');
-        $count = count($meters);
-        if($count === 0)
-            return null;
-        if($count !== 1)
-            throw new e_model('Неожиданное количество возвращаемых счетчиков.');
-        return  $meters[0];
-    }
+  public function find_by_name($name){
+    $meter = new data_meter();
+    $meter->set_name($name);
+    $meter->verify('name');
+    $sql = new sql();
+    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
+                FROM `meters` WHERE `company_id` = :company_id AND `name` = :name");
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
+    $sql->execute('Проблема при запросе счетчика.');
+    $stmt = $sql->get_stm();
+    $count = $stmt->rowCount();
+    if($count === 0)
+      return null;
+    elseif($count === 1)
+      return $this->create_object($stmt->fetch());
+    else
+      throw new e_model('Неожиданное количество возвращаемых счетчиков.');
+  }
 
     /**
     * Возвращает следующий для вставки идентификатор счетчика.
@@ -132,13 +133,12 @@ class mapper_meter{
   }
 
   public function update(data_meter $meter){
-    $this->company->verify('id');
     $meter->verify('id', 'name', 'capacity', 'rates', 'periods');
     $sql = new sql();
     $sql->query('UPDATE `meters` SET `name` = :name, `capacity` = :capacity,
                 `rates` = :rates, `periods` = :periods, `service` = :services
                 WHERE `company_id` = :company_id AND `id` = :id');
-    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':id', $meter->get_id(), PDO::PARAM_INT);
     $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
     $sql->bind(':capacity', $meter->get_capacity(), PDO::PARAM_INT);

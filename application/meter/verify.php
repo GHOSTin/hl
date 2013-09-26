@@ -56,8 +56,8 @@ class verify_meter{
     * Верификация периодов счетчика.
     */
     public static function periods(data_meter $meter){
-        if(!empty($meter->periods))
-            foreach($meter->periods as $period)
+        if(!empty($meter->get_periods()))
+            foreach($meter->get_periods() as $period)
                 $period = (int) ($period);
                 if($period < 0 OR $period > 240)
                     throw new e_model('Период задан не верно.');

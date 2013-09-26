@@ -2,7 +2,7 @@
 {% set meter = component.meter %}
 {% block title %}Диалог переименования счетчика{% endblock title %}
 {% block dialog %}
-	<input type="input" class="dialog-input-name" value="{{ meter.name }}">
+	<input type="input" class="dialog-input-name" value="{{ meter.get_name() }}">
 	<p>В названии счетчика могут быть использованы буквы русского алфавита, цифры, пробелы.</p>
 {% endblock dialog %}
 {% block buttons %}
@@ -11,7 +11,7 @@
 {% block script %}
 	$('.rename_meter').click(function(){
 		$.get('rename_meter',{
-			id: {{ meter.id }},
+			id: {{ meter.get_id() }},
 			name: $('.dialog-input-name').val()
 			},function(r){
 				$('.dialog').modal('hide');
