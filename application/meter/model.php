@@ -75,7 +75,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public function remove_period($id, $period){
-	    $meter = $this->get_meter($id);
+	  $meter = $this->get_meter($id);
 		$meter->remove_period($period);
 		$mapper = new mapper_meter($this->company);
 		return $mapper->update($meter);
@@ -86,7 +86,7 @@ class model_meter{
 	* @return data_meter
 	*/
 	public function remove_service($id, $service){
-	    $meter = $this->get_meter($id);
+	  $meter = $this->get_meter($id);
 		$meter->remove_service($service);
 		$mapper = new mapper_meter($this->company);
 		return $mapper->update($meter);

@@ -2,7 +2,7 @@
 {% set meter = component.meter %}
 {% block title %}Диалог исключения периода{% endblock title %}
 {% block dialog %}
-	Удалить период "{{ meter.periods[0] // 12 }} г {{ meter.periods[0] % 12 }} мес" из счетчика?
+	Удалить период "{{ request.GET('period') // 12 }} г {{ request.GET('period') % 12 }} мес" из счетчика?
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn remove_period">Удалить</div>
@@ -10,8 +10,8 @@
 {% block script %}
 	$('.remove_period').click(function(){
 		$.get('remove_period',{
-			id: {{ meter.id }},
-			period: '{{ meter.periods[0] }}'
+			id: {{ request.GET('id') }},
+			period: '{{ request.GET('period') }}'
 			},function(r){
 				$('.dialog').modal('hide');
 				init_content(r);

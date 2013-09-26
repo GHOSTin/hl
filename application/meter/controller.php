@@ -41,13 +41,9 @@ class controller_meter{
       ->get_meter($request->GET('id'))];
   }
 
-    public static function private_get_dialog_remove_period(model_request $request){
-        $meter = new data_meter();
-        $meter->set_id($_GET['id']);
-        $meter->add_period($_GET['period']);
-        $meter->verify('id', 'periods');
-        return ['meter' => $meter];
-    }
+  public static function private_get_dialog_remove_period(model_request $request){
+    return true;
+  }
 
     public static function private_get_dialog_remove_service(model_request $request){
         $meter = new data_meter();
@@ -67,10 +63,10 @@ class controller_meter{
       ->get_meter($request->GET('id'))];
   }
 
-    public static function private_remove_period(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->remove_period($_GET['id'], $_GET['period'])];
-    }
+  public static function private_remove_period(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->remove_period($request->GET('id'), $request->GET('period'))];
+  }
 
     public static function private_remove_service(model_request $request){
         $model = new model_meter(model_session::get_company());
