@@ -33,8 +33,7 @@ class model_meter{
 	* Возвращает объект счетчика или падает с исключением, что счетчик не существует.
 	*/
 	public function get_meter($id){
-		$mapper = new mapper_meter($this->company);
-		$meter = $mapper->find($id);
+		$meter = (new mapper_meter($this->company))->find($id);
 		if(!($meter instanceof data_meter))
 			throw new e_model('Счетчика не существует.');
 		return $meter;
@@ -78,14 +77,7 @@ class model_meter{
 	* @return array data_meter
 	*/
 	public function get_meters_by_service($service){
-	    $this->company->verify('id');
-	    $sql = new sql();
-	    $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
-	    			FROM `meters` WHERE `company_id` = :company_id AND FIND_IN_SET(:service, `service`) > 0
-	    		 	ORDER BY `name`");
-	    $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
-	    $sql->bind(':service', (string) $service, PDO::PARAM_STR);
-	    return $sql->map(new data_meter(), 'Проблема при выборке счетчиков.');
+	    return (new mapper_meter($this->company))->get_meters_by_service($service);
 	}
 
 	/**

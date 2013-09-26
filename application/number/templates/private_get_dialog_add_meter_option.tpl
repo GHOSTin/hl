@@ -1,7 +1,5 @@
 {% extends "dialog.tpl" %}
 {% set meter = component.meter %}
-{% set number = component.number %}
-{% set service = component.service %}
 {% set time = component.time %}
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
@@ -9,10 +7,10 @@
 {% block title %}Диалог добавления счетчика{% endblock title %}
 {% block dialog %}
 	<ul class="unstyled">
-		<li>Счетчик: {{ meter.name }}</li>
-		<li>Услуга: {{ services[service] }}</li>
-		<li>Тарифность: {{ rates[meter.rates - 1] }}</li>
-		<li>Разрядность: {{ meter.capacity }}</li>
+		<li>Счетчик: {{ meter.get_name() }}</li>
+		<li>Услуга: {{ services[request.GET('service')] }}</li>
+		<li>Тарифность: {{ rates[meter.get_rates() - 1] }}</li>
+		<li>Разрядность: {{ meter.get_capacity() }}</li>
 	</ul>
 	<ul class="unstyled">
 		<li>
@@ -34,7 +32,7 @@
 		<li>
 			<span>Период поверки</span>
 			<select class="dialog-select-period">
-                {% for period in meter.periods %}
+                {% for period in meter.get_periods() %}
                		<option value="{{ period }}">
                     {% if period > 12 %}
                         {{ period // 12 }} г {{ period % 12 }} месяц
@@ -80,9 +78,9 @@
 	// Привязывает счетчик к лицевому счету с выбранными параметрами
 	$('.add_meter').click(function(){
 		$.get('add_meter',{
-			number_id: {{ number.id }},
-			meter_id: {{ meter.id }},
-			service: '{{ service}}',
+			number_id: {{ request.GET('number_id') }},
+			meter_id: {{ meter.get_id() }},
+			service: '{{ request.GET('service') }}',
 			serial: $('.dialog-input-serial').val(),
 			date_release: $('.dialog-input-date_release').val(),
 			date_install: $('.dialog-input-date_install').val(),

@@ -29,7 +29,7 @@ final class data_meter extends data_object{
     }
 
     public function add_period($period){
-        if(in_array($period, $this->periods))
+        if(in_array($period, $this->periods, true))
             throw new e_model('Такой период уже задан в счетчике.');
         $this->periods[] = (int) $period;
     }

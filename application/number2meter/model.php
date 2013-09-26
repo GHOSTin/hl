@@ -13,11 +13,11 @@ class model_number2meter{
 
     public function add_meter($meter_id, $serial, $service, $place, $date_release,
                                 $date_install, $date_checking, $period, $comment){
-        $model = new model_meter($this->company);
-        $meter = $model->get_meter($meter_id);
-        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        $meter = (new model_meter($this->company))->get_meter($meter_id);
+        $mapper = new mapper_number2meter($this->company, $this->number);
         if($mapper->find($meter_id, $serial) !== null)
             throw new e_model('Счетчик с таким идентификатором и серийным номером уже существует.');
+        exit();
         $n2m = new data_number2meter();
         $n2m->set_meter_id($meter->id);
         $n2m->set_serial($serial);

@@ -81,9 +81,8 @@ class mapper_number2meter{
     }
 
     public function find($meter_id, $serial){
-        $this->company->verify('id');
         $meter = new data_meter();
-        $meter->id = $meter_id;
+        $meter->set_id($meter_id);
         $meter->verify('id');
         $sql = new sql();
         $sql->query("SELECT `number2meter`.`meter_id`, `number2meter`.`status`, `number2meter`.`number_id`,
@@ -99,17 +98,19 @@ class mapper_number2meter{
                     AND `number2meter`.`serial` = :serial
                     AND `number2meter`.`number_id` = :number_id
                     AND `meters`.`id` = `number2meter`.`meter_id`");
-        $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->bind(':meter_id', $meter_id, PDO::PARAM_INT);
-        $sql->bind(':serial', $serial, PDO::PARAM_STR);
-        $meters = $sql->map(new data_number2meter(), 'Проблема при запросе счетчика.');
-        $count = count($meters);
+        $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', (int )$meter_id, PDO::PARAM_INT);
+        $sql->bind(':serial', (string) $serial, PDO::PARAM_STR);
+        $sql->execute('Проблема при запросе счетчика.');
+        $stmt = $sql->get_stm();
+        $count = $stmt->rowCount();
         if($count === 0)
             return null;
-        if($count !== 1)
+        elseif($count === 1)
+            return $this->create_object($stmt->fetch());
+        else
             throw new e_model('Неожиданное количество возвращаемых счетчиков.');
-        return  $meters[0];
     }
 
     public function insert(data_number2meter $n2m){

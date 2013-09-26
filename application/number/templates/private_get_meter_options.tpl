@@ -3,7 +3,7 @@
 {% block html %}
     <option value="0">Выберите счетчик</option>
    {% for meter in meters %}
-    <option value="{{ meter.id }}">{{ meter.name }}</option>
+    <option value="{{ meter.get_id() }}">{{ meter.get_name() }}</option>
    {% endfor %}
 {% endblock html %}
 {% block js %}
