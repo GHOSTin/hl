@@ -22,23 +22,23 @@ class controller_meter{
         return ['meter' => $model->get_meter($_GET['id'])];
     }
 
-    public static function private_get_dialog_add_service(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->get_meter($_GET['id'])];
-    }
+  public static function private_get_dialog_add_service(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->get_meter($request->GET('id'))];
+  }
 
     public static function private_get_dialog_create_meter(model_request $request){
         return true;
     }
 
-    public static function private_get_dialog_edit_capacity(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->get_meter($_GET['id'])];
-    }
+  public static function private_get_dialog_edit_capacity(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->get_meter($request->GET('id'))];
+  }
 
   public static function private_get_dialog_edit_rates(model_request $request){
     return ['meter' => (new model_meter(model_session::get_company()))
-      ->get_meter($_GET['id'])];
+      ->get_meter($request->GET('id'))];
   }
 
     public static function private_get_dialog_remove_period(model_request $request){
@@ -87,10 +87,10 @@ class controller_meter{
       ->get_meters(new data_meter())];
   }
 
-    public static function private_update_capacity(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->update_capacity($_GET['id'], $_GET['capacity'])];
-    }
+  public static function private_update_capacity(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->update_capacity($request->GET('id'), $request->GET('capacity'))];
+  }
 
   public static function private_update_rates(model_request $request){
     return ['meter' => (new model_meter(model_session::get_company()))

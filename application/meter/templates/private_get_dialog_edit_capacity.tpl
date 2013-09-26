@@ -5,7 +5,7 @@
 	<select class="dialog-input-capacity">
 		{% for value in 1..9 %}
 			<option value="{{ value }}"
-			{% if meter.capacity == value %} selected{% endif %}
+			{% if meter.get_capacity() == value %} selected{% endif %}
 			>{{ value }}</option>
 		{% endfor %}
 	</select>
@@ -16,7 +16,7 @@
 {% block script %}
 	$('.update_capacity').click(function(){
 		$.get('update_capacity',{
-			id: {{ meter.id }},
+			id: {{ meter.get_id() }},
 			capacity: $('.dialog-input-capacity').val()
 			},function(r){
 				$('.dialog').modal('hide');
