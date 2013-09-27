@@ -1,41 +1,40 @@
 <?php
 class mapper_meter{
 
-    private $company;
+  private $company;
 
-    private static $sql_find = "SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
-      FROM `meters` WHERE `company_id` = :company_id AND `id` = :id";
+  private static $sql_find = "SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
+    FROM `meters` WHERE `company_id` = :company_id AND `id` = :id";
 
-    private static $sql_get_met_by_service = "SELECT `id`, `company_id`, `name`,
-      `capacity`, `rates`, `service`, `periods` FROM `meters`
-      WHERE `company_id` = :company_id AND FIND_IN_SET(:service, `service`) > 0
-      ORDER BY `name`";
+  private static $sql_get_met_by_service = "SELECT `id`, `company_id`, `name`,
+    `capacity`, `rates`, `service`, `periods` FROM `meters`
+    WHERE `company_id` = :company_id AND FIND_IN_SET(:service, `service`) > 0
+    ORDER BY `name`";
 
-    private static $sql_get_meters = "SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
-          FROM `meters` WHERE `company_id` = :company_id ORDER BY `name`";
+  private static $sql_get_meters = "SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
+    FROM `meters` WHERE `company_id` = :company_id ORDER BY `name`";
 
-    public function __construct(data_company $company){
-        $this->company = $company;
-        $this->company->verify('id');
-    }
+  public function __construct(data_company $company){
+    $this->company = $company;
+    $this->company->verify('id');
+  }
 
-    public function create(data_meter $meter){
-        $meter->set_id($this->get_insert_id());
-        $meter->set_company_id($this->company->id);
-        $meter->verify('id', 'company_id', 'name', 'rates', 'capacity');
-        $sql = new sql();
-        $sql->query("INSERT INTO `meters` (`id`, `company_id`, `name`, `rates`, `capacity`,`periods`)
-                    VALUES (:id, :company_id, :name, :rates, :capacity, :periods)");
-        $sql->bind(':id', $meter->get_id(), PDO::PARAM_INT);
-        $sql->bind(':company_id', $meter->get_company_id(), PDO::PARAM_INT);
-        $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
-        $sql->bind(':rates', $meter->get_rates(), PDO::PARAM_INT);
-        $sql->bind(':capacity', $meter->get_capacity(), PDO::PARAM_INT);
-        $sql->bind(':periods', implode(';', $meter->get_periods()), PDO::PARAM_STR);
-        $sql->execute('Проблемы при создании счетчика.');
-        $sql->close();
-        return $meter;
-    }
+  public function create(data_meter $meter){
+    $meter->set_id($this->get_insert_id());
+    $meter->set_company_id($this->company->get_id());
+    $meter->verify('id', 'company_id', 'name', 'rates', 'capacity');
+    $sql = new sql();
+    $sql->query("INSERT INTO `meters` (`id`, `company_id`, `name`, `rates`, `capacity`,`periods`)
+                VALUES (:id, :company_id, :name, :rates, :capacity, :periods)");
+    $sql->bind(':id', (int) $meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $meter->get_company_id(), PDO::PARAM_INT);
+    $sql->bind(':name', (string) $meter->get_name(), PDO::PARAM_STR);
+    $sql->bind(':rates', (int) $meter->get_rates(), PDO::PARAM_INT);
+    $sql->bind(':capacity', (int) $meter->get_capacity(), PDO::PARAM_INT);
+    $sql->bind(':periods', implode(';', $meter->get_periods()), PDO::PARAM_STR);
+    $sql->execute('Проблемы при создании счетчика.');
+    return $meter;
+  }
 
   public function create_object(array $row){
     $meter = new data_meter();
@@ -97,23 +96,23 @@ class mapper_meter{
       throw new e_model('Неожиданное количество возвращаемых счетчиков.');
   }
 
-    /**
-    * Возвращает следующий для вставки идентификатор счетчика.
-    * @return int
-    */
-    private function get_insert_id(){
-        $this->company->verify('id');
-        $sql = new sql();
-        $sql->query("SELECT MAX(`id`) as `max_id` FROM `meters`
-                    WHERE `company_id` = :company_id");
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->execute('Проблема при опредении следующего meter_id.');
-        if($sql->count() !== 1)
-            throw new e_model('Проблема при опредении следующего meter_id.');
-        $id = (int) $sql->row()['max_id'] + 1;
-        $sql->close();
-        return $id;
-    }
+  /**
+  * Возвращает следующий для вставки идентификатор счетчика.
+  * @return int
+  */
+  private function get_insert_id(){
+      $this->company->verify('id');
+      $sql = new sql();
+      $sql->query("SELECT MAX(`id`) as `max_id` FROM `meters`
+                  WHERE `company_id` = :company_id");
+      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+      $sql->execute('Проблема при опредении следующего meter_id.');
+      if($sql->count() !== 1)
+          throw new e_model('Проблема при опредении следующего meter_id.');
+      $id = (int) $sql->row()['max_id'] + 1;
+      $sql->close();
+      return $id;
+  }
 
   /**
   * Возвращает список счетчиков

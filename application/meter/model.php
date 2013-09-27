@@ -43,7 +43,7 @@ class model_meter{
 	* Возвращает список счетчиков
 	* @return array data_meter
 	*/
-	public function get_meters(data_meter $meter){
+	public function get_meters(){
 		return (new mapper_meter($this->company))->get_meters();
 	}
 

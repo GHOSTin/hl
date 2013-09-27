@@ -6,16 +6,16 @@ class controller_meter{
       ->add_period($request->GET('id'), $request->GET('period'))];
   }
 
-    public static function private_add_service(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->add_service($_GET['id'], $_GET['service'])];
-    }
+  public static function private_add_service(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->add_service($request->GET('id'), $request->GET('service'))];
+  }
 
-    public static function private_create_meter(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        $model->create_meter($_GET['name'], $_GET['capacity'], $_GET['rates']);
-        return ['meters' => $model->get_meters(new data_meter())];
-    }
+  public static function private_create_meter(model_request $request){
+      $model = new model_meter(model_session::get_company());
+      $model->create_meter($request->GET('name'), $request->GET('capacity'), $request->GET('rates'));
+      return ['meters' => $model->get_meters()];
+  }
 
   public static function private_get_dialog_add_period(model_request $request){
     return ['meter' => (new model_meter(model_session::get_company()))
@@ -28,7 +28,7 @@ class controller_meter{
   }
 
   public static function private_get_dialog_create_meter(model_request $request){
-      return true;
+    return true;
   }
 
   public static function private_get_dialog_edit_capacity(model_request $request){
@@ -64,10 +64,10 @@ class controller_meter{
       ->remove_period($request->GET('id'), $request->GET('period'))];
   }
 
-    public static function private_remove_service(model_request $request){
-        $model = new model_meter(model_session::get_company());
-        return ['meter' => $model->remove_service($_GET['id'], $_GET['service'])];
-    }
+  public static function private_remove_service(model_request $request){
+    return ['meter' => (new model_meter(model_session::get_company()))
+      ->remove_service($_GET['id'], $_GET['service'])];
+  }
 
   public static function private_rename_meter(model_request $request){
     return ['meter' => (new model_meter(model_session::get_company()))
@@ -76,7 +76,7 @@ class controller_meter{
 
   public static function private_show_default_page(model_request $request){
     return ['meters' => (new model_meter(model_session::get_company()))
-      ->get_meters(new data_meter())];
+      ->get_meters()];
   }
 
   public static function private_update_capacity(model_request $request){
