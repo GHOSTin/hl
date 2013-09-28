@@ -66,7 +66,7 @@ class controller_meter{
 
   public static function private_remove_service(model_request $request){
     return ['meter' => (new model_meter(model_session::get_company()))
-      ->remove_service($_GET['id'], $_GET['service'])];
+      ->remove_service($request->GET('id'), $request->GET('service'))];
   }
 
   public static function private_rename_meter(model_request $request){
