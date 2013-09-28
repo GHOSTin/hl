@@ -275,9 +275,8 @@ class controller_number{
     public static function private_get_meter_data(model_request $request){
         $company = model_session::get_company();
         $number = new data_number($request->GET('id'));
-        (new model_number2meter($company, $number))->init_meters();
-        $meter = $number->get_meters()[$request->GET('meter_id').'_'.$request->GET('serial')];
-
+        $meter = (new model_number2meter($company, $number))
+            ->get_meter($request->GET('meter_id'), $request->GET('serial'));
         if($_GET['time'] > 0)
             $time = getdate($_GET['time']);
         else
@@ -320,18 +319,19 @@ class controller_number{
                 'meter_data' => $model->get_values($time_begin, $time_end)];
     }
 
-    public static function private_get_meter_docs(model_request $request){
-        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
-        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
-    }
+  public static function private_get_meter_docs(model_request $request){
+    $number = new data_number($request->GET('id'));
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
+    return ['n2m' => $meter];
+  }
 
-    public static function private_get_meter_info(model_request $request){
-        $company = model_session::get_company();
-        $number = new data_number($request->GET('id'));
-        (new model_number2meter($company, $number))->init_meters();
-        $meter = $number->get_meters()[$request->GET('meter_id').'_'.$request->GET('serial')];
-        return ['n2m' => $meter];
-    }
+  public static function private_get_meter_info(model_request $request){
+    $number = new data_number($request->GET('id'));
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
+    return ['n2m' => $meter];
+  }
     
   public static function private_get_meter_options(model_request $request){
     return ['meters' => (new model_meter(model_session::get_company()))

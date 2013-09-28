@@ -52,7 +52,7 @@ class model_number2meter{
     }
 
     public function get_meter($meter_id, $serial){
-        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        $mapper = new mapper_number2meter($this->company, $this->number);
         $meter = $mapper->find($meter_id, $serial);
         if(!($meter instanceof data_number2meter))
             throw new e_model('Связи счетчик лицевой не существует.');
