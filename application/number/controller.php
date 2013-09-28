@@ -326,8 +326,11 @@ class controller_number{
     }
 
     public static function private_get_meter_info(model_request $request){
-        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
-        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
+        $company = model_session::get_company();
+        $number = new data_number($request->GET('id'));
+        (new model_number2meter($company, $number))->init_meters();
+        $meter = $number->get_meters()[$request->GET('meter_id').'_'.$request->GET('serial')];
+        return ['n2m' => $meter];
     }
     
   public static function private_get_meter_options(model_request $request){
