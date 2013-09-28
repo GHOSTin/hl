@@ -304,19 +304,17 @@ class controller_number{
     }
 
     public static function private_get_meter_cart(model_request $request){
-        $time = getdate();
-        $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
-        $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
-        $company = model_session::get_company();
-        $model = new model_number2meter($company, $_GET['number_id']);
-        $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
-        $model = new model_number($company);
-        $number = $model->get_number($_GET['number_id']);
-        $model = new model_meter2data(model_session::get_company(), $_GET['number_id'],
-                                        $_GET['meter_id'], $_GET['serial']);
-        return ['meter' => $meter,
-                'number' => $number, 'time' => $time_begin,
-                'meter_data' => $model->get_values($time_begin, $time_end)];
+        // $time = getdate();
+        // $time_begin = mktime(12, 0, 0, 1, 1, $time['year']);
+        // $time_end = mktime(12, 0, 0, 12, 1, $time['year']);
+      $company = model_session::get_company();
+      $number = (new model_number($company))->get_number($request->GET('number_id'));
+      $meter = (new model_number2meter(model_session::get_company(), $number))
+        ->get_meter($request->GET('meter_id'), $request->GET('serial'));
+      return ['n2m' => $meter];
+        // return ['meter' => $meter,
+        //         'number' => $number, 'time' => $time_begin,
+        //         'meter_data' => $model->get_values($time_begin, $time_end)];
     }
 
   public static function private_get_meter_docs(model_request $request){
