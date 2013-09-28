@@ -2,33 +2,35 @@
 class model_meter2data{
 
     private $company;
-    private $number_id;
-    private $meter_id;
-    private $serial;
+    private $number;
+    private $meter;
+    private $n2m;
 
-    public function __construct(data_company $company, $number_id, $meter_id, $serial){
+    public function __construct(data_company $company, data_number2meter $n2m){
         $this->company = $company;
-        $this->number_id = $number_id;
-        $this->meter_id = $meter_id;
-        $this->serial = $serial;
+        $this->company->verify('id');
+        $this->number = $n2m->get_number();
+        $this->number->verify('id');
+        $this->meter = $n2m->get_meter();
+        $this->meter->verify('id');
+        $this->n2m = $n2m;
+        $this->n2m->verify('serial');
     }
 
     public function get_values($begin, $end){
-        $this->company->verify('id');
-        if(empty($begin) OR empty($end))
-            throw new e_model('Время начала выборки больше чем время конца выборки.');
         $sql = new sql();
-        $sql->query("SELECT `time`, `value`, `comment`, `way`, `timestamp` FROM `meter2data`
+        $sql->query("SELECT `time`, `value`, `comment`, `way`, `timestamp`
+            FROM `meter2data`
                     WHERE `meter2data`.`company_id` = :company_id
                     AND `meter2data`.`number_id` = :number_id
                     AND `meter2data`.`meter_id` = :meter_id
                     AND `meter2data`.`serial` = :serial
                     AND `meter2data`.`time` >= :time_begin
                     AND `meter2data`.`time` <= :time_end");
-        $sql->bind(':meter_id', $this->meter_id, PDO::PARAM_INT);
-        $sql->bind(':serial', $this->serial, PDO::PARAM_STR);
-        $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+        $sql->bind(':meter_id', $this->meter->get_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $this->n2m->get_serial(), PDO::PARAM_STR);
+        $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
         $sql->bind(':time_begin', $begin, PDO::PARAM_INT);
         $sql->bind(':time_end', $end, PDO::PARAM_INT);
         $sql->execute( 'Проблема при при выборки данных счетчика.');
@@ -46,6 +48,10 @@ class model_meter2data{
             $result[$data->time] = $data;
         }
         return $result;
+    }
+
+    public function init_values($begin, $end){
+        $values = $this->get_values($begin, $end);
     }
 
     public function update_value($time, array $values, $way, $comment, $timestamp){

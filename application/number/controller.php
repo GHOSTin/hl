@@ -274,17 +274,19 @@ class controller_number{
 
     public static function private_get_meter_data(model_request $request){
         $company = model_session::get_company();
-        $model = new model_number2meter($company, $_GET['id']);
-        $meter = $model->get_meter($_GET['meter_id'], $_GET['serial']);
+        $number = new data_number($request->GET('id'));
+        (new model_number2meter($company, $number))->init_meters();
+        $meter = $number->get_meters()[$request->GET('meter_id').'_'.$request->GET('serial')];
+
         if($_GET['time'] > 0)
             $time = getdate($_GET['time']);
         else
             $time = getdate();
         $begin = mktime(12, 0, 0, 1, 1, $time['year']);
         $end = mktime(12, 0, 0, 12, 1, $time['year']);
-        $model = new model_meter2data($company, $_GET['id'], $_GET['meter_id'], $_GET['serial']);
-        return ['meter' => $meter, 
-                'time' => $begin, 'meter_data' => $model->get_values($begin, $end)];
+
+        (new model_meter2data($company, $meter))->init_values($begin, $end);
+        return ['n2m' => $meter, 'time' => $begin];
     }
 
     public static function private_get_meter_value(model_request $request){

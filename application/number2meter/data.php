@@ -56,6 +56,11 @@ class data_number2meter extends data_object{
         return $this->meter;
     }
 
+
+    public function get_number(){
+        return $this->number;
+    }
+
     public function get_period(){
         return $this->period;
     }
