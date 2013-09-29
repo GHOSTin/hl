@@ -14,7 +14,7 @@ class verify_number2meter{
     */
     public static function company_id(data_number2meter $number2meter){
         $company = new data_company();
-        $company->id = $number2meter->get_company_id();
+        $company->set_id($number2meter->get_company_id());
         $company->verify('id');
     }
 
@@ -23,7 +23,7 @@ class verify_number2meter{
     */
     public static function meter_id(data_number2meter $number2meter){
         $meter = new data_meter();
-        $meter->id = $number2meter->get_meter_id();
+        $meter->set_id($number2meter->get_meter_id());
         $meter->verify('id');
     }
 
@@ -72,8 +72,6 @@ class verify_number2meter{
     * Верификация места установки счетчика.
     */
     public static function place(data_number2meter $number2meter){
-        var_dump($number2meter->get_place());
-        exit();
         if(!in_array($number2meter->get_place(), ['bathroom', 'kitchen', 'toilet']))
             throw new e_model('Место установки задано не верно.');
     }

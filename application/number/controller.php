@@ -174,10 +174,12 @@ class controller_number{
         return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
     }
 
-    public static function private_get_dialog_edit_meter_status(model_request $request){
-        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
-        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
-    }
+  public static function private_get_dialog_edit_meter_status(model_request $request){
+    $number = new data_number($request->GET('id'));
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
+    return ['n2m' => $meter];
+  }
 
     public static function private_get_dialog_edit_meter_place(model_request $request){
         $model = new model_number2meter(model_session::get_company(), $_GET['id']);
@@ -451,21 +453,23 @@ class controller_number{
         return ['meter' => $model->update_period($_GET['meter_id'], $_GET['serial'], $period)];
     }
 
-    public static function private_update_meter_status(model_request $request){
-        $company = model_session::get_company();
-        $model = new model_number2meter($company, $_GET['number_id']);
-        $model->update_status($_GET['meter_id'], $_GET['serial']);
-        $meters = $model->get_meters();
-        $enable_meters = $disable_meters = [];
-        if(!empty($meters))
-            foreach($meters as $meter)
-                if($meter->get_status() == 'enabled')
-                    $enable_meters[] = $meter;
-                elseif($meter->get_status() == 'disabled')
-                    $disable_meters[] = $meter;
-        return ['data' => $meter,
-                'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
-    }
+  public static function private_update_meter_status(model_request $request){
+    $company = model_session::get_company();
+    $number = new data_number($request->GET('number_id'));
+    $model = new model_number2meter($company, $number);
+    $model->update_status($request->GET('meter_id'), $request->GET('serial'));
+    $model->init_meters();
+    $enable_meters = $disable_meters = [];
+    if(!empty($number->get_meters()))
+        foreach($number->get_meters() as $meter)
+            if($meter->get_status() == 'enabled')
+                $enable_meters[] = $meter;
+            elseif($meter->get_status() == 'disabled')
+                $disable_meters[] = $meter;
+    $model = new model_number($company);
+    return ['number' => $number,
+            'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
+  }
 
     public static function private_update_meter_place(model_request $request){
         $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);

@@ -128,7 +128,7 @@ class model_number2meter{
             $meter->set_status('disabled');
         else
             $meter->set_status('enabled');
-        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        $mapper = new mapper_number2meter($this->company, $this->number);
         return $mapper->update($meter);
     }
 }
