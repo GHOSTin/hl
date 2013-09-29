@@ -1,11 +1,11 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meter %}
+{% set n2m = component.n2m %}
 {% set places = {'kitchen':'Кухня', 'toilet':'Туалет', 'bathroom':'Ванна'} %}
 {% block title %}Диалог редактирования места установки счетчика{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-place">
 	{% for key, place in places %}
-		{% if meter.get_place() == key %}
+		{% if n2m.get_place() == key %}
 			{% set selected = ' selected' %}
 		{% else %}
 			{% set selected = '' %}
@@ -21,9 +21,9 @@
 	// Изменяет период поверки счетчика привязанного к лицевому счету
 	$('.update_meter_place').click(function(){
 		$.get('update_meter_place',{
-			number_id: {{ meter.get_number_id() }},
-			meter_id: {{ meter.get_meter_id() }},
-			serial: '{{ meter.get_serial() }}',
+			number_id: {{ n2m.get_number().get_id() }},
+			meter_id: {{ n2m.get_meter().get_id() }},
+			serial: '{{ n2m.get_serial() }}',
 			place: $('.dialog-select-place').val()
 			},function(r){
 				$('.dialog').modal('hide');

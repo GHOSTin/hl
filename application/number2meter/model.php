@@ -110,7 +110,7 @@ class model_number2meter{
         if(!in_array($meter->get_service(), ['cold_water', 'hot_water']))
                 throw new e_model('Вы не можете изменить место для счетчика с такой услугой.');
         $meter->set_place($place);
-        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        $mapper = new mapper_number2meter($this->company, $this->number);
         return $mapper->update($meter);
     }
 
