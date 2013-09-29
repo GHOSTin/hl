@@ -116,7 +116,7 @@ class model_number2meter{
 
     public function update_serial($meter_id, $old_serial, $new_serial){
         $old_meter = $this->get_meter($meter_id, $old_serial);
-        $mapper = new mapper_number2meter($this->company, $this->number_id);
+        $mapper = new mapper_number2meter($this->company, $this->number);
         if(!is_null($mapper->find($meter_id, $new_serial)))
             throw new e_model('Счетчик с таким серийным номером уже привязан.');
         return $mapper->update_serial($old_meter, $new_serial);

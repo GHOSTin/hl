@@ -186,10 +186,12 @@ class controller_number{
         return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
     }
 
-    public static function private_get_dialog_edit_serial(model_request $request){
-        $model = new model_number2meter(model_session::get_company(), $_GET['id']);
-        return ['meter' => $model->get_meter($_GET['meter_id'], $_GET['serial'])];
-    }
+  public static function private_get_dialog_edit_serial(model_request $request){
+    $number = new data_number($request->GET('id'));
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
+    return ['n2m' => $meter];
+  }
 
     public static function private_get_dialog_exclude_processing_center(model_request $request){
       return ['center' => (new model_processing_center)
@@ -432,15 +434,12 @@ class controller_number{
                 'meter_data' => $model->get_values($time_begin, $time_end)];
     }
 
-    public static function private_update_serial(model_request $request){
-        $meter = new data_number2meter();
-        $meter->set_number_id($_GET['number_id']);
-        $meter->set_meter_id($_GET['meter_id']);
-        $meter->set_serial($_GET['serial']);
-        $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
-        return ['old_meter' => $meter,
-                'new_meter' => $model->update_serial($_GET['meter_id'], $_GET['serial'], $_GET['new_serial'])];
-    }
+  public static function private_update_serial(model_request $request){
+    $number = new data_number($request->GET('number_id'));
+    return ['n2m' => (new model_number2meter(model_session::get_company(), $number))
+      ->update_serial($request->GET('meter_id'), $request->GET('serial'),
+        $request->GET('new_serial'))];
+  }
 
     public static function private_update_meter_comment(model_request $request){
         $model = new model_number2meter(model_session::get_company(), $_GET['number_id']);
