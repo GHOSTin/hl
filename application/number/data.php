@@ -58,6 +58,13 @@ final class data_number extends data_object{
       unset($this->centers[$n2c->get_center()->get_id()]);
     }
 
+    public function remove_n2m(data_number2meter $n2m){
+      $id = $n2m->get_meter()->get_id().'_'.$n2m->get_serial();
+      if(!array_key_exists($id, $this->meters))
+        throw new e_model('Счетчик не привязан к лицевому счету.');
+      unset($this->meters[$id]);
+    }
+
     public function get_id(){
         return $this->id;
     }

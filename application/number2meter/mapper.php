@@ -43,19 +43,29 @@ class mapper_number2meter{
         return $n2m;
     }
 
-    public function delete(data_number2meter $meter){
-        $meter->set_company_id($this->company->id);
-        $meter->set_number_id($this->number_id);
-        $meter->verify('company_id', 'number_id', 'meter_id', 'serial');
+    public function delete(data_number2meter $n2m){
+        $n2m->get_meter()->verify('id');
+        $n2m->verify('serial');
+
         $sql = new sql();
         $sql->query("DELETE FROM `number2meter` 
             WHERE `company_id` = :company_id AND `number_id` = :number_id
             AND `meter_id` = :meter_id AND `serial` = :serial");
-        $sql->bind(':number_id', $meter->get_number_id(), PDO::PARAM_INT);
-        $sql->bind(':company_id', $meter->get_company_id(), PDO::PARAM_INT);
-        $sql->bind(':meter_id', $meter->get_meter_id(), PDO::PARAM_INT);
-        $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
+        $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $n2m->get_meter()->get_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $n2m->get_serial(), PDO::PARAM_STR);
         $sql->execute('Проблема при удалении связи лицевого счета и счетчика');
+
+        $sql = new sql();
+        $sql->query("DELETE FROM `meter2data` WHERE `company_id` = :company_id
+            AND `number_id` = :number_id AND `meter_id` = :meter_id AND `serial` = :serial");
+
+        $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $n2m->get_meter()->get_id(), PDO::PARAM_INT);
+        $sql->bind(':serial', $n2m->get_serial(), PDO::PARAM_STR);
+        $sql->execute('Проблема при удалении значений счетчика');
     }
 
     public function init_meters(){
@@ -117,8 +127,8 @@ class mapper_number2meter{
     public function insert(data_number2meter $n2m){
         $n2m->verify('serial', 'service', 'status', 'place', 'date_release',
             'date_install', 'date_checking', 'period', 'comment');
-
-        exit();
+        $n2m->get_meter()->verify('id');
+        
         $sql = new sql();
         $sql->query('INSERT INTO `number2meter` (`company_id`, `number_id`,
                     `meter_id`, `serial`, `status`, `service`, `place`,
@@ -126,9 +136,9 @@ class mapper_number2meter{
                     `comment`) VALUES (:company_id, :number_id, :meter_id,
                     :serial, :status, :service, :place, :date_release,
                     :date_install, :date_checking, :period, :comment)');
-        $sql->bind(':number_id', $n2m->get_number_id(), PDO::PARAM_INT);
-        $sql->bind(':company_id', $n2m->get_company_id(), PDO::PARAM_INT);
-        $sql->bind(':meter_id', $n2m->get_meter_id(), PDO::PARAM_INT);
+        $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':meter_id', $n2m->get_meter()->get_id(), PDO::PARAM_INT);
         $sql->bind(':serial', $n2m->get_serial(), PDO::PARAM_STR);
         $sql->bind(':service', $n2m->get_service(), PDO::PARAM_STR);
         $sql->bind(':status', $n2m->get_status(), PDO::PARAM_STR);

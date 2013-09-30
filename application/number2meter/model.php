@@ -64,10 +64,13 @@ class model_number2meter{
         $mapper->init_meters();
     }
 
-    public function remove_meter($meter_id, $serial){
-        $meter = $this->get_meter($meter_id, $serial);
-        $mapper = new mapper_number2meter($this->company, $this->number_id);
-        return $mapper->delete($meter);
+    public function delete_meter($meter_id, $serial){
+        $this->init_meters();
+        $meter = new data_meter($meter_id);
+        $n2m = new data_number2meter($this->number, $meter);
+        $n2m->set_serial($serial);
+        $this->number->remove_n2m($n2m);
+        return (new mapper_number2meter($this->company, $this->number))->update_meter_list();
     }
     
     public function update_date_checking($meter_id, $serial, $time){

@@ -43,7 +43,7 @@
                 {% endfor %}
             </select>
 		</li>
-		{% if service in ['cold_water', 'hot_water'] %}
+		{% if request.GET('service') in ['cold_water', 'hot_water'] %}
 		<li>
 			<span>Место установки</span>
 			<select class="dialog-select-place">

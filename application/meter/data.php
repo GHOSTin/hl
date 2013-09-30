@@ -13,6 +13,10 @@ final class data_meter extends data_object{
   private $services = [];
   private static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
+  public function __construct($id = null){
+    $this->id = (int) $id;
+  }
+
   public function verify(){
     if(func_num_args() < 0)
       throw new e_data('Параметры верификации не были переданы.');
@@ -73,7 +77,7 @@ final class data_meter extends data_object{
   public function set_service($service){
     if(!in_array($service, self::$service_list, true))
       throw new e_model('Недопустимая служба');
-    $this->service[] = (string) $service;
+    $this->services[] = (string) $service;
   }
 
   public function get_services(){
