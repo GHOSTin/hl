@@ -445,9 +445,15 @@ class controller_number{
     (new model_meter2data($company, $n2m))
       ->update_value($request->GET('time'), $request->GET('tarif'), 
         $request->GET('way'), $request->GET('comment'), $timestamp);
-      exit();
-      return ['meter' => $meter, 'time' => $time_begin,
-              'meter_data' => $model->get_values($time_begin, $time_end)];
+    if($_GET['time'] > 0)
+        $time = getdate($_GET['time']);
+    else
+        $time = getdate();
+    $begin = mktime(12, 0, 0, 1, 1, $time['year']);
+    $end = mktime(12, 0, 0, 12, 1, $time['year']);
+
+    (new model_meter2data($company, $n2m))->init_values($begin, $end);
+    return ['n2m' => $n2m, 'time' => $begin];
   }
 
   public static function private_update_serial(model_request $request){
