@@ -1,78 +1,52 @@
 <?php
 class model_meter2data{
 
-    private $company;
-    private $n2m;
+  private $company;
+  private $n2m;
 
-    
-    public function __construct(data_company $company, data_number2meter $n2m){
-        $this->company = $company;
-        $this->company->verify('id');
-        $this->n2m = $n2m;
-        $this->n2m->get_number()->verify('id');
-        $this->n2m->get_meter()->verify('id');
-        $this->n2m->verify('serial');
-    }
+  
+  public function __construct(data_company $company, data_number2meter $n2m){
+      $this->company = $company;
+      $this->company->verify('id');
+      $this->n2m = $n2m;
+      $this->n2m->get_number()->verify('id');
+      $this->n2m->get_meter()->verify('id');
+      $this->n2m->verify('serial');
+  }
 
-    public function get_values($begin, $end){
-        // $sql = new sql();
-        // $sql->query("SELECT `time`, `value`, `comment`, `way`, `timestamp`
-        //     FROM `meter2data`
-        //             WHERE `meter2data`.`company_id` = :company_id
-        //             AND `meter2data`.`number_id` = :number_id
-        //             AND `meter2data`.`meter_id` = :meter_id
-        //             AND `meter2data`.`serial` = :serial
-        //             AND `meter2data`.`time` >= :time_begin
-        //             AND `meter2data`.`time` <= :time_end");
-        // $sql->bind(':meter_id', $this->meter->get_id(), PDO::PARAM_INT);
-        // $sql->bind(':serial', $this->n2m->get_serial(), PDO::PARAM_STR);
-        // $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
-        // $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-        // $sql->bind(':time_begin', $begin, PDO::PARAM_INT);
-        // $sql->bind(':time_end', $end, PDO::PARAM_INT);
-        // $sql->execute( 'Проблема при при выборки данных счетчика.');
-        // $result = [];
-        // while($row = $sql->row()){
-        //     $data = new data_meter2data();
-        //     $data->time = $row['time'];
-        //     $data->comment = $row['comment'];
-        //     $data->way = $row['way'];
-        //     $data->timestamp = $row['timestamp'];
-        //     if(empty($row['value']))
-        //         $data->value = [];
-        //     else
-        //         $data->value = explode(';', $row['value']);
-        //     $result[$data->time] = $data;
-        // }
-        // return $result;
-    }
+  public function get_values($begin, $end){
+    return (new mapper_meter2data($this->company, $this->n2m))
+      ->get_values($begin, $end);
+  }
 
-    public function get_value($time){
-      return (new mapper_meter2data($this->company, $this->n2m))->find($time);
-    }
-     
+  public function get_value($time){
+    return (new mapper_meter2data($this->company, $this->n2m))->find($time);
+  }
 
-    public function init_values($begin, $end){
-        $values = $this->get_values($begin, $end);
-    }
+  public function init_values($begin, $end){
+    $values = $this->get_values($begin, $end);
+    if(!empty($values))
+      foreach($values as $value)
+        $this->n2m->add_value($value);
+  }
 
-    public function update_value($time, array $values, $way, $comment, $timestamp){
-      $mapper = new mapper_meter2data($this->company, $this->n2m);
-      $value = $mapper->find($time);
-      if(!is_null($value)){
-        $value->set_way($way);
-        $value->set_comment($comment);
-        $value->set_value($values);
-        $value->set_timestamp($timestamp);
-        $mapper->update($value);
-      }else{
-        $value = new data_meter2data();
-        $value->set_way($way);
-        $value->set_comment($comment);
-        $value->set_value($values);
-        $value->set_time($time);
-        $value->set_timestamp(time());
-        $mapper->insert($value);
-      }
+  public function update_value($time, array $values, $way, $comment, $timestamp){
+    $mapper = new mapper_meter2data($this->company, $this->n2m);
+    $value = $mapper->find($time);
+    if(!is_null($value)){
+      $value->set_way($way);
+      $value->set_comment($comment);
+      $value->set_value($values);
+      $value->set_timestamp($timestamp);
+      $mapper->update($value);
+    }else{
+      $value = new data_meter2data();
+      $value->set_way($way);
+      $value->set_comment($comment);
+      $value->set_value($values);
+      $value->set_time($time);
+      $value->set_timestamp(time());
+      $mapper->insert($value);
     }
+  }
 }

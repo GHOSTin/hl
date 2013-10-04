@@ -21,9 +21,9 @@
                 <a class="get_meter_data_year" act='{{ component.time|date_modify("-1 year")|date("U")}}'><i class="icon-chevron-left"></i></a>
             </li>
             <li>
-                <h3>{{ component.time|date('Y')}}</h3>
+                <h3>{{ date|date('Y')}}</h3>
             </li>
-            {% if component.time|date('Y')!="now"|date('Y') %}
+            {% if date|date('Y')!="now"|date('Y') %}
             <li class="next">
                 <a class="get_meter_data_year" act='{{ component.time|date_modify("+1 year")|date("U")}}'><i class="icon-chevron-right"></i></a>
             </li>

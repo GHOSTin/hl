@@ -18,6 +18,7 @@ class data_number2meter extends data_object{
     private $status;
     private $meter;
     private $number;
+    private $values = [];
 
     public function __construct(data_number $number, data_meter $meter){
         $this->meter = $meter;
@@ -31,10 +32,15 @@ class data_number2meter extends data_object{
             verify_number2meter::$value($this);
     }
 
+    public function add_value(data_meter2data $m2d){
+        if(in_array($m2d->get_time(), $this->values, true))
+            throw new e_model('В счетчике уже добавлено показание за данный месяц.');
+        $this->values[$m2d->get_time()] = $m2d;
+    }
+
     public function get_comment(){
         return $this->comment;
     }
-
 
     public function get_date_checking(){
         return $this->date_checking;
@@ -79,6 +85,10 @@ class data_number2meter extends data_object{
 
     public function get_status(){
         return $this->status;
+    }
+
+    public function get_values(){
+        return $this->values;
     }
 
     public function set_comment($comment){

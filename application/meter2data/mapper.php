@@ -69,6 +69,30 @@ class mapper_meter2data{
             throw new e_model('Неожиданное количество возвращаемых строк.');
     }
 
+    public function get_values($begin, $end){
+      $sql = new sql();
+      $sql->query("SELECT `time`, `value`, `comment`, `way`, `timestamp`
+          FROM `meter2data` WHERE `meter2data`.`company_id` = :company_id
+                  AND `meter2data`.`number_id` = :number_id
+                  AND `meter2data`.`meter_id` = :meter_id
+                  AND `meter2data`.`serial` = :serial
+                  AND `meter2data`.`time` >= :time_begin
+                  AND `meter2data`.`time` <= :time_end");
+      $sql->bind(':meter_id', $this->n2m->get_meter()->get_id(), PDO::PARAM_INT);
+      $sql->bind(':serial', $this->n2m->get_serial(), PDO::PARAM_STR);
+      $sql->bind(':number_id', $this->n2m->get_number()->get_id(), PDO::PARAM_INT);
+      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+      $sql->bind(':time_begin', $begin, PDO::PARAM_INT);
+      $sql->bind(':time_end', $end, PDO::PARAM_INT);
+      $sql->execute( 'Проблема при при выборки данных счетчика.');
+      $stmt = $sql->get_stm();
+      $values = [];
+      while($row = $stmt->fetch())
+        $values[] = $this->create_object($row);
+      $stmt->closeCursor();
+      return $values;
+    }
+
     /*
     * Возвращает предидущее показание
     */

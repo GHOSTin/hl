@@ -2,7 +2,6 @@
 {% set n2m = component.n2m %}
 {% set current = component.meter_data %}
 {% set time = component.time %}
-{% set last = component.last_data[0] %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
     'сентябрь', 'октябрь', 'ноябрь', 'декабрь'] %}
 {% set ways = {'answerphone':'Автоответчик', 'telephone':'Телефон', 'fax':'Факс', 'personally':'Лично'}%}
@@ -43,26 +42,26 @@
         <div class="row">
             <div class="span2">
                 <div>1 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[0] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[0] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[0] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[0] }}">
                 {{ data.value[0] }}
             </div>
-            {% if meter.get_rates() == 2 %}
+            {% if n2m.get_meter().get_rates() == 2 %}
             <div class="span2">
                 <div class="">2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[1] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[1] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
             </div>
             {% endif %}
-            {% if meter.get_rates() == 3 %}
+            {% if n2m.get_meter().get_rates() == 3 %}
             <div class="span2">
                 <div>2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[1] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[1] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[1] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[1] }}">
                 {{ data.value[1] }}
 
             </div>
             <div class="span2">
                 <div class="">3 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.value[2] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[2] }}">
+                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[2] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[2] }}">
                 {{ data.value[2] }}
             </div>
             {% endif %}
@@ -70,10 +69,10 @@
         <div>
             <label>Время передачи показания</label>
             <input type="text" class="dialog-input-timestamp" value="
-            {% if current.timestamp < 1 %}
+            {% if current.get_timestamp() < 1 %}
                 {{ "now"|date('d.m.Y') }}
             {% else %}
-                {{ current.timestamp|date('d.m.Y') }}
+                {{ current.get_timestamp()|date('d.m.Y') }}
             {%endif%}
             ">
         </div>
@@ -81,13 +80,13 @@
             <label>Способ передачи показания</label>
             <select class="dialog-select-way">
                 {% for key, value in ways %}
-                <option value="{{ key }}" {% if current.way == key %} selected{% endif %}>{{ value }}</option>
+                <option value="{{ key }}" {% if current.get_way() == key %} selected{% endif %}>{{ value }}</option>
                 {% endfor %}
             </select>
         </div>
         <div>
             <label>Комментарий</label>
-            <textarea style="width:90%" class="dialog-textarea-comment">{{ current.comment }}</textarea>
+            <textarea style="width:90%" class="dialog-textarea-comment">{{ current.get_comment() }}</textarea>
         </div>
     </div>
     <div class="modal-footer">

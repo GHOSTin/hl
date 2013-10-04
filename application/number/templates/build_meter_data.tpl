@@ -1,16 +1,16 @@
 {% for i in 0..11 %}
-    {% set data = component.meter_data[date|date("U")] %}
+    {% set data = n2m.get_values()[date|date("U")] %}
     <div class="month row" time="{{ date|date("U") }}">
 
         <div class="span2">{{ months[i] }}</div>
-        {% for val in data.value %}
+        {% for val in data.get_value() %}
             <div class="span2">{{ val }}</div>
         {% else %}
             <div class="span2"></div>
-            {% if meter.get_rates() == 2 %}
+            {% if n2m.get_meter().get_rates() == 2 %}
             <div class="span2"></div>
             {% endif %}
-            {% if meter.get_rates() == 3 %}
+            {% if n2m.get_meter().get_rates() == 3 %}
             <div class="span2"></div>
             <div class="span2"></div>
             {% endif %}
