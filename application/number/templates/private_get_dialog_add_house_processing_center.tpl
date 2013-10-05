@@ -1,6 +1,5 @@
 {% extends "dialog.tpl" %}
 {% set centers = component.centers %}
-{% set house = component.house %}
 {% block title %}Диалог добавления процессингового центра{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-centers">
@@ -21,7 +20,7 @@
 // Добавляет идентификатор в процессинговом центре
 $('.add_house_processing_center').click(function(){
 	$.get('add_house_processing_center',{
-		house_id: {{ house.id }},
+		house_id: {{ request.GET('house_id') }},
 		center_id: $('.dialog-select-centers').val(),
 		identifier: $('.dialog-input-identifier').val()
 		},function(r){
