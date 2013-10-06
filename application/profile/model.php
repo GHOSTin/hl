@@ -161,29 +161,6 @@ class model_profile{
 	}
 
 	/**
-	* Записывает в сессию правила, ограничения, настройки, меню.
-	*/
-	public static function DELETE__get_user_profiles(data_company $company, data_user $user){
-		$user->verify('id');
-		$company->verify('id');
-		$sql = new sql();
-		$sql->query("SELECT `profile`, `rules`, `restrictions`, `settings`
-					FROM `profiles` WHERE  `user_id` = :user_id AND `company_id` = :company_id");
-		$sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->get_id() , PDO::PARAM_INT);
-		$sql->execute('Ошибка при получении профиля.');
-		if($sql->count() > 0)
-			while($profile = $sql->row())
-				if(array_search($profile['profile'], ['query', 'number']) !== false){
-					$rules[$profile['profile']] = json_decode($profile['rules']);
-					$restrictions[$profile['profile']] = json_decode($profile['restrictions']);
-				}
-		$sql->close();
-		model_session::set_rules($rules);
-		model_session::set_restrictions($restrictions);
-	}
-
-	/**
 	* Возвращает список компаний для которых есть профиль пользователя.
 	*/
 	public static function get_companies($user_id){

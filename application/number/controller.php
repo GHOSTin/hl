@@ -95,7 +95,7 @@ class controller_number{
 
   public static function private_get_dialog_add_house_processing_center(
     model_request $request){
-    return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
+    return ['centers' => (new model_processing_center)->get_processing_centers(),
             'house' => $house];
   }
 
