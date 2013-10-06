@@ -31,3 +31,8 @@
 	{% endfor %}
 	</ul>
 </li>
+<li>Диспетчер
+	<ul>
+		<li user="{{ query.get_creator().get_id() }}">{{ query.get_creator().get_lastname() }} {{ query.get_creator().get_firstname() }} {{ query.get_creator().get_middlename() }}</li>
+	</ul>
+</li>
