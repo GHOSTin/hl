@@ -27,14 +27,16 @@ class controller_number{
             'disable_meters' => $disable_meters];
   }
 
-  public static function private_add_house_processing_center(model_request $request){
+  public static function private_add_house_processing_center(
+    model_request $request){
     return ['house' => (new model_house())
       ->add_processing_center(model_session::get_company(),
         $request->GET('house_id'), $request->GET('center_id'),
         $request->GET('identifier'))];
   }
 
-  public static function private_remove_house_processing_center(model_request $request){
+  public static function private_remove_house_processing_center(
+    model_request $request){
     return ['house' => (new model_house())
       ->remove_processing_center(model_session::get_company(), 
       $request->GET('house_id'), $request->GET('center_id'))];
@@ -65,7 +67,7 @@ class controller_number{
 
   public static function private_delete_meter(model_request $request){
     $number = new data_number($request->GET('number_id'));
-    return ['n2m' => (new model_number2meter(model_session::get_company(), $number))
+    return ['n2m' => (new model_number2meter(model_session::get_company(),$number))
       ->delete_meter($request->GET('meter_id'), $request->GET('serial'))];
   }
 
@@ -91,195 +93,212 @@ class controller_number{
     return true;
   }
 
-    public static function private_get_dialog_add_house_processing_center(model_request $request){
-        return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
-                'house' => $house];
-    }
+  public static function private_get_dialog_add_house_processing_center(
+    model_request $request){
+    return ['centers' => model_processing_center::get_processing_centers(new data_processing_center()),
+            'house' => $house];
+  }
 
-    public static function private_get_dialog_remove_house_processing_center(model_request $request){
-        $house = new data_house();
-        $house->set_id($request->GET('house_id'));
-        $house = model_house::get_houses($house)[0];
-        $mapper = new mapper_house2processing_center(model_session::get_company(), $house);
-        $mapper->init_processing_centers();
-        return ['house' => $house, 'center_id' => $request->GET('center_id')];
-    }
+  public static function private_get_dialog_remove_house_processing_center(
+    model_request $request){
+    $house = new data_house();
+    $house->set_id($request->GET('house_id'));
+    $house = model_house::get_houses($house)[0];
+    $mapper = new mapper_house2processing_center(model_session::get_company(), $house);
+    $mapper->init_processing_centers();
+    return ['house' => $house, 'center_id' => $request->GET('center_id')];
+  }
 
-  public static function private_get_dialog_add_meter_option(model_request $request){
+  public static function private_get_dialog_add_meter_option(
+    model_request $request){
     $time = getdate();
     return ['meter' => (new model_meter(model_session::get_company()))
       ->get_meter($request->GET('meter_id')),
       'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
   }
 
-  public static function private_get_dialog_add_processing_center(model_request $request){
+  public static function private_get_dialog_add_processing_center(
+    model_request $request){
     return ['centers' => (new model_processing_center)->get_processing_centers()];
   }
 
-    public static function private_get_dialog_change_meter(model_request $request){
-        $data = new data_number2meter();
-        $data->set_number_id($request->GET('id'));
-        $data->set_meter_id($request->GET('meter_id'));
-        $data->set_serial($request->GET('serial'));
-        $data->verify('number_id', 'meter_id', 'serial');
-        return ['meter' => $data];
-    }
+  public static function private_get_dialog_change_meter(
+    model_request $request){
+    $data = new data_number2meter();
+    $data->set_number_id($request->GET('id'));
+    $data->set_meter_id($request->GET('meter_id'));
+    $data->set_serial($request->GET('serial'));
+    $data->verify('number_id', 'meter_id', 'serial');
+    return ['meter' => $data];
+  }
 
-    public static function private_get_dialog_change_meter_option(model_request $request){
-        $company = model_session::get_company();
-        $model = new model_meter($company);
-        $meter = $model->get_meter($request->GET('new_meter_id'));
-        $model = new model_number2meter($company, $request->GET('number_id'));
-        return ['meter' => $meter,
-                'service' => $request->GET('service'),
-                'old_meter' => $model->get_meter($request->GET('meter_id'), $request->GET('serial'))];
-    }
+  public static function private_get_dialog_change_meter_option(
+    model_request $request){
+    $company = model_session::get_company();
+    $model = new model_meter($company);
+    $meter = $model->get_meter($request->GET('new_meter_id'));
+    $model = new model_number2meter($company, $request->GET('number_id'));
+    return ['meter' => $meter,
+            'service' => $request->GET('service'),
+            'old_meter' => $model->get_meter($request->GET('meter_id'), $request->GET('serial'))];
+  }
 
-  public static function private_get_dialog_delete_meter(model_request $request){
+  public static function private_get_dialog_delete_meter(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_date_checking(model_request $request){
+  public static function private_get_dialog_edit_date_checking(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_date_install(model_request $request){
+  public static function private_get_dialog_edit_date_install(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_date_release(model_request $request){
+  public static function private_get_dialog_edit_date_release(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_meter_comment(model_request $request){
+  public static function private_get_dialog_edit_meter_comment(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_period(model_request $request){
+  public static function private_get_dialog_edit_period(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_meter_status(model_request $request){
+  public static function private_get_dialog_edit_meter_status(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_meter_place(model_request $request){
+  public static function private_get_dialog_edit_meter_place(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-  public static function private_get_dialog_edit_serial(model_request $request){
+  public static function private_get_dialog_edit_serial(
+    model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['n2m' => $meter];
   }
 
-    public static function private_get_dialog_exclude_processing_center(model_request $request){
-      return ['center' => (new model_processing_center)
-                          ->get_processing_center($request->GET('center_id'))];
-    }
+  public static function private_get_dialog_exclude_processing_center(
+    model_request $request){
+    return ['center' => (new model_processing_center)
+                        ->get_processing_center($request->GET('center_id'))];
+  }
 
-    public static function private_get_house_content(model_request $request){
-      $house = new data_house();
-      $house->set_id($request->take_get('id'));
-      (new model_house2number(model_session::get_company(), $house))->init_numbers();
-      return ['house' => $house];
-    }
+  public static function private_get_house_content(model_request $request){
+    $house = new data_house();
+    $house->set_id($request->take_get('id'));
+    (new model_house2number(model_session::get_company(), $house))->init_numbers();
+    return ['house' => $house];
+  }
 
-    public static function private_get_house_information(model_request $request){
-      $house = (new model_house)->get_house($request->GET('id'));
-      $model = new model_house2processing_center(model_session::get_company(), $house);
-      $model->init_processing_centers();
-      return ['house' => $house];
-    }
+  public static function private_get_house_information(model_request $request){
+    $house = (new model_house)->get_house($request->GET('id'));
+    $model = new model_house2processing_center(model_session::get_company(), $house);
+    $model->init_processing_centers();
+    return ['house' => $house];
+  }
 
-    public static function private_get_house_numbers(model_request $request){
-      $house = new data_house();
-      $house->set_id($request->GET('id'));
-      (new model_house2number(model_session::get_company(), $house))->init_numbers();
-      return ['house' => $house];
-    }
+  public static function private_get_house_numbers(model_request $request){
+    $house = new data_house();
+    $house->set_id($request->GET('id'));
+    (new model_house2number(model_session::get_company(), $house))->init_numbers();
+    return ['house' => $house];
+  }
 
-    public static function private_get_meters(model_request $request){
-        $company = model_session::get_company();
-        $number = new data_number();
-        $number->set_id($request->GET('id'));
-        $model = new model_number2meter($company, $number);
-        $model->init_meters();
-        $enable_meters = $disable_meters = [];
-        if(!empty($number->get_meters()))
-            foreach($number->get_meters() as $meter)
-                if($meter->get_status() == 'enabled')
-                    $enable_meters[] = $meter;
-                elseif($meter->get_status() == 'disabled')
-                    $disable_meters[] = $meter;
-        model_session::set_setting_param('number', 'number_content', 'meters');
-        $model = new model_number($company);
-        return ['number' => $model->get_number($request->GET('id')),
-                'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
-    }
-
-    public static function private_get_number_content(model_request $request){
-        $switch = model_session::get_setting_param('number', 'number_content');
-        $company = model_session::get_company();
-        $number = (new model_number(model_session::get_company()))
-                  ->get_number($request->GET('id'));
-        switch($switch){
-          case 'meters':
-            $model = new model_number2meter($company, $number);
-            $model->init_meters();
-            $enable_meters = $disable_meters = [];
-            if(!empty($number->get_meters()))
-              foreach($number->get_meters() as $meter)
-                if($meter->get_status() == 'enabled')
+  public static function private_get_meters(model_request $request){
+      $company = model_session::get_company();
+      $number = new data_number();
+      $number->set_id($request->GET('id'));
+      $model = new model_number2meter($company, $number);
+      $model->init_meters();
+      $enable_meters = $disable_meters = [];
+      if(!empty($number->get_meters()))
+          foreach($number->get_meters() as $meter)
+              if($meter->get_status() == 'enabled')
                   $enable_meters[] = $meter;
-                elseif($meter->get_status() == 'disabled')
+              elseif($meter->get_status() == 'disabled')
                   $disable_meters[] = $meter;
-            model_session::set_setting_param('number', 'number_content', 'meters');
-            return ['number' => $number,
-              'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters,
-              'setting' => $switch];
-          break;
+      model_session::set_setting_param('number', 'number_content', 'meters');
+      $model = new model_number($company);
+      return ['number' => $model->get_number($request->GET('id')),
+              'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters];
+  }
 
-          case 'centers':
-              (new model_number2processing_center($company, $number))->init_processing_centers();
-              return ['number' => $number, 'setting' => $switch];
-          break;
+  public static function private_get_number_content(model_request $request){
+      $switch = model_session::get_setting_param('number', 'number_content');
+      $company = model_session::get_company();
+      $number = (new model_number(model_session::get_company()))
+                ->get_number($request->GET('id'));
+      switch($switch){
+        case 'meters':
+          $model = new model_number2meter($company, $number);
+          $model->init_meters();
+          $enable_meters = $disable_meters = [];
+          if(!empty($number->get_meters()))
+            foreach($number->get_meters() as $meter)
+              if($meter->get_status() == 'enabled')
+                $enable_meters[] = $meter;
+              elseif($meter->get_status() == 'disabled')
+                $disable_meters[] = $meter;
+          model_session::set_setting_param('number', 'number_content', 'meters');
+          return ['number' => $number,
+            'enable_meters' => $enable_meters, 'disable_meters' => $disable_meters,
+            'setting' => $switch];
+        break;
 
-          default:
-            return ['number' => $number];
-        }
-    }
+        case 'centers':
+            (new model_number2processing_center($company, $number))
+              ->init_processing_centers();
+            return ['number' => $number, 'setting' => $switch];
+        break;
 
-    public static function private_get_number_information(model_request $request){
-        model_session::set_setting_param('number', 'number_content', 'information');
-        $model = new model_number(model_session::get_company());
-        return ['number' => $model->get_number($request->GET('id'))];
-    }
+        default:
+          return ['number' => $number];
+      }
+  }
+
+  public static function private_get_number_information(model_request $request){
+      model_session::set_setting_param('number', 'number_content', 'information');
+      $model = new model_number(model_session::get_company());
+      return ['number' => $model->get_number($request->GET('id'))];
+  }
 
   public static function private_get_meter_data(model_request $request){
     $company = model_session::get_company();
@@ -342,7 +361,8 @@ class controller_number{
   public static function private_get_processing_centers(model_request $request){
     $number = new data_number();
     $number->set_id($request->GET('id'));
-    (new model_number2processing_center(model_session::get_company(), $number))->init_processing_centers();
+    (new model_number2processing_center(model_session::get_company(), $number))
+      ->init_processing_centers();
     model_session::set_setting_param('number', 'number_content', 'centers');
     return ['number' => $number];
   }
@@ -352,22 +372,26 @@ class controller_number{
                         ->get_number($request->GET('id'))];
   }
 
-  public static function private_get_dialog_edit_number_fio(model_request $request){
+  public static function private_get_dialog_edit_number_fio(
+    model_request $request){
     return ['number' => (new model_number(model_session::get_company()))
                         ->get_number($request->GET('id'))];;
   }
 
-  public static function private_get_dialog_edit_number_telephone(model_request $request){
+  public static function private_get_dialog_edit_number_telephone(
+    model_request $request){
     return ['number' => (new model_number(model_session::get_company()))
                         ->get_number($request->GET('id'))];
   }
 
-  public static function private_get_dialog_edit_number_cellphone(model_request $request){
+  public static function private_get_dialog_edit_number_cellphone(
+    model_request $request){
     return ['number' => (new model_number(model_session::get_company()))
                         ->get_number($request->GET('id'))];
   }
 
-  public static function private_get_dialog_edit_meter_data(model_request $request){
+  public static function private_get_dialog_edit_meter_data(
+    model_request $request){
     $company = model_session::get_company();
     $number = new data_number($request->GET('id'));
     $n2m = (new model_number2meter($company, $number))
