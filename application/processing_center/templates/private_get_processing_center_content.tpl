@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set center = component.centers[0] %}
+{% set center = component.center %}
 {% block js %}
-    $('.processing-center[processing-center = {{ center.id }}]').append(get_hidden_content());
+    $('.processing-center[processing-center = {{ center.get_id() }}]').append(get_hidden_content());
 {% endblock js %}
 {% block html %}
     <div class="processing-center-content unstyled">
