@@ -504,6 +504,7 @@ class model_query{
 	public static function get_works(data_company $company, data_query $query){
 		$sql = new sql();
 		if(!empty($query->id)){
+			die('disabled works');
 			$sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
 				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
 				`works`.`id`, `works`.`name`

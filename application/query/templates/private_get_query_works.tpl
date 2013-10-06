@@ -1,11 +1,11 @@
 {% extends "ajax.tpl" %}
 {% set query = component.query %}
 {% block js %}
-	$('.query[query_id = {{query.id}}] .query-works').append(get_hidden_content())
+	$('.query[query_id = {{ query.get_id() }}] .query-works').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
 	<ul class="query-sub">
-		{% if query.status in ['open', 'working', 'reopen'] %}
+		{% if query.get_status() in ['open', 'working', 'reopen'] %}
 		<li class="get_dialog_add_work cm">добавить</li>
 		{% endif %}
 		<li>

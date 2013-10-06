@@ -128,6 +128,7 @@ final class data_query extends data_object{
 	private $managers = [];
 	private $performers = [];
 	private $observers = [];
+	private $works = [];
 
 	public function add_number(data_number $number){
 		if(in_array($number->get_id(), $this->numbers))
@@ -165,6 +166,12 @@ final class data_query extends data_object{
 		$this->performers[] = $user;
 	}
 
+	public function add_work(data_query2work $work){
+		if(in_array($work->get_id(), $this->works))
+			throw new e_model("Работа уже добавлен в заявку.");
+		$this->works[] = $work;
+	}
+
 	public function get_numbers(){
 		return $this->numbers;
 	}
@@ -187,6 +194,10 @@ final class data_query extends data_object{
 
 	public function get_performers(){
 		return $this->performers;
+	}
+
+	public function get_works(){
+		return $this->works;
 	}
 
 	public function get_company_id(){
