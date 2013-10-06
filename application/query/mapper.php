@@ -167,7 +167,7 @@ class mapper_query{
   }
 
   public function update(data_query $query){
-      $query->verify('company_id', 'id', 'payment_status', 'warning_status',
+      $query->verify('id', 'payment_status', 'warning_status',
                       'contact_fio', 'contact_telephone',
                       'close_reason', 'description', 'work_type_id', 'status',
                       'time_work', 'time_close', 'initiator', 'house_id');
@@ -184,7 +184,7 @@ class mapper_query{
                   `house_id` = :house_id,
                   `initiator-type` = :initiator
                   WHERE `company_id` = :company_id AND `id` = :id");
-      $sql->bind(':company_id', $query->get_company_id(), PDO::PARAM_INT);
+      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
       $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
       $sql->bind(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
       $sql->bind(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
@@ -238,4 +238,80 @@ class mapper_query{
     $sql->close();
     return $query_number;
   }
+
+    /**
+    * Возвращает заявки.
+    * @return array
+    */
+    public function get_queries(array $params){
+      $sql = new sql();
+      $sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
+        `queries`.`status`, `queries`.`initiator-type` as `initiator`,
+        `queries`.`payment-status` as `payment_status`,
+        `queries`.`warning-type` as `warning_status`,
+        `queries`.`department_id`, `queries`.`house_id`,
+        `queries`.`query_close_reason_id` as `close_reason_id`,
+        `queries`.`query_worktype_id` as `worktype_id`,
+        `queries`.`opentime` as `time_open`,
+        `queries`.`worktime` as `time_work`,
+        `queries`.`closetime` as `time_close`,
+        `queries`.`addinfo-name` as `contact_fio`,
+        `queries`.`addinfo-telephone` as `contact_telephone`,
+        `queries`.`addinfo-cellphone` as `contact_cellphone`,
+        `queries`.`description-open` as `description`,
+        `queries`.`description-close` as `close_reason`,
+        `queries`.`querynumber` as `number`,
+        `queries`.`query_inspection` as `inspection`, 
+        `houses`.`housenumber` as `house_number`,
+        `streets`.`name` as `street_name`,
+        `query_worktypes`.`name` as `work_type_name`,
+        `departments`.`name` as `department_name`
+        FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
+        WHERE `queries`.`company_id` = :company_id
+        AND `queries`.`house_id` = `houses`.`id`
+        AND `houses`.`street_id` = `streets`.`id`
+        AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
+        AND `opentime` > :time_open
+        AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
+        AND `queries`.`department_id` = `departments`.`id`");
+        $sql->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
+        $sql->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
+        // if(!empty($query->get_status()) AND $query->get_status() !== 'all'){
+        //  $sql->query(" AND `queries`.`status` = :status");
+        //  if(!in_array($query->get_status(), ['open', 'close', 'working', 'reopen']))
+        //    throw new e_model('Невозможный статус заявки.');
+        //  $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
+        // }
+        // if(!empty($query->street_id)){
+        //  $sql->query(" AND `houses`.`street_id` = :street_id");
+        //  $sql->bind(':street_id', $query->street_id, PDO::PARAM_INT);
+        // }
+        // if(!empty($query->house_id)){
+        //  $sql->query(" AND `queries`.`house_id` = :house_id");
+        //  $sql->bind(':house_id', $query->house_id, PDO::PARAM_INT);
+        // }
+        // if(!empty($query->worktype_id)){
+        //  $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
+        //  $sql->bind(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
+        // }
+        // if(!empty($query->department_id)){
+        //  if(is_array($query->department_id))
+        //    $departments = $query->department_id;
+        //  else
+        //    $departments[] = $query->department_id;
+        //  foreach($departments as $key => $department){
+        //    $p_departments[] = ':department_id'.$key;
+        //    $sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
+        //  }
+        //  $sql->query(" AND `queries`.`department_id` IN(".implode(',', $p_departments).")");
+        // }
+      $sql->query(" ORDER BY `queries`.`opentime` DESC");
+      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+      $sql->execute('Проблема при выборки заявко по номеру.');
+      $stmt = $sql->get_stm();
+      $queries = [];
+      while($row = $stmt->fetch())
+        $queries[] = $this->create_object($row);
+      return $queries;
+    }
 }

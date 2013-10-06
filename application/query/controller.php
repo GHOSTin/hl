@@ -457,7 +457,7 @@ class controller_query{
 		// $department = new data_department();
 		// $department->setid = model_session::get_restrictions()['query']->departments;
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
+		return ['queries' => (new model_query($company))->get_queries(),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
@@ -470,48 +470,44 @@ class controller_query{
 	}
 
 	public static function private_remove_user(model_request $request){
-		$company = model_session::get_company();
-		$model = new model_query($company);
-		$query = $model->remove_user($request->GET('id'), $request->GET('user_id'), $request->GET('type'));
-		return ['query' => $query,
-						'users' => model_query::get_users($company, $query)];
+		return ['query' => (new model_query(model_session::get_company()))
+			->remove_user($request->GET('id'), $request->GET('user_id'),
+			$request->GET('type'))];
 	}
 
 	public static function private_remove_work(model_request $request){
-		$company = model_session::get_company();
-		$query = (new model_query($company))->remove_work($request->GET('id'), $request->GET('work_id'));
-		return ['query' => $query,
-						'works' => model_query::get_works($company, $query)];
+		return ['query' => (new model_query(model_session::get_company()))
+			->remove_work($request->GET('id'), $request->GET('work_id'))];
 	}
 
 	public static function private_update_description(model_request $request){
-		$model = new model_query(model_session::get_company());
-		return ['query' => $model->update_description($request->GET('id'), $request->GET('description'))];
+		return ['query' => (new model_query(model_session::get_company()))
+			->update_description($request->GET('id'), $request->GET('description'))];
 	}
 
 	public static function private_update_reason(model_request $request){
-		$model = new model_query(model_session::get_company());
-		return ['query' => $model->update_reason($request->GET('id'), $request->GET('reason'))];
+		return ['query' => (new model_query(model_session::get_company()))
+			->update_reason($request->GET('id'), $request->GET('reason'))];
 	}
 
 	public static function private_update_contact_information(model_request $request){
-		$model = new model_query(model_session::get_company());
-		return ['query' => $model->update_contact_information($request->GET('id'),
-			 			$request->GET('fio'), $request->GET('telephone'), $request->GET('cellphone'))];
+		return ['query' => (new model_query(model_session::get_company()))
+			->update_contact_information($request->GET('id'), $request->GET('fio'),
+			$request->GET('telephone'), $request->GET('cellphone'))];
 	}
 
 	public static function private_update_payment_status(model_request $request){
-		$model = new model_query(model_session::get_company());
-		return ['query' => $model->update_payment_status($request->GET('id'), $request->GET('status'))];
+		return ['query' => (new model_query(model_session::get_company()))
+			->update_payment_status($request->GET('id'), $request->GET('status'))];
 	}
 
 	public static function private_update_warning_status(model_request $request){
-		$model = new model_query(model_session::get_company());
-		return ['query' => $model->update_warning_status($request->GET('id'), $request->GET('status'))];
+		return ['query' => (new model_query(model_session::get_company()))
+			->update_warning_status($request->GET('id'), $request->GET('status'))];
 	}
 
 	public static function private_update_work_type(model_request $request){
-		$model = new model_query(model_session::get_company());
-		return ['query' => $model->update_work_type($request->GET('id'), $request->GET('type'))];
+		return ['query' => (new model_query(model_session::get_company()))
+			->update_work_type($request->GET('id'), $request->GET('type'))];
 	}
 }

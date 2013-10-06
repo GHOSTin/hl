@@ -74,7 +74,7 @@ class verify_query{
     */
     public static function work_type_id(data_query $query){
         $work_type = new data_query_work_type();
-        $work_type->id = $query->get_work_type_id();
+        $work_type->set_id($query->get_work_type_id());
         $work_type->verify('id');
     }
 
@@ -167,7 +167,7 @@ class verify_query{
     */
     public static function company_id(data_query $query){
         $company = new data_company();
-        $company->id = $query->get_company_id();
+        $company->set_id($query->get_company_id());
         $company->verify('id');
     }
 
@@ -176,7 +176,7 @@ class verify_query{
     */
     public static function street_id(data_query $query){
         $street = new data_street();
-        $street->id = $query->get_street_id();
+        $street->set_id($query->get_street_id());
         $street->verify('id');
     }
 }

@@ -5,7 +5,7 @@
 	show_dialog(get_hidden_content());
 	$('.update_payment_status').click(function(){
 		$.get('update_payment_status',{
-			id: {{query.id}},
+			id: {{ query.get_id() }},
 			status: $('.dialog-payment_status :selected').val()
 			},function(r){
 				init_content(r);
@@ -23,7 +23,7 @@
 		<select class="dialog-payment_status">
 			{% for key, payment_status in payment_statuses %}
 				<option value="{{key}}"
-				{% if query.payment_status == key%}
+				{% if query.get_payment_status() == key%}
 					selected
 				{% endif %}
 				>{{payment_status}}</option>
