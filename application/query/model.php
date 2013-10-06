@@ -505,15 +505,6 @@ class model_query{
 		$sql = new sql();
 		if(!empty($query->id)){
 			die('disabled works');
-			$sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
-				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
-				`works`.`id`, `works`.`name`
-				FROM `query2work`, `works`
-				WHERE `query2work`.`company_id` = :company_id
-				AND `works`.`company_id` = :company_id
-				AND `works`.`id` = `query2work`.`work_id`
-				AND `query2work`.`query_id` = :id");
-			$sql->bind(':id', $query->id, PDO::PARAM_INT);
 		}else{
 			$sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
 				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
