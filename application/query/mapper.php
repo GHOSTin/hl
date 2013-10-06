@@ -3,9 +3,72 @@ class mapper_query{
 
   private $company;
 
+  private static $sql_select_by_number = "SELECT `queries`.`id`,
+      `queries`.`status`, `queries`.`initiator-type` as `initiator`,
+      `queries`.`payment-status` as `payment_status`,
+      `queries`.`warning-type` as `warning_status`,
+      `queries`.`department_id`, `queries`.`house_id`,
+      `queries`.`query_close_reason_id` as `close_reason_id`,
+      `queries`.`query_worktype_id` as `worktype_id`,
+      `queries`.`opentime` as `time_open`,
+      `queries`.`worktime` as `time_work`,
+      `queries`.`closetime` as `time_close`,
+      `queries`.`addinfo-name` as `contact_fio`,
+      `queries`.`addinfo-telephone` as `contact_telephone`,
+      `queries`.`addinfo-cellphone` as `contact_cellphone`,
+      `queries`.`description-open` as `description`,
+      `queries`.`description-close` as `close_reason`,
+      `queries`.`querynumber` as `number`,
+      `queries`.`query_inspection` as `inspection`, 
+      `houses`.`housenumber` as `house_number`,
+      `streets`.`name` as `street_name`,
+      `query_worktypes`.`name` as `work_type_name`,
+      `departments`.`name` as `department_name`
+      FROM `queries`, `houses`, `streets`, `query_worktypes` , `departments`
+      WHERE `queries`.`company_id` = :company_id
+      AND `queries`.`house_id` = `houses`.`id`
+      AND `houses`.`street_id` = `streets`.`id`
+      AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
+      AND `querynumber` = :number AND `departments`.`company_id` = :company_id
+      AND `queries`.`department_id` = `departments`.`id`
+      ORDER BY `opentime` DESC";
+
+
+
   public function __construct(data_company $company){
       $this->company = $company;
       $this->company->verify('id');
+  }
+
+  public function create_object(array $row){
+    $query = new data_query();
+    $query->set_id($row['id']);
+    $query->set_status($row['status']);
+    $query->set_initiator($row['initiator']);
+    $query->set_payment_status($row['payment_status']);
+    $query->set_warning_status($row['warning_status']);
+    $query->set_close_reason($row['close_reason']);
+    $query->set_time_open($row['time_open']);
+    $query->set_time_work($row['time_work']);
+    $query->set_time_close($row['time_close']);
+    $query->set_description($row['time_close']);
+    $query->set_number($row['number']);
+
+    $department = new data_department();
+    $department->set_id($row['department_id']);
+    $department->set_name('department_name');
+    $query->set_department($department);
+
+    $house = new data_house();
+    $house->set_id($row['house_id']);
+    $house->set_number($row['house_number']);
+    $query->set_house($house);
+
+    $street = new data_street();
+    $street->set_name($row['street_name']);
+    $query->set_street($street);
+
+    return $query;
   }
 
   public function insert(data_query $query){
@@ -82,6 +145,23 @@ class mapper_query{
       if($count !== 1)
           throw new e_model('Неожиданное количество возвращаемых заявок.');
       return  $queries[0];
+  }
+
+  /**
+  * Возвращает заявки.
+  * @return array
+  */
+  public function get_queries_by_number($number){
+    $sql = new sql();
+    $sql->query(self::$sql_select_by_number);
+    $sql->bind(':number', (int) $number, PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->execute('Проблема при выборки заявко по номеру.');
+    $stmt = $sql->get_stm();
+    $queries = [];
+    while($row = $stmt->fetch())
+      $queries[] = $this->create_object($row);
+    return $queries;
   }
 
   public function update(data_query $query){

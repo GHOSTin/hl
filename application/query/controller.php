@@ -338,10 +338,8 @@ class controller_query{
 	}
 
 	public static function private_get_search_result(model_request $request){
-		$query = new data_query();
-		$query->number = $_GET['param'];
-		$query->verify('number');
-		return ['queries' => model_query::get_queries(model_session::get_company(), $query)];
+		return ['queries' => (new model_query(model_session::get_company()))
+			->get_queries_by_number($request->GET('param'))];
 	}
 
 	public static function private_set_status(model_request $request){

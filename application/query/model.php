@@ -319,6 +319,15 @@ class model_query{
 		return $mapper->init_numbers();
 	}
 
+
+		/**
+		* Возвращает заявки.
+		* @return array
+		*/
+		public function get_queries_by_number($number){
+			return (new mapper_query($this->company))->get_queries_by_number($number);
+		}
+
 	/**
 	* Возвращает заявки.
 	* @return array
