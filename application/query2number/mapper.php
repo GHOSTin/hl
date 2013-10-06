@@ -4,11 +4,26 @@ class mapper_query2number{
     private $company;
     private $query;
 
+    private static $sql_get_numbers = "SELECT `query2number`.* , `numbers`.`number`,
+        `numbers`.`fio` FROM `query2number`, `numbers`
+        WHERE `query2number`.`company_id` = :company_id
+        AND `numbers`.`company_id` = :company_id
+        AND `query2number`.`query_id` = :query_id
+        AND `query2number`.`number_id` = `numbers`.`id`";
+
     public function __construct($company, $query){
         $this->company = $company;
         $this->query = $query;
         $this->company->verify('id');
         $this->query->verify('id');
+    }
+
+    public function create_object(array $row){
+        $number = new data_number();
+        $number->set_id($row['number_id']);
+        $number->set_number($row['number']);
+        $number->set_fio($row['fio']);
+        return $number;
     }
 
     private function delete(data_number $number){
@@ -35,48 +50,23 @@ class mapper_query2number{
 
     private function get_numbers(){
         $sql = new sql();
-        $sql->query("SELECT `query2number`.* , `numbers`.`number`,
-            `numbers`.`fio` FROM `query2number`, `numbers`
-            WHERE `query2number`.`company_id` = :company_id
-            AND `numbers`.`company_id` = :company_id
-            AND `query2number`.`query_id` = :query_id
-            AND `query2number`.`number_id` = `numbers`.`id`");
-        $sql->bind(':query_id', $this->query->id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+        $sql->query(self::$sql_get_numbers);
+        $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
         $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
         $stmt = $sql->get_stm();
         $numbers = [];
-        while($row = $stmt->fetch()){
-            $number = new data_number();
-            $number->id = $row['number_id'];
-            $number->number = $row['number'];
-            $number->fio = $row['fio'];
-            $numbers[$number->id] = $number;
-        }
+        while($row = $stmt->fetch())
+            $numbers[] = $this->create_object($row);
         $stmt->closeCursor();
-        return  $numbers;
+        return $numbers;
     }
 
     public function init_numbers(){
-        $sql = new sql();
-        $sql->query("SELECT `query2number`.* , `numbers`.`number`,
-            `numbers`.`fio` FROM `query2number`, `numbers`
-            WHERE `query2number`.`company_id` = :company_id
-            AND `numbers`.`company_id` = :company_id
-            AND `query2number`.`query_id` = :query_id
-            AND `query2number`.`number_id` = `numbers`.`id`");
-        $sql->bind(':query_id', $this->query->id, PDO::PARAM_INT);
-        $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-        $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
-        $stmt = $sql->get_stm();
-        while($row = $stmt->fetch()){
-            $number = new data_number();
-            $number->id = $row['number_id'];
-            $number->number = $row['number'];
-            $number->fio = $row['fio'];
-            $this->query->add_number($number);
-        }
-        $stmt->closeCursor();
+        $numbers = $this->get_numbers();
+        if(!empty($numbers))
+            foreach($numbers as $number)
+                $this->query->add_number($number);
         return $this->query;
     }
 
@@ -85,6 +75,7 @@ class mapper_query2number{
         $old = $this->get_numbers();
         $deleted = array_diff_key($old, $new);
         $inserted = array_diff_key($new, $old);
+        exit();
         if(!empty($inserted))
             foreach($inserted as $number)
                 $this->insert($number);

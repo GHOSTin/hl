@@ -307,134 +307,103 @@ class model_query{
 	}
 
 	public function get_query($id){
-		$mapper = new mapper_query($this->company);
-		$query = $mapper->find($id);
+		$query = (new mapper_query($this->company))->find($id);
 		if(!($query instanceof data_query))
 			throw new e_model('Проблема при выборке заявки');
 		return $query;
 	}
 
 	public function init_numbers(data_query $query){
-		$mapper = new mapper_query2number($this->company, $query);
-		return $mapper->init_numbers();
+		return (new mapper_query2number($this->company, $query))->init_numbers();
 	}
 
+	public function init_users(data_query $query){
+		return (new mapper_query2user($this->company, $query))->init_users();
+	}
 
-		/**
-		* Возвращает заявки.
-		* @return array
-		*/
-		public function get_queries_by_number($number){
-			return (new mapper_query($this->company))->get_queries_by_number($number);
-		}
+	/**
+	* Возвращает заявки.
+	* @return array
+	*/
+	public function get_queries_by_number($number){
+		return (new mapper_query($this->company))->get_queries_by_number($number);
+	}
 
 	/**
 	* Возвращает заявки.
 	* @return array
 	*/
 	public static function get_queries(data_company $company, data_query $query){
-		$company->verify('id');
- 		$sql = new sql();
-		if(!empty($query->get_id())){
-			die('disabled query id');
-		}elseif(!empty($query->get_number())){
-			die('disabled query number');
-			// $sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
-			// 	`queries`.`status`, `queries`.`initiator-type` as `initiator`,
-			// 	`queries`.`payment-status` as `payment_status`,
-			// 	`queries`.`warning-type` as `warning_status`,
-			// 	`queries`.`department_id`, `queries`.`house_id`,
-			// 	`queries`.`query_close_reason_id` as `close_reason_id`,
-			// 	`queries`.`query_worktype_id` as `worktype_id`,
-			// 	`queries`.`opentime` as `time_open`,
-			// 	`queries`.`worktime` as `time_work`,
-			// 	`queries`.`closetime` as `time_close`,
-			// 	`queries`.`addinfo-name` as `contact_fio`,
-			// 	`queries`.`addinfo-telephone` as `contact_telephone`,
-			// 	`queries`.`addinfo-cellphone` as `contact_cellphone`,
-			// 	`queries`.`description-open` as `description`,
-			// 	`queries`.`description-close` as `close_reason`,
-			// 	`queries`.`querynumber` as `number`,
-			// 	`queries`.`query_inspection` as `inspection`, 
-			// 	`houses`.`housenumber` as `house_number`,
-			// 	`streets`.`name` as `street_name`,
-			// 	`query_worktypes`.`name` as `work_type_name`,
-			// 	`departments`.`name` as `department_name`
-			// 	FROM `queries`, `houses`, `streets`, `query_worktypes` , `departments`
-			// 	WHERE `queries`.`company_id` = :company_id
-			// 	AND `queries`.`house_id` = `houses`.`id`
-			// 	AND `houses`.`street_id` = `streets`.`id`
-			// 	AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
-			// 	AND `querynumber` = :number AND `departments`.`company_id` = :company_id
-			// 	AND `queries`.`department_id` = `departments`.`id`
-			// 	ORDER BY `opentime` DESC");
-			// $query->verify('number');
-			// $sql->bind(':number', $query->get_number(), PDO::PARAM_INT);
-		}else{
-			$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
-				`queries`.`status`, `queries`.`initiator-type` as `initiator`,
-				`queries`.`payment-status` as `payment_status`,
-				`queries`.`warning-type` as `warning_status`,
-				`queries`.`department_id`, `queries`.`house_id`,
-				`queries`.`query_close_reason_id` as `close_reason_id`,
-				`queries`.`query_worktype_id` as `worktype_id`,
-				`queries`.`opentime` as `time_open`,
-				`queries`.`worktime` as `time_work`,
-				`queries`.`closetime` as `time_close`,
-				`queries`.`addinfo-name` as `contact_fio`,
-				`queries`.`addinfo-telephone` as `contact_telephone`,
-				`queries`.`addinfo-cellphone` as `contact_cellphone`,
-				`queries`.`description-open` as `description`,
-				`queries`.`description-close` as `close_reason`,
-				`queries`.`querynumber` as `number`,
-				`queries`.`query_inspection` as `inspection`, 
-				`houses`.`housenumber` as `house_number`,
-				`streets`.`name` as `street_name`,
-				`query_worktypes`.`name` as `work_type_name`,
-				`departments`.`name` as `department_name`
-				FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
-				WHERE `queries`.`company_id` = :company_id
-				AND `queries`.`house_id` = `houses`.`id`
-				AND `houses`.`street_id` = `streets`.`id`
-				AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
-				AND `opentime` > :time_open
-				AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
-				AND `queries`.`department_id` = `departments`.`id`");
-			$sql->bind(':time_open', $query->get_time_open()['begin'], PDO::PARAM_INT);
-			$sql->bind(':time_close', $query->get_time_open()['end'], PDO::PARAM_INT);
-			// if(!empty($query->get_status()) AND $query->get_status() !== 'all'){
-			// 	$sql->query(" AND `queries`.`status` = :status");
-			// 	if(!in_array($query->get_status(), ['open', 'close', 'working', 'reopen']))
-			// 		throw new e_model('Невозможный статус заявки.');
-			// 	$sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
-			// }
-			// if(!empty($query->street_id)){
-			// 	$sql->query(" AND `houses`.`street_id` = :street_id");
-			// 	$sql->bind(':street_id', $query->street_id, PDO::PARAM_INT);
-			// }
-			// if(!empty($query->house_id)){
-			// 	$sql->query(" AND `queries`.`house_id` = :house_id");
-			// 	$sql->bind(':house_id', $query->house_id, PDO::PARAM_INT);
-			// }
-			// if(!empty($query->worktype_id)){
-			// 	$sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
-			// 	$sql->bind(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
-			// }
-			// if(!empty($query->department_id)){
-			// 	if(is_array($query->department_id))
-			// 		$departments = $query->department_id;
-			// 	else
-			// 		$departments[] = $query->department_id;
-			// 	foreach($departments as $key => $department){
-			// 		$p_departments[] = ':department_id'.$key;
-			// 		$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
-			// 	}
-			// 	$sql->query(" AND `queries`.`department_id` IN(".implode(',', $p_departments).")");
-			// }
-			$sql->query(" ORDER BY `queries`.`opentime` DESC");
-		}
-		$sql->bind(':company_id', $company->get_id(), PDO::PARAM_INT);
-		return $sql->map(new data_query(), 'Проблема при выборке пользователей.');
+ 	// 	$sql = new sql();
+		// if(!empty($query->get_id())){
+		// 	die('disabled query id');
+		// }elseif(!empty($query->get_number())){
+		// 	die('disabled query number');
+		// }else{
+		// 	$sql->query("SELECT `queries`.`id`, `queries`.`company_id`,
+		// 		`queries`.`status`, `queries`.`initiator-type` as `initiator`,
+		// 		`queries`.`payment-status` as `payment_status`,
+		// 		`queries`.`warning-type` as `warning_status`,
+		// 		`queries`.`department_id`, `queries`.`house_id`,
+		// 		`queries`.`query_close_reason_id` as `close_reason_id`,
+		// 		`queries`.`query_worktype_id` as `worktype_id`,
+		// 		`queries`.`opentime` as `time_open`,
+		// 		`queries`.`worktime` as `time_work`,
+		// 		`queries`.`closetime` as `time_close`,
+		// 		`queries`.`addinfo-name` as `contact_fio`,
+		// 		`queries`.`addinfo-telephone` as `contact_telephone`,
+		// 		`queries`.`addinfo-cellphone` as `contact_cellphone`,
+		// 		`queries`.`description-open` as `description`,
+		// 		`queries`.`description-close` as `close_reason`,
+		// 		`queries`.`querynumber` as `number`,
+		// 		`queries`.`query_inspection` as `inspection`, 
+		// 		`houses`.`housenumber` as `house_number`,
+		// 		`streets`.`name` as `street_name`,
+		// 		`query_worktypes`.`name` as `work_type_name`,
+		// 		`departments`.`name` as `department_name`
+		// 		FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
+		// 		WHERE `queries`.`company_id` = :company_id
+		// 		AND `queries`.`house_id` = `houses`.`id`
+		// 		AND `houses`.`street_id` = `streets`.`id`
+		// 		AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
+		// 		AND `opentime` > :time_open
+		// 		AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
+		// 		AND `queries`.`department_id` = `departments`.`id`");
+		// 	$sql->bind(':time_open', $query->get_time_open()['begin'], PDO::PARAM_INT);
+		// 	$sql->bind(':time_close', $query->get_time_open()['end'], PDO::PARAM_INT);
+		// 	// if(!empty($query->get_status()) AND $query->get_status() !== 'all'){
+		// 	// 	$sql->query(" AND `queries`.`status` = :status");
+		// 	// 	if(!in_array($query->get_status(), ['open', 'close', 'working', 'reopen']))
+		// 	// 		throw new e_model('Невозможный статус заявки.');
+		// 	// 	$sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
+		// 	// }
+		// 	// if(!empty($query->street_id)){
+		// 	// 	$sql->query(" AND `houses`.`street_id` = :street_id");
+		// 	// 	$sql->bind(':street_id', $query->street_id, PDO::PARAM_INT);
+		// 	// }
+		// 	// if(!empty($query->house_id)){
+		// 	// 	$sql->query(" AND `queries`.`house_id` = :house_id");
+		// 	// 	$sql->bind(':house_id', $query->house_id, PDO::PARAM_INT);
+		// 	// }
+		// 	// if(!empty($query->worktype_id)){
+		// 	// 	$sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
+		// 	// 	$sql->bind(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
+		// 	// }
+		// 	// if(!empty($query->department_id)){
+		// 	// 	if(is_array($query->department_id))
+		// 	// 		$departments = $query->department_id;
+		// 	// 	else
+		// 	// 		$departments[] = $query->department_id;
+		// 	// 	foreach($departments as $key => $department){
+		// 	// 		$p_departments[] = ':department_id'.$key;
+		// 	// 		$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
+		// 	// 	}
+		// 	// 	$sql->query(" AND `queries`.`department_id` IN(".implode(',', $p_departments).")");
+		// 	// }
+		// 	$sql->query(" ORDER BY `queries`.`opentime` DESC");
+		// }
+		// $sql->bind(':company_id', $company->get_id(), PDO::PARAM_INT);
+		// return $sql->map(new data_query(), 'Проблема при выборке пользователей.');
 	}
 
 	/**
@@ -444,16 +413,7 @@ class model_query{
 	public static function get_numbers(data_company $company, data_query $query){
 		$sql = new sql();
 		if(!empty($query->id)){
-			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
-				`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
-				FROM `query2number`, `numbers`, `flats`
-				WHERE `query2number`.`company_id` = :company_id
-				AND `numbers`.`company_id` = :company_id
-				AND `numbers`.`id` = `query2number`.`number_id`
-				AND `numbers`.`flat_id` = `flats`.`id`
-				AND `query2number`.`query_id` = :id
-				ORDER BY (`flats`.`flatnumber` + 0)");
-			$sql->bind(':id', $query->id, PDO::PARAM_INT);
+			die('disabled numbers');
 		}else{
 			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
 				`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`

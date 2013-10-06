@@ -123,10 +123,17 @@ final class data_query extends data_object{
 	private $company_id;
 
 
-	private $numbers;
+	private $numbers = [];
+	private $creator;
 
 	public function add_number(data_number $number){
-		$this->numbers[$number->id] = $number;
+		if(in_array($number->get_id(), $this->numbers))
+			throw new e_model('Лицевой счет уже добавлен в заявку.');
+		$this->numbers[$number->get_id()] = $number;
+	}
+
+	public function add_creator(data_query2user $user){
+		$this->creator = $user;
 	}
 
 	public function get_numbers(){
@@ -135,6 +142,10 @@ final class data_query extends data_object{
 
 	public function get_close_reason(){
 		return $this->close_reason;
+	}
+
+	public function get_creator(){
+		return $this->creator;
 	}
 
 	public function get_company_id(){

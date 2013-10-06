@@ -295,19 +295,17 @@ class controller_query{
 	public static function private_get_query_content(model_request $request){
 		$company = model_session::get_company();
 		$model = new model_query($company);
-		$query = $model->get_query($_GET['id']);
+		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
-		return ['query' => $query, 
-				'users' => model_query::get_users($company, $query)];
+		$model->init_users($query);
+		return ['query' => $query];
 	}
 
 	public static function private_get_query_title(model_request $request){
-		$company = model_session::get_company();
 		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($_GET['id']);
+		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
-		return ['query' => $query,
-				'numbers' => model_query::get_numbers($company, $query)];
+		return ['query' => $query];
 	}
 
 	public static function private_get_query_numbers(model_request $request){
@@ -449,8 +447,8 @@ class controller_query{
 		$time = getdate($query->get_time_open()['begin']);
 		// exit();
 		$now = getdate();
-		$street = new data_street();
-		$street->set_department_id($query->get_department_id());
+		// $street = new data_street();
+		// $street->set_department_id($query->get_department_id());
 		$houses = [];
 		// if(!empty($query->get_street_id())){
 		// 	$street->id = $query->street_id;
