@@ -1,8 +1,7 @@
 {% extends "ajax.tpl" %}
 {% set query = component.query %}
-{% set numbers = query.get_numbers() %}
 {% block js %}
-	$('.query[query_id = {{ query.id }}] .query-numbers').append(get_hidden_content())
+	$('.query[query_id = {{ query.get_id() }}] .query-numbers').append(get_hidden_content())
 {% endblock js %}
 {% block html %}
 <div class="query-numbers-menu">
@@ -12,8 +11,8 @@
 </div>
 <div class="query-numbers-content">
 	<ul class="unstyle">
-	{% for number in numbers %}
-		<li number="{{number.id}}">кв.{{number.flat_number}} {{number.fio}} (№{{number.number}})</li>
+	{% for number in query.get_numbers() %}
+		<li number="{{ number.get_id() }}">кв.{{ number.get_flat_number() }} {{ number.get_fio() }} (№{{ number.get_number() }})</li>
 	{% else %}
 		<li>Нет лицевых счетов</li>
 	{% endfor %}

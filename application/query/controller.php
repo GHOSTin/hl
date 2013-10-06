@@ -310,7 +310,7 @@ class controller_query{
 
 	public static function private_get_query_numbers(model_request $request){
 		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($_GET['id']);
+		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
 		return ['query' => $query];
 	}
@@ -318,17 +318,17 @@ class controller_query{
 	public static function private_get_query_users(model_request $request){
 		$company = model_session::get_company();
 		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($_GET['id']);
-		return ['query' => $query,
-				'users' => model_query::get_users($company, $query)];
+		$query = $model->get_query($request->GET('id'));
+		$model->init_users($query);
+		return ['query' => $query];
 	}
 
 	public static function private_get_query_works(model_request $request){
 		$company = model_session::get_company();
 		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($_GET['id']);
-		return ['query' => $query,
-				'works' => model_query::get_works($company, $query)];
+		$query = $model->get_query($request->GET('id'));
+		$model->init_works($query);
+		return ['query' => $query];
 	}
 
 	public static function private_get_search(model_request $request){

@@ -321,6 +321,10 @@ class model_query{
 		return (new mapper_query2user($this->company, $query))->init_users();
 	}
 
+	public function init_works(data_query $query){
+		return (new mapper_query2work($this->company, $query))->init_works();
+	}
+
 	/**
 	* Возвращает заявки.
 	* @return array
@@ -458,13 +462,7 @@ class model_query{
 	public static function get_users(data_company $company, data_query $query){
 		$sql = new sql();
 		if(!empty($query->id)){
-			$sql->query("SELECT `query2user`.`query_id`, `query2user`.`class`, `users`.`id`,
-				`users`.`firstname`, `users`.`lastname`, `users`.`midlename`
-				FROM `query2user`, `users`
-				WHERE `query2user`.`company_id` = :company_id
-				AND `users`.`id` = `query2user`.`user_id`
-				AND `query2user`.`query_id` = :id");
-			$sql->bind(':id', $query->id, PDO::PARAM_INT);
+			die('disabled users');
 		}else{
 			$sql->query("SELECT `query2user`.`query_id`,  `query2user`.`class`, `users`.`id`,
 				`users`.`firstname`, `users`.`lastname`, `users`.`midlename`

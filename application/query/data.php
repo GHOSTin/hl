@@ -125,6 +125,9 @@ final class data_query extends data_object{
 
 	private $numbers = [];
 	private $creator;
+	private $managers = [];
+	private $performers = [];
+	private $observers = [];
 
 	public function add_number(data_number $number){
 		if(in_array($number->get_id(), $this->numbers))
@@ -133,7 +136,33 @@ final class data_query extends data_object{
 	}
 
 	public function add_creator(data_query2user $user){
+		if(!is_null($this->creator))
+			throw new e_model("Нельзя повторно указать создателя заявки.");
 		$this->creator = $user;
+	}
+
+	public function add_manager(data_query2user $user){
+		if($user->get_class() !== 'manager')
+			throw new e_model("Пользователь не является менеджером заявки.");
+		if(in_array($user->get_id(), $this->managers))
+			throw new e_model("Менеджер уже добавлен в заявку.");
+		$this->managers[] = $user;
+	}
+
+	public function add_observer(data_query2user $user){
+		if($user->get_class() !== 'observer')
+			throw new e_model("Пользователь не является менеджером заявки.");
+		if(in_array($user->get_id(), $this->observers))
+			throw new e_model("Исполнитель уже добавлен в заявку.");
+		$this->observers[] = $user;
+	}
+
+	public function add_performer(data_query2user $user){
+		if($user->get_class() !== 'performer')
+			throw new e_model("Пользователь не является менеджером заявки.");
+		if(in_array($user->get_id(), $this->performers))
+			throw new e_model("Исполнитель уже добавлен в заявку.");
+		$this->performers[] = $user;
 	}
 
 	public function get_numbers(){
@@ -146,6 +175,18 @@ final class data_query extends data_object{
 
 	public function get_creator(){
 		return $this->creator;
+	}
+
+	public function get_managers(){
+		return $this->managers;
+	}
+
+	public function get_observers(){
+		return $this->observers;
+	}
+
+	public function get_performers(){
+		return $this->performers;
 	}
 
 	public function get_company_id(){

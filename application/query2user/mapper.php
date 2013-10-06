@@ -50,6 +50,12 @@ class mapper_query2user{
       foreach($users as $user){
         if($user->get_class() === 'creator')
           $this->query->add_creator($user);
+        if($user->get_class() === 'manager')
+          $this->query->add_manager($user);
+        if($user->get_class() === 'performer')
+          $this->query->add_performer($user);
+        if($user->get_class() === 'observer')
+          $this->query->add_observer($user);
       }
     return $this->query;
   }
