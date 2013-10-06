@@ -22,7 +22,7 @@
             <option value="all">Все участки</option>
             {% if component.departments != false %}
                 {% for department in component.departments %}
-                    <option value="{{ department.id }}"
+                    <option value="{{ department.get_id() }}"
                     {% if department.id == component.filters.department_id %}
                     selected
                     {% endif %}
@@ -38,11 +38,11 @@
             <option value="all">Все улицы</option>
             {% if component.streets != false %}
                 {% for street in component.streets %}
-                    <option value="{{street.id}}"
-                    {% if street.id == component.filters.street_id %}
+                    <option value="{{ street.get_id() }}"
+                    {% if street.get_id() == component.filters.street_id %}
                         selected
                     {% endif %}
-                    >{{street.name}}</option>
+                    >{{ street.get_name() }}</option>
                 {% endfor %}
             {% endif %}
         </select>

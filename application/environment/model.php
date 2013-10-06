@@ -39,7 +39,7 @@ class model_environment{
 			$data['component'] = $controller::$method($request);
 			$data['request'] = $request;
 			if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
-			self::init_profiles();
+			self::init_profile($component);
 			$data['menu'] = model_menu::build_menu($component);
 			// if(isset(model_session::get_rules()[$component]))
 			// 	$data['rules'] = model_session::get_rules()[$component];
@@ -72,8 +72,8 @@ class model_environment{
 		}
 	}
 
-	public static function init_profiles(){
-		$profiles = (new model_user2profile(model_session::get_company(), model_session::get_user()))->get_profiles();
+	public static function init_profile($component){
+		// $profiles = (new model_user2profile(model_session::get_company(), model_session::get_user()))->get_profiles();
 	}
 
 	public static function before(){
