@@ -80,6 +80,9 @@ class mapper_query{
     $query->set_time_close($row['time_close']);
     $query->set_description($row['description']);
     $query->set_number($row['number']);
+    $query->set_contact_fio($row['contact_fio']);
+    $query->set_contact_telephone($row['contact_telephone']);
+    $query->set_contact_cellphone($row['contact_cellphone']);
 
     $department = new data_department();
     $department->set_id($row['department_id']);

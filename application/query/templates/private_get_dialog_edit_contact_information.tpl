@@ -4,7 +4,7 @@
 	show_dialog(get_hidden_content());
 	$('.update_contact_information').click(function(){
 		$.get('update_contact_information',{
-			id: {{query.id}},
+			id: {{ query.get_id() }},
 			fio: $('.dialog-fio').val(),
 			telephone: $('.dialog-telephone').val(),
 			cellphone: $('.dialog-cellphone').val()
@@ -21,11 +21,11 @@
     </div>	
 	<div class="modal-body">
 		<label>ФИО</label>
-		<input type="text" value="{{query.contact_fio}}" class="dialog-fio" />
+		<input type="text" value="{{ query.get_contact_fio() }}" class="dialog-fio" />
 		<label>Телефон</label>
-		<input type="text" value="{{query.contact_telephone}}" class="dialog-telephone" />
+		<input type="text" value="{{ query.get_contact_telephone() }}" class="dialog-telephone" />
 		<label>Сотовый телефон</label>
-		<input type="text" value="{{query.contact_cellphone}}" class="dialog-cellphone" />
+		<input type="text" value="{{ query.get_contact_cellphone() }}" class="dialog-cellphone" />
 	</div>
 	<div class="modal-footer">
 		<div class="btn update_contact_information">Сохранить</div>
