@@ -138,27 +138,23 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_close_query(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_reclose_query(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_reopen_query(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_to_working_query(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_change_initiator(model_request $request){

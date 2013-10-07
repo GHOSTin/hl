@@ -4,7 +4,7 @@
 	show_dialog(get_hidden_content());
 	$('.update_description').click(function(){
 		$.get('update_description',{
-			id: {{query.id}},
+			id: {{ query.get_id() }},
 			description: $('.dialog-description').val()
 			},function(r){
 				init_content(r);
@@ -18,7 +18,7 @@
         <h3>Описания заявки</h3>
     </div>	
 	<div class="modal-body">
-		<textarea class="dialog-description" style="width:500px; height:100px;">{{query.description}}</textarea>
+		<textarea class="dialog-description" style="width:500px; height:100px;">{{ query.get_description() }}</textarea>
 	</div>
 	<div class="modal-footer">
 		<div class="btn update_description">Сохранить</div>

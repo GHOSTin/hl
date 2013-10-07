@@ -78,7 +78,7 @@ class mapper_query{
     $query->set_time_open($row['time_open']);
     $query->set_time_work($row['time_work']);
     $query->set_time_close($row['time_close']);
-    $query->set_description($row['time_close']);
+    $query->set_description($row['description']);
     $query->set_number($row['number']);
 
     $department = new data_department();
