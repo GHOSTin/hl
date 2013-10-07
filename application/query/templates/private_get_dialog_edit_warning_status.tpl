@@ -5,7 +5,7 @@
 	show_dialog(get_hidden_content());
 	$('.update_warning_status').click(function(){
 		$.get('update_warning_status',{
-			id: {{query.id}},
+			id: {{ query.get_id() }},
 			status: $('.dialog-warning_status :selected').val()
 			},function(r){
 				init_content(r);
@@ -23,10 +23,10 @@
 		<select class="dialog-warning_status">
 			{% for key, warning_status in warning_statuses %}
 				<option value="{{key}}"
-				{% if query.warning_status == key%}
+				{% if query.get_warning_status() == key%}
 					selected
 				{% endif %}
-				>{{warning_status}}</option>
+				>{{ warning_status }}</option>
 			{% endfor %}
 		</select>
 	</div>

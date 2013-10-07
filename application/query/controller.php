@@ -173,33 +173,28 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_edit_description(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_edit_reason(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_edit_contact_information(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_edit_payment_status(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_edit_warning_status(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_dialog_edit_work_type(model_request $request){
