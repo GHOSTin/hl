@@ -14,9 +14,9 @@ class verify_query_work_type{
     * Верификация идентификатора типа работа заявки.
     */
     public static function id(data_query_work_type $query_work_type){
-        if(!preg_match('/^[0-9]{1,3}$/', $query_work_type->id))
+        if(!preg_match('/^[0-9]{1,3}$/', $query_work_type->get_id()))
             throw new e_model('Идентификатор типа заявки задан не верно.');
-        if($query_work_type->id > 255 OR $query_work_type->id < 1)
+        if($query_work_type->get_id() > 255 OR $query_work_type->get_id() < 1)
             throw new e_model('Идентификатор типа заявки задан не верно.');
     }
 

@@ -44,24 +44,6 @@ class verify_query{
     }
 
     /**
-    * Верификация идентификатора участка.
-    */
-    public static function department_id(data_query $query){
-        $department = new data_department();
-        $department->id = $query->get_department_id();
-        $department->verify('id');
-    }
-
-    /**
-    * Верификация идентификатора дома.
-    */
-    public static function house_id(data_query $query){
-        $house = new data_house();
-        $house->id = $query->get_house_id();
-        $house->verify('id');
-    }
-
-    /**
     * Верификация идентификатора причины закрытия.
     */
     public static function close_reason_id(data_query $query){
@@ -160,23 +142,5 @@ class verify_query{
     public static function inspection(data_query $query){
         if(empty($query->get_inspection()))
             throw new e_model('Инспекция заявки задана не верно.');
-    }
-
-    /**
-    * Верификация идентификатора компании.
-    */
-    public static function company_id(data_query $query){
-        $company = new data_company();
-        $company->set_id($query->get_company_id());
-        $company->verify('id');
-    }
-
-    /**
-    * Верификация идентификатора улицы.
-    */
-    public static function street_id(data_query $query){
-        $street = new data_street();
-        $street->set_id($query->get_street_id());
-        $street->verify('id');
     }
 }

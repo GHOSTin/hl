@@ -58,12 +58,7 @@ final class data_query extends data_object{
 	/*
 	* Идентификатор типа работ.
 	*/
-	private $worktype_id;
-
-	/*
-	* Имя типа работ.
-	*/
-	private $work_type_name;
+	private $work_type;
 
 	/*
 	* Время открытия.
@@ -170,6 +165,16 @@ final class data_query extends data_object{
 		if(in_array($work->get_id(), $this->works))
 			throw new e_model("Работа уже добавлен в заявку.");
 		$this->works[] = $work;
+	}
+
+	public function add_work_type(data_query_work_type $wt){
+		if(!is_null($this->work_type))
+			throw new e_model("Нельзя повторно указать тип заявки.");
+		$this->work_type = $wt;
+	}
+
+	public function get_work_type(){
+		return $this->work_type;
 	}
 
 	public function get_numbers(){

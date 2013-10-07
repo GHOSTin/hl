@@ -68,7 +68,7 @@
 			<span class="cm get_dialog_edit_payment_status">изменить</span>
 			{% endif %}
 		</li>
-		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type_name() }}</span>  
+		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>  
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
 			<span class="cm get_dialog_edit_work_type">изменить</span></li>
 			{% endif %}

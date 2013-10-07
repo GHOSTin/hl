@@ -634,12 +634,4 @@ class model_query{
 		$mapper = new mapper_query($this->company);
 		return $mapper->update($query);
 	}
-
-	/**
-	* Верификация типа объекта заявки.
-	*/
-	public static function is_data_query($query){
-		if(!($query instanceof data_query))
-			throw new e_model('Возвращеный объект не является заявкой.');
-	}
 }
