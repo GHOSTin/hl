@@ -168,8 +168,6 @@ final class data_query extends data_object{
 	}
 
 	public function add_work_type(data_query_work_type $wt){
-		if(!is_null($this->work_type))
-			throw new e_model("Нельзя повторно указать тип заявки.");
 		$this->work_type = $wt;
 	}
 

@@ -195,10 +195,8 @@ class controller_query{
 
 	public static function private_get_dialog_edit_work_type(model_request $request){
 		$company = model_session::get_company();
-		$model = new model_query($company);
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query,
-				'work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type())];
+		return ['query' => (new model_query($company))->get_query($request->GET('id')),
+				'work_types' => (new model_query_work_type($company))->get_query_work_types()];
 	}
 
 	public static function private_get_dialog_initiator(model_request $request){

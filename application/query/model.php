@@ -622,15 +622,11 @@ class model_query{
 	/**
 	* Обновляет тип работ.
 	*/
-	public function update_work_type($id, $type){
-		$query_work_type_params = new data_query_work_type();
-		$query_work_type_params->id = $type;
-		$query_work_type = model_query_work_type::get_query_work_types($this->company,
-																										$query_work_type_params)[0];
-		model_query_work_type::is_data_query_work_type($query_work_type);
+	public function update_work_type($id, $type_id){
+		$type = (new model_query_work_type(model_session::get_company()))
+			->get_query_work_type($type_id);
 		$query = $this->get_query($id);
-		$query->set_work_type_id($query_work_type->id);
-		$query->set_work_type_name($query_work_type->name);
+		$query->add_work_type($type);
 		$mapper = new mapper_query($this->company);
 		return $mapper->update($query);
 	}

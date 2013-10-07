@@ -5,7 +5,7 @@
 	show_dialog(get_hidden_content());
 	$('.update_work_type').click(function(){
 		$.get('update_work_type',{
-			id: {{query.id}},
+			id: {{ query.get_id() }},
 			type: $('.dialog-work_type :selected').val()
 			},function(r){
 				init_content(r);
@@ -22,11 +22,11 @@
 		<label>Тип оплаты:</label>
 		<select class="dialog-work_type">
 			{% for work_type in component.work_types %}
-				<option value="{{work_type.id}}"
-				{% if query.worktype_id == work_type.id %}
+				<option value="{{ work_type.get_id() }}"
+				{% if query.get_work_type().get_id() == work_type.get_id() %}
 					selected
 				{% endif %}
-				>{{work_type.name}}</option>
+				>{{ work_type.get_name() }}</option>
 			{% endfor %}
 		</select>
 	</div>
