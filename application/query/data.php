@@ -161,6 +161,14 @@ final class data_query extends data_object{
 		$this->performers[$user->get_id()] = $user;
 	}
 
+	public function remove_performer(data_query2user $user){
+		if($user->get_class() !== 'performer')
+			throw new e_model("Пользователь не является менеджером заявки.");
+		if(!array_key_exists($user->get_id(), $this->performers))
+			throw new e_model("Исполнителя нет в заявке.");
+		unset($this->performers[$user->get_id()]);
+	}
+
 	public function add_work(data_query2work $work){
 		if(in_array($work->get_id(), $this->works))
 			throw new e_model("Работа уже добавлен в заявку.");

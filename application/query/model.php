@@ -82,6 +82,24 @@ class model_query{
 	}
 
 	/**
+	* Добавляет ассоциацию заявка-пользователь.
+	*/
+	public function remove_user($query_id, $user_id, $class){
+		$user = new data_query2user((new model_user)->get_user($user_id));
+		$user->set_class($class);
+		$query = $this->get_query($query_id);
+		(new mapper_query2user($this->company, $query))->init_users();
+		if($class === 'manager')
+			$query->remove_manager($user);
+		elseif($class === 'performer')
+			$query->remove_performer($user);
+		else
+			throw new e_model('Несоответствующие параметры: class.');
+		(new mapper_query2user($this->company, $query))->update_users();
+		return $query;
+	}
+
+	/**
 	* Добавляет ассоциацию заявка-работа.
 	*/
 	public function add_work($query_id, $work_id, $begin_time, $end_time){

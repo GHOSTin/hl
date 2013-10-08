@@ -202,15 +202,7 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_remove_user(model_request $request){
-		$user = new data_user();
-		$user->id = $request->GET('user_id');
-		$user->verify('id');
-		$company = model_session::get_company();
-		$model = new model_query($company);
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query,
-				'user' => model_user::get_users($user)[0],
-				'type' => $request->GET('type')];
+		return ['user' => (new model_user)->get_user($request->GET('user_id'))];
 	}	
 
 	public static function private_get_dialog_remove_work(model_request $request){

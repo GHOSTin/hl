@@ -16,6 +16,10 @@ class mapper_query2user{
     (`query_id`, `user_id`, `company_id`, `class`)
     VALUES (:query_id, :user_id, :company_id, :class)";
 
+  private static $sql_delete = "DELETE FROM `query2user`
+    WHERE `company_id` = :company_id AND `query_id` = :query_id
+    AND `user_id` = :user_id AND `class` = :class";
+
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
@@ -68,20 +72,14 @@ class mapper_query2user{
   * Удаляет пользователя из заявки.
   */
   public function delete(data_query2user $user){
-    // if(!in_array($user->get_class(), ['manager', 'performer'], true))
-    //   throw new e_model('Несоответствующие параметры: class.');
-    exit();
-    $query = $this->get_query($query_id);
-    $model = new model_user();
-    $user = $model->get_user($user_id);
+    if(!in_array($user->get_class(), ['manager', 'performer'], true))
+      throw new e_model('Несоответствующие параметры: class.');
     $sql = new sql();
-    $sql->query("DELETE FROM `query2user`
-          WHERE `company_id` = :company_id AND `query_id` = :query_id
-          AND `user_id` = :user_id AND `class` = :class");
-    $sql->bind(':query_id', $query->id, PDO::PARAM_STR);
-    $sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-    $sql->bind(':class', $class, PDO::PARAM_STR);
+    $sql->query(self::$sql_delete);
+    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
+    $sql->bind(':class', $user->get_class(), PDO::PARAM_STR);
     $sql->execute('Ошибка при удалении пользователя и заявки.');
     return $query;
   }
