@@ -178,9 +178,9 @@ final class data_query extends data_object{
 	}
 
 	public function add_work(data_query2work $work){
-		if(in_array($work->get_id(), $this->works))
+		if(array_key_exists($work->get_id(), $this->works))
 			throw new e_model("Работа уже добавлен в заявку.");
-		$this->works[] = $work;
+		$this->works[$work->get_id()] = $work;
 	}
 
 	public function add_work_type(data_query_work_type $wt){

@@ -13,6 +13,10 @@ class mapper_query2work{
     AND `works`.`id` = `query2work`.`work_id`
     AND `query2work`.`query_id` = :query_id";
 
+  public static $sql_insert = "INSERT INTO `query2work` (`query_id`, `work_id`, 
+    `company_id`, `opentime`, `closetime`) VALUES (:query_id, :work_id,
+    :company_id, :time_open, :time_close)";
+
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
@@ -29,6 +33,18 @@ class mapper_query2work{
     $q2w->set_time_close($row['time_close']);
     $q2w->set_value($row['value']);
     return $q2w;
+  }
+
+  public function insert(data_query2work $work){
+    $sql = new sql();
+    $sql->query(self::$sql_insert);
+    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $sql->bind(':work_id', $work->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':time_open', $work->get_time_open(), PDO::PARAM_INT);
+    $sql->bind(':time_close', $work->get_time_close(), PDO::PARAM_INT);
+    $sql->execute('Ошибка при добавлении работы.');
+    return $query;
   }
 
   private function get_works(){
@@ -50,6 +66,24 @@ class mapper_query2work{
     if(!empty($works))
       foreach($works as $work)
         $this->query->add_work($work);
+    return $this->query;
+  }
+
+  public function update_works(){
+    $old = [];
+    $works = $this->get_works();
+    if(!empty($works))
+      foreach($works as $work)
+        $old[$work->get_id()] = $work;
+    $new = $this->query->get_works();
+    $deleted = array_diff_key($old, $new);
+    $inserted = array_diff_key($new, $old);
+    if(!empty($inserted))
+        foreach($inserted as $work)
+            $this->insert($work);
+    if(!empty($deleted))
+        foreach($deleted as $work)
+            $this->delete($work);
     return $this->query;
   }
 }

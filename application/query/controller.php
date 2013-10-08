@@ -25,8 +25,7 @@ class controller_query{
 		$company = model_session::get_company();
 		$query = (new model_query($company))->add_work($request->GET('id'),
 							$request->GET('work_id'), $begin_time, $end_time);
-		return ['query' => $query,
-						'works' => model_query::get_works($company, $query)];
+		return ['query' => $query];
 	}
 
 	public static function private_clear_filters(model_request $request){

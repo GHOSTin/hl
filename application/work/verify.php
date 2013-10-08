@@ -5,9 +5,9 @@ class verify_work{
     * Верификация идентификатора работы.
     */
     public static function id(data_work $work){
-        if(!preg_match('/^[0-9]{1,5}$/u', $work->id))
+        if(!preg_match('/^[0-9]{1,5}$/u', $work->get_id()))
             throw new e_model('Идентификатор работы задан не верно.');
-        if($work->id > 65535 OR $work->id < 1)
+        if($work->get_id() > 65535 OR $work->get_id() < 1)
             throw new e_model('Идентификатор работы задан не верно.');
     }
 

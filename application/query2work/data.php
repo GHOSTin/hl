@@ -12,6 +12,7 @@ class data_query2work{
 
   public function __construct(data_work $work){
     $this->work = $work;
+    $this->work->verify('id');
   }
 
   public function set_time_open($time){

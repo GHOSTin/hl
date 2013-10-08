@@ -108,21 +108,12 @@ class model_query{
 		if($begin_time > $end_time)
 			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
 		$query = $this->get_query($query_id);
-		$work = new data_work();
-		$work->id = $work_id;
-		$work->verify(id);
-		$work = model_work::get_works($this->company, $work)[0];
-		model_work::is_data_work($work);
-		$sql = new sql();
-		$sql->query("INSERT INTO `query2work` (`query_id`, `work_id`, `company_id`,
-					 `opentime`, `closetime`) VALUES (:query_id, :work_id, :company_id,
-					 :time_open, :time_close)");
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':work_id', $work->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-		$sql->bind(':time_open', $begin_time, PDO::PARAM_INT);
-		$sql->bind(':time_close', $end_time, PDO::PARAM_INT);
-		$sql->execute('Ошибка при добавлении работы.');
+		(new mapper_query2work($this->company, $query))->init_works();
+		$work = new data_query2work((new model_work($this->company))->get_work($work_id));
+		$work->set_time_open($begin_time);
+		$work->set_time_close($end_time);
+		$query->add_work($work);
+		(new mapper_query2work($this->company, $query))->update_works();
 		return $query;
 	}
 
