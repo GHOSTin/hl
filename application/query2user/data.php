@@ -14,6 +14,8 @@ class data_query2user{
   }
 
   public function set_class($class){
+    if(!in_array($class, ['creator', 'observer', 'manager', 'performer'], true))
+      throw new e_model('Не соответсвует тип пользователя.');
     $this->class = (string) $class;
   }
 
