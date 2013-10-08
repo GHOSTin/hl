@@ -13,26 +13,6 @@ class model_query{
 
 	/*
 	* Зависимая функция.
-	* Добавляет ассоциацию заявка-пользователь.
-	*/
-	private static function __add_user(data_company $company, data_query $query, data_user $user,  $class){
-		$query->verify('id');
-		$company->verify('id');
-		$user->verify('id');
-		if(array_search($class, ['creator', 'observer', 'manager', 'performer']) === false)
-			throw new e_model('Не соответсвует тип пользователя.');
-		$sql = new sql();
-		$sql->query("INSERT INTO `query2user` (`query_id`, `user_id`, `company_id`, `class`)
-					VALUES (:query_id, :user_id, :company_id, :class)");
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':class', $class, PDO::PARAM_STR);
-		$sql->execute('Проблема при добавлении пользователя.');
-	}
-
-	/*
-	* Зависимая функция.
 	* Создает заявку и записывает в лог заявки.
 	*/
 	private static function __add_query(data_company $company, data_query $query, data_object $initiator, $time){
@@ -87,21 +67,17 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public function add_user($query_id, $user_id, $class){
-		if(array_search($class, ['manager', 'performer']) === false)
-			throw new e_model('Несоответствующие параметры: class.');
+		$user = new data_query2user((new model_user)->get_user($user_id));
+		$user->set_class($class);
 		$query = $this->get_query($query_id);
-		$model = new model_user();
-		$user = $model->get_user($user_id);
-		$sql = new sql();
-		$sql->query("INSERT INTO `query2user` (`query_id`, `user_id`, `company_id`,
-				 `class`, `protect`) VALUES (:query_id, :user_id, :company_id,
-				 :class, :protect)");
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $query->company_id, PDO::PARAM_INT);
-		$sql->bind(':class', $class, PDO::PARAM_STR);
-		$sql->bind(':protect', 'false', PDO::PARAM_STR);
-		$sql->execute('Ошибка при добавлении пользователя.');
+		(new mapper_query2user($this->company, $query))->init_users();
+		if($class === 'manager')
+			$query->add_manager($user);
+		elseif($class === 'performer')
+			$query->add_performer($user);
+		else
+			throw new e_model('Несоответствующие параметры: class.');
+		(new mapper_query2user($this->company, $query))->update_users();
 		return $query;
 	}
 
@@ -521,27 +497,6 @@ class model_query{
 			$query->worktype_id = null;
 		elseif(empty($query->worktype_id))
 			$query->worktype_id = $query_filter->worktype_id;
-		return $query;
-	}
-
-	/**
-	* Удаляет пользователя из заявки.
-	*/
-	public function remove_user($query_id, $user_id, $class){
-		if(array_search($class, ['manager', 'performer']) === false)
-			throw new e_model('Несоответствующие параметры: class.');
-		$query = $this->get_query($query_id);
-		$model = new model_user();
-		$user = $model->get_user($user_id);
-		$sql = new sql();
-		$sql->query("DELETE FROM `query2user`
-					WHERE `company_id` = :company_id AND `query_id` = :query_id
-					AND `user_id` = :user_id AND `class` = :class");
-		$sql->bind(':query_id', $query->id, PDO::PARAM_STR);
-		$sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-		$sql->bind(':class', $class, PDO::PARAM_STR);
-		$sql->execute('Ошибка при удалении пользователя и заявки.');
 		return $query;
 	}
 

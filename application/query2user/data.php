@@ -10,6 +10,7 @@ class data_query2user{
 
   public function __construct(data_user $user){
     $this->user = $user;
+    $this->user->verify('id');
   }
 
   public function set_class($class){

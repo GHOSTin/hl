@@ -12,6 +12,10 @@ class mapper_query2user{
     AND `users`.`id` = `query2user`.`user_id`
     AND `query2user`.`query_id` = :query_id";
 
+  private static $sql_insert = "INSERT INTO `query2user`
+    (`query_id`, `user_id`, `company_id`, `class`)
+    VALUES (:query_id, :user_id, :company_id, :class)";
+
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
@@ -44,6 +48,44 @@ class mapper_query2user{
     return $users;
   }
 
+  /*
+  * Зависимая функция.
+  * Добавляет ассоциацию заявка-пользователь.
+  */
+  private function insert($user){
+    if(!in_array($user->get_class(), ['creator', 'observer', 'manager', 'performer'], true))
+      throw new e_model('Не соответсвует тип пользователя.');
+    $sql = new sql();
+    $sql->query(self::$sql_insert);
+    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
+    $sql->bind(':class', $user->get_class(), PDO::PARAM_STR);
+    $sql->execute('Проблема при добавлении пользователя.');
+  }
+
+  /**
+  * Удаляет пользователя из заявки.
+  */
+  public function delete(data_query2user $user){
+    // if(!in_array($user->get_class(), ['manager', 'performer'], true))
+    //   throw new e_model('Несоответствующие параметры: class.');
+    exit();
+    $query = $this->get_query($query_id);
+    $model = new model_user();
+    $user = $model->get_user($user_id);
+    $sql = new sql();
+    $sql->query("DELETE FROM `query2user`
+          WHERE `company_id` = :company_id AND `query_id` = :query_id
+          AND `user_id` = :user_id AND `class` = :class");
+    $sql->bind(':query_id', $query->id, PDO::PARAM_STR);
+    $sql->bind(':user_id', $user->id, PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+    $sql->bind(':class', $class, PDO::PARAM_STR);
+    $sql->execute('Ошибка при удалении пользователя и заявки.');
+    return $query;
+  }
+
   public function init_users(){
     $users = $this->get_users();
     if(!empty($users))
@@ -58,5 +100,47 @@ class mapper_query2user{
           $this->query->add_observer($user);
       }
     return $this->query;
+  }
+
+
+
+  public function update_users(){
+    $users = $this->get_users();
+    $old_creators = [];
+    $old_managers = [];
+    $old_performers = [];
+    $old_observers = [];
+    if(!empty($users))
+      foreach($users as $user){
+        if($user->get_class() === 'creator')
+          $old_creators[$user->get_id()] = $user;
+        if($user->get_class() === 'manager')
+          $old_managers[$user->get_id()] = $user;
+        if($user->get_class() === 'performer')
+          $old_performers[$user->get_id()] = $user;
+        if($user->get_class() === 'observer')
+          $old_observers[$user->get_id()] = $user;
+      }
+
+    $new_managers = $this->query->get_managers();
+    $delete_managers = array_diff_key($old_managers, $new_managers);
+    $insert_managers = array_diff_key($new_managers, $old_managers);
+    if(!empty($insert_managers))
+        foreach($insert_managers as $user)
+            $this->insert($user);
+    if(!empty($delete_managers))
+        foreach($delete_managers as $number)
+            $this->delete($number);
+
+    $new_performers = $this->query->get_performers();
+    $delete_performers = array_diff_key($old_performers, $new_performers);
+    $insert_performers = array_diff_key($new_performers, $old_performers);
+    if(!empty($insert_performers))
+        foreach($insert_performers as $user)
+            $this->insert($user);
+    if(!empty($delete_performers))
+        foreach($delete_performers as $number)
+            $this->delete($number);
+    return $query;
   }
 }

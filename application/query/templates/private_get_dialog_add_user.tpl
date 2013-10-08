@@ -1,14 +1,15 @@
 {% extends "ajax.tpl" %}
 {% set query = component.query %}
+{% set groups = component.groups %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.add_user').click(function(){
 		var user_id = $('.dialog-select-user :selected').val();
 		if(user_id > 0){
 			$.get('add_user',{
-				id: {{query.id}},
+				id: {{ query.get_id() }},
 				user_id: $('.dialog-select-user :selected').val(),
-				type: '{{component.type}}'
+				type: '{{ request.GET('type') }}'
 				},function(r){
 					init_content(r);
 					$('.dialog').modal('hide');
@@ -29,7 +30,7 @@
 {% block html %}
 <div class="modal">
     <div class="modal-header">
-        <h3>{% if component.type == 'manager' %}
+        <h3>{% if request.GET('type') == 'manager' %}
         		Менеджеры
         	{% else %}
         		Исполнители
@@ -39,8 +40,8 @@
 	<div class="modal-body">
 		<select class="dialog-select-group">
 			<option value="0">Выберите группу</option>
-		{% for group in component.groups %}
-			<option value="{{group.id}}">{{group.name}}</option>
+		{% for group in groups %}
+			<option value="{{ group.get_id() }}">{{ group.get_name() }}</option>
 		{% endfor %}
 		</select>
 		<select class="dialog-select-user" style="display:block" disabled="disabled">

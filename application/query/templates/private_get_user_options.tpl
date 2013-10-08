@@ -1,4 +1,4 @@
 <option value="0">Выберите пользователя</option>
-{% for user in component.users %}
-<option value="{{user.id}}">{{user.lastname}} {{user.firstname}} {{user.middlename}}</option>
+{% for user in component.group.get_users() %}
+<option value="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}</option>
 {% endfor %}

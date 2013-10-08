@@ -8,11 +8,9 @@ class controller_query{
 	static $rules = [];
 
 	public static function private_add_user(model_request $request){
-		$company = model_session::get_company();
-		$model = new model_query($company);
-		$query = $model->add_user($request->GET('id'), $request->GET('user_id'), $request->GET('type'));
-		return ['query' => $query,
-						'users' => model_query::get_users($company, $query)];
+		return ['query' => (new model_query(model_session::get_company()))
+			->add_user($request->GET('id'), $request->GET('user_id'),
+			$request->GET('type'))];
 	}
 
 	public static function private_add_work(model_request $request){
@@ -120,9 +118,9 @@ class controller_query{
 
 	public static function private_get_dialog_add_user(model_request $request){
 		$company = model_session::get_company();
-		return ['query' => (new model_query($company))->get_query($request->GET('id')),
-			'groups' => model_group::get_groups($company, new data_group()),
-			'type' => $request->GET('type')];
+		return ['query' => (new model_query($company))
+			->get_query($request->GET('id')),
+			'groups' => (new model_group($company))->get_groups()];
 	}
 
 	public static function private_get_dialog_add_work(model_request $request){
@@ -410,9 +408,9 @@ class controller_query{
 
 	public static function private_get_user_options(model_request $request){
 		$group = new data_group();
-		$group->id = $request->GET('id');
-		$group->verify('id');
-		return ['users' => model_group::get_users(model_session::get_company(), $group)];
+		$group->set_id($request->GET('id'));
+		(new model_group(model_session::get_company()))->init_users($group);
+		return ['group' => $group];
 	}
 
 	public static function private_get_work_options(model_request $request){

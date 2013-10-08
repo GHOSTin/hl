@@ -142,7 +142,7 @@ final class data_query extends data_object{
 			throw new e_model("Пользователь не является менеджером заявки.");
 		if(in_array($user->get_id(), $this->managers))
 			throw new e_model("Менеджер уже добавлен в заявку.");
-		$this->managers[] = $user;
+		$this->managers[$user->get_id()] = $user;
 	}
 
 	public function add_observer(data_query2user $user){
@@ -150,7 +150,7 @@ final class data_query extends data_object{
 			throw new e_model("Пользователь не является менеджером заявки.");
 		if(in_array($user->get_id(), $this->observers))
 			throw new e_model("Исполнитель уже добавлен в заявку.");
-		$this->observers[] = $user;
+		$this->observers[$user->get_id()] = $user;
 	}
 
 	public function add_performer(data_query2user $user){
@@ -158,7 +158,7 @@ final class data_query extends data_object{
 			throw new e_model("Пользователь не является менеджером заявки.");
 		if(in_array($user->get_id(), $this->performers))
 			throw new e_model("Исполнитель уже добавлен в заявку.");
-		$this->performers[] = $user;
+		$this->performers[$user->get_id()] = $user;
 	}
 
 	public function add_work(data_query2work $work){
