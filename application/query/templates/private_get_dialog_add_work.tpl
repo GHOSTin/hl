@@ -1,12 +1,13 @@
 {% extends "ajax.tpl" %}
 {% set query = component.query %}
+{% set workgroups = component.workgroups %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.add_work').click(function(){
 		var work_id = $('.dialog-select-work  :selected').val();
 		if(work_id > 0){
 			$.get('add_work',{
-				id: {{query.id}},
+				id: {{ request.GET('id') }},
 				work_id: work_id,
 				begin_hours: $('.dialog-begin_hours :selected').val(),
 				begin_minutes: $('.dialog-begin_minutes :selected').val(),
@@ -46,8 +47,8 @@
 		<div>
 			<select class="dialog-select-workgroup">
 				<option value="0">Выберите группу работ</option>
-			{% for workgroup in component.workgroups %}
-				<option value="{{workgroup.id}}">{{workgroup.name}}</option>
+			{% for workgroup in workgroups %}
+				<option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
 			{% endfor %}
 			</select>
 			<select class="dialog-select-work" style="display:block" disabled="disabled">

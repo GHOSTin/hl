@@ -124,9 +124,8 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_add_work(model_request $request){
-		$company = model_session::get_company();
-		return ['query' => (new model_query($company))->get_query($request->GET('id')),
-						'workgroups' => model_workgroup::get_workgroups($company, new data_workgroup())];
+		return ['workgroups' => (new model_workgroup(model_session::get_company()))
+			->get_workgroups()];
 	}	
 
 	public static function private_get_dialog_create_query(model_request $request){
@@ -407,9 +406,9 @@ class controller_query{
 
 	public static function private_get_work_options(model_request $request){
 		$work_group = new data_workgroup();
-		$work_group->id = $request->GET('id');
-		$work_group->verify('id');
-		return ['works' => model_workgroup::get_works(model_session::get_company(), $work_group)];
+		$work_group->set_id($request->GET('id'));
+		(new mapper_workgroup2work(model_session::get_company(), $work_group))->init_works();
+		return ['work_group' => $work_group];
 	}
 
 	public static function private_show_default_page(model_request $request){
