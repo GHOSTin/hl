@@ -182,22 +182,21 @@ class model_query{
 			if(!is_null($number_id)){
 				$query->set_initiator('number');
 				$number = (new model_number($company))->get_number($number_id);
-				$query->set_house_id($number->get_house_id());
+				$house = (new model_house)->get_house($number->get_house_id());
+				$query->set_house($house);
 				$query->add_number($number);
 				$mapper_q2n->update();
 			}elseif(!is_null($house_id)){
 				$query->set_initiator('house');
-				$house = new data_house();
-				$house->id = $house_id;
-				if(count(model_house::get_houses($house)) !== 1)
-					throw new e_model('Нет такого дома');
-				$numbers = model_house::get_numbers($company, $house);
-				if(!empty($numbers))
-					foreach($numbers as $number)
+				$house = (new model_house)->get_house($house_id);
+				$query->set_house($house);
+				(new mapper_house2number($company, $house))->init_numbers();
+				if(!empty($house->get_numbers()))
+					foreach($house->get_numbers() as $number)
 						$query->add_number($number);
 				$mapper_q2n->update();
 			}else
-				die('initiator wrong');
+				throw new e_model('initiator wrong');
 			$mapper = new mapper_query($this->company);
 			$query = $mapper->update($query);
 			$sql->commit();

@@ -60,12 +60,10 @@ class controller_query{
 	}
 
 	public static function private_change_initiator(model_request $request){
-		$company = model_session::get_company();
-		$model = new model_query($company);
-		$query = $model->change_initiator($request->GET('query_id'), $request->GET('house_id'), $request->GET('number_id'));
-		$model->init_numbers($query);
-		return ['query' => $query,
-						'users' => model_query::get_users($company, $query)];
+		$query = (new model_query(model_session::get_company()))
+			->change_initiator($request->GET('query_id'),
+			$request->GET('house_id'), $request->GET('number_id'));
+		return ['query' => $query];
 	}
 
 	public static function private_reclose_query(model_request $request){
@@ -158,14 +156,10 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_change_initiator(model_request $request){
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params(new data_query(), $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$street = new data_street();
-		$street->department_id = $query->department_id;
-		$company = model_session::get_company();
-		$streets = model_street::get_streets($street);
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query, 'streets' => $streets];
+		// $_SESSION['filters']['query'] = $query = model_query::build_query_params(new data_query(), $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id')),
+			'streets' => (new model_street)->get_streets()];
 	}
 
 	public static function private_get_dialog_edit_description(model_request $request){
@@ -256,20 +250,19 @@ class controller_query{
 	}
 
 	public static function private_get_houses(model_request $request){
-		$query = new data_query();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		// $_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$street = new data_street();
-		$street->id = $request->GET('id');
-		$street->department_id = $query->department_id;
-		$company = model_session::get_company();
-		return ['houses' => model_street::get_houses($street)];
+		$street->set_id($request->GET('id'));
+		(new mapper_street2house($street))->init_houses();
+		return ['street' => $street];
 	}
 
 	public static function private_get_numbers(model_request $request){
 		$house = new data_house();
-		$house->id = $request->GET('id');
-		$house->verify('id');
-		return ['numbers' => model_house::get_numbers(model_session::get_company(), $house)];
+		$house->set_id($request->GET('id'));
+		(new model_house2number(model_session::get_company(), $house))
+			->init_numbers();
+		return ['house' => $house];
 	}
 
 	public static function private_print_query(model_request $request){

@@ -8,6 +8,8 @@ class mapper_house{
   public function create_object(array $row){
     $house = new data_house();
     $house->set_id($row['id']);
+    $house->set_number($row['number']);
+    $house->set_department_id($row['department_id']);
     return $house;
   }
 
@@ -26,3 +28,4 @@ class mapper_house{
       throw new e_model('Неожиданное количество домов');
   }
 }
+

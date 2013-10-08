@@ -51,54 +51,6 @@ class model_street{
 	* @return array из object data_street
 	*/
 	public static function get_streets(){
-		$mapper = new mapper_street();
-		return $mapper->get_streets();
-	}
-	
-	/**
-	* Возвращает список домов
-	* @return array из object data_house
-	*/
-	public static function get_houses(data_street $street, data_house $house = null){
-		$sql = new sql();
-		$sql->query("SELECT `id`, `company_id`, `city_id`, `street_id`, 
-			 		`department_id`, `status`, `housenumber` as `number`
-					FROM `houses` WHERE `street_id` = :street_id");
-		$sql->bind(':street_id', $street->id, PDO::PARAM_INT);
-		if(!empty($street->department_id)){
-			$sql->query(" AND `houses`.`department_id` IN(");
-			if(is_array($street->department_id)){
-				$count = count($street->department_id);
-				$i = 1;
-				foreach($street->department_id as $key => $department){
-					$sql->query(':department_id'.$key);
-					if($i++ < $count)
-						$sql->query(',');
-					$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
-				}
-			}else{
-				$sql->query(':department_id0');
-				$sql->bind(':department_id0', $street->department_id, PDO::PARAM_INT);
-			}
-			$sql->query(")");
-		}
-		if(!empty($house->number)){
-			$sql->query(' AND `housenumber` = :number');
-			$sql->bind(':number', $house->number, PDO::PARAM_STR);
-		}
-		if(!empty($house->id)){
-			$sql->query(' AND `id` = :house_id');
-			$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
-		}
-		$sql->query(" ORDER BY (`houses`.`housenumber` + 0)");
-		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
-	}
-	
-	/**
-	* Проверка принадлежности объекта к классу data_street.
-	*/
-	public static function is_data_street($street){
-		if(!($street instanceof data_street))
-			throw new e_model('Возвращеный объект не является улицей.');
+		return (new mapper_street)->get_streets();
 	}
 }

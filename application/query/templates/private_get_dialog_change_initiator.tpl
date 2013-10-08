@@ -13,7 +13,7 @@
 		<select class="dialog-select-street">
 			<option value="">Выберите улицу...</option>
 			{% for street in streets %}
-			<option value="{{ street.id }}">{{ street.name }}</option>
+			<option value="{{ street.get_id() }}">{{ street.get_name() }}</option>
 			{% endfor %}
 		</select>
 	</div>

@@ -14,6 +14,7 @@ class mapper_number{
         $number->set_fio($row['fio']);
         $number->set_number($row['number']);
         $number->set_status($row['status']);
+        $number->set_house_id($row['house_id']);
         return $number;
     }
 

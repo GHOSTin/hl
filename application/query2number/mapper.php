@@ -28,11 +28,13 @@ class mapper_query2number{
 
     private function delete(data_number $number){
         $number->verify('id');
-        $sql->query("DELETE FROM `group2user` WHERE `group_id` = :group_id
-                    AND `user_id` = :user_id");
-        $sql->bind(':group_id', $group->id, PDO::PARAM_INT);
-        $sql->bind(':user_id', $user->id, PDO::PARAM_INT);
-        $sql->execute('Ошибка при исключении пользователя из группы.');
+        $sql = new sql();
+        $sql->query("DELETE FROM `query2number` WHERE `company_id` = :company_id
+                    AND `query_id` = :query_id AND `number_id` = :number_id");
+        $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+        $sql->bind(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
+        $sql->execute('Ошибка при исключении лицевого из заявки.');
     }
 
     private function insert(data_number $number){
@@ -40,10 +42,10 @@ class mapper_query2number{
         $sql = new sql();
         $sql->query("INSERT INTO `query2number` (`query_id`, `number_id`, `company_id`, `default`) 
                     VALUES (:query_id, :number_id, :company_id, :default)");
-        $sql->bind(':query_id', (int) $this->query->id, PDO::PARAM_INT);
-        $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
+        $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
         $sql->bind(':default', 'false', PDO::PARAM_STR);
-        $sql->bind(':number_id', (int) $number->id, PDO::PARAM_INT);
+        $sql->bind(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
         $sql->execute('Проблема при добавлении связи заявка-лицевой счет.');
         return $number;
     }
@@ -72,10 +74,13 @@ class mapper_query2number{
 
     public function update(){
         $new = $this->query->get_numbers();
-        $old = $this->get_numbers();
+        $old = [];
+        $numbers = $this->get_numbers();
+        if(!empty($numbers))
+            foreach($numbers as $number)
+                $old[$number->get_id()] = $number;
         $deleted = array_diff_key($old, $new);
         $inserted = array_diff_key($new, $old);
-        exit();
         if(!empty($inserted))
             foreach($inserted as $number)
                 $this->insert($number);
