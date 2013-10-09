@@ -298,10 +298,10 @@ class mapper_query{
        $sql->query(" AND `houses`.`street_id` = :street_id");
        $sql->bind(':street_id', (int) $params['street'], PDO::PARAM_INT);
       }
-      // if(!empty($query->house_id)){
-      //  $sql->query(" AND `queries`.`house_id` = :house_id");
-      //  $sql->bind(':house_id', $query->house_id, PDO::PARAM_INT);
-      // }
+      if(!empty($params['house'])){
+       $sql->query(" AND `queries`.`house_id` = :house_id");
+       $sql->bind(':house_id', (int) $params['house'], PDO::PARAM_INT);
+      }
       // if(!empty($query->worktype_id)){
       //  $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
       //  $sql->bind(':worktype_id', $query->worktype_id, PDO::PARAM_INT);

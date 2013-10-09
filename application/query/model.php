@@ -55,6 +55,11 @@ class model_query{
 	}
 
 	public function set_house($id){
+		if($id > 0){
+			$house = (new model_house($this->company))->get_house($id);
+			$this->set_param('house', $house->get_id());
+		}else
+			$this->set_param('house', null);
 	}
 
 	/*

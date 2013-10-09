@@ -306,17 +306,18 @@ class controller_query{
 		$model->set_department('all');
 		$model->set_street($request->GET('value'));
 		$model->set_house('all');
-		return ['queries' => $model->get_queries()];
+		if($request->GET('value') > 0){
+			$street = new data_street();
+			$street->set_id($request->GET('value'));
+			(new mapper_street2house($street))->init_houses();
+		}
+		return ['queries' => $model->get_queries(), 'street' => $street];
 	}
 
 	public static function private_set_house(model_request $request){
-		$query = new data_query();
-		$query->house_id = $request->GET('value');
-		$query->department_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company , $query),
-				'numbers' => model_query::get_numbers($company , $query)];
+		$model = new model_query(model_session::get_company());
+		$model->set_house($request->GET('value'));
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_set_department(model_request $request){
