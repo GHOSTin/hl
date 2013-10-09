@@ -4,7 +4,7 @@
 	show_dialog(get_hidden_content());
 	$('.to_working_query').click(function(){
 		$.get('to_working_query',{
-			id: {{query.id}}
+			id: {{ request.GET('id') }}
 			},function(r){
 				init_content(r);
 				$('.dialog').modal('hide');

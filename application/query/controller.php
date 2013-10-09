@@ -48,12 +48,11 @@ class controller_query{
 	}
 
 	public static function private_close_query(model_request $request){
-		$company = model_session::get_company();
-		$model = new model_query($company);
+		$model = new model_query(model_session::get_company());
 		$query = $model->close_query($request->GET('id'), $request->GET('reason'));
 		$model->init_numbers($query);
-		return ['query' => $query,
-						'users' => model_query::get_users($company, $query)];
+		$model->init_users($query);
+		return ['query' => $query];
 	}
 
 	public static function private_change_initiator(model_request $request){
@@ -64,21 +63,19 @@ class controller_query{
 	}
 
 	public static function private_reclose_query(model_request $request){
-		$company = model_session::get_company();
-		$model = new model_query($company);
+		$model = new model_query(model_session::get_company());
 		$query = $model->reclose_query($request->GET('id'));
 		$model->init_numbers($query);
-		return ['query' => $query,
-						'users' => model_query::get_users($company, $query)];
+		$model->init_users($query);
+		return ['query' => $query];
 	}
 
 	public static function private_reopen_query(model_request $request){
-		$company = model_session::get_company();
-		$model = new model_query($company);
+		$model = new model_query(model_session::get_company());
 		$query = $model->reopen_query($request->GET('id'));
 		$model->init_numbers($query);
-		return ['query' => $query,
-						'users' => model_query::get_users($company, $query)];
+		$model->init_users($query);
+		return ['query' => $query];
 	}
 
 	public static function private_to_working_query(model_request $request){
@@ -86,8 +83,8 @@ class controller_query{
 		$model = new model_query($company);
 		$query = $model->to_working_query($request->GET('id'));
 		$model->init_numbers($query);
-		return ['query' => $query,
-						'users' => model_query::get_users($company, $query)];
+		$model->init_users($query);
+		return ['query' => $query];
 	}
 
 	public static function private_create_query(model_request $request){
@@ -131,18 +128,15 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_close_query(model_request $request){
-		return ['query' => (new model_query(model_session::get_company()))
-			->get_query($request->GET('id'))];
+		return true;
 	}
 
 	public static function private_get_dialog_reclose_query(model_request $request){
-		return ['query' => (new model_query(model_session::get_company()))
-			->get_query($request->GET('id'))];
+		return true;
 	}
 
 	public static function private_get_dialog_reopen_query(model_request $request){
-		return ['query' => (new model_query(model_session::get_company()))
-			->get_query($request->GET('id'))];
+		return true;
 	}
 
 	public static function private_get_dialog_to_working_query(model_request $request){

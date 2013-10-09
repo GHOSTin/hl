@@ -1,10 +1,9 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.reopen_query').click(function(){
 		$.get('reopen_query',{
-			id: {{query.id}},
+			id: {{ request.GET('id') }},
 			reason: $('.dialog-reason').val()
 			},function(r){
 				init_content(r);

@@ -4,7 +4,7 @@
 	show_dialog(get_hidden_content());
 	$('.close_query').click(function(){
 		$.get('close_query',{
-			id: {{query.id}},
+			id: {{ request.GET('id') }},
 			reason: $('.dialog-reason').val()
 			},function(r){
 				init_content(r);
