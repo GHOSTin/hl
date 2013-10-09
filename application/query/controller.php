@@ -302,18 +302,11 @@ class controller_query{
 	}
 
 	public static function private_set_street(model_request $request){
-		$query = new data_query();
-		$query->street_id = $request->GET('value');
-		$query->department_id = 'all';
-		$query->house_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$street = new data_street();
-		$street->id = $request->GET('value');
-		$street->department_id = $query->department_id;
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-				'numbers' => model_query::get_numbers($company, $query),
-				'houses' => model_street::get_houses($street)];
+		$model = new model_query(model_session::get_company());
+		$model->set_department('all');
+		$model->set_street($request->GET('value'));
+		$model->set_house('all');
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_set_house(model_request $request){

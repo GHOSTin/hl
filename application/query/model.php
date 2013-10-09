@@ -16,6 +16,8 @@ class model_query{
 	    $this->params['time_open_end'] = $time  + 86400;
 	    $this->params['status'] = null;
 	    $this->params['department'] = null;
+	    $this->params['street'] = null;
+	    $this->params['house'] = null;
     	$_SESSION['model']['model'] = 'query';
     	$_SESSION['model']['params'] = $this->params;
 	  }
@@ -45,6 +47,11 @@ class model_query{
 	}
 
 	public function set_street($id){
+		if($id > 0){
+			$street = (new model_street($this->company))->get_street($id);
+			$this->set_param('street', $street->get_id());
+		}else
+			$this->set_param('street', null);
 	}
 
 	public function set_house($id){

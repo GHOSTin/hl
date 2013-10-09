@@ -46,6 +46,13 @@ class model_street{
 		return $street_id;
 	}
 
+	public static function get_street($id){
+		$street = (new mapper_street)->find($id);
+		if(!($street instanceof data_street))
+			throw new e_model('Нет улицы');
+		return $street;
+	}
+
 	/**
 	* Возвращает список улиц.
 	* @return array из object data_street

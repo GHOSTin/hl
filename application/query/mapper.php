@@ -288,16 +288,16 @@ class mapper_query{
       $sql->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
       if(!empty($params['status'])){
        $sql->query(" AND `queries`.`status` = :status");
-       $sql->bind(':status', $params['status'], PDO::PARAM_STR);
+       $sql->bind(':status', (string) $params['status'], PDO::PARAM_STR);
       }
       if(!empty($params['department'])){
       $sql->query(" AND `queries`.`department_id` = :department");
-       $sql->bind(':department', $params['department'], PDO::PARAM_INT);
+       $sql->bind(':department', (int)  $params['department'], PDO::PARAM_INT);
       }
-      // if(!empty($query->street_id)){
-      //  $sql->query(" AND `houses`.`street_id` = :street_id");
-      //  $sql->bind(':street_id', $query->street_id, PDO::PARAM_INT);
-      // }
+      if(!empty($params['street'])){
+       $sql->query(" AND `houses`.`street_id` = :street_id");
+       $sql->bind(':street_id', (int) $params['street'], PDO::PARAM_INT);
+      }
       // if(!empty($query->house_id)){
       //  $sql->query(" AND `queries`.`house_id` = :house_id");
       //  $sql->bind(':house_id', $query->house_id, PDO::PARAM_INT);
