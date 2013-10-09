@@ -183,6 +183,12 @@ final class data_query extends data_object{
 		$this->works[$work->get_id()] = $work;
 	}
 
+	public function remove_work(data_query2work $work){
+		if(!array_key_exists($work->get_id(), $this->works))
+			throw new e_model("Работа не была в заявке.");
+		unset($this->works[$work->get_id()]);
+	}
+
 	public function add_work_type(data_query_work_type $wt){
 		$this->work_type = $wt;
 	}

@@ -204,14 +204,8 @@ class controller_query{
 	}	
 
 	public static function private_get_dialog_remove_work(model_request $request){
-		$work = new data_work();
-		$work->id = $request->GET('work_id');
-		$work->verify('id');
-		$company = model_session::get_company();
-		$model = new model_query($company);
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query,
-				'work' => model_work::get_works($company, $work)[0]];
+		return ['work' => (new model_work(model_session::get_company()))
+			->get_work($request->GET('work_id'))];
 	}
 
 	public static function private_get_initiator(model_request $request){

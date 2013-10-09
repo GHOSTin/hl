@@ -514,19 +514,10 @@ class model_query{
 	*/
 	public function remove_work($query_id, $work_id){
 		$query = $this->get_query($query_id);
-		$work = new data_work();
-		$work->id = $work_id;
-		$work->verify('id');
-		$work = model_work::get_works($this->company, $work)[0];
-		model_work::is_data_work($work);
-		$sql = new sql();
-		$sql->query("DELETE FROM `query2work`
-					WHERE `company_id` = :company_id AND `query_id` = :query_id
-					AND `work_id` = :work_id");
-		$sql->bind(':query_id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':work_id', $work->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при удалении работы из заявки.');
+		(new mapper_query2work($this->company, $query))->init_works();
+		$work = new data_query2work((new model_work($this->company))->get_work($work_id));
+		$query->remove_work($work);
+		(new mapper_query2work($this->company, $query))->update_works();
 		return $query;
 	}
 

@@ -17,6 +17,10 @@ class mapper_query2work{
     `company_id`, `opentime`, `closetime`) VALUES (:query_id, :work_id,
     :company_id, :time_open, :time_close)";
 
+  public static $sql_delete = "DELETE FROM `query2work`
+          WHERE `company_id` = :company_id AND `query_id` = :query_id
+          AND `work_id` = :work_id";
+
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
@@ -33,6 +37,16 @@ class mapper_query2work{
     $q2w->set_time_close($row['time_close']);
     $q2w->set_value($row['value']);
     return $q2w;
+  }
+
+  public function delete(data_query2work $work){
+    $sql = new sql();
+    $sql->query(self::$sql_delete);
+    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $sql->bind(':work_id', $work->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->execute('Ошибка при удалении работы из заявки.');
+    return $query;
   }
 
   public function insert(data_query2work $work){
