@@ -290,6 +290,10 @@ class mapper_query{
        $sql->query(" AND `queries`.`status` = :status");
        $sql->bind(':status', $params['status'], PDO::PARAM_STR);
       }
+      if(!empty($params['department'])){
+      $sql->query(" AND `queries`.`department_id` = :department");
+       $sql->bind(':department', $params['department'], PDO::PARAM_INT);
+      }
       // if(!empty($query->street_id)){
       //  $sql->query(" AND `houses`.`street_id` = :street_id");
       //  $sql->bind(':street_id', $query->street_id, PDO::PARAM_INT);

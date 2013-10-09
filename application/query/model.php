@@ -15,6 +15,7 @@ class model_query{
 	    $this->params['time_open_begin'] = $time  - (86400 * 80);
 	    $this->params['time_open_end'] = $time  + 86400;
 	    $this->params['status'] = null;
+	    $this->params['department'] = null;
     	$_SESSION['model']['model'] = 'query';
     	$_SESSION['model']['params'] = $this->params;
 	  }
@@ -33,6 +34,20 @@ class model_query{
 			$this->set_param('status', null);
 		else
 			$this->set_param('status', $status);
+	}
+
+	public function set_department($id){
+		if($id > 0){
+			$department = (new model_department($this->company))->get_department($id);
+			$this->set_param('department', $department->get_id());
+		}else
+			$this->set_param('department', null);
+	}
+
+	public function set_street($id){
+	}
+
+	public function set_house($id){
 	}
 
 	/*

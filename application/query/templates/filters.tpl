@@ -23,10 +23,10 @@
             {% if component.departments != false %}
                 {% for department in component.departments %}
                     <option value="{{ department.get_id() }}"
-                    {% if department.id == component.filters.department_id %}
+                    {% if department.get_id() == component.filters.department_id %}
                     selected
                     {% endif %}
-                    >{{ department.name }}</option>
+                    >{{ department.get_name() }}</option>
                 {% endfor %}
             {% endif %}
         </select>

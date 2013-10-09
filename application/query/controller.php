@@ -327,14 +327,11 @@ class controller_query{
 	}
 
 	public static function private_set_department(model_request $request){
-		$query = new data_query();
-		$query->department_id = $request->GET('value');
-		$query->street_id = 'all';
-		$query->house_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-				'numbers' => model_query::get_numbers($company, $query)];
+		$model = new model_query(model_session::get_company());
+		$model->set_department($request->GET('value'));
+		$model->set_street('all');
+		$model->set_house('all');
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_set_work_type(model_request $request){
@@ -392,28 +389,16 @@ class controller_query{
 
 	public static function private_show_default_page(model_request $request){
 		$query = new data_query();
-		// $_SESSION['filters']['query'] = $query = model_query::build_query_params($query,
-		// 		$_SESSION['filters']['query']); 
 		$time = getdate();
-		// exit();
 		$now = getdate();
-		// $street = new data_street();
-		// $street->set_department_id($query->get_department_id());
 		$houses = [];
-		// if(!empty($query->get_street_id())){
-		// 	$street->id = $query->street_id;
-		// 	$houses = model_street::get_houses($street);
-		// }
-		// $department = new data_department();
-		// $department->setid = model_session::get_restrictions()['query']->departments;
 		$company = model_session::get_company();
 		return ['queries' => (new model_query($company))->get_queries(),
 			'filters' => $_SESSION['filters']['query'],
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),
-			// 'users' => (new model_user)->get_users(),
-			// 'departments' => model_department::get_departments($company, $department),
+			'departments' => (new model_department($company))->get_departments(),
 			// 'numbers' => model_query::get_numbers($company, $query),
 			// 'query_work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type()),
 			'houses' => $houses];

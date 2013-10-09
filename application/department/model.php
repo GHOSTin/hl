@@ -1,6 +1,13 @@
 <?php
 class model_department{
 
+	private $company;
+
+	public function __construct(data_company $company){
+		$this->company = $company;
+		$this->company->verify('id');
+	}
+
 	/**
 	* Создает новый участок в компании.
 	* @return object data_department
@@ -40,37 +47,19 @@ class model_department{
 		$sql->close();
 		return $department_id;
 	}
+
+	public function get_department($id){
+		$department = (new mapper_department($this->company))->find($id);
+		if(!($department instanceof data_department))
+			throw new e_model('Нет такого участка.');
+		return $department;
+	}
 	
 	/**
 	* Возвращает список участков компании.
 	* @return array из object data_department
 	*/
-	public static function get_departments(data_company $company, data_department $department){
-		$company->verify('id');
-		$sql = new sql();
-		$sql->query("SELECT `id`, `company_id`, `status`, `name`
-					FROM `departments` WHERE `company_id` = :company_id");
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		if(!empty($department->id)){
-			$params = [];
-			if(is_array($department->id))
-				$departments = $department->id;
-			else
-				$departments[] = $department->id;
-			foreach($departments as $key => $department){
-				$params[] = ':department_id'.$key;
-				$sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
-			}
-			$sql->query(" AND `id` IN(".implode(',', $params).")");
-		}
-		return $sql->map(new data_department(), 'Проблема при выборке пользователей.');
-	}
-
-	/**
-	* Проверка принадлежности объекта к классу data_department.
-	*/
-	public static function is_data_department($department){
-		if(!($department instanceof data_department))
-			throw new e_model('Возвращеный объект не является участком.');
+	public function get_departments(){
+		return (new mapper_department($this->company))->get_departments();
 	}
 }
