@@ -354,32 +354,31 @@ class controller_query{
 
 	public static function private_get_timeline(model_request $request){
 		$time = (int) $request->GET('time');
-		$query = new data_query();
 		if($time < 0)
 			$time = getdate();
 		else
 			$time = getdate($time);
-
 		$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
+		$now = getdate();
+		$now = mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']);
+		$model = new model_query(model_session::get_company());
 		switch ($request->GET('act')) {
 			case 'next':
-				$query->time_open['begin'] = strtotime("+1 month", $time);
+				$begin = strtotime("+1 month", $time);
 				$timeline = strtotime("+1 month +12 hours", $time);
 			break;
 			case 'previous':
-				$query->time_open['begin'] = strtotime("-1 day", $time);
+				$begin = strtotime("-1 day", $time);
 				$timeline = strtotime("-12 hours", $time);
 			break;
 			default:
 				return false;
 		}
-		$now = getdate();
-		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+		$model->set_param('time_open_begin', $begin);
+		$model->set_param('time_open_end', $begin + 86399);
 		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-			'numbers' => model_query::get_numbers($company, $query),
-			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
+		return ['queries' => (new model_query($company))->get_queries(),
+			'now' =>  $now,
 			'timeline' => $timeline];
 	}
 
@@ -401,7 +400,7 @@ class controller_query{
 		$query = new data_query();
 		// $_SESSION['filters']['query'] = $query = model_query::build_query_params($query,
 		// 		$_SESSION['filters']['query']); 
-		$time = getdate($query->get_time_open()['begin']);
+		$time = getdate();
 		// exit();
 		$now = getdate();
 		// $street = new data_street();

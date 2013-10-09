@@ -7,8 +7,24 @@ class model_query{
 	public function __construct(data_company $company){
 		$this->company = $company;
     $this->company->verify('id');
-    $this->params['time_open_begin'] = time() - (86400 * 80);
-    $this->params['time_open_end'] = time() + 86400;
+    if(!empty($_SESSION['model']) AND $_SESSION['model']['model'] === 'query'){
+    	$this->params = $_SESSION['model']['params'];
+    }else{
+    	$time = getdate();
+    	$time = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+	    $this->params['time_open_begin'] = $time  - (86400 * 80);
+	    $this->params['time_open_end'] = $time  + 86400;
+    	$_SESSION['model']['model'] = 'query';
+    	$_SESSION['model']['params'] = $this->params;
+	  }
+	  // unset($_SESSION['model']);
+	}
+
+	public function set_param($param, $value){
+		if(!array_key_exists($param, $this->params))
+			throw new e_model('Не существует такого параметра.');
+		$this->params[$param] = $value;
+		$_SESSION['model']['params'] = $this->params;
 	}
 
 	/*
@@ -187,7 +203,6 @@ class model_query{
 			$sql->commit();
 			return $query;
 		}catch(exception $e){
-			die($e);
 			$sql->rallback();
 			die('Проблема');
 		}
