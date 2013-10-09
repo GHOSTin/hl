@@ -2,11 +2,11 @@
 {% set query = component.query %}
 {% block js %}
 	show_dialog(get_hidden_content());
-	{% if query.status == 'open' %}
+	{% if query.get_status() == 'open' %}
 		$('.print_query').click(function(){
 			$('.dialog').modal('hide');
 			$.get('to_working_query',{
-				id: {{query.id}}
+				id: {{ query.get_id() }}
 				},function(r){
 					init_content(r);
 				});
@@ -19,8 +19,8 @@
         <h3>Документы</h3>
     </div>	
 	<div class="modal-body">
-		<a href="/query/print_query?id={{query.id}}" target="_blank" class="
-		{% if query.status == 'open' %}
+		<a href="/query/print_query?id={{ query.get_id() }}" target="_blank" class="
+		{% if query.get_status() == 'open' %}
 			print_query
 		{% else %}
 			close_dialog

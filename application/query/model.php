@@ -459,55 +459,55 @@ class model_query{
 		return $result;
 	}
 
-	/*
-	* Учитывает сессионный фильтры.
-	*/
-	public static function build_query_params(data_query $query, data_query $query_filter = null){
-		$time = getdate();
-		if(!$query_filter instanceof data_query){
-			$query = new data_query();
-			$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-			$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		}
-		if(empty($query->time_open))
-			$query->time_open = $query_filter->time_open;
-		if(empty($query->status))
-			$query->status = $query_filter->status;
-		// обработка улиц
-		if($query->street_id === 'all')
-			$query->street_id = null;
-		elseif(empty($query->street_id))
-			$query->street_id = $query_filter->street_id;
-		// обработка дома
-		if(!empty($query->street_id)){
-			if(empty($query->house_id))
-				$query->house_id = $query_filter->house_id;
-			else
-				if($query->house_id === 'all')
-					$query->house_id = null;
-		}else
-			$query->house_id = null;
-		// обработка участка
-		if(empty($query->department_id)){
-			if(empty($query_filter->department_id))
-				$query->department_id = $restrictions->departments;
-			else
-				$query->department_id = $query_filter->department_id;
-		}else{
-			if($query->department_id === 'all')
-				$query->department_id = $restrictions->departments;
-			else
-				if(!empty($restrictions->departments))
-					if(array_search($query->department_id, $restrictions->departments) === false)
-						$query->department_id = $restrictions->departments;
-		}
-		// обработка типа работ
-		if($query->worktype_id === 'all')
-			$query->worktype_id = null;
-		elseif(empty($query->worktype_id))
-			$query->worktype_id = $query_filter->worktype_id;
-		return $query;
-	}
+	// /*
+	// * Учитывает сессионный фильтры.
+	// */
+	// public static function build_query_params(data_query $query, data_query $query_filter = null){
+	// 	$time = getdate();
+	// 	if(!$query_filter instanceof data_query){
+	// 		$query = new data_query();
+	// 		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+	// 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
+	// 	}
+	// 	if(empty($query->time_open))
+	// 		$query->time_open = $query_filter->time_open;
+	// 	if(empty($query->status))
+	// 		$query->status = $query_filter->status;
+	// 	// обработка улиц
+	// 	if($query->street_id === 'all')
+	// 		$query->street_id = null;
+	// 	elseif(empty($query->street_id))
+	// 		$query->street_id = $query_filter->street_id;
+	// 	// обработка дома
+	// 	if(!empty($query->street_id)){
+	// 		if(empty($query->house_id))
+	// 			$query->house_id = $query_filter->house_id;
+	// 		else
+	// 			if($query->house_id === 'all')
+	// 				$query->house_id = null;
+	// 	}else
+	// 		$query->house_id = null;
+	// 	// обработка участка
+	// 	if(empty($query->department_id)){
+	// 		if(empty($query_filter->department_id))
+	// 			$query->department_id = $restrictions->departments;
+	// 		else
+	// 			$query->department_id = $query_filter->department_id;
+	// 	}else{
+	// 		if($query->department_id === 'all')
+	// 			$query->department_id = $restrictions->departments;
+	// 		else
+	// 			if(!empty($restrictions->departments))
+	// 				if(array_search($query->department_id, $restrictions->departments) === false)
+	// 					$query->department_id = $restrictions->departments;
+	// 	}
+	// 	// обработка типа работ
+	// 	if($query->worktype_id === 'all')
+	// 		$query->worktype_id = null;
+	// 	elseif(empty($query->worktype_id))
+	// 		$query->worktype_id = $query_filter->worktype_id;
+	// 	return $query;
+	// }
 
 	/**
 	* Обновляет работу из заявки.

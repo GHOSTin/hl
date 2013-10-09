@@ -33,13 +33,11 @@
 		<button class="close get_query_title">&times;</button>
 	</h4>
 	<ul class="nav nav-pills">
-	{% if rules.showDocs == true %}
 		<li><a href="#" class="get_documents">Документы</a></li>
-	{% endif %}
-	{% if rules.closeQuery == true and query.status in ['open', 'working'] %}
+	{% if query.get_status() in ['open', 'working'] %}
 		<li><a href="#" class="get_dialog_close_query">Закрыть заявку</a></li>
 	{% endif %}
-	{% if rules.closeQuery == true and query.status == 'reopen' %}
+	{% if query.get_status() == 'reopen' %}
 		<li><a href="#" class="get_dialog_reclose_query">Перезакрыть заявку</a></li>
 	{% endif %}
 	{% if query.get_status() == 'open' %}

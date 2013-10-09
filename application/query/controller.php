@@ -99,9 +99,8 @@ class controller_query{
 	}
 
 	public static function private_get_documents(model_request $request){
-		$model = new model_query(model_session::get_company());
-		$query = $model->get_query($request->GET('id'));
-		return ['query' => $query];
+		return ['query' => (new model_query(model_session::get_company()))
+			->get_query($request->GET('id'))];
 	}
 
 	public static function private_get_day(model_request $request){
@@ -252,8 +251,8 @@ class controller_query{
 		$model = new model_query($company);
 		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
-		return ['query' => $query, 
-				'users' => model_query::get_users($company, $query)];
+		$model->init_users($query);
+		return ['query' => $query];
 	}
 
 	public static function private_get_query_content(model_request $request){
