@@ -286,12 +286,10 @@ class mapper_query{
       AND `queries`.`department_id` = `departments`.`id`");
       $sql->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
       $sql->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
-      // if(!empty($query->get_status()) AND $query->get_status() !== 'all'){
-      //  $sql->query(" AND `queries`.`status` = :status");
-      //  if(!in_array($query->get_status(), ['open', 'close', 'working', 'reopen']))
-      //    throw new e_model('Невозможный статус заявки.');
-      //  $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
-      // }
+      if(!empty($params['status'])){
+       $sql->query(" AND `queries`.`status` = :status");
+       $sql->bind(':status', $params['status'], PDO::PARAM_STR);
+      }
       // if(!empty($query->street_id)){
       //  $sql->query(" AND `houses`.`street_id` = :street_id");
       //  $sql->bind(':street_id', $query->street_id, PDO::PARAM_INT);

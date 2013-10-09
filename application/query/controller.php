@@ -296,13 +296,9 @@ class controller_query{
 	}
 
 	public static function private_set_status(model_request $request){
-		$query = new data_query();
-		$query->status = $request->GET('value');
-		$query->department_id = 'all';
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-				'numbers' => model_query::get_numbers($company, $query)];
+		$model = new model_query(model_session::get_company());
+		$model->set_status($request->GET('value'));
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_set_street(model_request $request){

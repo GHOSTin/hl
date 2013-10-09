@@ -10,7 +10,7 @@
             </small>
         </div>
     	{% for query in component.queries %}
-    		<div class="query get_query_content" query_id="{{query.id}}">
+    		<div class="query get_query_content" query_id="{{ query.get_id() }}">
     			{% include '@query/build_query_title.tpl' %}
     		</div>
         {% else %}

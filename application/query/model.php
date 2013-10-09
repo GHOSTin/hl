@@ -14,6 +14,7 @@ class model_query{
     	$time = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 	    $this->params['time_open_begin'] = $time  - (86400 * 80);
 	    $this->params['time_open_end'] = $time  + 86400;
+	    $this->params['status'] = null;
     	$_SESSION['model']['model'] = 'query';
     	$_SESSION['model']['params'] = $this->params;
 	  }
@@ -25,6 +26,13 @@ class model_query{
 			throw new e_model('Не существует такого параметра.');
 		$this->params[$param] = $value;
 		$_SESSION['model']['params'] = $this->params;
+	}
+
+	public function set_status($status){
+		if(!in_array($status, ['open', 'close', 'reopen', 'working'], true))
+			$this->set_param('status', null);
+		else
+			$this->set_param('status', $status);
 	}
 
 	/*
