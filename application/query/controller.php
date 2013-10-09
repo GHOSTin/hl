@@ -102,13 +102,11 @@ class controller_query{
 
 	public static function private_get_day(model_request $request){
 		$time = getdate($request->GET('time'));
-		$query = new data_query();
-		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-			'numbers' => model_query::get_numbers($company, $query)];
+		$begin = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$model = new model_query(model_session::get_company());
+		$model->set_param('time_open_begin', $begin);
+		$model->set_param('time_open_end', $begin + 86399);
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_get_dialog_add_user(model_request $request){
@@ -377,7 +375,7 @@ class controller_query{
 		$model->set_param('time_open_begin', $begin);
 		$model->set_param('time_open_end', $begin + 86399);
 		$company = model_session::get_company();
-		return ['queries' => (new model_query($company))->get_queries(),
+		return ['queries' => $model->get_queries(),
 			'now' =>  $now,
 			'timeline' => $timeline];
 	}
