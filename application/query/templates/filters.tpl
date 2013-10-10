@@ -58,11 +58,11 @@
                 <option value="all">Ожидание...</option>
             {% endif %}
             {% for house in component.houses %}
-                    <option value="{{house.id}}"
-                    {% if house.id == component.filters.house_id %}
+                    <option value="{{ house.get_id() }}"
+                    {% if house.get_id() == params['house'] %}
                         selected
                     {% endif %}
-                    >дом №{{house.number}}</option>
+                    >дом №{{ house.get_number() }}</option>
             {% endfor %}
         </select>
 	</div>

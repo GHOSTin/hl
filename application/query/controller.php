@@ -358,14 +358,20 @@ class controller_query{
 	}
 
 	public static function private_show_default_page(model_request $request){
-		$query = new data_query();
 		$time = getdate();
 		$now = getdate();
 		$houses = [];
 		$company = model_session::get_company();
 		$model = new model_query($company);
+		$params = $model->get_params();
+		if($params['street'] > 0){
+			$street = new data_street();
+			$street->set_id($params['street']);
+			(new mapper_street2house($street))->init_houses();
+			$houses = $street->get_houses();
+		}
 		return ['queries' => $model->get_queries(),
-			'params' => $model->get_params(),
+			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),
