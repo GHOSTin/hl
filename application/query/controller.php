@@ -20,12 +20,10 @@ class controller_query{
 		$end_hours = (int) $request->GET('end_hours');
 		$end_minutes = (int) $request->GET('end_minutes');
 		$end_date = (string) $request->GET('end_date');
-		$begin_time = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
-		$end_time = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
-		$company = model_session::get_company();
-		$query = (new model_query($company))->add_work($request->GET('id'),
-							$request->GET('work_id'), $begin_time, $end_time);
-		return ['query' => $query];
+		$begin = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
+		$end = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
+		return ['query' => (new model_query(model_session::get_company()))
+			->add_work($request->GET('id'), $request->GET('work_id'), $begin, $end)];
 	}
 
 	public static function private_clear_filters(model_request $request){
@@ -358,12 +356,12 @@ class controller_query{
 	}
 
 	public static function private_show_default_page(model_request $request){
-		$time = getdate();
 		$now = getdate();
 		$houses = [];
 		$company = model_session::get_company();
 		$model = new model_query($company);
 		$params = $model->get_params();
+		$time = getdate($params['time_open_begin']);
 		if($params['street'] > 0){
 			$street = new data_street();
 			$street->set_id($params['street']);
