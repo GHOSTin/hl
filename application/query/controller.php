@@ -30,21 +30,11 @@ class controller_query{
 
 	public static function private_clear_filters(model_request $request){
 		$time = getdate();
-		$query = new data_query();
-		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-		$query->status = 'all';
-		$query->street_id = 'all';
-		$query->house_id = 'all';
-		$query->department_id = 'all';
-		$query->worktype_id = 'all';
-		$time = getdate();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-				'numbers' => model_query::get_numbers($company, $query),
-				'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
-				'now' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year'])];
+		$model = new model_query(model_session::get_company());
+		$model->init_params();
+		return ['queries' => $model->get_queries(),
+			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
+			'now' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year'])];
 	}
 
 	public static function private_close_query(model_request $request){

@@ -10,19 +10,23 @@ class model_query{
     if(!empty($_SESSION['model']) AND $_SESSION['model']['model'] === 'query'){
     	$this->params = $_SESSION['model']['params'];
     }else{
-    	$time = getdate();
-    	$time = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-	    $this->params['time_open_begin'] = $time  - (86400 * 80);
-	    $this->params['time_open_end'] = $time  + 86400;
-	    $this->params['status'] = null;
-	    $this->params['department'] = null;
-	    $this->params['street'] = null;
-	    $this->params['house'] = null;
-	    $this->params['work_type'] = null;
     	$_SESSION['model']['model'] = 'query';
-    	$_SESSION['model']['params'] = $this->params;
+    	$this->init_params();
 	  }
 	  // unset($_SESSION['model']);
+	}
+
+	public function init_params(){
+  	$time = getdate();
+  	$time = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+    $this->params['time_open_begin'] = $time;
+    $this->params['time_open_end'] = $time  + 86359;
+    $this->params['status'] = null;
+    $this->params['department'] = null;
+    $this->params['street'] = null;
+    $this->params['house'] = null;
+    $this->params['work_type'] = null;
+    $_SESSION['model']['params'] = $this->params;
 	}
 
 	public function set_param($param, $value){
