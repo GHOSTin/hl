@@ -13,7 +13,6 @@ class model_query{
     	$_SESSION['model']['model'] = 'query';
     	$this->init_params();
 	  }
-	  // unset($_SESSION['model']);
 	}
 
 	public function init_params(){
@@ -79,58 +78,6 @@ class model_query{
 			$this->set_param('work_type', null);
 	}
 
-	/*
-	* Зависимая функция.
-	* Создает заявку и записывает в лог заявки.
-	*/
-	private static function __add_query(data_company $company, data_query $query, data_object $initiator, $time){
-		$company->verify('id');
-		if(!($initiator instanceof data_house OR $initiator instanceof data_number))
-			throw new e_model('Инициатор не верного формата.');
-		if(empty($initiator->department_id))
-			throw new e_model('department_id не указан.');
-		if(!is_int($time))
-			throw new e_model('Неверная дата.');
-		$query->company_id = $company->id;
-		$query->status = 'open';
-		$query->payment_status = 'unpaid';
-		$query->warning_status = 'normal';
-		$query->department_id = $initiator->department_id;
-		$query->time_open = $query->time_work = $time;
-		$query->verify('id', 'company_id', 'status', 'initiator', 'payment_status',
-						'warning_status', 'department_id', 'house_id', 'work_type_id',
-						'time_open', 'time_work', 'contact_fio', 'contact_telephone',
-						'contact_cellphone', 'description', 'number');
-		$sql = new sql();
-		$sql->query("INSERT INTO `queries` (
-					`id`, `company_id`, `status`, `initiator-type`, `payment-status`,
-					`warning-type`, `department_id`, `house_id`, `query_worktype_id`,
-					`opentime`, `worktime`, `addinfo-name`, `addinfo-telephone`,
-					`addinfo-cellphone`, `description-open`, `querynumber`)
-					VALUES (:id, :company_id, :status, :initiator, :payment_status, 
-					:warning_status,:department_id, :house_id, :worktype_id, :time_open,
-					:time_work, :contact_fio, :contact_telephone, :contact_cellphone,
-					:description, :number)");
-		$sql->bind(':id', $query->id, PDO::PARAM_INT);
-		$sql->bind(':company_id', $query->company_id, PDO::PARAM_INT, 3);
-		$sql->bind(':status', $query->status, PDO::PARAM_STR);
-		$sql->bind(':initiator', $query->initiator, PDO::PARAM_STR);
-		$sql->bind(':payment_status', $query->payment_status, PDO::PARAM_STR);
-		$sql->bind(':warning_status', $query->warning_status, PDO::PARAM_STR);
-		$sql->bind(':department_id', $query->department_id, PDO::PARAM_INT);
-		$sql->bind(':house_id', $query->house_id, PDO::PARAM_INT);
-		$sql->bind(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
-		$sql->bind(':time_open', $query->time_open, PDO::PARAM_INT);
-		$sql->bind(':time_work', $query->time_work, PDO::PARAM_INT);
-		$sql->bind(':contact_fio', $query->contact_fio, PDO::PARAM_STR);
-		$sql->bind(':contact_telephone', $query->contact_telephone, PDO::PARAM_STR);
-		$sql->bind(':contact_cellphone', $query->contact_cellphone, PDO::PARAM_STR);
-		$sql->bind(':description', $query->description, PDO::PARAM_STR);
-		$sql->bind(':number', $query->number, PDO::PARAM_INT);
-		$sql->execute('Проблемы при создании заявки.');
-		return $query;
-	}
-
 	/**
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
@@ -183,29 +130,6 @@ class model_query{
 		$query->add_work($work);
 		(new mapper_query2work($this->company, $query))->update_works();
 		return $query;
-	}
-
-	/*
-	* Зависимая функция.
-	* Добавляет ассоциацию заявка-лицевой_счет в зависимости от типа инициатора.
-	*/
-	private static function add_numbers(data_company $company, data_query $query, $initiator){
-		if($initiator instanceof data_house){
-			$initiator->verify('id');
-			$numbers = model_house::get_numbers($company, $initiator);
-		}elseif($initiator instanceof data_number){
-			$initiator->verify('id');
-			$model = new model_number($company);
-			$numbers[] = $model->get_number($initiator->id);
-		}else
-			throw new e_model('Не подходящий тип инициатора.');
-		if(count($numbers) < 1)
-			throw new e_model('Не соответсвующее количество лицевых счетов.');
-		$mapper = new mapper_query2number($company, $query);
-		$mapper->init_numbers();
-		foreach($numbers as $number)
-			$query->add_number($number);
-		$mapper->update();
 	}
 
 	/**
@@ -302,13 +226,12 @@ class model_query{
 	* @retrun array из data_query
 	*/
 	public function create_query($initiator, $id, $description, $work_type,
-																			$contact_fio, $contact_telephone,
-																			$contact_cellphone){
+										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{
 			sql::begin();
 			$time = time();
 			$query = new data_query();
-      $query->set_company_id($this->company->id);
+      $query->set_company_id($this->company->get_id());
       $query->set_status('open');
       $query->set_payment_status('unpaid');
       $query->set_warning_status('normal');
@@ -319,35 +242,46 @@ class model_query{
       $query->set_contact_fio($contact_fio);
       $query->set_contact_telephone($contact_telephone);
       $query->set_contact_cellphone($contact_cellphone);
+
       // получение идентификатора дома
 			if($initiator === 'house'){
-				$initiator = new data_house();
-				$initiator->id = $id;
-				$initiator->verify('id');
-				$initiator = model_house::get_houses($initiator)[0];
-				$query->set_house_id($initiator->id);
-        $query->set_department_id($initiator->department_id);
+				$house = (new model_house)->get_house($id);
+				(new mapper_house2number($this->company, $house))->init_numbers();
+				if(!empty($house->get_numbers()))
+					foreach($house->get_numbers() as $number)
+						$query->add_number($number);
+				$department = (new model_department($this->company))
+					->get_department($house->get_department_id());
+				$query->set_house($house);
+        $query->set_department($department);
 			}elseif($initiator === 'number'){
-				$model = new model_number($this->company);
-				$initiator = $model->get_number($id);
-				$query->set_house_id($initiator->house_id);
-        $query->set_department_id($initiator->department_id);
+				$number = (new model_number($this->company))->get_number($id);
+				$house = (new model_house)->get_house($number->get_house_id());
+				$department = (new model_department($this->company))
+					->get_department($house->get_department_id());
+				$query->add_number($number);
+				$query->set_house($house);
+        $query->set_department($department);
 			}else
 				throw new e_model('Инициатор не корректен.');
-      // проверка на существование типа работ
-			$query_work_type_params = new data_query_work_type();
-			$query_work_type_params->id = $work_type;
-			$query_work_type = model_query_work_type::get_query_work_types($this->company, $query_work_type_params)[0];
-			model_query_work_type::is_data_query_work_type($query_work_type);
-      $query->set_work_type_id($query_work_type->id);
+			$query_work_type = (new model_query_work_type($this->company))
+				->get_query_work_type($work_type);
+      $query->add_work_type($query_work_type);
 			$mapper = new mapper_query($this->company);
 			$query->set_id($mapper->get_insert_id());
 			$query->set_number($mapper->get_insert_query_number($time));
       $query = $mapper->insert($query);
-			self::add_numbers($this->company, $query, $initiator);
-			self::__add_user($this->company, $query, model_session::get_user(), 'creator');
-			self::__add_user($this->company, $query, model_session::get_user(), 'manager');
-			self::__add_user($this->company, $query, model_session::get_user(), 'observer');
+      (new mapper_query2number($this->company, $query))->update();
+			$creator = new data_query2user(model_session::get_user());
+      $creator->set_class('creator');
+			$manager = new data_query2user(model_session::get_user());
+      $manager->set_class('manager');
+			$observer = new data_query2user(model_session::get_user());
+			$observer->set_class('observer');
+      $query->add_creator($creator);
+      $query->add_manager($manager);
+      $query->add_observer($observer);
+      (new mapper_query2user($this->company, $query))->update_users();
 			sql::commit();
 			return $query;
 		}catch(exception $e){
@@ -525,56 +459,6 @@ class model_query{
 		$sql->close();
 		return $result;
 	}
-
-	// /*
-	// * Учитывает сессионный фильтры.
-	// */
-	// public static function build_query_params(data_query $query, data_query $query_filter = null){
-	// 	$time = getdate();
-	// 	if(!$query_filter instanceof data_query){
-	// 		$query = new data_query();
-	// 		$query->time_open['begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-	// 		$query->time_open['end'] = $query->time_open['begin'] + 86399;
-	// 	}
-	// 	if(empty($query->time_open))
-	// 		$query->time_open = $query_filter->time_open;
-	// 	if(empty($query->status))
-	// 		$query->status = $query_filter->status;
-	// 	// обработка улиц
-	// 	if($query->street_id === 'all')
-	// 		$query->street_id = null;
-	// 	elseif(empty($query->street_id))
-	// 		$query->street_id = $query_filter->street_id;
-	// 	// обработка дома
-	// 	if(!empty($query->street_id)){
-	// 		if(empty($query->house_id))
-	// 			$query->house_id = $query_filter->house_id;
-	// 		else
-	// 			if($query->house_id === 'all')
-	// 				$query->house_id = null;
-	// 	}else
-	// 		$query->house_id = null;
-	// 	// обработка участка
-	// 	if(empty($query->department_id)){
-	// 		if(empty($query_filter->department_id))
-	// 			$query->department_id = $restrictions->departments;
-	// 		else
-	// 			$query->department_id = $query_filter->department_id;
-	// 	}else{
-	// 		if($query->department_id === 'all')
-	// 			$query->department_id = $restrictions->departments;
-	// 		else
-	// 			if(!empty($restrictions->departments))
-	// 				if(array_search($query->department_id, $restrictions->departments) === false)
-	// 					$query->department_id = $restrictions->departments;
-	// 	}
-	// 	// обработка типа работ
-	// 	if($query->worktype_id === 'all')
-	// 		$query->worktype_id = null;
-	// 	elseif(empty($query->worktype_id))
-	// 		$query->worktype_id = $query_filter->worktype_id;
-	// 	return $query;
-	// }
 
 	/**
 	* Обновляет работу из заявки.

@@ -139,6 +139,21 @@ class mapper_query2user{
     if(!empty($delete_performers))
         foreach($delete_performers as $number)
             $this->delete($number);
+
+    $new_observers = $this->query->get_observers();
+    $delete_observers = array_diff_key($old_observers, $new_observers);
+    $insert_observers = array_diff_key($new_observers, $old_observers);
+    if(!empty($insert_observers))
+        foreach($insert_observers as $user)
+            $this->insert($user);
+    if(!empty($delete_observers))
+        foreach($delete_observers as $number)
+            $this->delete($number);
+    if(empty($old_creators))
+      if(empty($this->query->get_creator()))
+        throw new e_model('Создатель заявки не может быть пустым.');
+      else
+        $this->insert($this->query->get_creator());
     return $query;
   }
 }

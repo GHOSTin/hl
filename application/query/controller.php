@@ -79,9 +79,10 @@ class controller_query{
 
 	public static function private_create_query(model_request $request){
 		$model = new model_query(model_session::get_company());
-		$model->create_query($request->GET('initiator'), $request->GET('id'), $request->GET('description'),
-												$request->GET('work_type'), $request->GET('fio'), $request->GET('telephone'),
-												$request->GET('cellphone'));
+		$query = $model->create_query($request->GET('initiator'), $request->GET('id'),
+			$request->GET('description'), $request->GET('work_type'),
+			$request->GET('fio'), $request->GET('telephone'), 
+			$request->GET('cellphone'));
 		return ['queries' => [$query]];
 	}
 

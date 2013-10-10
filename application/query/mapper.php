@@ -107,10 +107,12 @@ class mapper_query{
   }
 
   public function insert(data_query $query){
-    $query->verify('id', 'company_id', 'status', 'initiator', 'payment_status',
-            'warning_status', 'department_id', 'house_id', 'work_type_id',
-            'time_open', 'time_work', 'contact_fio', 'contact_telephone',
-            'contact_cellphone', 'description', 'number');
+    $query->verify('id', 'status', 'initiator', 'payment_status',
+            'warning_status', 'time_open', 'time_work', 'contact_fio',
+            'contact_telephone', 'contact_cellphone', 'description', 'number');
+    $query->get_house()->verify('id');
+    $query->get_department()->verify('id');
+    $query->get_work_type()->verify('id');
     $sql = new sql();
     $sql->query("INSERT INTO `queries` (
           `id`, `company_id`, `status`, `initiator-type`, `payment-status`,
@@ -122,14 +124,14 @@ class mapper_query{
           :time_work, :contact_fio, :contact_telephone, :contact_cellphone,
           :description, :number)");
     $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $query->get_company_id(), PDO::PARAM_INT, 3);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT, 3);
     $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
     $sql->bind(':initiator', $query->get_initiator(), PDO::PARAM_STR);
     $sql->bind(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
     $sql->bind(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
-    $sql->bind(':department_id', $query->get_department_id(), PDO::PARAM_INT);
-    $sql->bind(':house_id', $query->get_house_id(), PDO::PARAM_INT);
-    $sql->bind(':worktype_id', $query->get_work_type_id(), PDO::PARAM_INT);
+    $sql->bind(':department_id', $query->get_department()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':worktype_id', $query->get_work_type()->get_id(), PDO::PARAM_INT);
     $sql->bind(':time_open', $query->get_time_open(), PDO::PARAM_INT);
     $sql->bind(':time_work', $query->get_time_work(), PDO::PARAM_INT);
     $sql->bind(':contact_fio', $query->get_contact_fio(), PDO::PARAM_STR);
@@ -220,7 +222,7 @@ class mapper_query{
     $sql = new sql();
     $sql->query("SELECT MAX(`id`) as `max_query_id` FROM `queries`
         WHERE `company_id` = :company_id");
-    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при опредении следующего query_id.');
     if($sql->count() !== 1)
       throw new e_model('Проблема при опредении следующего query_id.');
@@ -238,7 +240,7 @@ class mapper_query{
     $sql->query("SELECT MAX(`querynumber`) as `querynumber` FROM `queries`
                 WHERE `opentime` > :begin AND `opentime` <= :end
                 AND `company_id` = :company_id");
-    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
     $sql->bind(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
     $sql->execute('Проблема при опредении следующего querynumber.');

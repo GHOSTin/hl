@@ -76,7 +76,7 @@ final class data_house extends data_object{
   }
 
   public function set_department_id($id){
-    $this->department_id = (int) $department_id;
+    $this->department_id = (int) $id;
   }
 
   public function set_id($id){
