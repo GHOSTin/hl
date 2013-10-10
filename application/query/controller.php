@@ -27,12 +27,12 @@ class controller_query{
 	}
 
 	public static function private_clear_filters(model_request $request){
-		$time = getdate();
 		$model = new model_query(model_session::get_company());
 		$model->init_params();
+		$time = getdate($model->get_params()['time_open_begin']);
+		$timeline = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		return ['queries' => $model->get_queries(),
-			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
-			'now' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year'])];
+			'timeline' =>  $timeline, 'now' =>  $timeline];
 	}
 
 	public static function private_close_query(model_request $request){
@@ -44,10 +44,9 @@ class controller_query{
 	}
 
 	public static function private_change_initiator(model_request $request){
-		$query = (new model_query(model_session::get_company()))
+		return ['query' => (new model_query(model_session::get_company()))
 			->change_initiator($request->GET('query_id'),
-			$request->GET('house_id'), $request->GET('number_id'));
-		return ['query' => $query];
+			$request->GET('house_id'), $request->GET('number_id'))];
 	}
 
 	public static function private_reclose_query(model_request $request){
@@ -67,8 +66,7 @@ class controller_query{
 	}
 
 	public static function private_to_working_query(model_request $request){
-		$company = model_session::get_company();
-		$model = new model_query($company);
+		$model = new model_query(model_session::get_company());
 		$query = $model->to_working_query($request->GET('id'));
 		$model->init_numbers($query);
 		$model->init_users($query);
@@ -77,10 +75,10 @@ class controller_query{
 
 	public static function private_create_query(model_request $request){
 		$model = new model_query(model_session::get_company());
-		$query = $model->create_query($request->GET('initiator'), $request->GET('id'),
-			$request->GET('description'), $request->GET('work_type'),
-			$request->GET('fio'), $request->GET('telephone'), 
-			$request->GET('cellphone'));
+		$query = $model->create_query($request->GET('initiator'),
+			$request->GET('id'), $request->GET('description'),
+			$request->GET('work_type'), $request->GET('fio'),
+			$request->GET('telephone'), $request->GET('cellphone'));
 		return ['queries' => [$query]];
 	}
 
@@ -110,35 +108,41 @@ class controller_query{
 			->get_workgroups()];
 	}	
 
-	public static function private_get_dialog_create_query(model_request $request){
+	public static function private_get_dialog_create_query(
+		model_request $request){
 		return true;
 	}
 
-	public static function private_get_dialog_close_query(model_request $request){
+	public static function private_get_dialog_close_query(
+		model_request $request){
 		return true;
 	}
 
-	public static function private_get_dialog_reclose_query(model_request $request){
+	public static function private_get_dialog_reclose_query(
+		model_request $request){
 		return true;
 	}
 
-	public static function private_get_dialog_reopen_query(model_request $request){
+	public static function private_get_dialog_reopen_query(
+		model_request $request){
 		return true;
 	}
 
-	public static function private_get_dialog_to_working_query(model_request $request){
+	public static function private_get_dialog_to_working_query(
+		model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->get_query($request->GET('id'))];
 	}
 
-	public static function private_get_dialog_change_initiator(model_request $request){
-		// $_SESSION['filters']['query'] = $query = model_query::build_query_params(new data_query(), $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
+	public static function private_get_dialog_change_initiator(
+		model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->get_query($request->GET('id')),
 			'streets' => (new model_street)->get_streets()];
 	}
 
-	public static function private_get_dialog_edit_description(model_request $request){
+	public static function private_get_dialog_edit_description(
+		model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->get_query($request->GET('id'))];
 	}
@@ -148,25 +152,31 @@ class controller_query{
 			->get_query($request->GET('id'))];
 	}
 
-	public static function private_get_dialog_edit_contact_information(model_request $request){
+	public static function private_get_dialog_edit_contact_information(
+		model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->get_query($request->GET('id'))];
 	}
 
-	public static function private_get_dialog_edit_payment_status(model_request $request){
+	public static function private_get_dialog_edit_payment_status(
+		model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->get_query($request->GET('id'))];
 	}
 
-	public static function private_get_dialog_edit_warning_status(model_request $request){
+	public static function private_get_dialog_edit_warning_status(
+		model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->get_query($request->GET('id'))];
 	}
 
-	public static function private_get_dialog_edit_work_type(model_request $request){
+	public static function private_get_dialog_edit_work_type(
+		model_request $request){
 		$company = model_session::get_company();
-		return ['query' => (new model_query($company))->get_query($request->GET('id')),
-				'work_types' => (new model_query_work_type($company))->get_query_work_types()];
+		return ['query' => (new model_query($company))
+			->get_query($request->GET('id')),
+			'work_types' => (new model_query_work_type($company))
+			->get_query_work_types()];
 	}
 
 	public static function private_get_dialog_initiator(model_request $request){
@@ -200,7 +210,6 @@ class controller_query{
 	}
 
 	public static function private_get_houses(model_request $request){
-		// $_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
 		$street = new data_street();
 		$street->set_id($request->GET('id'));
 		(new mapper_street2house($street))->init_houses();
@@ -351,7 +360,8 @@ class controller_query{
 	public static function private_get_work_options(model_request $request){
 		$work_group = new data_workgroup();
 		$work_group->set_id($request->GET('id'));
-		(new mapper_workgroup2work(model_session::get_company(), $work_group))->init_works();
+		(new mapper_workgroup2work(model_session::get_company(), $work_group))
+			->init_works();
 		return ['work_group' => $work_group];
 	}
 
@@ -374,7 +384,8 @@ class controller_query{
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),
 			'departments' => (new model_department($company))->get_departments(),
-			'query_work_types' => (new model_query_work_type($company))->get_query_work_types(),
+			'query_work_types' => (new model_query_work_type($company))
+				->get_query_work_types(),
 			'houses' => $houses];
 	}
 
@@ -399,7 +410,8 @@ class controller_query{
 			->update_reason($request->GET('id'), $request->GET('reason'))];
 	}
 
-	public static function private_update_contact_information(model_request $request){
+	public static function private_update_contact_information(
+		model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->update_contact_information($request->GET('id'), $request->GET('fio'),
 			$request->GET('telephone'), $request->GET('cellphone'))];
