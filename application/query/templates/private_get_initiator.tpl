@@ -3,14 +3,12 @@
 	show_dialog(get_hidden_content());
 	$('.create_query').click(function(){
 		$.get('create_query',{
-		{% if component.initiator != false %}
-			initiator: '{{component.initiator}}',
-			{% if component.initiator == 'number' %}
-				id: {{component.number.id}},
+			initiator: '{{ request.GET('initiator') }}',
+			{% if request.GET('initiator') == 'number' %}
+				id: {{ component.number.get_id() }},
 			{% else %}
-				id: {{component.house.id}},
+				id: {{ component.house.get_id() }},
 			{% endif %}
-		{% endif %}
 			fio: $('.dialog-fio').val(),
 			work_type: $('.dialog-worktype').val(),
 			telephone: $('.dialog-telephone').val(),
@@ -28,25 +26,20 @@
         <h3>Форма создания заявки</h3>
     </div>
     <div class="modal-body">
-	{% if component.initiator != false %}
-		{% if component.initiator == 'number' %}
-			{%if component.number != false %}
+		{% if request.GET('initiator') == 'number' %}
 				<ul>
-					<li>л/с №{{component.number.number}}</li>
-					<li>Владелец: {{component.number.fio}}</li>
-					<li>Телефон: {{component.number.telephone}}</li>
-					<li>Сотовый: {{component.number.cellphone}}</li>
-					<li>Контактное лицо: {{component.number.contact_fio}}</li>
-					<li>Телефон контактного лица: {{component.number.contact_telephone}}</li>
-					<li>Сотовые телефон контактного лица: {{component.number.contact_cellphone}}</li>
+					<li>л/с №{{ component.number.get_number() }}</li>
+					<li>Владелец: {{ component.number.get_fio() }}</li>
+					<li>Телефон: {{ component.number.get_telephone() }}</li>
+					<li>Сотовый: {{ component.number.get_cellphone() }}</li>
+					{#<li>Контактное лицо: {#{ component.number.get_contact_fio() }}</li>
+					<li>Телефон контактного лица: {{ component.number.get_contact_telephone()}}</li>
+					<li>Сотовые телефон контактного лица: {{ component.number.get_contact_cellphone() }}</li>#}
 				</ul>
-			{% endif %}
-		{% elseif component.initiator == 'house' %}
-			{% if component.house != false %}
+		{% else %}
 				<div>
-					{{component.house.street_name}}, дом №{{component.house.number}}
+					{{ component.house.get_street_name() }}, дом №{{ component.house.get_number() }}
 				</div>
-			{% endif %}
 		{% endif %}
 		<div style="display:inline-block;vertical-align:top; width:300px">
 			<div>Данные контактного лица по заявке</div>
@@ -72,7 +65,7 @@
 			<select class="dialog-worktype">
 				{% if component.query_work_types != false %}
 					{% for query_work_type in component.query_work_types %}
-						<option value="{{query_work_type.id}}">{{query_work_type.name}}</option>
+						<option value="{{ query_work_type.get_id() }}">{{ query_work_type.get_name() }}</option>
 					{% endfor %}
 				{% endif %}
 			</select>
@@ -88,8 +81,6 @@
 		<div class="dialog-trouble" style="padding: 20px 0px 0px 0px;">
 			<textarea class="dialog-description" style="width:500px; height:100px;"></textarea>
 		</div>
-
-	{% endif %}
 	</div>
 	<div class="modal-footer">
 		<div class="btn create_query">Создать</div>

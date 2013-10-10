@@ -171,13 +171,7 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_initiator(model_request $request){
-		$query = new data_query();
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$street = new data_street();
-		$street->department_id = $query->department_id;
-		$company = model_session::get_company();
-		return ['streets' => model_street::get_streets($street),
-				'initiator' => $request->GET('value')];
+		return ['streets' => (new model_street)->get_streets()];
 	}
 
 	public static function private_get_dialog_remove_user(model_request $request){
@@ -191,24 +185,18 @@ class controller_query{
 
 	public static function private_get_initiator(model_request $request){
 		$company = model_session::get_company();
-		$types = model_query_work_type::get_query_work_types($company, new data_query_work_type());
+		$types = (new model_query_work_type($company))->get_query_work_types();
 		switch($request->GET('initiator')){
 			case 'number':
-				$model = new model_number($company);
-				return ['initiator' => 'number',
-						'number' => $model->get_number($request->GET('id')),
-						'query_work_types' => $types];
+				return ['number' => (new model_number($company))
+					->get_number($request->GET('id')), 'query_work_types' => $types];
 			break;
 			case 'house':
-				$house = new data_house();
-				$house->id = $request->GET('id');
-				$house->verify('id');
-				return ['initiator' => 'house',
-						'house' => model_house::get_houses($house)[0],
-						'query_work_types' => $types];
+				return ['house' => (new model_house)->get_house($request->GET('id')),
+					'query_work_types' => $types];
 			break;
 			default:
-				return ['initiator' => false];		
+				throw new e_model('Проблема типа инициатора.');		
 		}
 	}
 

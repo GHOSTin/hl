@@ -4,9 +4,7 @@
     <div class="span3">
         <div class="row-fluid">
             <div class="btn-group span12 query_controls">
-                {% if rules.createQuery == true %}
                 <div class="get_dialog_create_query cm btn span8">Создать заявку</div>
-                {% endif %}
                 <div class="get_search cm btn span4">Поиск</div>
             </div>
             <div  class="page-header span12">

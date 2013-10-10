@@ -8,7 +8,7 @@
 			$('.dialog-select-house').html(r).attr('disabled', false);
 		});
 	});		
-	{% if component.initiator == 'house' %}
+	{% if request.GET('value') == 'house' %}
 		$('.dialog-select-house').change(function(){
 			$.get('get_initiator',{
 				initiator: 'house',
@@ -40,13 +40,13 @@
 		<select style="display:block" class="dialog-select-street">
 			<option value="0">Выберите улицу</option>
 			{% for street in component.streets %}
-				<option value="{{street.id}}">{{street.name}}</option>
+				<option value="{{ street.get_id() }}">{{ street.get_name() }}</option>
 			{% endfor %}
 		</select>
 		<select class="dialog-select-house" style="display:block" disabled="disabled">
 			<option value="0">Ожидание...</option>
 		</select>
-		{% if component.initiator == 'number' %}
+		{% if request.GET('value') == 'number' %}
 			<select class="dialog-select-number" style="display:block" disabled="disabled">
 				<option value="0">Ожидание...</option>
 			</select>
