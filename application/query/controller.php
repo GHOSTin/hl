@@ -374,8 +374,9 @@ class controller_query{
 		$now = getdate();
 		$houses = [];
 		$company = model_session::get_company();
-		return ['queries' => (new model_query($company))->get_queries(),
-			'filters' => $_SESSION['filters']['query'],
+		$model = new model_query($company);
+		return ['queries' => $model->get_queries(),
+			'params' => $model->get_params(),
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),

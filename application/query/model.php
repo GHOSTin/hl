@@ -29,6 +29,10 @@ class model_query{
     $_SESSION['model']['params'] = $this->params;
 	}
 
+	public function get_params(){
+		return $this->params;
+	}
+
 	public function set_param($param, $value){
 		if(!array_key_exists($param, $this->params))
 			throw new e_model('Не существует такого параметра.');

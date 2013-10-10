@@ -1,3 +1,4 @@
+{% set params = component.params %}
 <!-- begin filters -->
 <div class="filters span12">
 	<!-- begin filter status -->
@@ -8,7 +9,7 @@
             {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
             {% for key, status in statuses %}
                 <option value="{{ key }}"
-                {% if key == component.filters.status %}
+                {% if key == params['status'] %}
                  selected
                 {% endif %}
                 >{{status}}</option>
@@ -23,7 +24,7 @@
             {% if component.departments != false %}
                 {% for department in component.departments %}
                     <option value="{{ department.get_id() }}"
-                    {% if department.get_id() == component.filters.department_id %}
+                    {% if department.get_id() == params['department'] %}
                     selected
                     {% endif %}
                     >{{ department.get_name() }}</option>
@@ -39,7 +40,7 @@
             {% if component.streets != false %}
                 {% for street in component.streets %}
                     <option value="{{ street.get_id() }}"
-                    {% if street.get_id() == component.filters.street_id %}
+                    {% if street.get_id() == params['street'] %}
                         selected
                     {% endif %}
                     >{{ street.get_name() }}</option>
@@ -73,7 +74,7 @@
             {% if component.query_work_types != false %}
                 {% for query_work_type in component.query_work_types %}
                     <option value="{{ query_work_type.get_id() }}"
-                    {% if query_work_type.get_id() == component.filters.worktype_id %}
+                    {% if query_work_type.get_id() == params['work_type'] %}
                     selected
                     {% endif %}
                     >{{ query_work_type.get_name() }}</option>
