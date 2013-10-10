@@ -329,12 +329,9 @@ class controller_query{
 	}
 
 	public static function private_set_work_type(model_request $request){
-		$query = new data_query();
-		$query->worktype_id = $request->GET('value');
-		$_SESSION['filters']['query'] = $query = model_query::build_query_params($query, $_SESSION['filters']['query'], model_session::get_restrictions()['query']);
-		$company = model_session::get_company();
-		return ['queries' => model_query::get_queries($company, $query),
-				'numbers' => model_query::get_numbers($company, $query)];
+		$model = new model_query(model_session::get_company());
+		$model->set_work_type($request->GET('value'));
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_get_timeline(model_request $request){
@@ -393,8 +390,7 @@ class controller_query{
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => model_street::get_streets($street),
 			'departments' => (new model_department($company))->get_departments(),
-			// 'numbers' => model_query::get_numbers($company, $query),
-			// 'query_work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type()),
+			'query_work_types' => (new model_query_work_type($company))->get_query_work_types(),
 			'houses' => $houses];
 	}
 

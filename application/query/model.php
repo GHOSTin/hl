@@ -18,6 +18,7 @@ class model_query{
 	    $this->params['department'] = null;
 	    $this->params['street'] = null;
 	    $this->params['house'] = null;
+	    $this->params['work_type'] = null;
     	$_SESSION['model']['model'] = 'query';
     	$_SESSION['model']['params'] = $this->params;
 	  }
@@ -60,6 +61,14 @@ class model_query{
 			$this->set_param('house', $house->get_id());
 		}else
 			$this->set_param('house', null);
+	}
+
+	public function set_work_type($id){
+		if($id > 0){
+			$work_type = (new model_query_work_type($this->company))->get_query_work_type($id);
+			$this->set_param('work_type', $work_type->get_id());
+		}else
+			$this->set_param('work_type', null);
 	}
 
 	/*

@@ -72,11 +72,11 @@
             <option value="all">Все типы</option>
             {% if component.query_work_types != false %}
                 {% for query_work_type in component.query_work_types %}
-                    <option value="{{query_work_type.id}}"
-                    {% if query_work_type.id == component.filters.worktype_id %}
+                    <option value="{{ query_work_type.get_id() }}"
+                    {% if query_work_type.get_id() == component.filters.worktype_id %}
                     selected
                     {% endif %}
-                    >{{query_work_type.name}}</option>
+                    >{{ query_work_type.get_name() }}</option>
                 {% endfor %}
             {% endif %}
         </select>

@@ -302,10 +302,10 @@ class mapper_query{
        $sql->query(" AND `queries`.`house_id` = :house_id");
        $sql->bind(':house_id', (int) $params['house'], PDO::PARAM_INT);
       }
-      // if(!empty($query->worktype_id)){
-      //  $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
-      //  $sql->bind(':worktype_id', $query->worktype_id, PDO::PARAM_INT);
-      // }
+      if(!empty($params['work_type'])){
+       $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
+       $sql->bind(':worktype_id', (int) $params['work_type'], PDO::PARAM_INT);
+      }
       // if(!empty($query->department_id)){
       //  if(is_array($query->department_id))
       //    $departments = $query->department_id;
