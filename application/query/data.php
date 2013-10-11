@@ -112,10 +112,7 @@ final class data_query extends data_object{
 
 	private $street;
 
-	/*
-	* Идентификатор компании.
-	*/
-	private $company_id;
+
 
 
 	private $numbers = [];
@@ -294,19 +291,20 @@ final class data_query extends data_object{
 	}
 
 	public function set_id($id){
+		$id = (int) $id;
+		if($id > 4294967295 OR $id < 1)
+		    throw new e_model('Идентификатор заявки задан не верно.');
 		$this->id = $id;
 	}
 
-	public function set_company_id($id){
-		$this->company_id = $id;
-	}
-
 	public function set_number($number){
-		$this->number = $number;
+		if(!preg_match('/^[0-9]{1,6}$/', $number))
+		    throw new e_model('Номер заявки задан не верно.');
+		$this->number = (int) $number;
 	}
 
 	public function set_time_open($time){
-		$this->time_open = $time;
+		$this->time_open = (int) $time;
 	}
 
 	public function set_close_reason($reason){
@@ -318,7 +316,9 @@ final class data_query extends data_object{
 	}
 
 	public function set_initiator($initiator){
-		$this->initiator = $initiator;
+		if(!in_array($initiator, ['house', 'number'], true))
+			throw new e_model('Неверный тип заявки.');
+		$this->initiator = (string) $initiator;
 	}
 
 	public function set_house(data_house $house){
@@ -346,29 +346,43 @@ final class data_query extends data_object{
 	}
 
 	public function set_payment_status($status){
+		if(!in_array($status, ['paid', 'unpaid', 'recalculation'], true))
+		    throw new e_model('Статус оплаты заявки задан не верно.');
 		$this->payment_status = $status;
 	}
 
 	public function set_status($status){
+		if(!in_array($status, ['open', 'close', 'working', 'reopen'], true))
+		    throw new e_model('Статус заявки задан не верно.');
 		$this->status = $status;
 	}
 
 	public function set_time_close($time){
-		$this->time_close = $time;
+		if(!in_array($this->status, ['open', 'working'], true)){
+			if( $time < $this->time_open)
+				throw new e_model('Время закрытия заявки не может быть меньше времени открытия.');
+			if($time < $this->time_work)
+				throw new e_model('Время закрытия заявки не может быть меньше времени передачи в работу.');
+		}
+		$this->time_close = (int) $time;
 	}
 
 	public function set_time_work($time){
-		$this->time_work = $time;
+		if($time < $this->time_open)
+			throw new e_model('Время закрытия заявки не может быть меньше времени открытия.');
+		$this->time_work = (int) $time;
 	}
 
 	public function set_warning_status($status){
+		if(!in_array($status, ['hight', 'normal', 'planned'], true))
+		    throw new e_model('Статус ворнинга заявки задан не верно.');
 		$this->warning_status = $status;
 	}
 
 	public function verify(){
-        if(func_num_args() < 0)
-            throw new e_data('Параметры верификации не были переданы.');
-        foreach(func_get_args() as $value)
-            verify_query::$value($this);
-    }
+    if(func_num_args() < 0)
+        throw new e_data('Параметры верификации не были переданы.');
+    foreach(func_get_args() as $value)
+        verify_query::$value($this);
+  }
 }
