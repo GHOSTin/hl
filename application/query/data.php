@@ -148,20 +148,16 @@ final class data_query extends data_object{
 		$this->users['performer'][$user->get_id()] = $user;
 	}
 
-	public function remove_performer(data_query2user $user){
-		if($user->get_class() !== 'performer')
-			throw new e_model("Пользователь не является менеджером заявки.");
-		if(!array_key_exists($user->get_id(), $this->performers))
+	public function remove_performer(data_user $user){
+		if(!array_key_exists($user->get_id(), $this->users['performer']))
 			throw new e_model("Исполнителя нет в заявке.");
-		unset($this->performers[$user->get_id()]);
+		unset($this->users['performer'][$user->get_id()]);
 	}
 
-	public function remove_manager(data_query2user $user){
-		if($user->get_class() !== 'manager')
-			throw new e_model("Пользователь не является менеджером заявки.");
-		if(!array_key_exists($user->get_id(), $this->managers))
+	public function remove_manager(data_user $user){
+		if(!array_key_exists($user->get_id(), $this->users['manager']))
 			throw new e_model("Исполнителя нет в заявке.");
-		unset($this->managers[$user->get_id()]);
+		unset($this->users['manager'][$user->get_id()]);
 	}
 
 	public function add_work(data_query2work $work){

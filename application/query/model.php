@@ -106,8 +106,7 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public function add_user($query_id, $user_id, $class){
-		$user = new data_query2user((new model_user)->get_user($user_id));
-		$user->set_class($class);
+		$user = (new model_user)->get_user($user_id);
 		$query = $this->get_query($query_id);
 		(new mapper_query2user($this->company, $query))->init_users();
 		if($class === 'manager')
@@ -124,8 +123,7 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public function remove_user($query_id, $user_id, $class){
-		$user = new data_query2user((new model_user)->get_user($user_id));
-		$user->set_class($class);
+		$user = (new model_user)->get_user($user_id);
 		$query = $this->get_query($query_id);
 		(new mapper_query2user($this->company, $query))->init_users();
 		if($class === 'manager')
@@ -256,7 +254,6 @@ class model_query{
 			sql::begin();
 			$time = time();
 			$query = new data_query();
-      $query->set_company_id($this->company->get_id());
       $query->set_status('open');
       $query->set_payment_status('unpaid');
       $query->set_warning_status('normal');
@@ -297,15 +294,10 @@ class model_query{
 			$query->set_number($mapper->get_insert_query_number($time));
       $query = $mapper->insert($query);
       (new mapper_query2number($this->company, $query))->update();
-			$creator = new data_query2user(model_session::get_user());
-      $creator->set_class('creator');
-			$manager = new data_query2user(model_session::get_user());
-      $manager->set_class('manager');
-			$observer = new data_query2user(model_session::get_user());
-			$observer->set_class('observer');
-      $query->add_creator($creator);
-      $query->add_manager($manager);
-      $query->add_observer($observer);
+			$user = model_session::get_user();
+      $query->add_creator($user);
+      $query->add_manager($user);
+      $query->add_observer($user);
       (new mapper_query2user($this->company, $query))->update_users();
 			sql::commit();
 			return $query;
