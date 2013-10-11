@@ -23,11 +23,21 @@
             <option value="all">Все участки</option>
             {% if component.departments != false %}
                 {% for department in component.departments %}
-                    <option value="{{ department.get_id() }}"
-                    {% if department.get_id() == params['department'] %}
-                    selected
+                    {% if params['department'] is empty %}
+                        <option value="{{ department.get_id() }}"
+                        {% if department.get_id() == params['department'] %}
+                        selected
+                        {% endif %}
+                        >{{ department.get_name() }}</option>
+                    {% else %}
+                        {% if department.get_id() in params['department'] %}
+                            <option value="{{ department.get_id() }}"
+                            {% if department.get_id() == params['department'] %}
+                            selected
+                            {% endif %}
+                            >{{ department.get_name() }}</option>
+                        {% endif %}
                     {% endif %}
-                    >{{ department.get_name() }}</option>
                 {% endfor %}
             {% endif %}
         </select>
