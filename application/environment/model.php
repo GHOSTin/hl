@@ -39,12 +39,9 @@ class model_environment{
 			$data['component'] = $controller::$method($request);
 			$data['request'] = $request;
 			if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
-			self::init_profile($component);
-			$data['menu'] = model_menu::build_menu($component);
-			// if(isset(model_session::get_rules()[$component]))
-			// 	$data['rules'] = model_session::get_rules()[$component];
-			// model_session::set_session(new component_session_manager(new php_session_storage(), $component));
-		}
+				self::init_profile($component);
+				$data['menu'] = model_menu::build_menu($component);
+			}
 			$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
 			if(file_exists($template)){
 				return load_template($component.'.'.$method, $data);
@@ -73,7 +70,13 @@ class model_environment{
 	}
 
 	public static function init_profile($component){
-		// $profiles = (new model_user2profile(model_session::get_company(), model_session::get_user()))->get_profiles();
+		$profile = (new mapper_user2profile(model_session::get_company(),
+			model_session::get_user()))->find($component);
+		if($profile instanceof data_profile)
+			model_session::set_profile($profile);
+		else
+			if($component !== 'default_page')
+				throw new e_model('Нет доступа.');
 	}
 
 	public static function before(){

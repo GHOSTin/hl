@@ -8,6 +8,7 @@ class model_session{
     private static $links;
     private static $settings;
     private static $session;
+    private static $profile;
 
     public static function get_restrictions(){
         return self::$restrictions;
@@ -27,6 +28,14 @@ class model_session{
 
     public static function get_settings(){
         return self::$settings;
+    }
+
+    public static function get_profile(){
+        return self::$profile;
+    }
+
+    public static function set_profile($profile){
+        self::$profile = $profile;
     }
 
     public static function get_setting_param($component, $param){

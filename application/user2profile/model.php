@@ -36,7 +36,8 @@ class model_user2profile{
     if(in_array($rule, array_keys($rules))){
       $rules[$rule] = !$rules[$rule];
       $sql = new sql();
-      $sql->query('UPDATE `profiles` SET `rules` = :rules WHERE `company_id` = :company_id
+      $sql->query('UPDATE `profiles` SET `rules` = :rules
+        WHERE `company_id` = :company_id
         AND `user_id` = :user_id AND `profile` = :profile');
       $sql->bind(':rules', (string) json_encode($rules), PDO::PARAM_STR);
       $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
