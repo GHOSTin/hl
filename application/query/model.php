@@ -72,7 +72,8 @@ class model_query{
 
 	public function set_work_type($id){
 		if($id > 0){
-			$work_type = (new model_query_work_type($this->company))->get_query_work_type($id);
+			$work_type = (new model_query_work_type($this->company))
+				->get_query_work_type($id);
 			$this->set_param('work_type', $work_type->get_id());
 		}else
 			$this->set_param('work_type', null);
@@ -124,7 +125,8 @@ class model_query{
 			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
 		$query = $this->get_query($query_id);
 		(new mapper_query2work($this->company, $query))->init_works();
-		$work = new data_query2work((new model_work($this->company))->get_work($work_id));
+		$work = new data_query2work((new model_work($this->company))
+			->get_work($work_id));
 		$work->set_time_open($begin_time);
 		$work->set_time_close($end_time);
 		$query->add_work($work);
@@ -339,8 +341,9 @@ class model_query{
 		if(!empty($query->id)){
 			die('disabled numbers');
 		}else{
-			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, `numbers`.`id`,
-				`numbers`.`fio`, `numbers`.`number`, `flats`.`flatnumber` as `flat_number`
+			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, 
+				`numbers`.`id`, `numbers`.`fio`, `numbers`.`number`,
+				`flats`.`flatnumber` as `flat_number`
 				FROM `queries`, `query2number`, `numbers`, `flats`
 				WHERE `queries`.`company_id` = :company_id
 				AND `query2number`.`company_id` = :company_id
@@ -384,8 +387,9 @@ class model_query{
 		if(!empty($query->id)){
 			die('disabled users');
 		}else{
-			$sql->query("SELECT `query2user`.`query_id`,  `query2user`.`class`, `users`.`id`,
-				`users`.`firstname`, `users`.`lastname`, `users`.`midlename`
+			$sql->query("SELECT `query2user`.`query_id`,  `query2user`.`class`,
+				`users`.`id`, `users`.`firstname`, `users`.`lastname`,
+				`users`.`midlename`
 				FROM `queries`, `query2user`, `users`
 				WHERE `queries`.`company_id` = :company_id
 				AND `query2user`.`company_id` = :company_id
@@ -426,7 +430,8 @@ class model_query{
 		if(!empty($query->id)){
 			die('disabled works');
 		}else{
-			$sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
+			$sql->query("SELECT `query2work`.`query_id`,
+				`query2work`.`opentime` as `time_open`,
 				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
 				`works`.`id`, `works`.`name`
 				FROM `queries`, `query2work`, `works`
@@ -466,7 +471,8 @@ class model_query{
 	public function remove_work($query_id, $work_id){
 		$query = $this->get_query($query_id);
 		(new mapper_query2work($this->company, $query))->init_works();
-		$work = new data_query2work((new model_work($this->company))->get_work($work_id));
+		$work = new data_query2work((new model_work($this->company))
+			->get_work($work_id));
 		$query->remove_work($work);
 		(new mapper_query2work($this->company, $query))->update_works();
 		return $query;
