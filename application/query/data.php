@@ -116,11 +116,9 @@ final class data_query extends data_object{
 
 
 	private $numbers = [];
-	private $creator;
-	private $managers = [];
-	private $performers = [];
-	private $observers = [];
 	private $works = [];
+	private $users = ['creator' => null, 'manager' => [],
+										'observer' => [], 'performer' => []];
 
 	public function add_number(data_number $number){
 		if(in_array($number->get_id(), $this->numbers))
@@ -128,34 +126,26 @@ final class data_query extends data_object{
 		$this->numbers[$number->get_id()] = $number;
 	}
 
-	public function add_creator(data_query2user $user){
-		if(!is_null($this->creator))
-			throw new e_model("Нельзя повторно указать создателя заявки.");
-		$this->creator = $user;
+	public function add_creator(data_user $user){
+		$this->users['creator'] = $user;
 	}
 
-	public function add_manager(data_query2user $user){
-		if($user->get_class() !== 'manager')
-			throw new e_model("Пользователь не является менеджером заявки.");
-		if(array_key_exists($user->get_id(), $this->managers))
+	public function add_manager(data_user $user){
+		if(array_key_exists($user->get_id(), $this->users['manager']))
 			throw new e_model("Менеджер уже добавлен в заявку.");
-		$this->managers[$user->get_id()] = $user;
+		$this->users['manager'][$user->get_id()] = $user;
 	}
 
-	public function add_observer(data_query2user $user){
-		if($user->get_class() !== 'observer')
-			throw new e_model("Пользователь не является менеджером заявки.");
-		if(array_key_exists($user->get_id(), $this->observers))
+	public function add_observer(data_user $user){
+		if(array_key_exists($user->get_id(), $this->users['observer']))
 			throw new e_model("Исполнитель уже добавлен в заявку.");
-		$this->observers[$user->get_id()] = $user;
+		$this->users['observer'][$user->get_id()] = $user;
 	}
 
-	public function add_performer(data_query2user $user){
-		if($user->get_class() !== 'performer')
-			throw new e_model("Пользователь не является менеджером заявки.");
-		if(array_key_exists($user->get_id(), $this->performers))
+	public function add_performer(data_user $user){
+		if(array_key_exists($user->get_id(), $this->users['performer']))
 			throw new e_model("Исполнитель уже добавлен в заявку.");
-		$this->performers[$user->get_id()] = $user;
+		$this->users['performer'][$user->get_id()] = $user;
 	}
 
 	public function remove_performer(data_query2user $user){
@@ -203,19 +193,19 @@ final class data_query extends data_object{
 	}
 
 	public function get_creator(){
-		return $this->creator;
+		return $this->users['creator'];
 	}
 
 	public function get_managers(){
-		return $this->managers;
+		return $this->users['manager'];
 	}
 
 	public function get_observers(){
-		return $this->observers;
+		return $this->users['observer'];
 	}
 
 	public function get_performers(){
-		return $this->performers;
+		return $this->users['performer'];
 	}
 
 	public function get_works(){

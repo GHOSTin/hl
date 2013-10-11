@@ -33,9 +33,7 @@ class mapper_query2user{
     $user->set_firstname($row['firstname']);
     $user->set_middlename($row['middlename']);
     $user->set_lastname($row['lastname']);
-    $q2u = new data_query2user($user);
-    $q2u->set_class($row['class']);
-    return $q2u;
+    return $user;
   }
 
   private function get_users(){
@@ -47,7 +45,7 @@ class mapper_query2user{
     $stmt = $sql->get_stm();
     $users = [];
     while($row = $stmt->fetch())
-      $users[] = $this->create_object($row);
+      $users[$row['class']][] = $this->create_object($row);
     $stmt->closeCursor();
     return $users;
   }
@@ -86,15 +84,20 @@ class mapper_query2user{
 
   public function init_users(){
     $users = $this->get_users();
-    if(!empty($users))
-      foreach($users as $user){
-        if($user->get_class() === 'creator')
+    if(!empty($users['creator']))
+      foreach($users['creator'] as $user){
           $this->query->add_creator($user);
-        if($user->get_class() === 'manager')
+      }
+    if(!empty($users['manager']))
+      foreach($users['manager'] as $user){
           $this->query->add_manager($user);
-        if($user->get_class() === 'performer')
+      }
+    if(!empty($users['performer']))
+      foreach($users['performer'] as $user){
           $this->query->add_performer($user);
-        if($user->get_class() === 'observer')
+      }
+    if(!empty($users['observer']))
+      foreach($users['observer'] as $user){
           $this->query->add_observer($user);
       }
     return $this->query;
@@ -103,6 +106,7 @@ class mapper_query2user{
 
 
   public function update_users(){
+    exit();
     $users = $this->get_users();
     $old_creators = [];
     $old_managers = [];
