@@ -91,8 +91,8 @@ class controller_query{
 		$time = getdate($request->GET('time'));
 		$begin = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$model = new model_query(model_session::get_company());
-		$model->set_param('time_open_begin', $begin);
-		$model->set_param('time_open_end', $begin + 86399);
+		$model->set_time_open_begin($begin);
+		$model->set_time_open_end($begin + 86399);
 		return ['queries' => $model->get_queries()];
 	}
 
@@ -342,8 +342,8 @@ class controller_query{
 			default:
 				return false;
 		}
-		$model->set_param('time_open_begin', $begin);
-		$model->set_param('time_open_end', $begin + 86399);
+		$model->set_time_open_begin($begin);
+		$model->set_time_open_end($begin + 86399);
 		$company = model_session::get_company();
 		return ['queries' => $model->get_queries(),
 			'now' =>  $now,

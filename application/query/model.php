@@ -17,7 +17,6 @@ class model_query{
     	$_SESSION['model']['model'] = 'query';
     	$this->init_params();
 	  }
-	  // unset($_SESSION['model']);
 	}
 
 	public function init_params(){
@@ -76,6 +75,14 @@ class model_query{
 			$this->set_param('street', $street->get_id());
 		}else
 			$this->set_param('street', null);
+	}
+
+	public function set_time_open_begin($time){
+		$this->set_param('time_open_begin', (int) $time);
+	}
+
+	public function set_time_open_end($time){
+		$this->set_param('time_open_end', (int) $time);
 	}
 
 	public function set_house($id){
