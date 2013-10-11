@@ -29,7 +29,7 @@ class mapper_user2profile{
       foreach($rules as $rule => $status)
         $rule_collection->add_rule($rule, $status);
     $profile->set_rules($rule_collection);
-    // $profile['restrictions'] = (array) json_decode($row['restrictions']);
+    $profile->set_restrictions((array) json_decode($row['restrictions']));
     return $profile;
   }
 
@@ -64,10 +64,13 @@ class mapper_user2profile{
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
     $sql->execute('Ошибка при получении профиля.');
-    if($sql->count() === 0)
+    $stmt = $sql->get_stm();
+    $count = $stmt->rowCount();
+    if($count === 0)
       return null;
-    if($sql->count() !== 1)
+    elseif($count === 1)
+      return $this->create_object($stmt->fetch());
+    else
       throw new e_model('Неверное количество профилей.');     
-    return $this->create_object($sql->row());
   }
 }

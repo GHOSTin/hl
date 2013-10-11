@@ -286,39 +286,31 @@ class mapper_query{
       AND `opentime` > :time_open
       AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
       AND `queries`.`department_id` = `departments`.`id`");
-      $sql->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
-      $sql->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
-      if(!empty($params['status'])){
-       $sql->query(" AND `queries`.`status` = :status");
-       $sql->bind(':status', (string) $params['status'], PDO::PARAM_STR);
+    $sql->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
+    $sql->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
+    if(!empty($params['status'])){
+     $sql->query(" AND `queries`.`status` = :status");
+     $sql->bind(':status', (string) $params['status'], PDO::PARAM_STR);
+    }
+    if(!empty($params['department'])){
+      foreach($params['department']as $key => $department){
+         $department_key[] = ':department_id'.$key;
+         $sql->bind(':department_id'.$key, (int) $department, PDO::PARAM_INT);
       }
-      if(!empty($params['department'])){
-      $sql->query(" AND `queries`.`department_id` = :department");
-       $sql->bind(':department', (int)  $params['department'], PDO::PARAM_INT);
-      }
-      if(!empty($params['street'])){
-       $sql->query(" AND `houses`.`street_id` = :street_id");
-       $sql->bind(':street_id', (int) $params['street'], PDO::PARAM_INT);
-      }
-      if(!empty($params['house'])){
-       $sql->query(" AND `queries`.`house_id` = :house_id");
-       $sql->bind(':house_id', (int) $params['house'], PDO::PARAM_INT);
-      }
-      if(!empty($params['work_type'])){
-       $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
-       $sql->bind(':worktype_id', (int) $params['work_type'], PDO::PARAM_INT);
-      }
-      // if(!empty($query->department_id)){
-      //  if(is_array($query->department_id))
-      //    $departments = $query->department_id;
-      //  else
-      //    $departments[] = $query->department_id;
-      //  foreach($departments as $key => $department){
-      //    $p_departments[] = ':department_id'.$key;
-      //    $sql->bind(':department_id'.$key, $department, PDO::PARAM_INT);
-      //  }
-      //  $sql->query(" AND `queries`.`department_id` IN(".implode(',', $p_departments).")");
-      // }
+      $sql->query(" AND `queries`.`department_id` IN(".implode(',', $department_key).")");
+    }
+    if(!empty($params['street'])){
+     $sql->query(" AND `houses`.`street_id` = :street_id");
+     $sql->bind(':street_id', (int) $params['street'], PDO::PARAM_INT);
+    }
+    if(!empty($params['house'])){
+     $sql->query(" AND `queries`.`house_id` = :house_id");
+     $sql->bind(':house_id', (int) $params['house'], PDO::PARAM_INT);
+    }
+    if(!empty($params['work_type'])){
+     $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
+     $sql->bind(':worktype_id', (int) $params['work_type'], PDO::PARAM_INT);
+    }
     $sql->query(" ORDER BY `queries`.`opentime` DESC");
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при выборки заявко по номеру.');

@@ -4,6 +4,7 @@ class data_profile extends data_object{
   private $name;
   private $profile;
   private $rules;
+  private $restrictions;
 
   public function __construct($profile){
     $this->profile = (string) $profile;
@@ -23,5 +24,13 @@ class data_profile extends data_object{
 
   public function set_rules(data_rule_collection $collection){
     $this->rules = $collection;
+  }
+
+  public function set_restrictions(array $restrictions){
+    $this->restrictions = $restrictions;
+  }
+
+  public function get_restrictions(){
+    return $this->restrictions;
   }
 }

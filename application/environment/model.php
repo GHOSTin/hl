@@ -35,13 +35,13 @@ class model_environment{
 			$resolver = new model_resolver();
 			list($controller, $method) = $resolver->get_controller($request);
 			$component = substr($controller, 11);
-			$data['file_prefix'] = $component;
-			$data['component'] = $controller::$method($request);
-			$data['request'] = $request;
 			if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
 				self::init_profile($component);
 				$data['menu'] = model_menu::build_menu($component);
 			}
+			$data['file_prefix'] = $component;
+			$data['component'] = $controller::$method($request);
+			$data['request'] = $request;
 			$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
 			if(file_exists($template)){
 				return load_template($component.'.'.$method, $data);

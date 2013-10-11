@@ -34,7 +34,7 @@ class model_session{
         return self::$profile;
     }
 
-    public static function set_profile($profile){
+    public static function set_profile(data_profile $profile){
         self::$profile = $profile;
     }
 

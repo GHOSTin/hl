@@ -3,16 +3,21 @@ class model_query{
 
 	private $company;
 	private $params = [];
+	private $restrictions = [];
 
 	public function __construct(data_company $company){
 		$this->company = $company;
     $this->company->verify('id');
+	  $profile = model_session::get_profile();
+	  if((string) $profile === 'query')
+	  	$this->restrictions = $profile->get_restrictions();
     if(!empty($_SESSION['model']) AND $_SESSION['model']['model'] === 'query'){
     	$this->params = $_SESSION['model']['params'];
     }else{
     	$_SESSION['model']['model'] = 'query';
     	$this->init_params();
 	  }
+	  // unset($_SESSION['model']);
 	}
 
 	public function init_params(){
@@ -21,10 +26,15 @@ class model_query{
     $this->params['time_open_begin'] = $time;
     $this->params['time_open_end'] = $time  + 86359;
     $this->params['status'] = null;
-    $this->params['department'] = null;
     $this->params['street'] = null;
     $this->params['house'] = null;
     $this->params['work_type'] = null;
+
+    $this->params['department'] = null;
+		if(!empty($this->restrictions['departments']))
+			$this->params['department'] = $this->restrictions['departments'];
+		else
+			$this->params['department'] = [];
     $_SESSION['model']['params'] = $this->params;
 	}
 
@@ -48,10 +58,16 @@ class model_query{
 
 	public function set_department($id){
 		if($id > 0){
+			if(!empty($this->restrictions['departments']))
+				if(!in_array($id, $this->restrictions['departments']))
+					throw new e_model('Участок не может быть добавлен.');
 			$department = (new model_department($this->company))->get_department($id);
-			$this->set_param('department', $department->get_id());
+			$this->set_param('department', [$department->get_id()]);
 		}else
-			$this->set_param('department', null);
+		if(!empty($this->restrictions['departments']))
+			$this->set_param('department', $this->restrictions['departments']);
+		else
+			$this->set_param('department', []);
 	}
 
 	public function set_street($id){
@@ -330,139 +346,6 @@ class model_query{
 	public function get_queries(){
 		$mapper = new mapper_query($this->company);
 		return $mapper->get_queries($this->params);
-	}
-
-	/**
-	* Возвращает лицевые счета заявки.
-	* @return array
-	*/
-	public static function get_numbers(data_company $company, data_query $query){
-		$sql = new sql();
-		if(!empty($query->id)){
-			die('disabled numbers');
-		}else{
-			$sql->query("SELECT `query2number`.`query_id`, `query2number`.`default`, 
-				`numbers`.`id`, `numbers`.`fio`, `numbers`.`number`,
-				`flats`.`flatnumber` as `flat_number`
-				FROM `queries`, `query2number`, `numbers`, `flats`
-				WHERE `queries`.`company_id` = :company_id
-				AND `query2number`.`company_id` = :company_id
-				AND `flats`.`company_id` = :company_id
-				AND `numbers`.`company_id` = :company_id
-				AND `queries`.`id` = `query2number`.`query_id`
-				AND `numbers`.`id` = `query2number`.`number_id`
-				AND `numbers`.`flat_id` = `flats`.`id`
-				AND `opentime` > :time_open
-				AND `opentime` <= :time_close
-				ORDER BY (`flats`.`flatnumber` + 0)");
-			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
-			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			if(!empty($query->status) AND $query->status !== 'all'){
-				$sql->query(" AND `queries`.`status` = :status");
-				$sql->bind(':status', $query->status, PDO::PARAM_STR);
-			}
-		}
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при выборке лицевых счетов.');
-		$result = ['structure' => [], 'numbers' => []];
-		while($row = $sql->row()){
-			$number = new data_number();
-			$number->id = $row['id'];
-			$number->fio = $row['fio'];
-			$number->number = $row['number'];
-			$number->flat_number = $row['flat_number'];
-			$result['structure'][$row['query_id']][$row['default']][] = $number->id;
-			$result['numbers'][$number->id] = $number;
-		}
-		$sql->close();
-		return $result;
-	}
-
-	/**
-	* Возвращает пользователей заявки.
-	* @return array
-	*/
-	public static function get_users(data_company $company, data_query $query){
-		$sql = new sql();
-		if(!empty($query->id)){
-			die('disabled users');
-		}else{
-			$sql->query("SELECT `query2user`.`query_id`,  `query2user`.`class`,
-				`users`.`id`, `users`.`firstname`, `users`.`lastname`,
-				`users`.`midlename`
-				FROM `queries`, `query2user`, `users`
-				WHERE `queries`.`company_id` = :company_id
-				AND `query2user`.`company_id` = :company_id
-				AND `users`.`id` = `query2user`.`user_id`
-				AND `queries`.`id` = `query2user`.`query_id`
-				AND `opentime` > :time_open
-				AND `opentime` <= :time_close");
-			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
-			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			if(!empty($query->status) AND $query->status !== 'all'){
-				$sql->query(" AND `queries`.`status` = :status");
-				$sql->bind(':status', $query->status, PDO::PARAM_STR);
-			}
-			$sql->query(" ORDER BY `opentime` DESC");
-		}
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при выборке пользователей.');
-		$result = ['structure' => [], 'users' => []];
-		while($row = $sql->row()){
-			$user = new data_user();
-			$user->id = $row['id'];
-			$user->firstname = $row['firstname'];
-			$user->lastname = $row['lastname'];
-			$user->middlename = $row['midlename'];
-			$result['structure'][$row['query_id']][$row['class']][] = $user->id;
-			$result['users'][$user->id] = $user;
-		}
-		$sql->close();
-		return $result;
-	}
-
-	/**
-	* Возвращает работы.
-	* @return array
-	*/
-	public static function get_works(data_company $company, data_query $query){
-		$sql = new sql();
-		if(!empty($query->id)){
-			die('disabled works');
-		}else{
-			$sql->query("SELECT `query2work`.`query_id`,
-				`query2work`.`opentime` as `time_open`,
-				`query2work`.`closetime` as `time_close`, `query2work`.`value`,
-				`works`.`id`, `works`.`name`
-				FROM `queries`, `query2work`, `works`
-				WHERE `queries`.`company_id` = :company_id
-				AND `query2work`.`company_id` = :company_id
-				AND `works`.`id` = `query2work`.`work_id`
-				AND `queries`.`id` = `query2work`.`query_id`
-				AND `queries`.`opentime` > :time_open
-				AND `queries`.`opentime` <= :time_close");
-			$sql->bind(':time_open', $query->time_open['begin'], PDO::PARAM_INT);
-			$sql->bind(':time_close', $query->time_open['end'], PDO::PARAM_INT);
-			if(!empty($query->status) AND $query->status !== 'all'){
-				$sql->query(" AND `queries`.`status` = :status");
-				$sql->bind(':status', $query->status, PDO::PARAM_STR);
-			}
-			$sql->query(" ORDER BY `queries`.`opentime` DESC");
-		}
-		$sql->bind(':company_id', $company->id, PDO::PARAM_INT);
-		$sql->execute('Ошибка при выборке работ.');
-		$result = ['structure' => [], 'works' => []];
-		while($row = $sql->row()){
-			$work = new data_work();
-			$work->id = $row['id'];
-			$work->name = $row['name'];
-			$current = ['work_id' => $work->id, 'time_open' => $row['time_open'],
-				'time_close' => $row['time_close'], 'value' => $row['value']];
-			$result['structure'][$row['query_id']][] = $current;
-			$result['works'][$work->id] = $work ;
-		}
-		$sql->close();
-		return $result;
 	}
 
 	/**
