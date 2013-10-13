@@ -7,4 +7,6 @@
     <dd>{{ number.get_telephone() }} <a class="get_dialog_edit_number_telephone">изменить</a></dd>
     <dt>Сотовый телефон:</dt>
     <dd>{{ number.get_cellphone() }} <a class="get_dialog_edit_number_cellphone">изменить</a></dd>
+    <dt>Пароль в личный кабинет:</dt>
+    <dd>******** <a class="get_dialog_edit_password">изменить</a></dd>
 </dl>

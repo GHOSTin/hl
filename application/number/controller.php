@@ -375,7 +375,11 @@ class controller_number{
   public static function private_get_dialog_edit_number_fio(
     model_request $request){
     return ['number' => (new model_number(model_session::get_company()))
-                        ->get_number($request->GET('id'))];;
+                        ->get_number($request->GET('id'))];
+  }
+
+  public static function private_get_dialog_edit_password(
+    model_request $request){
   }
 
   public static function private_get_dialog_edit_number_telephone(
@@ -433,6 +437,13 @@ class controller_number{
   public static function private_update_number(model_request $request){
     return ['number' => (new model_number(model_session::get_company()))
                 ->update_number($request->GET('id'), $request->GET('number'))];
+  }
+
+  public static function private_update_number_password(model_request $request){
+    if($request->GET('password') !== $request->GET('confirm'))
+      throw new e_model('Подтверждение и пароль не совпадают.');
+    return ['number' => (new model_number(model_session::get_company()))
+                ->update_password($request->GET('id'), $request->GET('password'))];
   }
 
   public static function private_update_number_fio(model_request $request){

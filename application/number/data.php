@@ -20,7 +20,7 @@ final class data_number extends data_object{
 	private $house_number;
 	private $id;
 	private $number;
-	private $password;
+	private $hash;
 	private $status;
 	private $street_name;
 	private $telephone;
@@ -89,6 +89,10 @@ final class data_number extends data_object{
         return $this->number;
     }
 
+    public function get_hash(){
+        return $this->hash;
+    }
+
     public function get_telephone(){
         return $this->telephone;
     }
@@ -139,6 +143,10 @@ final class data_number extends data_object{
 
     public function set_status($status){
         $this->status = (string) $status;
+    }
+
+    public function set_hash($hash){
+        $this->hash = (string) $hash;
     }
 
     public function set_telephone($telephone){

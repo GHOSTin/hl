@@ -15,6 +15,7 @@ class mapper_number{
         $number->set_number($row['number']);
         $number->set_status($row['status']);
         $number->set_house_id($row['house_id']);
+        $number->set_hash($row['password']);
         return $number;
     }
 
@@ -96,7 +97,7 @@ class mapper_number{
         $number->verify('id', 'number', 'fio', 'telephone');
         $sql = new sql();
         $sql->query('UPDATE `numbers` SET `number` = :number, `fio` = :fio,
-            `cellphone` = :cellphone, `telephone` = :telephone
+            `cellphone` = :cellphone, `telephone` = :telephone, `password` = :hash
             WHERE `company_id` = :company_id AND `id` = :id');
         $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
         $sql->bind(':id', $number->get_id(), PDO::PARAM_INT);
@@ -104,7 +105,8 @@ class mapper_number{
         $sql->bind(':fio', $number->get_fio(), PDO::PARAM_STR);
         $sql->bind(':telephone', $number->get_telephone(), PDO::PARAM_STR);
         $sql->bind(':cellphone', $number->get_cellphone(), PDO::PARAM_STR);
+        $sql->bind(':hash', $number->get_hash(), PDO::PARAM_STR);
         $sql->execute('Проблема при обнослении лицевого счета.');
-        return $user;
+        return $number;
     }
 }

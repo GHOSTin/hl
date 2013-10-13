@@ -92,6 +92,19 @@ class model_number{
 	}
 
 	/**
+	* Обновляет номер лицевого счета
+	* @return object data_number
+	*/
+	public function update_password($id, $password){
+		$number = $this->get_number($id);
+		$mapper = new mapper_number($this->company);
+		$hash = md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
+		$number->set_hash($hash);
+		$mapper->update($number);
+		return $number;
+	}
+
+	/**
 	* Обновляет ФИО владельца лицевого счета
 	* @return object data_number
 	*/

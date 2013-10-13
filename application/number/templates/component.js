@@ -215,6 +215,14 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+
+    // выводит диалог изменеия пароля в личный кабинет
+    }).on('click', '.get_dialog_edit_password', function(){
+        $.get('get_dialog_edit_password',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
         
     // выводит диалог добавление процессингового центра
     }).on('click', '.get_dialog_add_house_processing_center', function(){
