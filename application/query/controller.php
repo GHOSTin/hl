@@ -378,7 +378,10 @@ class controller_query{
 			(new mapper_street2house($street))->init_houses();
 			$houses = $street->get_houses();
 		}
-		return ['queries' => $model->get_queries(),
+		
+		$collection = new collection_query($company, $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection,
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),

@@ -64,6 +64,21 @@ class mapper_query2number{
         return $numbers;
     }
 
+
+    private function get_numbers_for_collection_query(array $ids){
+        $sql = new sql();
+        $sql->query(self::$sql_get_numbers);
+        $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+        $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+        $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
+        $stmt = $sql->get_stm();
+        $numbers = [];
+        while($row = $stmt->fetch())
+            $numbers[] = $this->create_object($row);
+        $stmt->closeCursor();
+        return $numbers;
+    }
+
     public function init_numbers(){
         $numbers = $this->get_numbers();
         if(!empty($numbers))
