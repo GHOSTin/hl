@@ -231,9 +231,11 @@ class controller_user{
     }
 
     public static function private_get_user_profiles(model_request $request){
-        $user = (new model_user)->get_user($request->take_get('id'));
+        $user = new data_user();
+        $user->set_id($request->GET('id'));
         return ['user' => $user,
-                'companies' => model_profile::get_companies($request->take_get('id'))];
+                'companies' => (new model_user2profile(model_session::get_company(), $user))
+                    ->get_companies()];
     }
 
     public static function private_get_user_letters(model_request $request){

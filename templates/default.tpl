@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css" >
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     <title>MSHC2</title>
-    {% if anonymous == false %}
-	    <link rel="stylesheet" href="/templates/default/css/libs.css" >
-		<link rel="stylesheet" href="/?css=component.css&p={{ file_prefix }}" >
-	{% endif %}
+    <link rel="stylesheet" href="/templates/default/css/libs.css" >
+    <link rel="stylesheet" href="/?css=component.css&p={{ file_prefix }}" >
     {% block css %}{% endblock css %}
 </head>
 <body>
@@ -38,14 +36,12 @@
 </body>
     <script src="/templates/default/js/jquery.min.js"></script>
     <script src="/templates/default/js/bootstrap.min.js"></script>
-    {#{% if anonymous == false %}
-        <script src="/templates/default/js/jcanvas.min.js"></script>
-	    <script src="/templates/default/js/ajaxupload.js"></script>
+    {% if user is not empty %}
 	    <script src="/templates/default/js/socket.io.js"></script>
 	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>
 	    <script src="/templates/default/js/notification-center.js"></script>
         <script src="/templates/default/js/chat.js"></script>
-    {% endif %}#}
+    {% endif %}
 	<script src="/templates/default/js/default.js"></script>
 	<script src="/?js=component.js&p={{ file_prefix }}"></script>
     {% block javascript %}{% endblock javascript %}

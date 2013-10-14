@@ -36,6 +36,7 @@ class model_environment{
 			list($controller, $method) = $resolver->get_controller($request);
 			$component = substr($controller, 11);
 			if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
+				$data['user'] = $_SESSION['user'];
 				self::init_profile($component);
 				$data['menu'] = model_menu::build_menu($component);
 			}
