@@ -16,7 +16,7 @@
             </ul>
         </li>
         <li class="number-content-content">
-        {% if stn == 'centers' %}
+        {% if stn == 'processing_centers' %}
             {% include '@number/build_processing_centers.tpl' %}
         {% elseif stn == 'meters'%}
             {% include '@number/build_meters.tpl' %}

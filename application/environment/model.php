@@ -75,7 +75,7 @@ class model_environment{
 		if($profile instanceof data_profile)
 			model_session::set_profile($profile);
 		else
-			if($component !== 'default_page')
+			if(!in_array($component, ['default_page', 'profile'], true))
 				throw new e_model('Нет доступа.');
 	}
 
@@ -84,7 +84,6 @@ class model_environment{
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
 			model_session::set_user($_SESSION['user']);
 			model_session::set_company($_SESSION['company']);
-			model_session::set_settings($_SESSION['settings']);
 		}
 	}
 }

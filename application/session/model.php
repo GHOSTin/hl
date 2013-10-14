@@ -26,20 +26,12 @@ class model_session{
         return self::$company;
     }
 
-    public static function get_settings(){
-        return self::$settings;
-    }
-
     public static function get_profile(){
         return self::$profile;
     }
 
     public static function set_profile(data_profile $profile){
         self::$profile = $profile;
-    }
-
-    public static function get_setting_param($component, $param){
-        return self::$settings[$component][$param];
     }
 
     public static function set_user(data_user $user){
@@ -72,29 +64,6 @@ class model_session{
             self::$rules = $rules;
         }else
             throw new exception('Нельзя дважды определить правила доступа.');
-    }
-
-    public static function set_session(component_session_manager $session){
-        if(!isset(self::$session)){
-            self::$session = $session;
-        }else
-            throw new exception('Нельзя дважды определить сессию компонента.');
-    }
-
-    public static function get_session(){
-        return self::$session;
-    }
-
-    public static function set_settings($settings){
-        if(!isset(self::$settings)){
-            self::$settings = $settings;
-        }else
-            throw new exception('Нельзя дважды определить настройки.');
-    }
-
-    public static function set_setting_param($component, $param, $value){
-        self::$settings[$component][$param] = $value;
-        $_SESSION['settings'] = self::$settings;
     }
 
     /**

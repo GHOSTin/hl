@@ -31,7 +31,9 @@ class controller_query{
 		$model->init_params();
 		$time = getdate($model->get_params()['time_open_begin']);
 		$timeline = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		return ['queries' => $model->get_queries(),
+		$collection = new collection_query($company, $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection,
 			'timeline' =>  $timeline, 'now' =>  $timeline];
 	}
 
@@ -93,7 +95,10 @@ class controller_query{
 		$model = new model_query(model_session::get_company());
 		$model->set_time_open_begin($begin);
 		$model->set_time_open_end($begin + 86399);
-		return ['queries' => $model->get_queries()];
+		$collection = new collection_query(model_session::get_company(),
+		 $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection];
 	}
 
 	public static function private_get_dialog_add_user(model_request $request){
@@ -284,7 +289,10 @@ class controller_query{
 	public static function private_set_status(model_request $request){
 		$model = new model_query(model_session::get_company());
 		$model->set_status($request->GET('value'));
-		return ['queries' => $model->get_queries()];
+		$collection = new collection_query(model_session::get_company(),
+		 $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => collection];
 	}
 
 	public static function private_set_street(model_request $request){
@@ -297,13 +305,19 @@ class controller_query{
 			$street->set_id($request->GET('value'));
 			(new mapper_street2house($street))->init_houses();
 		}
-		return ['queries' => $model->get_queries(), 'street' => $street];
+		$collection = new collection_query(model_session::get_company(),
+		 $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection, 'street' => $street];
 	}
 
 	public static function private_set_house(model_request $request){
 		$model = new model_query(model_session::get_company());
 		$model->set_house($request->GET('value'));
-		return ['queries' => $model->get_queries()];
+		$collection = new collection_query(model_session::get_company(),
+		 $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection];
 	}
 
 	public static function private_set_department(model_request $request){
@@ -311,13 +325,19 @@ class controller_query{
 		$model->set_department($request->GET('value'));
 		$model->set_street('all');
 		$model->set_house('all');
-		return ['queries' => $model->get_queries()];
+		$collection = new collection_query(model_session::get_company(),
+		 $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection];
 	}
 
 	public static function private_set_work_type(model_request $request){
 		$model = new model_query(model_session::get_company());
 		$model->set_work_type($request->GET('value'));
-		return ['queries' => $model->get_queries()];
+		$collection = new collection_query(model_session::get_company(),
+		 $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection];
 	}
 
 	public static function private_get_timeline(model_request $request){
@@ -345,7 +365,9 @@ class controller_query{
 		$model->set_time_open_begin($begin);
 		$model->set_time_open_end($begin + 86399);
 		$company = model_session::get_company();
-		return ['queries' => $model->get_queries(),
+		$collection = new collection_query($company, $model->get_queries());
+		$collection->init_numbers();
+		return ['queries' => $collection,
 			'now' =>  $now,
 			'timeline' => $timeline];
 	}
@@ -378,7 +400,6 @@ class controller_query{
 			(new mapper_street2house($street))->init_houses();
 			$houses = $street->get_houses();
 		}
-		
 		$collection = new collection_query($company, $model->get_queries());
 		$collection->init_numbers();
 		return ['queries' => $collection,
