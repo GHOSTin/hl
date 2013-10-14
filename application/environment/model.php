@@ -29,6 +29,7 @@ class model_environment{
 	*/
 	public static function get_page_content(){
 		try{
+			throw new e_model('sdfsdf');
 			session_start();
 			self::before();
 			$request = new model_request();
@@ -49,23 +50,15 @@ class model_environment{
 				return load_template('error.no_template', $data);
 			}
 		}catch(exception $e){
-			die($e);
-			// if($e instanceof e_model){
-			// 	$args['error'] = $e;
-   //      if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-   //          return load_template('error.show_ajax_error', $args);
-   //      else
-   //          return load_template('error.show_html_error', $args);
-			// }elseif($e instanceof e_controller){
-			// 	header("HTTP/1.0 404 Not Found");
-			// 	return load_template('error.show_404_error', []);
-			// }else{
-			// 	$args['error'] = $e;
-   //      if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-   //          return load_template('error.show_ajax_error', $args);
-   //      else
-   //          return load_template('error.show_html_error', $args);
-			// }
+			if($e instanceof e_model){
+				$args['error'] = $e;
+        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
+            return load_template('error.show_ajax_error', $args);
+        else
+            return load_template('error.show_html_error', $args);
+			}else{
+				die('Problem');
+			}
 		}
 	}
 
