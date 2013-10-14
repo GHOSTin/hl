@@ -118,6 +118,18 @@ class model_user2profile{
     return $profile;
   }
 
+  /**
+  * Возвращает список компаний для которых есть профиль пользователя.
+  */
+  public function get_companies(){
+    $sql = new sql();
+    $sql->query("SELECT DISTINCT `companies`.`id`, `companies`.`name`
+          FROM `companies`, `profiles` WHERE `profiles`.`user_id` = :user_id
+          AND `profiles`.`company_id` = `companies`.`id`");
+    $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+    return $sql->map(new data_company(), 'Проблемы при получении компаний в профиле.');
+  }
+
   public function update_rule($profile, $rule){
     $profile = $this->get_profile($profile);
     $rules = $profile->get_rules()->get_rules();
