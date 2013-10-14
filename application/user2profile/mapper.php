@@ -23,12 +23,7 @@ class mapper_user2profile{
 
   public function create_object(array $row){
     $profile = new data_profile($row['profile']);
-    $rules = (array) json_decode($row['rules']);
-    $rule_collection = new data_rule_collection();
-    if(!empty($rules))
-      foreach($rules as $rule => $status)
-        $rule_collection->add_rule($rule, $status);
-    $profile->set_rules($rule_collection);
+    $profile->set_rules((array) json_decode($row['rules']));
     $profile->set_restrictions((array) json_decode($row['restrictions']));
     return $profile;
   }
@@ -72,5 +67,19 @@ class mapper_user2profile{
       return $this->create_object($stmt->fetch());
     else
       throw new e_model('Неверное количество профилей.');     
+  }
+
+  public function insert(data_profile $profile){
+    $sql = new sql();
+    $sql->query("INSERT INTO `profiles` (`company_id`, `user_id`, `profile`,
+          `rules`, `restrictions`, `settings`) VALUES (:company_id, :user_id,
+          :profile, :rules, :restrictions, :settings)");
+    $sql->bind(':user_id', $this->user->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
+    $sql->bind(':rules', json_encode($profile->get_rules()), PDO::PARAM_STR);
+    $sql->bind(':restrictions', json_encode($profile->get_restrictions()), PDO::PARAM_STR);
+    $sql->bind(':settings', '[]', PDO::PARAM_STR);
+    $sql->execute('Ошибка при добавлении профиля.');
   }
 }

@@ -1,7 +1,6 @@
 <?php
 class data_profile extends data_object{
   
-  private $name;
   private $profile;
   private $rules;
   private $restrictions;
@@ -18,12 +17,8 @@ class data_profile extends data_object{
     return $this->rules;
   }
 
-  public function set_name($name){
-    $this->name = (string) $name;
-  }
-
-  public function set_rules(data_rule_collection $collection){
-    $this->rules = $collection;
+  public function set_rules(array $rules){
+    $this->rules = $rules;
   }
 
   public function set_restrictions(array $restrictions){

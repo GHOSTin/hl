@@ -4,8 +4,12 @@ class controller_user{
 	static $name = 'Пользователи';
 
     public static function private_add_profile(model_request $request){
-        model_profile::add_profile($request->take_get('company_id'),
-                $request->take_get('user_id'), $request->take_get('profile'));
+        $company = new data_company();
+        $company->set_id($request->take_get('company_id'));
+        $user = new data_user();
+        $user->set_id($request->take_get('user_id'));
+        (new model_user2profile($company, $user))
+            ->add_profile($request->take_get('profile'));
         return ['companies' => model_profile::get_companies($request->take_get('user_id'))];
     }
 

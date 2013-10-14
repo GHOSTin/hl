@@ -4,11 +4,99 @@ class model_user2profile{
   private $company;
   private $user;
 
+    
+  
+
+  private static $rules = [
+    'import' => ['generalAccess' => false],
+    'materialgroup' => ['generalAccess' => false,
+                        'createMaterial' => false,
+                        'createMaterialgroup' => false,
+                        'deleteMaterial' => false,
+                        'deleteMaterialgroup' => false,
+                        'editMaterial' => false,
+                        'editMaterialgroup' => false],
+    'meter' => ['generalAccess' => false],
+    'number' => ['generalAccess' => false,
+                'createDepartment' => false,
+                'createNumber' => false,
+                'editMeter' => false,
+                'editNumber' => false,
+                'editNumberContact' => false,
+                'sendSms' => false],
+    'phrase' => ['generalAccess' => false,
+                'createPhrase' => false],
+    'report' => ['generalAccess' => false],
+    'query' => ['generalAccess' => false,
+                'createQuery' => false,
+                'closeQuery' => false,
+                'editContact' => false,
+                'editDescriptionOpen' => false,
+                'editDescriptionClose' => false,
+                'editInitiator' => false,
+                'editPaymentStatus' => false,
+                'editPerformers' => false,
+                'editManagers' => false,
+                'editMaterials' => false,
+                'editNumbers' => false,
+                'editWarningType' => false,
+                'editWorks' => false,
+                'editWorkType' => false,
+                'editInspection' => false,
+                'reopenQuery' => false,
+                'sendSms' => false,
+                'showHistory' => false,
+                'showDocs' => false],
+    'user' => ['generalAccess' => false,
+              'addGroup' => false,
+              'addUser' => false,
+              'createGroup' => false,
+              'createUser' => false,
+              'deleteGroup' => false,
+              'deleteUser' => false,
+              'editGroup' => false,
+              'editUser' => false,
+              'setPassword' => false,
+              'setRule' => false],
+    'workgroup' => ['generalAccess' => false,
+                    'createWork' => false,
+                    'createWorkgroup' => false,
+                    'deleteWork' => false,
+                    'deleteWorkgroup' => false,
+                    'editWork' => false,
+                    'editWorkgroup' => false]
+  ];
+
+
+  private static $restrictions = [
+    'query' =>['departments' => [],
+                'worktypes' => []
+              ]
+  ];
+
   public function __construct(data_company $company, data_user $user){
     $this->company = $company;
     $this->user = $user;
     $this->company->verify('id');
     $this->user->verify('id');
+  }
+
+
+  public function add_profile($profile){
+    $mapper = new mapper_user2profile($this->company, $this->user);
+    if(!is_null($mapper->find($profile)))
+      throw new e_model('Профиль уже существует.');
+    $p = new data_profile($profile);
+    if(!empty(self::$rules[$profile]))
+      $p->set_rules(self::$rules[$profile]);
+    else
+      $p->set_rules([]);
+    if(!empty(self::$restrictions[$profile]))
+      $p->set_restrictions(self::$restrictions[$profile]);
+    else
+      $p->set_restrictions([]);
+    $mapper->insert($p);
+    return $p;
   }
 
   public function delete($profile){

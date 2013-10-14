@@ -62,6 +62,16 @@ class mapper_query{
     AND `queries`.`id` = :id AND `departments`.`company_id` = :company_id
         AND `queries`.`department_id` = `departments`.`id`";
 
+    private static $sql_insert =  "INSERT INTO `queries` (
+          `id`, `company_id`, `status`, `initiator-type`, `payment-status`,
+          `warning-type`, `department_id`, `house_id`, `query_worktype_id`,
+          `opentime`, `worktime`, `addinfo-name`, `addinfo-telephone`,
+          `addinfo-cellphone`, `description-open`, `querynumber`)
+          VALUES (:id, :company_id, :status, :initiator, :payment_status, 
+          :warning_status,:department_id, :house_id, :worktype_id, :time_open,
+          :time_work, :contact_fio, :contact_telephone, :contact_cellphone,
+          :description, :number)";
+
   public function __construct(data_company $company){
       $this->company = $company;
       $this->company->verify('id');
@@ -114,15 +124,7 @@ class mapper_query{
     $query->get_department()->verify('id');
     $query->get_work_type()->verify('id');
     $sql = new sql();
-    $sql->query("INSERT INTO `queries` (
-          `id`, `company_id`, `status`, `initiator-type`, `payment-status`,
-          `warning-type`, `department_id`, `house_id`, `query_worktype_id`,
-          `opentime`, `worktime`, `addinfo-name`, `addinfo-telephone`,
-          `addinfo-cellphone`, `description-open`, `querynumber`)
-          VALUES (:id, :company_id, :status, :initiator, :payment_status, 
-          :warning_status,:department_id, :house_id, :worktype_id, :time_open,
-          :time_work, :contact_fio, :contact_telephone, :contact_cellphone,
-          :description, :number)");
+    $sql->query(self::$sql_insert);
     $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT, 3);
     $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
