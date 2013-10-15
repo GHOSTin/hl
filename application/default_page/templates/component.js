@@ -3,6 +3,6 @@ $(document).ready(function(){
     },function(r){
         /** создать блок с полученным контентом */
         $('section.main').html('<div id="chat">'+r+'</div>');
-        //build_chat_window();
+        build_chat_window();
     });
 });
