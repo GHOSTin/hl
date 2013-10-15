@@ -292,7 +292,7 @@ class controller_query{
 		$collection = new collection_query(model_session::get_company(),
 		 $model->get_queries());
 		$collection->init_numbers();
-		return ['queries' => collection];
+		return ['queries' => $collection];
 	}
 
 	public static function private_set_street(model_request $request){
