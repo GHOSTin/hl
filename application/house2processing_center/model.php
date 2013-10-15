@@ -13,16 +13,29 @@ class model_house2processing_center{
 
   public function add_processing_center($center_id, $identifier){
     $this->house = (new model_house)->get_house($this->house->get_id());
-    $center = (new model_processing_center)->get_processing_center($center_id);
+    $center = new data_house2processing_center(
+      (new model_processing_center)->get_processing_center($center_id));
+    $center->set_identifier($identifier);
     $mapper = new mapper_house2processing_center($this->company, $this->house);
     $mapper->init_processing_centers();
-    $this->house->add_processing_center($center, $identifier);
+    $this->house->add_processing_center($center);
+    $mapper->update_processing_centers();
+    return $this->house;
+  }
+
+  public function remove_processing_center($center_id){
+    $this->house = (new model_house)->get_house($this->house->get_id());
+    $center = new data_house2processing_center(
+      (new model_processing_center)->get_processing_center($center_id));
+    $mapper = new mapper_house2processing_center($this->company, $this->house);
+    $mapper->init_processing_centers();
+    $this->house->remove_processing_center($center);
     $mapper->update_processing_centers();
     return $this->house;
   }
 
   public function init_processing_centers(){
-    $mapper = new mapper_house2processing_center($this->company, $this->house);
-    $mapper->init_processing_centers();
+    (new mapper_house2processing_center($this->company, $this->house))
+      ->init_processing_centers();
   }
 }

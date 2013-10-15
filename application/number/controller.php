@@ -50,9 +50,10 @@ class controller_number{
 
   public static function private_remove_house_processing_center(
     model_request $request){
-    return ['house' => (new model_house())
-      ->remove_processing_center(model_session::get_company(), 
-      $request->GET('house_id'), $request->GET('center_id'))];
+    $house = new data_house($request->GET('house_id'));
+    return ['house' => (new model_house2processing_center(
+      model_session::get_company(), $house))
+      ->remove_processing_center($request->GET('center_id'))];
   }
 
   public static function private_add_processing_center(model_request $request){
@@ -116,13 +117,10 @@ class controller_number{
 
   public static function private_get_dialog_remove_house_processing_center(
     model_request $request){
-    $house = new data_house();
-    $house->set_id($request->GET('house_id'));
-    $house = model_house::get_houses($house)[0];
-    $mapper = new mapper_house2processing_center(model_session::get_company(),
-      $house);
-    $mapper->init_processing_centers();
-    return ['house' => $house, 'center_id' => $request->GET('center_id')];
+    $house = new data_house($request->GET('house_id'));
+    (new mapper_house2processing_center(
+      model_session::get_company(), $house))->init_processing_centers();
+    return ['house' => $house];
   }
 
   public static function private_get_dialog_add_meter_option(
@@ -249,9 +247,8 @@ class controller_number{
 
   public static function private_get_house_information(model_request $request){
     $house = (new model_house)->get_house($request->GET('id'));
-    $model = new model_house2processing_center(model_session::get_company(),
-      $house);
-    $model->init_processing_centers();
+    (new model_house2processing_center(
+      model_session::get_company(), $house))->init_processing_centers();
     return ['house' => $house];
   }
 

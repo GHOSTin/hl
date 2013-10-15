@@ -107,16 +107,16 @@ final class data_house extends data_object{
     throw new e_model($message);
   }
 
-  public function add_processing_center(data_processing_center $center, $identifier){
+  public function add_processing_center(data_house2processing_center $center){
     if(array_key_exists($center->get_id(), $this->centers))
       $this->send_error('К дому уже привязан процессинговый центр.');
-    $this->centers[$center->get_id()] = [$center, $identifier];
+    $this->centers[$center->get_id()] = $center;
   }
 
-  public function remove_processing_center(data_processing_center $center){
-    if(!array_key_exists($center->id, $this->centers))
+  public function remove_processing_center(data_house2processing_center $center){
+    if(!array_key_exists($center->get_id(), $this->centers))
       $this->send_error('Процессинговый центр не привязан к дому.');
-    unset($this->centers[$center->id]);
+    unset($this->centers[$center->get_id()]);
   }
 
   public function get_processing_centers(){
