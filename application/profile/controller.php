@@ -17,7 +17,7 @@ class controller_profile{
 	}
 	
 	public static function private_get_notification_center_content(model_request $request){
-		return ['users' => model_user::get_users(new data_user())];
+		return ['users' => (new model_user)->get_users()];
 	}
 
 	public static function private_show_default_page(model_request $request){
