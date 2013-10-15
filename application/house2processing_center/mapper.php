@@ -72,7 +72,7 @@ class mapper_house2processing_center{
     return $centers;
   }
 
-  public function update(){
+  public function update_processing_centers(){
     $new = $this->house->get_processing_centers();
     $old = $this->get_processing_centers();
     $deleted = array_diff_key($old, $new);

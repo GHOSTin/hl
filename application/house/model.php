@@ -1,29 +1,6 @@
 <?php
 class model_house{
 
-	public function add_processing_center(data_company $company, $house_id,
-																				$center_id, $identifier){
-		$house = new data_house();
-		$house->set_id($house_id);
-		$house->verify('id');
-		$houses = self::get_houses($house);
-		if(count($houses) !== 1)
-			throw new e_model('Неверное количество домов.');
-		$center = new data_processing_center();
-		$center->id = $center_id;
-		$center->verify('id');
-		$centers = model_processing_center::get_processing_centers($center);
-		if(count($centers) !== 1)
-			throw new e_model('Неверное количество центров.');
-		$center = $centers[0];
-		$house = $houses[0];
-		$mapper = new mapper_house2processing_center($company, $house);
-		$mapper->init_processing_centers();
-		$house->add_processing_center($center, $identifier);
-		$mapper->update();
-		return $house;
-	}
-
 	public function remove_processing_center(data_company $company, $house_id,
 																						$center_id){
 		$house = new data_house();

@@ -41,10 +41,11 @@ class controller_number{
 
   public static function private_add_house_processing_center(
     model_request $request){
-    return ['house' => (new model_house())
-      ->add_processing_center(model_session::get_company(),
-        $request->GET('house_id'), $request->GET('center_id'),
-        $request->GET('identifier'))];
+    $house = new data_house($request->GET('house_id'));
+    return ['house' => (new model_house2processing_center(
+      model_session::get_company(), $house))
+      ->add_processing_center($request->GET('center_id'),
+      $request->GET('identifier'))];
   }
 
   public static function private_remove_house_processing_center(
@@ -110,7 +111,7 @@ class controller_number{
   public static function private_get_dialog_add_house_processing_center(
     model_request $request){
     return ['centers' => (new model_processing_center)
-      ->get_processing_centers(), 'house' => $house];
+      ->get_processing_centers()];
   }
 
   public static function private_get_dialog_remove_house_processing_center(

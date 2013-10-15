@@ -24,25 +24,20 @@ class mapper_house2number{
 
   public function create_object(array $row){
     $number = new data_number();
+    $number->set_cellphone($row['cellphone']);
+    $number->set_fio($row['fio']);
     $number->set_id($row['id']);
-    $number->set_company_id($row['company_id']);
-    $number->set_city_id($row['city_id']);
-    $number->set_house_id($row['house_id']);
-    $number->set_flat_id($row['flat_id']);
     $number->set_number($row['number']);
     $number->set_type($row['type']);
     $number->set_status($row['status']);
-    $number->set_fio($row['fio']);
     $number->set_telephone($row['telephone']);
-    $number->set_cellphone($row['cellphone']);
-    $number->set_flat_number($row['flat_number']);
+    $flat = new data_flat();
+    $flat->set_id($row['flat_id']);
+    $flat->set_number($row['flat_number']);
+    $number->set_flat($flat);
     return $number;
   }
   
-  /**
-  * Возвращает лицевые счета дома.
-  * @return array из object data_number
-  */
   private function get_numbers(){
     $sql = new sql();
     $sql->query(self::$sql_get_numbers);

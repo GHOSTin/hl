@@ -59,10 +59,6 @@ final class data_number extends data_object{
     return $this->hash;
   }
 
-  public function get_house(){
-    return $this->house;
-  }
-
   public function get_id(){
     return $this->id;
   }
@@ -104,10 +100,6 @@ final class data_number extends data_object{
 
   public function set_hash($hash){
     $this->hash = (string) $hash;
-  }
-
-  public function set_house(data_house $house){
-    $this->house = $house;
   }
 
   public function set_id($id){
