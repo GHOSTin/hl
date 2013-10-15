@@ -26,7 +26,7 @@ class mapper_workgroup2work{
     $sql = new sql();
     $sql->query(self::$sql_get_works);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':work_group_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':work_group_id', (int) $this->work_group->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при выборки работ.');
     $stmt = $sql->get_stm();
     $works = [];
