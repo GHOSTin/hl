@@ -57,6 +57,7 @@ class model_environment{
         else
             return load_template('error.show_html_error', $args);
 			}else{
+				die($e);
 				die('Problem');
 			}
 		}

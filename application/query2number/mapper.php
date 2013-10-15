@@ -5,11 +5,13 @@ class mapper_query2number{
     private $query;
 
     private static $sql_get_numbers = "SELECT `query2number`.* , `numbers`.`number`,
-        `numbers`.`fio` FROM `query2number`, `numbers`
+        `numbers`.`fio`, `flats`.`flatnumber`
+        FROM `query2number`, `numbers`, `flats`
         WHERE `query2number`.`company_id` = :company_id
         AND `numbers`.`company_id` = :company_id
         AND `query2number`.`query_id` = :query_id
-        AND `query2number`.`number_id` = `numbers`.`id`";
+        AND `query2number`.`number_id` = `numbers`.`id`
+        AND `numbers`.`flat_id` = `flats`.`id`";
 
     public function __construct($company, $query){
         $this->company = $company;
@@ -23,6 +25,7 @@ class mapper_query2number{
         $number->set_id($row['number_id']);
         $number->set_number($row['number']);
         $number->set_fio($row['fio']);
+        $number->set_flat_number($row['flatnumber']);
         return $number;
     }
 
