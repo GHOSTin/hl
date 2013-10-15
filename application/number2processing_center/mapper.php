@@ -3,20 +3,25 @@ class mapper_number2processing_center{
 
   private $company;
   private $number;
-  private static $sql_get_centers = "SELECT `processing_center2number`.`company_id`,
-    `processing_center2number`.`processing_center_id`, `processing_center2number`.`number_id`,
-    `processing_center2number`.`identifier`, `processing_centers`.`name` as `processing_center_name`
+
+  private static $sql_get_centers = "SELECT
+    `processing_center2number`.`company_id`,
+    `processing_center2number`.`processing_center_id`, 
+    `processing_center2number`.`number_id`,
+    `processing_center2number`.`identifier`, 
+    `processing_centers`.`name` as `processing_center_name`
     FROM `processing_center2number`, `processing_centers`
     WHERE `processing_center2number`.`company_id` = :company_id
-    AND `processing_center2number`.`processing_center_id` = `processing_centers`.`id`
+    AND `processing_center2number`.`processing_center_id` 
+    = `processing_centers`.`id`
     AND `processing_center2number`.`number_id` = :number_id
     ORDER BY `processing_centers`.`name`";
-
-  private static $sql_add_center = "INSERT INTO `processing_center2number`(`company_id`, `processing_center_id`,
-            `number_id`, `identifier`) VALUES (:company_id, :processing_center_id, :number_id, :identifier)";
-  
-  private static $sql_delete = "DELETE FROM `processing_center2number` WHERE `company_id` = :company_id
-                AND `number_id` = :number_id AND `processing_center_id` = :processing_center_id";
+  private static $sql_add_center = "INSERT INTO `processing_center2number`
+    (`company_id`, `processing_center_id`, `number_id`, `identifier`)
+    VALUES (:company_id, :processing_center_id, :number_id, :identifier)";
+  private static $sql_delete = "DELETE FROM `processing_center2number`
+    WHERE `company_id` = :company_id AND `number_id` = :number_id
+    AND `processing_center_id` = :processing_center_id";
 
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;
@@ -52,7 +57,7 @@ class mapper_number2processing_center{
     $center = new data_processing_center();
     $center->set_id($row['processing_center_id']);
     $center->set_name($row['processing_center_name']);
-    $n2c = new data_number2processing_center($this->number, $center);
+    $n2c = new data_number2processing_center($center);
     $n2c->set_identifier($row['identifier']);
     return $n2c;
   }

@@ -1,25 +1,24 @@
 <?php
-class data_number2processing_center extends data_object{
+class data_number2processing_center{
 
   private $identifier;
-  private $number;
-  private $center;
+  private $processing_center;
 
-  public function get_center(){
-    return $this->center;
+  public function __call($method, $args){
+    return $this->processing_center->$method($args);
+  }
+
+  public function __construct(data_processing_center $center){
+    $this->processing_center = $center;
+    $this->processing_center->verify('id');
   }
 
   public function get_identifier(){
     return $this->identifier;
   }
 
-  public function __construct(data_number $number, data_processing_center $center){
-    $this->center = $center;
-    $this->number = $number;
-  }
-
   public function set_identifier($id){
-    $this->identifier = $id;
+    $this->identifier = (string) $id;
   }
 
   public function verify(){

@@ -5,6 +5,7 @@ class model_number{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
+		$this->company->verify('id');
 	}
 	
 	/**

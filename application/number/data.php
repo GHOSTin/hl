@@ -32,9 +32,9 @@ final class data_number extends data_object{
   }
 
   public function add_processing_center(data_number2processing_center $n2c){
-    if(array_key_exists($n2c->get_center()->get_id(), $this->centers))
+    if(array_key_exists($n2c->get_id(), $this->centers))
       throw new e_model('Центр уже добавлен.');
-    $this->centers[$n2c->get_center()->get_id()] = $n2c;
+    $this->centers[$n2c->get_id()] = $n2c;
   }
 
   public function delete_processing_center(data_number2processing_center $n2c){
