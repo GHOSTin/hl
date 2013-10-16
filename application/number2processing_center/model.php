@@ -24,7 +24,7 @@ class model_number2processing_center{
   public function delete_processing_center($center_id){
     $this->init_processing_centers();
     $center = (new model_processing_center)->get_processing_center($center_id);
-    $n2c = new data_number2processing_center($this->number, $center);
+    $n2c = new data_number2processing_center($center);
     $this->number->delete_processing_center($n2c);
     (new mapper_number2processing_center($this->company, $this->number))
     ->update();

@@ -38,9 +38,9 @@ final class data_number extends data_object{
   }
 
   public function delete_processing_center(data_number2processing_center $n2c){
-    if(!array_key_exists($n2c->get_center()->get_id(), $this->centers))
+    if(!array_key_exists($n2c->get_id(), $this->centers))
       throw new e_model('Центр не привязан к лицевому счету.');
-    unset($this->centers[$n2c->get_center()->get_id()]);
+    unset($this->centers[$n2c->get_id()]);
   }
 
   public function get_cellphone(){

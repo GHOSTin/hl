@@ -43,12 +43,10 @@ class mapper_number2processing_center{
   }
 
   public function delete(data_number2processing_center $n2c){
-    $n2c->verify('identifier');
-    $n2c->get_center()->verify('id');
     $sql = new sql();
     $sql->query(self::$sql_delete);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':processing_center_id', (int) $n2c->get_center()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
     $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     return $sql->execute('Проблема при ислючении идентификатора расчетного центра.');
   }
@@ -88,7 +86,7 @@ class mapper_number2processing_center{
     $centers = $this->get_processing_centers();
     if(!empty($centers))
       foreach($centers as $center)
-        $old[$center->get_center()->get_id()] = $center;
+        $old[$center->get_id()] = $center;
     $deleted = array_diff_key($old, $new);
     $inserted = array_diff_key($new, $old);
     if(!empty($inserted))
