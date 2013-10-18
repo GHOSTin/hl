@@ -25,7 +25,9 @@ class mapper_query2number{
         $number->set_id($row['number_id']);
         $number->set_number($row['number']);
         $number->set_fio($row['fio']);
-        $number->set_flat_number($row['flatnumber']);
+        $flat = new data_flat();
+        $flat->set_number($row['flatnumber']);
+        $number->set_flat($flat);
         return $number;
     }
 

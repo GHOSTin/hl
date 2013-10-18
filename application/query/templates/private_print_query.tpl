@@ -1,9 +1,4 @@
 {% set query = component.query %}
-{% if query.get_initiator() == 'number' %}
-    {% if query.get_numbers()[0] != false %}
-        {% set number = query.get_numbers()[0] %};
-    {% endif %}
-{% endif %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -200,7 +195,9 @@
 			<div class="ttle">
 					{{ query.get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
 					{% if query.get_initiator() == 'number' %}
-							, кв.  (л/с №{{ number.get_number() }}, {{ number.get_fio() }})
+                        {% for number in query.get_numbers() %}
+							, кв.{{ number.get_flat().get_number() }}  (л/с №{{ number.get_number() }}, {{ number.get_fio() }})
+                        {% endfor %}
 					{% endif %}
 			</div>
 			<div class="ttle">{{ query.get_description() }}</div>

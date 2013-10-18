@@ -32,7 +32,9 @@ class collection_query implements iterator{
     $number->set_id($row['number_id']);
     $number->set_number($row['number']);
     $number->set_fio($row['fio']);
-    $number->set_flat_number($row['flat_number']);
+    $flat = new data_flat();
+    $flat->set_number($row['flat_number']);
+    $number->set_flat($flat);
     return $number;
   }
 

@@ -11,12 +11,14 @@
 		<b>№{{ query.get_number() }}</b> {{ query.get_time_open()|date("H:i d.m.y") }} {{ query.get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
 		{% if query.get_initiator() == 'number' %}
 			{% for number in query.get_numbers() %}
-				, кв. {{ number.get_number() }} ({{ number.get_fio() }})
+				, кв.{{ number.get_flat().get_number() }} {{ number.get_number() }} ({{ number.get_fio() }})
 			{% endfor %}
 		{% endif %}
 	</div>
 	{% if query.get_initiator() == 'number' %}
-		кв. {{ number.flat_number }}
+		{% for number in query.get_numbers() %}
+			кв.{{ number.get_flat().get_number() }}
+		{% endfor %}
 	{% endif %}
 	{{ query.get_description() }}
 </div>
