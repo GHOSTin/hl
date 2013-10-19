@@ -59,21 +59,6 @@ class model_house{
 		return $street;
 	}
 
-	/**
-	* Возвращает следующий для вставки идентификатор дома.
-	* @return int
-	*/
-	public static function get_insert_id(){
-		$sql = new sql();
-		$sql->query("SELECT MAX(`id`) as `max_house_id` FROM `houses`");
-		$sql->execute('Проблема при опредении следующего house_id.');
-		if($sql->count() !== 1)
-			throw new e_model('Проблема при опредении следующего house_id.');
-		$house_id = (int) $sql->row()['max_house_id'] + 1;
-		$sql->close();
-		return $house_id;
-	}
-
 	public function get_house($id){
 		$house = (new mapper_house())->find($id);
 		if(!($house instanceof data_house))

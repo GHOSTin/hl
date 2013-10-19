@@ -36,12 +36,9 @@ class controller_import{
     }
 
     public static function private_create_house(model_request $request){
-        $house = new data_house();
-        $house->number = $_GET['number'];
-        $house->status = true;
-        $street = new data_street();
-        $street->id = $_GET['street_id'];
-        return model_street::create_house($street, $house, $_SESSION['user']);
+      $street = (new model_street)->get_street($request->GET('street_id'));
+      return ['house' =>(new model_street2house($street))
+        ->create_house($request->GET('number'))];
     }
 
     public static function private_load_numbers(model_request $request){
@@ -79,10 +76,10 @@ class controller_import{
     }
 
     public static function private_analize_house(model_request $request){
-        return model_import::analize_import_house($_FILES['file']);
+      return (new model_import)->analize_import_house($request->FILES('file'));
     }
 
     public static function private_analize_flats(model_request $request){
-        return model_import::analize_import_flats($_FILES['file']);
+        return model_import::analize_import_flats($request->FILES('file'));
     }
 }

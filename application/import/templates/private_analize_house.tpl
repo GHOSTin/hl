@@ -7,8 +7,8 @@
     {{ component.error }}
 {% else %}
     <h5>Файл "{{ component.file.name }}"<br>
-        <span class="dialog-city_id" city_id="{{ component.city.id }}">{{ component.city.name }}</span>,
-        <span class="dialog-street_id" street_id="{{ component.street.id }}">{{ component.street.name }}</span>
+        <span class="dialog-city_id" city_id="{{ component.city.get_id() }}">{{ component.city.get_name() }}</span>,
+        <span class="dialog-street_id" street_id="{{ component.street.get_id() }}">{{ component.street.get_name() }}</span>
     </h5>
     <div>
         {% if component.house == false %}
@@ -17,7 +17,7 @@
             </div>
         {% else %}
             <div class="alert alert-success">
-            {{ component.house.number }} - уже существует<br>
+            {{ component.house.get_number() }} - уже существует<br>
             Залить дом нельзя.
             </div>
         {% endif %}
