@@ -7,9 +7,9 @@
     {{ component.error }}
 {% else %}
     <h5>Файл "{{ component.file.name }}"<br>
-        <span class="dialog-city_id" city_id="{{ component.city.id }}">{{ component.city.name }}</span>,
-        <span class="dialog-street_id" street_id="{{ component.street.id }}">{{ component.street.name }}</span>,
-        <span class="dialog-house_id" house_id="{{ component.house.id }}">дом №{{ component.house.number }}</span>
+        <span class="dialog-city_id" city_id="{{ component.city.get_id() }}">{{ component.city.get_name() }}</span>,
+        <span class="dialog-street_id" street_id="{{ component.street.get_id() }}">{{ component.street.get_name() }}</span>,
+        <span class="dialog-house_id" house_id="{{ component.house.get_id() }}">дом №{{ component.house.get_number() }}</span>
     </h5>
     <div>
         <table class="table table-striped">
@@ -25,14 +25,14 @@
                 <tr>
                     <td></td>
                     <td><span style="color:blue">OLD</span></td>
-                    <td>{{ flat.number }}</td>
+                    <td>{{ flat }}</td>
                 </tr>
             {% endfor %}
             {% for flat in component.new_flats %}
                 <tr>
                     <td><input type="checkbox"></td>
                     <td><span style="color:green">NEW</span></td>
-                    <td>{{ flat.number }}</td>
+                    <td>{{ flat }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -41,5 +41,4 @@
         <button class="btn get_dialog_import_flats">Отменить</button>
     </div>
 {% endif %}
-{{ component.flats }}
 {% endblock html %}

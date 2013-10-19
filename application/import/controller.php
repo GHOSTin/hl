@@ -81,6 +81,6 @@ class controller_import{
   }
 
   public static function private_analize_flats(model_request $request){
-    return model_import::analize_import_flats($request->FILES('file'));
+    return (new model_import)->analize_import_flats($request->FILES('file'));
   }
 }

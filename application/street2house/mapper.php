@@ -67,7 +67,6 @@ class mapper_street2house{
     return $house;
   }
 
-
   public function find_by_number($number){
     $sql = new sql();
     $sql->query(self::$sql_find_number);

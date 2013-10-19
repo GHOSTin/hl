@@ -80,23 +80,4 @@ class model_house{
 		}
 		return $sql->map(new data_house(), 'Проблема при выборке домов из базы данных.');
 	}
-
-	/**
-	* Возвращает лицевые счета дома.
-	* @return array из object data_flat
-	*/
-	public static function get_flats(data_house $house, data_flat $flat){
-		self::verify_id($house);
-		$sql = new sql();
-		$sql->query("SELECT `id`, `house_id`, `status`, `flatnumber` as `number`
-					FROM `flats` WHERE `house_id` = :house_id");
-		$sql->bind(':house_id', $house->id, PDO::PARAM_INT);
-		if(!empty($flat->number)){
-			$flat->verify('number');
-			$sql->query(" AND `flatnumber` = :flat_number");
-			$sql->bind(':flat_number', $flat->number, PDO::PARAM_INT);
-		}
-		$sql->query("ORDER BY (`flatnumber` + 0)");
-		return $sql->map(new data_flat(), 'Проблемы при выборке квартир.');
-	}
 }

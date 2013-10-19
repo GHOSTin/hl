@@ -15,6 +15,7 @@ final class data_house extends data_object{
 	private $street_id;
 	private $street_name;
   private $centers = [];
+  private $flats = [];
   private $numbers = [];
 
   public function __construct($id = null){
@@ -25,6 +26,12 @@ final class data_house extends data_object{
     if(array_key_exists($number->get_id(), $this->numbers))
       throw new e_model('Дом уже добавлен в улицу.');
     $this->numbers[$number->get_id()] = $number;
+  }
+
+  public function add_flat(data_flat $flat){
+    if(array_key_exists($flat->get_id(), $this->flats))
+      throw new e_model('В доме уже существует такая квартира.');
+    $this->flats[$flat->get_id()] = $flat;
   }
 
   public function get_city_id(){
@@ -41,6 +48,10 @@ final class data_house extends data_object{
 
   public function get_department_id(){
     return $this->department_id;
+  }
+
+  public function get_flats(){
+    return $this->flats;
   }
 
   public function get_id(){
