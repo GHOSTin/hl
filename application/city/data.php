@@ -5,14 +5,9 @@
 */
 final class data_city extends data_object{
 	
-  private $company_id;
 	private $id;
   private $name;
 	private $status;
-
-  public function get_company_id(){
-    return $this->company_id;
-  }
 
   public function get_id(){
     return $this->id;
@@ -24,10 +19,6 @@ final class data_city extends data_object{
 
   public function get_status(){
     return $this->status;
-  }
-
-  public function set_company_id($id){
-    $this->company_id = (int) $id;
   }
 
   public function set_id($id){

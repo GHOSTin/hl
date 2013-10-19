@@ -3,5 +3,5 @@
     $('.import-form').html(get_hidden_content());
 {% endblock js %}
 {% block html %}
-    Улица "{{ component.name}}" успешно залита.
+    Улица "{{ component.street.get_name()}}" успешно залита.
 {% endblock html %}

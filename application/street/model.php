@@ -1,6 +1,21 @@
 <?php
 class model_street{
 
+
+	public static function create_street($city_id, $street_name){
+		$city = (new model_city)->get_city($city_id);
+		var_dump((new mapper_street)->get_street_by_name($street_name));
+		exit();
+		if(!is_null((new mapper_street)->get_street_by_name($street_name)))
+			throw new e_model('Такая улица уже существует.');
+		$mapper = new mapper_street();
+		$street = new data_street();
+		$street->set_id($mapper->get_insert_id());
+		$street->set_name($street_name);
+		$street->set_status('true');
+		return $mapper->insert($city, $street);
+	}
+
 	/**
 	* Создает новый дом.
 	* @return object data_city
@@ -31,23 +46,15 @@ class model_street{
 		return $house;
 	}
 
-	/**
-	* Возвращает следующий для вставки идентификатор улицы.
-	* @return int
-	*/
-	public static function get_insert_id(){
-		$sql = new sql();
-		$sql->query("SELECT MAX(`id`) as `max_street_id` FROM `streets`");
-		$sql->execute('Проблема при опредении следующего street_id.');
-		if($sql->count() !== 1)
-			throw new e_model('Проблема при опредении следующего street_id.');
-		$street_id = (int) $sql->row()['max_street_id'] + 1;
-		$sql->close();
-		return $street_id;
-	}
-
 	public static function get_street($id){
 		$street = (new mapper_street)->find($id);
+		if(!($street instanceof data_street))
+			throw new e_model('Нет улицы');
+		return $street;
+	}
+
+	public static function get_street_by_name($name){
+		$street = (new mapper_street)->get_street_by_name($name);
 		if(!($street instanceof data_street))
 			throw new e_model('Нет улицы');
 		return $street;

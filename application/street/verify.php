@@ -49,7 +49,7 @@ class verify_street{
     /**
     * Верификация названия улицы.
     */
-    public static function verify_name(data_street $street){
+    public static function name(data_street $street){
         if(!preg_match('/^[а-яА-Я]+$/u', $street->get_name()))
             throw new e_model('Название улицы задано не верно.');
     }
