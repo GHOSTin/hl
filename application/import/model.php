@@ -150,18 +150,23 @@ class model_import{
 		}
 	}
 
+	private function get_xml_file($file){
+		if(!file_exists($file))
+			throw new e_model('Файла для обработки не существует.');
+		$xml = simplexml_load_file($file);
+		if($xml === false)
+			throw new e_model('Ошибка в xml файле.');
+		return $xml;
+	}
+
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
-	public static function analize_import_street($file){
-		if(!file_exists($file['tmp_name']))
-			throw new e_model('Файла для обработки не существует.');
-		$xml = simplexml_load_file($file['tmp_name']);
-		if($xml === false)
-			throw new e_model('Ошибка в xml файле.');
+	public function analize_import_street($file){
+		$xml = $this->get_xml_file($file['tmp_name']);
 		$house_node = $xml->attributes();
 		$city = (new model_city)->get_city_by_name((string) $house_node->city);
-		$street = (new mapper_street)
+		$street = (new mapper_city2street($city))
 			->get_street_by_name((string) $house_node->street);
 		return ['file' => $file, 'city' => $city, 'street' => $street,
 			'street_name' => (string) $house_node->street];
@@ -170,12 +175,8 @@ class model_import{
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
-	public static function analize_import_house($file){
-		if(!file_exists($file['tmp_name']))
-			throw new e_model('Файла для обработки не существует.');
-		$xml = simplexml_load_file($file['tmp_name']);
-		if($xml === false)
-			throw new e_model('Ошибка в xml файле.');
+	public function analize_import_house($file){
+		$xml = $this->get_xml_file($file['tmp_name']);
 		$house_node = $xml->attributes();
 		$city = (new model_city)->get_city_by_name((string) $house_node->city);
 		$street = (new model_street)->get_street_by_name((string) $house_node->street);

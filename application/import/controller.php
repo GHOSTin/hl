@@ -31,8 +31,9 @@ class controller_import{
     }
 
     public static function private_create_street(model_request $request){
-        return ['street' => (new model_street)
-            ->create_street($request->GET('city_id'), $request->GET('name'))];
+      $city = (new model_city)->get_city($request->GET('city_id'));
+      return ['street' => (new model_city2street($city))
+          ->create_street($request->GET('name'))];
     }
 
     public static function private_create_house(model_request $request){
@@ -66,20 +67,20 @@ class controller_import{
         return true;
     }
 
-    public static function private_import_numbers(model_request $request){
-        return model_import::analize_import_numbers($_FILES['file']);
-    }
+  public static function private_import_numbers(model_request $request){
+    return model_import::analize_import_numbers($_FILES['file']);
+  }
 
-    public static function private_analize_street(model_request $request){
-        return (new model_import(model_session::get_company()))
-            ->analize_import_street($request);
-    }
+  public static function private_analize_street(model_request $request){
+    return (new model_import(model_session::get_company()))
+      ->analize_import_street($request->FILES('file'));
+  }
 
-    public static function private_analize_house(model_request $request){
-      return (new model_import)->analize_import_house($request->FILES('file'));
-    }
+  public static function private_analize_house(model_request $request){
+    return (new model_import)->analize_import_house($request->FILES('file'));
+  }
 
-    public static function private_analize_flats(model_request $request){
-        return model_import::analize_import_flats($request->FILES('file'));
-    }
+  public static function private_analize_flats(model_request $request){
+    return model_import::analize_import_flats($request->FILES('file'));
+  }
 }
