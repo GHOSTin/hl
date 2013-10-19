@@ -179,7 +179,8 @@ class model_import{
 		$xml = $this->get_xml_file($file['tmp_name']);
 		$house_node = $xml->attributes();
 		$city = (new model_city)->get_city_by_name((string) $house_node->city);
-		$street = (new model_street)->get_street_by_name((string) $house_node->street);
+		$street = (new model_city2street($city))
+			->get_street_by_name((string) $house_node->street);
 		$house = (new mapper_street2house($street))
 			->find_by_number((string) $house_node->number);
 		return ['file' => $file, 'city' => $city, 'street' => $street,

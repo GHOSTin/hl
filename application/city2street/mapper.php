@@ -51,7 +51,6 @@ class mapper_city2street{
       throw new e_model('Неожиданное чисто записей');
   }
 
-
   public function insert(data_street $street){
     $street->verify('id', 'name');
     $sql = new sql();
