@@ -67,7 +67,8 @@ class controller_import{
   }
 
   public static function private_import_numbers(model_request $request){
-    return model_import::analize_import_numbers($_FILES['file']);
+    return (new model_import(model_session::get_company()))
+      ->analize_import_numbers($request->FILES('file'));
   }
 
   public static function private_analize_street(model_request $request){
