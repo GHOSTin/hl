@@ -24,6 +24,13 @@ class model_street2house{
     return $mapper->insert($house);
   }
 
+  public function get_house($id){
+    $house = (new mapper_street2house($this->street))->find($id);
+    if(!($house instanceof data_house))
+      throw new e_model('Дом не существует.');
+    return $house;
+  }
+
   public function get_house_by_number($number){
     $house = (new mapper_street2house($this->street))->find_by_number($number);
     if(!($house instanceof data_house))

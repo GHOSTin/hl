@@ -1,6 +1,10 @@
 <?php
 class mapper_city2street{
 
+  private static $sql_one = "SELECT `id`, `company_id`, 
+    `city_id`, `status`, `name` FROM `streets` WHERE `city_id` = :city_id
+    AND `id` = :street_id";
+
   private static $sql_one_by_name = "SELECT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` WHERE `city_id` = :city_id
     AND `name` = :name";
@@ -33,6 +37,22 @@ class mapper_city2street{
     $street_id = (int) $sql->row()['max_street_id'] + 1;
     $sql->close();
     return $street_id;
+  }
+
+  public function get_street($id){
+    $sql = new sql();
+    $sql->query(self::$sql_one);
+    $sql->bind(':city_id', (int) $this->city->get_id(), PDO::PARAM_INT);
+    $sql->bind(':street_id', (int) $id, PDO::PARAM_INT);
+    $sql->execute('Проблема при выборке улиц');
+    $stmt = $sql->get_stm();
+    $count = $stmt->rowCount();
+    if($count === 0)
+      return null;
+    elseif($count === 1)
+      return $this->create_object($stmt->fetch());
+    else
+      throw new e_model('Неожиданное чисто записей');
   }
 
   public function get_street_by_name($name){

@@ -7,6 +7,10 @@ class mapper_street2house{
     `department_id`, `status`, `housenumber` as `number`
     FROM `houses` WHERE `street_id` = :street_id  ORDER BY (`houses`.`housenumber` + 0)";
 
+  private static $sql_find = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+    `department_id`, `status`, `housenumber` as `number`
+    FROM `houses` WHERE `id` = :house_id AND `street_id` = :street_id";
+
   private static $sql_find_number = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
     `department_id`, `status`, `housenumber` as `number`
     FROM `houses` WHERE `housenumber` = :number AND `street_id` = :street_id";
@@ -67,11 +71,27 @@ class mapper_street2house{
     return $house;
   }
 
+  public function find($id){
+    $sql = new sql();
+    $sql->query(self::$sql_find);
+    $sql->bind(':house_id', (int) $id, PDO::PARAM_INT);
+    $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
+    $sql->execute('Проблема при выборке домов из базы данных.');
+    $stmt = $sql->get_stm();
+    $count = $stmt->rowCount();
+    if($count === 0)
+      return null;
+    elseif($count === 1)
+      return $this->create_object($stmt->fetch());
+    else
+      throw new e_model('Неожиданное количество домов');
+  }
+
   public function find_by_number($number){
     $sql = new sql();
     $sql->query(self::$sql_find_number);
     $sql->bind(':number', (string) $number, PDO::PARAM_STR);
-    $sql->bind(':street_id', (string) $this->street->get_id(), PDO::PARAM_INT);
+    $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при выборке домов из базы данных.');
     $stmt = $sql->get_stm();
     $count = $stmt->rowCount();

@@ -55,17 +55,16 @@ class controller_import{
         return true;
     }
 
-    public static function private_load_flats(model_request $request){
-        $flats = $_POST['flats'];
-        $city = new data_city();
-        $city->id = $_POST['city_id'];
-        $street = new data_street();
-        $street->id = $_POST['street_id'];
-        $house = new data_house();
-        $house->id = $_POST['house_id'];
-        model_import::load_flats($city, $street, $house, $flats);
-        return true;
-    }
+  public static function private_load_flats(model_request $request){
+    $city = new data_city($request->POST('city_id'));
+    $street = (new model_city2street($city))
+      ->get_street($request->POST('street_id'));
+    $house = (new model_street2house($street))
+      ->get_house($request->POST('house_id'));
+    $flats = $_POST['flats'];
+    (new model_import)->load_flats($house, $request->POST('flats'));
+    return true;
+  }
 
   public static function private_import_numbers(model_request $request){
     return model_import::analize_import_numbers($_FILES['file']);

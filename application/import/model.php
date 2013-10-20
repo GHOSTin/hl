@@ -20,7 +20,7 @@ class model_import{
 				$flats[] = $flat->get_number();
 		foreach($xml->flat as $flat_node){
 			$number = (string) $flat_node->attributes()->number;
-			if(isset($flats[$number]))
+			if(in_array($number, $flats))
 				$old_flats[] = $number;
 			else
 				$new_flats[] = $number;
@@ -204,33 +204,24 @@ class model_import{
 		return true;
 	}
 
-	public static function load_flats(data_city $city_params, data_street $street_params,
-										data_house $house_params, $flats){
+	public function load_flats(data_house $house, $flats){
 		if(empty($flats))
 			throw new e_model('Нечего импортировать.');
-		$cities = model_city::get_cities($city_params);
-		if(count($cities) !== 1)
-			throw new e_model('Возвращено неверное количество городов.');
-		$city = $cities[0];
-		if(!($city instanceof data_city))
-			throw new e_model('Проблема при запросе города.');
-		$streets = model_street::get_streets($street_params);
-		if(count($streets) !== 1)
-			throw new e_model('Возвращено неверное количество улиц.');
-		$street = $streets[0];
-		if(!($street instanceof data_street))
-			throw new e_model('Проблема при запросе улицы.');
-		$houses = model_street::get_houses($street_params, $house_params);
-		if(count($streets) !== 1)
-			throw new e_model('Возвращено неверное количество домов.');
-		$house = $houses[0];
-		if(!($house instanceof data_house))
-			throw new e_model('Проблема при запросе дома.');
+		$company = model_session::get_company();
+		$mapper = new mapper_house2flat($company, $house);
+		$mapper->init_flats();
+		$old = [];
+		if(!empty($house->get_flats()))
+			foreach($house->get_flats() as $flat)
+				$old[] = $flat->get_id();
 		foreach($flats as $flat_data){
-			$flat = new data_flat();
-			$flat->number = $flat_data;
-			$flat->status = 'true';
-			model_house::create_flat($house, $flat);
+			if(!in_array($flat_data, $old)){
+				$flat = new data_flat();
+				$flat->set_id($mapper->get_insert_id());
+				$flat->set_number($flat_data);
+				$flat->set_status('true');
+				$mapper->insert($flat);
+			}
 		}
 	}
 }

@@ -9,6 +9,10 @@ final class data_city extends data_object{
   private $name;
 	private $status;
 
+  public function __construct($id = null){
+    $this->id = (int) $id;
+  }
+
   public function get_id(){
     return $this->id;
   }

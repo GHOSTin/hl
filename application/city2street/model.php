@@ -17,6 +17,13 @@ class model_city2street{
     return $mapper->insert($street);
   }
 
+  public function get_street($id){
+    $street = (new mapper_city2street($this->city))->get_street($id);
+    if(!($street instanceof data_street))
+      throw new e_model('Нет улицы');
+    return $street;
+  }
+
   public function get_street_by_name($name){
     $street = (new mapper_city2street($this->city))->get_street_by_name($name);
     if(!($street instanceof data_street))
