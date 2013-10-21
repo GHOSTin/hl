@@ -79,6 +79,10 @@ final class data_number extends data_object{
     return $this->telephone;
   }
 
+  public function get_status(){
+    return $this->status;
+  }
+
   public function remove_n2m(data_number2meter $n2m){
     $id = $n2m->get_meter()->get_id().'_'.$n2m->get_serial();
     if(!array_key_exists($id, $this->meters))

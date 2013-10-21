@@ -31,11 +31,13 @@ class mapper_street2house{
     $house = new data_house();
     $house->set_id($row['id']);
     $house->set_company_id($row['company_id']);
-    $house->set_city_id($row['city_id']);
     $house->set_street_id($row['street_id']);
     $house->set_department_id($row['department_id']);
     $house->set_status($row['status']);
     $house->set_number($row['number']);
+    $city = new data_city();
+    $city->set_id($row['city_id']);
+    $house->set_city($city);
     return $house;
   }
 

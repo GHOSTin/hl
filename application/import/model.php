@@ -1,6 +1,13 @@
 <?php
 class model_import{
 
+	private $company;
+
+	public function __construct(data_company $company){
+		$this->company = $company;
+		$this->company->verify('id');
+	}
+
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
@@ -12,8 +19,7 @@ class model_import{
 			->get_street_by_name((string) $house_node->street);
 		$house = (new model_street2house($street))
 			->get_house_by_number((string) $house_node->number);
-		$company = model_session::get_company();
-		(new mapper_house2flat($company, $house))->init_flats();
+		(new mapper_house2flat($this->company, $house))->init_flats();
 		$flats = $old_flats = $new_flats = [];
 		if(!empty($house->get_flats()))
 			foreach($house->get_flats() as $flat)
@@ -40,13 +46,13 @@ class model_import{
 			->get_street_by_name((string) $house_node->street);
 		$house = (new model_street2house($street))
 			->get_house_by_number((string) $house_node->number);
-		(new mapper_house2flat(model_session::get_company(), $house))->init_flats();
+		(new mapper_house2flat($this->company, $house))->init_flats();
 		$old = [];
 		if(!empty($house->get_flats()))
 			foreach($house->get_flats() as $flat)
 				$old[$flat->get_number()] = $flat;
 		$i = 0;
-		$mapper = new mapper_house2number(model_session::get_company(), $house);
+		$mapper = new mapper_house2number($this->company, $house);
 		foreach($xml->flat as $flat_node){
 			$flat_number = (string) $flat_node->attributes()->number;
 			if(!array_key_exists($flat_number, $old))
@@ -106,49 +112,35 @@ class model_import{
 		'house' => $house, 'house_number' => (string) $house_node->number];
 	}
 
-	public static function load_numbers(data_company $company, data_city $city_params,
-						data_street $street_params, data_house $house_params, $numbers){
+	public function load_numbers($city_id, $street_id, $house_id, $numbers){
 		if(empty($numbers))
 			throw new e_model('Нечего импортировать.');
-		$cities = model_city::get_cities($city_params);
-		if(count($cities) !== 1)
-			throw new e_model('Возвращено неверное количество городов.');
-		$city = $cities[0];
-		if(!($city instanceof data_city))
-			throw new e_model('Проблема при запросе города.');
-		$streets = model_street::get_streets($street_params);
-		if(count($streets) !== 1)
-			throw new e_model('Возвращено неверное количество улиц.');
-		$street = $streets[0];
-		if(!($street instanceof data_street))
-			throw new e_model('Проблема при запросе улицы.');
-		$houses = model_street::get_houses($street_params, $house_params);
-		if(count($streets) !== 1)
-			throw new e_model('Возвращено неверное количество домов.');
-		$house = $houses[0];
-		if(!($house instanceof data_house))
-			throw new e_model('Проблема при запросе дома.');
+		$city = new data_city($city_id);
+		$street = (new model_city2street($city))
+		  ->get_street($street_id);
+		$house = (new model_street2house($street))
+		  ->get_house($house_id);
+		(new mapper_house2flat($this->company, $house))->init_flats();
+		$old = [];
+		if(!empty($house->get_flats()))
+			foreach($house->get_flats() as $flat)
+				$old[$flat->get_number()] = $flat;
 		foreach($numbers as $number_data){
-			$flat = new data_flat();
-			$flat->number = $number_data['flat'];
-			$flats = model_house::get_flats($house, $flat);
-			if(count($flats) !== 1)
-					throw new e_model('Квартира №'.$flat->number.' не существует в базе!');
-			$flat = $flats[0];
-			model_flat::is_data_flat($flat);
-			$number = new data_number();
-			$number->number = $number_data['number'];
-			$number->fio = $number_data['fio'];
-			$numbers = model_city::get_numbers($company, $city, $number);
-			if(count($numbers) > 1){
-				throw new e_model('Возвращается больше чем один лицевой счет.');
-			}if(count($numbers) === 1){
-				// лицевой счет существует нужно апдейтить
-				$number = $numbers[0];
-				model_number::is_data_number($number);
-			}else{
-				// лицевой счет отсутствует, нужно создавать
-				model_city::create_number($company, $city, $street, $house, $flat, $number);
+			if(!array_key_exists($number_data['flat'], $old))
+				throw new e_model('Квартиры не существует.');
+			$number = (new mapper_house2number($this->company, $house))
+				->get_number_by_number($number_data['number']);
+			$mapper = new mapper_house2number($this->company, $house);
+			if($number instanceof data_number)
+				$n = null;
+			else{
+				$number = new data_number();
+				$number->set_id($mapper->get_insert_id());
+				$number->set_number($number_data['number']);
+				$number->set_fio($number_data['fio']);
+				$number->set_flat($old[$number_data['flat']]);
+				$number->set_status('true');
+				$mapper->insert($number);
 			}
 		}
 		return true;
@@ -157,8 +149,7 @@ class model_import{
 	public function load_flats(data_house $house, $flats){
 		if(empty($flats))
 			throw new e_model('Нечего импортировать.');
-		$company = model_session::get_company();
-		$mapper = new mapper_house2flat($company, $house);
+		$mapper = new mapper_house2flat($this->company, $house);
 		$mapper->init_flats();
 		$old = [];
 		if(!empty($house->get_flats()))

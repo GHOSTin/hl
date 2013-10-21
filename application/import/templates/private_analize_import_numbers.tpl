@@ -17,6 +17,7 @@
                 <tr>
                     <th><input type="checkbox" id="toggle_checkboxes"></th>
                     <th>Статус</th>
+                    <th>Квартира</th>
                     <th>№ лицевого</th>
                     <th>ФИО собственника</th>
                 </tr>
@@ -38,6 +39,7 @@
                         <td><span style="color:blue">OLD</span></td>
                     {% endif%}
                 {% endif %}
+                    <td>{{ new.get_flat().get_number() }}</td>
                     <td>{{ new.get_number() }}</td>
                 {% if old is empty %}
                     <td>{{ new.get_fio() }}</td>

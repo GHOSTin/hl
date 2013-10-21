@@ -5,8 +5,7 @@
 */
 final class data_house extends data_object{
 	
-	private $city_id;
-  private $city_name;
+	private $city;
 	private $company_id;
 	private $department_id;
 	private $id;
@@ -34,12 +33,8 @@ final class data_house extends data_object{
     $this->flats[$flat->get_id()] = $flat;
   }
 
-  public function get_city_id(){
-    return $this->city_id;
-  }
-
-  public function get_city_name(){
-    return $this->city_name;
+  public function get_city(){
+    return $this->city;
   }
 
   public function get_company_id(){
@@ -78,12 +73,8 @@ final class data_house extends data_object{
     return $this->street_name;
   }
 
-  public function set_city_id($id){
-    $this->city_id = (int) $id;
-  }
-
-  public function set_city_name($name){
-    $this->city_name = (string) $name;
+  public function set_city(data_city $city){
+    $this->city = $city;
   }
 
   public function set_company_id($id){

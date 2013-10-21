@@ -67,7 +67,7 @@ class verify_number{
     * Верификация ФИО владельца лицевого счета.
     */
     public static function fio(data_number $number){
-        if(!preg_match('/^[А-Яа-я0-9\. ]{3,20}$/u', $number->get_fio()))
+        if(!preg_match('/^[А-Яа-я0-9\. ]{3,255}$/u', $number->get_fio()))
             throw new e_model('ФИО владельца лицевого счета заданы не верно.');
     }
 
@@ -103,7 +103,7 @@ class verify_number{
     * Верификация номера лицевого счета.
     */
     public static function number(data_number $number){
-        if(!preg_match('/^[0-9]{1,20}$/', $number->get_number()))
+        if(!preg_match('/^[0-9А-Яа-я]{1,20}$/u', $number->get_number()))
             throw new e_model('Номер лицевого счета задан не верно.');
     }
 

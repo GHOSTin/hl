@@ -10,6 +10,9 @@ class mapper_house{
     $house->set_id($row['id']);
     $house->set_number($row['number']);
     $house->set_department_id($row['department_id']);
+    $city = new data_city();
+    $city->set_id($row['city_id']);
+    $house->set_city($city);
     return $house;
   }
 
