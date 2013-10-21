@@ -34,7 +34,6 @@ class controller_number{
           $enable_meters[] = $meter;
         elseif($meter->get_status() == 'disabled')
           $disable_meters[] = $meter;
-    model_session::set_setting_param('number', 'number_content', 'meters');
     return ['number' => $number, 'enable_meters' => $enable_meters,
             'disable_meters' => $disable_meters];
   }
@@ -252,8 +251,7 @@ class controller_number{
   }
 
   public static function private_get_house_numbers(model_request $request){
-    $house = new data_house();
-    $house->set_id($request->GET('id'));
+    $house = (new model_house)->get_house($request->GET('id'));
     (new model_house2number(model_session::get_company(), $house))
       ->init_numbers();
     return ['house' => $house];

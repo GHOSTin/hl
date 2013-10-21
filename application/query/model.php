@@ -182,7 +182,8 @@ class model_query{
 			if(!is_null($number_id)){
 				$query->set_initiator('number');
 				$number = (new model_number($company))->get_number($number_id);
-				$house = (new model_house)->get_house($number->get_house_id());
+				$house = (new model_house)
+					->get_house($number->get_flat()->get_house()->get_id());
 				$query->set_house($house);
 				$query->add_number($number);
 				$mapper_q2n->update();
@@ -202,6 +203,7 @@ class model_query{
 			$sql->commit();
 			return $query;
 		}catch(exception $e){
+			die($e);
 			$sql->rallback();
 			die('Проблема');
 		}
@@ -278,7 +280,8 @@ class model_query{
         $query->set_department($department);
 			}elseif($initiator === 'number'){
 				$number = (new model_number($this->company))->get_number($id);
-				$house = (new model_house)->get_house($number->get_house_id());
+				$house = (new model_house)
+					->get_house($number->get_flat()->get_house()->get_id());
 				$department = (new model_department($this->company))
 					->get_department($house->get_department_id());
 				$query->add_number($number);

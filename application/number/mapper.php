@@ -15,6 +15,14 @@ class mapper_number{
         $number->set_number($row['number']);
         $number->set_status($row['status']);
         $number->set_hash($row['password']);
+        $house = new data_house();
+        $house->set_id($row['house_id']);
+        $house->set_number($row['house_number']);
+        $flat = new data_flat();
+        $flat->set_id($row['flat_id']);
+        $flat->set_id($row['flat_number']);
+        $flat->set_house($house);
+        $number->set_flat($flat);
         return $number;
     }
 

@@ -14,7 +14,7 @@
 <div class="query-numbers-content">
 	<ul class="unstyle">
 	{% for number in query.get_numbers() %}
-		<li number="{{ number.get_id() }}">кв.{{ number.get_flat_number() }} {{ number.get_fio() }} (№{{ number.get_number() }})</li>
+		<li number="{{ number.get_id() }}">кв.{{ number.get_flat().get_number() }} {{ number.get_fio() }} (№{{ number.get_number() }})</li>
 	{% else %}
 		<li>Нет лицевых счетов</li>
 	{% endfor %}

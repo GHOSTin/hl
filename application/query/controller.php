@@ -27,7 +27,8 @@ class controller_query{
 	}
 
 	public static function private_clear_filters(model_request $request){
-		$model = new model_query(model_session::get_company());
+		$company = model_session::get_company();
+		$model = new model_query($company);
 		$model->init_params();
 		$time = getdate($model->get_params()['time_open_begin']);
 		$timeline = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
@@ -222,8 +223,7 @@ class controller_query{
 	}
 
 	public static function private_get_numbers(model_request $request){
-		$house = new data_house();
-		$house->set_id($request->GET('id'));
+		$house = (new model_house)->get_house($request->GET('id'));
 		(new model_house2number(model_session::get_company(), $house))
 			->init_numbers();
 		return ['house' => $house];

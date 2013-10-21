@@ -6,7 +6,7 @@
 final class data_flat extends data_object{
 
   private $company_id;
-  private $house_id;
+  private $house;
   private $id;
   private $number;
   private $status;
@@ -15,8 +15,8 @@ final class data_flat extends data_object{
     return $this->company_id;
   }
 
-  public function get_house_id(){
-    return $this->house_id;
+  public function get_house(){
+    return $this->house;
   }
 
   public function get_id(){
@@ -35,8 +35,8 @@ final class data_flat extends data_object{
     $this->company_id = (int) $id;
   }
 
-  public function set_house_id($id){
-    $this->house_id = (int) $id;
+  public function set_house(data_house $house){
+    $this->house = $house;
   }
 
   public function set_id($id){
