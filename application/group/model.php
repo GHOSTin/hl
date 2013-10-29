@@ -64,26 +64,10 @@ class model_group{
 
 	/**
 	* Возвращает список групп.
-	* @return array из data_group
+	* @return array
 	*/
 	public function get_groups(){
-		$sql = new sql();
-		$sql->query("SELECT `id`, `company_id`, `status`, `name`
-					FROM `groups` WHERE `company_id` = :company_id  ORDER BY `name`");
-		$sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-		return $sql->map(new data_group(), 'Проблема при выборке групп пользователей.');
-	}
-	
-	/**
-	* Возвращает список пользователей группы
-	* @return array из data_user
-	*/
-	public function init_users(data_group $group){
-		$mapper = new mapper_group2user($this->company, $group);	
-		$users = $mapper->get_users();
-		if(!empty($users))
-			foreach($users as $user)
-				$group->add_user($user);
+		return (new mapper_group($this->company))->get_groups();
 	}
 
 	/**
@@ -95,13 +79,5 @@ class model_group{
 		$group->set_name($name);
 		$mapper = new mapper_group($this->company);		
 		return $mapper->update($group);
-	}
-
-	/**
-	* Проверка принадлежности объекта к классу data_group.
-	*/
-	public static function is_data_group($group){
-		if(!($group instanceof data_group))
-			throw new e_model('Возвращеный объект не является группой.');
 	}
 }

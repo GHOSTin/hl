@@ -1,26 +1,27 @@
 <?php
 class mapper_group{
 
+  private $company;
+
   private static $find = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id AND `id` = :id";
-
   private static $find_by_name = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id AND `name` = :name";
-
   private static $insert_id = "SELECT MAX(`id`) as `max_id` FROM `groups`
     WHERE `company_id` = :company_id";
-
   private static $insert = 'INSERT INTO `groups` (`id`, `company_id`, `name`, `status`)
           VALUES (:id, :company_id, :name, :status)';
-
-  private $company;
+  private static $groups = "SELECT `id`, `company_id`, `status`, `name`
+    FROM `groups` WHERE `company_id` = :company_id  ORDER BY `name`";
+  private static $update = "UPDATE `groups` SET `name` = :name
+    WHERE `company_id` = :company_id AND `id` = :id";
 
   public function __construct(data_company $company){
     $this->company = $company;
     $this->company->verify('id');
   }
 
-  public function create_object(array $row){
+  private function create_object(array $row){
     $group = new data_group();
     $group->set_id($row['id']);
     $group->set_company_id($row['company_id']);
@@ -76,13 +77,29 @@ class mapper_group{
   }
 
   /**
+  * Возвращает список групп.
+  * @return array
+  */
+  public function get_groups(){
+    $sql = new sql();
+    $sql->query(self::$groups);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->execute('Проблема при выборке групп.');
+    $stmt = $sql->get_stm();
+    $groups = [];
+    while($row = $stmt->fetch())
+      $groups[] = $this->create_object($row);
+    return $groups;
+  }
+
+  /**
   * Возвращает следующий для вставки идентификатор группы.
   * @return int
   */
   public function get_insert_id(){
     $sql = new sql();
     $sql->query(self::$insert_id);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при опредении следующего group_id.');
     if($sql->count() !== 1)
         throw new e_model('Проблема при опредении следующего group_id.');
@@ -106,11 +123,10 @@ class mapper_group{
   public function update(data_group $group){
     $group->verify('id', 'name', 'status', 'company_id');
     $sql = new sql();
-    $sql->query("UPDATE `groups` SET `name` = :name WHERE `company_id` = :company_id
-          AND `id` = :id");
-    $sql->bind(':id', $group->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $group->get_company_id(), PDO::PARAM_INT);
-    $sql->bind(':name', $group->get_name(), PDO::PARAM_STR);
+    $sql->query(self::$update);
+    $sql->bind(':id', (int) $group->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
+    $sql->bind(':name', (string) $group->get_name(), PDO::PARAM_STR);
     $sql->execute('Проблема при изменении группы.');
     return $group;
   }

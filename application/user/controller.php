@@ -182,7 +182,7 @@ class controller_user{
   public static function private_get_group_users(model_request $request){
     $group = new data_group();
     $group->set_id($request->take_get('id'));
-    (new model_group(model_session::get_company()))->init_users($group);
+    (new mapper_group2user(model_session::get_company(), $group))->init_users($group);
     return ['group' => $group];
   }
 
