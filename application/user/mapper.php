@@ -18,6 +18,9 @@
     `username`, `firstname`, `lastname`, `midlename`, `password`, `telephone`,
     `cellphone`) VALUES (:user_id, :company_id, :status, :login, :firstname,
     :lastname, :middlename, :password, :telephone, :cellphone)";
+  private static $get_users = "SELECT `id`, `company_id`, `status`,
+    `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
+    `password`, `telephone`, `cellphone` FROM `users` ORDER BY `lastname`";
 
   public function create_object(array $row){
     $user = new data_user();
@@ -78,6 +81,21 @@
     $user_id = (int) $sql->row()['max_user_id'] + 1;
     $sql->close();
     return $user_id;
+  }
+
+  /**
+  * Возвращает пользователей
+  * @return array из data_user
+  */
+  public function get_users(){
+    $sql = new sql();
+    $sql->query(self::$get_users);
+    $sql->execute('Проблема при выборке пользователей.');
+    $stmt = $sql->get_stm();
+    $users = [];
+    while($row = $stmt->fetch())
+      $users[] = $this->create_object($row);
+    return $users;
   }
 
   public function insert(data_user $user){

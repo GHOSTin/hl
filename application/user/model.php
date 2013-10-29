@@ -5,7 +5,7 @@ class model_user{
 	* Создает пользователя
 	*/
 	public function create_user($lastname, $firstname, $middlename, $login,
-			$password, $status){
+		$password, $status){
 		$user = new data_user();
 		$user->set_lastname($lastname);
 		$user->set_firstname($firstname);
@@ -19,7 +19,6 @@ class model_user{
 
 	/**
 	* Формирует хэш с солью
-	* @return string
 	*/
 	public function get_password_hash($password){
 		return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
@@ -36,22 +35,14 @@ class model_user{
 	}
 
 	/**
-	* Возвращает пользователей
-	* @return array из data_user
+	* Возвращает список пользователей.
 	*/
 	public function get_users(){
-		$sql = new sql();
-		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
-			`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
-			`users`.`midlename` as `middlename`, `users`.`password`,
-			`users`.`telephone`, `users`.`cellphone`
-			FROM `users` ORDER BY `users`.`lastname`");
-		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');
+		return (new mapper_user)->get_users();
 	}
 
 	/**
 	* Обновляет ФИО пользователя
-	* @return array из data_user
 	*/
 	public function update_fio($id, $lastname, $firstname, $middlename){
 		$mapper = new mapper_user();
