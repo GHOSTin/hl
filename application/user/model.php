@@ -66,8 +66,8 @@ class model_user{
 	* @return object data_user
 	*/
 	public function update_password($id, $password){
-		if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $password))
-            throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
+		// if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $password))
+  //           throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
     $mapper = new mapper_user();
 		$user = $mapper->find($id);
 		$user->set_hash($this->get_password_hash($password));

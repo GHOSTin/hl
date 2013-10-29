@@ -58,7 +58,7 @@ class mapper_query2work{
     $sql->bind(':time_open', $work->get_time_open(), PDO::PARAM_INT);
     $sql->bind(':time_close', $work->get_time_close(), PDO::PARAM_INT);
     $sql->execute('Ошибка при добавлении работы.');
-    return $query;
+    return $this->query;
   }
 
   private function get_works(){

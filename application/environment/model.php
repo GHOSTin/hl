@@ -69,7 +69,8 @@ class model_environment{
 		if($profile instanceof data_profile)
 			model_session::set_profile($profile);
 		else
-			if(!in_array($component, ['default_page', 'profile', 'exit', 'processing_center', 'import'], true))
+			if(!in_array($component, ['default_page', 'profile', 'exit',
+				'processing_center', 'import', 'user'], true))
 				throw new e_model('Нет доступа.');
 	}
 

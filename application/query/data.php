@@ -121,7 +121,7 @@ final class data_query extends data_object{
 										'observer' => [], 'performer' => []];
 
 	public function add_number(data_number $number){
-		if(in_array($number->get_id(), $this->numbers))
+		if(array_key_exists($number->get_id(), $this->numbers))
 			throw new e_model('Лицевой счет уже добавлен в заявку.');
 		$this->numbers[$number->get_id()] = $number;
 	}

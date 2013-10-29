@@ -119,9 +119,4 @@ class mapper_user{
         $sql->bind(':id', $user->get_id(), PDO::PARAM_INT);
         $sql->execute('Проблемы при обвнолении записи пользователя.');
     }
-
-    private function is_data_user($user){
-        if(!($user instanceof data_user))
-            throw new e_model('Возвращен объект не является пользователем');
-    }
 }
