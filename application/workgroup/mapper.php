@@ -3,8 +3,8 @@ class mapper_workgroup{
 
 	private $company;
 
-	private static $sql_get_workgroups = "SELECT `id`,`company_id`, `status`, `name`
-		FROM `workgroups` WHERE `company_id` = :company_id";
+	private static $sql_get_workgroups = "SELECT `id`,`company_id`, `status`,
+		`name` FROM `workgroups` WHERE `company_id` = :company_id";
 
 	public function __construct($company){
 		$this->company = $company;

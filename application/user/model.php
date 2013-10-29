@@ -4,7 +4,8 @@ class model_user{
 	/*
 	* Создает пользователя
 	*/
-	public function create_user($lastname, $firstname, $middlename, $login, $password, $status){
+	public function create_user($lastname, $firstname, $middlename, $login,
+			$password, $status){
 		$user = new data_user();
 		$user->set_lastname($lastname);
 		$user->set_firstname($firstname);
@@ -30,7 +31,7 @@ class model_user{
 	public function get_user($id){
 		$user = (new mapper_user)->find($id);
 		if(!($user instanceof data_user))
-			throw new e_model('Нет пользователя');
+			throw new e_model('Не существует такого пользователя.');
 		return $user;
 	}
 
@@ -41,9 +42,10 @@ class model_user{
 	public function get_users(){
 		$sql = new sql();
 		$sql->query("SELECT `users`.`id`, `users`.`company_id`,`users`.`status`,
-				`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
-				`users`.`midlename` as `middlename`, `users`.`password`, `users`.`telephone`,
-				`users`.`cellphone` FROM `users` ORDER BY `users`.`lastname`");
+			`users`.`username` as `login`, `users`.`firstname`, `users`.`lastname`,
+			`users`.`midlename` as `middlename`, `users`.`password`,
+			`users`.`telephone`, `users`.`cellphone`
+			FROM `users` ORDER BY `users`.`lastname`");
 		return $sql->map(new data_user(), 'Проблема при выборке пользователей.');
 	}
 
@@ -93,14 +95,6 @@ class model_user{
 		$user->set_login($login);
 		$mapper->update($user);
 		return $user;
-	}
-
-	/**
-	* Верификация типа объекта пользователя.
-	*/
-	public static function is_data_user($user){
-		if(!($user instanceof data_user))
-			throw new e_model('Возвращен объект не является пользователем');
 	}
 
 	/**
