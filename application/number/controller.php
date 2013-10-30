@@ -320,16 +320,16 @@ class controller_number{
     $company = model_session::get_company();
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter($company, $number))
-        ->get_meter($request->GET('meter_id'), $request->GET('serial'));
+      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     if($request->GET('time') > 0)
-        $time = getdate($request->GET('time'));
+      $time = getdate($request->GET('time'));
     else
-        $time = getdate();
+      $time = getdate();
     $begin = mktime(12, 0, 0, 1, 1, $time['year']);
     $end = mktime(12, 0, 0, 12, 1, $time['year']);
-
-    (new model_meter2data($company, $meter))->init_values($begin, $end);
-    return ['n2m' => $meter, 'time' => $begin];
+    (new model_meter2data($company, $number, $meter))
+      ->init_values($begin, $end);
+    return ['number' => $number, 'meter' => $meter, 'time' => $begin];
   }
 
   public static function private_get_meter_value(model_request $request){
