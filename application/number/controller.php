@@ -367,7 +367,7 @@ class controller_number{
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return ['number' => $number, 'meter' => $meter];
   }
     
   public static function private_get_meter_options(model_request $request){
