@@ -25,7 +25,7 @@ final class data_number extends data_object{
   }
 
   public function add_meter(data_number2meter $n2m){
-    $id = $n2m->get_meter()->get_id().'_'.$n2m->get_serial();
+    $id = $n2m->get_id().'_'.$n2m->get_serial();
     if(array_key_exists($id, $this->meters))
       throw new e_model('Счетчик уже добавлен.');
     $this->meters[$id] = $n2m;

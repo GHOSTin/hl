@@ -66,9 +66,12 @@ class controller_user{
   }
 
   public static function private_exclude_user(model_request $request){
-    return ['group' => (new model_group(model_session::get_company()))
-      ->exclude_user($request->take_get('group_id'),
-      $request->take_get('user_id'))];
+    $company = model_session::get_company();
+    $group = (new model_group($company))
+      ->get_group($request->take_get('group_id'));
+    $user = (new model_user)->get_user($request->take_get('user_id'));
+    return ['group' => (new model_group2user($company))
+      ->exclude_user($user)];
   }
 
   public static function private_get_company_content(model_request $request){
