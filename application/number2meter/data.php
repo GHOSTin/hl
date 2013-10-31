@@ -21,14 +21,6 @@ class data_number2meter{
 
   public function __construct(data_meter $meter){
     $this->meter = $meter;
-    $this->meter->verify('id');
-  }
-
-	public function verify(){
-    if(func_num_args() < 0)
-      throw new e_data('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value)
-      verify_number2meter::$value($this);
   }
 
   public function add_value(data_meter2data $m2d){
@@ -82,38 +74,102 @@ class data_number2meter{
   }
 
   public function set_comment($comment){
-    $this->comment = (string) $comment;
+    self::verify_comment($comment);
+    $this->comment = $comment;
   }
 
   public function set_date_checking($time){
-    $this->date_checking = (int) $time;
+    $time = (int) $time;
+    self::verify_date_checking($time);
+    if($this->date_install > $time)
+      throw new e_model('Время последней поверки счетчика не может быть
+      больше времени установки счетчика.');
+    $this->date_checking = $time;
   }
 
   public function set_date_install($time){
-    $this->date_install = (int) $time;
+    $time = (int) $time;
+    self::date_install($time);
+    if($this->date_release > $time)
+      throw new e_model('Время установки счетчика не может быть больше времени
+      произдовства счетчика.');
+    $this->date_install = $time;
   }
 
   public function set_date_release($time){
-    $this->date_release = (int) $time;
+    $time = (int) $time;
+    self::verify_date_release($time);
+    $this->date_release = $time;
   }
 
   public function set_period($period){
-    $this->period = (int) $period;
+    $period = (int) $period;
+    self::verify_period($period);
+    $this->period = $period;
   }
 
   public function set_place($place){
-    $this->place = (string) $place;
+    self::verify_place($place);
+    $this->place = $place;
   }
 
   public function set_serial($serial){
-    $this->serial = (string) $serial;
+    self::verify_serial($serial);
+    $this->serial = $serial;
   }
   
   public function set_service($service){
-    $this->service = (string) $service;
+    self::verify_service($service);
+    $this->service = $service;
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
+    self::verify_status($status);
+    $this->status = $status;
+  }
+
+  public static function verify_date_checking($time){
+    if($time < 1)
+      throw new e_model('Время даты поверки задано не верно.');
+  }
+
+  public static function date_install($time){
+    if($time < 1)
+      throw new e_model('Время даты установки задано не верно.');
+  }
+
+  public static function verify_comment($comment){
+    if(!preg_match('/^[А-Яа-я0-9\., ]{0,255}$/u', $comment))
+      throw new e_model('Комментарий задан не верно.');
+  }
+
+  public static function verify_date_release($time){
+    if($time < 1)
+      throw new e_model('Дата выпуска счетчика задана не верно.');
+  }
+
+  public static function verify_period($period){
+    if($period < 1 OR $period > 241)
+        throw new e_model('Период задан не верно.');
+  }
+
+  public static function verify_place($place){
+    if(!in_array($place, ['bathroom', 'kitchen', 'toilet'], true))
+      throw new e_model('Место установки задано не верно.');
+  }
+
+  public static function verify_serial($serial){
+    if(!preg_match('/^[а-яА-Я0-9]{1,20}$/u', $serial))
+      throw new e_model('Заводской номер счетчика задано не верно.');
+  }
+
+  public static function verify_service($service){
+    if(!in_array($service, data_meter::get_service_list()))
+      throw new e_model('Услуга задана не верно.');
+  }
+
+  public static function verify_status($status){
+    if(!in_array($status, ['enabled', 'disabled'], true))
+      throw new e_model('Статус счетчика задан не верно.');
   }
 }

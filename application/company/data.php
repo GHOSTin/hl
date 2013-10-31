@@ -39,4 +39,9 @@ final class data_company extends data_object{
     foreach(func_get_args() as $value)
       verify_company::$value($this);
   }
+
+  public static function verify_id($id){
+    if($id > 255 OR $id < 1)
+      throw new e_model('Идентификатор компании задан не верно.');
+  }
 }

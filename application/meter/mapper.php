@@ -16,7 +16,7 @@ class mapper_meter{
 
   public function __construct(data_company $company){
     $this->company = $company;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
   }
 
   public function create(data_meter $meter){
@@ -58,9 +58,6 @@ class mapper_meter{
   }
 
   public function find($id){
-    $meter = new data_meter();
-    $meter->set_id($id);
-    $meter->verify('id');
     $sql = new sql();
     $sql->query(self::$sql_find);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -77,14 +74,11 @@ class mapper_meter{
   }
 
   public function find_by_name($name){
-    $meter = new data_meter();
-    $meter->set_name($name);
-    $meter->verify('name');
     $sql = new sql();
     $sql->query("SELECT `id`, `company_id`, `name`, `capacity`, `rates`, `service`, `periods`
                 FROM `meters` WHERE `company_id` = :company_id AND `name` = :name");
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':name', $meter->get_name(), PDO::PARAM_STR);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':name', (string) $name, PDO::PARAM_STR);
     $sql->execute('Проблема при запросе счетчика.');
     $stmt = $sql->get_stm();
     $count = $stmt->rowCount();
@@ -132,7 +126,7 @@ class mapper_meter{
   }
 
   public function update(data_meter $meter){
-    $meter->verify('id', 'name', 'capacity', 'rates', 'periods');
+    $this->verify($meter);
     $sql = new sql();
     $sql->query('UPDATE `meters` SET `name` = :name, `capacity` = :capacity,
                 `rates` = :rates, `periods` = :periods, `service` = :services
@@ -146,6 +140,19 @@ class mapper_meter{
     $sql->bind(':services', implode(',', $meter->get_services()), PDO::PARAM_STR);
     $sql->execute('Проблема при обновлении счетчика.');
     return $meter;
+  }
+
+  private function verify(data_meter $meter){
+    data_meter::verify_id($meter->get_id());
+    data_meter::verify_name($meter->get_name());
+    data_meter::verify_capacity($meter->get_capacity());
+    data_meter::verify_rates($meter->get_rates());
+    if(!empty($meter->get_periods()))
+      foreach($meter->get_periods() as $period)
+        data_meter::verify_period($period);
+    if(!empty($meter->get_services()))
+      foreach($meter->get_services() as $service)
+        data_meter::verify_service($service);
   }
 
   public function get_meters(){
