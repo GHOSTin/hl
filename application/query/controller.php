@@ -290,7 +290,7 @@ class controller_query{
 		$model = new model_query(model_session::get_company());
 		$model->set_status($request->GET('value'));
 		$collection = new collection_query(model_session::get_company(),
-		 $model->get_queries());
+			$model->get_queries());
 		$collection->init_numbers();
 		return ['queries' => $collection];
 	}
