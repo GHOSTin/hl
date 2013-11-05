@@ -77,12 +77,14 @@ class controller_query{
 	}
 
 	public static function private_create_query(model_request $request){
-		$model = new model_query(model_session::get_company());
+		$company = model_session::get_company();
+		$model = new model_query($company);
 		$query = $model->create_query($request->GET('initiator'),
 			$request->GET('id'), $request->GET('description'),
 			$request->GET('work_type'), $request->GET('fio'),
 			$request->GET('telephone'), $request->GET('cellphone'));
-		return ['queries' => [$query]];
+		$collection = new collection_query($company, $model->get_queries());
+		return ['queries' => $collection];
 	}
 
 	public static function private_get_documents(model_request $request){
@@ -282,8 +284,10 @@ class controller_query{
 	}
 
 	public static function private_get_search_result(model_request $request){
-		return ['queries' => (new model_query(model_session::get_company()))
-			->get_queries_by_number($request->GET('param'))];
+		$model = new model_query(model_session::get_company());
+		$collection = new collection_query(model_session::get_company(),
+			$model->get_queries_by_number($request->GET('param')));
+		return ['queries' => $collection];
 	}
 
 	public static function private_set_status(model_request $request){
