@@ -51,10 +51,6 @@ class data_user extends data_object{
     return $this->middlename;
   }
 
-  public function get_password(){
-    return $this->password;
-  }
-
   public function get_status(){
     return $this->status;
   }
@@ -101,6 +97,11 @@ class data_user extends data_object{
 
   public function set_telephone($telephone){
     $this->telephone = (string) $telephone;
+  }
+
+  public static function verify_password($password){
+    if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $password))
+      throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
   }
 
 	public function verify(){

@@ -135,7 +135,7 @@
     $sql->bind(':login', $user->get_login(), PDO::PARAM_STR);
     $sql->bind(':telephone', $user->get_telephone(), PDO::PARAM_STR);
     $sql->bind(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
-    $sql->bind(':password', $user->get_password(), PDO::PARAM_STR);
+    $sql->bind(':password', $user->get_hash(), PDO::PARAM_STR);
     $sql->bind(':id', $user->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблемы при обвнолении записи пользователя.');
   }
