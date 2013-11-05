@@ -111,10 +111,6 @@ final class data_query extends data_object{
 	private $inspection;
 
 	private $street;
-
-
-
-
 	private $numbers = [];
 	private $works = [];
 	private $users = ['creator' => null, 'manager' => [],

@@ -1,5 +1,5 @@
 <?php
-class collection_query implements iterator{
+class collection_query{
 
   private $company;
   private $queries = [];
@@ -17,14 +17,19 @@ class collection_query implements iterator{
         $this->id[] = $query->get_id();
   }
 
-  private function get_query($key){
-    $query = $this->queries[$key];
-    if(!($query instanceof data_query))
-      return null;
-    if(!empty($this->q2n[$query->get_id()]))
-      foreach($this->q2n[$query->get_id()] as $number)
-        $query->add_number($this->numbers[$number]);
-    return $query;
+  public function count(){
+    return count($this->id);
+  }
+
+  public function get_queries(){
+    foreach($this->queries as $query){
+      if(!($query instanceof data_query))
+        return null;
+      if(!empty($this->q2n[$query->get_id()]))
+        foreach($this->q2n[$query->get_id()] as $number)
+          $query->add_number($this->numbers[$number]);
+      yield $query;
+    }
   }
 
   public function create_number(array $row){
@@ -42,7 +47,7 @@ class collection_query implements iterator{
     if(!empty($this->id)){
       $ids = implode(', ', $this->id);
       $sql = new sql();
-      $sql->query("SELECT `query2number`.* , `numbers`.`number`,
+      $sql->query("SELECT DISTINCT `query2number`.* , `numbers`.`number`,
           `numbers`.`fio`, `flats`.`flatnumber` as `flat_number`
           FROM `query2number`, `numbers`, `flats`
           WHERE `query2number`.`company_id` = :company_id
@@ -59,28 +64,5 @@ class collection_query implements iterator{
         $this->q2n[$row['query_id']][] = $number->get_id();
       }
     }
-  }
-
-  public function rewind(){
-    $this->pointer = 0;
-  }
-
-  public function current(){
-    return $this->get_query($this->pointer);
-  }
-
-  public function key(){
-    return $this->pointer;
-  }
-
-  public function next(){
-    $row = $this->get_query($this->pointer);
-    if($row instanceof data_query)
-      $this->pointer++;
-    return $row;
-  }
-
-  public function valid(){
-    return (!is_null($this->current()));
   }
 }
