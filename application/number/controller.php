@@ -168,10 +168,7 @@ class controller_number{
 
   public static function private_get_dialog_edit_date_checking(
     model_request $request){
-    $number = new data_number($request->GET('id'));
-    $meter = (new model_number2meter(model_session::get_company(), $number))
-      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return self::data_for_meters_dialog($request);
   }
 
   public static function private_get_dialog_edit_date_install(
@@ -409,10 +406,10 @@ class controller_number{
     $time = explode('.', $request->GET('date'));
     $time = mktime(12, 0, 0, $time[1], $time[0], $time[2]);
     $number = new data_number($request->GET('number_id'));
-    return ['n2m' => (new model_number2meter(model_session::get_company(),
-      $number))
-      ->update_date_checking($request->GET('meter_id'), $request->GET('serial'),
-        $time)];
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->update_date_checking($request->GET('meter_id'),
+      $request->GET('serial'), $time);
+    return ['number' => $number, 'meter' => $meter];
   }
 
   public static function private_update_date_install(model_request $request){

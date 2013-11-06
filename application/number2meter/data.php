@@ -93,12 +93,20 @@ class data_number2meter{
     if($this->date_release > $time)
       throw new e_model('Время установки счетчика не может быть больше времени
       произдовства счетчика.');
+    if(!is_null($this->date_checking))
+      if($this->date_checking < $time)
+        throw new e_model('Время установки счетчика не может быть больше времени
+        последней поверки счетчика.');
     $this->date_install = $time;
   }
 
   public function set_date_release($time){
     $time = (int) $time;
     self::verify_date_release($time);
+    if(!is_null($this->date_install))
+      if($this->date_install < $time)
+        throw new e_model('Время производства счетчика не может быть больше
+        времени установки счетчика');
     $this->date_release = $time;
   }
 
