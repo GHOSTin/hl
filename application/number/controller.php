@@ -193,10 +193,7 @@ class controller_number{
 
   public static function private_get_dialog_edit_meter_status(
     model_request $request){
-    $number = new data_number($request->GET('id'));
-    $meter = (new model_number2meter(model_session::get_company(), $number))
-      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return self::data_for_meters_dialog($request);
   }
 
   public static function private_get_dialog_edit_meter_place(

@@ -19,7 +19,12 @@
         {% if stn == 'processing_centers' %}
             {% include '@number/build_processing_centers.tpl' %}
         {% elseif stn == 'meters'%}
-            {% include '@number/build_meters.tpl' %}
+            <div>
+                <a class="get_dialog_add_meter">Привязать счетчик</a>
+            </div>
+            <div class="number-meters">
+                {% include '@number/build_meters.tpl' %}
+            </div>
         {% else %}
             {% include '@number/build_number_fio.tpl'%}
         {% endif %}
