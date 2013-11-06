@@ -184,10 +184,7 @@ class controller_number{
 
   public static function private_get_dialog_edit_date_release(
     model_request $request){
-    $number = new data_number($request->GET('id'));
-    $meter = (new model_number2meter(model_session::get_company(), $number))
-      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return self::data_for_meters_dialog($request);
   }
 
   public static function private_get_dialog_edit_meter_comment(
@@ -200,10 +197,7 @@ class controller_number{
 
   public static function private_get_dialog_edit_period(
     model_request $request){
-    $number = new data_number($request->GET('id'));
-    $meter = (new model_number2meter(model_session::get_company(), $number))
-      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return self::data_for_meters_dialog($request);
   }
 
   public static function private_get_dialog_edit_meter_status(
@@ -216,6 +210,10 @@ class controller_number{
 
   public static function private_get_dialog_edit_meter_place(
     model_request $request){
+    return self::data_for_meters_dialog($request);
+  }
+
+  private static function data_for_meters_dialog(model_request $request){
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
@@ -434,10 +432,10 @@ class controller_number{
     $time = explode('.', $request->GET('date'));
     $time = mktime(12, 0, 0, $time[1], $time[0], $time[2]);
     $number = new data_number($request->GET('number_id'));
-    return ['n2m' => (new model_number2meter(model_session::get_company(),
-      $number))
-      ->update_date_release($request->GET('meter_id'), $request->GET('serial'),
-        $time)];
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->update_date_release($request->GET('meter_id'),
+      $request->GET('serial'), $time);
+    return ['number' => $number, 'meter' => $meter];
   }
 
   public static function private_update_number(model_request $request){
@@ -508,10 +506,10 @@ class controller_number{
   public static function private_update_period(model_request $request){
     $period = ((int) $request->GET('year') * 12) + (int) $request->GET('month');
     $number = new data_number($request->GET('number_id'));
-    return ['n2m' => (new model_number2meter(model_session::get_company(),
-      $number))
+    $meter = (new model_number2meter(model_session::get_company(), $number))
       ->update_period($request->GET('meter_id'), $request->GET('serial'),
-        $period)];
+      $period);
+    return ['number' => $number, 'meter' => $meter];
   }
 
   public static function private_update_meter_status(model_request $request){
