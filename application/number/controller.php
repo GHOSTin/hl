@@ -357,14 +357,17 @@ class controller_number{
   }
 
   public static function private_get_dialog_edit_number(model_request $request){
+    return self::data_for_dialog_number($request);
+  }
+
+  private static function data_for_dialog_number(model_request $request){
     return ['number' => (new model_number(model_session::get_company()))
                         ->get_number($request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_fio(
     model_request $request){
-    return ['number' => (new model_number(model_session::get_company()))
-                        ->get_number($request->GET('id'))];
+    return self::data_for_dialog_number($request);
   }
 
   public static function private_get_dialog_edit_password(
@@ -373,14 +376,12 @@ class controller_number{
 
   public static function private_get_dialog_edit_number_telephone(
     model_request $request){
-    return ['number' => (new model_number(model_session::get_company()))
-                        ->get_number($request->GET('id'))];
+    return self::data_for_dialog_number($request);
   }
 
   public static function private_get_dialog_edit_number_cellphone(
     model_request $request){
-    return ['number' => (new model_number(model_session::get_company()))
-                        ->get_number($request->GET('id'))];
+    return self::data_for_dialog_number($request);
   }
 
   public static function private_get_dialog_edit_meter_data(
