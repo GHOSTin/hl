@@ -89,7 +89,7 @@ class data_number2meter{
 
   public function set_date_install($time){
     $time = (int) $time;
-    self::date_install($time);
+    self::verify_date_install($time);
     if($this->date_release > $time)
       throw new e_model('Время установки счетчика не может быть больше времени
       произдовства счетчика.');
@@ -104,7 +104,7 @@ class data_number2meter{
 
   public function set_period($period){
     $period = (int) $period;
-    self::verify_period($period);
+    data_meter::verify_period($period);
     $this->period = $period;
   }
 
@@ -133,7 +133,7 @@ class data_number2meter{
       throw new e_model('Время даты поверки задано не верно.');
   }
 
-  public static function date_install($time){
+  public static function verify_date_install($time){
     if($time < 1)
       throw new e_model('Время даты установки задано не верно.');
   }
@@ -146,11 +146,6 @@ class data_number2meter{
   public static function verify_date_release($time){
     if($time < 1)
       throw new e_model('Дата выпуска счетчика задана не верно.');
-  }
-
-  public static function verify_period($period){
-    if($period < 1 OR $period > 241)
-        throw new e_model('Период задан не верно.');
   }
 
   public static function verify_place($place){

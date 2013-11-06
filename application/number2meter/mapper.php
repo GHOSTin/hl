@@ -33,9 +33,18 @@ class mapper_number2meter{
     AND `number2meter`.`number_id` = :number_id
     AND `meters`.`id` = `number2meter`.`meter_id`";
 
+  public static $update = "UPDATE `number2meter` SET `period` = :period,
+    `status` = :status, `place` = :place, `comment` = :comment,
+    `date_release` = :date_release, `date_install` = :date_install,
+    `date_checking` = :date_checking WHERE `company_id` = :company_id
+    AND `number_id` = :number_id AND `meter_id` = :meter_id
+    AND `serial` = :serial";
+
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;
     $this->number = $number;
+    data_company::verify_id($this->company->get_id());
+    data_number::verify_id($this->number->get_id());
   }
 
   public function create_object(array $row){
@@ -151,28 +160,32 @@ class mapper_number2meter{
     return  $n2m;
   }
 
-  public function update(data_number2meter $n2m){
-    $n2m->verify('serial', 'period', 'status', 'place', 'comment',
-        'date_release', 'date_install', 'date_checking');
+  public function update(data_number2meter $meter){
+    data_meter::verify_id($meter->get_id());
+    data_meter::verify_period($meter->get_period());
+    data_number2meter::verify_serial($meter->get_serial());
+    data_number2meter::verify_serial($meter->get_serial());
+    data_number2meter::verify_status($meter->get_status());
+    data_number2meter::verify_place($meter->get_place());
+    data_number2meter::verify_comment($meter->get_comment());
+    data_number2meter::verify_date_release($meter->get_date_release());
+    data_number2meter::verify_date_install($meter->get_date_install());
+    data_number2meter::verify_date_checking($meter->get_date_checking());
     $sql = new sql();
-    $sql->query("UPDATE `number2meter` SET `period` = :period, `status` = :status,
-        `place` = :place, `comment` = :comment, `date_release` = :date_release,
-        `date_install` = :date_install, `date_checking` = :date_checking
-        WHERE `company_id` = :company_id AND `number_id` = :number_id
-        AND `meter_id` = :meter_id AND `serial` = :serial");
-    $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', $n2m->get_meter()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':serial', $n2m->get_serial(), PDO::PARAM_STR);
-    $sql->bind(':period', $n2m->get_period(), PDO::PARAM_INT);
-    $sql->bind(':status', $n2m->get_status(), PDO::PARAM_STR);
-    $sql->bind(':date_release', $n2m->get_date_release(), PDO::PARAM_INT);
-    $sql->bind(':date_install', $n2m->get_date_install(), PDO::PARAM_INT);
-    $sql->bind(':date_checking', $n2m->get_date_checking(), PDO::PARAM_INT);
-    $sql->bind(':place', $n2m->get_place(), PDO::PARAM_STR);
-    $sql->bind(':comment', $n2m->get_comment(), PDO::PARAM_STR);
+    $sql->query(self::$update);
+    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':meter_id', (int) $meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':serial', (string) $meter->get_serial(), PDO::PARAM_STR);
+    $sql->bind(':period', (int) $meter->get_period(), PDO::PARAM_INT);
+    $sql->bind(':status', (string) $meter->get_status(), PDO::PARAM_STR);
+    $sql->bind(':date_release', (int) $meter->get_date_release(), PDO::PARAM_INT);
+    $sql->bind(':date_install', (int) $meter->get_date_install(), PDO::PARAM_INT);
+    $sql->bind(':date_checking', (int) $meter->get_date_checking(), PDO::PARAM_INT);
+    $sql->bind(':place', (string) $meter->get_place(), PDO::PARAM_STR);
+    $sql->bind(':comment', (string) $meter->get_comment(), PDO::PARAM_STR);
     $sql->execute('Проблема при обновлении связи лицевого счета и счетчика');
-    return $n2m;
+    return $meter;
   }
 
   public function update_serial(data_number2meter $meter, $serial){

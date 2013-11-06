@@ -23,11 +23,6 @@ class collection_query{
 
   public function get_queries(){
     foreach($this->queries as $query){
-      if(!($query instanceof data_query))
-        return null;
-      if(!empty($this->q2n[$query->get_id()]))
-        foreach($this->q2n[$query->get_id()] as $number)
-          $query->add_number($this->numbers[$number]);
       yield $query;
     }
   }

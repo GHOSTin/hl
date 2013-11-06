@@ -219,7 +219,7 @@ class controller_number{
     $number = new data_number($request->GET('id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return ['number' => $number, 'meter' => $meter];
   }
 
   public static function private_get_dialog_edit_serial(
@@ -535,9 +535,9 @@ class controller_number{
 
   public static function private_update_meter_place(model_request $request){
     $number = new data_number($request->GET('number_id'));
-    return ['n2m' => (new model_number2meter(model_session::get_company(),
-      $number))
+    $meter = (new model_number2meter(model_session::get_company(), $number))
       ->update_place($request->GET('meter_id'), $request->GET('serial'),
-        $request->GET('place'))];
+      $request->GET('place'));
+    return ['number' => $number, 'meter' => $meter];
   }
 }

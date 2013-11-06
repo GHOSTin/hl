@@ -129,7 +129,7 @@ final class data_meter extends data_object{
   }
 
   public static function verify_period($period){
-    if($period < 0 OR $period > 240)
+    if($period < 0 OR $period > 241)
         throw new e_model('Период задан не верно.');
   }
 

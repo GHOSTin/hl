@@ -136,4 +136,9 @@ final class data_number extends data_object{
     foreach(func_get_args() as $value)
       verify_number::$value($this);
   }
+
+  public static function verify_id($id){
+    if($id > 16777215 OR $id < 1)
+      throw new e_model('Идентификатор лицевого счета задан не верно.');
+  }
 }
