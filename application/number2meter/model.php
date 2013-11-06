@@ -13,10 +13,11 @@ class model_number2meter{
 
   public function add_meter($meter_id, $serial, $service, $place, $date_release,
                               $date_install, $date_checking, $period, $comment){
+
     $meter = (new model_meter($this->company))->get_meter($meter_id);
     $mapper = new mapper_number2meter($this->company, $this->number);
     $mapper->init_meters();
-    $n2m = new data_number2meter($this->number, $meter);
+    $n2m = new data_number2meter($meter);
     $n2m->set_serial($serial);
     $n2m->set_status('enabled');
     $n2m->set_service($service);
