@@ -18,6 +18,14 @@ class mapper_number2meter{
       AND `number2meter`.`number_id` = :number_id
       AND `meters`.`id` = `number2meter`.`meter_id`";
 
+  private static $delete = "DELETE FROM `number2meter` 
+    WHERE `company_id` = :company_id AND `number_id` = :number_id
+    AND `meter_id` = :meter_id AND `serial` = :serial";
+
+  private static $delete_values = "DELETE FROM `meter2data`
+    WHERE `company_id` = :company_id AND `number_id` = :number_id
+    AND `meter_id` = :meter_id AND `serial` = :serial";
+
   private static $insert = "INSERT INTO `number2meter` (`company_id`, `number_id`,
     `meter_id`, `serial`, `status`, `service`, `place`, `date_release`,
     `date_install`, `date_checking`, `period`, `comment`) VALUES (:company_id,
@@ -82,24 +90,18 @@ class mapper_number2meter{
 
   public function delete(data_number2meter $meter){
     $this->verify($meter);
-    exit();
     $sql = new sql();
-    $sql->query("DELETE FROM `number2meter` 
-        WHERE `company_id` = :company_id AND `number_id` = :number_id
-        AND `meter_id` = :meter_id AND `serial` = :serial");
+    $sql->query(self::$delete);
     $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', $meter->get_meter()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':meter_id', $meter->get_id(), PDO::PARAM_INT);
     $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
     $sql->execute('Проблема при удалении связи лицевого счета и счетчика');
-
     $sql = new sql();
-    $sql->query("DELETE FROM `meter2data` WHERE `company_id` = :company_id
-        AND `number_id` = :number_id AND `meter_id` = :meter_id AND `serial` = :serial");
-
+    $sql->query(self::$delete_values);
     $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', $meter->get_meter()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':meter_id', $meter->get_id(), PDO::PARAM_INT);
     $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
     $sql->execute('Проблема при удалении значений счетчика');
   }

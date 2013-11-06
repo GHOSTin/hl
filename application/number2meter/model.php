@@ -66,10 +66,8 @@ class model_number2meter{
 
   public function delete_meter($meter_id, $serial){
     $this->init_meters();
-    $meter = new data_meter($meter_id);
-    $n2m = new data_number2meter($this->number, $meter);
-    $n2m->set_serial($serial);
-    $this->number->remove_n2m($n2m);
+    $meter = $this->get_meter($meter_id, $serial);
+    $this->number->remove_n2m($meter);
     return (new mapper_number2meter($this->company, $this->number))->update_meter_list();
   }
   
