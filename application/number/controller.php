@@ -183,10 +183,7 @@ class controller_number{
 
   public static function private_get_dialog_edit_meter_comment(
     model_request $request){
-    $number = new data_number($request->GET('id'));
-    $meter = (new model_number2meter(model_session::get_company(), $number))
-      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return self::data_for_meters_dialog($request);
   }
 
   public static function private_get_dialog_edit_period(
@@ -216,10 +213,7 @@ class controller_number{
 
   public static function private_get_dialog_edit_serial(
     model_request $request){
-    $number = new data_number($request->GET('id'));
-    $meter = (new model_number2meter(model_session::get_company(), $number))
-      ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $meter];
+    return self::data_for_meters_dialog($request);
   }
 
   public static function private_get_dialog_exclude_processing_center(
@@ -483,18 +477,18 @@ class controller_number{
 
   public static function private_update_serial(model_request $request){
     $number = new data_number($request->GET('number_id'));
-    return ['n2m' => (new model_number2meter(model_session::get_company(),
-      $number))
-      ->update_serial($request->GET('meter_id'), $request->GET('serial'),
-        $request->GET('new_serial'))];
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->update_serial($request->GET('meter_id'),
+      $request->GET('serial'), $request->GET('new_serial'));
+    return ['number' => $number, 'meter' => $meter];
   }
 
   public static function private_update_meter_comment(model_request $request){
     $number = new data_number($request->GET('number_id'));
-    return ['n2m' => (new model_number2meter(model_session::get_company(),
-      $number))
-      ->update_comment($request->GET('meter_id'), $request->GET('serial'),
-        $request->GET('comment'))];
+    $meter = (new model_number2meter(model_session::get_company(), $number))
+      ->update_comment($request->GET('meter_id'),
+      $request->GET('serial'), $request->GET('comment'));
+    return ['number' => $number, 'meter' => $meter];
   }
 
   public static function private_update_period(model_request $request){
