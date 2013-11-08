@@ -46,7 +46,7 @@ class data_number2meter{
   }
 
   public function get_date_next_checking(){
-    return $this->date_next_checking;
+    return strtotime('+'.$this->period.' month', $this->date_checking);
   }
 
   public function get_period(){
