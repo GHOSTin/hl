@@ -7,7 +7,7 @@ class mapper_number2meter{
   private static $sql_get_meters = "SELECT `number2meter`.`meter_id`, 
           `number2meter`.`status`,
           `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
-          `number2meter`.`service`, `number2meter`.`serial`,
+          `meters`.`periods`, `number2meter`.`service`, `number2meter`.`serial`,
           `number2meter`.`date_release`, `number2meter`.`date_install`,
           `number2meter`.`date_checking`, `number2meter`.`period`,
           `number2meter`.`place`, `number2meter`.`comment`
@@ -45,7 +45,7 @@ class mapper_number2meter{
 
   private static $find = "SELECT `number2meter`.`meter_id`,
     `number2meter`.`status`, `number2meter`.`number_id`,
-    `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
+    `meters`.`name`, `meters`.`rates`, `meters`.`capacity`, `meters`.`periods`,
     `number2meter`.`service`, `number2meter`.`serial`,
     `number2meter`.`date_release`, `number2meter`.`date_install`,
     `number2meter`.`date_checking`, `number2meter`.`period`,
@@ -86,6 +86,12 @@ class mapper_number2meter{
     $meter->set_name($row['name']);
     $meter->set_capacity($row['capacity']);
     $meter->set_rates($row['rates']);
+    if(!empty($row['periods'])){
+      $periods = explode(';', $row['periods']);
+      if(!empty($periods))
+        foreach($periods as $period)
+          $meter->add_period($period);
+    }
     $n2m = new data_number2meter($meter);
     $n2m->set_serial($row['serial']);
     $n2m->set_service($row['service']);

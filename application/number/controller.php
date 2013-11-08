@@ -491,11 +491,10 @@ class controller_number{
   }
 
   public static function private_update_period(model_request $request){
-    $period = ((int) $request->GET('year') * 12) + (int) $request->GET('month');
     $number = new data_number($request->GET('number_id'));
     $meter = (new model_number2meter(model_session::get_company(), $number))
       ->update_period($request->GET('meter_id'), $request->GET('serial'),
-      $period);
+      $request->GET('period'));
     return ['number' => $number, 'meter' => $meter];
   }
 

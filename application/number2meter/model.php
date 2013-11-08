@@ -103,6 +103,8 @@ class model_number2meter{
 
   public function update_period($meter_id, $serial, $period){
     $meter = $this->get_meter($meter_id, $serial);
+    if(!in_array($period, $meter->get_periods()))
+      throw new e_model('Нет такого периода в счетчике.');
     $meter->set_period($period);
     $mapper = new mapper_number2meter($this->company, $this->number);
     return $mapper->update($meter);
