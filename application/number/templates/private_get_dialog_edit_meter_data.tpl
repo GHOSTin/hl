@@ -1,5 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set n2m = component.n2m %}
+{% set number = component.number %}
+{% set meter = component.meter %}
 {% set current = component.meter_data %}
 {% set time = component.time %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
@@ -13,9 +14,9 @@
            tarifs.push($(this).val());
         });
         $.get('update_meter_data',{
-            id: {{ n2m.get_number().get_id() }},
-            meter_id: {{ n2m.get_meter().get_id() }},
-            serial: {{ n2m.get_serial() }},
+            id: {{ number.get_id() }},
+            meter_id: {{ meter.get_id() }},
+            serial: {{ meter.get_serial() }},
             number: $('.dialog-number').val(),
             time: {{ time }},
             tarif: tarifs,
@@ -40,31 +41,13 @@
     </div>
     <div class="modal-body">
         <div class="row">
-            <div class="span2">
-                <div>1 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[0] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[0] }}">
-                {{ data.value[0] }}
-            </div>
-            {% if n2m.get_meter().get_rates() == 2 %}
-            <div class="span2">
-                <div class="">2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[1] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[1] }}">
-                {{ data.value[1] }}
-            </div>
-            {% endif %}
-            {% if n2m.get_meter().get_rates() == 3 %}
-            <div class="span2">
-                <div>2 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[1] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[1] }}">
-                {{ data.value[1] }}
-
-            </div>
-            <div class="span2">
-                <div class="">3 тариф</div>
-                <input type="text" class="dialog-tarif input-small" value="{{ current.get_value()[2] }}" maxlength="{{ n2m.get_meter().get_capacity() }}" min="{{ data.value[2] }}">
-                {{ data.value[2] }}
-            </div>
-            {% endif %}
+            {% for i in 1..meter.get_rates() %}
+                <div class="span2">
+                    <div>{{ i }} тариф</div>
+                    <input type="text" class="dialog-tarif input-small" value="{{ current.get_values()[i - 1] }}" maxlength="{{ meter.get_capacity() }}" min="{{ data.value[i - 1] }}">
+                    {{ data.value[i - 1] }}
+                </div>
+            {% endfor %}
         </div>
         <div>
             <label>Время передачи показания</label>

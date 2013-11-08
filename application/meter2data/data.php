@@ -5,7 +5,7 @@
 final class data_meter2data extends data_object{
 
 	private $time;
-	private $value;
+	private $values = [];
     private $comment;
     private $way;
     private $timestamp;
@@ -13,20 +13,7 @@ final class data_meter2data extends data_object{
     private $number_id;
     private $meter_id;
     private $serial;
-
-    public function __construct(){
-        if(empty($this->value))
-            $this->value = [];
-        else
-            $this->value = explode(';', $this->value);
-    }
-
-    public function verify(){
-        if(func_num_args() < 0)
-            throw new e_data('Параметры верификации не были переданы.');
-        foreach(func_get_args() as $value)
-            verify_meter2data::$value($this);
-    }
+    private static $ways = ['answerphone', 'telephone', 'fax', 'personally'];
 
     public function get_comment(){
         return $this->comment;
@@ -56,8 +43,8 @@ final class data_meter2data extends data_object{
         return $this->timestamp;
     }
 
-    public function get_value(){
-        return $this->value;
+    public function get_values(){
+        return $this->values;
     }
 
     public function get_way(){
@@ -65,26 +52,32 @@ final class data_meter2data extends data_object{
     }
 
     public function set_comment($comment){
+        self::verify_comment($comment);
         $this->comment = $comment;
     }
 
     public function set_company_id($id){
+        data_company::verify_id($id);
         $this->company_id = $id;
     }
 
     public function set_number_id($id){
+        data_number::verify_id($id);
         $this->number_id = $id;
     }
 
     public function set_meter_id($id){
+        data_meter::verify_id($id);
         $this->meter_id = $id;
     }
 
     public function set_serial($serial){
+        data_meter::verify_serial($serial);
         $this->serial = $serial;
     }
 
     public function set_time($time){
+        verify_environment::verify_time($time);
         $this->time = $time;
     }
 
@@ -92,11 +85,22 @@ final class data_meter2data extends data_object{
         $this->timestamp = $time;
     }
 
-    public function set_value(array $values){
-        $this->value = $values;
+    public function set_value($key, $value){
+        $this->values[(int) $key] = (int) $value;
     }
 
     public function set_way($way){
+        self::verify_way($way);
         $this->way = $way;
+    }
+
+    public static function verify_comment($comment){
+        if(!preg_match('/^[А-Яа-я0-9\., ]{0,255}$/u', $comment))
+            throw new e_model('Комментарий задан не верно.');
+    }
+
+    public static function verify_way($way){
+        if(!in_array($way, self::$ways, true))
+            throw new e_model('Спсоб передачи показания задан не верно.');
     }
 }

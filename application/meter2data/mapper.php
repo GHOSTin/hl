@@ -16,18 +16,32 @@ class mapper_meter2data{
     AND `meter2data`.`serial` = :serial AND `meter2data`.`time` >= :time_begin
     AND `meter2data`.`time` <= :time_end";
 
+  private static $update = "UPDATE`meter2data` SET `timestamp` = :timestamp, 
+    `value` = :value, `way` = :way, `comment` = :comment
+    WHERE `company_id` = :company_id AND `number_id` = :number_id
+    AND `meter_id` = :meter_id AND `serial` = :serial AND `time` = :time";
+
   public function __construct(data_company $company, data_number $number,
    data_number2meter $meter){
     $this->company = $company;
     $this->number = $number;
     $this->meter = $meter;
+    data_company::verify_id($this->company->get_id());
+    data_number::verify_id($this->number->get_id());
+    data_meter::verify_id($this->meter->get_id());
+    data_meter::verify_rates($this->meter->get_rates());
   }
 
   public function create_object(array $row){
     $value = new data_meter2data();
     $value->set_way($row['way']);
     $value->set_comment($row['comment']);
-    $value->set_value(explode(';', $row['value']));
+    if(!empty($row['value'])){
+      $values = explode(';', $row['value']);
+      $limit = $this->meter->get_rates();
+      for($i = 0; $i < $limit; $i++)
+        $value->set_value($i, $values[$i]);
+    }
     $value->set_time($row['time']);
     $value->set_timestamp($row['timestamp']);
     return $value;
@@ -58,10 +72,10 @@ class mapper_meter2data{
       $time = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
       $sql = new sql();
       $sql->query(self::$sql_get_value);
-      $sql->bind(':number_id', $this->n2m->get_number()->get_id(), PDO::PARAM_INT);
+      $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
       $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-      $sql->bind(':meter_id', $this->n2m->get_meter()->get_id(), PDO::PARAM_INT);
-      $sql->bind(':serial', $this->n2m->get_serial(), PDO::PARAM_STR);
+      $sql->bind(':meter_id', $this->meter->get_id(), PDO::PARAM_INT);
+      $sql->bind(':serial', $this->meter->get_serial(), PDO::PARAM_STR);
       $sql->bind(':time', $time, PDO::PARAM_INT);
       $sql->execute('Проблема при запросе показания счетчика.');
       $stmt = $sql->get_stm();
@@ -122,22 +136,25 @@ class mapper_meter2data{
   }
 
   public function update(data_meter2data $data){
-      $data->verify('time','timestamp', 'value', 'way', 'comment');
+      $this->verify($data);
       $sql = new sql();
-      $sql->query("UPDATE`meter2data` SET `timestamp` = :timestamp, 
-              `value` = :value, `way` = :way, `comment` = :comment
-              WHERE `company_id` = :company_id AND `number_id` = :number_id
-              AND `meter_id` = :meter_id AND `serial` = :serial AND `time` = :time");
+      $sql->query(self::$update);
       $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-      $sql->bind(':number_id', $this->n2m->get_number()->get_id(), PDO::PARAM_INT);
-      $sql->bind(':meter_id', $this->n2m->get_meter()->get_id(), PDO::PARAM_INT);
-      $sql->bind(':serial', $this->n2m->get_serial(), PDO::PARAM_STR);
+      $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
+      $sql->bind(':meter_id', $this->meter->get_id(), PDO::PARAM_INT);
+      $sql->bind(':serial', $this->meter->get_serial(), PDO::PARAM_STR);
       $sql->bind(':time', $data->get_time(), PDO::PARAM_INT);
       $sql->bind(':timestamp', $data->get_timestamp(), PDO::PARAM_INT);
-      $sql->bind(':value', implode(';', $data->get_value()), PDO::PARAM_STR);
+      $sql->bind(':value', implode(';', $data->get_values()), PDO::PARAM_STR);
       $sql->bind(':way', $data->get_way(), PDO::PARAM_STR);
       $sql->bind(':comment', $data->get_comment(), PDO::PARAM_STR);
       $sql->execute('Проблемы при обновлении показания.');
       return $data;
+  }
+
+  private function verify(data_meter2data $data){
+    verify_environment::verify_time($data->get_time());
+    data_meter2data::verify_comment($data->get_comment());
+    data_meter2data::verify_way($data->get_way());
   }
 }

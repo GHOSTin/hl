@@ -18,7 +18,6 @@ class mapper_number2meter{
       AND `number2meter`.`number_id` = :number_id
       AND `meters`.`id` = `number2meter`.`meter_id`";
 
-
   private static $change = "UPDATE `number2meter` SET `meter_id` = :meter_id,
     `serial` = :serial, `period` = :period, `service` = :service
     WHERE `company_id` = :company_id AND `number_id` = :number_id
@@ -64,7 +63,6 @@ class mapper_number2meter{
     `date_checking` = :date_checking WHERE `company_id` = :company_id
     AND `number_id` = :number_id AND `meter_id` = :meter_id
     AND `serial` = :serial";
-
 
   private static $update_serial = "UPDATE `number2meter`
     SET `period` = :period, `status` = :status, `serial` = :new_serial,

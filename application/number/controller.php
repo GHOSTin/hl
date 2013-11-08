@@ -317,7 +317,12 @@ class controller_number{
   }
 
   public static function private_get_meter_value(model_request $request){
-    return self::private_get_meter_data($request);
+    $data = self::private_get_meter_data($request);
+    $begin = mktime(12, 0, 0, 1, 1, $time['year']);
+    $end = mktime(12, 0, 0, 12, 1, $time['year']);
+    (new model_meter2data(model_session::get_company(), 
+      $data['number'], $data['meter']))->init_values($begin, $end);
+    return $data;
   }
 
   public static function private_get_meter_cart(model_request $request){
@@ -386,13 +391,12 @@ class controller_number{
     model_request $request){
     $company = model_session::get_company();
     $number = new data_number($request->GET('id'));
-    $n2m = (new model_number2meter($company, $number))
+    $meter = (new model_number2meter($company, $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    return ['n2m' => $n2m,
-            'time' => $request->GET('time'),
-            'meter_data' => (new model_meter2data($company, $n2m))
-              ->get_value($request->GET('time')),
-            'last_data' => null];
+    return ['number' => $number, 'meter' => $meter,
+            'time' => $request->GET('time'), 'last_data' => null,
+            'meter_data' => (new model_meter2data($company, $number, $meter))
+              ->get_value($request->GET('time'))];
   }
 
   public static function private_update_date_checking(model_request $request){
@@ -458,9 +462,10 @@ class controller_number{
     $timestamp = mktime(12, 0, 0, (int) $timestamp[1], (int) $timestamp[0], (int) $timestamp[2]);
     $company = model_session::get_company();
     $number = new data_number($request->GET('id'));
-    $n2m = (new model_number2meter($company, $number))
+    $meter = (new model_number2meter($company, $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
-    (new model_meter2data($company, $n2m))
+
+    (new model_meter2data($company, $number, $meter))
       ->update_value($request->GET('time'), $request->GET('tarif'), 
         $request->GET('way'), $request->GET('comment'), $timestamp);
     if($request->GET('time') > 0)
@@ -469,9 +474,8 @@ class controller_number{
         $time = getdate();
     $begin = mktime(12, 0, 0, 1, 1, $time['year']);
     $end = mktime(12, 0, 0, 12, 1, $time['year']);
-
-    (new model_meter2data($company, $n2m))->init_values($begin, $end);
-    return ['n2m' => $n2m, 'time' => $begin];
+    (new model_meter2data($company, $number, $meter))->init_values($begin, $end);
+    return ['number' => $number, 'meter' => $meter, 'time' => $begin];
   }
 
   public static function private_update_serial(model_request $request){
