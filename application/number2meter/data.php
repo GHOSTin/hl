@@ -20,7 +20,7 @@ class data_number2meter{
   }
 
   public function __construct(data_meter $meter){
-    $this->meter = $meter;
+    $this->set_meter($meter);
   }
 
   public function add_value(data_meter2data $m2d){
@@ -108,6 +108,11 @@ class data_number2meter{
         throw new e_model('Время производства счетчика не может быть больше
         времени установки счетчика');
     $this->date_release = $time;
+  }
+
+  public function set_meter(data_meter $meter){
+    $this->meter = $meter;
+    data_meter::verify_id($this->meter->get_id());
   }
 
   public function set_period($period){

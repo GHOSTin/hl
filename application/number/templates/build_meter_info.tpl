@@ -6,12 +6,11 @@
 <button class="btn get_dialog_delete_meter">Удалить счетчик и показания</button>
 <h5>Основные параметры счетчика</h5>
 <ul class="unstyled" style="padding-left:20px">
+    <li>Название: {{ services[meter.get_service()] }} {{ meter.get_name() }} <a class="get_dialog_change_meter">изменить</a></li>
     <li>Статус: {{ statuses[meter.get_status()] }} <a class="get_dialog_edit_meter_status">изменить</a></li>
-    <li>Услуга: {{ services[meter.get_service()] }}</li>
     {% if meter.get_service() == 'cold_water' or meter.get_service() == 'hot_water' %}
     <li>Место установки: {{ places[meter.get_place()] }} <a class="get_dialog_edit_meter_place">изменить</a></li>
     {% endif %}
-    <li>Название: {{ meter.get_name() }} <a class="get_dialog_change_meter">заменить счетчик</a></li>
     <li>Серийный номер: {{ meter.get_serial() }} <a class="get_dialog_edit_serial">изменить</a></li>
     <li>Тарифность: {{ rates[meter.get_rates() - 1] }}</li>
     <li>Разрядность: {{ meter.get_capacity() }}</li>

@@ -31,25 +31,27 @@ class model_number2meter{
     $mapper->update_meter_list();
   }
 
-  public function change_meter($old_meter_id, $old_serial, $meter_id, $serial, $service, $place, $date_release,
-                              $date_install, $date_checking, $period, $comment){
-    $model = new model_meter($this->company);
-    $meter = $model->get_meter($meter_id);
-    $mapper = new mapper_number2meter($this->company, $this->number_id);
-    if($mapper->find($meter_id, $serial) !== null)
-        throw new e_model('Счетчик с таким идентификатором и серийным номером уже существует.');
-    $n2m = new data_number2meter();
-    $n2m->set_meter_id($meter_id);
-    $n2m->set_serial($serial);
-    $n2m->set_status('enabled');
-    $n2m->set_service($service);
-    $n2m->set_place($place);
-    $n2m->set_date_release($date_release);
-    $n2m->set_date_install($date_install);
-    $n2m->set_date_checking($date_checking);
-    $n2m->set_period($period);
-    $n2m->set_comment($comment);
-    return $mapper->change($n2m, $old_meter_id, $old_serial);
+  public function change_meter($old_meter_id, $old_serial,
+                                $new_meter_id, $service, $period){
+    try{
+      sql::begin();
+      $mapper = new mapper_number2meter($this->company, $this->number);
+      if($mapper->find($new_meter_id, $old_serial) !== null)
+          throw new e_model('Счетчик с таким идентификатором
+                              и серийным номером уже существует.');
+      $new_meter = (new model_meter($this->company))->get_meter($new_meter_id);
+      $old_meter = $this->get_meter($old_meter_id, $old_serial);
+      if(!in_array($period, $new_meter->get_periods()))
+        throw new e_model('Такого периода нет в счетчикке.');
+      if(!in_array($service, $new_meter->get_services()))
+        throw new e_model('Такой службы нет в счетчика.');
+      $old_meter->set_meter($new_meter);
+      $old_meter->set_service($service);
+      $old_meter->set_period($period);
+      return $mapper->change($old_meter, $old_meter_id, $old_serial);
+    }catch(exception $e){
+      sql::rollback();
+    }
   }
 
   public function get_meter($meter_id, $serial){

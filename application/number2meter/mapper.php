@@ -18,6 +18,17 @@ class mapper_number2meter{
       AND `number2meter`.`number_id` = :number_id
       AND `meters`.`id` = `number2meter`.`meter_id`";
 
+
+  private static $change = "UPDATE `number2meter` SET `meter_id` = :meter_id,
+    `serial` = :serial, `period` = :period, `service` = :service
+    WHERE `company_id` = :company_id AND `number_id` = :number_id
+    AND `meter_id` = :old_meter_id AND `serial` = :old_serial";
+
+  private static $change_values = "UPDATE `meter2data`
+    SET `meter_id` = :new_meter_id
+    WHERE `company_id` = :company_id AND `number_id` = :number_id
+    AND `meter_id` = :old_meter_id AND `serial` = :old_serial";
+
   private static $delete = "DELETE FROM `number2meter` 
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `meter_id` = :meter_id AND `serial` = :serial";
@@ -210,31 +221,26 @@ class mapper_number2meter{
   }
 
   public function change(data_number2meter $meter, $old_meter_id, $old_serial){
-    $meter->set_company_id($this->company->id);
-    $meter->set_number_id($this->number_id);
-    $meter->verify('company_id', 'number_id', 'meter_id', 'serial', 'period',
-                    'status', 'place', 'comment', 'date_release', 'date_install', 'date_checking');
+    $this->verify($meter);
     $sql = new sql();
-    $sql->query("UPDATE `number2meter` SET `meter_id` = :meter_id,
-        `serial` = :serial, `period` = :period, `status` = :status, 
-        `place` = :place, `comment` = :comment, `date_release` = :date_release,
-        `date_install` = :date_install, `date_checking` = :date_checking
-        WHERE `company_id` = :company_id AND `number_id` = :number_id
-        AND `meter_id` = :old_meter_id AND `serial` = :old_serial");
-    $sql->bind(':number_id', $meter->get_number_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $meter->get_company_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', $meter->get_meter_id(), PDO::PARAM_INT);
-    $sql->bind(':serial', $meter->get_serial(), PDO::PARAM_STR);
-    $sql->bind(':period', $meter->get_period(), PDO::PARAM_INT);
-    $sql->bind(':status', $meter->get_status(), PDO::PARAM_STR);
-    $sql->bind(':date_release', $meter->get_date_release(), PDO::PARAM_INT);
-    $sql->bind(':date_install', $meter->get_date_install(), PDO::PARAM_INT);
-    $sql->bind(':date_checking', $meter->get_date_checking(), PDO::PARAM_INT);
-    $sql->bind(':place', $meter->get_place(), PDO::PARAM_STR);
-    $sql->bind(':comment', $meter->get_comment(), PDO::PARAM_STR);
+    $sql->query(self::$change);
+    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':meter_id', (int) $meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':serial', (string) $meter->get_serial(), PDO::PARAM_STR);
+    $sql->bind(':period', (int) $meter->get_period(), PDO::PARAM_INT);
+    $sql->bind(':service', (string) $meter->get_service(), PDO::PARAM_STR);
     $sql->bind(':old_meter_id', (int) $old_meter_id, PDO::PARAM_INT);
     $sql->bind(':old_serial', (string) $old_serial, PDO::PARAM_STR);
     $sql->execute('Проблема при обновлении связи лицевого счета и счетчика');
+    $sql = new sql();
+    $sql->query(self::$change_values);
+    $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':old_meter_id', $old_meter_id, PDO::PARAM_INT);
+    $sql->bind(':new_meter_id', $meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':old_serial', $meter->get_serial(), PDO::PARAM_STR);
+    $sql->execute('Проблема при изменении значений счетчика');
     return $meter;
   }
 
