@@ -245,45 +245,59 @@ class mapper_number2meter{
   }
 
   public function change(data_number2meter $meter, $old_meter_id, $old_serial){
-    $this->verify($meter);
-    $sql = new sql();
-    $sql->query(self::$change);
-    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', (int) $meter->get_id(), PDO::PARAM_INT);
-    $sql->bind(':serial', (string) $meter->get_serial(), PDO::PARAM_STR);
-    $sql->bind(':period', (int) $meter->get_period(), PDO::PARAM_INT);
-    $sql->bind(':service', (string) $meter->get_service(), PDO::PARAM_STR);
-    $sql->bind(':old_meter_id', (int) $old_meter_id, PDO::PARAM_INT);
-    $sql->bind(':old_serial', (string) $old_serial, PDO::PARAM_STR);
-    $sql->execute('Проблема при обновлении связи лицевого счета и счетчика');
-    $sql = new sql();
-    $sql->query(self::$change_values);
-    $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':old_meter_id', $old_meter_id, PDO::PARAM_INT);
-    $sql->bind(':new_meter_id', $meter->get_id(), PDO::PARAM_INT);
-    $sql->bind(':old_serial', $meter->get_serial(), PDO::PARAM_STR);
-    $sql->execute('Проблема при изменении значений счетчика');
-    return $meter;
+    try{
+      sql::begin();
+      $this->verify($meter);
+      $sql = new sql();
+      $sql->query(self::$change);
+      $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+      $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+      $sql->bind(':meter_id', (int) $meter->get_id(), PDO::PARAM_INT);
+      $sql->bind(':serial', (string) $meter->get_serial(), PDO::PARAM_STR);
+      $sql->bind(':period', (int) $meter->get_period(), PDO::PARAM_INT);
+      $sql->bind(':service', (string) $meter->get_service(), PDO::PARAM_STR);
+      $sql->bind(':old_meter_id', (int) $old_meter_id, PDO::PARAM_INT);
+      $sql->bind(':old_serial', (string) $old_serial, PDO::PARAM_STR);
+      $sql->execute('Проблема при обновлении связи лицевого счета и счетчика');
+      $sql = new sql();
+      $sql->query(self::$change_values);
+      $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
+      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+      $sql->bind(':old_meter_id', $old_meter_id, PDO::PARAM_INT);
+      $sql->bind(':new_meter_id', $meter->get_id(), PDO::PARAM_INT);
+      $sql->bind(':old_serial', $meter->get_serial(), PDO::PARAM_STR);
+      $sql->execute('Проблема при изменении значений счетчика');
+      sql::commit();
+      return $meter;
+    }catch(exception $e){
+      sql::rollback();
+      throw new e_model('Проблема при изменении значений счетчика');
+    }
   }
 
   public function update_meter_list(){
-    $new = $this->number->get_meters();
-    $old = [];
-    $meters = $this->get_meters();
-    if(!empty($meters))
-      foreach($meters as $meter)
-        $old[$meter->get_id().'_'.$meter->get_serial()] = $meter;
-    $deleted = array_diff_key($old, $new);
-    $inserted = array_diff_key($new, $old);
-    if(!empty($inserted))
-      foreach($inserted as $meter)
-        $this->insert($meter);
-    if(!empty($deleted))
-      foreach($deleted as $meter)
-        $this->delete($meter);
-    return $this->number;
+    try{
+      sql::begin();
+      $new = $this->number->get_meters();
+      $old = [];
+      $meters = $this->get_meters();
+      if(!empty($meters))
+        foreach($meters as $meter)
+          $old[$meter->get_id().'_'.$meter->get_serial()] = $meter;
+      $deleted = array_diff_key($old, $new);
+      $inserted = array_diff_key($new, $old);
+      if(!empty($inserted))
+        foreach($inserted as $meter)
+          $this->insert($meter);
+      if(!empty($deleted))
+        foreach($deleted as $meter)
+          $this->delete($meter);
+        sql::commit();
+      return $this->number;
+    }catch(exception $e){
+      sql::rollback();
+      throw new e_model('Проблема при обновлении списка счетчиков.');
+    }
   }
 
   private function verify(data_number2meter $meter){
