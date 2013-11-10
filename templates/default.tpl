@@ -29,7 +29,7 @@
     <footer>
         <div class="container-fluid">
             <p class="muted credit">
-                Разработка компании <a href="http://mlsco.ru">mlsco</a>
+                 Версия {{ version }}. Разработка компании <a href="http://mlsco.ru">mlsco</a>.
             </p>
         </div>
     </footer>        

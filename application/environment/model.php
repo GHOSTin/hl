@@ -43,6 +43,8 @@ class model_environment{
 			$data['file_prefix'] = $component;
 			$data['component'] = $controller::$method($request);
 			$data['request'] = $request;
+			$file = fopen(ROOT.'/version', 'r');
+			$data['version'] = fgets($file);
 			$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
 			if(file_exists($template)){
 				return load_template($component.'.'.$method, $data);
