@@ -26,17 +26,15 @@ class mapper_number2processing_center{
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;
     $this->number = $number;
-    $this->company->verify('id');
-    $this->number->verify('id');
+    data_company::verify_id($this->company->get_id());
+    data_number::verify_id($this->number->get_id());
   }
 
   public function insert(data_number2processing_center $n2c){
-    $n2c->verify('identifier');
-    $n2c->get_center()->verify('id');
     $sql = new sql();
     $sql->query(self::$sql_add_center);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':processing_center_id', (int) $n2c->get_center()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
     $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     $sql->bind(':identifier', (string) $n2c->get_identifier(), PDO::PARAM_STR);
     $sql->execute('Ошибка при добавлении центра в лицевой счет.');

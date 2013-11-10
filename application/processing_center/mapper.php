@@ -50,9 +50,6 @@ class mapper_processing_center{
   * @return list object data_processing_center
   */
   public function find($id){
-    $c = new data_processing_center();
-    $c->set_id($id);
-    $c->verify('id');
     $sql = new sql();
     $sql->query(self::$sql_get_center);
     $sql->bind(':id', (int) $id, PDO::PARAM_INT);

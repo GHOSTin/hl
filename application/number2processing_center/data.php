@@ -10,7 +10,7 @@ class data_number2processing_center{
 
   public function __construct(data_processing_center $center){
     $this->processing_center = $center;
-    $this->processing_center->verify('id');
+    data_processing_center::verify_id($this->processing_center->get_id());
   }
 
   public function get_identifier(){
@@ -18,13 +18,12 @@ class data_number2processing_center{
   }
 
   public function set_identifier($id){
+    self::verify_identifier($id);
     $this->identifier = (string) $id;
   }
 
-  public function verify(){
-    if(func_num_args() < 0)
-      throw new e_data('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value)
-      verify_number2processing_center::$value($this);
+  public static function verify_identifier($ident){
+    if(!preg_match('/^[а-яА-Яa-zA-Z0-9]{0,20}$/u', $ident))
+        throw new e_model('Идентификатор лицевого счета задан не верно.');
   }
 }
