@@ -5,14 +5,19 @@ class mapper_group{
 
   private static $find = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id AND `id` = :id";
+
   private static $find_by_name = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id AND `name` = :name";
-  private static $insert_id = "SELECT MAX(`id`) as `max_id` FROM `groups`
+
+  private static $id = "SELECT MAX(`id`) as `max_id` FROM `groups`
     WHERE `company_id` = :company_id";
+
   private static $insert = 'INSERT INTO `groups` (`id`, `company_id`, `name`, `status`)
           VALUES (:id, :company_id, :name, :status)';
+
   private static $groups = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id  ORDER BY `name`";
+
   private static $update = "UPDATE `groups` SET `name` = :name
     WHERE `company_id` = :company_id AND `id` = :id";
 
@@ -98,7 +103,7 @@ class mapper_group{
   */
   public function get_insert_id(){
     $sql = new sql();
-    $sql->query(self::$insert_id);
+    $sql->query(self::$id);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при опредении следующего group_id.');
     if($sql->count() !== 1)

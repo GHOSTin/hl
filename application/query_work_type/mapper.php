@@ -11,7 +11,7 @@ class mapper_query_work_type{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
 	}
 
 	public function create_object(array $row){

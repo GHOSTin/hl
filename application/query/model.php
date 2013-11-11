@@ -7,7 +7,7 @@ class model_query{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
 	  $profile = model_session::get_profile();
 	  if((string) $profile === 'query')
 	  	$this->restrictions = $profile->get_restrictions();

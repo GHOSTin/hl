@@ -5,7 +5,7 @@ class mapper_query2user{
   private $query;
   private static $classes = ['creator', 'manager', 'performer', 'observer'];
 
-  private static $sql_get_users = "SELECT `query2user`.`query_id`,
+  private static $all = "SELECT `query2user`.`query_id`,
     `query2user`.`class`, `users`.`id`,
     `users`.`firstname`, `users`.`lastname`, `users`.`midlename`
     FROM `query2user`, `users`
@@ -13,18 +13,18 @@ class mapper_query2user{
     AND `users`.`id` = `query2user`.`user_id`
     AND `query2user`.`query_id` = :query_id";
 
-  private static $sql_insert = "INSERT INTO `query2user`
+  private static $insert = "INSERT INTO `query2user`
     (`query_id`, `user_id`, `company_id`, `class`)
     VALUES (:query_id, :user_id, :company_id, :class)";
 
-  private static $sql_delete = "DELETE FROM `query2user`
+  private static $delete = "DELETE FROM `query2user`
     WHERE `company_id` = :company_id AND `query_id` = :query_id
     AND `user_id` = :user_id AND `class` = :class";
 
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
     $this->query->verify('id');
   }
 
@@ -39,7 +39,7 @@ class mapper_query2user{
 
   private function get_users(){
     $sql = new sql();
-    $sql->query(self::$sql_get_users);
+    $sql->query(self::$all);
     $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
@@ -62,7 +62,7 @@ class mapper_query2user{
     if(!in_array($class, self::$classes, true))
       throw new e_model('Не соответсвует тип пользователя.');
     $sql = new sql();
-    $sql->query(self::$sql_insert);
+    $sql->query(self::$insert);
     $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
@@ -77,7 +77,7 @@ class mapper_query2user{
     if(!in_array($class, self::$classes, true))
       throw new e_model('Не соответсвует тип пользователя.');
     $sql = new sql();
-    $sql->query(self::$sql_delete);
+    $sql->query(self::$delete);
     $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
@@ -107,44 +107,49 @@ class mapper_query2user{
     return $this->query;
   }
 
-
-
   public function update_users(){
-    $users = $this->get_users();
-    $new_managers = $this->query->get_managers();
-    $delete_managers = array_diff_key($users['manager'], $new_managers);
-    $insert_managers = array_diff_key($new_managers, $users['manager']);
-    if(!empty($insert_managers))
-        foreach($insert_managers as $user)
-            $this->insert($user, 'manager');
-    if(!empty($delete_managers))
-        foreach($delete_managers as $number)
-            $this->delete($number, 'manager');
+    try{
+      sql::begin();
+      $users = $this->get_users();
+      $new_managers = $this->query->get_managers();
+      $delete_managers = array_diff_key($users['manager'], $new_managers);
+      $insert_managers = array_diff_key($new_managers, $users['manager']);
+      if(!empty($insert_managers))
+          foreach($insert_managers as $user)
+              $this->insert($user, 'manager');
+      if(!empty($delete_managers))
+          foreach($delete_managers as $number)
+              $this->delete($number, 'manager');
 
-    $new_performers = $this->query->get_performers();
-    $delete_performers = array_diff_key($users['performer'], $new_performers);
-    $insert_performers = array_diff_key($new_performers, $users['performer']);
-    if(!empty($insert_performers))
-        foreach($insert_performers as $user)
-            $this->insert($user, 'performer');
-    if(!empty($delete_performers))
-        foreach($delete_performers as $number)
-            $this->delete($number, 'performer');
+      $new_performers = $this->query->get_performers();
+      $delete_performers = array_diff_key($users['performer'], $new_performers);
+      $insert_performers = array_diff_key($new_performers, $users['performer']);
+      if(!empty($insert_performers))
+          foreach($insert_performers as $user)
+              $this->insert($user, 'performer');
+      if(!empty($delete_performers))
+          foreach($delete_performers as $number)
+              $this->delete($number, 'performer');
 
-    $new_observers = $this->query->get_observers();
-    $delete_observers = array_diff_key($users['observer'], $new_observers);
-    $insert_observers = array_diff_key($new_observers, $users['observer']);
-    if(!empty($insert_observers))
-        foreach($insert_observers as $user)
-            $this->insert($user, 'observer');
-    if(!empty($delete_observers))
-        foreach($delete_observers as $number)
-            $this->delete($number, 'observer');
-    if(empty($users['creator']))
-      if(empty($this->query->get_creator()))
-        throw new e_model('Создатель заявки не может быть пустым.');
-      else
-        $this->insert($this->query->get_creator(), 'creator');
-    return $query;
+      $new_observers = $this->query->get_observers();
+      $delete_observers = array_diff_key($users['observer'], $new_observers);
+      $insert_observers = array_diff_key($new_observers, $users['observer']);
+      if(!empty($insert_observers))
+          foreach($insert_observers as $user)
+              $this->insert($user, 'observer');
+      if(!empty($delete_observers))
+          foreach($delete_observers as $number)
+              $this->delete($number, 'observer');
+      if(empty($users['creator']))
+        if(empty($this->query->get_creator()))
+          throw new e_model('Создатель заявки не может быть пустым.');
+        else
+          $this->insert($this->query->get_creator(), 'creator');
+      sql::commit();
+      return $query;
+    }catch(exception $e){
+      sql::rollback();
+      throw new e_model('Проблемы при обновлении списка пользователей.');
+    }
   }
 }

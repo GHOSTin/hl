@@ -16,6 +16,8 @@ class data_number2meter{
   private $values = [];
 
   public function __call($method, $args){
+    if(!in_array($method, get_class_methods($this->meter), true))
+      throw new e_model('Вызван недопустимый метод.');
     return $this->meter->$method($args);
   }
 

@@ -1,10 +1,10 @@
 <?php
 class mapper_city{
 
-  private static $sql_get_city_by_name = "SELECT `id`, `status`, `name`
+  private static $one_by_name = "SELECT `id`, `status`, `name`
     FROM `cities` WHERE `name` = :name";
 
-  private static $sql_get_city = "SELECT `id`, `status`, `name`
+  private static $one = "SELECT `id`, `status`, `name`
     FROM `cities` WHERE `id` = :id";
 
   public function create_object(array $row){
@@ -16,7 +16,7 @@ class mapper_city{
 
   public function get_city_by_name($name){
     $sql = new sql();
-    $sql->query(self::$sql_get_city_by_name);
+    $sql->query(self::$one_by_name);
     $sql->bind(':name', (string) $name, PDO::PARAM_STR);
     $sql->execute('Проблема при выборке городов.');
     $stmt = $sql->get_stm();
@@ -31,7 +31,7 @@ class mapper_city{
 
   public function find($id){
     $sql = new sql();
-    $sql->query(self::$sql_get_city);
+    $sql->query(self::$one);
     $sql->bind(':id', (int) $id, PDO::PARAM_INT);
     $sql->execute('Проблема при выборке городов.');
     $stmt = $sql->get_stm();

@@ -4,16 +4,20 @@ class mapper_house2flat{
   private $company;
   private $house;
 
-  private static $sql_get_flats = "SELECT `id`, `house_id`, `status`, `flatnumber`
-          FROM `flats` WHERE `house_id` = :house_id ORDER BY (`flatnumber` + 0)";
+  private static $sql_get_flats = "SELECT `id`, `house_id`, `status`,
+    `flatnumber` FROM `flats` WHERE `house_id` = :house_id
+    ORDER BY (`flatnumber` + 0)";
+
   private static $sql_insert = "INSERT `flats` (`id`, `company_id`, `house_id`,
-    `status`, `flatnumber`) VALUES (:id, :company_id, :house_id, :status,
-    :number)";
+    `status`, `flatnumber`) VALUES (:id, :company_id,
+    :house_id, :status, :number)";
+
+  private static $id = "SELECT MAX(`id`) as `max_flat_id` FROM `flats`";
 
   public function __construct(data_company $company, data_house $house){
     $this->company = $company;
     $this->house = $house;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
     $this->house->verify('id');
   }
 
@@ -38,7 +42,7 @@ class mapper_house2flat{
 
   public function get_insert_id(){
     $sql = new sql();
-    $sql->query("SELECT MAX(`id`) as `max_flat_id` FROM `flats`");
+    $sql->query(self::$id);
     $sql->execute('Проблема при опредении следующего flat_id.');
     if($sql->count() !== 1)
       throw new e_model('Проблема при опредении следующего flat_id.');

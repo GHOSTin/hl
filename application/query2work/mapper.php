@@ -4,7 +4,7 @@ class mapper_query2work{
   private $company;
   private $query;
 
-  private static $sql_get_works = "SELECT `query2work`.`opentime` as `time_open`,
+  private static $many = "SELECT `query2work`.`opentime` as `time_open`,
     `query2work`.`closetime` as `time_close`, `query2work`.`value`,
     `works`.`id`, `works`.`name`
     FROM `query2work`, `works`
@@ -13,18 +13,18 @@ class mapper_query2work{
     AND `works`.`id` = `query2work`.`work_id`
     AND `query2work`.`query_id` = :query_id";
 
-  public static $sql_insert = "INSERT INTO `query2work` (`query_id`, `work_id`, 
+  public static $indert = "INSERT INTO `query2work` (`query_id`, `work_id`, 
     `company_id`, `opentime`, `closetime`) VALUES (:query_id, :work_id,
     :company_id, :time_open, :time_close)";
 
-  public static $sql_delete = "DELETE FROM `query2work`
+  public static $delete = "DELETE FROM `query2work`
           WHERE `company_id` = :company_id AND `query_id` = :query_id
           AND `work_id` = :work_id";
 
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
     $this->query->verify('id');
   }
 
@@ -41,7 +41,7 @@ class mapper_query2work{
 
   public function delete(data_query2work $work){
     $sql = new sql();
-    $sql->query(self::$sql_delete);
+    $sql->query(self::$delete);
     $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $sql->bind(':work_id', $work->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -51,7 +51,7 @@ class mapper_query2work{
 
   public function insert(data_query2work $work){
     $sql = new sql();
-    $sql->query(self::$sql_insert);
+    $sql->query(self::$indert);
     $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $sql->bind(':work_id', $work->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -63,7 +63,7 @@ class mapper_query2work{
 
   private function get_works(){
     $sql = new sql();
-    $sql->query(self::$sql_get_works);
+    $sql->query(self::$many);
     $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при запросе работ.');

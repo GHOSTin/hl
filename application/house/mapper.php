@@ -1,7 +1,7 @@
 <?php
 class mapper_house{
 
-  private static $sql_find = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+  private static $one = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
     `department_id`, `status`, `housenumber` as `number`
     FROM `houses` WHERE `id` = :house_id";
 
@@ -18,7 +18,7 @@ class mapper_house{
 
   public function find($id){
     $sql = new sql();
-    $sql->query(self::$sql_find);
+    $sql->query(self::$one);
     $sql->bind(':house_id', (int) $id, PDO::PARAM_INT);
     $sql->execute('Проблема при выборке домов из базы данных.');
     $stmt = $sql->get_stm();

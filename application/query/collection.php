@@ -10,7 +10,7 @@ class collection_query{
 
   public function __construct(data_company $company, array $queries){
     $this->company = $company;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
     $this->queries = $queries;
     if(!empty($this->queries))
       foreach($this->queries as $query)
