@@ -35,7 +35,7 @@ class mapper_meter2data{
     AND `meter_id` = :meter_id AND `serial` = :serial AND `time` < :time)";
 
   public function __construct(data_company $company, data_number $number,
-   data_number2meter $meter){
+    data_number2meter $meter){
     $this->company = $company;
     $this->number = $number;
     $this->meter = $meter;

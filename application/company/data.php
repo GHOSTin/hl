@@ -30,18 +30,17 @@ class data_company{
   }
 
   public function set_id($id){
-    $id = (int) $id;
+    $this->id = (int) $id;
     self::verify_id($id);
-    $this->id = $id;
   }
 
   public function set_name($name){
+    $this->name = (string) $name;
     self::verify_name($name);
-    $this->name = $name;
   }
 
   public function set_status($status){
+    $this->status = (string) $status;
     self::verify_status($status);
-    $this->status = $status;
   }
 }

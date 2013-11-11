@@ -14,14 +14,9 @@ final class data_meter extends data_object{
   private static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_company), true))
+    if(!in_array($method, get_class_methods(verify_meter), true))
       throw new e_model('Нет доступного метода.');
     return verify_meter::$method($args[0]);
-  }
-
-  public function __construct($id = null){
-    if(!is_null($id))
-      $this->set_id($id);
   }
 
   public function add_period($period){
@@ -80,9 +75,8 @@ final class data_meter extends data_object{
   }
 
   public function set_id($id){
-    $id = (int) $id;
-    self::verify_id($id);
-    $this->id = $id;
+    $this->id = (int) $id;
+    self::verify_id($this->id);
   }
 
   public function set_service($service){
@@ -99,20 +93,18 @@ final class data_meter extends data_object{
   }
 
   public function set_name($name){
+    $this->name = (string) $name;
     self::verify_name($name);
-    $this->name = $name;
   }
 
   public function set_capacity($capacity){
-    $capacity = (int) $capacity;
-    self::verify_capacity($capacity);
-    $this->capacity = $capacity;
+    $this->capacity = (int) $capacity;
+    self::verify_capacity($this->capacity);
   }
 
   public function set_rates($rates){
-    $rates = (int) $rates;
-    self::verify_rates($rates);
-    $this->rates = $rates;
+    $this->rates = (int) $rates;
+    self::verify_rates($this->rates);
   }
 
   public function get_periods(){

@@ -18,8 +18,8 @@ class data_house2processing_center{
   }
 
   public function set_identifier($identifier){
+    $this->identifier = (string) $identifier;
     self::verify_identifier($identifier);
-    $this->identifier = $identifier;
   }
 
   public static function verify_identifier($ident){

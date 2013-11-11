@@ -5,7 +5,7 @@ class model_group{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-		$this->company->verify('id');
+		data_company::verify_id($this->company->get_id());
 	}
 
 	/**

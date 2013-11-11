@@ -11,6 +11,14 @@ final class data_flat extends data_object{
   private $number;
   private $status;
 
+  public static $statuses = ['true', 'false'];
+
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_flat), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_flat::$method($args[0]);
+  }
+
   public function get_company_id(){
     return $this->company_id;
   }

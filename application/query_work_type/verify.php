@@ -13,8 +13,8 @@ class verify_query_work_type{
   * Верификация названия типа работ заявки.
   */
   public static function verify_name($name){
-    if(!preg_match('/^[А-Я][а-я]{2,19}$/u', $name))
-      throw new e_model('Название типа работ задано не верно.');
+    // if(!preg_match('/^[А-Я][а-я]{2,19}$/u', $name))
+    //   throw new e_model('Название типа работ задано не верно.');
   }
 
   /**

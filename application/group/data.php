@@ -11,6 +11,12 @@ class data_group extends data_object{
   private $status;
   private $users = [];
 
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_group), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_group::$method($args[0]);
+  }
+
   public function add_user(data_user $user){
     if(array_key_exists($user->get_id(), $this->users))
       throw new e_model('Пользователь уже добавлен в группу.');
@@ -21,10 +27,6 @@ class data_group extends data_object{
     if(!array_key_exists($user->get_id(), $this->users))
       throw new e_model('Пользователя нет в группе.');
     unset($this->users[$user->get_id()]);
-  }
-
-  public function get_company_id(){
-    return $this->company_id;
   }
 
   public function get_id(){
@@ -43,19 +45,18 @@ class data_group extends data_object{
     return $this->users;
   }
 
-  public function set_company_id($id){
-    $this->company_id = (int) $id;
-  }
-
   public function set_id($id){
     $this->id = (int) $id;
+    self::verify_id($this->id);
   }
 
   public function set_name($name){
     $this->name = (string) $name;
+    self::verify_name($this->name);
   }
 
   public function set_status($status){
     $this->status = (string) $status;
+    self::verify_status($this->status);
   }
 }

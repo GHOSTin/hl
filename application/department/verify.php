@@ -1,38 +1,27 @@
 <?php
 class verify_department{
 
-    /**
-    * Верификация идентификатора компании.
-    */
-    public static function company_id(data_department $department){
-        $company = new data_company();
-        $company->set_id($department->get_company_id());
-        $company->verify('id');
-    }
+  /**
+  * Верификация идентификатора участка.
+  */
+  public static function verify_id($id){
+    if($id > 255 OR $id < 1)
+      throw new e_model('Идентификатор участка задан не верно.');
+  }
 
-    /**
-    * Верификация идентификатора участка.
-    */
-    public static function id(data_department $department){
-        if(!preg_match('/^[0-9]{1,3}$/', $department->get_id()))
-            throw new e_model('Идентификатор участка задан не верно.');
-        if($department->get_id() > 255 OR $department->get_id() < 1)
-            throw new e_model('Идентификатор участка задан не верно.');
-    }
+  /**
+  * Верификация названия участка.
+  */
+  public static function verify_name($name){
+    // if(!preg_match('/^[А-Я][а-я0-9№ ]{1,19}$/', $name))
+    //   throw new e_model('Название участка задано не верно.');
+  }
 
-    /**
-    * Верификация названия участка.
-    */
-    public static function name(data_department $department){
-        if(!preg_match('/^[А-Я][а-я0-9№ ]{1,19}$/', $department->get_name()))
-            throw new e_model('Название участка задано не верно.');
-    }
-
-    /**
-    * Верификация статуса участка.
-    */
-    public static function status(data_department $department){
-        if(!in_array($department->get_status(), ['active', 'deactive']))
-            throw new e_model('Статус участка задан не верно.');
-    }
+  /**
+  * Верификация статуса участка.
+  */
+  public static function verify_status($status){
+    if(!in_array($status, data_department::$statuses))
+      throw new e_model('Статус участка задан не верно.');
+  }
 }

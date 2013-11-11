@@ -116,6 +116,12 @@ final class data_query extends data_object{
 	private $users = ['creator' => null, 'manager' => [],
 										'observer' => [], 'performer' => []];
 
+	public static function __callStatic($method, $args){
+	  if(!in_array($method, get_class_methods(verify_query), true))
+	    throw new e_model('Нет доступного метода.');
+	  return verify_query::$method($args[0]);
+	}
+
 	public function add_number(data_number $number){
 		if(array_key_exists($number->get_id(), $this->numbers))
 			throw new e_model('Лицевой счет уже добавлен в заявку.');

@@ -23,13 +23,12 @@ class mapper_group{
 
   public function __construct(data_company $company){
     $this->company = $company;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
   }
 
   private function create_object(array $row){
     $group = new data_group();
     $group->set_id($row['id']);
-    $group->set_company_id($row['company_id']);
     $group->set_status($row['status']);
     $group->set_name($row['name']);
     return $group;

@@ -18,7 +18,7 @@ class mapper_house2flat{
     $this->company = $company;
     $this->house = $house;
     data_company::verify_id($this->company->get_id());
-    $this->house->verify('id');
+    data_house::verify_id($this->house->get_id());
   }
 
   public function create_object(array $row){

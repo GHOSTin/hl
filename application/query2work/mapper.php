@@ -25,7 +25,7 @@ class mapper_query2work{
     $this->company = $company;
     $this->query = $query;
     data_company::verify_id($this->company->get_id());
-    $this->query->verify('id');
+    data_query::verify_id($this->query->get_id());
   }
 
   public function create_object(array $row){

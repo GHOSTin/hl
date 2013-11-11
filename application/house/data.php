@@ -45,14 +45,6 @@ final class data_house{
     return $this->city;
   }
 
-  public function get_company_id(){
-    return $this->company_id;
-  }
-
-  public function get_department_id(){
-    return $this->department_id;
-  }
-
   public function get_flats(){
     return $this->flats;
   }
@@ -73,45 +65,23 @@ final class data_house{
     return $this->status;
   }
 
-  public function get_street_id(){
-    return $this->street_id;
-  }
-
-  public function get_street_name(){
-    return $this->street_name;
-  }
-
   public function set_city(data_city $city){
     $this->city = $city;
   }
 
-  public function set_company_id($id){
-    $this->company_id = (int) $id;
-  }
-
-  public function set_department_id($id){
-    $this->department_id = (int) $id;
-  }
-
   public function set_id($id){
-    $this->id = $id;
+    $this->id = (int) $id;
+    self::verify_id($this->id);
   }
 
   public function set_number($number){
     $this->number = (string) $number;
+    self::verify_number($this->number);
   }
 
   public function set_status($status){
+    $this->status = (string) $status;
     self::verify_status($status);
-    $this->status = $status;
-  }
-
-  public function set_street_id($id){
-    $this->street_id = (int) $id;
-  }
-
-  public function set_street_name($name){
-    $this->street_name = (string) $name;
   }
 
   private function send_error($message){
