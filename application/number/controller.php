@@ -41,10 +41,11 @@ class controller_number{
   public static function private_add_house_processing_center(
     model_request $request){
     $house = new data_house($request->GET('house_id'));
-    return ['house' => (new model_house2processing_center(
+    $house = (new model_house2processing_center(
       model_session::get_company(), $house))
       ->add_processing_center($request->GET('center_id'),
-      $request->GET('identifier'))];
+      $request->GET('identifier'));
+    return ['house' => $house];
   }
 
   public static function private_remove_house_processing_center(

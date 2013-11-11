@@ -7,8 +7,8 @@ class model_house2processing_center{
   public function __construct(data_company $company, data_house $house){
     $this->company = $company;
     $this->house = $house;
-    $this->company->verify('id');
-    $this->house->verify('id');
+    data_company::verify_id($this->company->get_id());
+    data_house::verify_id($this->house->get_id());
   }
 
   public function add_processing_center($center_id, $identifier){

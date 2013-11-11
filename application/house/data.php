@@ -131,4 +131,9 @@ final class data_house extends data_object{
     foreach(func_get_args() as $value)
         verify_house::$value($this);
   }
+
+  public static function verify_id($id){
+    if($id > 65535 OR $id < 1)
+        throw new e_model('Идентификатор дома задан не верно.');
+  }
 }

@@ -15,8 +15,8 @@ class mapper_house2processing_center{
   public function __construct(data_company $company, data_house $house){
     $this->company = $company;
     $this->house = $house;
-    $this->company->verify('id');
-    $this->house->verify('id');
+    data_company::verify_id($this->company->get_id());
+    data_house::verify_id($this->house->get_id());
   }
 
   public function create_object(array $row){
@@ -51,7 +51,7 @@ class mapper_house2processing_center{
     $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
     $sql->bind(':center_id', (int) $center->get_id(), PDO::PARAM_INT);
     $sql->bind(':identifier', (string) $center->get_identifier(), PDO::PARAM_STR);
-    $sql->execute('Проблема при добавлении связи.');
+    // $sql->execute('Проблема при добавлении связи.');
   }
 
   private function get_processing_centers(){
