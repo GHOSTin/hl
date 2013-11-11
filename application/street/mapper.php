@@ -10,8 +10,6 @@ class mapper_street{
   public function create_object(array $row){
     $street = new data_street();
     $street->set_id($row['id']);
-    $street->set_company_id($row['company_id']);
-    $street->set_city_id($row['city_id']);
     $street->set_status($row['status']);
     $street->set_name($row['name']);
     return $street;

@@ -9,7 +9,8 @@ class model_house2number{
     $this->company = $company;
     $this->house = $house;
     data_company::verify_id($this->company->get_id());
-    $this->house->verify('id');
+    data_house::verify_id($this->house->get_id());
+    data_city::verify_id($this->house->get_city()->get_id());
   }
 
   public function init_numbers(){

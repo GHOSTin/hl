@@ -5,7 +5,7 @@ class model_street2house{
 
   public function __construct(data_street $street){
     $this->street = $street;
-    $this->street->verify('id');
+    data_street::verify_id($this->street->get_id());
   }
 
   public function init_houses(){

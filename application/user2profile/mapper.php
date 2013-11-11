@@ -4,14 +4,14 @@ class mapper_user2profile{
   private $company;
   private $user;
 
-  private static $sql_find_all = "SELECT `profile` FROM `profiles` 
+  private static $many = "SELECT `profile` FROM `profiles` 
           WHERE  `user_id` = :user_id AND `company_id` = :company_id";
 
-  private static $sql_find = "SELECT `profile`, `rules`, `restrictions`, `settings`
+  private static $one = "SELECT `profile`, `rules`, `restrictions`, `settings`
     FROM `profiles` WHERE  `user_id` = :user_id 
     AND `company_id` = :company_id AND `profile` = :profile";
 
-  private static $sql_delete = "DELETE FROM `profiles` WHERE  `user_id` = :user_id
+  private static $delete = "DELETE FROM `profiles` WHERE  `user_id` = :user_id
           AND `company_id` = :company_id AND `profile` = :profile";
 
   private static $insert = "INSERT INTO `profiles` (`company_id`, `user_id`,
@@ -22,7 +22,7 @@ class mapper_user2profile{
     $this->company = $company;
     $this->user = $user;
     data_company::verify_id($this->company->get_id());
-    $this->user->verify('id');
+    data_user::verify_id($this->user->get_id());
   }
 
   public function create_object(array $row){
@@ -34,7 +34,7 @@ class mapper_user2profile{
 
   public function delete(data_profile $profile){
     $sql = new sql();
-    $sql->query(self::$sql_delete);
+    $sql->query(self::$delete);
     $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
@@ -43,7 +43,7 @@ class mapper_user2profile{
 
   public function find_all(){
     $sql = new sql();
-    $sql->query(self::$sql_find_all);
+    $sql->query(self::$many);
     $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->execute('Ошибка при получении профиля.');
@@ -58,7 +58,7 @@ class mapper_user2profile{
 
   public function find($profile){
     $sql = new sql();
-    $sql->query(self::$sql_find);
+    $sql->query(self::$one);
     $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);

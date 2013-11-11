@@ -58,11 +58,4 @@ class data_group extends data_object{
   public function set_status($status){
     $this->status = (string) $status;
   }
-
-  public function verify(){
-    if(func_num_args() < 0)
-      throw new e_data('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value)
-      verify_group::$value($this);
-  }
 }

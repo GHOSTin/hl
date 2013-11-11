@@ -19,6 +19,13 @@ class data_user extends data_object{
 	private $telephone;
   private $hash;
 
+  public static $statuses = ['true', 'false'];
+
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_user), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_user::$method($args[0]);
+  }
 
   public function get_cellphone(){
     return $this->cellphone;
@@ -61,10 +68,12 @@ class data_user extends data_object{
 
   public function set_cellphone($cellphone){
     $this->cellphone = (string) $cellphone;
+    self::verify_cellphone($this->cellphone);
   }
 
   public function set_id($id){
     $this->id = (int) $id;
+    self::verify_id($this->id);
   }
 
   public function set_company_id($id){
@@ -73,6 +82,7 @@ class data_user extends data_object{
 
   public function set_firstname($firstname){
     $this->firstname = (string) $firstname;
+    self::verify_firstname($this->firstname);
   }
 
   public function set_hash($hash){
@@ -81,34 +91,26 @@ class data_user extends data_object{
 
   public function set_lastname($lastname){
     $this->lastname = (string) $lastname;
+    self::verify_lastname($this->lastname);
   }
 
   public function set_login($login){
     $this->login = (string) $login;
+    self::verify_login($this->login);
   }
 
   public function set_middlename($middlename){
     $this->middlename = (string) $middlename;
+    self::verify_middlename($this->middlename);
   }
 
   public function set_status($status){
     $this->status = (string) $status;
+    self::verify_status($this->status);
   }
 
   public function set_telephone($telephone){
     $this->telephone = (string) $telephone;
-  }
-
-  public static function verify_password($password){
-    if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $password))
-      throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-  }
-
-	public function verify(){
-    if(func_num_args() < 0)
-        throw new e_data('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value){
-      verify_user::$value($this);
-    }
+    self::verify_telephone($this->telephone);
   }
 }

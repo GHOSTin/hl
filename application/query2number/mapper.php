@@ -17,7 +17,7 @@ class mapper_query2number{
     WHERE `company_id` = :company_id
     AND `query_id` = :query_id AND `number_id` = :number_id";
 
-  private static $indert = "INSERT INTO `query2number`
+  private static $insert = "INSERT INTO `query2number`
     (`query_id`, `number_id`, `company_id`, `default`) 
     VALUES (:query_id, :number_id, :company_id, :default)";
 

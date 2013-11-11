@@ -9,9 +9,7 @@ final class data_city extends data_object{
   private $name;
 	private $status;
 
-  public function __construct($id = null){
-    $this->id = (int) $id;
-  }
+  private static $statuses = ['false', 'true'];
 
   public function get_id(){
     return $this->id;
@@ -26,21 +24,42 @@ final class data_city extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
+    $id = (int) $id;
+    self::verify_id($id);
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
+    self::verify_name($name);
+    $this->name = $name;
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
+    self::verify_status($status);
+    $this->status = $status;
   }
 
-  public function verify(){
-    if(func_num_args() < 0)
-      throw new e_data('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value)
-      verify_city::$value($this);
+  /**
+  * Верификация идентификатора.
+  */
+  public static function verify_id($id){
+    if($id > 65535 OR $id < 1)
+      throw new e_model('Идентификатор города задан не верно.');
+  }
+
+  /**
+  * Верификация названия.
+  */
+  public static function verify_name($name){
+    if(!preg_match('/^[А-Я][а-я]{0,19}$/', $name))
+      throw new e_model('Название города задано не верно.');
+  }
+
+  /**
+  * Верификация статуса.
+  */
+  public static function verify_status($status){
+    if(!in_array($status, self::$statuses, true))
+      throw new e_model('Статус города задан не верно.');
   }
 }

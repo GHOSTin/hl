@@ -3,11 +3,19 @@
 * Связь с таблицей `companies`.
 * Компании глобальны для системы.
 */
-final class data_company extends data_object{
+class data_company{
 
 	private $id;
   private $name;
 	private $status;
+
+  public static $statuses = ['true', 'false'];
+
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_company), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_company::$method($args[0]);
+  }
 
   public function get_id(){
     return $this->id;
@@ -22,19 +30,18 @@ final class data_company extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
+    $id = (int) $id;
+    self::verify_id($id);
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
+    self::verify_name($name);
+    $this->name = $name;
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
-  }
-
-  public static function verify_id($id){
-    if($id > 255 OR $id < 1)
-      throw new e_model('Идентификатор компании задан не верно.');
+    self::verify_status($status);
+    $this->status = $status;
   }
 }

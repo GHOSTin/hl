@@ -360,11 +360,4 @@ final class data_query extends data_object{
 		    throw new e_model('Статус ворнинга заявки задан не верно.');
 		$this->warning_status = $status;
 	}
-
-	public function verify(){
-    if(func_num_args() < 0)
-        throw new e_data('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value)
-        verify_query::$value($this);
-  }
 }

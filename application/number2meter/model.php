@@ -7,8 +7,8 @@ class model_number2meter{
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;
     $this->number = $number;
-    $this->company->verify('id');
-    $this->number->verify('id');
+    data_company::verify_id($this->company->get_id());
+    data_number::verify_id($this->number->get_id());
   }
 
   public function add_meter($meter_id, $serial, $service, $place, $date_release,

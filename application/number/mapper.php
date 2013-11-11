@@ -5,7 +5,7 @@ class mapper_number{
 
     public function __construct(data_company $company){
         $this->company = $company;
-        $this->company->verify('id');
+        data_company::verify_id($this->company->get_id());
     }
 
     public function create_object(array $row){
@@ -29,9 +29,6 @@ class mapper_number{
     }
 
     public function find($id){
-        $number = new data_number();
-        $number->set_id($id);
-        $number->verify('id');
         $sql = new sql();
         $sql->query("SELECT `numbers`.`id`, `numbers`.`company_id`, 
                         `numbers`.`city_id`, `numbers`.`house_id`, 
@@ -53,7 +50,7 @@ class mapper_number{
                     AND `numbers`.`house_id` = `houses`.`id`
                     AND `houses`.`street_id` = `streets`.`id`");
         $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-        $sql->bind(':number_id', $number->get_id(), PDO::PARAM_INT);
+        $sql->bind(':number_id', $id, PDO::PARAM_INT);
         $sql->execute('Проблема при запросе лицевого счета.');
         $stmt = $sql->get_stm();
         $count = $stmt->rowCount();

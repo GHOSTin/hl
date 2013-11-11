@@ -10,6 +10,7 @@ class mapper_city{
   public function create_object(array $row){
     $city = new data_city();
     $city->set_id($row['id']);
+    $city->set_status($row['status']);
     $city->set_name($row['name']);
     return $city;
   }

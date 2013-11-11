@@ -13,6 +13,12 @@ final class data_meter extends data_object{
   private $services = [];
   private static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_company), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_meter::$method($args[0]);
+  }
+
   public function __construct($id = null){
     if(!is_null($id))
       $this->set_id($id);
@@ -111,35 +117,5 @@ final class data_meter extends data_object{
 
   public function get_periods(){
     return $this->periods;
-  }
-
-  public static function verify_capacity($capacity){
-    if($capacity < 1 OR $capacity > 9)
-      throw new e_model('Разрядность задана не верно.');
-  }
-
-  public static function verify_id($id){
-    if($id > 16777215 OR $id < 1)
-      throw new e_model('Идентификатор счетчика задан не верно.');
-  }
-
-  public static function verify_name($name){
-    if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]{1,20}$/u', $name))
-      throw new e_model('Название счетчика задано не верно.');
-  }
-
-  public static function verify_period($period){
-    if($period < 0 OR $period > 241)
-        throw new e_model('Период задан не верно.');
-  }
-
-  public static function verify_rates($rates){
-    if($rates < 1 OR $rates > 3)
-      throw new e_model('Тарифность задана не верно.');
-  }
-
-  public static function verify_service($service){
-    if(!in_array($service, self::$service_list))
-      throw new e_model('Услуга задана не верно.');
   }
 }

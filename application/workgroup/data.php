@@ -10,7 +10,14 @@ class data_workgroup extends data_object{
   private $name;
 	private $status;
   private $works = [];
-  private static $statuses = ['active', 'deactive'];
+
+  public static $statuses = ['active', 'deactive'];
+
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_workgroup), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_workgroup::$method($args[0]);
+  }
 
   public function add_work(data_work $work){
     if(array_key_exists($work->get_id(), $this->works))
@@ -35,42 +42,17 @@ class data_workgroup extends data_object{
   }
 
   public function set_id($id){
-    $id = (int) $id;
-    self::verify_id($id);
-    $this->id = $id;
+    $this->id = (int) $id;
+    self::verify_id($this->id);
   }
 
   public function set_name($name){
-    self::verify_name($name);
-    $this->name = $name;
+    $this->name = (string) $name;
+    self::verify_name($this->name);
   }
 
   public function set_status($status){
-    self::verify_status($status);
-    $this->status = $status;
-  }
-
-  /**
-  * Верификация идентификатора группы работ.
-  */
-  public static function verify_id($id){
-    if($id > 65535 OR $id < 1)
-      throw new e_model('Идентификатор группы работ задан не верно.');
-  }
-
-  /**
-  * Верификация названия группы работ.
-  */
-  public static function verify_name($name){
-    // if(!preg_match('/^[А-Я][а-я ]{2,99}$/u', $name))
-    //   throw new e_model('Название группы работ не удовлетворяет "а-яА-Я".');
-  }
-
-  /**
-  * Верификация статуса группы работ.
-  */
-  public static function verify_status($status){
-    if(!in_array($status, self::$statuses, true))
-      throw new e_model('Статус группы работ задан не верно.');
+    $this->status = (string) $status;
+    self::verify_status($this->status);
   }
 }

@@ -3,7 +3,7 @@
 * Связь с таблицей `houses`.
 * Дома глобальны, но пока привязаны к компании.
 */
-final class data_house extends data_object{
+final class data_house{
 	
 	private $city;
 	private $company_id;
@@ -16,6 +16,14 @@ final class data_house extends data_object{
   private $centers = [];
   private $flats = [];
   private $numbers = [];
+
+  public static $statuses = ['true', 'false'];
+
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_house), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_house::$method($args[0]);
+  }
 
   public function __construct($id = null){
     $this->id = (int) $id;
@@ -94,7 +102,8 @@ final class data_house extends data_object{
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
+    self::verify_status($status);
+    $this->status = $status;
   }
 
   public function set_street_id($id){
@@ -123,17 +132,5 @@ final class data_house extends data_object{
 
   public function get_processing_centers(){
     return $this->centers;
-  }
-
-	public function verify(){
-    if(func_num_args() < 0)
-      $this->send_error('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value)
-        verify_house::$value($this);
-  }
-
-  public static function verify_id($id){
-    if($id > 65535 OR $id < 1)
-        throw new e_model('Идентификатор дома задан не верно.');
   }
 }
