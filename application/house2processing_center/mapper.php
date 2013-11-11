@@ -51,7 +51,7 @@ class mapper_house2processing_center{
     $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
     $sql->bind(':center_id', (int) $center->get_id(), PDO::PARAM_INT);
     $sql->bind(':identifier', (string) $center->get_identifier(), PDO::PARAM_STR);
-    // $sql->execute('Проблема при добавлении связи.');
+    $sql->execute('Проблема при добавлении связи.');
   }
 
   private function get_processing_centers(){
