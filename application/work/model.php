@@ -5,13 +5,9 @@ class model_work{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-		$this->company->verify('id');
+		data_company::verify_id($this->company->get_id());
 	}
 	
-	/**
-	* Возвращает список работ заявки
-	* @return array из data_work
-	*/
 	public function get_work($id){
 		return (new mapper_work($this->company))->find($id);
 	}

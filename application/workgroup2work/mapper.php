@@ -2,18 +2,18 @@
 class mapper_workgroup2work{
 
   private $company;
-  private $work_group;
+  private $group;
 
-  private static $sql_get_works = "SELECT `id`,`company_id`, `status`, `name`
+  private static $many = "SELECT `id`,`company_id`, `status`, `name`
     FROM `works` WHERE `company_id` = :company_id
     AND `workgroup_id` = :group_id";
 
   public function __construct(data_company $company,
     data_workgroup $work_group){
     $this->company = $company;
-    $this->work_group = $work_group;
-    $this->company->verify('id');
-    $this->work_group->verify('id');
+    $this->group = $work_group;
+    data_company::verify_id($this->company->get_id());
+    data_workgroup::verify_id($this->group->get_id());
   }
 
   private function create_object(array $row){
@@ -25,9 +25,9 @@ class mapper_workgroup2work{
 
   private function get_works(){
     $sql = new sql();
-    $sql->query(self::$sql_get_works);
+    $sql->query(self::$many);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':group_id', (int) $this->work_group->get_id(), PDO::PARAM_INT);
+    $sql->bind(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при выборки работ.');
     $stmt = $sql->get_stm();
     $works = [];
@@ -40,7 +40,7 @@ class mapper_workgroup2work{
     $works = $this->get_works();
     if(!empty($works))
       foreach($works as $work)
-        $this->work_group->add_work($work);
-    return $this->work_group;
+        $this->group->add_work($work);
+    return $this->group;
   }
 }

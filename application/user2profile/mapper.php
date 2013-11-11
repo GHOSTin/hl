@@ -14,10 +14,14 @@ class mapper_user2profile{
   private static $sql_delete = "DELETE FROM `profiles` WHERE  `user_id` = :user_id
           AND `company_id` = :company_id AND `profile` = :profile";
 
+  private static $insert = "INSERT INTO `profiles` (`company_id`, `user_id`,
+    `profile`, `rules`, `restrictions`, `settings`) VALUES (:company_id,
+    :user_id, :profile, :rules, :restrictions, :settings)";
+
   public function __construct(data_company $company, data_user $user){
     $this->company = $company;
     $this->user = $user;
-    $this->company->verify('id');
+    data_company::verify_id($this->company->get_id());
     $this->user->verify('id');
   }
 
@@ -71,11 +75,9 @@ class mapper_user2profile{
 
   public function insert(data_profile $profile){
     $sql = new sql();
-    $sql->query("INSERT INTO `profiles` (`company_id`, `user_id`, `profile`,
-          `rules`, `restrictions`, `settings`) VALUES (:company_id, :user_id,
-          :profile, :rules, :restrictions, :settings)");
-    $sql->bind(':user_id', $this->user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->query(sql::$insert);
+    $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
     $sql->bind(':rules', json_encode($profile->get_rules()), PDO::PARAM_STR);
     $sql->bind(':restrictions', json_encode($profile->get_restrictions()), PDO::PARAM_STR);

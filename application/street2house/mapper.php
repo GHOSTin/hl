@@ -3,24 +3,23 @@ class mapper_street2house{
 
   private $street;
 
-  private static $sql_init_houses = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
-    `department_id`, `status`, `housenumber` as `number`
-    FROM `houses` WHERE `street_id` = :street_id  ORDER BY (`houses`.`housenumber` + 0)";
+  private static $houses = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+    `department_id`, `status`, `housenumber` as `number` FROM `houses`
+    WHERE `street_id` = :street_id  ORDER BY (`houses`.`housenumber` + 0)";
 
-  private static $sql_find = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+  private static $one = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
     `department_id`, `status`, `housenumber` as `number`
     FROM `houses` WHERE `id` = :house_id AND `street_id` = :street_id";
 
-  private static $sql_find_number = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
-    `department_id`, `status`, `housenumber` as `number`
+  private static $one_by_number = "SELECT `id`, `company_id`, `city_id`,
+    `street_id`, `department_id`, `status`, `housenumber` as `number`
     FROM `houses` WHERE `housenumber` = :number AND `street_id` = :street_id";
 
+  private static $insert = "INSERT INTO `houses` (`id`, `company_id`, `city_id`,
+    `street_id`, `department_id`, `status`, `housenumber`)
+    VALUES (:house_id, 1, 1, :street_id, 1, :status, :number)";
 
-  private static $sql_insert = "INSERT INTO `houses`
-    (`id`, `company_id`, `city_id`, `street_id`,
-    `department_id`, `status`, `housenumber`)
-    VALUES (:house_id, 1, 1, :street_id, 1,
-    :status, :number)";
+  private static $id = "SELECT MAX(`id`) as `max_house_id` FROM `houses`";
 
   public function __construct(data_street $street){
     $this->street = $street;
@@ -43,7 +42,7 @@ class mapper_street2house{
 
   private function get_houses(){
     $sql = new sql();
-    $sql->query(self::$sql_init_houses);
+    $sql->query(self::$houses);
     $sql->bind(':street_id', $this->street->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при выборке домов.');
     $stmt = $sql->get_stm();
@@ -64,18 +63,18 @@ class mapper_street2house{
 
   public function insert(data_house $house){
     $sql = new sql();
-    $sql->query(self::$sql_insert);
-    $sql->bind(':house_id', $house->get_id(), PDO::PARAM_INT);
-    $sql->bind(':street_id', $this->street->get_id(), PDO::PARAM_INT);
-    $sql->bind(':status', $house->get_status(), PDO::PARAM_STR);
-    $sql->bind(':number', $house->get_number(), PDO::PARAM_STR);
+    $sql->query(self::$insert);
+    $sql->bind(':house_id', (int) $house->get_id(), PDO::PARAM_INT);
+    $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
+    $sql->bind(':status', (string) $house->get_status(), PDO::PARAM_STR);
+    $sql->bind(':number', (string) $house->get_number(), PDO::PARAM_STR);
     $sql->execute('Проблемы при создании нового дома.');
     return $house;
   }
 
   public function find($id){
     $sql = new sql();
-    $sql->query(self::$sql_find);
+    $sql->query(self::$one);
     $sql->bind(':house_id', (int) $id, PDO::PARAM_INT);
     $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при выборке домов из базы данных.');
@@ -91,7 +90,7 @@ class mapper_street2house{
 
   public function find_by_number($number){
     $sql = new sql();
-    $sql->query(self::$sql_find_number);
+    $sql->query(self::$one_by_number);
     $sql->bind(':number', (string) $number, PDO::PARAM_STR);
     $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при выборке домов из базы данных.');
@@ -111,7 +110,7 @@ class mapper_street2house{
   */
   public static function get_insert_id(){
     $sql = new sql();
-    $sql->query("SELECT MAX(`id`) as `max_house_id` FROM `houses`");
+    $sql->query(self::$id);
     $sql->execute('Проблема при опредении следующего house_id.');
     if($sql->count() !== 1)
       throw new e_model('Проблема при опредении следующего house_id.');

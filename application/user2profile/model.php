@@ -4,9 +4,6 @@ class model_user2profile{
   private $company;
   private $user;
 
-    
-  
-
   private static $rules = [
     'import' => ['generalAccess' => false],
     'materialgroup' => ['generalAccess' => false,
@@ -67,7 +64,6 @@ class model_user2profile{
                     'editWorkgroup' => false]
   ];
 
-
   private static $restrictions = [
     'query' =>['departments' => [],
                 'worktypes' => []
@@ -80,7 +76,6 @@ class model_user2profile{
     $this->company->verify('id');
     $this->user->verify('id');
   }
-
 
   public function add_profile($profile){
     $mapper = new mapper_user2profile($this->company, $this->user);

@@ -8,15 +8,16 @@ final class data_work extends data_object{
 	private $company_id;
   private $id;
   private $name;
-  private $status;
-	private $workgroup_id;
 
   public function set_id($id){
-    $this->id = (int) $id;
+    $id = (int) $id;
+    self::verify_id($id);
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
+    self::verify_name($name);
+    $this->name = $name;
   }
 
   public function get_id(){
@@ -27,10 +28,19 @@ final class data_work extends data_object{
     return $this->name;
   }
 
-  public function verify(){
-    if(func_num_args() < 0)
-      throw new e_data('Параметры верификации не были переданы.');
-    foreach(func_get_args() as $value)
-      verify_work::$value($this);
+  /**
+  * Верификация идентификатора работы.
+  */
+  public static function verify_id($id){
+    if($id > 65535 OR $id < 1)
+      throw new e_model('Идентификатор работы задан не верно.');
+  }
+
+  /**
+  * Верификация названия работы.
+  */
+  public static function verify_name($name){
+    // if(!preg_match('/^[А-Я][а-я ]{2,99}$/u', $name))
+    //   throw new e_model('Название работы не удовлетворяет "а-яА-Я".');
   }
 }

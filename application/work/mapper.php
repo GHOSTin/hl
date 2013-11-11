@@ -2,12 +2,13 @@
 class mapper_work{
 
 	private $company;
+	
 	private static $sql_find = "SELECT `id`,`company_id`, `status`, `name`
 		FROM `works` WHERE `company_id` = :company_id  AND `id` = :id";
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-		$this->company->verify('id');
+		data_company::verify_id($this->company->get_id());
 	}
 
 	public function create_object(array $row){

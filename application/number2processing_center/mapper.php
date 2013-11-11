@@ -4,7 +4,7 @@ class mapper_number2processing_center{
   private $company;
   private $number;
 
-  private static $sql_get_centers = "SELECT
+  private static $all = "SELECT
     `processing_center2number`.`company_id`,
     `processing_center2number`.`processing_center_id`, 
     `processing_center2number`.`number_id`,
@@ -16,10 +16,12 @@ class mapper_number2processing_center{
     = `processing_centers`.`id`
     AND `processing_center2number`.`number_id` = :number_id
     ORDER BY `processing_centers`.`name`";
-  private static $sql_add_center = "INSERT INTO `processing_center2number`
+
+  private static $insert = "INSERT INTO `processing_center2number`
     (`company_id`, `processing_center_id`, `number_id`, `identifier`)
     VALUES (:company_id, :processing_center_id, :number_id, :identifier)";
-  private static $sql_delete = "DELETE FROM `processing_center2number`
+
+  private static $delete = "DELETE FROM `processing_center2number`
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `processing_center_id` = :processing_center_id";
 
@@ -32,7 +34,7 @@ class mapper_number2processing_center{
 
   public function insert(data_number2processing_center $n2c){
     $sql = new sql();
-    $sql->query(self::$sql_add_center);
+    $sql->query(self::$insert);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
     $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
@@ -42,7 +44,7 @@ class mapper_number2processing_center{
 
   public function delete(data_number2processing_center $n2c){
     $sql = new sql();
-    $sql->query(self::$sql_delete);
+    $sql->query(self::$delete);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
     $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
@@ -67,7 +69,7 @@ class mapper_number2processing_center{
 
   private function get_processing_centers(){
     $sql = new sql();
-    $sql->query(self::$sql_get_centers);
+    $sql->query(self::$all);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     $sql->execute('Проблема при при выборке расчетных центров.');

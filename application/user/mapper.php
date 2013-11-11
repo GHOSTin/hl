@@ -6,18 +6,23 @@
     `midlename` as `middlename`, `password`, 
     `telephone`, `cellphone` FROM `users` WHERE `username` = :login
     AND `password` = :hash";
+
   private static $find = "SELECT `id`, `company_id`, `status`,
     `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
     `password`, `telephone`, `cellphone` FROM `users` WHERE `id` = :id";
+
   private static $insert_id = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
+
   private static $update = "UPDATE `users` SET `firstname` = :firstname,
     `lastname` = :lastname, `midlename` = :middlename, `status` = :status,
     `password` = :password, `telephone` = :telephone, `cellphone` = :cellphone,
     `username` = :login WHERE `id` = :id";
+
   private static $insert = "INSERT INTO `users` (`id`, `company_id`, `status`,
     `username`, `firstname`, `lastname`, `midlename`, `password`, `telephone`,
     `cellphone`) VALUES (:user_id, :company_id, :status, :login, :firstname,
     :lastname, :middlename, :password, :telephone, :cellphone)";
+  
   private static $get_users = "SELECT `id`, `company_id`, `status`,
     `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
     `password`, `telephone`, `cellphone` FROM `users` ORDER BY `lastname`";

@@ -1,10 +1,10 @@
 <?php
 class mapper_street{
 
-  private static $sql_get_streets = "SELECT DISTINCT `id`, `company_id`, 
+  private static $many = "SELECT DISTINCT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` ORDER BY `name`";
 
-  private static $sql_one = "SELECT DISTINCT `id`, `company_id`, 
+  private static $one = "SELECT DISTINCT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` WHERE `id` = :id";
 
   public function create_object(array $row){
@@ -19,7 +19,7 @@ class mapper_street{
 
   public function find($id){
     $sql = new sql();
-    $sql->query(self::$sql_one);
+    $sql->query(self::$one);
     $sql->bind(':id', (int) $id, PDO::PARAM_INT);
     $sql->execute('Проблема при выборке улиц');
     $stmt = $sql->get_stm();
@@ -34,7 +34,7 @@ class mapper_street{
 
   public function get_streets(){
     $sql = new sql();
-    $sql->query(self::$sql_get_streets);
+    $sql->query(self::$many);
     $sql->execute('Проблема при выборке улиц');
     $streets = [];
     $stmt = $sql->get_stm();

@@ -25,7 +25,7 @@ class model_processing_center{
 
   /**
   * Возвращает список процессинговых центров
-  * @return list object data_processing_center
+  * @return array
   */
   public function get_processing_centers(){
     return (new mapper_processing_center)->get_processing_centers();

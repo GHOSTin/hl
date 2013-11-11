@@ -5,7 +5,7 @@ class mapper_meter2data{
   private $number;
   private $meter;
 
-  private static $sql_get_value = "SELECT `time`, `value`, `comment`, `way`, `timestamp`
+  private static $all = "SELECT `time`, `value`, `comment`, `way`, `timestamp`
     FROM `meter2data` WHERE `meter2data`.`company_id` = :company_id
     AND `meter2data`.`number_id` = :number_id AND `meter2data`.`meter_id` = :meter_id
     AND `meter2data`.`serial` = :serial AND `meter2data`.`time` = :time";
@@ -25,6 +25,14 @@ class mapper_meter2data{
     `meter_id`, `serial`, `time`, `timestamp`, `value`, `way`, `comment`)
     VALUES (:company_id, :number_id, :meter_id, :serial, :time, :timestamp,
     :value, :way, :comment)";
+
+  private static $last = "SELECT`company_id`, `number_id`, `meter_id`, `serial`,
+    `time`, `timestamp`, `value`, `way`, `comment` FROM `meter2data`
+    WHERE `company_id` = :company_id AND `number_id` = :number_id
+    AND `meter_id` = :meter_id AND `serial` = :serial
+    AND `time` = (SELECT MAX(`time`) FROM `meter2data` WHERE 
+    `company_id` = :company_id AND `number_id` = :number_id
+    AND `meter_id` = :meter_id AND `serial` = :serial AND `time` < :time)";
 
   public function __construct(data_company $company, data_number $number,
    data_number2meter $meter){
@@ -56,15 +64,15 @@ class mapper_meter2data{
     $this->verify($value);
     $sql = new sql();
     $sql->query(self::$insert);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', $this->meter->get_id(), PDO::PARAM_INT);
-    $sql->bind(':serial', $this->meter->get_serial(), PDO::PARAM_STR);
-    $sql->bind(':time', $value->get_time(), PDO::PARAM_INT);
-    $sql->bind(':timestamp', $value->get_timestamp(), PDO::PARAM_INT);
-    $sql->bind(':value', implode(';', $value->get_values()), PDO::PARAM_STR);
-    $sql->bind(':way', $value->get_way(), PDO::PARAM_STR);
-    $sql->bind(':comment', $value->get_comment(), PDO::PARAM_STR);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    $sql->bind(':meter_id', (int) $this->meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':serial', (string) $this->meter->get_serial(), PDO::PARAM_STR);
+    $sql->bind(':time', (int) $value->get_time(), PDO::PARAM_INT);
+    $sql->bind(':timestamp', (int) $value->get_timestamp(), PDO::PARAM_INT);
+    $sql->bind(':value', (string) implode(';', $value->get_values()), PDO::PARAM_STR);
+    $sql->bind(':way', (string) $value->get_way(), PDO::PARAM_STR);
+    $sql->bind(':comment', (string) $value->get_comment(), PDO::PARAM_STR);
     $sql->execute('Проблемы при создании показания.');
     return $value;
   }
@@ -73,12 +81,12 @@ class mapper_meter2data{
     $time = getdate($time);
     $time = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
     $sql = new sql();
-    $sql->query(self::$sql_get_value);
-    $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', $this->meter->get_id(), PDO::PARAM_INT);
-    $sql->bind(':serial', $this->meter->get_serial(), PDO::PARAM_STR);
-    $sql->bind(':time', $time, PDO::PARAM_INT);
+    $sql->query(self::$all);
+    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':meter_id', (int) $this->meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':serial', (int) $this->meter->get_serial(), PDO::PARAM_STR);
+    $sql->bind(':time', (int) $time, PDO::PARAM_INT);
     $sql->execute('Проблема при запросе показания счетчика.');
     $stmt = $sql->get_stm();
     $count = $stmt->rowCount();
@@ -115,19 +123,12 @@ class mapper_meter2data{
     $time = getdate($time);
     $time = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
     $sql = new sql();
-    $sql->query("SELECT`company_id`, `number_id`, `meter_id`, `serial`,
-                `time`, `timestamp`, `value`, `way`, `comment`
-                FROM `meter2data`
-                WHERE `company_id` = :company_id AND `number_id` = :number_id
-                AND `meter_id` = :meter_id AND `serial` = :serial
-                AND `time` = (SELECT MAX(`time`) FROM `meter2data` WHERE 
-                `company_id` = :company_id AND `number_id` = :number_id
-                AND `meter_id` = :meter_id AND `serial` = :serial AND `time` < :time)");
-    $sql->bind(':number_id', $this->number_id, PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->id, PDO::PARAM_INT);
-    $sql->bind(':meter_id', $this->meter_id, PDO::PARAM_INT);
-    $sql->bind(':serial', $this->serial, PDO::PARAM_STR);
-    $sql->bind(':time', $time, PDO::PARAM_INT);
+    $sql->query(self::$last);
+    $sql->bind(':number_id', (int) $this->number_id, PDO::PARAM_INT);
+    $sql->bind(':company_id', (int) $this->company->id, PDO::PARAM_INT);
+    $sql->bind(':meter_id', (int) $this->meter_id, PDO::PARAM_INT);
+    $sql->bind(':serial', (string) $this->serial, PDO::PARAM_STR);
+    $sql->bind(':time', (int) $time, PDO::PARAM_INT);
     $data = $sql->map(new data_meter2data(), 'Проблема при запросе показания счетчика.');
     $count = count($data);
     if($count === 0)
@@ -141,15 +142,15 @@ class mapper_meter2data{
     $this->verify($data);
     $sql = new sql();
     $sql->query(self::$update);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number_id', $this->number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':meter_id', $this->meter->get_id(), PDO::PARAM_INT);
-    $sql->bind(':serial', $this->meter->get_serial(), PDO::PARAM_STR);
-    $sql->bind(':time', $data->get_time(), PDO::PARAM_INT);
-    $sql->bind(':timestamp', $data->get_timestamp(), PDO::PARAM_INT);
-    $sql->bind(':value', implode(';', $data->get_values()), PDO::PARAM_STR);
-    $sql->bind(':way', $data->get_way(), PDO::PARAM_STR);
-    $sql->bind(':comment', $data->get_comment(), PDO::PARAM_STR);
+    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    $sql->bind(':meter_id', (int) $this->meter->get_id(), PDO::PARAM_INT);
+    $sql->bind(':serial', (string) $this->meter->get_serial(), PDO::PARAM_STR);
+    $sql->bind(':time', (int) $data->get_time(), PDO::PARAM_INT);
+    $sql->bind(':timestamp', (int) $data->get_timestamp(), PDO::PARAM_INT);
+    $sql->bind(':value', (string) implode(';', $data->get_values()), PDO::PARAM_STR);
+    $sql->bind(':way', (string) $data->get_way(), PDO::PARAM_STR);
+    $sql->bind(':comment', (string) $data->get_comment(), PDO::PARAM_STR);
     $sql->execute('Проблемы при обновлении показания.');
     return $data;
   }
