@@ -124,8 +124,8 @@
   }
 
   public function update(data_user $user){
-    $user->verify('id', 'firstname', 'middlename', 'lastname', 'status',
-      'login', 'telephone');
+    // $user->verify('id', 'firstname', 'middlename', 'lastname', 'status',
+    //   'login', 'telephone');
     $sql = new sql();
     $sql->query(self::$update);
     $sql->bind(':firstname', $user->get_firstname(), PDO::PARAM_STR);
