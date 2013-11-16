@@ -52,7 +52,7 @@
         <td>
             {% if query.get_initiator() == 'number' %}
                 {% for number in query.get_numbers() %}
-                    {{ number.fio }} (№{{ number.number }}), кв. {{ number.flat_number }}
+                    <div>{{ number.get_fio() }} (№{{ number.get_number() }}), кв. {{ number.get_flat().get_number() }}</div>
                 {% endfor %}
             {% endif %}
         </td>

@@ -24,6 +24,10 @@ class collection_query{
 
   public function get_queries(){
     foreach($this->queries as $query){
+      if(!empty($this->q2n[$query->get_id()]))
+        foreach($this->q2n[$query->get_id()] as $number_id)
+          $query->add_number($this->numbers[$number_id]);
+
       if(!empty($this->query2user[$query->get_id()]['creator'])){
         $user_id = $this->query2user[$query->get_id()]['creator'][0];
         $query->add_creator($this->users[$user_id]);
