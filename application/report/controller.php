@@ -33,10 +33,8 @@ class controller_report{
         $collection = new collection_query($company, $queries);
         $collection->init_numbers();
         $collection->init_users();
-        return ['queries' => $collection
-                //'users' => model_query::get_users($company, $query),
-                //'works' => model_query::get_works($company, $query)
-        ];
+        $collection->init_works();
+        return ['queries' => $collection];
     }
 
     public static function private_report_query_one_xls(){

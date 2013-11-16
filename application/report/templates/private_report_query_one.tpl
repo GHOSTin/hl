@@ -1,9 +1,5 @@
 {% extends "print.tpl" %}
 {% set queries = component.queries %}
-{% set users = component.users %}
-{% set works = component.works %}
-{% set numbers = component.numbers %}
-
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
 {% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'} %}
@@ -61,13 +57,10 @@
         <td>{{ query.get_description() }}</td>
         <td>{{ query.get_close_reason() }}</td>
         <td>
-            {#
-            {% for wstrct in works.structure[query.get_id()] %}
-                {% set work = works.works[wstrct.work_id] %}
-                {{ work.name }}
-                {% set work_time = (work_time + (wstrct.time_close - wstrct.time_open)) // 60 %}
+            {% for work in query.get_works() %}
+                {{ work.get_name() }}
+                {% set work_time = (work_time + (work.get_time_close() - work.get_time_open())) // 60 %}
             {% endfor %}
-            #}
         </td>
         <td>{{ work_time }}</td>
         <td>

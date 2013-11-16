@@ -50,10 +50,10 @@ class model_report{
       if($department_id === 'all')
           unset($filters['department_id']);
       else{
-          $query = new data_query();
-          $query->department_id = $department_id;
-          $query->verify('department_id');
-          $filters['department_id'] = $department_id;
+        $query = new data_query();
+        $query->department_id = $department_id;
+        $query->verify('department_id');
+        $filters['department_id'] = $department_id;
       }
       $session->set('filters', $filters);
   }
