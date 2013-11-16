@@ -3,11 +3,11 @@ class controller_report{
 
 	static $name = 'Отчеты';
 
-    public static function private_clear_filter_query(){
+    public static function private_clear_filter_query(model_request $request){
         model_report::clear_filter_query();
     }
 
-    public static function private_get_query_reports(){
+    public static function private_get_query_reports(model_request $request){
         $model = new model_report('query');
         $company = model_session::get_company();
         // $filters = $session->get('filters');
@@ -26,7 +26,7 @@ class controller_report{
             'filters' => $filters];
     }
 
-    public static function private_report_query_one(){
+    public static function private_report_query_one(model_request $request){
         $company = model_session::get_company();
         $params = (new model_report('query'))->get_params();
         $queries = (new mapper_query($company))->get_queries($params);
@@ -37,7 +37,7 @@ class controller_report{
         return ['queries' => $collection];
     }
 
-    public static function private_report_query_one_xls(){
+    public static function private_report_query_one_xls(model_request $request){
         $query = model_report::build_query_param(model_session::get_session()->get('filters'));
         $company = model_session::get_company();
         header('Content-Disposition: attachment; filename=export.xml');
@@ -48,25 +48,26 @@ class controller_report{
                 'numbers' => model_query::get_numbers($company, $query)];
     }
 
-    public static function private_set_time_begin(){
+    public static function private_set_time_begin(model_request $request){
         $time = explode('.', $_GET['time']);
         model_report::set_filter('time_begin', mktime(0, 0, 0, $time[1], $time[0], $time[2]));
     }
 
-    public static function private_set_time_end(){
+    public static function private_set_time_end(model_request $request){
         $time = explode('.', $_GET['time']);
         model_report::set_filter('time_end', mktime(23, 59, 59, $time[1], $time[0], $time[2]));
     }
 
-    public static function private_set_filter_query_department(){
+    public static function private_set_filter_query_department(model_request $request){
         model_report::set_filter_query_department($_GET['id']);
     }
 
-    public static function private_set_filter_query_status(){
-        model_report::set_filter_query_status($_GET['status']);
+    public static function private_set_filter_query_status(model_request $request){
+        (new model_report('query'))
+            ->set_filter_query_status($request->GET('status'));
     }
 
-    public static function private_set_filter_query_street(){
+    public static function private_set_filter_query_street(model_request $request){
         model_report::set_filter_query_street($_GET['id']);
         if($_GET['id'] !== 'all'){
             $street = new data_street();
@@ -77,15 +78,15 @@ class controller_report{
             return true;
     }
 
-    public static function private_set_filter_query_house(){
+    public static function private_set_filter_query_house(model_request $request){
         model_report::set_filter_query_house($_GET['id']);
     }
 
-    public static function private_set_filter_query_worktype(){
+    public static function private_set_filter_query_worktype(model_request $request){
         model_report::set_filter_query_worktype($_GET['id']);
     }
 
-	public static function private_show_default_page(){
+	public static function private_show_default_page(model_request $request){
 		return true;
 	}
 }

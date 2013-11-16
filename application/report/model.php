@@ -58,14 +58,16 @@ class model_report{
       $session->set('filters', $filters);
   }
 
-  public static function set_filter_query_status($status){
+  public function set_filter_query_status($status){
+    if($status === 'all')
+      $this->params['status'] = null;
+    else{
       $query = new data_query();
-      $query->status = $status;
+      $query->set_status($status);
       $query->verify('status');
-      $session = model_session::get_session();
-      $filters = $session->get('filters');
-      $filters['status'] = $status;
-      $session->set('filters', $filters);
+      $this->params['status'] = $status;
+    }
+    (new mem(__CLASS__))->save($this->params);
   }
 
   public static function set_filter_query_street($street_id){
