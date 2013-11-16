@@ -59,7 +59,8 @@ class controller_report{
     }
 
     public static function private_set_filter_query_department(model_request $request){
-        model_report::set_filter_query_department($_GET['id']);
+        (new model_report('query'))
+            ->set_filter_query_department($request->GET('id'));
     }
 
     public static function private_set_filter_query_status(model_request $request){

@@ -44,18 +44,15 @@ class model_report{
       $session->set('filters', $filters);
   }
 
-  public static function set_filter_query_department($department_id){
-      $session = model_session::get_session();
-      $filters = $session->get('filters');
-      if($department_id === 'all')
-          unset($filters['department_id']);
-      else{
-        $query = new data_query();
-        $query->department_id = $department_id;
-        $query->verify('department_id');
-        $filters['department_id'] = $department_id;
-      }
-      $session->set('filters', $filters);
+  public function set_filter_query_department($department_id){
+    if($department_id === 'all')
+      $this->params['department'] = [];
+    else{
+      $department = (new model_department(model_session::get_company()))
+        ->get_department($department_id);
+      $this->params['department'][0] = $department->get_id();
+    }
+    (new mem(__CLASS__))->save($this->params);
   }
 
   public function set_filter_query_status($status){
