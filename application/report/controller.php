@@ -8,35 +8,35 @@ class controller_report{
     }
 
     public static function private_get_query_reports(){
+        $model = new model_report('query');
         $company = model_session::get_company();
-        $session = model_session::get_session();
-        if($session->get('report') !== 'query'){
-            $session->set('report', 'query');
-            model_report::clear_filter_query();
-        }
-        $filters = $session->get('filters');
-        if($filters['street_id'] > 0){
-            $street = new data_street();
-            $street->id = $filters['street_id'];
-            $street->verify('id');
-            $houses = model_street::get_houses($street);
-        }
+        // $filters = $session->get('filters');
+        // if($filters['street_id'] > 0){
+        //     $street = new data_street();
+        //     $street->id = $filters['street_id'];
+        //     $street->verify('id');
+        //     $houses = model_street::get_houses($street);
+        // }
         return [
-            'streets' => model_street::get_streets(new data_street()),
-            'users' => model_user::get_users(new data_user()),
-            'departments' => model_department::get_departments($company, new data_department()),
-            'query_work_types' => model_query_work_type::get_query_work_types($company, new data_query_work_type()),
+            'streets' => (new model_street)->get_streets(),
+            'users' => (new model_user)->get_users(),
+            'departments' => (new model_department($company))->get_departments(),
+            'query_work_types' => (new model_query_work_type($company))->get_query_work_types(),
             'houses' => $houses,
             'filters' => $filters];
     }
 
     public static function private_report_query_one(){
-        $query = model_report::build_query_param(model_session::get_session()->get('filters'));
         $company = model_session::get_company();
-        return ['queries' => model_query::get_queries($company, $query),
-                'users' => model_query::get_users($company, $query),
-                'works' => model_query::get_works($company, $query),
-                'numbers' => model_query::get_numbers($company, $query)];
+        $params = (new model_report('query'))->get_params();
+        $queries = (new mapper_query($company))->get_queries($params);
+        $collection = new collection_query($company, $queries);
+        $collection->init_numbers();
+        $collection->init_users();
+        return ['queries' => $collection
+                //'users' => model_query::get_users($company, $query),
+                //'works' => model_query::get_works($company, $query)
+        ];
     }
 
     public static function private_report_query_one_xls(){
