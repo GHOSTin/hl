@@ -16,7 +16,7 @@ class model_report{
       $this->init_params();
       $mem->save($this->params);
     }
-    unset($_SESSION['model']);
+    // unset($_SESSION['model']);
   }
 
   public function get_params(){
@@ -26,8 +26,9 @@ class model_report{
   private function init_params(){
     $time = getdate();
     $this->params['profile'] = $this->profile;
-    $this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']) - 86400*21;
+    $this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']) - 86400*24;
     $this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
+    $this->params['department'] = [];
   }
 
   public static function clear_filter_query(){
@@ -97,17 +98,14 @@ class model_report{
       $session->set('filters', $filters);
   }
 
-  public static function set_filter_query_worktype($worktype_id){
-      $session = model_session::get_session();
-      $filters = $session->get('filters');
-      if($worktype_id === 'all')
-          unset($filters['worktype_id']);
-      else{
-          $query = new data_query();
-          $query->worktype_id = $worktype_id;
-          $query->verify('work_type_id');
-          $filters['worktype_id'] = $worktype_id;
-      }
-      $session->set('filters', $filters);
+  public function set_filter_query_worktype($worktype_id){
+    if($worktype_id === 'all')
+      $this->params['work_type'] = null;
+    else{
+      $work_type = (new model_query_work_type(model_session::get_company()))
+        ->get_query_work_type($worktype_id);
+      $this->params['work_type'] = $work_type->get_id();
+    }
+    (new mem(__CLASS__))->save($this->params);
   }
 }
