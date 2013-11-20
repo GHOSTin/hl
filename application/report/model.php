@@ -95,18 +95,14 @@ class model_report{
     return $street;
   }
 
-  public static function set_filter_query_house($house_id){
-      $session = model_session::get_session();
-      $filters = $session->get('filters');
-      if($house_id === 'all'){
-          unset($filters['house_id']);
-      }else{
-          $query = new data_query();
-          $query->house_id = $house_id;
-          $query->verify('house_id');
-          $filters['house_id'] = $house_id;
-      }
-      $session->set('filters', $filters);
+  public function set_filter_query_house($house_id){
+    if($house_id === 'all'){
+        $this->params['house'] = null;
+    }else{
+      $house = (new model_house)->get_house($house_id);
+      $this->params['house'] = $house->get_id();
+    }
+    (new mem(__CLASS__))->save($this->params);
   }
 
   public function set_filter_query_worktype($worktype_id){

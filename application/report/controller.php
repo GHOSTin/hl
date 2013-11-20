@@ -81,7 +81,8 @@ class controller_report{
     }
 
     public static function private_set_filter_query_house(model_request $request){
-        model_report::set_filter_query_house($_GET['id']);
+        (new model_report('query'))
+            ->set_filter_query_house($request->GET('id'));
     }
 
     public static function private_set_filter_query_worktype(model_request $request){
