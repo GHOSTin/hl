@@ -26,7 +26,7 @@ class model_report{
   private function init_params(){
     $time = getdate();
     $this->params['profile'] = $this->profile;
-    $this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']) - 86400*25;
+    $this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
     $this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
     $this->params['department'] = [];
     $this->params['work_type'] = null;
@@ -34,9 +34,9 @@ class model_report{
     $this->params['house'] = null;
   }
 
-  public static function clear_filter_query(){
+  public function clear_filter_query(){
     $this->init_params();
-    return $this->params;
+    (new mem(__CLASS__))->save($this->params);
   }
 
   public static function set_filter($key, $value){
@@ -97,7 +97,7 @@ class model_report{
 
   public function set_filter_query_house($house_id){
     if($house_id === 'all'){
-        $this->params['house'] = null;
+      $this->params['house'] = null;
     }else{
       $house = (new model_house)->get_house($house_id);
       $this->params['house'] = $house->get_id();

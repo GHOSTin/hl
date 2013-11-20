@@ -4,7 +4,7 @@ class controller_report{
 	static $name = 'Отчеты';
 
     public static function private_clear_filter_query(model_request $request){
-        model_report::clear_filter_query();
+        (new model_report('query'))->clear_filter_query();
     }
 
     public static function private_get_query_reports(model_request $request){
