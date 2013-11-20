@@ -67,6 +67,8 @@ class model_report{
         ->get_department($department_id);
       $this->params['department'][0] = $department->get_id();
     }
+    $this->params['street'] = null;
+    $this->params['house'] = null;
     (new mem(__CLASS__))->save($this->params);
   }
 
@@ -74,9 +76,7 @@ class model_report{
     if($status === 'all')
       $this->params['status'] = null;
     else{
-      $query = new data_query();
-      $query->set_status($status);
-      $query->verify('status');
+      data_query::verify_status($status);
       $this->params['status'] = $status;
     }
     (new mem(__CLASS__))->save($this->params);
@@ -91,6 +91,7 @@ class model_report{
       $this->params['street'] = $street->get_id();
       $this->params['house'] = null;
     }
+    $this->params['department'] = [];
     (new mem(__CLASS__))->save($this->params);
     return $street;
   }
