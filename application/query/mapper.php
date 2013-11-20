@@ -96,7 +96,7 @@ class mapper_query{
 
     $department = new data_department();
     $department->set_id($row['department_id']);
-    $department->set_name('department_name');
+    $department->set_name($row['department_name']);
     $query->set_department($department);
 
     $house = new data_house();

@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set houses = component.houses %}
+{% set street = component.street %}
 {% block js %}
-    {% if houses is not empty %}
+    {% if street.get_houses() is not empty %}
         $('.filter-select-house').html(get_hidden_content()).attr('disabled', false);
     {% else %}
         $('.filter-select-house').html('<option>Ожидание...</option>').attr('disabled', true);
@@ -9,7 +9,7 @@
 {% endblock js %}
 {% block html %}
     <option value="all">Выберите дом...</option>
-    {% for house in houses %}
-    <option value="{{ house.id }}">дом №{{ house.number }}</option>
+    {% for house in street.get_houses() %}
+    <option value="{{ house.get_id() }}">дом №{{ house.get_number() }}</option>
     {% endfor %}
 {% endblock html %}

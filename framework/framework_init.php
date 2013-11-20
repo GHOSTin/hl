@@ -65,3 +65,20 @@ class php_session_storage{
 		return $_SESSION['components'][$manager->component][$key];
 	}
 }
+
+class mem{
+
+	private $name;
+
+	public function __construct($name){
+		$this->name = (string) $name;
+	}
+
+	public function get_params(){
+		return $_SESSION['model'][$this->name];
+	}
+
+	public function save(array $params){
+		$_SESSION['model'][$this->name] = $params;
+	}
+}
