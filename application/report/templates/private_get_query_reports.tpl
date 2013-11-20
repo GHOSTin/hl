@@ -83,8 +83,8 @@
             <ul class="unstyled filters">
                 <li>
                     <div>по дате</div>
-                    c <input type="text" class="input-small query_time_begin" value="{{ filters.time_begin|date('d.m.Y') }}"><br>
-                    по <input type="text" class="input-small query_time_end" value="{{ filters.time_end|date('d.m.Y') }}">
+                    c <input type="text" class="input-small query_time_begin" value="{{ filters.time_open_begin|date('d.m.Y') }}"><br>
+                    по <input type="text" class="input-small query_time_end" value="{{ filters.time_open_end|date('d.m.Y') }}">
                 </li>
                 <li>
                     <div>по статусу заявки</div>
@@ -92,11 +92,7 @@
                         <option value="all">Все заявки</option>
                         {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
                         {% for key, status in statuses %}
-                            <option value="{{ key }}"
-                            {% if key == filters.status %}
-                             selected
-                            {% endif %}
-                            >{{status}}</option>
+                            <option value="{{ key }}"{% if key == filters.status %} selected{% endif %}>{{status}}</option>
                         {% endfor %}
                     </select>
                 </li>
@@ -106,7 +102,7 @@
                         <option value="all">Все улицы</option>
                         {% if component.streets != false %}
                             {% for street in component.streets %}
-                                <option value="{{ street.get_id() }}"{% if street.get_id() == filters.street_id %} selected{% endif %}>{{ street.get_name() }}</option>
+                                <option value="{{ street.get_id() }}"{% if street.get_id() == filters.street %} selected{% endif %}>{{ street.get_name() }}</option>
                             {% endfor %}
                         {% endif %}
                     </select>
@@ -114,7 +110,7 @@
                         <select class="filter-select-house">
                             <option value="all">Выберите дом...</option>
                             {% for house in houses %}
-                            <option value="{{ house.get_id() }}"{% if house.get_id() == filters.house_id %} selected{% endif %}>дом №{{ house.get_number() }}</option>
+                            <option value="{{ house.get_id() }}"{% if house.get_id() == filters.house %} selected{% endif %}>дом №{{ house.get_number() }}</option>
                             {% endfor %}
                         </select>
                     {% else %}
@@ -129,7 +125,7 @@
                     <select class="filter-select-department">
                         <option value="all">Все участки</option>
                     {% for department in component.departments %}
-                        <option value="{{ department.get_id() }}"{% if department.get_id() == filters.department_id %} selected{% endif %}>{{ department.get_name() }}</option>
+                        <option value="{{ department.get_id() }}"{% if department.get_id() == filters.department[0] %} selected{% endif %}>{{ department.get_name() }}</option>
                     {% endfor %}
                     </select>
                 </li>
@@ -138,7 +134,7 @@
                     <select class="filter-select-worktype">
                         <option value="all">Все работы</option>
                     {% for query_work_type in component.query_work_types %}
-                        <option value="{{ query_work_type.get_id() }}"{% if query_work_type.get_id() == filters.worktype_id %} selected{% endif %}>{{ query_work_type.get_name() }}</option>
+                        <option value="{{ query_work_type.get_id() }}"{% if query_work_type.get_id() == filters.work_type %} selected{% endif %}>{{ query_work_type.get_name() }}</option>
                     {% endfor %}
                     </select>
                 </li>

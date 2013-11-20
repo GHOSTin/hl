@@ -10,20 +10,21 @@ class controller_report{
     public static function private_get_query_reports(model_request $request){
         $model = new model_report('query');
         $company = model_session::get_company();
-        // $filters = $session->get('filters');
-        // if($filters['street_id'] > 0){
-        //     $street = new data_street();
-        //     $street->id = $filters['street_id'];
-        //     $street->verify('id');
-        //     $houses = model_street::get_houses($street);
-        // }
+        $params = $model->get_params();
+        
+        if($params['street'] > 0){
+            $street = new data_street();
+            $street->set_id($params['street']);
+            (new model_street2house($street))->init_houses();
+            $houses = $street->get_houses();
+        }
         return [
             'streets' => (new model_street)->get_streets(),
             'users' => (new model_user)->get_users(),
             'departments' => (new model_department($company))->get_departments(),
             'query_work_types' => (new model_query_work_type($company))->get_query_work_types(),
             'houses' => $houses,
-            'filters' => $filters];
+            'filters' => $params];
     }
 
     public static function private_report_query_one(model_request $request){
