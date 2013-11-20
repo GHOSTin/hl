@@ -50,12 +50,14 @@ class controller_report{
 
     public static function private_set_time_begin(model_request $request){
         $time = explode('.', $_GET['time']);
-        model_report::set_filter('time_begin', mktime(0, 0, 0, $time[1], $time[0], $time[2]));
+        (new model_report('query'))
+            ->set_time_begin(mktime(0, 0, 0, $time[1], $time[0], $time[2]));
     }
 
     public static function private_set_time_end(model_request $request){
         $time = explode('.', $_GET['time']);
-        model_report::set_filter('time_end', mktime(23, 59, 59, $time[1], $time[0], $time[2]));
+        (new model_report('query'))
+            ->set_time_end(mktime(23, 59, 59, $time[1], $time[0], $time[2]));
     }
 
     public static function private_set_filter_query_department(model_request $request){

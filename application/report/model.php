@@ -26,9 +26,10 @@ class model_report{
   private function init_params(){
     $time = getdate();
     $this->params['profile'] = $this->profile;
-    $this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']) - 86400*24;
+    $this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']) - 86400*25;
     $this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
     $this->params['department'] = [];
+    $this->params['work_type'] = null;
   }
 
   public static function clear_filter_query(){
@@ -43,6 +44,17 @@ class model_report{
           $filters = [];
       $filters[$key] = $value;
       $session->set('filters', $filters);
+  }
+
+
+  public function set_time_begin($time){
+    $this->params['time_open_begin'] = $time;
+    (new mem(__CLASS__))->save($this->params);
+  }
+
+  public function set_time_end($time){
+    $this->params['time_open_end'] = $time;
+    (new mem(__CLASS__))->save($this->params);
   }
 
   public function set_filter_query_department($department_id){
