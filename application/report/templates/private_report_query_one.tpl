@@ -3,7 +3,6 @@
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
 {% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'} %}
-{% set user_roles = {'creator':'Диспетчер', 'manager':'Ответственный', 'performer': 'Исполнитель', 'observer': 'Наблюдатель'} %}
 {% block css %}
 <style>
     table tr td{
@@ -67,7 +66,7 @@
             {% set creator = query.get_creator() %}
             <div>{{ creator.get_lastname() }} {{ creator.get_firstname() }} {{ creator.get_middlename() }} (диспетчер)</div>
             {% for user in query.get_managers() %}
-                <div>{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }} (менеджер)</div>
+                <div>{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }} (ответственный)</div>
             {% endfor %}
             {% for user in query.get_performers() %}
                 <div>{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }} (исполнитель)</div>

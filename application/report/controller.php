@@ -39,14 +39,16 @@ class controller_report{
     }
 
     public static function private_report_query_one_xls(model_request $request){
-        $query = model_report::build_query_param(model_session::get_session()->get('filters'));
-        $company = model_session::get_company();
         header('Content-Disposition: attachment; filename=export.xml');
         header('Content-type: application/octet-stream');
-        return ['queries' => model_query::get_queries($company, $query),
-                'users' => model_query::get_users($company, $query),
-                'works' => model_query::get_works($company, $query),
-                'numbers' => model_query::get_numbers($company, $query)];
+        $company = model_session::get_company();
+        $params = (new model_report('query'))->get_params();
+        $queries = (new mapper_query($company))->get_queries($params);
+        $collection = new collection_query($company, $queries);
+        $collection->init_numbers();
+        $collection->init_users();
+        $collection->init_works();
+        return ['queries' => $collection];
     }
 
     public static function private_set_time_begin(model_request $request){
