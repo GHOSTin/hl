@@ -71,12 +71,11 @@ class controller_report{
     }
 
     public static function private_set_filter_query_street(model_request $request){
-        model_report::set_filter_query_street($_GET['id']);
-        if($_GET['id'] !== 'all'){
-            $street = new data_street();
-            $street->id = $_GET['id'];
-            $street->verify('id');
-            return ['houses' => model_street::get_houses($street)];
+        $street = (new model_report('query'))
+            ->set_filter_query_street($request->GET('id'));
+        if(!is_null($street)){
+            (new model_street2house($street))->init_houses();
+            return ['street' => $street];
         }else
             return true;
     }

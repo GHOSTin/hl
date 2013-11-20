@@ -30,6 +30,8 @@ class model_report{
     $this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
     $this->params['department'] = [];
     $this->params['work_type'] = null;
+    $this->params['street'] = null;
+    $this->params['house'] = null;
   }
 
   public static function clear_filter_query(){
@@ -80,20 +82,17 @@ class model_report{
     (new mem(__CLASS__))->save($this->params);
   }
 
-  public static function set_filter_query_street($street_id){
-      $session = model_session::get_session();
-      $filters = $session->get('filters');
-      if($street_id === 'all'){
-          unset($filters['street_id']);
-          unset($filters['house_id']);
-      }else{
-          $query = new data_query();
-          $query->street_id = $street_id;
-          $query->verify('street_id');
-          $filters['street_id'] = $street_id;
-          unset($filters['house_id']);
-      }
-      $session->set('filters', $filters);
+  public function set_filter_query_street($street_id){
+    if($street_id === 'all'){
+      $this->params['street'] = null;
+      $this->params['house'] = null;
+    }else{
+      $street = (new model_street)->get_street($street_id);
+      $this->params['street'] = $street->get_id();
+      $this->params['house'] = null;
+    }
+    (new mem(__CLASS__))->save($this->params);
+    return $street;
   }
 
   public static function set_filter_query_house($house_id){
