@@ -13,7 +13,7 @@ class verify_query{
   * Верификация статуса заявки.
   */
   public static function verify_status($status){
-    if(!in_array($status, ['open', 'close', 'working', 'reopen']))
+    if(!in_array($status, data_query::$status_list, true))
       throw new e_model('Статус заявки задан не верно.');
   }
 
@@ -21,7 +21,7 @@ class verify_query{
   * Верификация инициатора заявки.
   */
   public static function verify_initiator($initiator){
-    if(!in_array($initiator, ['number', 'house']))
+    if(!in_array($initiator, data_query::$initiator_list, true))
       throw new e_model('Инициатор заявки задан не верно.');
   }
 
@@ -29,7 +29,7 @@ class verify_query{
   * Верификация статуса оплаты заявки.
   */
   public static function verify_payment_status($status){
-    if(!in_array($status, ['paid', 'unpaid', 'recalculation']))
+    if(!in_array($status, data_query::$payment_status_list, true))
       throw new e_model('Статус оплаты заявки задан не верно.');
   }
 
@@ -37,7 +37,7 @@ class verify_query{
   * Верификация ворнинга заявки.
   */
   public static function verify_warning_status($status){
-    if(!in_array($status, ['hight', 'normal', 'planned']))
+    if(!in_array($status, data_query::$warning_status_list, true))
       throw new e_model('Статус ворнинга заявки задан не верно.');
   }
 

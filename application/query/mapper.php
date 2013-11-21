@@ -60,17 +60,17 @@ class mapper_query{
     AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
     AND `houses`.`street_id` = `streets`.`id`
     AND `queries`.`id` = :id AND `departments`.`company_id` = :company_id
-        AND `queries`.`department_id` = `departments`.`id`";
+    AND `queries`.`department_id` = `departments`.`id`";
 
   private static $insert =  "INSERT INTO `queries` (
-        `id`, `company_id`, `status`, `initiator-type`, `payment-status`,
-        `warning-type`, `department_id`, `house_id`, `query_worktype_id`,
-        `opentime`, `worktime`, `addinfo-name`, `addinfo-telephone`,
-        `addinfo-cellphone`, `description-open`, `querynumber`)
-        VALUES (:id, :company_id, :status, :initiator, :payment_status, 
-        :warning_status,:department_id, :house_id, :worktype_id, :time_open,
-        :time_work, :contact_fio, :contact_telephone, :contact_cellphone,
-        :description, :number)";
+    `id`, `company_id`, `status`, `initiator-type`, `payment-status`,
+    `warning-type`, `department_id`, `house_id`, `query_worktype_id`,
+    `opentime`, `worktime`, `addinfo-name`, `addinfo-telephone`,
+    `addinfo-cellphone`, `description-open`, `querynumber`)
+    VALUES (:id, :company_id, :status, :initiator, :payment_status, 
+    :warning_status,:department_id, :house_id, :worktype_id, :time_open,
+    :time_work, :contact_fio, :contact_telephone, :contact_cellphone,
+    :description, :number)";
 
   private static $update = "UPDATE `queries`
     SET `payment-status` = :payment_status, `warning-type` = :warning_status,
@@ -89,38 +89,38 @@ class mapper_query{
     AND `company_id` = :company_id";
 
   private static $many = "SELECT `queries`.`id`, `queries`.`company_id`,
-      `queries`.`status`, `queries`.`initiator-type` as `initiator`,
-      `queries`.`payment-status` as `payment_status`,
-      `queries`.`warning-type` as `warning_status`,
-      `queries`.`department_id`, `queries`.`house_id`,
-      `queries`.`query_close_reason_id` as `close_reason_id`,
-      `queries`.`query_worktype_id` as `worktype_id`,
-      `queries`.`opentime` as `time_open`,
-      `queries`.`worktime` as `time_work`,
-      `queries`.`closetime` as `time_close`,
-      `queries`.`addinfo-name` as `contact_fio`,
-      `queries`.`addinfo-telephone` as `contact_telephone`,
-      `queries`.`addinfo-cellphone` as `contact_cellphone`,
-      `queries`.`description-open` as `description`,
-      `queries`.`description-close` as `close_reason`,
-      `queries`.`querynumber` as `number`,
-      `queries`.`query_inspection` as `inspection`, 
-      `houses`.`housenumber` as `house_number`,
-      `streets`.`name` as `street_name`,
-      `query_worktypes`.`name` as `work_type_name`,
-      `departments`.`name` as `department_name`
-      FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
-      WHERE `queries`.`company_id` = :company_id
-      AND `queries`.`house_id` = `houses`.`id`
-      AND `houses`.`street_id` = `streets`.`id`
-      AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
-      AND `opentime` > :time_open
-      AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
-      AND `queries`.`department_id` = `departments`.`id`";
+    `queries`.`status`, `queries`.`initiator-type` as `initiator`,
+    `queries`.`payment-status` as `payment_status`,
+    `queries`.`warning-type` as `warning_status`,
+    `queries`.`department_id`, `queries`.`house_id`,
+    `queries`.`query_close_reason_id` as `close_reason_id`,
+    `queries`.`query_worktype_id` as `worktype_id`,
+    `queries`.`opentime` as `time_open`,
+    `queries`.`worktime` as `time_work`,
+    `queries`.`closetime` as `time_close`,
+    `queries`.`addinfo-name` as `contact_fio`,
+    `queries`.`addinfo-telephone` as `contact_telephone`,
+    `queries`.`addinfo-cellphone` as `contact_cellphone`,
+    `queries`.`description-open` as `description`,
+    `queries`.`description-close` as `close_reason`,
+    `queries`.`querynumber` as `number`,
+    `queries`.`query_inspection` as `inspection`, 
+    `houses`.`housenumber` as `house_number`,
+    `streets`.`name` as `street_name`,
+    `query_worktypes`.`name` as `work_type_name`,
+    `departments`.`name` as `department_name`
+    FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
+    WHERE `queries`.`company_id` = :company_id
+    AND `queries`.`house_id` = `houses`.`id`
+    AND `houses`.`street_id` = `streets`.`id`
+    AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
+    AND `opentime` > :time_open
+    AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
+    AND `queries`.`department_id` = `departments`.`id`";
 
   public function __construct(data_company $company){
-      $this->company = $company;
-      data_company::verify_id($this->company->get_id());
+    $this->company = $company;
+    data_company::verify_id($this->company->get_id());
   }
 
   public function create_object(array $row){
@@ -223,28 +223,28 @@ class mapper_query{
   }
 
   public function update(data_query $query){
-      $this->verify($query);
-      data_house::verify_id($query->get_house()->get_id());
-      data_query_work_type::verify_id($query->get_work_type()->get_id());
-      $sql = new sql();
-      $sql->query(self::$update);
-      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-      $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
-      $sql->bind(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
-      $sql->bind(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
-      $sql->bind(':fio', $query->get_contact_fio(), PDO::PARAM_STR);
-      $sql->bind(':telephone', $query->get_contact_telephone(), PDO::PARAM_STR);
-      $sql->bind(':cellphone', $query->get_contact_cellphone(), PDO::PARAM_STR);
-      $sql->bind(':close_reason', $query->get_close_reason(), PDO::PARAM_STR);
-      $sql->bind(':description', $query->get_description(), PDO::PARAM_STR);
-      $sql->bind(':work_type_id', $query->get_work_type()->get_id(), PDO::PARAM_INT);
-      $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
-      $sql->bind(':time_work', $query->get_time_work(), PDO::PARAM_INT);
-      $sql->bind(':time_close', $query->get_time_close(), PDO::PARAM_INT);
-      $sql->bind(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
-      $sql->bind(':initiator', $query->get_initiator(), PDO::PARAM_STR);
-      $sql->execute('Ошибка при обновлении заявки.');
-      return $query;
+    $this->verify($query);
+    data_house::verify_id($query->get_house()->get_id());
+    data_query_work_type::verify_id($query->get_work_type()->get_id());
+    $sql = new sql();
+    $sql->query(self::$update);
+    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
+    $sql->bind(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
+    $sql->bind(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
+    $sql->bind(':fio', $query->get_contact_fio(), PDO::PARAM_STR);
+    $sql->bind(':telephone', $query->get_contact_telephone(), PDO::PARAM_STR);
+    $sql->bind(':cellphone', $query->get_contact_cellphone(), PDO::PARAM_STR);
+    $sql->bind(':close_reason', $query->get_close_reason(), PDO::PARAM_STR);
+    $sql->bind(':description', $query->get_description(), PDO::PARAM_STR);
+    $sql->bind(':work_type_id', $query->get_work_type()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
+    $sql->bind(':time_work', $query->get_time_work(), PDO::PARAM_INT);
+    $sql->bind(':time_close', $query->get_time_close(), PDO::PARAM_INT);
+    $sql->bind(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
+    $sql->bind(':initiator', $query->get_initiator(), PDO::PARAM_STR);
+    $sql->execute('Ошибка при обновлении заявки.');
+    return $query;
   }
 
   /*
@@ -290,27 +290,27 @@ class mapper_query{
     $sql->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
     $sql->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
     if(!empty($params['status'])){
-     $sql->query(" AND `queries`.`status` = :status");
-     $sql->bind(':status', (string) $params['status'], PDO::PARAM_STR);
+      $sql->query(" AND `queries`.`status` = :status");
+      $sql->bind(':status', (string) $params['status'], PDO::PARAM_STR);
     }
     if(!empty($params['department'])){
       foreach($params['department']as $key => $department){
-         $department_key[] = ':department_id'.$key;
-         $sql->bind(':department_id'.$key, (int) $department, PDO::PARAM_INT);
+       $department_key[] = ':department_id'.$key;
+       $sql->bind(':department_id'.$key, (int) $department, PDO::PARAM_INT);
       }
       $sql->query(" AND `queries`.`department_id` IN(".implode(',', $department_key).")");
     }
     if(!empty($params['street'])){
-     $sql->query(" AND `houses`.`street_id` = :street_id");
-     $sql->bind(':street_id', (int) $params['street'], PDO::PARAM_INT);
+      $sql->query(" AND `houses`.`street_id` = :street_id");
+      $sql->bind(':street_id', (int) $params['street'], PDO::PARAM_INT);
     }
     if(!empty($params['house'])){
-     $sql->query(" AND `queries`.`house_id` = :house_id");
-     $sql->bind(':house_id', (int) $params['house'], PDO::PARAM_INT);
+      $sql->query(" AND `queries`.`house_id` = :house_id");
+      $sql->bind(':house_id', (int) $params['house'], PDO::PARAM_INT);
     }
     if(!empty($params['work_type'])){
-     $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
-     $sql->bind(':worktype_id', (int) $params['work_type'], PDO::PARAM_INT);
+      $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
+      $sql->bind(':worktype_id', (int) $params['work_type'], PDO::PARAM_INT);
     }
     $sql->query(" ORDER BY `queries`.`opentime` DESC");
     $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);

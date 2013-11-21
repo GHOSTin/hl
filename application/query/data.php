@@ -116,6 +116,13 @@ final class data_query extends data_object{
 	private $users = ['creator' => null, 'manager' => [],
 										'observer' => [], 'performer' => []];
 
+
+	public static $initiator_list = ['number', 'house'];
+
+	public static $payment_status_list = ['paid', 'unpaid', 'recalculation'];
+	public static $status_list = ['open', 'close', 'working', 'reopen'];
+	public static $warning_status_list = ['hight', 'normal', 'planned'];
+
 	public static function __callStatic($method, $args){
 	  if(!in_array($method, get_class_methods(verify_query), true))
 	    throw new e_model('Нет доступного метода.');
@@ -279,38 +286,38 @@ final class data_query extends data_object{
 	}
 
 	public function set_id($id){
-		$id = (int) $id;
-		if($id > 4294967295 OR $id < 1)
-		    throw new e_model('Идентификатор заявки задан не верно.');
-		$this->id = $id;
+		$this->id = (int) $id;
+		self::verify_id($this->id);
 	}
 
 	public function set_number($number){
-		if(!preg_match('/^[0-9]{1,6}$/', $number))
-		    throw new e_model('Номер заявки задан не верно.');
 		$this->number = (int) $number;
+		self::verify_number($this->number);
 	}
 
 	public function set_time_open($time){
 		$this->time_open = (int) $time;
+		self::verify_time_open($this->time_open);
 	}
 
 	public function set_close_reason($reason){
-		$this->close_reason = $reason;
+		$this->close_reason = (string) $reason;
+		self::verify_close_reason($this->close_reason);
 	}
 
 	public function set_department(data_department $department){
 		$this->department = $department;
+		data_department::verify_id($this->department->get_id());
 	}
 
 	public function set_initiator($initiator){
-		if(!in_array($initiator, ['house', 'number'], true))
-			throw new e_model('Неверный тип заявки.');
 		$this->initiator = (string) $initiator;
+		self::verify_initiator($this->initiator);
 	}
 
 	public function set_house(data_house $house){
 		$this->house = $house;
+		data_house::verify_id($this->house->get_id());
 	}
 
 	public function set_street(data_street $street){
@@ -319,30 +326,32 @@ final class data_query extends data_object{
 
 	public function set_contact_cellphone($cellphone){
 		$this->contact_cellphone = $cellphone;
+		self::verify_contact_telephone($this->contact_cellphone);
 	}
 
 	public function set_contact_fio($fio){
 		$this->contact_fio = $fio;
+		self::verify_contact_fio($this->contact_fio);
 	}
 
 	public function set_contact_telephone($telephone){
 		$this->contact_telephone = $telephone;
+		self::verify_contact_telephone($this->contact_telephone);
 	}
 
 	public function set_description($description){
 		$this->description = $description;
+		self::verify_description($this->description);
 	}
 
 	public function set_payment_status($status){
-		if(!in_array($status, ['paid', 'unpaid', 'recalculation'], true))
-		    throw new e_model('Статус оплаты заявки задан не верно.');
-		$this->payment_status = $status;
+		$this->payment_status = (string) $status;
+		self::verify_payment_status($this->payment_status);
 	}
 
 	public function set_status($status){
-		if(!in_array($status, ['open', 'close', 'working', 'reopen'], true))
-		    throw new e_model('Статус заявки задан не верно.');
-		$this->status = $status;
+		$this->status = (string) $status;
+		self::verify_status($this->status);
 	}
 
 	public function set_time_close($time){
@@ -356,14 +365,13 @@ final class data_query extends data_object{
 	}
 
 	public function set_time_work($time){
-		if($time < $this->time_open)
+		if($this->time_open > $time)
 			throw new e_model('Время закрытия заявки не может быть меньше времени открытия.');
 		$this->time_work = (int) $time;
 	}
 
 	public function set_warning_status($status){
-		if(!in_array($status, ['hight', 'normal', 'planned'], true))
-		    throw new e_model('Статус ворнинга заявки задан не верно.');
-		$this->warning_status = $status;
+		$this->warning_status = (string) $status;
+		self::verify_warning_status($this->warning_status);
 	}
 }
