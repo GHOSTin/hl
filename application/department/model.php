@@ -12,8 +12,8 @@ class model_department{
 	* Создает новый участок в компании.
 	* @return object data_department
 	*/
-	public static function create_department(data_company $company, data_department $department,
-											data_current_user $user){
+	public static function create_department(data_company $company,
+													data_department $department, data_current_user $user){
 		$company->verify('id');
 		$department->company_id = $company->id;
 		$department->id = self::get_insert_id($company);

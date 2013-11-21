@@ -1,9 +1,5 @@
 <?php
-/*
-* Связь с таблицей `cities`.
-* Города глобальны, но пока привязаны к компании.
-*/
-final class data_city extends data_object{
+class data_city extends data_object{
 	
 	private $id;
   private $name;
@@ -12,9 +8,9 @@ final class data_city extends data_object{
   private static $statuses = ['false', 'true'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_user), true))
+    if(!in_array($method, get_class_methods(verify_city), true))
       throw new e_model('Нет доступного метода.');
-    return verify_user::$method($args[0]);
+    return verify_city::$method($args[0]);
   }
 
   public function get_id(){
@@ -30,18 +26,17 @@ final class data_city extends data_object{
   }
 
   public function set_id($id){
-    $id = (int) $id;
-    self::verify_id($id);
-    $this->id = $id;
+    $this->id = (int) $id;
+    self::verify_id($this->id);
   }
 
   public function set_name($name){
-    self::verify_name($name);
-    $this->name = $name;
+    $this->name = (string) $name;
+    self::verify_name($this->name);
   }
 
   public function set_status($status){
-    self::verify_status($status);
-    $this->status = $status;
+    $this->status = (string) $status;
+    self::verify_status($this->status);
   }
 }

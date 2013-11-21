@@ -1,16 +1,11 @@
 <?php
-/*
-* Связь с таблицей `departments`.
-* В каждой компании свои участки.
-*/
-final class data_department extends data_object{
+class data_department extends data_object{
 
-  private $company_id;
   private $id;
   private $name;
   private $status;
 
-  private static $statuses = ['active', 'deactive'];
+  public static $statuses = ['active', 'deactive'];
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods(verify_department), true))

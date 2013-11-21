@@ -1,8 +1,4 @@
 <?php
-/*
-* Связь с таблицей `companies`.
-* Компании глобальны для системы.
-*/
 class data_company{
 
 	private $id;
@@ -31,16 +27,16 @@ class data_company{
 
   public function set_id($id){
     $this->id = (int) $id;
-    self::verify_id($id);
+    self::verify_id($this->id);
   }
 
   public function set_name($name){
     $this->name = (string) $name;
-    self::verify_name($name);
+    self::verify_name($this->name);
   }
 
   public function set_status($status){
     $this->status = (string) $status;
-    self::verify_status($status);
+    self::verify_status($this->status);
   }
 }

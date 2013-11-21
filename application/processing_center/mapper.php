@@ -14,7 +14,7 @@ class mapper_processing_center{
     VALUES (:id, :name)";
 
   private static $insert_id = "SELECT MAX(`id`) as `max_id`
-    FROM `processing_centers`"
+    FROM `processing_centers`";
 
   public function create_object(array $row){
     $center = new data_processing_center();

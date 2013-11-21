@@ -12,8 +12,8 @@ class mapper_group{
   private static $id = "SELECT MAX(`id`) as `max_id` FROM `groups`
     WHERE `company_id` = :company_id";
 
-  private static $insert = 'INSERT INTO `groups` (`id`, `company_id`, `name`, `status`)
-          VALUES (:id, :company_id, :name, :status)';
+  private static $insert = 'INSERT INTO `groups` (`id`, `company_id`, `name`,
+    `status`) VALUES (:id, :company_id, :name, :status)';
 
   private static $groups = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id  ORDER BY `name`";

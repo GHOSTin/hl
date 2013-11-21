@@ -21,7 +21,7 @@ class verify_city{
   * Верификация статуса.
   */
   public static function verify_status($status){
-    if(!in_array($status, self::$statuses, true))
+    if(!in_array($status, data_city::$statuses, true))
       throw new e_model('Статус города задан не верно.');
   }
 }

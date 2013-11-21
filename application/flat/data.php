@@ -1,9 +1,5 @@
 <?php
-/*
-* Связь с таблицей `flats`.
-* Квартиры глобальны, но пока привязаны к компании.
-*/
-final class data_flat extends data_object{
+class data_flat extends data_object{
 
   private $company_id;
   private $house;
@@ -17,10 +13,6 @@ final class data_flat extends data_object{
     if(!in_array($method, get_class_methods(verify_flat), true))
       throw new e_model('Нет доступного метода.');
     return verify_flat::$method($args[0]);
-  }
-
-  public function get_company_id(){
-    return $this->company_id;
   }
 
   public function get_house(){
@@ -39,23 +31,22 @@ final class data_flat extends data_object{
     return $this->status;
   }
 
-  public function set_company_id($id){
-    $this->company_id = (int) $id;
-  }
-
   public function set_house(data_house $house){
     $this->house = $house;
   }
 
   public function set_id($id){
     $this->id = (int) $id;
+    self::verify_id($this->id);
   }
 
   public function set_number($number){
     $this->number = (string) $number;
+    self::verify_number($this->number);
   }
 
   public function set_status($status){
     $this->status = (string) $status;
+    self::verify_status($this->status);
   }
 }

@@ -18,6 +18,7 @@ class mapper_department{
 		$department = new data_department();
 		$department->set_id($row['id']);
 		$department->set_name($row['name']);
+		$department->set_status($row['status']);
 		return $department;
 	}
 
@@ -39,7 +40,7 @@ class mapper_department{
 
 	/**
 	* Возвращает список участков компании.
-	* @return array из object data_department
+	* @return array
 	*/
 	public function get_departments(){
 		$sql = new sql();

@@ -274,19 +274,15 @@ class model_query{
 				if(!empty($house->get_numbers()))
 					foreach($house->get_numbers() as $number)
 						$query->add_number($number);
-				$department = (new model_department($this->company))
-					->get_department($house->get_department_id());
 				$query->set_house($house);
-        $query->set_department($department);
+        $query->set_department($house->get_department());
 			}elseif($initiator === 'number'){
 				$number = (new model_number($this->company))->get_number($id);
 				$house = (new model_house)
 					->get_house($number->get_flat()->get_house()->get_id());
-				$department = (new model_department($this->company))
-					->get_department($house->get_department_id());
 				$query->add_number($number);
 				$query->set_house($house);
-        $query->set_department($department);
+        $query->set_department($house->get_department());
 			}else
 				throw new e_model('Инициатор не корректен.');
 			$query_work_type = (new model_query_work_type($this->company))

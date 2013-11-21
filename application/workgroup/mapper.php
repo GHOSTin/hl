@@ -8,7 +8,7 @@ class mapper_workgroup{
 
 	public function __construct($company){
 		$this->company = $company;
-		$this->company->verify('id');
+		data_company::verify_id($this->company->get_id());
 	}
 
 	public function create_object(array $row){

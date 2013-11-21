@@ -379,7 +379,7 @@ class controller_query{
 	public static function private_get_user_options(model_request $request){
 		$group = new data_group();
 		$group->set_id($request->GET('id'));
-		(new model_group(model_session::get_company()))->init_users($group);
+		(new mapper_group2user(model_session::get_company(), $group))->init_users();
 		return ['group' => $group];
 	}
 

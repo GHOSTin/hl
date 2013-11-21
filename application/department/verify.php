@@ -13,8 +13,8 @@ class verify_department{
   * Верификация названия участка.
   */
   public static function verify_name($name){
-    // if(!preg_match('/^[А-Я][а-я0-9№ ]{1,19}$/', $name))
-    //   throw new e_model('Название участка задано не верно.');
+    if(!preg_match('/^[0-9а-яА-Я №]{3,19}$/u', $name))
+      throw new e_model('Название участка задано не верно.');
   }
 
   /**

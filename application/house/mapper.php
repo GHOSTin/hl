@@ -13,6 +13,9 @@ class mapper_house{
     $city = new data_city();
     $city->set_id($row['city_id']);
     $house->set_city($city);
+    $department = new data_department();
+    $department->set_id($row['department_id']);
+    $house->set_department($department);
     return $house;
   }
 

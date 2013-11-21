@@ -40,7 +40,7 @@ class mapper_query2number{
   }
 
   private function delete(data_number $number){
-    $number->verify('id');
+    data_number::verify_id($number->get_id());
     $sql = new sql();
     $sql->query(self::$delete);
     $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
@@ -50,7 +50,7 @@ class mapper_query2number{
   }
 
   private function insert(data_number $number){
-    $number->verify('id');
+    data_number::verify_id($number->get_id());
     $sql = new sql();
     $sql->query(self::$insert);
     $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
@@ -99,27 +99,20 @@ class mapper_query2number{
   }
 
   public function update(){
-    try{
-      sql::begin();
-      $new = $this->query->get_numbers();
-      $old = [];
-      $numbers = $this->get_numbers();
-      if(!empty($numbers))
-        foreach($numbers as $number)
-          $old[$number->get_id()] = $number;
-      $deleted = array_diff_key($old, $new);
-      $inserted = array_diff_key($new, $old);
-      if(!empty($inserted))
-        foreach($inserted as $number)
-          $this->insert($number);
-      if(!empty($deleted))
-        foreach($deleted as $number)
-          $this->delete($number);
-      sql::commit();
-      return $this->query;
-    }catch(exception $e){
-      sql::rollback();
-      throw new e_model('Проблемы при обновлении списка лицевых счетов.');
-    }
+    $new = $this->query->get_numbers();
+    $old = [];
+    $numbers = $this->get_numbers();
+    if(!empty($numbers))
+      foreach($numbers as $number)
+        $old[$number->get_id()] = $number;
+    $deleted = array_diff_key($old, $new);
+    $inserted = array_diff_key($new, $old);
+    if(!empty($inserted))
+      foreach($inserted as $number)
+        $this->insert($number);
+    if(!empty($deleted))
+      foreach($deleted as $number)
+        $this->delete($number);
+    return $this->query;
   }
 }

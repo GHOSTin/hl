@@ -5,27 +5,39 @@ class mapper_house2number{
   private $house;
 
   private static $many = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
-    `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`, `numbers`.`number`,
-    `numbers`.`type`, `numbers`.`status`, `numbers`.`fio`, `numbers`.`telephone`,
-    `numbers`.`cellphone`, `numbers`.`password`, `numbers`.`contact-fio` as `contact_fio`,
-    `numbers`.`contact-telephone` as `contact_telephone`, `numbers`.`contact-cellphone` as `contact_cellphone`,
-    `flats`.`flatnumber` as `flat_number`, `houses`.`housenumber` as `house_number`,
+    `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`, 
+    `numbers`.`number`, `numbers`.`type`, `numbers`.`status`, `numbers`.`fio`,
+    `numbers`.`telephone`, `numbers`.`cellphone`, `numbers`.`password`,
+    `numbers`.`contact-fio` as `contact_fio`,
+    `numbers`.`contact-telephone` as `contact_telephone`,
+    `numbers`.`contact-cellphone` as `contact_cellphone`,
+    `flats`.`flatnumber` as `flat_number`,
+    `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`
-    FROM `numbers`, `flats`, `houses`, `streets` WHERE `numbers`.`house_id` = :house_id
-    AND `numbers`.`company_id` = :company_id AND `numbers`.`flat_id` = `flats`.`id`
-    AND `numbers`.`house_id` = `houses`.`id` AND `houses`.`street_id` = `streets`.`id`
+    FROM `numbers`, `flats`, `houses`, `streets`
+    WHERE `numbers`.`house_id` = :house_id
+    AND `numbers`.`company_id` = :company_id 
+    AND `numbers`.`flat_id` = `flats`.`id`
+    AND `numbers`.`house_id` = `houses`.`id`
+    AND `houses`.`street_id` = `streets`.`id`
     ORDER BY (`flats`.`flatnumber` + 0)";
 
   private static $one_by_number = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
-    `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`, `numbers`.`number`,
-    `numbers`.`type`, `numbers`.`status`, `numbers`.`fio`, `numbers`.`telephone`,
-    `numbers`.`cellphone`, `numbers`.`password`, `numbers`.`contact-fio` as `contact_fio`,
-    `numbers`.`contact-telephone` as `contact_telephone`, `numbers`.`contact-cellphone` as `contact_cellphone`,
-    `flats`.`flatnumber` as `flat_number`, `houses`.`housenumber` as `house_number`,
+    `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`,
+    `numbers`.`number`, `numbers`.`type`, `numbers`.`status`, `numbers`.`fio`,
+    `numbers`.`telephone`, `numbers`.`cellphone`, `numbers`.`password`,
+    `numbers`.`contact-fio` as `contact_fio`,
+    `numbers`.`contact-telephone` as `contact_telephone`,
+    `numbers`.`contact-cellphone` as `contact_cellphone`,
+    `flats`.`flatnumber` as `flat_number`,
+    `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`
-    FROM `numbers`, `flats`, `houses`, `streets` WHERE `numbers`.`house_id` = :house_id
-    AND `numbers`.`company_id` = :company_id AND `numbers`.`flat_id` = `flats`.`id`
-    AND `numbers`.`house_id` = `houses`.`id` AND `houses`.`street_id` = `streets`.`id`
+    FROM `numbers`, `flats`, `houses`, `streets`
+    WHERE `numbers`.`house_id` = :house_id
+    AND `numbers`.`company_id` = :company_id
+    AND `numbers`.`flat_id` = `flats`.`id`
+    AND `numbers`.`house_id` = `houses`.`id`
+    AND `houses`.`street_id` = `streets`.`id`
     AND `numbers`.`number` = :number";
 
   private static $insert = "INSERT INTO `numbers` (`id`, `company_id`,

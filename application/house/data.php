@@ -1,13 +1,8 @@
 <?php
-/*
-* Связь с таблицей `houses`.
-* Дома глобальны, но пока привязаны к компании.
-*/
-final class data_house{
+class data_house{
 	
 	private $city;
-	private $company_id;
-	private $department_id;
+  private $department;
 	private $id;
 	private $number;
 	private $status;
@@ -45,6 +40,10 @@ final class data_house{
     return $this->city;
   }
 
+  public function get_department(){
+    return $this->department;
+  }
+
   public function get_flats(){
     return $this->flats;
   }
@@ -67,6 +66,10 @@ final class data_house{
 
   public function set_city(data_city $city){
     $this->city = $city;
+  }
+
+  public function set_department(data_department $department){
+    $this->department = $department;
   }
 
   public function set_id($id){

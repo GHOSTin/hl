@@ -13,7 +13,6 @@ class model_number2meter{
 
   public function add_meter($meter_id, $serial, $service, $place, $date_release,
                               $date_install, $date_checking, $period, $comment){
-
     $meter = (new model_meter($this->company))->get_meter($meter_id);
     $mapper = new mapper_number2meter($this->company, $this->number);
     $mapper->init_meters();
@@ -70,7 +69,8 @@ class model_number2meter{
     $this->init_meters();
     $meter = $this->get_meter($meter_id, $serial);
     $this->number->remove_n2m($meter);
-    return (new mapper_number2meter($this->company, $this->number))->update_meter_list();
+    return (new mapper_number2meter($this->company, $this->number))
+      ->update_meter_list();
   }
   
   public function update_date_checking($meter_id, $serial, $time){

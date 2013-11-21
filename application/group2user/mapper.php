@@ -21,7 +21,7 @@ class mapper_group2user{
     $this->company = $company;
     $this->group = $group;
     data_company::verify_id($this->company->get_id());
-    $this->group->verify('id');
+    data_group::verify_id($this->group->get_id());
   }
 
   public function create_object(array $row){

@@ -112,7 +112,7 @@ class verify_query{
   /**
   * Верификация причины закрытия заявки.
   */
-  public static function verify_close_reason(data_query $text){
+  public static function verify_close_reason($text){
     // if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{0,65535}$/u', $text)))
     //   throw new e_model('Описание заявки заданы не верно.');
   }
@@ -121,13 +121,13 @@ class verify_query{
   * Верификация номера заявки.
   */
   public static function verify_number($number){
-    if(!preg_match('/^[0-9]{1,6}$/', $numbers))
+    if(!preg_match('/^[0-9]{1,6}$/', $number))
         throw new e_model('Номер заявки задан не верно.');
   }
 
   /**
   * Верификация инспеции заявки.
   */
-  public static function verify_inspection(data_query $query){
+  public static function verify_inspection($query){
   }
 }

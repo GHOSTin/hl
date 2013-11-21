@@ -108,8 +108,6 @@ class mapper_query2user{
   }
 
   public function update_users(){
-    try{
-      sql::begin();
       $users = $this->get_users();
       $new_managers = $this->query->get_managers();
       $delete_managers = array_diff_key($users['manager'], $new_managers);
@@ -145,11 +143,6 @@ class mapper_query2user{
           throw new e_model('Создатель заявки не может быть пустым.');
         else
           $this->insert($this->query->get_creator(), 'creator');
-      sql::commit();
       return $query;
-    }catch(exception $e){
-      sql::rollback();
-      throw new e_model('Проблемы при обновлении списка пользователей.');
-    }
   }
 }
