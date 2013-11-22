@@ -1,11 +1,6 @@
 <?php
-/*
-* Связь с таблицей `works`.
-* В каждой компании свои работы.
-*/
-final class data_work extends data_object{
+class data_work extends data_object{
 
-	private $company_id;
   private $id;
   private $name;
 
@@ -15,6 +10,14 @@ final class data_work extends data_object{
     return verify_work::$method($args[0]);
   }
 
+  public function get_id(){
+    return $this->id;
+  }
+
+  public function get_name(){
+    return $this->name;
+  }
+
   public function set_id($id){
     $this->id = (int) $id;
     self::verify_id($this->id);
@@ -22,14 +25,6 @@ final class data_work extends data_object{
 
   public function set_name($name){
     $this->name = (string) $name;
-    self::verify_name($name);
-  }
-
-  public function get_id(){
-    return $this->id;
-  }
-
-  public function get_name(){
-    return $this->name;
+    self::verify_name($this->name);
   }
 }

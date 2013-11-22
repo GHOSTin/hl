@@ -3,7 +3,6 @@ class model_environment{
 
 	/**
 	* Инициализирует соединения с базой данных.
-	* @return void
 	*/
 	public static function create_batabase_connection(){
 		try{
@@ -43,14 +42,12 @@ class model_environment{
 			$data['file_prefix'] = $component;
 			$data['component'] = $controller::$method($request);
 			$data['request'] = $request;
-			$file = fopen(ROOT.'/version', 'r');
-			$data['version'] = fgets($file);
+			$data['version'] = file_get_contents(ROOT.'/version');
 			$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
-			if(file_exists($template)){
+			if(file_exists($template))
 				return load_template($component.'.'.$method, $data);
-			}else{
+			else
 				return load_template('error.no_template', $data);
-			}
 		}catch(exception $e){
 			if($e instanceof e_model){
 				$args['error'] = $e;

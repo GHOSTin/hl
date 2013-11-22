@@ -20,7 +20,6 @@ class mapper_work{
 	
 	/**
 	* Возвращает список работ заявки
-	* @return array из data_work
 	*/
 	public function find($id){
 		$sql = new sql();

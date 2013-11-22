@@ -38,7 +38,7 @@
 				</ul>
 		{% else %}
 				<div>
-					{{ component.house.get_street_name() }}, дом №{{ component.house.get_number() }}
+					{{ component.house.get_street().get_name() }}, дом №{{ component.house.get_number() }}
 				</div>
 		{% endif %}
 		<div style="display:inline-block;vertical-align:top; width:300px">

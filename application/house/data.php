@@ -64,6 +64,10 @@ class data_house{
     return $this->status;
   }
 
+  public function get_street(){
+    return $this->street;
+  }
+
   public function set_city(data_city $city){
     $this->city = $city;
   }
@@ -85,6 +89,11 @@ class data_house{
   public function set_status($status){
     $this->status = (string) $status;
     self::verify_status($status);
+  }
+
+  public function set_street(data_street $street){
+    $this->street = $street;
+    data_street::verify_id($this->street->get_id());
   }
 
   private function send_error($message){

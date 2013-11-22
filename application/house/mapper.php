@@ -1,21 +1,30 @@
 <?php
 class mapper_house{
 
-  private static $one = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
-    `department_id`, `status`, `housenumber` as `number`
-    FROM `houses` WHERE `id` = :house_id";
+  private static $one = "SELECT `houses`.`id`, `houses`.`city_id`,
+    `houses`.`street_id`, `houses`.`department_id`, `houses`.`status`,
+    `houses`.`housenumber`, `streets`.`name`
+    FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
+    AND `houses`.`street_id` = `streets`.`id`";
 
   public function create_object(array $row){
     $house = new data_house();
     $house->set_id($row['id']);
-    $house->set_number($row['number']);
+    $house->set_number($row['housenumber']);
     $house->set_status($row['status']);
+    // city
     $city = new data_city();
     $city->set_id($row['city_id']);
     $house->set_city($city);
+    // department
     $department = new data_department();
     $department->set_id($row['department_id']);
     $house->set_department($department);
+    // street
+    $street = new data_street();
+    $street->set_id($row['street_id']);
+    $street->set_name($row['name']);
+    $house->set_street($street);
     return $house;
   }
 

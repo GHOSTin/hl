@@ -1,11 +1,6 @@
 <?php
-/*
-* Связь с таблицей `workgroups`.
-* В каждой компании свои группы работы.
-*/
 class data_workgroup extends data_object{
 
-	private $company_id;
   private $id;
   private $name;
 	private $status;

@@ -5,14 +5,14 @@ class mapper_user2profile{
   private $user;
 
   private static $many = "SELECT `profile` FROM `profiles` 
-          WHERE  `user_id` = :user_id AND `company_id` = :company_id";
+    WHERE  `user_id` = :user_id AND `company_id` = :company_id";
 
   private static $one = "SELECT `profile`, `rules`, `restrictions`, `settings`
     FROM `profiles` WHERE  `user_id` = :user_id 
     AND `company_id` = :company_id AND `profile` = :profile";
 
   private static $delete = "DELETE FROM `profiles` WHERE  `user_id` = :user_id
-          AND `company_id` = :company_id AND `profile` = :profile";
+    AND `company_id` = :company_id AND `profile` = :profile";
 
   private static $insert = "INSERT INTO `profiles` (`company_id`, `user_id`,
     `profile`, `rules`, `restrictions`, `settings`) VALUES (:company_id,

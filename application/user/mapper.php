@@ -11,7 +11,7 @@
     `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
     `password`, `telephone`, `cellphone` FROM `users` WHERE `id` = :id";
 
-  private static $insert_id = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
+  private static $id = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
 
   private static $update = "UPDATE `users` SET `firstname` = :firstname,
     `lastname` = :lastname, `midlename` = :middlename, `status` = :status,
@@ -79,7 +79,7 @@
 
   private function get_insert_id(){
     $sql = new sql();
-    $sql->query(self::$insert_id);
+    $sql->query(self::$id);
     $sql->execute('Проблема при опредении следующего user_id.');
     if($sql->count() !== 1)
         throw new e_model('Проблема при опредении следующего user_id.');
