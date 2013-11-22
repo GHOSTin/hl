@@ -27,7 +27,7 @@ class verify_meter{
   }
 
   public static function verify_service($service){
-    if(!in_array($service, self::$service_list))
+    if(!in_array($service, data_meter::$service_list))
       throw new e_model('Услуга задана не верно.');
   }
 }

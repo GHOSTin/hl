@@ -5,7 +5,7 @@ class data_city extends data_object{
   private $name;
 	private $status;
 
-  private static $statuses = ['false', 'true'];
+  public static $status_list = ['false', 'true'];
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods(verify_city), true))

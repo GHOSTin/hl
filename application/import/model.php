@@ -5,7 +5,7 @@ class model_import{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-		$this->company->verify('id');
+		data_company::verify_id($this->company->get_id());
 	}
 
 	/*
@@ -115,7 +115,8 @@ class model_import{
 	public function load_numbers($city_id, $street_id, $house_id, $numbers){
 		if(empty($numbers))
 			throw new e_model('Нечего импортировать.');
-		$city = new data_city($city_id);
+		$city = new data_city();
+		$city->set_id($city_id);
 		$street = (new model_city2street($city))
 		  ->get_street($street_id);
 		$house = (new model_street2house($street))

@@ -9,7 +9,7 @@ class mapper_meter{
 
   private static $one_by_name = "SELECT `id`, `company_id`, `name`, `capacity`,
     `rates`, `service`, `periods` FROM `meters`
-    WHERE `company_id` = :company_id AND `name` = :name"
+    WHERE `company_id` = :company_id AND `name` = :name";
 
   private static $insert = "INSERT INTO `meters` (`id`, `company_id`, `name`,
     `rates`, `capacity`,`periods`) VALUES (:id, :company_id, :name, :rates,
@@ -29,7 +29,7 @@ class mapper_meter{
 
   private static $update = 'UPDATE `meters` SET `name` = :name,
     `capacity` = :capacity, `rates` = :rates, `periods` = :periods,
-    `service` = :services WHERE `company_id` = :company_id AND `id` = :id'
+    `service` = :services WHERE `company_id` = :company_id AND `id` = :id';
 
   public function __construct(data_company $company){
     $this->company = $company;

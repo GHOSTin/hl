@@ -11,7 +11,8 @@ final class data_meter extends data_object{
   private $rates;
   private $periods = [];
   private $services = [];
-  private static $service_list = ['cold_water', 'hot_water', 'electrical'];
+  
+  public static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods(verify_meter), true))

@@ -3,7 +3,7 @@ class model_city2street{
 
   public function __construct(data_city $city){
     $this->city = $city;
-    $this->city->verify('id');
+    data_city::verify_id($this->city->get_id());
   }
 
   public function create_street($street_name){

@@ -113,8 +113,6 @@ class mapper_house2number{
   }
 
   public function insert(data_number $number){
-    $number->verify('id', 'number', 'fio', 'status');
-    $number->get_flat()->verify('id');
     $sql = new sql();
     $sql->query(self::$insert);
     $sql->bind(':id', (int) $number->get_id(), PDO::PARAM_INT);
@@ -150,5 +148,13 @@ class mapper_house2number{
       throw new e_model('Проблема при опредении следующего number_id.');
     $number_id = (int) $sql->row()['max_number_id'] + 1;
     return $number_id;
+  }
+
+  private function verify(data_number $number){
+    data_number::verify_id($number->get_id());
+    data_number::verify_number($number->get_number());
+    data_number::verify_fio($number->get_fio());
+    data_number::verify_status($number->get_status());
+    data_flat::verify_id($number->get_flat()->get_id());
   }
 }

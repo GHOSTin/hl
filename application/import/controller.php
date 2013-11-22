@@ -33,7 +33,7 @@ class controller_import{
   public static function private_create_street(model_request $request){
     $city = (new model_city)->get_city($request->GET('city_id'));
     return ['street' => (new model_city2street($city))
-        ->create_street($request->GET('name'))];
+      ->create_street($request->GET('name'))];
   }
 
   public static function private_create_house(model_request $request){
@@ -50,7 +50,8 @@ class controller_import{
   }
 
   public static function private_load_flats(model_request $request){
-    $city = new data_city($request->POST('city_id'));
+    $city = new data_city();
+    $city->set_id($request->POST('city_id'));
     $street = (new model_city2street($city))
       ->get_street($request->POST('street_id'));
     $house = (new model_street2house($street))

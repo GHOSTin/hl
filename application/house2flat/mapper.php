@@ -59,7 +59,7 @@ class mapper_house2flat{
   }
 
   public function insert(data_flat $flat){
-    $flat->verify('id', 'number');
+    $this->verify($flat);
     $sql = new sql();
     $sql->query(self::$sql_insert);
     $sql->bind(':id', (int) $flat->get_id(), PDO::PARAM_INT);
@@ -69,5 +69,11 @@ class mapper_house2flat{
     $sql->bind(':number', (string) $flat->get_number(), PDO::PARAM_STR);
     $sql->execute('Проблема при добавлении квартиры.');
     return $flat;
+  }
+
+  private function verify(data_flat $flat){
+    data_flat::verify_id($flat->get_id());
+    data_flat::verify_number($flat->get_number());
+    data_flat::verify_status($flat->get_status());
   }
 }

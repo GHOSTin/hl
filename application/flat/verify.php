@@ -21,7 +21,7 @@ class verify_flat{
   * Верификация статуса квартиры.
   */
   public static function verify_status($status){
-    if(!in_array($status, self::$statuses, true))
+    if(!in_array($status, data_flat::$statuses, true))
       throw new e_model('Статус квартиры задан не верно.');
   }
 }

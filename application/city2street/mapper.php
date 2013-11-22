@@ -21,8 +21,6 @@ class mapper_city2street{
   public function create_object(array $row){
     $street = new data_street();
     $street->set_id($row['id']);
-    $street->set_company_id($row['company_id']);
-    $street->set_city_id($row['city_id']);
     $street->set_status($row['status']);
     $street->set_name($row['name']);
     return $street;
@@ -76,7 +74,7 @@ class mapper_city2street{
   }
 
   public function insert(data_street $street){
-    $street->verify('id', 'name');
+    $this->verify($street);
     $sql = new sql();
     $sql->query(self::$insert);
     $sql->bind(':street_id', $street->get_id(), PDO::PARAM_INT);
@@ -85,5 +83,11 @@ class mapper_city2street{
     $sql->bind(':name', $street->get_name(), PDO::PARAM_STR);
     $sql->execute('Проблемы при вставке улицы в базу данных.');
     return $street;
+  }
+
+  private function verify(data_street $street){
+    data_street::verify_id($street->get_id());
+    data_street::verify_name($street->get_name());
+    data_street::verify_status($street->get_status());
   }
 }
