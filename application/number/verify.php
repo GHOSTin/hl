@@ -11,15 +11,6 @@ class verify_number{
     }
 
     /**
-    * Верификация идентификатора города.
-    */
-    public static function city_id(data_number $number){
-        $city = new data_city();
-        $city->set_id($number->get_city_id());
-        $city->verify('id');
-    }
-
-    /**
     * Верификация сотового телефона контактного лица.
     */
     public static function contact_cellphone(data_number $number){
@@ -46,64 +37,26 @@ class verify_number{
     }
 
     /**
-    * Верификация идентификатора компании.
-    */
-    public static function company_id(data_number $number){
-        $company = new data_company();
-        $company->set_id($number->get_company_id());
-        $company->verify('id');
-    }
-
-    /**
-    * Верификация идентификатора участка.
-    */
-    public static function department_id(data_number $number){
-        $department = new data_department();
-        $department->set_id($number->get_department_id());
-        $department->verify();
-    }
-
-    /**
     * Верификация ФИО владельца лицевого счета.
     */
-    public static function fio(data_number $number){
-        if(!preg_match('/^[А-Яа-я0-9\. ]{3,255}$/u', $number->get_fio()))
+    public static function verify_fio($fio){
+        if(!preg_match('/^[А-Яа-я0-9\. ]{3,255}$/u', $fio))
             throw new e_model('ФИО владельца лицевого счета заданы не верно.');
-    }
-
-    /**
-    * Верификация идентификатора квартиры.
-    */
-    public static function flat_id(data_number $number){
-        $flat = new data_flat();
-        $flat->set_id($number->get_flat_id());
-        $flat->verify('id');
-    }
-
-    /**
-    * Верификация идентификатора дома.
-    */
-    public static function house_id(data_number $number){
-        $house = new data_house();
-        $house->set_id($number->get_house_id());
-        $house->verify('id');
     }
 
     /**
     * Верификация идентификатора лицевого счета.
     */
-    public static function id(data_number $number){
-        if(!preg_match('/^[0-9]{1,8}$/', $number->get_id()))
-            throw new e_model('Идентификатор лицевого счета задан не верно.');
-        if($number->get_id() > 16777215 OR $number->get_id() < 1)
+    public static function verify_id($id){
+        if($id > 16777215 OR $id < 1)
             throw new e_model('Идентификатор лицевого счета задан не верно.');
     }
 
     /**
     * Верификация номера лицевого счета.
     */
-    public static function number(data_number $number){
-        if(!preg_match('/^[0-9А-Яа-я]{1,20}$/u', $number->get_number()))
+    public static function verify_num($num){
+        if(!preg_match('/^[0-9А-Яа-я]{1,20}$/u', $num))
             throw new e_model('Номер лицевого счета задан не верно.');
     }
 
@@ -126,17 +79,9 @@ class verify_number{
     /**
     * Верификация телефона владельца лицевого счета.
     */
-    public static function telephone(data_number $number){
-        if(!empty($number->get_telephone()))
-            if(!preg_match('/^[0-9]{2,11}$/', $number->get_telephone()))
+    public static function verify_telephone($telephone){
+        if(!empty($telephone))
+            if(!preg_match('/^[0-9]{2,11}$/', $telephone))
                 throw new e_model('Номер телефона пользователя задан не верно.');
-    }
-
-    /**
-    * Верификация типа лицевого счета.
-    */
-    public static function number_type(data_number $number){
-        if(!$number->get_type() !== 'human')
-            throw new e_model('Тип лицевого счета задан не верно.');
     }
 }

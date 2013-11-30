@@ -100,7 +100,7 @@ class mapper_number{
     }
 
     public function update(data_number $number){
-        $number->verify('id', 'number', 'fio', 'telephone');
+        $this->verify($number);
         $sql = new sql();
         $sql->query('UPDATE `numbers` SET `number` = :number, `fio` = :fio,
             `cellphone` = :cellphone, `telephone` = :telephone, `password` = :hash
@@ -114,5 +114,13 @@ class mapper_number{
         $sql->bind(':hash', $number->get_hash(), PDO::PARAM_STR);
         $sql->execute('Проблема при обнослении лицевого счета.');
         return $number;
+    }
+
+
+    private function verify(data_number $number){
+        data_number::verify_id($number->get_id());
+        data_number::verify_num($number->get_number());
+        data_number::verify_fio($number->get_fio());
+        data_number::verify_telephone($number->get_telephone());
     }
 }

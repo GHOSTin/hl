@@ -20,6 +20,12 @@ final class data_number extends data_object{
   private $telephone;
   private $type;
 
+  public static function __callStatic($method, $args){
+    if(!in_array($method, get_class_methods(verify_number), true))
+      throw new e_model('Нет доступного метода.');
+    return verify_number::$method($args[0]);
+  }
+
   public function __construct($id = null){
     $this->id = (int) $id;
   }
@@ -128,10 +134,5 @@ final class data_number extends data_object{
 
   public function set_type($type){
     $this->type = (string) $type;
-  }
-
-  public static function verify_id($id){
-    if($id > 16777215 OR $id < 1)
-      throw new e_model('Идентификатор лицевого счета задан не верно.');
   }
 }
