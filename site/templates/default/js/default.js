@@ -24,3 +24,12 @@ function get_hidden_content(tag){
 $('body').on('click', '.close_dialog', function(){
 	$('.dialog').modal('hide');
 });
+
+$(document).ready(function(){
+    $(document).on('click', '.get_dialog_error_message', function(){
+        $.get('/error/show_dialog',{
+            },function(r){
+                init_content(r);
+            });
+    });
+});
