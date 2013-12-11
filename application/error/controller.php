@@ -9,6 +9,12 @@ class controller_error{
     return true;
   }
 
+  public static function private_delete_error(model_request $request){
+    (new model_error)->delete_error($request->GET('time'),
+      $request->GET('user_id'));
+    exit();
+  }
+
   public static function private_send_error(model_request $request){
     (new model_error)->send_error($request->GET('text'));
     exit();

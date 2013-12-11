@@ -3,9 +3,9 @@
 {% block component %}
   <ul>
   {% for error in errors %}
-    <li>
-      <h5>{{ error.get_user().get_lastname() }} {{ error.get_user().get_firstname() }} {{ error.get_user().get_middlename() }} ({{ error.get_time()|date('d.m.Y')}})</h5>
-      {{ error.get_text() }}
+    <li time="{{ error.get_time() }}" user_id="{{ error.get_user().get_id() }}">
+      <h5>{{ error.get_time()|date('d.m.Y') }} {{ error.get_user().get_lastname() }} {{ error.get_user().get_firstname() }} {{ error.get_user().get_middlename() }}</h5>
+      {{ error.get_text() }} <a class="delete_error">удалить</a>
     </li>    
   {% endfor %}
   </ul>
