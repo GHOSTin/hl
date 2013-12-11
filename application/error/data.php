@@ -13,6 +13,10 @@ class data_error{
     return $this->text;
   }
 
+  public function get_time(){
+    return $this->time;
+  }
+
   public function set_user(data_user $user){
     $this->user = $user;
   }
@@ -21,7 +25,7 @@ class data_error{
     $this->text = (string) $text;
   }
 
-  public function set_time(){
+  public function set_time($time){
     $this->time = (int) $time;
   }
 }
