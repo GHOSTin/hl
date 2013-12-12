@@ -17,8 +17,9 @@ class twig{
     }
 
     public function load_twig(){
+        $options = ['cache' => ROOT.'/cache'];
 		$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
-		self::$twig = new Twig_Environment($loader);
+		self::$twig = new Twig_Environment($loader, $options);
     }
 
     public function get_twig(){
