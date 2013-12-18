@@ -11,7 +11,7 @@ class model_meter{
 	* Возвращает объект счетчика или падает с исключением, что счетчик не существует.
 	*/
 	public function get_meter($id){
-		$meter = (new mapper_meter($this->company))->find($id);
+		$meter = (new mapper_meter(di::get('pdo'), $this->company))->find($id);
 		if(!($meter instanceof data_meter))
 			throw new e_model('Счетчика не существует.');
 		return $meter;
@@ -22,7 +22,7 @@ class model_meter{
 	* @return array data_meter
 	*/
 	public function get_meters(){
-		return (new mapper_meter($this->company))->get_meters();
+		return (new mapper_meter(di::get('pdo'), $this->company))->get_meters();
 	}
 
 	/**
@@ -30,6 +30,6 @@ class model_meter{
 	* @return array data_meter
 	*/
 	public function get_meters_by_service($service){
-	    return (new mapper_meter($this->company))->get_meters_by_service($service);
+	    return (new mapper_meter(di::get('pdo'), $this->company))->get_meters_by_service($service);
 	}
 }

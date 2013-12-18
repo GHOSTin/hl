@@ -8,7 +8,7 @@
                 <li class="get_dialog_import_house"><a href="#">Импорт дома</a></li>
                 <li class="get_dialog_import_flats"><a href="#">Импорт квартир</a></li>
                 <li class="get_dialog_import_numbers"><a href="#">Импорт лицевых счетов</a></li>
-                {# <li class="get_dialog_import_meters"><a href="#">Импорт счетчиков</a></li> #}
+                <li class="get_dialog_import_meters"><a href="#">Импорт счетчиков</a></li>
             </ul>
         </div>
         <div class="span9 import-form"></div>

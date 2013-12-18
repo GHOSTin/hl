@@ -92,6 +92,11 @@ class di{
 			self::$instance = new Pimple();
 		return self::$instance;
 	}
+
+	public function get($key){
+		$pimple = self::get_instance();
+		return $pimple[$key];
+	}
 }
 
 $pimple = di::get_instance();

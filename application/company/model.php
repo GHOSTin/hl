@@ -3,7 +3,6 @@ class model_company{
 
 	/**
 	* Создает новую компанию
-	* @return object data_company
 	*/
 	public static function create_company(data_company $company, data_current_user $user){
 		$company->id = self::get_insert_id();
@@ -28,7 +27,6 @@ class model_company{
 	
 	/**
 	* Возвращает следующий для вставки идентификатор дома.
-	* @return int
 	*/
 	private static function get_insert_id(){
 		$sql = new sql();
@@ -45,15 +43,6 @@ class model_company{
 	* Возвращает список компаний
 	*/
 	public static function get_companies(){
-		$pdo = di::get_instance()['pdo'];
-		return (new mapper_company($pdo))->find_all();
-	}
-
-	/**
-	* Проверка принадлежности объекта к классу data_company.
-	*/
-	public static function is_data_company($company){
-		if(!($company instanceof data_company))
-			throw new e_model('Возвращеный объект не является компанией.');
+		return (new mapper_company(di::get('pdo')))->find_all();
 	}
 }

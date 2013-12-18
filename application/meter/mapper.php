@@ -16,7 +16,8 @@ class mapper_meter{
     `service`, `periods` FROM `meters`
     WHERE `company_id` = :company_id ORDER BY `name`";
 
-  public function __construct(data_company $company){
+  public function __construct(PDO $pdo, data_company $company){
+    $this->pdo = $pdo;
     $this->company = $company;
     data_company::verify_id($this->company->get_id());
   }
@@ -43,12 +44,11 @@ class mapper_meter{
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при запросе счетчика.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model('Проблема при запросе счетчика.');
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -62,12 +62,11 @@ class mapper_meter{
   * Возвращает список счетчиков.
   */
   public function get_meters_by_service($service){
-    $sql = new sql();
-    $sql->query(self::$all_by_service);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':service', (string) $service, PDO::PARAM_STR);
-    $sql->execute('Проблема при выборке счетчиков.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$all_by_service);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':service', (string) $service, PDO::PARAM_STR);
+    if($stmt->execute())
+      throw new e_model('Проблема при выборке счетчиков.');
     $meters = [];
     while($row = $stmt->fetch())
       $meters[] = $this->create_object($row);
@@ -78,11 +77,10 @@ class mapper_meter{
   * Возвращает список счетчиков.
   */
   public function get_meters(){
-    $sql = new sql();
-    $sql->query(self::$all);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке счетчиков.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$all);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model('Проблема при выборке счетчиков.');
     $meters = [];
     while($row = $stmt->fetch())
       $meters[] = $this->create_object($row);
