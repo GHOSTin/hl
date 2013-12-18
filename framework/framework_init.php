@@ -26,14 +26,6 @@ function framework_autoload($class_name){
 		return;
 }
 spl_autoload_register('framework_autoload');
-// подгрузка временной реализации класс шаблонизатора
-try{
-	require_once('twig.php');
-	require_once ROOT.'/libs/Twig/Autoloader.php';
-	Twig_Autoloader::register();
-}catch(exception $e){
-	die('Шаблонизатор не может быть подгружен.');
-}
 
 class component_session_manager{
 
@@ -111,3 +103,22 @@ $pimple['pdo'] = $pimple->share(function($pimple){
 	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
   return $pdo;
 });
+
+require_once ROOT.'/libs/Twig/Autoloader.php';
+Twig_Autoloader::register();
+
+$pimple['twig'] = $pimple->share(function($pimple){
+	$options = ['cache' => ROOT.'/cache', 'auto_reload' => true];
+	$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
+	return new Twig_Environment($loader, $options);
+
+});
+
+function load_template($name, array $args = []){
+  $twig = di::get_instance()['twig'];
+  list($component, $template) = explode('.', $name, 2);
+  $template_dir = ROOT.'/'.framework_configuration::application_folder.'/'.$component.'/templates/';
+  $loader = $twig->getLoader();
+  $loader->prependPath($template_dir, $component);
+  return $twig->render('@'.$component.'/'.$template.'.tpl', $args);
+}
