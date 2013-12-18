@@ -1,28 +1,6 @@
 <?php
 class model_environment{
 
-	/**
-	* Инициализирует соединения с базой данных.
-	*/
-	public static function create_batabase_connection(){
-		try{
-			db::connect(application_configuration::database_host,
-						application_configuration::database_name,
-						application_configuration::database_user,
-						application_configuration::database_password);
-		}catch(exception $e){
- 			throw new e_model('Нет соединения с базой данных.');
-		}
-		// устанавливаем параметры по умолчанию
-		try{
-			db::get_handler()->exec("SET NAMES utf8");
-			db::get_handler()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			db::get_handler()->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-		}catch(exception $e){
-			throw new e_model('Аттрибуты соединения с базой данных не применились.'); 
-		}
-	}
-
 	/*
 	* Возвращает содержимое страницы.
 	*/
@@ -74,7 +52,6 @@ class model_environment{
 	}
 
 	public static function before(){
-		self::create_batabase_connection();
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
 			model_session::set_user($_SESSION['user']);
 			model_session::set_company($_SESSION['company']);

@@ -83,3 +83,31 @@ class mem{
 		$_SESSION['model'][$this->name] = $params;
 	}
 }
+
+
+require_once(ROOT.'/libs/Pimple.php');
+
+class di{
+
+	private static $instance;
+
+	private function __construct(){}
+	private function __clone(){}
+	private function __wakeup(){}
+
+	public static function get_instance(){
+		if(is_null(self::$instance))
+			self::$instance = new Pimple();
+		return self::$instance;
+	}
+}
+
+$pimple = di::get_instance();
+
+$pimple['pdo'] = $pimple->share(function($pimple){
+	$pdo = new PDO('mysql:host='.application_configuration::database_host.';dbname='.application_configuration::database_name, application_configuration::database_user, application_configuration::database_password);
+	$pdo->exec("SET NAMES utf8");
+	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+  return $pdo;
+});
