@@ -69,7 +69,7 @@ class model_environment{
 			model_session::set_profile($profile);
 		else
 			if(!in_array($component, ['default_page', 'profile', 'exit',
-				'processing_center', 'import', 'user', 'meter', 'error'], true))
+				'processing_center', 'import', 'user', 'meter', 'error', 'company'], true))
 				throw new e_model('Нет доступа.');
 	}
 

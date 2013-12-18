@@ -42,14 +42,10 @@ class model_company{
 	}
 	
 	/**
-	* Возвращает компании
-	* @return array object data_company
+	* Возвращает список компаний
 	*/
-	public static function get_companies(data_company $company){
-		$sql = new sql();
-		$sql->query("SELECT `id`, `name` FROM `companies`");
-		$sql->query(" ORDER BY `name`");
-		return $sql->map(new data_company(), 'Проблема при выборке компаний.');
+	public static function get_companies(){
+		return (new mapper_company(db::get_handler()))->find_all();
 	}
 
 	/**
