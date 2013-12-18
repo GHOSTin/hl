@@ -3,7 +3,8 @@
 class model_error{
 
   public function delete_error($time, $user_id){
-    $mapper = new mapper_error(db::get_handler());
+    $pdo = di::get_instance()['pdo'];
+    $mapper = new mapper_error($pdo);
     $error = $mapper->find($time, $user_id);
     if(!($error instanceof data_error))
       throw new e_model('Нет такой ошибки!');
@@ -19,6 +20,7 @@ class model_error{
   }
 
   public function get_errors(){
-     return (new mapper_error(db::get_handler()))->find_all();
+    $pdo = di::get_instance()['pdo'];
+    return (new mapper_error($pdo))->find_all();
   }
 }

@@ -111,7 +111,6 @@ $pimple['twig'] = $pimple->share(function($pimple){
 	$options = ['cache' => ROOT.application_configuration::twig_cache, 'auto_reload' => application_configuration::twig_reload_template];
 	$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
 	return new Twig_Environment($loader, $options);
-
 });
 
 function load_template($name, array $args = []){

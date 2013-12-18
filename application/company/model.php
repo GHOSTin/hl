@@ -45,7 +45,8 @@ class model_company{
 	* Возвращает список компаний
 	*/
 	public static function get_companies(){
-		return (new mapper_company(db::get_handler()))->find_all();
+		$pdo = di::get_instance()['pdo'];
+		return (new mapper_company($pdo))->find_all();
 	}
 
 	/**
