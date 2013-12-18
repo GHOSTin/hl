@@ -25,7 +25,7 @@ class mapper_company{
   public function find_all(){
     $stmt = $this->pdo->prepare(self::$find_all);
     if(!$stmt->execute())
-      new alert(self::$error);
+      throw new e_model(self::$error);
     $companies = [];
     while($row = $stmt->fetch())
       $companies[] = $this->create_object($row);
