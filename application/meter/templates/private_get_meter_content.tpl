@@ -9,12 +9,9 @@
 {% block html %}
     <div class="meter-content">
         <h3>Информация о счетчике</h3>
-        <ul class="nav nav-pills">
-            <li><a class="get_dialog_rename_meter">Переименовать</a></li>
-        </ul>
-        <div>Тарифность: <span class="meter-rates">{{ rates[meter.get_rates() - 1] }}</span> <a class="get_dialog_edit_rates">изменить</a></div>
-        <div>Разрядность: <span class="meter-capacity">{{ meter.get_capacity() }} <a class="get_dialog_edit_capacity">изменить</a></div>
-        <div>Периоды поверки: <a class="get_dialog_add_period">добавить</a>
+        <div>Тарифность: <span class="meter-rates">{{ rates[meter.get_rates() - 1] }}</span></div>
+        <div>Разрядность: <span class="meter-capacity">{{ meter.get_capacity() }}</div>
+        <div>Периоды поверки:
             <ul class="meter-periods">
                 {% for period in meter.get_periods() %}
                 <li period="{{ period }}">
@@ -23,18 +20,15 @@
                     {% else %}
                         {{ period }} мес.
                     {% endif %}
-                <a class="get_dialog_remove_period">удалить</a></li>
+                </li>
                 {% endfor %}
             </ul>
         </div>
         <div style="margin-top:50px">
             <h3>Услуги</h3>
-            <ul class="nav nav-pills">
-                <li><a class="get_dialog_add_service">Добавить</a></li>
-            </ul>
             <ul class="meter-services unstyled">
                 {% for service in meter.get_services() %}
-                    <li service="{{ service }}">{{ services[service] }} <a class="get_dialog_remove_service">исключить</a></li>
+                    <li service="{{ service }}">{{ services[service] }}</li>
                 {% else %}
                     <li>Нет услуг</li>
                 {% endfor %}
