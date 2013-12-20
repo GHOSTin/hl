@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<house city="Первоуральск" street="Ватутина" number="52а">
+<house city="Первоуральск г" street="ул Ватутина" number="52а">
 	<flat number="1">
 		<number number="233242" fio="Хорошавцев" telephone="" cellphone="" contact_fio="" contact_telephone="" contact_cellphone="">
 			<meter name="СВГ-15" service="ГВС" serial="127485аб" date_install="21.12.1984" date_expire="21.12.2013" tarif="2">

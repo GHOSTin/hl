@@ -75,26 +75,38 @@ class model_import{
 			'house' => $house, 'numbers' => $numbers];
 	}
 
-	private function get_xml_file($file){
-		if(!file_exists($file))
-			throw new e_model('Файла для обработки не существует.');
-		$xml = simplexml_load_file($file);
-		if($xml === false)
-			throw new e_model('Ошибка в xml файле.');
-		return $xml;
-	}
+	/*
+	* Анализирует файт импорта лицевых счетов
+	*/
+	public function analize_import_meters($file){
+		$import = new data_import(ROOT.'/specifications/import_numbers.xml');
 
+		var_dump($import->get_street());
+		var_dump($import->get_city());
+		var_dump($import->get_house());
+
+		exit();
+		$house_node = $xml->attributes();
+		$city = (new model_city)->get_city_by_name((string) $house_node->city);
+		$street = (new model_city2street($city))
+			->get_street_by_name((string) $house_node->street);
+		$house = (new model_street2house($street))
+			->get_house_by_number((string) $house_node->number);
+		(new model_house2number(model_session::get_company(), $house))->init_numbers();
+		if(!empty($house->get_numbers))
+		return ['file' => $file, 'city' => $city, 'street' => $street,
+			'house' => $house, 'numbers' => $numbers];
+	}
+// ROOT.'/specifications/import_numbers.xml'
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
 	public function analize_import_street($file){
-		$xml = $this->get_xml_file($file['tmp_name']);
-		$house_node = $xml->attributes();
-		$city = (new model_city)->get_city_by_name((string) $house_node->city);
+		$import = new data_import($file['tmp_name']);
+		$city = (new model_city)->get_city_by_name($import->get_city()->get_name());
 		$street = (new mapper_city2street($city))
-			->get_street_by_name((string) $house_node->street);
-		return ['file' => $file, 'city' => $city, 'street' => $street,
-			'street_name' => (string) $house_node->street];
+			->get_street_by_name((string) $import->get_street()->get_name());
+		return ['import' => $import, 'city' => $city, 'street' => $street];
 	}
 	
 	/*

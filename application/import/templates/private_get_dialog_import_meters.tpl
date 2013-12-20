@@ -12,6 +12,6 @@
 {% block html %}
 <h3>Импорт счетчиков</h3>
 <div>
-    <input id="fileupload" type="file" name="file" data-url="/import/import_meters/" multiple>
+    <input id="fileupload" type="file" name="file" data-url="/import/import_meters" multiple>
 </div>
 {% endblock html %}
