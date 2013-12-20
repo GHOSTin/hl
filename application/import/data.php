@@ -4,7 +4,6 @@ class data_import{
 
   private $file;
   private $xml;
-  private $streets = [];
 
   public function __construct($file){
     $this->file = $file;
@@ -13,6 +12,12 @@ class data_import{
     $this->xml = simplexml_load_file($file);
     if($this->xml === false)
       throw new e_model('Ошибка в xml файле.');
+    $attr = $this->xml->attributes();
+    $this->city = (new model_city)->get_city_by_name($attr['city']);
+  }
+
+  public function get_xml(){
+    return $this->xml;
   }
 
   public function get_file(){
@@ -27,10 +32,15 @@ class data_import{
   }
 
   public function get_city(){
-    $attr = $this->xml->attributes();
-    $city = new data_city();
-    $city->set_name($attr['city']);
-    return $city;
+    return $this->city;
+  }
+
+  public function get_flats(){
+    $flats = [];
+    if(!empty($this->xml->flat))
+      foreach($this->xml->flat as $flat_node)
+        $flats[] = (string) $flat_node->attributes()->number;
+    return $flats;
   }
 
   public function get_house(){

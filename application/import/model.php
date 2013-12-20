@@ -12,27 +12,19 @@ class model_import{
 	* Анализирует файт импорта лицевых счетов
 	*/
 	public function analize_import_flats($file){
-		$xml = $this->get_xml_file($file['tmp_name']);
-		$house_node = $xml->attributes();
-		$city = (new model_city)->get_city_by_name((string) $house_node->city);
-		$street = (new model_city2street($city))
-			->get_street_by_name((string) $house_node->street);
-		$house = (new model_street2house($street))
-			->get_house_by_number((string) $house_node->number);
+		$import = new data_import($file['tmp_name']);
+		$street = (new mapper_city2street($import->get_city()))
+			->get_street_by_name($import->get_street()->get_name());
+		$house = (new mapper_street2house($street))
+			->find_by_number($import->get_house()->get_number());
 		(new mapper_house2flat($this->company, $house))->init_flats();
-		$flats = $old_flats = $new_flats = [];
+		$old_flats = $new_flats = [];
 		if(!empty($house->get_flats()))
 			foreach($house->get_flats() as $flat)
-				$flats[] = $flat->get_number();
-		foreach($xml->flat as $flat_node){
-			$number = (string) $flat_node->attributes()->number;
-			if(in_array($number, $flats))
-				$old_flats[] = $number;
-			else
-				$new_flats[] = $number;
-		}
-		return ['file' => $file, 'city' => $city, 'street' => $street,
-			'house' => $house, 'new_flats' => $new_flats, 'old_flats' => $old_flats];
+				$old_flats[] = $flat->get_number();
+		return ['import' => $import, 'street' => $street, 'house' => $house,
+			'new_flats' => array_diff($import->get_flats(), $old_flats),
+			'old_flats' => $old_flats];
 	}
 
 	/*
@@ -97,31 +89,27 @@ class model_import{
 		return ['file' => $file, 'city' => $city, 'street' => $street,
 			'house' => $house, 'numbers' => $numbers];
 	}
-// ROOT.'/specifications/import_numbers.xml'
+ 
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
 	public function analize_import_street($file){
 		$import = new data_import($file['tmp_name']);
-		$city = (new model_city)->get_city_by_name($import->get_city()->get_name());
-		$street = (new mapper_city2street($city))
+		$street = (new mapper_city2street($import->get_city()))
 			->get_street_by_name((string) $import->get_street()->get_name());
-		return ['import' => $import, 'city' => $city, 'street' => $street];
+		return ['import' => $import, 'street' => $street];
 	}
 	
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
 	public function analize_import_house($file){
-		$xml = $this->get_xml_file($file['tmp_name']);
-		$house_node = $xml->attributes();
-		$city = (new model_city)->get_city_by_name((string) $house_node->city);
-		$street = (new model_city2street($city))
-			->get_street_by_name((string) $house_node->street);
+		$import = new data_import($file['tmp_name']);
+		$street = (new mapper_city2street($import->get_city()))
+			->get_street_by_name($import->get_street()->get_name());
 		$house = (new mapper_street2house($street))
-			->find_by_number((string) $house_node->number);
-		return ['file' => $file, 'city' => $city, 'street' => $street,
-		'house' => $house, 'house_number' => (string) $house_node->number];
+			->find_by_number($import->get_house()->get_number());
+		return ['import' => $import, 'street' => $street, 'house' => $house];
 	}
 
 	public function load_numbers($city_id, $street_id, $house_id, $numbers){
