@@ -73,8 +73,8 @@ class model_user2profile{
   public function __construct(data_company $company, data_user $user){
     $this->company = $company;
     $this->user = $user;
-    $this->company->verify('id');
-    $this->user->verify('id');
+    data_company::verify_id($this->company->get_id());
+    data_user::verify_id($this->user->get_id());
   }
 
   public function add_profile($profile){
