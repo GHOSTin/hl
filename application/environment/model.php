@@ -40,7 +40,6 @@ class model_environment{
 		$profile = model_session::get_profile();
 		if($profile instanceof data_profile)
 			$data['rules'] = $profile->get_rules();
-		$data['file_prefix'] = $component;
 		$data['component'] = $controller::$method($request);
 		$data['request'] = $request;
 		$data['version'] = file_get_contents(ROOT.'/version');

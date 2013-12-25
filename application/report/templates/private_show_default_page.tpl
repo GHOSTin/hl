@@ -11,6 +11,7 @@
 </div>
 {% endblock component %}
 {% block javascript %}
+    <script src="/?js=component.js&p=report"></script>
     <script src="/templates/default/js/bootstrap-datepicker.js"></script>
 {% endblock javascript %}
 {% block css %}

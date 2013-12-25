@@ -7,3 +7,9 @@
     {% endfor %}
 </ul>
 {% endblock component %}
+{% block javascript %}
+    <script src="/?js=component.js&p=meter"></script>
+{% endblock javascript %}
+{% block css %}
+    <link rel="stylesheet" href="/?css=component.css&p=meter" >
+{% endblock css %}
