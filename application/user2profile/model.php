@@ -127,7 +127,7 @@ class model_user2profile{
 
   public function update_rule($profile, $rule){
     $profile = $this->get_profile($profile);
-    $rules = $profile->get_rules()->get_rules();
+    $rules = $profile->get_rules();
     if(in_array($rule, array_keys($rules))){
       $rules[$rule] = !$rules[$rule];
       $sql = new sql();
