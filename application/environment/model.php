@@ -21,11 +21,7 @@ class model_environment{
 			$data['component'] = $controller::$method($request);
 			$data['request'] = $request;
 			$data['version'] = file_get_contents(ROOT.'/version');
-			$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
-			if(file_exists($template))
-				return load_template($component.'.'.$method, $data);
-			else
-				return load_template('error.no_template', $data);
+			return self::render_template($component, $method, $data);
 		}catch(exception $e){
 			if($e instanceof e_model){
 				$args['error'] = $e;
@@ -38,6 +34,14 @@ class model_environment{
 				die('Problem');
 			}
 		}
+	}
+
+	public static function render_template($component, $method, $data){
+		$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
+		if(file_exists($template))
+			return load_template($component.'.'.$method, $data);
+		else
+			return load_template('error.no_template', $data);
 	}
 
 	public static function init_profile($component){
