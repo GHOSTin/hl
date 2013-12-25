@@ -37,6 +37,9 @@ class model_environment{
 			$data['user'] = model_session::get_user();
 			$data['menu'] = model_menu::build_menu($component);
 		}
+		$profile = model_session::get_profile();
+		if($profile instanceof data_profile)
+			$data['rules'] = $profile->get_rules();
 		$data['file_prefix'] = $component;
 		$data['component'] = $controller::$method($request);
 		$data['request'] = $request;
