@@ -75,7 +75,7 @@ class mapper_user2profile{
 
   public function insert(data_profile $profile){
     $sql = new sql();
-    $sql->query(sql::$insert);
+    $sql->query(self::$insert);
     $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
     $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
