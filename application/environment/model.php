@@ -1,6 +1,9 @@
 <?php
 class model_environment{
 
+	private static $profiles = ['default_page', 'profile', 'exit',
+		'processing_center', 'import', 'meter', 'error', 'company', 'report'];
+
 	/*
 	* Возвращает содержимое страницы.
 	*/
@@ -52,12 +55,14 @@ class model_environment{
 	public static function init_profile($component){
 		$profile = (new mapper_user2profile(model_session::get_company(),
 			model_session::get_user()))->find($component);
-		if($profile instanceof data_profile)
+		if(in_array($component, self::$profiles, true))
+			return;
+		elseif($profile instanceof data_profile){
+			if($profile->get_rules()['generalAccess'] !== true)
+				throw new e_model('Доступа нет.');
 			model_session::set_profile($profile);
-		else
-			if(!in_array($component, ['default_page', 'profile', 'exit',
-				'processing_center', 'import', 'user', 'meter', 'error', 'company'], true))
-				throw new e_model('Нет доступа.');
+		}else
+			throw new e_model('Доступа нет.');
 	}
 
 	public static function before(){
