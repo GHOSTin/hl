@@ -12,15 +12,7 @@ class model_environment{
 			$resolver = new model_resolver();
 			list($controller, $method) = $resolver->get_controller($request);
 			$component = substr($controller, 11);
-			if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
-				$data['user'] = $_SESSION['user'];
-				self::init_profile($component);
-				$data['menu'] = model_menu::build_menu($component);
-			}
-			$data['file_prefix'] = $component;
-			$data['component'] = $controller::$method($request);
-			$data['request'] = $request;
-			$data['version'] = file_get_contents(ROOT.'/version');
+			$data = self::prepare_answer($controller, $component, $method, $request);
 			return self::render_template($component, $method, $data);
 		}catch(exception $e){
 			if($e instanceof e_model){
@@ -34,6 +26,19 @@ class model_environment{
 				die('Problem');
 			}
 		}
+	}
+
+	public static function prepare_answer($controller, $component, $method, $request){
+		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
+			self::init_profile($component);
+			$data['user'] = model_session::get_user();
+			$data['menu'] = model_menu::build_menu($component);
+		}
+		$data['file_prefix'] = $component;
+		$data['component'] = $controller::$method($request);
+		$data['request'] = $request;
+		$data['version'] = file_get_contents(ROOT.'/version');
+		return $data;
 	}
 
 	public static function render_template($component, $method, $data){
