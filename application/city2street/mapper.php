@@ -18,14 +18,6 @@ class mapper_city2street{
     data_city::verify_id($this->city->get_id());
   }
 
-  public function create_object(array $row){
-    $street = new data_street();
-    $street->set_id($row['id']);
-    $street->set_status($row['status']);
-    $street->set_name($row['name']);
-    return $street;
-  }
-
   /**
   * Возвращает следующий для вставки идентификатор улицы.
   * @return int
@@ -49,10 +41,11 @@ class mapper_city2street{
     $sql->execute('Проблема при выборке улиц');
     $stmt = $sql->get_stm();
     $count = $stmt->rowCount();
+    $factory = new factory_street();
     if($count === 0)
       return null;
     elseif($count === 1)
-      return $this->create_object($stmt->fetch());
+      return $factory->create($stmt->fetch());
     else
       throw new e_model('Неожиданное чисто записей');
   }
@@ -65,10 +58,11 @@ class mapper_city2street{
     $sql->execute('Проблема при выборке улиц');
     $stmt = $sql->get_stm();
     $count = $stmt->rowCount();
+    $factory = new factory_street();
     if($count === 0)
       return null;
     elseif($count === 1)
-      return $this->create_object($stmt->fetch());
+      return $factory->create($stmt->fetch());
     else
       throw new e_model('Неожиданное чисто записей');
   }
