@@ -22,15 +22,15 @@ class sql{
     }
 
     public static function begin(){
-        $this->pdo->beginTransaction();
+        di::get_instance()['pdo']->beginTransaction();
     }
 
     public static function commit(){
-        $this->pdo->commit();
+        di::get_instance()['pdo']->commit();
     }
 
     public static function rollback(){
-        $this->pdo->rollBack();
+        di::get_instance()['pdo']->rollBack();
     }
 
     public function count(){
