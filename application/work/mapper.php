@@ -21,10 +21,7 @@ class mapper_work{
 		$work->set_name($row['name']);
 		return $work;
 	}
-	
-	/**
-	* Возвращает список работ заявки
-	*/
+
 	public function find($id){
 		$stmt = $this->pdo->prepare(self::$sql_find);
 		$stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -37,6 +34,6 @@ class mapper_work{
 		elseif($count === 1)
 			return $this->create_object($stmt->fetch());
 		else
-			throw new e_model('Неожиданное количество записей.');
+			throw new e_model(self::$alert);
 	}
 }
