@@ -20,9 +20,8 @@ class mapper_number{
         $house = new data_house();
         $house->set_id($row['house_id']);
         $house->set_number($row['house_number']);
-        $flat = new data_flat();
-        $flat->set_id($row['flat_id']);
-        $flat->set_id($row['flat_number']);
+        $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
+        $flat = (new factory_flat)->create($flat);
         $flat->set_house($house);
         $number->set_flat($flat);
         return $number;
