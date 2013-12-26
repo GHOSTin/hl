@@ -2,6 +2,9 @@
 class mapper_department{
 
 	private $company;
+	private $pdo;
+
+	private static $alert = 'Проблема в мапере участка.';
 
 	private static $many = "SELECT `id`, `company_id`, `status`, `name`
 		FROM `departments` WHERE `company_id` = :company_id";
@@ -12,6 +15,7 @@ class mapper_department{
 	public function __construct(data_company $company){
 		$this->company = $company;
 		data_company::verify_id($this->company->get_id());
+		$this->pdo = di::get('pdo');
 	}
 
 	public function create_object(array $row){
@@ -23,11 +27,11 @@ class mapper_department{
 	}
 
 	public function find($id){
-		$sql = new sql();
-		$sql->query(self::$one);
-		$sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-		$sql->bind(':id', (int) $id, PDO::PARAM_INT);
-		$sql->execute('Проблема при выборке участка.');
+		$stmt = $this->pdo->prepare(self::$one);
+		$stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+		$stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+		if(!$stmt->execute())
+			throw new e_model(self::$alert);
 		$stmt = $sql->get_stm();
 		$count = $stmt->rowCount();
 		if($count === 0)
@@ -43,11 +47,10 @@ class mapper_department{
 	* @return array
 	*/
 	public function get_departments(){
-		$sql = new sql();
-		$sql->query(self::$many);
-		$sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-		$sql->execute('Проблема при выборке пользователей.');
-		$stmt = $sql->get_stm();
+		$stmt = $this->pdo->prepare(self::$many);
+		$stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+		if(!$stmt->execute())
+			throw new e_model(self::$alert);
 		$departments = [];
 		while($row = $stmt->fetch())
 			$departments[] = $this->create_object($row);
