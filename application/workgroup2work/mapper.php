@@ -20,13 +20,6 @@ class mapper_workgroup2work{
     $this->pdo = di::get('pdo');
   }
 
-  private function create_object(array $row){
-    $work = new data_work();
-    $work->set_id($row['id']);
-    $work->set_name($row['name']);
-    return $work;
-  }
-
   private function get_works(){
     $stmt = $this->pdo->prepare(self::$many);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -34,8 +27,9 @@ class mapper_workgroup2work{
     if(!$stmt->execute())
       throw new e_model(self::$alert);
     $works = [];
+    $factory = new factory_work();
     while($row = $stmt->fetch())
-      $works[] = $this->create_object($row);
+      $works[] = $factory->create($row);
     return $works;
   }
 

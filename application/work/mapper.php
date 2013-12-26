@@ -15,13 +15,6 @@ class mapper_work{
 		$this->pdo = di::get('pdo');
 	}
 
-	public function create_object(array $row){
-		$work = new data_work();
-		$work->set_id($row['id']);
-		$work->set_name($row['name']);
-		return $work;
-	}
-
 	public function find($id){
 		$stmt = $this->pdo->prepare(self::$sql_find);
 		$stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -29,10 +22,11 @@ class mapper_work{
 		if(!$stmt->execute())
 			throw new e_model(self::$alert);
 		$count = $stmt->rowCount();
+		$factory = new factory_work();
 		if($count === 0)
 			return null;
 		elseif($count === 1)
-			return $this->create_object($stmt->fetch());
+			return $factory->create($stmt->fetch());
 		else
 			throw new e_model(self::$alert);
 	}

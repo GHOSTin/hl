@@ -74,10 +74,8 @@ class collection_query{
   }
 
   public function create_work(array $row){
-    $work = new data_work();
-    $work->set_id($row['id']);
-    $work->set_name($row['name']);
-    $q2w = new data_query2work($work);
+    $factory = new factory_work();
+    $q2w = new data_query2work($factory->create($row));
     $q2w->set_time_open($row['time_open']);
     $q2w->set_time_close($row['time_close']);
     $q2w->set_value($row['value']);

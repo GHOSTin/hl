@@ -29,9 +29,8 @@ class mapper_query2work{
   }
 
   public function create_object(array $row){
-    $work = new data_work();
-    $work->set_id($row['id']);
-    $work->set_name($row['name']);
+    $factory = new factory_work();
+    $work = $factory->create($row);
     $q2w = new data_query2work($work);
     $q2w->set_time_open($row['time_open']);
     $q2w->set_time_close($row['time_close']);
