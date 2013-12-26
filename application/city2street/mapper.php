@@ -1,6 +1,11 @@
 <?php
 class mapper_city2street{
 
+  private $city;
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере соотношения города и улиц.';
+
   private static $one = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
     FROM `streets` WHERE `city_id` = :city_id AND `id` = :street_id";
 
@@ -16,30 +21,25 @@ class mapper_city2street{
   public function __construct(data_city $city){
     $this->city = $city;
     data_city::verify_id($this->city->get_id());
+    $this->pdo = di::get('pdo');
   }
 
-  /**
-  * Возвращает следующий для вставки идентификатор улицы.
-  * @return int
-  */
   public function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
-    $sql->execute('Проблема при опредении следующего street_id.');
-    if($sql->count() !== 1)
+    $stmt = $this->pdo->prepare(self::$id);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    if($stmt->rowCount() !== 1)
       throw new e_model('Проблема при опредении следующего street_id.');
-    $street_id = (int) $sql->row()['max_street_id'] + 1;
-    $sql->close();
+    $street_id = (int) $sql->fetch()['max_street_id'] + 1;
     return $street_id;
   }
 
   public function get_street($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':city_id', (int) $this->city->get_id(), PDO::PARAM_INT);
-    $sql->bind(':street_id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке улиц');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':city_id', (int) $this->city->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':street_id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     $factory = new factory_street();
     if($count === 0)
@@ -51,12 +51,11 @@ class mapper_city2street{
   }
 
   public function get_street_by_name($name){
-    $sql = new sql();
-    $sql->query(self::$one_by_name);
-    $sql->bind(':city_id', (int) $this->city->get_id(), PDO::PARAM_INT);
-    $sql->bind(':name', (string) $name, PDO::PARAM_STR);
-    $sql->execute('Проблема при выборке улиц');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one_by_name);
+    $stmt->bindValue(':city_id', (int) $this->city->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':name', (string) $name, PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     $factory = new factory_street();
     if($count === 0)
@@ -69,13 +68,13 @@ class mapper_city2street{
 
   public function insert(data_street $street){
     $this->verify($street);
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':street_id', $street->get_id(), PDO::PARAM_INT);
-    $sql->bind(':city_id', $this->city->get_id(), PDO::PARAM_INT);
-    $sql->bind(':status', $street->get_status(), PDO::PARAM_STR);
-    $sql->bind(':name', $street->get_name(), PDO::PARAM_STR);
-    $sql->execute('Проблемы при вставке улицы в базу данных.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':street_id', $street->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':city_id', $this->city->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':status', $street->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':name', $street->get_name(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $street;
   }
 
