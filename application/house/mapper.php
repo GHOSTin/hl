@@ -1,11 +1,17 @@
 <?php
 class mapper_house{
 
+  private static $alert = 'Проблема в мапере дома';
+
   private static $one = "SELECT `houses`.`id`, `houses`.`city_id`,
     `houses`.`street_id`, `houses`.`department_id`, `houses`.`status`,
     `houses`.`housenumber`, `streets`.`name`
     FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
     AND `houses`.`street_id` = `streets`.`id`";
+
+  public function __construct(){
+    $this->pdo = di::get('pdo');
+  }
 
   public function create_object(array $row){
     $house = new data_house();
@@ -29,11 +35,10 @@ class mapper_house{
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':house_id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке домов из базы данных.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':house_id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
