@@ -1,11 +1,19 @@
 <?php
 class mapper_street{
 
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере улицы.';
+
   private static $many = "SELECT DISTINCT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` ORDER BY `name`";
 
   private static $one = "SELECT DISTINCT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` WHERE `id` = :id";
+
+  public function __construct(){
+    $this->pdo = di::get('pdo');
+  }
 
   public function create_object(array $row){
     $street = new data_street();
@@ -16,11 +24,10 @@ class mapper_street{
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке улиц');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);;
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -31,11 +38,10 @@ class mapper_street{
   }
 
   public function get_streets(){
-    $sql = new sql();
-    $sql->query(self::$many);
-    $sql->execute('Проблема при выборке улиц');
+    $stmt = $this->pdo->prepare(self::$many);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $streets = [];
-    $stmt = $sql->get_stm();
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch())
         $streets[] = $this->create_object($row);
