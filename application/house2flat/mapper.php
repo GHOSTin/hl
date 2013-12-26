@@ -5,7 +5,7 @@ class mapper_house2flat{
   private $house;
 
   private static $sql_get_flats = "SELECT `id`, `house_id`, `status`,
-    `flatnumber` FROM `flats` WHERE `house_id` = :house_id
+    `flatnumber` as `number` FROM `flats` WHERE `house_id` = :house_id
     ORDER BY (`flatnumber` + 0)";
 
   private static $sql_insert = "INSERT `flats` (`id`, `company_id`, `house_id`,
@@ -21,13 +21,6 @@ class mapper_house2flat{
     data_house::verify_id($this->house->get_id());
   }
 
-  public function create_object(array $row){
-    $flat = new data_flat();
-    $flat->set_id($row['id']);
-    $flat->set_number($row['flatnumber']);
-    return $flat;
-  }
-
   public function get_flats(){
     $sql = new sql();
     $sql->query(self::$sql_get_flats);
@@ -35,8 +28,9 @@ class mapper_house2flat{
     $sql->execute('Проблемы при выборке квартир.');
     $stmt = $sql->get_stm();
     $flats = [];
+    $factory = new factory_flat();
     while($row = $stmt->fetch())
-      $flats[] = $this->create_object($row);
+      $flats[] = $factory->create($row);
     return $flats;
   } 
 

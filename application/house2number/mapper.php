@@ -67,10 +67,8 @@ class mapper_house2number{
     $number->set_type($row['type']);
     $number->set_status($row['status']);
     $number->set_telephone($row['telephone']);
-    $flat = new data_flat();
-    $flat->set_id($row['flat_id']);
-    $flat->set_number($row['flat_number']);
-    $number->set_flat($flat);
+    $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
+    $number->set_flat((new factory_flat)->create($flat));
     return $number;
   }
 
