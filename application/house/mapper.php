@@ -27,10 +27,8 @@ class mapper_house{
     $department->set_id($row['department_id']);
     $house->set_department($department);
     // street
-    $street = new data_street();
-    $street->set_id($row['street_id']);
-    $street->set_name($row['name']);
-    $house->set_street($street);
+    $street = ['id' => $row['street_id'], 'name' => $row['name']];
+    $house->set_street((new factory_street)->create($street));
     return $house;
   }
 

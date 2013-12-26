@@ -22,6 +22,7 @@ class mapper_query{
     `queries`.`query_inspection` as `inspection`, 
     `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`,
     `query_worktypes`.`name` as `work_type_name`,
     `departments`.`name` as `department_name`
     FROM `queries`, `houses`, `streets`, `query_worktypes` , `departments`
@@ -52,6 +53,7 @@ class mapper_query{
     `queries`.`query_inspection` as `inspection`, 
     `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`,
     `query_worktypes`.`name` as `work_type_name`,
     `departments`.`name` as `department_name`
     FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
@@ -107,6 +109,7 @@ class mapper_query{
     `queries`.`query_inspection` as `inspection`, 
     `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`,
     `query_worktypes`.`name` as `work_type_name`,
     `departments`.`name` as `department_name`
     FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
@@ -149,10 +152,8 @@ class mapper_query{
     $house->set_id($row['house_id']);
     $house->set_number($row['house_number']);
     $query->set_house($house);
-
-    $street = new data_street();
-    $street->set_name($row['street_name']);
-    $query->set_street($street);
+    $street = ['id' => $row['street_id'], 'name' => $row['street_name']];
+    $query->set_street((new factory_street)->create($street));
 
     $wt = new data_query_work_type();
     $wt->set_id($row['worktype_id']);
