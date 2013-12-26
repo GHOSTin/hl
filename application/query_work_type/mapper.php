@@ -2,6 +2,9 @@
 class mapper_query_work_type{
 
 	private $company;
+	private $pdo;
+
+	private static $alert = 'Проблема в мапере типов работ заявки.';
 
 	private static $sql_get_types = "SELECT `id`,`company_id`, `status`, `name`
 		FROM `query_worktypes` WHERE `company_id` = :company_id";
@@ -12,6 +15,7 @@ class mapper_query_work_type{
 	public function __construct(data_company $company){
 		$this->company = $company;
     data_company::verify_id($this->company->get_id());
+    $this->pdo = di::get('pdo');
 	}
 
 	public function create_object(array $row){
@@ -22,12 +26,11 @@ class mapper_query_work_type{
 	}
 
 	public  function find($id){
-		$sql = new sql();
-		$sql->query(self::$sql_find);
-		$sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-		$sql->bind(':id', (int) $id, PDO::PARAM_INT);
-		$sql->execute('Проблема при выборке типов заявки..');
-		$stmt = $sql->get_stm();
+		$stmt = $this->pdo->prepare(self::$sql_find);
+		$stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+		$stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+		if(!$stmt->execute())
+			throw new e_model(self::$alert);
 		$count = $stmt->rowCount();
 		if($count === 0)
 			return null;
@@ -37,16 +40,11 @@ class mapper_query_work_type{
 			throw new e_model('Неожиданное количество типов.');
 	}
 	
-	/**
-	* Возвращает список работ заявки
-	* @return array из data_query_work_type
-	*/
 	public  function get_query_work_types(){
-		$sql = new sql();
-		$sql->query(self::$sql_get_types);
-		$sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-		$sql->execute('Проблема при выборке типов заявки..');
-		$stmt = $sql->get_stm();
+		$stmt = $this->pdo->prepare(self::$sql_get_types);
+		$stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+		if(!$stmt->execute())
+			throw new e_model(self::$alert);
 		$types = [];
 		while($row = $stmt->fetch())
 		  $types[] = $this->create_object($row);
