@@ -3,6 +3,9 @@ class mapper_house2number{
   
   private $company;
   private $house;
+  private $pdo;
+
+  private static $alert = 'Проблемы в мапере ассоциации дома и лицевого счета.';
 
   private static $many = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
     `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`, 
@@ -56,6 +59,7 @@ class mapper_house2number{
     data_company::verify_id($this->company->get_id());
     data_house::verify_id($this->house->get_id());
     data_city::verify_id($this->house->get_city()->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
@@ -73,13 +77,12 @@ class mapper_house2number{
   }
 
   public function get_number_by_number($number){
-    $sql = new sql();
-    $sql->query(self::$one_by_number);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':house_id', $this->house->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number', (string) $number, PDO::PARAM_STR);
-    $sql->execute('Проблемы при выборке номеров.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one_by_number);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':house_id', $this->house->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':number', (string) $number, PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -90,12 +93,11 @@ class mapper_house2number{
   }
   
   private function get_numbers(){
-    $sql = new sql();
-    $sql->query(self::$many);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблемы при выборке номеров.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$many);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $numbers = [];
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch())
@@ -111,40 +113,36 @@ class mapper_house2number{
   }
 
   public function insert(data_number $number){
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':id', (int) $number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int)$this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':city_id', (int) $this->house->get_city()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
-    $sql->bind(':flat_id', (int) $number->get_flat()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number', (string) $number->get_number(), PDO::PARAM_STR);
-    $sql->bind(':type', 'human', PDO::PARAM_STR);
-    $sql->bind(':status', (string) $number->get_status(), PDO::PARAM_STR);
-    $sql->bind(':fio', (string) $number->get_fio(), PDO::PARAM_STR);
-    $sql->bind(':telephone', '', PDO::PARAM_STR);
-    $sql->bind(':cellphone', '', PDO::PARAM_STR);
-    $sql->bind(':password', '', PDO::PARAM_STR);
-    $sql->bind(':contact_fio', '', PDO::PARAM_STR);
-    $sql->bind(':contact_telephone', '', PDO::PARAM_STR);
-    $sql->bind(':contact_cellphone', '', PDO::PARAM_STR);
-    $sql->execute('Проблема при создании лицевого счета.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':id', (int) $number->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int)$this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':city_id', (int) $this->house->get_city()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':flat_id', (int) $number->get_flat()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':number', (string) $number->get_number(), PDO::PARAM_STR);
+    $stmt->bindValue(':type', 'human', PDO::PARAM_STR);
+    $stmt->bindValue(':status', (string) $number->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':fio', (string) $number->get_fio(), PDO::PARAM_STR);
+    $stmt->bindValue(':telephone', '', PDO::PARAM_STR);
+    $stmt->bindValue(':cellphone', '', PDO::PARAM_STR);
+    $stmt->bindValue(':password', '', PDO::PARAM_STR);
+    $stmt->bindValue(':contact_fio', '', PDO::PARAM_STR);
+    $stmt->bindValue(':contact_telephone', '', PDO::PARAM_STR);
+    $stmt->bindValue(':contact_cellphone', '', PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $number;
   }
 
-  /**
-  * Возвращает следующий для вставки идентификатор лицевого счета.
-  * @return int
-  */
   public function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
-    $sql->bind(':city_id', (int) $this->house->get_city()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при опредении следующего number_id.');
-    if($sql->count() !== 1)
-      throw new e_model('Проблема при опредении следующего number_id.');
-    $number_id = (int) $sql->row()['max_number_id'] + 1;
+    $stmt = $this->pdo->prepare(self::$id);
+    $stmt->bindValue(':city_id', (int) $this->house->get_city()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    if($sql->rowCount() !== 1)
+      throw new e_model(self::$alert);
+    $number_id = (int) $sql->fetch()['max_number_id'] + 1;
     return $number_id;
   }
 
