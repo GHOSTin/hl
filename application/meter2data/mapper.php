@@ -6,6 +6,8 @@ class mapper_meter2data{
   private $number;
   private $meter;
 
+  private static $alert = 'Проблема в мапере соотношения счетчиков и показаний';
+
   private static $all = "SELECT `time`, `value`, `comment`, `way`, `timestamp`
     FROM `meter2data` WHERE `meter2data`.`company_id` = :company_id
     AND `meter2data`.`number_id` = :number_id AND `meter2data`.`meter_id` = :meter_id
