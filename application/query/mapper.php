@@ -2,6 +2,9 @@
 class mapper_query{
 
   private $company;
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере заявок.';
 
   private static $find_by_number = "SELECT `queries`.`id`,
     `queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -124,6 +127,7 @@ class mapper_query{
   public function __construct(data_company $company){
     $this->company = $company;
     data_company::verify_id($this->company->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
@@ -168,35 +172,34 @@ class mapper_query{
     data_house::verify_id($query->get_house()->get_id());
     data_department::verify_id($query->get_department()->get_id());
     data_query_work_type::verify_id($query->get_work_type()->get_id());
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT, 3);
-    $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
-    $sql->bind(':initiator', $query->get_initiator(), PDO::PARAM_STR);
-    $sql->bind(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
-    $sql->bind(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
-    $sql->bind(':department_id', $query->get_department()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':worktype_id', $query->get_work_type()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':time_open', $query->get_time_open(), PDO::PARAM_INT);
-    $sql->bind(':time_work', $query->get_time_work(), PDO::PARAM_INT);
-    $sql->bind(':contact_fio', $query->get_contact_fio(), PDO::PARAM_STR);
-    $sql->bind(':contact_telephone', $query->get_contact_telephone(), PDO::PARAM_STR);
-    $sql->bind(':contact_cellphone', $query->get_contact_cellphone(), PDO::PARAM_STR);
-    $sql->bind(':description', $query->get_description(), PDO::PARAM_STR);
-    $sql->bind(':number', $query->get_number(), PDO::PARAM_INT);
-    $sql->execute('Проблемы при создании заявки.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':id', $query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT, 3);
+    $stmt->bindValue(':status', $query->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':initiator', $query->get_initiator(), PDO::PARAM_STR);
+    $stmt->bindValue(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':department_id', $query->get_department()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':worktype_id', $query->get_work_type()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_open', $query->get_time_open(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_work', $query->get_time_work(), PDO::PARAM_INT);
+    $stmt->bindValue(':contact_fio', $query->get_contact_fio(), PDO::PARAM_STR);
+    $stmt->bindValue(':contact_telephone', $query->get_contact_telephone(), PDO::PARAM_STR);
+    $stmt->bindValue(':contact_cellphone', $query->get_contact_cellphone(), PDO::PARAM_STR);
+    $stmt->bindValue(':description', $query->get_description(), PDO::PARAM_STR);
+    $stmt->bindValue(':number', $query->get_number(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $query;
   }
 
   public function find($query_id){
-    $sql = new sql();
-    $sql->query(self::$find);
-    $sql->bind(':id', (int) $query_id, PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке заявки');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$find);
+    $stmt->bindValue(':id', (int) $query_id, PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
         return null;
@@ -206,17 +209,12 @@ class mapper_query{
         throw new e_model('Неожиданное количество возвращаемых заявок.');
   }
 
-  /**
-  * Возвращает заявки.
-  * @return array
-  */
   public function get_queries_by_number($number){
-    $sql = new sql();
-    $sql->query(self::$find_by_number);
-    $sql->bind(':number', (int) $number, PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборки заявко по номеру.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$find_by_number);
+    $stmt->bindValue(':number', (int) $number, PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+        throw new e_model(self::$alert);
     $queries = [];
     while($row = $stmt->fetch())
       $queries[] = $this->create_object($row);
@@ -227,96 +225,88 @@ class mapper_query{
     $this->verify($query);
     data_house::verify_id($query->get_house()->get_id());
     data_query_work_type::verify_id($query->get_work_type()->get_id());
-    $sql = new sql();
-    $sql->query(self::$update);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':id', $query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
-    $sql->bind(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
-    $sql->bind(':fio', $query->get_contact_fio(), PDO::PARAM_STR);
-    $sql->bind(':telephone', $query->get_contact_telephone(), PDO::PARAM_STR);
-    $sql->bind(':cellphone', $query->get_contact_cellphone(), PDO::PARAM_STR);
-    $sql->bind(':close_reason', $query->get_close_reason(), PDO::PARAM_STR);
-    $sql->bind(':description', $query->get_description(), PDO::PARAM_STR);
-    $sql->bind(':work_type_id', $query->get_work_type()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':status', $query->get_status(), PDO::PARAM_STR);
-    $sql->bind(':time_work', $query->get_time_work(), PDO::PARAM_INT);
-    $sql->bind(':time_close', $query->get_time_close(), PDO::PARAM_INT);
-    $sql->bind(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
-    $sql->bind(':initiator', $query->get_initiator(), PDO::PARAM_STR);
-    $sql->execute('Ошибка при обновлении заявки.');
+    $stmt = $this->pdo->prepare(self::$update);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':id', $query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':warning_status', $query->get_warning_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':fio', $query->get_contact_fio(), PDO::PARAM_STR);
+    $stmt->bindValue(':telephone', $query->get_contact_telephone(), PDO::PARAM_STR);
+    $stmt->bindValue(':cellphone', $query->get_contact_cellphone(), PDO::PARAM_STR);
+    $stmt->bindValue(':close_reason', $query->get_close_reason(), PDO::PARAM_STR);
+    $stmt->bindValue(':description', $query->get_description(), PDO::PARAM_STR);
+    $stmt->bindValue(':work_type_id', $query->get_work_type()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':status', $query->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':time_work', $query->get_time_work(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_close', $query->get_time_close(), PDO::PARAM_INT);
+    $stmt->bindValue(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':initiator', $query->get_initiator(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+        throw new e_model(self::$alert);
     return $query;
   }
 
-  /*
-  * Возвращает следующий для вставки идентификатор заявки.
-  */
   public function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при опредении следующего query_id.');
-    if($sql->count() !== 1)
-      throw new e_model('Проблема при опредении следующего query_id.');
-    $query_id = (int) $sql->row()['max_query_id'] + 1;
-    $sql->close();
+    $stmt = $this->pdo->prepare(self::$id);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+        throw new e_model(self::$alert);
+    if($stmt->rowCount() !== 1)
+      throw new e_model(self::$alert);
+    $query_id = (int) $stmt->fetch()['max_query_id'] + 1;
     return $query_id;
   }
 
-  /*
-  * Возвращает следующий для вставки номер заявки.
-  */
   public function get_insert_query_number($time){
     $time = getdate($time);
-    $sql = new sql();
-    $sql->query(self::$number);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
-    $sql->bind(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
-    $sql->execute('Проблема при опредении следующего querynumber.');
+    $stmt = $this->pdo->prepare(self::$number);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
+    $stmt->bindValue(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
+    if(!$stmt->execute())
+        throw new e_model(self::$alert);
     if($sql->count() !== 1)
-      throw new e_model('Проблема при опредении следующего querynumber.');
-    $query_number = (int) $sql->row()['querynumber'] + 1;
-    $sql->close();
+      throw new e_model(self::$alert);
+    $query_number = (int) $sql->fetch()['querynumber'] + 1;
     return $query_number;
   }
 
-  /**
-  * Возвращает заявки.
-  * @return array
-  */
   public function get_queries(array $params){
-    $sql = new sql();
-    $sql->query(self::$many);
-    $sql->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
-    $sql->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
+    $query = self::$many;
+    $params = [];
     if(!empty($params['status'])){
-      $sql->query(" AND `queries`.`status` = :status");
-      $sql->bind(':status', (string) $params['status'], PDO::PARAM_STR);
+      $query .= " AND `queries`.`status` = :status";
+      $params[] = [':status', (string) $params['status'], PDO::PARAM_STR];
     }
     if(!empty($params['department'])){
       foreach($params['department']as $key => $department){
        $department_key[] = ':department_id'.$key;
-       $sql->bind(':department_id'.$key, (int) $department, PDO::PARAM_INT);
+       $params[] = [':department_id'.$key, (int) $department, PDO::PARAM_INT];
       }
-      $sql->query(" AND `queries`.`department_id` IN(".implode(',', $department_key).")");
+      $query .= " AND `queries`.`department_id` IN(".implode(',', $department_key).")";
     }
     if(!empty($params['street'])){
-      $sql->query(" AND `houses`.`street_id` = :street_id");
-      $sql->bind(':street_id', (int) $params['street'], PDO::PARAM_INT);
+      $query .= " AND `houses`.`street_id` = :street_id";
+      $params[] = [':street_id', (int) $params['street'], PDO::PARAM_INT];
     }
     if(!empty($params['house'])){
-      $sql->query(" AND `queries`.`house_id` = :house_id");
-      $sql->bind(':house_id', (int) $params['house'], PDO::PARAM_INT);
+      $query .= " AND `queries`.`house_id` = :house_id";
+      $params[] = [':house_id', (int) $params['house'], PDO::PARAM_INT];
     }
     if(!empty($params['work_type'])){
-      $sql->query(" AND `queries`.`query_worktype_id` = :worktype_id");
-      $sql->bind(':worktype_id', (int) $params['work_type'], PDO::PARAM_INT);
+      $query .= " AND `queries`.`query_worktype_id` = :worktype_id";
+      $params[] = [':worktype_id', (int) $params['work_type'], PDO::PARAM_INT];
     }
-    $sql->query(" ORDER BY `queries`.`opentime` DESC");
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборки заявко по номеру.');
-    $stmt = $sql->get_stm();
+    $query .= " ORDER BY `queries`.`opentime` DESC";
+    $stmt = $this->pdo->prepare($query);
+    $stmt->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
+    $stmt->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
+    if(!empty($params))
+      foreach($params as $param)
+        $stmt->bindValue($param[0], $param[1], $param[2]);
+    if(!$stmt->execute())
+        throw new e_model(self::$alert);
     $queries = [];
     while($row = $stmt->fetch())
       $queries[] = $this->create_object($row);
