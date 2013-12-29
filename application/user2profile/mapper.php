@@ -3,6 +3,9 @@ class mapper_user2profile{
 
   private $company;
   private $user;
+  private $pdo;
+
+  private $alert = 'Проблема в мапере соотношения пользователя и профиля.';
 
   private static $many = "SELECT `profile` FROM `profiles` 
     WHERE  `user_id` = :user_id AND `company_id` = :company_id";
@@ -33,20 +36,20 @@ class mapper_user2profile{
   }
 
   public function delete(data_profile $profile){
-    $sql = new sql();
-    $sql->query(self::$delete);
-    $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
-    $sql->execute('Ошибка при удалении профиля.');
+    $stmt = $this->pdo->prepare(self::$delete);
+    $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 
   public function find_all(){
-    $sql = new sql();
-    $sql->query(self::$many);
-    $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Ошибка при получении профиля.');
+    $stmt = $this->pdo->prepare(self::$many);
+    $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $profiles = [];
     $stmt = $sql->get_stm();
     if($stmt->rowCount() > 0)
@@ -57,31 +60,30 @@ class mapper_user2profile{
   }
 
   public function find($profile){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
-    $sql->execute('Ошибка при получении профиля.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неверное количество профилей.');     
+      throw new e_model(self::$alert);     
   }
 
   public function insert(data_profile $profile){
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':profile', (string) $profile, PDO::PARAM_STR);
-    $sql->bind(':rules', json_encode($profile->get_rules()), PDO::PARAM_STR);
-    $sql->bind(':restrictions', json_encode($profile->get_restrictions()), PDO::PARAM_STR);
-    $sql->bind(':settings', '[]', PDO::PARAM_STR);
-    $sql->execute('Ошибка при добавлении профиля.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
+    $stmt->bindValue(':rules', json_encode($profile->get_rules()), PDO::PARAM_STR);
+    $stmt->bindValue(':restrictions', json_encode($profile->get_restrictions()), PDO::PARAM_STR);
+    $stmt->bindValue(':settings', '[]', PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 }
