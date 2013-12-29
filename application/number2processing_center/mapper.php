@@ -3,6 +3,9 @@ class mapper_number2processing_center{
 
   private $company;
   private $number;
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере соотношения лицевого счета и процессинговго центра.';
 
   private static $all = "SELECT
     `processing_center2number`.`company_id`,
@@ -30,25 +33,26 @@ class mapper_number2processing_center{
     $this->number = $number;
     data_company::verify_id($this->company->get_id());
     data_number::verify_id($this->number->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function insert(data_number2processing_center $n2c){
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
-    $sql->bind(':identifier', (string) $n2c->get_identifier(), PDO::PARAM_STR);
-    $sql->execute('Ошибка при добавлении центра в лицевой счет.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':identifier', (string) $n2c->get_identifier(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 
   public function delete(data_number2processing_center $n2c){
-    $sql = new sql();
-    $sql->query(self::$delete);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
-    return $sql->execute('Проблема при ислючении идентификатора расчетного центра.');
+    $stmt = $this->pdo->prepare(self::$delete);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 
   public function create_object(array $row){
@@ -68,12 +72,11 @@ class mapper_number2processing_center{
   }
 
   private function get_processing_centers(){
-    $sql = new sql();
-    $sql->query(self::$all);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при при выборке расчетных центров.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$all);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $centers = [];
     while($row = $stmt->fetch())
       $centers[] = $this->create_object($row);
