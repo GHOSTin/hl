@@ -26,6 +26,18 @@ footer, #push{
     max-height: 100%;
 }
 
+.fixed-top {
+    position: fixed;
+    top:0;
+}
+
+.fixed-bottom {
+    position: fixed;
+    bottom:0;
+    right: 20px;
+    border-radius: 4px 4px 0 0;
+}
+
 .cm{
 	color:#0088CC;
     cursor: pointer;
