@@ -1,7 +1,5 @@
 <?php
-/*
-* Связь с таблицей `meters`.
-*/
+
 final class data_meter extends data_object{
   
   private $capacity;

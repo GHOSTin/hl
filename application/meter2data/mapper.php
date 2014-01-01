@@ -1,4 +1,5 @@
 <?php
+
 class mapper_meter2data{
 
   private $pdo;

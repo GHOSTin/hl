@@ -1,4 +1,5 @@
 <?php
+
 class model_street{
 
 	public static function get_street($id){

@@ -1,4 +1,5 @@
 <?php
+
 class mapper_street2house{
 
   private $street;

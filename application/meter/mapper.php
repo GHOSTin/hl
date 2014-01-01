@@ -1,4 +1,5 @@
 <?php
+
 class mapper_meter{
 
   private $company;
@@ -58,9 +59,6 @@ class mapper_meter{
       throw new e_model('Неожиданное количество возвращаемых счетчиков.');
   }
 
-  /**
-  * Возвращает список счетчиков.
-  */
   public function get_meters_by_service($service){
     $stmt = $this->pdo->prepare(self::$all_by_service);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -73,9 +71,6 @@ class mapper_meter{
     return $meters;
   }
 
-  /**
-  * Возвращает список счетчиков.
-  */
   public function get_meters(){
     $stmt = $this->pdo->prepare(self::$all);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);

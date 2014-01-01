@@ -1,4 +1,5 @@
 <?php
+
 class application_configuration{
 
 	const templateName = 'default';
@@ -13,7 +14,7 @@ class application_configuration{
 	const chat_enable = false;
 	const chat_host = 'mshc2.local';
 	const chat_port = 3000;
-
+	// twig
 	const twig_reload_template = true;
 	const twig_cache = '/cache';
 }
