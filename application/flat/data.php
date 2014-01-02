@@ -10,7 +10,7 @@ class data_flat extends data_object{
   public static $statuses = ['true', 'false'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_flat), true))
+    if(!in_array($method, get_class_methods('verify_flat'), true))
       throw new e_model('Нет доступного метода.');
     return verify_flat::$method($args[0]);
   }

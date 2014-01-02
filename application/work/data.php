@@ -5,7 +5,7 @@ class data_work extends data_object{
   private $name;
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_work), true))
+    if(!in_array($method, get_class_methods('verify_work'), true))
       throw new e_model('Нет доступного метода.');
     return verify_work::$method($args[0]);
   }

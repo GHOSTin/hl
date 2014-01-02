@@ -21,7 +21,7 @@ final class data_number extends data_object{
   private $type;
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_number), true))
+    if(!in_array($method, get_class_methods('verify_number'), true))
       throw new e_model('Нет доступного метода.');
     return verify_number::$method($args[0]);
   }

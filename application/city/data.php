@@ -8,7 +8,7 @@ class data_city extends data_object{
   public static $status_list = ['false', 'true'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_city), true))
+    if(!in_array($method, get_class_methods('verify_city'), true))
       throw new e_model('Нет доступного метода.');
     return verify_city::$method($args[0]);
   }

@@ -13,7 +13,7 @@ final class data_meter extends data_object{
   public static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_meter), true))
+    if(!in_array($method, get_class_methods('verify_meter'), true))
       throw new e_model('Нет доступного метода.');
     return verify_meter::$method($args[0]);
   }

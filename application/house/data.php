@@ -15,7 +15,7 @@ class data_house{
   public static $statuses = ['true', 'false'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_house), true))
+    if(!in_array($method, get_class_methods('verify_house'), true))
       throw new e_model('Нет доступного метода.');
     return verify_house::$method($args[0]);
   }
