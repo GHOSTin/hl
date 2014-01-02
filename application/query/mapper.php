@@ -273,37 +273,37 @@ class mapper_query{
 
   public function get_queries(array $params){
     $query = self::$many;
-    $params = [];
+    $prms = [];
     if(!empty($params['status'])){
       $query .= " AND `queries`.`status` = :status";
-      $params[] = [':status', (string) $params['status'], PDO::PARAM_STR];
+      $prms[] = [':status', (string) $params['status'], PDO::PARAM_STR];
     }
     if(!empty($params['department'])){
       foreach($params['department']as $key => $department){
        $department_key[] = ':department_id'.$key;
-       $params[] = [':department_id'.$key, (int) $department, PDO::PARAM_INT];
+       $prms[] = [':department_id'.$key, (int) $department, PDO::PARAM_INT];
       }
       $query .= " AND `queries`.`department_id` IN(".implode(',', $department_key).")";
     }
     if(!empty($params['street'])){
       $query .= " AND `houses`.`street_id` = :street_id";
-      $params[] = [':street_id', (int) $params['street'], PDO::PARAM_INT];
+      $prms[] = [':street_id', (int) $params['street'], PDO::PARAM_INT];
     }
     if(!empty($params['house'])){
       $query .= " AND `queries`.`house_id` = :house_id";
-      $params[] = [':house_id', (int) $params['house'], PDO::PARAM_INT];
+      $prms[] = [':house_id', (int) $params['house'], PDO::PARAM_INT];
     }
     if(!empty($params['work_type'])){
       $query .= " AND `queries`.`query_worktype_id` = :worktype_id";
-      $params[] = [':worktype_id', (int) $params['work_type'], PDO::PARAM_INT];
+      $prms[] = [':worktype_id', (int) $params['work_type'], PDO::PARAM_INT];
     }
     $query .= " ORDER BY `queries`.`opentime` DESC";
     $stmt = $this->pdo->prepare($query);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
     $stmt->bindValue(':time_close', $params['time_open_end'], PDO::PARAM_INT);
-    if(!empty($params))
-      foreach($params as $param)
+    if(!empty($prms))
+      foreach($prms as $param)
         $stmt->bindValue($param[0], $param[1], $param[2]);
     if(!$stmt->execute())
         throw new e_model(self::$alert);

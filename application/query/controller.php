@@ -410,7 +410,7 @@ class controller_query{
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
-			'streets' => model_street::get_streets($street),
+			'streets' => model_street::get_streets(),
 			'departments' => (new model_department($company))->get_departments(),
 			'query_work_types' => (new model_query_work_type($company))
 				->get_query_work_types(),
