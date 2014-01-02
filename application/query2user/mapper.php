@@ -30,13 +30,15 @@ class mapper_query2user{
     $this->query = $query;
     data_company::verify_id($this->company->get_id());
     data_query::verify_id($this->query->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
     $user = new data_user();
     $user->set_id($row['id']);
     $user->set_firstname($row['firstname']);
-    $user->set_middlename($row['middlename']);
+    if(!empty($row['middlename']))
+      $user->set_middlename($row['middlename']);
     $user->set_lastname($row['lastname']);
     return $user;
   }
