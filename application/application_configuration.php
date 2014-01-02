@@ -17,4 +17,6 @@ class application_configuration{
 	// twig
 	const twig_reload_template = true;
 	const twig_cache = '/cache';
+	// php
+	const php_timezone = 'Asia/Yekaterinburg';
 }

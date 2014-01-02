@@ -299,9 +299,9 @@ class mapper_query{
     }
     $query .= " ORDER BY `queries`.`opentime` DESC";
     $stmt = $this->pdo->prepare($query);
-    $stmt->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $stmt->bind(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
-    $stmt->bind(':time_close', $params['time_open_end'], PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_open', $params['time_open_begin'], PDO::PARAM_INT);
+    $stmt->bindValue(':time_close', $params['time_open_end'], PDO::PARAM_INT);
     if(!empty($params))
       foreach($params as $param)
         $stmt->bindValue($param[0], $param[1], $param[2]);

@@ -53,7 +53,7 @@
   public function find($id){
     $stmt = $this->pdo->prepare(self::$find);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
-    if($stmt->execute())
+    if(!$stmt->execute())
       throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
