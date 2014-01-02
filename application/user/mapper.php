@@ -3,6 +3,8 @@
 
   private $pdo;
 
+  private static $alert = 'Проблема в мапере пользователя.';
+
   private static $LOGIN = "SELECT `id`, `company_id`, `status`,
     `username` as `login`, `firstname`, `lastname`,
     `midlename` as `middlename`, `password`, 
@@ -52,7 +54,7 @@
     $stmt = $this->pdo->prepare(self::$find);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
     if($stmt->execute())
-      throw new e_model($alert);
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -63,27 +65,23 @@
   }
 
   public function find_by_login_and_password($login, $password){
-    try{
-      $stmt = $this->pdo->prepare(self::$LOGIN);
-      $stmt->bindValue(':login', htmlspecialchars($login), PDO::PARAM_STR);
-      $stmt->bindValue(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
-      if($stmt->execute())
-        throw new e_model($alert);
-      if($stm->rowCount() !== 1){
-          $stmt->closeCursor();
-          throw new e_model('Проблемы при авторизации.');
-      }
-      $user = $this->create_object($stm->fetch());
-      $stmt->closeCursor();
-      return $user;
-    }catch(exception $e){
-        return null;
-    }
+    $stmt = $this->pdo->prepare(self::$LOGIN);
+    $stmt->bindValue(':login', htmlspecialchars($login), PDO::PARAM_STR);
+    $stmt->bindValue(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    $count = $stmt->rowCount();
+    if($count === 0)
+      return null;
+    elseif($count === 1)
+      return $this->create_object($stmt->fetch());
+    else
+      throw new e_model(self::$alert);
   }
 
   private function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
-    if($stmt->execute())
+    if(!$stmt->execute())
       throw new e_model($alert);
     if($stmt->rowCount() !== 1)
         throw new e_model('Проблема при опредении следующего user_id.');
@@ -93,8 +91,8 @@
 
   public function get_users(){
     $stmt = $this->pdo->prepare(self::$get_users);
-    if($stmt->execute())
-      throw new e_model($alert);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $users = [];
     while($row = $stmt->fetch())
       $users[] = $this->create_object($row);
@@ -104,8 +102,8 @@
   public function insert(data_user $user){
     $stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `username` = :login");
     $stmt->bindValue(':login', $user->get_login(), PDO::PARAM_STR);
-    if($stmt->execute())
-      throw new e_model($alert);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     if($stmt->rowCount() !== 0)
         throw new e_model('Пользователь с таким логином уже существует.');
     $user->set_id($this->get_insert_id());
@@ -122,7 +120,7 @@
     $stmt->bindValue(':telephone', $user->get_telephone(), PDO::PARAM_STR);
     $stmt->bindValue(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
     if($stmt->execute())
-      throw new e_model($alert);
+      throw new e_model(self::$alert);
     return $user;
   }
 
@@ -139,7 +137,7 @@
     $stmt->bindValue(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
     $stmt->bindValue(':password', $user->get_hash(), PDO::PARAM_STR);
     $stmt->bindValue(':id', $user->get_id(), PDO::PARAM_INT);
-    if($stmt->execute())
-      throw new e_model($alert);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 }

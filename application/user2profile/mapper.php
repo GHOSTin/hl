@@ -26,6 +26,7 @@ class mapper_user2profile{
     $this->user = $user;
     data_company::verify_id($this->company->get_id());
     data_user::verify_id($this->user->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
