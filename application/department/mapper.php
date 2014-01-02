@@ -32,7 +32,6 @@ class mapper_department{
 		$stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
 		if(!$stmt->execute())
 			throw new e_model(self::$alert);
-		$stmt = $sql->get_stm();
 		$count = $stmt->rowCount();
 		if($count === 0)
 			return null;
