@@ -1,6 +1,6 @@
 <?php
 class data_house{
-	
+
 	private $city;
   private $department;
 	private $id;
@@ -16,7 +16,7 @@ class data_house{
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods('verify_house'), true))
-      throw new e_model('Нет доступного метода.');
+      throw new BadMethodCallException();
     return verify_house::$method($args[0]);
   }
 

@@ -14,7 +14,7 @@ class data_street extends data_object{
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods('verify_street'), true))
-      throw new e_model('Нет доступного метода.');
+      throw new BadMethodCallException();
     return verify_street::$method($args[0]);
   }
 

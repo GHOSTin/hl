@@ -8,7 +8,7 @@ class data_query2work{
 
   public function __call($method, $args){
     if(!in_array($method, get_class_methods($this->work)))
-      throw new e_model('Вызван недопустимый метод.');
+      throw new BadMethodCallException();
     return $this->work->$method($args);
   }
 

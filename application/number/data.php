@@ -22,7 +22,7 @@ final class data_number extends data_object{
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods('verify_number'), true))
-      throw new e_model('Нет доступного метода.');
+      throw new BadMethodCallException();
     return verify_number::$method($args[0]);
   }
 

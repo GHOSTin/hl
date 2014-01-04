@@ -1,6 +1,6 @@
 <?php
 class data_city extends data_object{
-	
+
 	private $id;
   private $name;
 	private $status;
@@ -9,7 +9,7 @@ class data_city extends data_object{
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods('verify_city'), true))
-      throw new e_model('Нет доступного метода.');
+      throw new BadMethodCallException();
     return verify_city::$method($args[0]);
   }
 
