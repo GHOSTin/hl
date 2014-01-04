@@ -174,7 +174,7 @@ class mapper_query{
     data_query_work_type::verify_id($query->get_work_type()->get_id());
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':id', $query->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT, 3);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':status', $query->get_status(), PDO::PARAM_STR);
     $stmt->bindValue(':initiator', $query->get_initiator(), PDO::PARAM_STR);
     $stmt->bindValue(':payment_status', $query->get_payment_status(), PDO::PARAM_STR);

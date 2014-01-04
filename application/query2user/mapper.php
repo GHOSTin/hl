@@ -148,6 +148,6 @@ class mapper_query2user{
           throw new e_model('Создатель заявки не может быть пустым.');
         else
           $this->insert($this->query->get_creator(), 'creator');
-      return $query;
+      return $this->query;
   }
 }

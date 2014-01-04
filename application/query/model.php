@@ -204,7 +204,7 @@ class model_query{
 			$this->pdo->commit();
 			return $query;
 		}catch(exception $e){
-			$this->pdo->rollback();
+			$this->pdo->rollBack();
 			throw new e_model('Проблема');
 		}
 	}
@@ -253,7 +253,7 @@ class model_query{
 	public function create_query($initiator, $id, $description, $work_type,
 										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{
-			$this->pdo->startTransaction();
+			$this->pdo->beginTransaction();
 			$time = time();
 			$query = new data_query();
       $query->set_status('open');
@@ -302,7 +302,7 @@ class model_query{
 			return $query;
 		}catch(exception $e){
 			die($e->getMessage());
-			$this->pdo->rollback();
+			$this->pdo->rollBack();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
 			else

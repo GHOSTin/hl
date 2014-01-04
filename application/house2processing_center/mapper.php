@@ -8,12 +8,12 @@ class mapper_house2processing_center{
 
   private static $alert = 'Проблема в мапере ассоциаций дома и процессингового центра.';
 
-  private static $delete = "DELETE FROM `house2processing_center` 
+  private static $delete = "DELETE FROM `house2processing_center`
     WHERE `company_id` = :company_id AND `house_id` = :house_id
     AND `center_id` = :center_id";
 
-  private static $insert = "INSERT INTO `house2processing_center` 
-    (`company_id`, `house_id`, `center_id`, `identifier`) 
+  private static $insert = "INSERT INTO `house2processing_center`
+    (`company_id`, `house_id`, `center_id`, `identifier`)
     VALUES (:company_id, :house_id, :center_id, :identifier)";
 
   private static $all = "SELECT `house2processing_center`.`center_id`,
@@ -96,7 +96,7 @@ class mapper_house2processing_center{
       $this->pdo->commit();
       return $this->house;
     }catch(exception $e){
-      $this->pdo->rollback();
+      $this->pdo->rollBack();
       throw new e_model('Проблема при обновлении списка процессинговых центров.');
     }
   }

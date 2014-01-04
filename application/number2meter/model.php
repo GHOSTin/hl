@@ -33,7 +33,7 @@ class model_number2meter{
   public function change_meter($old_meter_id, $old_serial,
                                 $new_meter_id, $service, $period){
     try{
-      sql::begin();
+      $this->pdo->beginTransaction();
       $mapper = new mapper_number2meter($this->company, $this->number);
       if($mapper->find($new_meter_id, $old_serial) !== null)
           throw new e_model('Счетчик с таким идентификатором
@@ -49,7 +49,7 @@ class model_number2meter{
       $old_meter->set_period($period);
       return $mapper->change($old_meter, $old_meter_id, $old_serial);
     }catch(exception $e){
-      sql::rollback();
+      $this->pdo->rollBack();
     }
   }
 
@@ -72,7 +72,7 @@ class model_number2meter{
     return (new mapper_number2meter($this->company, $this->number))
       ->update_meter_list();
   }
-  
+
   public function update_date_checking($meter_id, $serial, $time){
     $meter = $this->get_meter($meter_id, $serial);
     $meter->set_date_checking($time);
