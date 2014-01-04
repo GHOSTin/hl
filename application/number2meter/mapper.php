@@ -7,7 +7,7 @@ class mapper_number2meter{
 
   private static $alert = 'Проблема в мапере соотношения лицевого счета и счетчиков.';
 
-  private static $sql_get_meters = "SELECT `number2meter`.`meter_id`, 
+  private static $get_meters = "SELECT `number2meter`.`meter_id`,
           `number2meter`.`status`,
           `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
           `meters`.`periods`, `number2meter`.`service`, `number2meter`.`serial`,
@@ -36,7 +36,7 @@ class mapper_number2meter{
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `meter_id` = :old_meter_id AND `serial` = :old_serial";
 
-  private static $delete = "DELETE FROM `number2meter` 
+  private static $delete = "DELETE FROM `number2meter`
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `meter_id` = :meter_id AND `serial` = :serial";
 
@@ -141,7 +141,7 @@ class mapper_number2meter{
   * Возвращает список счетчиков лицевого счета
   */
   private function get_meters(){
-    $stmt = $this->pdo->prepare(self::$sql_get_meters);
+    $stmt = $this->pdo->prepare(self::$get_meters);
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())

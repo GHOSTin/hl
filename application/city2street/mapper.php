@@ -15,7 +15,7 @@ class mapper_city2street{
   private static $id = "SELECT MAX(`id`) as `max_street_id` FROM `streets`";
 
   private static $insert = "INSERT INTO `streets` (`id`, `company_id`,
-    `city_id`, `status`, `name`) VALUES 
+    `city_id`, `status`, `name`) VALUES
     (:street_id, 2, :city_id, :status, :name)";
 
   public function __construct(data_city $city){
@@ -30,7 +30,7 @@ class mapper_city2street{
       throw new e_model(self::$alert);
     if($stmt->rowCount() !== 1)
       throw new e_model('Проблема при опредении следующего street_id.');
-    $street_id = (int) $sql->fetch()['max_street_id'] + 1;
+    $street_id = (int) $stmt->fetch()['max_street_id'] + 1;
     return $street_id;
   }
 

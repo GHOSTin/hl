@@ -7,11 +7,11 @@ class mapper_street2house{
 
   private static $alert = 'Проблема в мапере сотношения цлиу и домов.';
 
-  private static $houses = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+  private static $houses = "SELECT `id`, `company_id`, `city_id`, `street_id`,
     `department_id`, `status`, `housenumber` as `number` FROM `houses`
     WHERE `street_id` = :street_id  ORDER BY (`houses`.`housenumber` + 0)";
 
-  private static $one = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+  private static $one = "SELECT `id`, `company_id`, `city_id`, `street_id`,
     `department_id`, `status`, `housenumber` as `number`
     FROM `houses` WHERE `id` = :house_id AND `street_id` = :street_id";
 
@@ -104,8 +104,7 @@ class mapper_street2house{
   }
 
   public static function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
+    $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
       throw new e_model(self::$alert);
     if($stmt->rowCount() !== 1)

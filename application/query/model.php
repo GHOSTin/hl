@@ -253,7 +253,7 @@ class model_query{
 	public function create_query($initiator, $id, $description, $work_type,
 										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{
-			sql::begin();
+			$this->pdo->startTransaction();
 			$time = time();
 			$query = new data_query();
       $query->set_status('open');
@@ -298,11 +298,11 @@ class model_query{
       $query->add_manager($user);
       $query->add_observer($user);
       (new mapper_query2user($this->company, $query))->update_users();
-			sql::commit();
+			$this->pdo->commit();
 			return $query;
 		}catch(exception $e){
 			die($e->getMessage());
-			sql::rollback();
+			$this->pdo->rollback();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
 			else
@@ -410,7 +410,7 @@ class model_query{
 		$mapper = new mapper_query($this->company);
 		return $mapper->update($query);
 	}
-	
+
 	/**
 	* Обновляет тип работ.
 	*/

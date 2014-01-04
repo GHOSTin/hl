@@ -5,8 +5,8 @@ class mapper_work{
 	private $pdo;
 
 	private static $alert = "Проблема в мапере работ.";
-	
-	private static $sql_find = "SELECT `id`,`company_id`, `status`, `name`
+
+	private static $find = "SELECT `id`,`company_id`, `status`, `name`
 		FROM `works` WHERE `company_id` = :company_id  AND `id` = :id";
 
 	public function __construct(data_company $company){
@@ -16,7 +16,7 @@ class mapper_work{
 	}
 
 	public function find($id){
-		$stmt = $this->pdo->prepare(self::$sql_find);
+		$stmt = $this->pdo->prepare(self::$find);
 		$stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
 		$stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
 		if(!$stmt->execute())

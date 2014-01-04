@@ -1,14 +1,14 @@
 <?php
 class mapper_house2number{
-  
+
   private $company;
   private $house;
   private $pdo;
 
   private static $alert = 'Проблемы в мапере ассоциации дома и лицевого счета.';
 
-  private static $many = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
-    `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`, 
+  private static $many = "SELECT `numbers`.`id`, `numbers`.`company_id`,
+    `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`,
     `numbers`.`number`, `numbers`.`type`, `numbers`.`status`, `numbers`.`fio`,
     `numbers`.`telephone`, `numbers`.`cellphone`, `numbers`.`password`,
     `numbers`.`contact-fio` as `contact_fio`,
@@ -19,13 +19,13 @@ class mapper_house2number{
     `streets`.`name` as `street_name`
     FROM `numbers`, `flats`, `houses`, `streets`
     WHERE `numbers`.`house_id` = :house_id
-    AND `numbers`.`company_id` = :company_id 
+    AND `numbers`.`company_id` = :company_id
     AND `numbers`.`flat_id` = `flats`.`id`
     AND `numbers`.`house_id` = `houses`.`id`
     AND `houses`.`street_id` = `streets`.`id`
     ORDER BY (`flats`.`flatnumber` + 0)";
 
-  private static $one_by_number = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
+  private static $one_by_number = "SELECT `numbers`.`id`, `numbers`.`company_id`,
     `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`,
     `numbers`.`number`, `numbers`.`type`, `numbers`.`status`, `numbers`.`fio`,
     `numbers`.`telephone`, `numbers`.`cellphone`, `numbers`.`password`,
@@ -91,7 +91,7 @@ class mapper_house2number{
     else
       throw new e_model('Неожиданное колличество записей');
   }
-  
+
   private function get_numbers(){
     $stmt = $this->pdo->prepare(self::$many);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -140,9 +140,9 @@ class mapper_house2number{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new e_model(self::$alert);
-    if($sql->rowCount() !== 1)
+    if($stmt->rowCount() !== 1)
       throw new e_model(self::$alert);
-    $number_id = (int) $sql->fetch()['max_number_id'] + 1;
+    $number_id = (int) $stmt->fetch()['max_number_id'] + 1;
     return $number_id;
   }
 

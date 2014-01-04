@@ -7,11 +7,11 @@ class mapper_user2profile{
 
   private $alert = 'Проблема в мапере соотношения пользователя и профиля.';
 
-  private static $many = "SELECT `profile` FROM `profiles` 
+  private static $many = "SELECT `profile` FROM `profiles`
     WHERE  `user_id` = :user_id AND `company_id` = :company_id";
 
   private static $one = "SELECT `profile`, `rules`, `restrictions`, `settings`
-    FROM `profiles` WHERE  `user_id` = :user_id 
+    FROM `profiles` WHERE  `user_id` = :user_id
     AND `company_id` = :company_id AND `profile` = :profile";
 
   private static $delete = "DELETE FROM `profiles` WHERE  `user_id` = :user_id
@@ -52,11 +52,9 @@ class mapper_user2profile{
     if(!$stmt->execute())
       throw new e_model(self::$alert);
     $profiles = [];
-    $stmt = $sql->get_stm();
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch())
         $profiles[] = $this->create_object($row);
-    $sql->close();
     return $profiles;
   }
 
@@ -73,7 +71,7 @@ class mapper_user2profile{
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model(self::$alert);     
+      throw new e_model(self::$alert);
   }
 
   public function insert(data_profile $profile){

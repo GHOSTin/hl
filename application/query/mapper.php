@@ -22,7 +22,7 @@ class mapper_query{
     `queries`.`description-open` as `description`,
     `queries`.`description-close` as `close_reason`,
     `queries`.`querynumber` as `number`,
-    `queries`.`query_inspection` as `inspection`, 
+    `queries`.`query_inspection` as `inspection`,
     `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
@@ -53,7 +53,7 @@ class mapper_query{
     `queries`.`description-open` as `description`,
     `queries`.`description-close` as `close_reason`,
     `queries`.`querynumber` as `number`,
-    `queries`.`query_inspection` as `inspection`, 
+    `queries`.`query_inspection` as `inspection`,
     `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
@@ -72,7 +72,7 @@ class mapper_query{
     `warning-type`, `department_id`, `house_id`, `query_worktype_id`,
     `opentime`, `worktime`, `addinfo-name`, `addinfo-telephone`,
     `addinfo-cellphone`, `description-open`, `querynumber`)
-    VALUES (:id, :company_id, :status, :initiator, :payment_status, 
+    VALUES (:id, :company_id, :status, :initiator, :payment_status,
     :warning_status,:department_id, :house_id, :worktype_id, :time_open,
     :time_work, :contact_fio, :contact_telephone, :contact_cellphone,
     :description, :number)";
@@ -109,7 +109,7 @@ class mapper_query{
     `queries`.`description-open` as `description`,
     `queries`.`description-close` as `close_reason`,
     `queries`.`querynumber` as `number`,
-    `queries`.`query_inspection` as `inspection`, 
+    `queries`.`query_inspection` as `inspection`,
     `houses`.`housenumber` as `house_number`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
@@ -265,9 +265,9 @@ class mapper_query{
     $stmt->bindValue(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
     if(!$stmt->execute())
         throw new e_model(self::$alert);
-    if($sql->count() !== 1)
+    if($stmt->rowCount() !== 1)
       throw new e_model(self::$alert);
-    $query_number = (int) $sql->fetch()['querynumber'] + 1;
+    $query_number = (int) $stmt->fetch()['querynumber'] + 1;
     return $query_number;
   }
 

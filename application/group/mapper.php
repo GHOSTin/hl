@@ -106,10 +106,9 @@ class mapper_group{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new e_model(self::$alert);
-    if($sql->count() !== 1)
+    if($stmt->rowCount() !== 1)
         throw new e_model('Проблема при опредении следующего group_id.');
-    $id = (int) $sql->row()['max_id'] + 1;
-    $sql->close();
+    $id = (int) $stmt->fetch()['max_id'] + 1;
     return $id;
   }
 
