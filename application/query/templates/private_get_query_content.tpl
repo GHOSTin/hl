@@ -66,11 +66,11 @@
 			<span class="cm get_dialog_edit_payment_status">изменить</span>
 			{% endif %}
 		</li>
-		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>  
+		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
 			<span class="cm get_dialog_edit_work_type">изменить</span></li>
 			{% endif %}
-		<li>Тип заявки: 
+		<li>Тип заявки:
 			<span class="query-general-warning_status">
 			{% if query.get_warning_status() in warning_statuses|keys %}
 				{{ warning_statuses[query.get_warning_status()] }}
@@ -114,6 +114,9 @@
 		</li>
 		<li class="query-works">
 			<h5>Работы</h5>
+		</li>
+		<li class="query-comments">
+			<h5>Комментарии</h5>
 		</li>
 	</ul>
 	</div>

@@ -329,6 +329,10 @@ class model_query{
 		return (new mapper_query2work($this->company, $query))->init_works();
 	}
 
+	public function init_comments(data_query $query){
+		return [];
+	}
+
 	/**
 	* Возвращает заявки.
 	* @return array

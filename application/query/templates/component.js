@@ -19,7 +19,7 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.get_query_content', function(){
 		$.get('get_query_content',{
 			 id: $(this).attr('query_id')
@@ -33,7 +33,7 @@ $(document).ready(function(){
 			},function(r){
 				show_content(r);
 			});
-	});	
+	});
 	// выводит лицевые счета заявки
 	$('body').on('click', '.query-numbers > h5', function(){
 		if($(this).siblings().is('.query-numbers-content')){
@@ -68,13 +68,24 @@ $(document).ready(function(){
 					init_content(r);
 				});
 	});
+		// выводит комментарии заявки
+	$('body').on('click', '.query-comments > h5', function(){
+		if($(this).siblings().is('.query-sub'))
+			$(this).siblings('.query-sub').remove();
+		else
+			$.get('get_query_comments',{
+				 id: get_query_id($(this))
+				},function(r){
+					init_content(r);
+				});
+	});
 	$('body').on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
 			 id: get_query_id($(this))
 			},function(r){
 				show_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.timeline-day', function(){
 		var self = $(this);
 		$.get('get_day',{
@@ -84,7 +95,7 @@ $(document).ready(function(){
 				self.addClass('timeline-day-current');
 				$('.queries').html(r);
 			});
-	});		
+	});
 	$('body').on('click', '.get_search', function(){
 		$.get('get_search',{
 			},function(r){
@@ -103,7 +114,7 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 	$('.filter-content-select-status').change(function(){
 		$.get('set_status',{
 			value: $('.filter-content-select-status :selected').val()
@@ -144,21 +155,21 @@ $(document).ready(function(){
 			},function(r){
 				show_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.get_dialog_edit_description', function(){
 		$.get('get_dialog_edit_description',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.get_dialog_edit_reason', function(){
 		$.get('get_dialog_edit_reason',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.get_dialog_edit_contact_information', function(){
 		$.get('get_dialog_edit_contact_information',{
 			id: get_query_id($(this))
@@ -172,21 +183,21 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.get_dialog_edit_warning_status', function(){
 		$.get('get_dialog_edit_warning_status',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.get_dialog_edit_work_type', function(){
 		$.get('get_dialog_edit_work_type',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 	$('body').on('click', '.get_dialog_add_user', function(){
 		$.get('get_dialog_add_user',{
 			id: get_query_id($(this)),
@@ -194,7 +205,7 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	})	
+	})
 	$('body').on('click', '.get_dialog_remove_user', function(){
 		$.get('get_dialog_remove_user',{
 			id: get_query_id($(this)),
@@ -203,7 +214,7 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	})	
+	})
 	$('body').on('click', '.get_dialog_add_work', function(){
 		$.get('get_dialog_add_work',{
 			id: get_query_id($(this))
@@ -250,14 +261,14 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	})
-	
+
 	$('body').on('click', '.get_dialog_to_working_query', function(){
 		$.get('get_dialog_to_working_query',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
-	})	
+	})
 	$('body').on('click', '.get_timeline', function(){
 		$.get('get_timeline',{
 			act: $(this).attr('act'),
@@ -265,7 +276,7 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	});	
+	});
 });
 function get_query_id(obj){
 	return obj.closest('.query').attr('query_id');
