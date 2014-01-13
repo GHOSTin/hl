@@ -330,7 +330,8 @@ class model_query{
 	}
 
 	public function init_comments(data_query $query){
-		return [];
+		return (new mapper_query2comment(di::get('pdo'), $this->company, $query))
+			->init_comments();
 	}
 
 	/**
