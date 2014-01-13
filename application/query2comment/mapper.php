@@ -10,7 +10,7 @@ class mapper_query2comment{
 
   private static $find_all = "SELECT `company_id`, `query_id`, `user_id`, `time`,
     `message` FROM `query2comment` WHERE `company_id` = :company_id
-    AND `query_id` = :query_id";
+    AND `query_id` = :query_id ORDER BY `time`";
 
   public function __construct(PDO $pdo, data_company $company, data_query $query){
     $this->pdo = $pdo;
@@ -19,6 +19,10 @@ class mapper_query2comment{
   }
 
   private function create_object(array $row){
+    $comment = new data_query2comment();
+    $comment->set_time($row['time']);
+    $comment->set_message($row['message']);
+    return $comment;
   }
 
   private function find_all(){
@@ -29,14 +33,15 @@ class mapper_query2comment{
       throw new e_model(self::$alert);
     $comments = [];
     while($row = $stmt->fetch())
-      $comments[] = $this->create_object();
+      $comments[] = $this->create_object($row);
     return $comments;
   }
 
   public function init_comments(){
     $comments = $this->find_all();
-    var_dump($comments);
-    exit();
+    if(!empty($comments))
+      foreach($comments as $comment)
+        $this->query->add_comment($comment);
     return $this->query;
   }
 }

@@ -5,6 +5,8 @@
 {% endblock js %}
 {% block html %}
 	<ul class="query-sub">
-
+  {% for comment in query.get_comments() %}
+    <li>{{ comment.get_message() }}</li>
+  {% endfor %}
 	</ul>
 {% endblock html %}
