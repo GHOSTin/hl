@@ -17,6 +17,10 @@ class mapper_query2comment{
     AND `query2comment`.`user_id` = `users`.`id`
     ORDER BY `query2comment`.`time`";
 
+  private static $insert = 'INSERT `query2comment` (`company_id`, `query_id`,
+    `user_id`, `time`, `message`) VALUES (:company_id, :query_id, :user_id,
+    :time, :message)';
+
   public function __construct(PDO $pdo, data_company $company, data_query $query){
     $this->pdo = $pdo;
     $this->company = $company;
@@ -55,6 +59,17 @@ class mapper_query2comment{
     return $this->query;
   }
 
+  private function insert(data_query2comment $comment){
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':user_id', $comment->get_user()->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':time', $comment->get_time(), PDO::PARAM_INT);
+    $stmt->bindValue(':message', $comment->get_message(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+  }
+
   public function update(){
     $old = [];
     $comments = $this->find_all();
@@ -67,11 +82,11 @@ class mapper_query2comment{
     $deleted = array_diff_key($old, $new);
     $inserted = array_diff_key($new, $old);
     if(!empty($inserted))
-        foreach($inserted as $work)
-            $this->insert($work);
+      foreach($inserted as $comment)
+        $this->insert($comment);
     if(!empty($deleted))
-        foreach($deleted as $work)
-            $this->delete($work);
+      foreach($deleted as $comment)
+        $this->delete($comment);
     return $this->query;
   }
 }

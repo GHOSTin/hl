@@ -9,10 +9,8 @@
       <a class="get_dialog_add_comment cm">Оставить комментарий</a>
     </li>
     <li>
-      <ul>
-      {% for comment in query.get_comments() %}
-        <li>{{ comment.get_message() }}</li>
-      {% endfor %}
+      <ul class="comments">
+      {% include '@query/query_comments.tpl'%}
       </ul>
     </li>
 	</ul>
