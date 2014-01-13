@@ -5,8 +5,15 @@
 {% endblock js %}
 {% block html %}
 	<ul class="query-sub">
-  {% for comment in query.get_comments() %}
-    <li>{{ comment.get_message() }}</li>
-  {% endfor %}
+    <li>
+      <a class="get_dialog_create_comment">Оставить комментарий</a>
+    </li>
+    <li>
+      <ul>
+      {% for comment in query.get_comments() %}
+        <li>{{ comment.get_message() }}</li>
+      {% endfor %}
+      </ul>
+    </li>
 	</ul>
 {% endblock html %}
