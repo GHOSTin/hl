@@ -104,6 +104,10 @@ class controller_query{
 		return ['queries' => $collection];
 	}
 
+	public static function private_get_dialog_add_comment(model_request $request){
+		return true;
+	}
+
 	public static function private_get_dialog_add_user(model_request $request){
 		$company = model_session::get_company();
 		return ['query' => (new model_query($company))

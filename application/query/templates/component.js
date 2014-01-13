@@ -198,6 +198,13 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	});
+	$('body').on('click', '.get_dialog_add_comment', function(){
+		$.get('get_dialog_add_comment',{
+			id: get_query_id($(this))
+			},function(r){
+				init_content(r);
+			});
+	})
 	$('body').on('click', '.get_dialog_add_user', function(){
 		$.get('get_dialog_add_user',{
 			id: get_query_id($(this)),
