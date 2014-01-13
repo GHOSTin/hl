@@ -104,6 +104,18 @@ class model_query{
 			$this->set_param('work_type', null);
 	}
 
+	public function add_comment($query_id, $message){
+		$comment = new data_query2comment($_SESSION['user']);
+		$comment->set_time(time());
+		$comment->set_message($message);
+		$query = $this->get_query($query_id);
+		$mapper = new mapper_query2comment(di::get('pdo'), $this->company, $query);
+		$mapper->init_comments();
+		$query->add_comment($comment);
+		$mapper->update();
+		return $query;
+	}
+
 	/**
 	* Добавляет ассоциацию заявка-пользователь.
 	*/

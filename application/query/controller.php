@@ -13,6 +13,11 @@ class controller_query{
 			$request->GET('type'))];
 	}
 
+	public static function private_add_comment(model_request $request){
+		return ['query' => (new model_query(model_session::get_company()))
+			->add_comment($request->GET('query_id'), $request->GET('message'))];
+	}
+
 	public static function private_add_work(model_request $request){
 		$begin_hours = (int) $request->GET('begin_hours');
 		$begin_minutes = (int) $request->GET('begin_minutes');

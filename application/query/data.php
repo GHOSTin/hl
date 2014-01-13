@@ -50,7 +50,10 @@ class data_query extends data_object{
 	}
 
 	public function add_comment(data_query2comment $comment){
-		$this->comments[] = $comment;
+		$id = $comment->get_user()->get_id().'_'.$comment->get_time();
+		if(array_key_exists($id, $this->comments))
+			throw new e_model('Комментарий уже существует.');
+		$this->comments[$id] = $comment;
 	}
 
 	public function add_creator(data_user $user){

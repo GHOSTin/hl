@@ -8,9 +8,14 @@ class mapper_query2comment{
 
   private static $alert = 'Проблема в мапере соотношения заявки и комментариев.';
 
-  private static $find_all = "SELECT `company_id`, `query_id`, `user_id`, `time`,
-    `message` FROM `query2comment` WHERE `company_id` = :company_id
-    AND `query_id` = :query_id ORDER BY `time`";
+  private static $find_all = "SELECT `query2comment`.`time`,
+    `query2comment`.`message`, `users`.`id`, `users`.`lastname`,
+    `users`.`firstname`, `users`.`midlename`
+    FROM `query2comment`, `users`
+    WHERE `query2comment`.`company_id` = :company_id
+    AND `query2comment`.`query_id` = :query_id
+    AND `query2comment`.`user_id` = `users`.`id`
+    ORDER BY `query2comment`.`time`";
 
   public function __construct(PDO $pdo, data_company $company, data_query $query){
     $this->pdo = $pdo;
@@ -19,7 +24,12 @@ class mapper_query2comment{
   }
 
   private function create_object(array $row){
-    $comment = new data_query2comment();
+    $user = new data_user();
+    $user->set_id($row['id']);
+    $user->set_lastname($row['lastname']);
+    $user->set_firstname($row['firstname']);
+    $user->set_middlename($row['midlename']);
+    $comment = new data_query2comment($user);
     $comment->set_time($row['time']);
     $comment->set_message($row['message']);
     return $comment;
@@ -42,6 +52,26 @@ class mapper_query2comment{
     if(!empty($comments))
       foreach($comments as $comment)
         $this->query->add_comment($comment);
+    return $this->query;
+  }
+
+  public function update(){
+    $old = [];
+    $comments = $this->find_all();
+    if(!empty($comments))
+      foreach($comments as $comment){
+        $id = $comment->get_user()->get_id().'_'.$comment->get_time();
+        $old[$id] = $comment;
+      }
+    $new = $this->query->get_comments();
+    $deleted = array_diff_key($old, $new);
+    $inserted = array_diff_key($new, $old);
+    if(!empty($inserted))
+        foreach($inserted as $work)
+            $this->insert($work);
+    if(!empty($deleted))
+        foreach($deleted as $work)
+            $this->delete($work);
     return $this->query;
   }
 }
