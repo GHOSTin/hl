@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     <title>MSHC2</title>
     <link rel="stylesheet" href="/templates/default/css/libs.css" >
-    <link rel="stylesheet" href="/?css=component.css&p={{ file_prefix }}" >
     {% block css %}{% endblock css %}
 </head>
 <body>
@@ -41,7 +40,6 @@
 	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>
 	    <script src="/templates/default/js/notification-center.js"></script>
         <script src="/templates/default/js/chat.js"></script>
-        <script src="/?js=component.js&p={{ file_prefix }}"></script>
     {% endif %}
 	<script src="/templates/default/js/default.js"></script>
 	

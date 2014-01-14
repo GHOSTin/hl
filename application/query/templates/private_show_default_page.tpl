@@ -4,7 +4,9 @@
     <div class="span3">
         <div class="row-fluid">
             <div class="btn-group span12 query_controls">
+                {% if rules['createQuery'] == true %}
                 <div class="get_dialog_create_query cm btn span8">Создать заявку</div>
+                {% endif %}
                 <div class="get_search cm btn span4">Поиск</div>
             </div>
             <div  class="page-header span12">
@@ -31,8 +33,10 @@
     <!-- end right block -->
 {% endblock component %}
 {% block javascript %}
+    <script src="/?js=component.js&p=query"></script>
     <script src="/templates/default/js/bootstrap-datepicker.js"></script>
 {% endblock javascript %}
 {% block css %}
+    <link rel="stylesheet" href="/?css=component.css&p=query" >
     <link rel="stylesheet" href="/templates/default/css/datepicker.css" >
 {% endblock css %}
