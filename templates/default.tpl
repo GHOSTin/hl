@@ -29,7 +29,7 @@
     <footer>
         <div class="container-fluid">
             <p class="muted credit">
-                 Версия {{ version }}. Разработка компании <a href="http://mlsco.ru">mlsco</a>. <a class="get_dialog_error_message pull-right btn btn-danger fixed-bottom">Сообщить об ошибке.</a>
+                 Версия {{ version }}. Разработка компании <a href="http://mlsco.ru">mlsco</a>. <a class="get_dialog_error_message pull-right btn btn-danger fixed-right">Сообщить об ошибке.</a>
             </p>
         </div>
     </footer>        
