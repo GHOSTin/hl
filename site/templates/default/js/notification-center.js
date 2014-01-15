@@ -63,7 +63,7 @@ $.extend($.expr[':'], {
 });
 var uid = parseInt(get_cookie('uid'));
 /** тайтл страницы */
-var global_title = $(document).attr('title') || '';
+var global_title;
 /** сокет-соединение для центра уведомлений */
 var notify_center = io.connect('http://'+ get_cookie('chat_host') + ':' + get_cookie('chat_port') + '/notify');
 /** сокет-соединение для чата */
@@ -90,6 +90,7 @@ var intervalID = setInterval(tryReconnect, 60000);
  */
 notify_center.on('connect', function(){
     if($('.current_user').length){
+        global_title = $(document).attr('title') || ''
         notify_center.json.send({"type":"user_ready", "data":{'uid': uid}});
         chat.json.send({"type":"user_ready", "data":{'uid': uid}});
     }
@@ -285,12 +286,12 @@ var build_chat_window = function(){
                 if($('.chat.active').length){
                     var active_user = userList.list[$('.chat.active').attr('id').split('_')[1]];
                     var offset = 0;
-                    if($('#chat-dates').is(':visible')){
+                    if($('ul#chat-dates').is(':visible')){
                         offset = Object.keys(active_user.messages).length;
                         active_user.first_message_id = $('.chat.active div.chat-feed blockquote:first').attr('id');
                         chat.json.send({'type':'load_previous_messages', 'data':{"uid":active_user.id, "offset": offset}});
                     }
-                    if($('#chat-history').is(':visible')){
+                    if($('ul#chat-history').is(':visible')){
                         offset = Object.keys(active_user.history_dates).length;
                         chat.json.send({'type':'get_history_list', 'data':{'uid':active_user.id, 'offset': offset}})
                     }

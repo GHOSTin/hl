@@ -9,7 +9,7 @@
     <div>
         <a class="get_dialog_add_meter">Привязать счетчик</a>
     </div>
-    <div class="number-meters">
+    <div class="number-meters col-sm-6 col-lg-6">
         {% include '@number/build_meters.tpl' %}
     </div>
 {% endblock html %}

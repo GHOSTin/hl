@@ -3,10 +3,10 @@
 {% block title %}Диалог редактирования пароля пользователя{% endblock title %}
 {% block dialog %}
 	<label>Логин</label>
-	<input type="text" class="dialog-input-login" value="{{ user.get_login() }}">
+	<input type="text" class="dialog-input-login form-control" value="{{ user.get_login() }}">
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_login">Изменить</div>
+	<div class="btn btn-primary update_login">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет логин пользователя

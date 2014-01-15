@@ -3,7 +3,7 @@
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}
 {% set places = {'kitchen':'Кухня', 'toilet':'Туалет', 'bathroom':'Ванна'} %}
 {% set statuses = {'enabled':'Активный', 'disabled':'Отключен'} %}
-<button class="btn get_dialog_delete_meter">Удалить счетчик и показания</button>
+<button class="btn btn-default get_dialog_delete_meter">Удалить счетчик и показания</button>
 <h5>Основные параметры счетчика</h5>
 <ul class="unstyled" style="padding-left:20px">
     <li>Название: {{ services[meter.get_service()] }} {{ meter.get_name() }} <a class="get_dialog_change_meter">изменить</a></li>

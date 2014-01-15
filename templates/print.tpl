@@ -18,7 +18,6 @@
                 }
             </style>
     <link rel="stylesheet" href="/templates/default/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css">
     {% block css %}{% endblock css %}
 </head>
 <body>

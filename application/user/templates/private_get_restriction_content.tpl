@@ -10,7 +10,7 @@
     $('.user[user = {{ user.id }}] .company[company = {{ company.id }}] .profile[profile = "{{ profile_name }}"] .restriction[restriction = "{{ restriction_name }}"]').append(get_hidden_content());
 {% endblock js %}
 {% block html %}
-    <ul class="restriction-content unstyled">   
+    <ul class="restriction-content list-unstyled">
         {% if restriction_name == 'departments' %}
             {% for department in items %}
                 <li class="item" item="{{ department.id }}"><input type="checkbox"{% if department.id in rest %}checked=""{% endif %}> {{ department.name }}</li>

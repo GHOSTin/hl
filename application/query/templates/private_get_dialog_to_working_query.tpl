@@ -12,7 +12,7 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Передача заявки в работу.</h3>
     </div>	
@@ -20,8 +20,8 @@
 		Передать заявку в работу?
 	</div>
 	<div class="modal-footer">
-		<div class="btn to_working_query">Передать</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary to_working_query">Передать</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

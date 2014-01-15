@@ -1,4 +1,6 @@
-<div class="input-append">
-	<input type="text" class="search_parameters" placeholder="Введите номер заявки">
-	<button class="btn get_search_result">Найти</button>
+<div class="row">
+    <div class="col-lg-3">
+	    <input type="text" class="form-control search_parameters" placeholder="Введите номер заявки">
+    </div>
+	<button class="btn btn-default get_search_result">Найти</button>
 </div>

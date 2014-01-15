@@ -3,6 +3,7 @@ html,body{
 	height: 100%;
     background-color: rgb(246,246,246);
 }
+
 .main{margin-top: 60px}
 
 .navbar .btn-navbar.pull-left {
@@ -49,6 +50,20 @@ footer, #push{
     -o-transform: rotate(-90deg); /* Opera */
 }
 
+.modal-content select+select{
+    margin-top: 10px;
+}
+
+.modal-content .form-inline select+select{
+    margin-top: 0px;
+}
+
+.modal-content .form-inline select,
+.modal-content .form-inline input {
+    margin: 0 5px;
+}
+
+
 .cm{
 	color:#0088CC;
     cursor: pointer;
@@ -56,14 +71,20 @@ footer, #push{
 
 .modal{
     min-width: 560px;
-    max-height: 800px;
+}
+
+.icon-white{
+    color: white;
+}
+
+.modal-content{
+    z-index: 1050;
 }
 
 #_hidden_notification_center{
 	position:absolute;
 	top:50px;
 	right:0px;
-    padding: 10px;
 	z-index:101;
 	width:600px;
     height: 500px;
@@ -75,17 +96,13 @@ footer, #push{
 
 div[class^=chat-col-]{
     position: relative;
-    height: 500px;
+    height: 100%;
     display: inline-block;
     vertical-align: top;
-}
-
-.chat-col-right{
-    width: 399px;
+    padding: 10px;
 }
 
 .chat-col-left{
-    width: 195px;
     border-right: 1px solid rgba(0,0,0,.1);
 }
 
@@ -100,17 +117,18 @@ div[class^=chat-col-]{
 #chat-user-filter-clear {
     float: none;
     position: absolute;
-    right: 15px;
-    top: 6px;
+    right: 8px;
+    top: 8px;
 }
 
 .chat-user-list{
     overflow: auto;
-    height: 470px;
+    height: 450px;
 }
 
 .chat-users{
     margin: 0;
+    padding: 0;
 }
 
 .chat-users li{
@@ -120,6 +138,24 @@ div[class^=chat-col-]{
 
 .chat-users li a{
     padding: 5px;
+    margin-left: 15px;
+}
+
+.chat-users li a:before{
+    content: "\2022";
+    font-size: 2.2em;
+    height: 21px;
+    position: absolute;
+    left: 0;
+    margin-top: -12px;
+}
+
+.chat-users li.offline a:before{
+    color: palevioletred;
+}
+
+.chat-users li.online a:before{
+    color: greenyellow;
 }
 
 .chat-users li.offline a{
@@ -139,6 +175,7 @@ div[class^=chat-col-]{
     color: #7c7d7e !important;
 }
 
+
 .chat-users .status {
     font-size: 2.2em;
     vertical-align: middle;
@@ -146,28 +183,18 @@ div[class^=chat-col-]{
 
 }
 
-.chat-users .offline .status{
-    color: palevioletred;
-}
-
-.chat-users .online .status{
-    color: greenyellow;
-}
-
-form.well{
-    margin: 0;
-}
-
 .mCSB_container.mCS_no_scrollbar{
-    margin-right: 30px !important;
+    margin-right: 20px !important;
 }
 
 .chat {
-    max-height: 500px;
-    padding: 0 10px;
+    max-height: 480px;
+    margin: 0;
+    margin-bottom: 126px;
 }
 
-.chat h6 {
+.chat h4 {
+    position: relative;
     text-align: center;
     background: #dedede;
     border-radius: 4px 4px 0 0;
@@ -176,22 +203,19 @@ form.well{
 
 .chat .chat-history{
     margin: 0;
-    height: 20px;
-}
-
-.chat textarea{
-    width: 336px;
-    height: 40px;
+    position: absolute;
+    right: 2px;
+    top: 2px;
 }
 
 .chat-feed{
-    height: 335px;
+    height: 310px;
     overflow: auto;
-    margin: 0 0 10px;
 }
 
 .chat-feed ul {
     margin: 0;
+    padding: 0;
 }
 
 .chat-feed header{
@@ -279,9 +303,9 @@ form.well{
     overflow: hidden;
 }
 
-@media (max-width: 979px){
-    .main {margin: 0;}
-}
+/*@media (max-width: 979px){*/
+    /*.main {margin: 0;}*/
+/*}*/
 
 @media print{
     #print{

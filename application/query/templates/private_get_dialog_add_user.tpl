@@ -28,7 +28,7 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>{% if request.GET('type') == 'manager' %}
         		Менеджеры
@@ -38,19 +38,19 @@
         </h3>
     </div>	
 	<div class="modal-body">
-		<select class="dialog-select-group">
+		<select class="dialog-select-group form-control">
 			<option value="0">Выберите группу</option>
 		{% for group in groups %}
 			<option value="{{ group.get_id() }}">{{ group.get_name() }}</option>
 		{% endfor %}
 		</select>
-		<select class="dialog-select-user" style="display:block" disabled="disabled">
+		<select class="dialog-select-user form-control" style="display:block" disabled="disabled">
 			<option value="0">Ожидание...</option>
 		</select>
 	</div>
 	<div class="modal-footer">
-		<div class="btn add_user">Сохранить</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary add_user">Сохранить</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

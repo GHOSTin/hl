@@ -3,10 +3,10 @@
 {% block title %}Диалог редактирования названия группы{% endblock title %}
 {% block dialog %}
 	<label>Название группы</label>
-	<input type="text" class="dialog-input-name" value="{{ group.get_name() }}">
+	<input type="text" class="dialog-input-name form-control" value="{{ group.get_name() }}">
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_group_name">Изменить</div>
+	<div class="btn btn-primary update_group_name">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет название группы

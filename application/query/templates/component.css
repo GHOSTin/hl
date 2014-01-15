@@ -8,7 +8,6 @@
 }
 
 .query_controls{
-   margin-left: 6% !important;
    margin-top: 20px;
 }
 
@@ -16,11 +15,6 @@
 .query_status_close {border-left:4px solid #cccccc;}
 .query_status_reopen {border-left:4px solid blue;}
 .query_status_working {border-left:4px solid black;}
-
-.query_controls + .page-header{
-    padding: 0;
-    margin: 10px 0;
-}
 
 .timeline .pagination{
     margin: 0;
@@ -30,15 +24,14 @@
 }
 .timeline-control, .timeline-day {
     cursor: pointer;
-    width:18px;
-    height:20px;
+    height:34px;
     line-height: 20px;
     font-size:12px !important;
-    padding: 4px;
-    margin-bottom: 20px;
+    padding: 6px;
+    margin-bottom: 18px;
 }
 .timeline-day-wday{
-    margin-top:3px;
+    margin-top:5px;
     font-size:10px;
     color: black;
     font-weight: normal;
@@ -50,6 +43,21 @@ ul.query-sub, ul.query-general{
     list-style:none;
 }
 
+.filters select {
+    margin-bottom: 10px;
+}
+
+.datepicker{
+    z-index: 1060!important;
+}
+
 @media (max-width: 768px){
     .query_controls {margin: 0 !important;}
+}
+
+@media (min-width: 768px){
+    .query_controls + .page-header{
+        padding: 0;
+        margin: 10px 0;
+    }
 }

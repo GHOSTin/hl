@@ -78,17 +78,20 @@
 {% endblock js %}
 {% block html %}
     <h4>Отчеты по заявкам</h4>
-    <div class="row-fluid">
-        <div class="span3">Фильтры <a class="clear_filter_query">сбросить</a>
-            <ul class="unstyled filters">
+    <div class="row">
+        <div class="col-sm-3 col-lg-3">
+            <div class="col-xs-12">
+                <h4>Фильтры <small><a class="pull-right clear_filter_query">сбросить</a></small></h4>
+            </div>
+            <ul class="list-unstyled filters">
                 <li>
-                    <div>по дате</div>
-                    c <input type="text" class="input-small query_time_begin" value="{{ filters.time_open_begin|date('d.m.Y') }}"><br>
-                    по <input type="text" class="input-small query_time_end" value="{{ filters.time_open_end|date('d.m.Y') }}">
+                    <label>по дате</label>
+                    <div class="row form-group"><label class="control-label col-xs-1">с</label><div class="col-xs-10"><input type="text" class="form-control query_time_begin" value="{{ filters.time_open_begin|date('d.m.Y') }}"></div></div>
+                    <div class="row form-group"><label class="control-label col-xs-1">по</label><div class="col-xs-10"><input type="text" class="form-control query_time_end" value="{{ filters.time_open_end|date('d.m.Y') }}"></div></div>
                 </li>
-                <li>
-                    <div>по статусу заявки</div>
-                    <select class="filter-status">
+                <li class="form-group">
+                    <label>по статусу заявки</label>
+                    <select class="filter-status form-control">
                         <option value="all">Все заявки</option>
                         {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
                         {% for key, status in statuses %}
@@ -96,9 +99,9 @@
                         {% endfor %}
                     </select>
                 </li>
-                <li>
-                    <div>по дому и улице</div>
-                    <select class="filter-select-street">
+                <li class="form-group">
+                    <label>по дому и улице</label>
+                    <select class="filter-select-street form-control">
                         <option value="all">Все улицы</option>
                         {% if component.streets != false %}
                             {% for street in component.streets %}
@@ -107,31 +110,31 @@
                         {% endif %}
                     </select>
                     {% if houses is not empty %}
-                        <select class="filter-select-house">
+                        <select class="filter-select-house form-control">
                             <option value="all">Выберите дом...</option>
                             {% for house in houses %}
                             <option value="{{ house.get_id() }}"{% if house.get_id() == filters.house %} selected{% endif %}>дом №{{ house.get_number() }}</option>
                             {% endfor %}
                         </select>
                     {% else %}
-                        <select class="filter-select-house" disabled="disabled">
+                        <select class="filter-select-house form-control" disabled="disabled">
                             <option>Ожидание...</option>
                         </select>
                     {% endif %}
                     
                 </li>
-                <li>
-                    <div>по участку</div>
-                    <select class="filter-select-department">
+                <li class="form-group">
+                    <label>по участку</label>
+                    <select class="filter-select-department form-control">
                         <option value="all">Все участки</option>
                     {% for department in component.departments %}
                         <option value="{{ department.get_id() }}"{% if department.get_id() == filters.department[0] %} selected{% endif %}>{{ department.get_name() }}</option>
                     {% endfor %}
                     </select>
                 </li>
-                <li>
-                    <div>по типу работ</div>
-                    <select class="filter-select-worktype">
+                <li class="form-group">
+                    <label>по типу работ</label>
+                    <select class="filter-select-worktype form-control">
                         <option value="all">Все работы</option>
                     {% for query_work_type in component.query_work_types %}
                         <option value="{{ query_work_type.get_id() }}"{% if query_work_type.get_id() == filters.work_type %} selected{% endif %}>{{ query_work_type.get_name() }}</option>
@@ -140,11 +143,12 @@
                 </li>
             </ul>
         </div>
-        <div class="span9">
-            <ul class="unstyled">
+        <div class="col-xs-12 col-sm-9 col-lg-9">
+            <ul class="list-unstyled">
                 <li>Отчет №1 
                     <div>
-                        <a href="/report/report_query_one" target="_blank">Просмотреть</a> <a href="/report/report_query_one_xls" target="_blank">Выгрузить</a>
+                        <a class="btn btn-link" href="/report/report_query_one" target="_blank">Просмотреть</a>
+                        <a class="btn btn-link" href="/report/report_query_one_xls" target="_blank">Выгрузить</a>
                     </div>
                 </li>
             </ul>

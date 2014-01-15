@@ -11,7 +11,7 @@
 {% endblock js %}
 {% block html %}
 <h3>Импорт дома</h3>
-<p class="alert">Для создания дома в файле должны быть указаны название улицы и название города.</p>
+<p class="alert alert-warning">Для создания дома в файле должны быть указаны название улицы и название города.</p>
 <div>
     <input id="fileupload" type="file" name="file" data-url="/import/analize_house" multiple>
 </div>

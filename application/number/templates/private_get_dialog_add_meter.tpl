@@ -2,13 +2,13 @@
 {% set number = component.number %}
 {% block title %}Диалог добавления счетчика{% endblock title %}
 {% block dialog %}
-	<select class="dialog-select-service">
+	<select class="dialog-select-service form-control">
 		<option value="">Выберите услугу</option>
 		<option value="cold_water">Холодное водоснабжение</option>
 		<option value="hot_water">Горячее водоснабжение</option>
 		<option value="electrical">Электроэнергия</option>
 	</select>
-	<select class="dialog-select-meters" style="display:block" disabled>
+	<select class="dialog-select-meters form-control" disabled>
 		<option>Ожидание...</option>
 	</select>
 {% endblock dialog %}

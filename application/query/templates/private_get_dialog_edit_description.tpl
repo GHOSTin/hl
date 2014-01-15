@@ -13,16 +13,16 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Описания заявки</h3>
     </div>	
 	<div class="modal-body">
-		<textarea class="dialog-description" style="width:500px; height:100px;">{{ query.get_description() }}</textarea>
+		<textarea class="dialog-description form-control" rows="5">{{ query.get_description() }}</textarea>
 	</div>
 	<div class="modal-footer">
-		<div class="btn update_description">Сохранить</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary update_description">Сохранить</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

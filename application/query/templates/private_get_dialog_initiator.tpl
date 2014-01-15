@@ -37,19 +37,23 @@
 {% endblock js %}
 {% block html %}
 	{% if component.streets != false %}
-		<select style="display:block" class="dialog-select-street">
-			<option value="0">Выберите улицу</option>
-			{% for street in component.streets %}
-				<option value="{{ street.get_id() }}">{{ street.get_name() }}</option>
-			{% endfor %}
-		</select>
-		<select class="dialog-select-house" style="display:block" disabled="disabled">
-			<option value="0">Ожидание...</option>
-		</select>
-		{% if request.GET('value') == 'number' %}
-			<select class="dialog-select-number" style="display:block" disabled="disabled">
-				<option value="0">Ожидание...</option>
-			</select>
-		{% endif %}
+        <div class="row">
+            <div class="col-lg-5">
+                <select style="display:block" class="form-control dialog-select-street">
+                    <option value="0">Выберите улицу</option>
+                    {% for street in component.streets %}
+                        <option value="{{street.get_id()}}">{{street.get_name()}}</option>
+                    {% endfor %}
+                </select>
+                <select class="form-control dialog-select-house" style="display:block" disabled="disabled">
+                    <option value="0">Ожидание...</option>
+                </select>
+                {% if request.GET('value') == 'number' %}
+                    <select class="form-control dialog-select-number" style="display:block" disabled="disabled">
+                        <option value="0">Ожидание...</option>
+                    </select>
+                {% endif %}
+            </div>
+        </div>
 	{% endif %}
 {% endblock html %}

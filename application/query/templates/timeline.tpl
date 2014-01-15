@@ -12,12 +12,12 @@
     {% endif %}
     {{ y }}
 </div>
-<div class="btn-group pagination" data-toggle="buttons-radio">
-    <a class="timeline-control btn get_timeline" act="previous">
-        <i class="icon-chevron-left"></i>
+<div class="btn-group" data-toggle="buttons">
+    <a class="timeline-control btn btn-primary get_timeline" act="previous">
+        <i class="glyphicon glyphicon-chevron-left"></i>
     </a>
     {% for i in range(1, current_day_time|date('t')) %}
-        <a class="timeline-day btn
+        <a class="timeline-day btn btn-primary
             {% if day|date('U') == current_day_time %}
                 active
             {% endif %}
@@ -25,6 +25,7 @@
                 btn-info
             {% endif %}
             " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">
+            <input type="radio">
             <div>{{ i }}</div>
             <div class="timeline-day-wday">
                 {% set w = day|date('w') %}
@@ -41,7 +42,7 @@
         </a>
         {% set day = day|date_modify('+1 day') %}
     {% endfor %}
-    <a class="timeline-control btn get_timeline" act="next">
-        <i class="icon-chevron-right"></i>
+    <a class="timeline-control btn btn-primary get_timeline" act="next">
+        <i class="glyphicon glyphicon-chevron-right"></i>
     </a>
 </div>

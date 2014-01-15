@@ -11,7 +11,7 @@
 	{% endif %}
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_meter_status">Изменить</div>
+	<div class="btn btn-primary update_meter_status">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет период поверки счетчика привязанного к лицевому счету

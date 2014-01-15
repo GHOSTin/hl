@@ -4,7 +4,7 @@
 	Вы действительно хотите удалить профиль?
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn delete_profile">Удалить</div>
+	<div class="btn btn-primary delete_profile">Удалить</div>
 {% endblock buttons %}
 {% block script %}
 	// Удаляет профиль

@@ -3,7 +3,7 @@
 {% set meter = component.meter %}
 {% block title %}Диалог редактирования серийного номера счетчика{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-serial" value="{{ meter.get_serial() }}">	
+	<input type="text" class="dialog-input-serial form-control" value="{{ meter.get_serial() }}">	
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn update_serial">Изменить</div>

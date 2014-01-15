@@ -12,7 +12,7 @@
 	</select>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_period">Изменить</div>
+	<div class="btn btn-primary update_period">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет период поверки счетчика привязанного к лицевому счету

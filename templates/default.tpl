@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
     <meta name="viewport" content="width=device-width, maximum-scale = 1, minimum-scale = 1">
 	<link rel="stylesheet" href="/templates/default/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="/templates/default/css/bootstrap-responsive.min.css" >
+    <link rel="stylesheet" href="/templates/default/css/bootstrap-glyphicons.css" >
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     <title>MSHC2</title>
     <link rel="stylesheet" href="/templates/default/css/libs.css" >
@@ -14,21 +14,23 @@
 <body>
     <div id="wrap">
         {% if anonymous == false %}
-            <header>
+            <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
             {% autoescape false %}
                     {{menu}}
             {% endautoescape %}
             </header>
         {% endif %}
-    	<div class="container-fluid">
-            <section class="main row-fluid">{% block component %}{% endblock component %}</section>
+    	<div class="container">
+            <section class="row">
+                <section class="main col-xs-12">{% block component %}{% endblock component %}</section>
+            </section>
             <section id="push"></section>
         </div>
     </div>
     <footer>
-        <div class="container-fluid">
-            <p class="muted credit">
-                 Версия {{ version }}. Разработка компании <a href="http://mlsco.ru">mlsco</a>. {% if user is not empty %}<a class="get_dialog_error_message pull-right btn btn-danger fixed-right">Сообщить об ошибке.</a>{% endif %}
+        <div class="container">
+            <p class="col-xs-12 muted credit">
+                Версия {{ version }}. Разработка компании <a href="http://mlsco.ru">mlsco</a>. {% if user is not empty %}<a class="get_dialog_error_message pull-right btn btn-danger fixed-right">Сообщить об ошибке.</a>{% endif %}
             </p>
         </div>
     </footer>        

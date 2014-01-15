@@ -1,18 +1,19 @@
 {% extends "default.tpl" %}
 {% set streets = component.streets %}
 {% block component %}
-    <div class="navbar span12">
-        <div class="navbar-inner">
-            <form class="navbar-search pull-left" id="filter-numbers">
-                <input type="text" id="search-number" filter="streets" autocomplete="off">
-            </form>
-        </div>
+    <div class="navbar navbar-default col-xs-12">
+        <form class="navbar-form pull-left col-xs-12" id="filter-numbers">
+            <span style="display:inline-block">
+                <input type="text" class="form-control" id="search-number" filter="streets" autocomplete="off">
+            </span>
+        </form>
     </div>
     {% include '@number/build_street_titles.tpl' %}
 {% endblock component %}
 {% block javascript %}
     <script src="/?js=component.js&p=number"></script>
     <script src="/templates/default/js/bootstrap-datepicker.js"></script>
+    <script src="/templates/default/js/typeahead.min.js"></script>
 {% endblock javascript %}
 {% block css %}
     <link rel="stylesheet" href="/?css=component.css&p=number" >

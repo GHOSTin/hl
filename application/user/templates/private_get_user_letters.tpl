@@ -12,7 +12,7 @@
     </div>
     <div class="_letter-content">
         <div>
-            <a class="get_dialog_create_user">Создать нового пользователя</a>
+            <a class="btn btn-link get_dialog_create_user">Создать нового пользователя</a>
         </div>
     </div>
 {% endblock html %}

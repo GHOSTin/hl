@@ -1,11 +1,9 @@
 form.well {
-    padding: 10px 19px;
+    padding: 10px;
 }
 
 #chat {
-    padding: 10px;
     z-index:101;
-    width:600px;
     height: 500px;
     background:white;
     border: 1px solid rgba(0,0,0,.2);

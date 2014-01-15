@@ -12,7 +12,7 @@
     </div>
     <div class="_letter_content">
         <div>
-            <a class="get_dialog_create_group">Создать группу</a>
+            <a class="btn btn-link get_dialog_create_group">Создать группу</a>
         </div>
     </div>
 {% endblock html %}

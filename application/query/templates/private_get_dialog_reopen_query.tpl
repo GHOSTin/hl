@@ -12,7 +12,7 @@
 	});
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Диалог переоткрытия заявки</h3>
     </div>	
@@ -20,8 +20,8 @@
 		Переоткрыть заявку?
 	</div>
 	<div class="modal-footer">
-		<div class="btn reopen_query">Переоткрыть</div>
-		<div class="btn close_dialog">Отмена</div>
+		<div class="btn btn-primary reopen_query">Переоткрыть</div>
+		<div class="btn btn-default close_dialog">Отмена</div>
 	</div>	  
 </div>
 {% endblock html %}

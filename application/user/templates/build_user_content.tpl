@@ -1,4 +1,4 @@
-<ul class="unstyled">
+<ul class="list-unstyled">
     <li>ID: {{ user.get_id() }}</li>
     <li>Фамилия: {{ user.get_lastname() }} <a class="get_dialog_edit_fio">изменить</a></li>
     <li>Имя: {{ user.get_firstname() }} <a class="get_dialog_edit_fio">изменить</a></li>

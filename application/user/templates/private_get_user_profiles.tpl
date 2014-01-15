@@ -6,10 +6,10 @@
 {% endblock js %}
 {% block html %}
     <div>
-        <a class="get_dialog_add_profile">Добавить профиль</a>
+        <a class="btn btn-link get_dialog_add_profile">Добавить профиль</a>
     </div>
     {% if companies is not empty %}
-        <ul class="unstyled user-profiles">
+        <ul class="list-unstyled user-profiles">
         {% for company in companies %}
             <li class="company" company="{{ company.get_id() }}">
                 <div class="get_company_content">{{ company.get_name() }}</div>

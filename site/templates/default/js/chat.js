@@ -32,7 +32,7 @@ window.userList = {
             var user = this.list[id];
             var online_status = ((user.online) ? 'online' : 'offline');
             var li = '';
-            li += '<li class="' + online_status + '"><span class="status">&bull;</span><a href="#chat-user_' + user.id + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
+            li += '<li class="' + online_status + '"><a href="#chat-user_' + user.id + '" user_id="' + user.id + '" data-toggle="tab">' + user.name;
             if (user.hasUnread())
                 li += '<span class="unread_count label label-info pull-right">+' + user.unreadCount() + '</span>';
             li += '</a></li>';
@@ -54,17 +54,17 @@ window.userList = {
         for (var i in this.list) {
             var user = this.list[i];
                 var pane = '';
-                pane += '<div class="chat tab-pane fade user" id="chat-user_' + user.id + '">';
-                pane += '<h6><span class="status">&bull;</span>' + user.name;
-                pane += '<button type="button" class="chat-history btn btn-mini pull-right" data-toggle="button">';
-                pane += '<i class="icon-book"></i>';
-                pane += '</button></h6>';
-                pane += '<div class="chat-feed">';
+                pane += '<div class="chat tab-pane fade user panel panel-default" id="chat-user_' + user.id + '">';
+                pane += '<h4 class="panel-heading">' + user.name;
+                pane += '<button type="button" class="chat-history btn btn-mini" data-toggle="button">';
+                pane += '<i class="glyphicon glyphicon-book"></i>';
+                pane += '</button></h4>';
+                pane += '<div class="chat-feed panel-body">';
                 pane += '<ul id="chat-dates"></ul>';
                 pane += '<ul id="chat-history" style="display:none;"></ul>';
                 pane += '</div>';
-                pane += '<form class="well message" data-user-id="' + user.id + '">';
-                pane += '<textarea name="message" placeholder="Сообщение"></textarea>';
+                pane += '<form class="panel-footer message" data-user-id="' + user.id + '"><div class="form-group">';
+                pane += '<textarea name="message" placeholder="Сообщение" class="form-control"></textarea></div>';
 //                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
                 pane += '<button class="btn btn-primary" type="submit">Отправить</button>';
                 pane += '<ul class="attachments nav nav-tabs nav-stacked"></ul>';
@@ -313,8 +313,8 @@ User.prototype.addHistory_date = function (history) {
  */
 User.prototype.markAllAsRead = function () {
     if (this.previousMessagesLoaded && this.hasUnread()) {
-        chat.json.send({'type':'get_unread_count'});
         chat.json.send({'type':'mark_as_read', 'data':{'mids':this.unreadMessagesIds().join(','), 'uid':this.id}});
+        chat.json.send({'type':'get_unread_count'});
     }
 };
 /**

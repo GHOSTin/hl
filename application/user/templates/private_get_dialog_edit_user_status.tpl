@@ -10,9 +10,9 @@
 {% endblock dialog %}
 {% block buttons %}
 	{% if user.get_status() == 'false' %}
-		<div class="btn update_user_status">Активировать</div>
+		<div class="btn btn-success update_user_status">Активировать</div>
 	{% elseif user.get_status() == 'true' %}
-		<div class="btn update_user_status">Заблокировать</div>
+		<div class="btn btn-danger update_user_status">Заблокировать</div>
 	{% endif %}
 {% endblock buttons %}
 {% block script %}

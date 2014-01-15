@@ -2,10 +2,10 @@
 {% set number = component.number %}
 {% block title %}Диалог редактирования сотового телефона владельца{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-cellphone" value="{{ number.get_cellphone() }}">
+	<input type="text" class="dialog-input-cellphone form-control" value="{{ number.get_cellphone() }}">
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_number_cellphone">Изменить</div>
+	<div class="btn btn-primary update_number_cellphone">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет телефон владельца лицевого счета

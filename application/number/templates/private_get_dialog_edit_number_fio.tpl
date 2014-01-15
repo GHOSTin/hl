@@ -2,10 +2,10 @@
 {% set number = component.number %}
 {% block title %}Диалог редактирования ФИО владельца{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-fio" value="{{ number.get_fio() }}">
+	<input type="text" class="dialog-input-fio form-control" value="{{ number.get_fio() }}">
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_number_fio">Изменить</div>
+	<div class="btn btn-primary update_number_fio">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Изменяет ФИО владельца лицевого счета

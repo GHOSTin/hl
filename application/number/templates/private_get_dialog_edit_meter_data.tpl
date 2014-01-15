@@ -35,23 +35,23 @@
     });
 {% endblock js %}
 {% block html %}
-<div class="modal">
+<div class="modal-content">
     <div class="modal-header">
         <h3>Данный счетчика за {{ months[time|date("m") - 1] }} {{ time|date("Y") }}</h3>
     </div>
     <div class="modal-body">
         <div class="row">
             {% for i in 1..meter.get_rates() %}
-                <div class="span2">
+                <div class="col-xs-2">
                     <div>{{ i }} тариф</div>
-                    <input type="text" class="dialog-tarif input-small" value="{{ current.get_values()[i - 1] }}" maxlength="{{ meter.get_capacity() }}" min="{{ data.value[i - 1] }}">
+                    <input type="text" class="dialog-tarif form-control" value="{{ current.get_values()[i - 1] }}" maxlength="{{ meter.get_capacity() }}" min="{{ data.value[i - 1] }}">
                     {{ data.value[i - 1] }}
                 </div>
             {% endfor %}
         </div>
         <div>
             <label>Время передачи показания</label>
-            <input type="text" class="dialog-input-timestamp" value="
+            <input type="text" class="dialog-input-timestamp form-control" value="
             {% if current.get_timestamp() < 1 %}
                 {{ "now"|date('d.m.Y') }}
             {% else %}
@@ -61,7 +61,7 @@
         </div>
         <div>
             <label>Способ передачи показания</label>
-            <select class="dialog-select-way">
+            <select class="dialog-select-way  form-control">
                 {% for key, value in ways %}
                 <option value="{{ key }}" {% if current.get_way() == key %} selected{% endif %}>{{ value }}</option>
                 {% endfor %}
@@ -69,7 +69,7 @@
         </div>
         <div>
             <label>Комментарий</label>
-            <textarea style="width:90%" class="dialog-textarea-comment">{{ current.get_comment() }}</textarea>
+            <textarea class="dialog-textarea-comment form-control" rows="5">{{ current.get_comment() }}</textarea>
         </div>
     </div>
     <div class="modal-footer">
