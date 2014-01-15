@@ -113,7 +113,7 @@ require_once ROOT.'/libs/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
 $pimple['twig'] = $pimple->share(function($pimple){
-	$options = ['cache' => ROOT.application_configuration::twig_cache, 'auto_reload' => application_configuration::twig_reload_template];
+	$options = [];
 	$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
 	return new Twig_Environment($loader, $options);
 });

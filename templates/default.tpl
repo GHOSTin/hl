@@ -13,7 +13,7 @@
 </head>
 <body>
     <div id="wrap">
-        {% if anonymous == false %}
+        {% if user is not empty %}
             <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
             {% autoescape false %}
                     {{menu}}

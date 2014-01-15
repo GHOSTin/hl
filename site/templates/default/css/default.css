@@ -41,7 +41,7 @@ footer, #push{
 
 .fixed-right {
     position: fixed;
-    top: 350px;
+    bottom: 100px;
     right: -70px;
     border-radius: 4px 4px 0 0;
     -webkit-transform: rotate(-90deg); /* Chrome y Safari */
