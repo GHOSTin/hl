@@ -7,7 +7,7 @@
     <div class="panel-body">
         <ul>
         {% for meter in enable_meters %}
-            <li class="meter" meter="{{ meter.get_meter_id() }}" serial="{{ meter.get_serial() }}">
+            <li class="meter" meter="{{ meter.get_id() }}" serial="{{ meter.get_serial() }}">
                 {% set period = meter.get_period() %}
                 <p class="get_meter_data">{{ services[meter.get_service()] }} {{ meter.get_name() }} №{{ meter.get_serial() }} ({{ meter.get_date_next_checking()|date('d.m.Y') }})</p>
             </li>
@@ -22,7 +22,7 @@
     <div class="panel-body">
         <ul>
         {% for meter in disable_meters %}
-            <li class="meter" meter="{{ meter.get_meter_id() }}" serial="{{ meter.get_serial() }}">
+            <li class="meter" meter="{{ meter.get_id() }}" serial="{{ meter.get_serial() }}">
                 {% set period = meter.get_period() %}
                 <p class="get_meter_data">{{ services[meter.get_service()] }} {{ meter.get_name() }} №{{ meter.get_serial() }} ({{ meter.get_date_next_checking()|date('d.m.Y') }})</p>
             </li>
