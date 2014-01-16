@@ -1,4 +1,5 @@
 <?php
+
 class model_street2house{
 
   private $street;

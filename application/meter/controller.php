@@ -1,4 +1,5 @@
 <?php
+
 class controller_meter{
 
   public static function private_get_meter_content(model_request $request){

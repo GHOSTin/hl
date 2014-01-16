@@ -93,7 +93,7 @@ class di{
 		return self::$instance;
 	}
 
-	public function get($key){
+	public static function get($key){
 		$pimple = self::get_instance();
 		return $pimple[$key];
 	}

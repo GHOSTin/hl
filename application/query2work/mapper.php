@@ -3,6 +3,9 @@ class mapper_query2work{
 
   private $company;
   private $query;
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере соотношения заявки и работы.';
 
   private static $many = "SELECT `query2work`.`opentime` as `time_open`,
     `query2work`.`closetime` as `time_close`, `query2work`.`value`,
@@ -26,12 +29,12 @@ class mapper_query2work{
     $this->query = $query;
     data_company::verify_id($this->company->get_id());
     data_query::verify_id($this->query->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
-    $work = new data_work();
-    $work->set_id($row['id']);
-    $work->set_name($row['name']);
+    $factory = new factory_work();
+    $work = $factory->create($row);
     $q2w = new data_query2work($work);
     $q2w->set_time_open($row['time_open']);
     $q2w->set_time_close($row['time_close']);
@@ -40,34 +43,33 @@ class mapper_query2work{
   }
 
   public function delete(data_query2work $work){
-    $sql = new sql();
-    $sql->query(self::$delete);
-    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':work_id', $work->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Ошибка при удалении работы из заявки.');
+    $stmt = $this->pdo->prepare(self::$delete);
+    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':work_id', $work->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $query;
   }
 
   public function insert(data_query2work $work){
-    $sql = new sql();
-    $sql->query(self::$indert);
-    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':work_id', $work->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':time_open', $work->get_time_open(), PDO::PARAM_INT);
-    $sql->bind(':time_close', $work->get_time_close(), PDO::PARAM_INT);
-    $sql->execute('Ошибка при добавлении работы.');
+    $stmt = $this->pdo->prepare(self::$indert);
+    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':work_id', $work->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_open', $work->get_time_open(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_close', $work->get_time_close(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $this->query;
   }
 
   private function get_works(){
-    $sql = new sql();
-    $sql->query(self::$many);
-    $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при запросе работ.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$many);
+    $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $works = [];
     while($row = $stmt->fetch())
       $works[] = $this->create_object($row);

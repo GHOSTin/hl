@@ -1,14 +1,17 @@
 <?php
 class mapper_house2flat{
-  
+
   private $company;
   private $house;
+  private $pdo;
 
-  private static $sql_get_flats = "SELECT `id`, `house_id`, `status`,
-    `flatnumber` FROM `flats` WHERE `house_id` = :house_id
+  private static $alert = 'Проблема в мапере ассоциации дома и квартиры.';
+
+  private static $get_flats = "SELECT `id`, `house_id`, `status`,
+    `flatnumber` as `number` FROM `flats` WHERE `house_id` = :house_id
     ORDER BY (`flatnumber` + 0)";
 
-  private static $sql_insert = "INSERT `flats` (`id`, `company_id`, `house_id`,
+  private static $insert = "INSERT `flats` (`id`, `company_id`, `house_id`,
     `status`, `flatnumber`) VALUES (:id, :company_id,
     :house_id, :status, :number)";
 
@@ -19,35 +22,28 @@ class mapper_house2flat{
     $this->house = $house;
     data_company::verify_id($this->company->get_id());
     data_house::verify_id($this->house->get_id());
-  }
-
-  public function create_object(array $row){
-    $flat = new data_flat();
-    $flat->set_id($row['id']);
-    $flat->set_number($row['flatnumber']);
-    return $flat;
+    $this->pdo = di::get('pdo');
   }
 
   public function get_flats(){
-    $sql = new sql();
-    $sql->query(self::$sql_get_flats);
-    $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблемы при выборке квартир.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$get_flats);
+    $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $flats = [];
+    $factory = new factory_flat();
     while($row = $stmt->fetch())
-      $flats[] = $this->create_object($row);
+      $flats[] = $factory->create($row);
     return $flats;
-  } 
+  }
 
   public function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
-    $sql->execute('Проблема при опредении следующего flat_id.');
-    if($sql->count() !== 1)
-      throw new e_model('Проблема при опредении следующего flat_id.');
-    $flat_id = (int) $sql->row()['max_flat_id'] + 1;
-    $sql->close();
+    $stmt = $this->pdo->prepare(self::$id);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    if($stmt->rowCount() !== 1)
+      throw new e_model(self::$alert);
+    $flat_id = (int) $stmt->fetch()['max_flat_id'] + 1;
     return $flat_id;
   }
 
@@ -60,14 +56,14 @@ class mapper_house2flat{
 
   public function insert(data_flat $flat){
     $this->verify($flat);
-    $sql = new sql();
-    $sql->query(self::$sql_insert);
-    $sql->bind(':id', (int) $flat->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
-    $sql->bind(':status', (string) $flat->get_status(), PDO::PARAM_STR);
-    $sql->bind(':number', (string) $flat->get_number(), PDO::PARAM_STR);
-    $sql->execute('Проблема при добавлении квартиры.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':id', (int) $flat->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':status', (string) $flat->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':number', (string) $flat->get_number(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $flat;
   }
 

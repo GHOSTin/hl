@@ -1,13 +1,17 @@
 <?php
+
 class mapper_street2house{
 
   private $street;
+  private $pdo;
 
-  private static $houses = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+  private static $alert = 'Проблема в мапере сотношения цлиу и домов.';
+
+  private static $houses = "SELECT `id`, `company_id`, `city_id`, `street_id`,
     `department_id`, `status`, `housenumber` as `number` FROM `houses`
     WHERE `street_id` = :street_id  ORDER BY (`houses`.`housenumber` + 0)";
 
-  private static $one = "SELECT `id`, `company_id`, `city_id`, `street_id`, 
+  private static $one = "SELECT `id`, `company_id`, `city_id`, `street_id`,
     `department_id`, `status`, `housenumber` as `number`
     FROM `houses` WHERE `id` = :house_id AND `street_id` = :street_id";
 
@@ -24,6 +28,7 @@ class mapper_street2house{
   public function __construct(data_street $street){
     $this->street = $street;
     data_street::verify_id($this->street->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
@@ -38,11 +43,10 @@ class mapper_street2house{
   }
 
   private function get_houses(){
-    $sql = new sql();
-    $sql->query(self::$houses);
-    $sql->bind(':street_id', $this->street->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке домов.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$houses);
+    $stmt->bindValue(':street_id', $this->street->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $houses = [];
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch()){
@@ -59,23 +63,22 @@ class mapper_street2house{
   }
 
   public function insert(data_house $house){
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':house_id', (int) $house->get_id(), PDO::PARAM_INT);
-    $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
-    $sql->bind(':status', (string) $house->get_status(), PDO::PARAM_STR);
-    $sql->bind(':number', (string) $house->get_number(), PDO::PARAM_STR);
-    $sql->execute('Проблемы при создании нового дома.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':house_id', (int) $house->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':status', (string) $house->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':number', (string) $house->get_number(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $house;
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':house_id', (int) $id, PDO::PARAM_INT);
-    $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке домов из базы данных.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':house_id', (int) $id, PDO::PARAM_INT);
+    $stmt->bindValue(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -86,12 +89,11 @@ class mapper_street2house{
   }
 
   public function find_by_number($number){
-    $sql = new sql();
-    $sql->query(self::$one_by_number);
-    $sql->bind(':number', (string) $number, PDO::PARAM_STR);
-    $sql->bind(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке домов из базы данных.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one_by_number);
+    $stmt->bindValue(':number', (string) $number, PDO::PARAM_STR);
+    $stmt->bindValue(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -101,18 +103,13 @@ class mapper_street2house{
       throw new e_model('Неожиданное количество домов');
   }
 
-  /**
-  * Возвращает следующий для вставки идентификатор дома.
-  * @return int
-  */
   public static function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
-    $sql->execute('Проблема при опредении следующего house_id.');
-    if($sql->count() !== 1)
+    $stmt = $this->pdo->prepare(self::$id);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    if($stmt->rowCount() !== 1)
       throw new e_model('Проблема при опредении следующего house_id.');
-    $house_id = (int) $sql->row()['max_house_id'] + 1;
-    $sql->close();
+    $house_id = (int) $stmt->fetch()['max_house_id'] + 1;
     return $house_id;
   }
 }

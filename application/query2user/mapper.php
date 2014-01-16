@@ -3,6 +3,10 @@ class mapper_query2user{
 
   private $company;
   private $query;
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере соотношения заявки и пользователя.';
+
   private static $classes = ['creator', 'manager', 'performer', 'observer'];
 
   private static $all = "SELECT `query2user`.`query_id`,
@@ -26,24 +30,25 @@ class mapper_query2user{
     $this->query = $query;
     data_company::verify_id($this->company->get_id());
     data_query::verify_id($this->query->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
     $user = new data_user();
     $user->set_id($row['id']);
     $user->set_firstname($row['firstname']);
-    $user->set_middlename($row['middlename']);
+    if(!empty($row['middlename']))
+      $user->set_middlename($row['middlename']);
     $user->set_lastname($row['lastname']);
     return $user;
   }
 
   private function get_users(){
-    $sql = new sql();
-    $sql->query(self::$all);
-    $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$all);
+    $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $users = ['creator' => null, 'manager' => [],
               'observer' => [], 'performer' => []];
     while($row = $stmt->fetch()){
@@ -61,13 +66,13 @@ class mapper_query2user{
   private function insert(data_user $user, $class){
     if(!in_array($class, self::$classes, true))
       throw new e_model('Не соответсвует тип пользователя.');
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':class', $class, PDO::PARAM_STR);
-    $sql->execute('Проблема при добавлении пользователя.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':class', $class, PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 
   /**
@@ -76,13 +81,13 @@ class mapper_query2user{
   public function delete(data_user $user, $class){
     if(!in_array($class, self::$classes, true))
       throw new e_model('Не соответсвует тип пользователя.');
-    $sql = new sql();
-    $sql->query(self::$delete);
-    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':class', $class, PDO::PARAM_STR);
-    $sql->execute('Ошибка при удалении пользователя и заявки.');
+    $stmt = $this->pdo->prepare(self::$delete);
+    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':class', $class, PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $query;
   }
 
@@ -143,6 +148,6 @@ class mapper_query2user{
           throw new e_model('Создатель заявки не может быть пустым.');
         else
           $this->insert($this->query->get_creator(), 'creator');
-      return $query;
+      return $this->query;
   }
 }

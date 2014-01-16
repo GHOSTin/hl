@@ -245,11 +245,11 @@ class controller_number{
     $model->init_meters();
     $enable_meters = $disable_meters = [];
     if(!empty($number->get_meters()))
-        foreach($number->get_meters() as $meter)
-            if($meter->get_status() == 'enabled')
-                $enable_meters[] = $meter;
-            elseif($meter->get_status() == 'disabled')
-                $disable_meters[] = $meter;
+      foreach($number->get_meters() as $meter)
+        if($meter->get_status() == 'enabled')
+          $enable_meters[] = $meter;
+        elseif($meter->get_status() == 'disabled')
+          $disable_meters[] = $meter;
     self::set_param('number_content', 'meters');
     $model = new model_number($company);
     return ['number' => $model->get_number($request->GET('id')),

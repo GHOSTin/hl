@@ -1,6 +1,7 @@
 <?php
 class model_query{
 
+	private $pdo;
 	private $company;
 	private $params = [];
 	private $restrictions = [];
@@ -8,6 +9,7 @@ class model_query{
 	public function __construct(data_company $company){
 		$this->company = $company;
     data_company::verify_id($this->company->get_id());
+    $this->pdo = di::get('pdo');
 	  $profile = model_session::get_profile();
 	  if((string) $profile === 'query')
 	  	$this->restrictions = $profile->get_restrictions();
@@ -102,6 +104,18 @@ class model_query{
 			$this->set_param('work_type', null);
 	}
 
+	public function add_comment($query_id, $message){
+		$comment = new data_query2comment($_SESSION['user']);
+		$comment->set_time(time());
+		$comment->set_message($message);
+		$query = $this->get_query($query_id);
+		$mapper = new mapper_query2comment(di::get('pdo'), $this->company, $query);
+		$mapper->init_comments();
+		$query->add_comment($comment);
+		$mapper->update();
+		return $query;
+	}
+
 	/**
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
@@ -173,9 +187,8 @@ class model_query{
 	* Закрывает заявку.
 	*/
 	public function change_initiator($id, $house_id = null, $number_id = null){
-		$sql = new sql();
-		$sql->begin();
 		try{
+			$this->pdo->beginTransaction();
 			$company = model_session::get_company();
 			$query = $this->get_query($id);
 			$mapper_q2n = new mapper_query2number($company, $query);
@@ -200,12 +213,11 @@ class model_query{
 				throw new e_model('initiator wrong');
 			$mapper = new mapper_query($this->company);
 			$query = $mapper->update($query);
-			$sql->commit();
+			$this->pdo->commit();
 			return $query;
 		}catch(exception $e){
-			die($e);
-			$sql->rallback();
-			die('Проблема');
+			$this->pdo->rollBack();
+			throw new e_model('Проблема');
 		}
 	}
 
@@ -253,7 +265,7 @@ class model_query{
 	public function create_query($initiator, $id, $description, $work_type,
 										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{
-			sql::begin();
+			$this->pdo->beginTransaction();
 			$time = time();
 			$query = new data_query();
       $query->set_status('open');
@@ -298,11 +310,11 @@ class model_query{
       $query->add_manager($user);
       $query->add_observer($user);
       (new mapper_query2user($this->company, $query))->update_users();
-			sql::commit();
+			$this->pdo->commit();
 			return $query;
 		}catch(exception $e){
 			die($e->getMessage());
-			sql::rollback();
+			$this->pdo->rollBack();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
 			else
@@ -327,6 +339,11 @@ class model_query{
 
 	public function init_works(data_query $query){
 		return (new mapper_query2work($this->company, $query))->init_works();
+	}
+
+	public function init_comments(data_query $query){
+		return (new mapper_query2comment(di::get('pdo'), $this->company, $query))
+			->init_comments();
 	}
 
 	/**
@@ -410,7 +427,7 @@ class model_query{
 		$mapper = new mapper_query($this->company);
 		return $mapper->update($query);
 	}
-	
+
 	/**
 	* Обновляет тип работ.
 	*/

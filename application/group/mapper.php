@@ -2,6 +2,9 @@
 class mapper_group{
 
   private $company;
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере групп.';
 
   private static $find = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id AND `id` = :id";
@@ -24,6 +27,7 @@ class mapper_group{
   public function __construct(data_company $company){
     $this->company = $company;
     data_company::verify_id($this->company->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   private function create_object(array $row){
@@ -35,12 +39,11 @@ class mapper_group{
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$find);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке группы.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$find);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0){
       $stmt->closeCursor();
@@ -56,12 +59,11 @@ class mapper_group{
   }
 
   public function find_by_name($name){
-    $sql = new sql();
-    $sql->query(self::$find_by_name);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':name', (string) $name, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке группы.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$find_by_name);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':name', (string) $name, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0){
       $stmt->closeCursor();
@@ -85,11 +87,10 @@ class mapper_group{
   * @return array
   */
   public function get_groups(){
-    $sql = new sql();
-    $sql->query(self::$groups);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке групп.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$groups);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $groups = [];
     while($row = $stmt->fetch())
       $groups[] = $this->create_object($row);
@@ -101,37 +102,36 @@ class mapper_group{
   * @return int
   */
   public function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при опредении следующего group_id.');
-    if($sql->count() !== 1)
+    $stmt = $this->pdo->prepare(self::$id);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    if($stmt->rowCount() !== 1)
         throw new e_model('Проблема при опредении следующего group_id.');
-    $id = (int) $sql->row()['max_id'] + 1;
-    $sql->close();
+    $id = (int) $stmt->fetch()['max_id'] + 1;
     return $id;
   }
 
   public function insert(data_group $group){
     $group->verify('id', 'name', 'status', 'company_id');
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':id', (int) $group->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
-    $sql->bind(':name', (string) $group->get_name(), PDO::PARAM_STR);
-    $sql->bind(':status', (string) $group->get_status(), PDO::PARAM_STR);
-    $sql->execute('Проблемы при создании группы.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':id', (int) $group->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':name', (string) $group->get_name(), PDO::PARAM_STR);
+    $stmt->bindValue(':status', (string) $group->get_status(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $group;
   }
 
   public function update(data_group $group){
     $group->verify('id', 'name', 'status', 'company_id');
-    $sql = new sql();
-    $sql->query(self::$update);
-    $sql->bind(':id', (int) $group->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
-    $sql->bind(':name', (string) $group->get_name(), PDO::PARAM_STR);
-    $sql->execute('Проблема при изменении группы.');
+    $stmt = $this->pdo->prepare(self::$update);
+    $stmt->bindValue(':id', (int) $group->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':name', (string) $group->get_name(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $group;
   }
 }

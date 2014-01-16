@@ -1,11 +1,17 @@
 <?php
 class mapper_house{
 
+  private static $alert = 'Проблема в мапере дома';
+
   private static $one = "SELECT `houses`.`id`, `houses`.`city_id`,
     `houses`.`street_id`, `houses`.`department_id`, `houses`.`status`,
     `houses`.`housenumber`, `streets`.`name`
     FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
     AND `houses`.`street_id` = `streets`.`id`";
+
+  public function __construct(){
+    $this->pdo = di::get('pdo');
+  }
 
   public function create_object(array $row){
     $house = new data_house();
@@ -21,19 +27,16 @@ class mapper_house{
     $department->set_id($row['department_id']);
     $house->set_department($department);
     // street
-    $street = new data_street();
-    $street->set_id($row['street_id']);
-    $street->set_name($row['name']);
-    $house->set_street($street);
+    $street = ['id' => $row['street_id'], 'name' => $row['name']];
+    $house->set_street((new factory_street)->create($street));
     return $house;
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':house_id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке домов из базы данных.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':house_id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;

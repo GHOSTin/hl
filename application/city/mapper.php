@@ -1,11 +1,19 @@
 <?php
 class mapper_city{
 
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере города.';
+
   private static $one_by_name = "SELECT `id`, `status`, `name`
     FROM `cities` WHERE `name` = :name";
 
   private static $one = "SELECT `id`, `status`, `name`
     FROM `cities` WHERE `id` = :id";
+
+  public function __construct(){
+    $this->pdo = di::get('pdo');
+  }
 
   public function create_object(array $row){
     $city = new data_city();
@@ -16,11 +24,10 @@ class mapper_city{
   }
 
   public function get_city_by_name($name){
-    $sql = new sql();
-    $sql->query(self::$one_by_name);
-    $sql->bind(':name', (string) $name, PDO::PARAM_STR);
-    $sql->execute('Проблема при выборке городов.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pro->prepare(self::$one_by_name);
+    $stmt->bindValue(':name', (string) $name, PDO::PARAM_STR);
+    if(!$stmt->execute(self::$alert))
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -31,11 +38,10 @@ class mapper_city{
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке городов.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute(self::$alert))
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;

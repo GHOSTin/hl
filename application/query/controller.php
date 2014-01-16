@@ -3,7 +3,7 @@
 * Контроллер компонента заявок.
 */
 class controller_query{
-	
+
 	static $name = 'Заявки';
 	static $rules = [];
 
@@ -11,6 +11,11 @@ class controller_query{
 		return ['query' => (new model_query(model_session::get_company()))
 			->add_user($request->GET('id'), $request->GET('user_id'),
 			$request->GET('type'))];
+	}
+
+	public static function private_add_comment(model_request $request){
+		return ['query' => (new model_query(model_session::get_company()))
+			->add_comment($request->GET('query_id'), $request->GET('message'))];
 	}
 
 	public static function private_add_work(model_request $request){
@@ -104,6 +109,10 @@ class controller_query{
 		return ['queries' => $collection];
 	}
 
+	public static function private_get_dialog_add_comment(model_request $request){
+		return true;
+	}
+
 	public static function private_get_dialog_add_user(model_request $request){
 		$company = model_session::get_company();
 		return ['query' => (new model_query($company))
@@ -114,7 +123,7 @@ class controller_query{
 	public static function private_get_dialog_add_work(model_request $request){
 		return ['workgroups' => (new model_workgroup(model_session::get_company()))
 			->get_workgroups()];
-	}	
+	}
 
 	public static function private_get_dialog_create_query(
 		model_request $request){
@@ -193,7 +202,7 @@ class controller_query{
 
 	public static function private_get_dialog_remove_user(model_request $request){
 		return ['user' => (new model_user)->get_user($request->GET('user_id'))];
-	}	
+	}
 
 	public static function private_get_dialog_remove_work(model_request $request){
 		return ['work' => (new model_work(model_session::get_company()))
@@ -213,7 +222,7 @@ class controller_query{
 					'query_work_types' => $types];
 			break;
 			default:
-				throw new e_model('Проблема типа инициатора.');		
+				throw new e_model('Проблема типа инициатора.');
 		}
 	}
 
@@ -276,6 +285,14 @@ class controller_query{
 		$model = new model_query(model_session::get_company());
 		$query = $model->get_query($request->GET('id'));
 		$model->init_works($query);
+		return ['query' => $query];
+	}
+
+	public static function private_get_query_comments(model_request $request){
+		$company = model_session::get_company();
+		$model = new model_query(model_session::get_company());
+		$query = $model->get_query($request->GET('id'));
+		$model->init_comments($query);
 		return ['query' => $query];
 	}
 
@@ -410,7 +427,7 @@ class controller_query{
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
-			'streets' => model_street::get_streets($street),
+			'streets' => model_street::get_streets(),
 			'departments' => (new model_department($company))->get_departments(),
 			'query_work_types' => (new model_query_work_type($company))
 				->get_query_work_types(),

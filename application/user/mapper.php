@@ -1,6 +1,10 @@
   <?php
   class mapper_user{
 
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере пользователя.';
+
   private static $LOGIN = "SELECT `id`, `company_id`, `status`,
     `username` as `login`, `firstname`, `lastname`,
     `midlename` as `middlename`, `password`, 
@@ -27,6 +31,10 @@
     `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
     `password`, `telephone`, `cellphone` FROM `users` ORDER BY `lastname`";
 
+  public function __construct(){
+    $this->pdo = di::get('pdo');
+  }
+
   public function create_object(array $row){
     $user = new data_user();
     $user->set_id($row['id']);
@@ -43,11 +51,10 @@
   }
 
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$find);
-    $sql->bind(':id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке пользователя.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$find);
+    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -58,45 +65,34 @@
   }
 
   public function find_by_login_and_password($login, $password){
-    try{
-      $sql = new sql();
-      $sql->query(self::$LOGIN);
-      $sql->bind(':login', htmlspecialchars($login), PDO::PARAM_STR);
-      $sql->bind(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
-      $sql->execute('Проблема при авторизации');
-      $stm = $sql->get_stm();
-      if($stm->rowCount() !== 1){
-          $sql->close();
-          throw new e_model('Проблемы при авторизации.');
-      }
-      $user = $this->create_object($stm->fetch());
-      $sql->close();
-      return $user;
-    }catch(exception $e){
-        return null;
-    }
+    $stmt = $this->pdo->prepare(self::$LOGIN);
+    $stmt->bindValue(':login', htmlspecialchars($login), PDO::PARAM_STR);
+    $stmt->bindValue(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    $count = $stmt->rowCount();
+    if($count === 0)
+      return null;
+    elseif($count === 1)
+      return $this->create_object($stmt->fetch());
+    else
+      throw new e_model(self::$alert);
   }
 
   private function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$id);
-    $sql->execute('Проблема при опредении следующего user_id.');
-    if($sql->count() !== 1)
+    $stmt = $this->pdo->prepare(self::$id);
+    if(!$stmt->execute())
+      throw new e_model($alert);
+    if($stmt->rowCount() !== 1)
         throw new e_model('Проблема при опредении следующего user_id.');
-    $user_id = (int) $sql->row()['max_user_id'] + 1;
-    $sql->close();
+    $user_id = (int) $stmt->fetch()['max_user_id'] + 1;
     return $user_id;
   }
 
-  /**
-  * Возвращает пользователей
-  * @return array из data_user
-  */
   public function get_users(){
-    $sql = new sql();
-    $sql->query(self::$get_users);
-    $sql->execute('Проблема при выборке пользователей.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$get_users);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $users = [];
     while($row = $stmt->fetch())
       $users[] = $this->create_object($row);
@@ -104,44 +100,44 @@
   }
 
   public function insert(data_user $user){
-    $sql = new sql();
-    $sql->query("SELECT `id` FROM `users` WHERE `username` = :login");
-    $sql->bind(':login', $user->get_login(), PDO::PARAM_STR);
-    $sql->execute("Ошибка при поиске идентичного логина.");
-    if($sql->count() !== 0)
+    $stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `username` = :login");
+    $stmt->bindValue(':login', $user->get_login(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    if($stmt->rowCount() !== 0)
         throw new e_model('Пользователь с таким логином уже существует.');
     $user->set_id($this->get_insert_id());
     $user->verify('firstname', 'lastname', 'middlename', 'login', 'status');
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':user_id', $user->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', 2, PDO::PARAM_INT);
-    $sql->bind(':status', $user->get_status(), PDO::PARAM_STR);
-    $sql->bind(':login', $user->get_login(), PDO::PARAM_STR);
-    $sql->bind(':firstname', $user->get_firstname(), PDO::PARAM_STR);
-    $sql->bind(':lastname', $user->get_lastname(), PDO::PARAM_STR);
-    $sql->bind(':middlename', $user->get_middlename(), PDO::PARAM_STR);
-    $sql->bind(':password', $user->get_hash(), PDO::PARAM_STR);
-    $sql->bind(':telephone', $user->get_telephone(), PDO::PARAM_STR);
-    $sql->bind(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
-    $sql->execute('Проблемы при создании пользователя.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', 2, PDO::PARAM_INT);
+    $stmt->bindValue(':status', $user->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':login', $user->get_login(), PDO::PARAM_STR);
+    $stmt->bindValue(':firstname', $user->get_firstname(), PDO::PARAM_STR);
+    $stmt->bindValue(':lastname', $user->get_lastname(), PDO::PARAM_STR);
+    $stmt->bindValue(':middlename', $user->get_middlename(), PDO::PARAM_STR);
+    $stmt->bindValue(':password', $user->get_hash(), PDO::PARAM_STR);
+    $stmt->bindValue(':telephone', $user->get_telephone(), PDO::PARAM_STR);
+    $stmt->bindValue(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
+    if($stmt->execute())
+      throw new e_model(self::$alert);
     return $user;
   }
 
   public function update(data_user $user){
     // $user->verify('id', 'firstname', 'middlename', 'lastname', 'status',
     //   'login', 'telephone');
-    $sql = new sql();
-    $sql->query(self::$update);
-    $sql->bind(':firstname', $user->get_firstname(), PDO::PARAM_STR);
-    $sql->bind(':lastname', $user->get_lastname(), PDO::PARAM_STR);
-    $sql->bind(':middlename', $user->get_middlename(), PDO::PARAM_STR);
-    $sql->bind(':status', $user->get_status(), PDO::PARAM_STR);
-    $sql->bind(':login', $user->get_login(), PDO::PARAM_STR);
-    $sql->bind(':telephone', $user->get_telephone(), PDO::PARAM_STR);
-    $sql->bind(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
-    $sql->bind(':password', $user->get_hash(), PDO::PARAM_STR);
-    $sql->bind(':id', $user->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблемы при обвнолении записи пользователя.');
+    $stmt = $this->pdo->prepare(self::$update);
+    $stmt->bindValue(':firstname', $user->get_firstname(), PDO::PARAM_STR);
+    $stmt->bindValue(':lastname', $user->get_lastname(), PDO::PARAM_STR);
+    $stmt->bindValue(':middlename', $user->get_middlename(), PDO::PARAM_STR);
+    $stmt->bindValue(':status', $user->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':login', $user->get_login(), PDO::PARAM_STR);
+    $stmt->bindValue(':telephone', $user->get_telephone(), PDO::PARAM_STR);
+    $stmt->bindValue(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
+    $stmt->bindValue(':password', $user->get_hash(), PDO::PARAM_STR);
+    $stmt->bindValue(':id', $user->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 }

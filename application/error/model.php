@@ -15,7 +15,7 @@ class model_error{
     $error->set_text($text);
     $error->set_user(model_session::get_user());
     $error->set_time(time());
-    return (new mapper_error(db::get_handler()))->insert($error);
+    return (new mapper_error(di::get('pdo')))->insert($error);
   }
 
   public function get_errors(){

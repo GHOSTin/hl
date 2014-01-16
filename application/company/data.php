@@ -8,8 +8,8 @@ class data_company{
   public static $statuses = ['true', 'false'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_company), true))
-      throw new e_model('Нет доступного метода.');
+    if(!in_array($method, get_class_methods('verify_company'), true))
+      throw new BadMethodCallException();
     return verify_company::$method($args[0]);
   }
 

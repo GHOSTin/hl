@@ -1,7 +1,5 @@
 <?php
-/*
-* Связь с таблицей `meter2data`.
-*/
+
 final class data_meter2data extends data_object{
 
   private $time;

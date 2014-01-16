@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     <title>MSHC2</title>
     <link rel="stylesheet" href="/templates/default/css/libs.css" >
-    <link rel="stylesheet" href="/?css=component.css&p={{ file_prefix }}" >
     {% block css %}{% endblock css %}
 </head>
 <body>
@@ -29,7 +28,7 @@
     <footer>
         <div class="container-fluid">
             <p class="muted credit">
-                 Версия {{ version }}. Разработка компании <a href="http://mlsco.ru">mlsco</a>. <a class="get_dialog_error_message" style="padding-left:300px">Сообщить об ошибке.</a>
+                 Версия {{ version }}. Разработка компании <a href="http://mlsco.ru">mlsco</a>. {% if user is not empty %}<a class="get_dialog_error_message pull-right btn btn-danger fixed-bottom">Сообщить об ошибке.</a>{% endif %}
             </p>
         </div>
     </footer>        
@@ -41,7 +40,6 @@
 	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>
 	    <script src="/templates/default/js/notification-center.js"></script>
         <script src="/templates/default/js/chat.js"></script>
-        <script src="/?js=component.js&p={{ file_prefix }}"></script>
     {% endif %}
 	<script src="/templates/default/js/default.js"></script>
 	

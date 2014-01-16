@@ -1,6 +1,10 @@
 <?php
 class mapper_processing_center{
 
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере процессинговых центров.';
+
   private static $all = "SELECT `id`, `name`
     FROM `processing_centers` ORDER BY `name`";
 
@@ -16,6 +20,11 @@ class mapper_processing_center{
   private static $insert_id = "SELECT MAX(`id`) as `max_id`
     FROM `processing_centers`";
 
+
+  public function __construct(){
+    $this->pdo = di::get('pdo');
+  }
+
   public function create_object(array $row){
     $center = new data_processing_center();
     $center->set_id($row['id']);
@@ -25,26 +34,21 @@ class mapper_processing_center{
 
   public function insert(data_processing_center $center){
     $this->verify($center);
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':id', (int) $center->get_id(), PDO::PARAM_INT);
-    $sql->bind(':name', (string) $center->get_name(), PDO::PARAM_STR);
-    $sql->execute('Проблемы при создании процессингового центра.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':id', (int) $center->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':name', (string) $center->get_name(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $center;
   }
 
-  /**
-  * Возвращает следующий для вставки processing_center_id.
-  * @return int
-  */
   public function get_insert_id(){
-    $sql = new sql();
-    $sql->query(self::$insert_id);
-    $sql->execute('Проблема при опредении следующего processing_center_id.');
-    if($sql->count() !== 1)
-        throw new e_model('Проблема при опредении следующего processing_center_id.');
-    $user_id = (int) $sql->row()['max_id'] + 1;
-    $sql->close();
+    $stmt = $this->pdo->prepare(self::$insert_id);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
+    if($stmt->rowCount() !== 1)
+        throw new e_model(self::$alert);
+    $user_id = (int) $stmt->fetch()['max_id'] + 1;
     return $user_id;
   }
 
@@ -53,11 +57,10 @@ class mapper_processing_center{
   * @return list object data_processing_center
   */
   public function find($id){
-    $sql = new sql();
-    $sql->query(self::$one);
-    $sql->bind(':id', (int) $id, PDO::PARAM_INT);
-    $sql->execute('Проблема при выборке расчетных центров.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$one);
+    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
@@ -72,10 +75,9 @@ class mapper_processing_center{
   * @return list object data_processing_center
   */
   public function get_processing_centers(){
-    $sql = new sql();
-    $sql->query(self::$all);
-    $sql->execute('Проблема при выборке расчетных центров.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$all);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $centers = [];
     while($row = $stmt->fetch())
       $centers[] = $this->create_object($row);
@@ -84,11 +86,11 @@ class mapper_processing_center{
 
   public function update(data_processing_center $center){
     $this->verify($center);
-    $sql = new sql();
-    $sql->query(self::$update);
-    $sql->bind(':id', (int) $center->get_id(), PDO::PARAM_INT);
-    $sql->bind(':name', (string) $center->get_name(), PDO::PARAM_STR);
-    $sql->execute('Проблемы при переименовании процессингового центра.');
+    $stmt = $this->pdo->prepare(self::$update);
+    $stmt->bindValue(':id', (int) $center->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':name', (string) $center->get_name(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $center;
   }
 

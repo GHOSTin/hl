@@ -9,8 +9,8 @@ class data_workgroup extends data_object{
   public static $statuses = ['active', 'deactive'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_workgroup), true))
-      throw new e_model('Нет доступного метода.');
+    if(!in_array($method, get_class_methods('verify_workgroup'), true))
+      throw new BadMethodCallException();
     return verify_workgroup::$method($args[0]);
   }
 

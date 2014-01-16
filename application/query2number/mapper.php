@@ -3,6 +3,9 @@ class mapper_query2number{
 
   private $company;
   private $query;
+  private $pdo;
+
+  private static $alert = 'Проблема в мапере соотношения заявки и лицевых счетов.';
 
   private static $all = "SELECT `query2number`.* , `numbers`.`number`,
     `numbers`.`fio`, `flats`.`flatnumber`
@@ -26,6 +29,7 @@ class mapper_query2number{
     $this->query = $query;
     data_company::verify_id($this->company->get_id());
     data_query::verify_id($this->query->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
@@ -41,33 +45,32 @@ class mapper_query2number{
 
   private function delete(data_number $number){
     data_number::verify_id($number->get_id());
-    $sql = new sql();
-    $sql->query(self::$delete);
-    $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
-    $sql->execute('Ошибка при исключении лицевого из заявки.');
+    $stmt = $this->pdo->prepare(self::$delete);
+    $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 
   private function insert(data_number $number){
     data_number::verify_id($number->get_id());
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
-    $sql->bind(':default', 'false', PDO::PARAM_STR);
-    $sql->bind(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при добавлении связи заявка-лицевой счет.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':default', 'false', PDO::PARAM_STR);
+    $stmt->bindValue(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     return $number;
   }
 
   private function get_numbers(){
-    $sql = new sql();
-    $sql->query(self::$all);
-    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$all);
+    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $numbers = [];
     while($row = $stmt->fetch())
       $numbers[] = $this->create_object($row);
@@ -77,12 +80,11 @@ class mapper_query2number{
 
 
   private function get_numbers_for_collection_query(array $ids){
-    $sql = new sql();
-    $sql->query(self::$all);
-    $sql->bind(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при запросе связи заявка-лицевой_счет.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$all);
+    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $numbers = [];
     while($row = $stmt->fetch())
       $numbers[] = $this->create_object($row);

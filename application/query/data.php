@@ -4,128 +4,42 @@
 * Заявки ассоциированы с компанией.
 * Каждый год номер заявки начинает идти с 1, а иджентификатор заявки увеличивается дальше.
 */
-final class data_query extends data_object{
+class data_query extends data_object{
 
-	/*
-	* Идентификатор заявки уникален для компании.
-	*/
 	private $id;
-
-	/*
-	* Статус заявки: 
-	* open - открытая заявка,
-	* working - заявка передана в работу,
-	* close - закрытая заявка,
-	* reopen - переоткрытая заявка.
-	*/
 	private $status;
-
-	/*
-	* Тип ициниатора:
-	* number - лицевой счет,
-	* house - дом.
-	*/
 	private $initiator;
-
-	/*
-	* Статус оплаты:
-	* paid - оплачиваемая,
-	* unpaid - неоплаичваемая,
-	* recalculation - перерасчет.
-	*/
 	private $payment_status;
-
-	/*
-	* Статус реакции:
-	* hight - аварийная заявка,
-	* normal - заявка на участок,
-	* planned - плановая заявка.
-	*/
 	private $warning_status;
-
 	private $department;
-
-	/*
-	* Идентификатор дома.
-	*/
 	private $house;
-
-	/*
-	* Идентификатор причины закрытия.
-	*/
 	private $close_reason_id;
-
-	/*
-	* Идентификатор типа работ.
-	*/
 	private $work_type;
-
-	/*
-	* Время открытия.
-	*/
 	private $time_open;
-
-	/*
-	* Время когда заявка была передана в работу.
-	*/
 	private $time_work;
-
-	/*
-	* Время закрытия.
-	*/
 	private $time_close;
-
-	/*
-	* ФИО контактного лица.
-	*/
 	private $contact_fio;
-
-	/*
-	* Телефон контактного лица.
-	*/
 	private $contact_telephone;
-
-	/*
-	* Сотовый телефон контактного лица.
-	*/
 	private $contact_cellphone;
-
-	/*
-	* Описание заявки.
-	*/
 	private $description;
-
-	/*
-	* Описания причины закрытия.
-	*/
 	private $close_reason;
-
-	/*
-	* Номер заявки.
-	*/
 	private $number;
-
-	/*
-	* Данные инспекции.
-	*/
 	private $inspection;
-
 	private $street;
 	private $numbers = [];
 	private $works = [];
 	private $users = ['creator' => null, 'manager' => [],
 										'observer' => [], 'performer' => []];
-
+	private $comments = [];
 
 	public static $initiator_list = ['number', 'house'];
-
 	public static $payment_status_list = ['paid', 'unpaid', 'recalculation'];
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
 	public static $warning_status_list = ['hight', 'normal', 'planned'];
 
 	public static function __callStatic($method, $args){
-	  if(!in_array($method, get_class_methods(verify_query), true))
-	    throw new e_model('Нет доступного метода.');
+	  if(!in_array($method, get_class_methods('verify_query'), true))
+	    throw new BadMethodCallException();
 	  return verify_query::$method($args[0]);
 	}
 
@@ -133,6 +47,13 @@ final class data_query extends data_object{
 		if(array_key_exists($number->get_id(), $this->numbers))
 			throw new e_model('Лицевой счет уже добавлен в заявку.');
 		$this->numbers[$number->get_id()] = $number;
+	}
+
+	public function add_comment(data_query2comment $comment){
+		$id = $comment->get_user()->get_id().'_'.$comment->get_time();
+		if(array_key_exists($id, $this->comments))
+			throw new e_model('Комментарий уже существует.');
+		$this->comments[$id] = $comment;
 	}
 
 	public function add_creator(data_user $user){
@@ -195,6 +116,10 @@ final class data_query extends data_object{
 
 	public function get_close_reason(){
 		return $this->close_reason;
+	}
+
+	public function get_comments(){
+		return $this->comments;
 	}
 
 	public function get_creator(){

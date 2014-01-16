@@ -1,7 +1,5 @@
 <?php
 
-use \PDO;
-
 class mapper_company{
 
   private $pdo;

@@ -2,6 +2,7 @@
 class collection_query{
 
   private $company;
+  private $pdo;
   private $queries = [];
   private $id = [];
   private $pointer = 0;
@@ -12,10 +13,13 @@ class collection_query{
   private $query2user = [];
   private $query2work = [];
 
+  private static $alert = 'Проблема в коллекции.';
+
   public function __construct(data_company $company, array $queries){
     $this->company = $company;
     data_company::verify_id($this->company->get_id());
     $this->queries = $queries;
+    $this->pdo = di::get('pdo');
     if(!empty($this->queries))
       foreach($this->queries as $query)
         $this->id[] = $query->get_id();
@@ -74,10 +78,8 @@ class collection_query{
   }
 
   public function create_work(array $row){
-    $work = new data_work();
-    $work->set_id($row['id']);
-    $work->set_name($row['name']);
-    $q2w = new data_query2work($work);
+    $factory = new factory_work();
+    $q2w = new data_query2work($factory->create($row));
     $q2w->set_time_open($row['time_open']);
     $q2w->set_time_close($row['time_close']);
     $q2w->set_value($row['value']);
@@ -87,8 +89,7 @@ class collection_query{
   public function init_numbers(){
     if(!empty($this->id)){
       $ids = implode(', ', $this->id);
-      $sql = new sql();
-      $sql->query("SELECT DISTINCT `query2number`.* , `numbers`.`number`,
+      $stmt = $this->pdo->prepare("SELECT DISTINCT `query2number`.* , `numbers`.`number`,
           `numbers`.`fio`, `flats`.`flatnumber` as `flat_number`
           FROM `query2number`, `numbers`, `flats`
           WHERE `query2number`.`company_id` = :company_id
@@ -96,9 +97,9 @@ class collection_query{
           AND `query2number`.`query_id` IN(".$ids.")
           AND `query2number`.`number_id` = `numbers`.`id`
           AND `numbers`.`flat_id` = `flats`.`id`");
-      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-      $sql->execute('Проблемы при выборе лицевых счетов.');
-      $stmt = $sql->get_stm();
+      $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+      if(!$stmt->execute())
+        throw new e_model(self::$alert);
       while($row = $stmt->fetch()){
         $number = $this->create_number($row);
         $this->numbers[$number->get_id()] = $number;
@@ -110,17 +111,16 @@ class collection_query{
   public function init_users(){
     if(!empty($this->id)){
       $ids = implode(', ', $this->id);
-      $sql = new sql();
-      $sql->query("SELECT `query2user`.`query_id`,
+      $stmt = $this->pdo->prepare("SELECT `query2user`.`query_id`,
       `query2user`.`class`, `users`.`id`,
       `users`.`firstname`, `users`.`lastname`, `users`.`midlename`
       FROM `query2user`, `users`
       WHERE `query2user`.`company_id` = :company_id
       AND `users`.`id` = `query2user`.`user_id`
       AND `query2user`.`query_id` IN(".$ids.")");
-      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-      $sql->execute('Проблемы при выборе пользователей.');
-      $stmt = $sql->get_stm();
+      $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+      if(!$stmt->execute())
+        throw new e_model(self::$alert);
       while($row = $stmt->fetch()){
         $user = $this->create_user($row);
         $this->users[$user->get_id()] = $user;
@@ -132,8 +132,7 @@ class collection_query{
   public function init_works(){
     if(!empty($this->id)){
       $ids = implode(', ', $this->id);
-      $sql = new sql();
-      $sql->query("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
+      $stmt = $this->pdo->prepare("SELECT `query2work`.`query_id`, `query2work`.`opentime` as `time_open`,
         `query2work`.`closetime` as `time_close`, `query2work`.`value`,
         `works`.`id`, `works`.`name`
         FROM `query2work`, `works`
@@ -141,9 +140,9 @@ class collection_query{
         AND `works`.`company_id` = :company_id
         AND `works`.`id` = `query2work`.`work_id`
         AND `query2work`.`query_id` IN(".$ids.")");
-      $sql->bind(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-      $sql->execute('Проблемы при выборе работ.');
-      $stmt = $sql->get_stm();
+      $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+      if(!$stmt->execute())
+        throw new e_model(self::$alert);
       while($row = $stmt->fetch()){
         $work = $this->create_work($row);
         $this->works[$work->get_id()] = $work;

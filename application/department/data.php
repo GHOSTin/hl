@@ -8,8 +8,8 @@ class data_department extends data_object{
   public static $statuses = ['active', 'deactive'];
 
   public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods(verify_department), true))
-      throw new e_model('Нет доступного метода.');
+    if(!in_array($method, get_class_methods('verify_department'), true))
+      throw new BadMethodCallException();
     return verify_department::$method($args[0]);
   }
 

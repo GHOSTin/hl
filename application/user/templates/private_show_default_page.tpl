@@ -14,3 +14,9 @@
         </div>
     </div>
 {% endblock component %}
+{% block javascript %}
+    <script src="/?js=component.js&p=user"></script>
+{% endblock javascript %}
+{% block css %}
+    <link rel="stylesheet" href="/?css=component.css&p=user" >
+{% endblock css %}

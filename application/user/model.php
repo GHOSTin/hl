@@ -73,11 +73,11 @@ class model_user{
 	*/
 	public function update_login($id, $login){
 		// проверка на существование идентичного логина
-		$sql = new sql();
-		$sql->query("SELECT `id` FROM `users` WHERE `username` = :login");
-		$sql->bind(':login', $login, PDO::PARAM_STR);
-		$sql->execute("Ошибка при поиске идентичного логина.");
-		if($sql->count() !== 0)
+		$stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `username` = :login");
+		$$tmt->bindValue(':login', $login, PDO::PARAM_STR);
+		if($stmt->execute("Ошибка при поиске идентичного логина."))
+			throw new e_model('pdoblem');
+		if($stmt->rowCount() !== 0)
 			throw new e_model('Такой логин уже существует.');
 		// обвноление логина пользователя в базе данных
 		$mapper = new mapper_user();

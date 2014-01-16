@@ -1,4 +1,5 @@
 <?php
+
 class verify_meter{
 
   public static function verify_capacity($capacity){
@@ -18,7 +19,7 @@ class verify_meter{
 
   public static function verify_period($period){
     if($period < 0 OR $period > 241)
-        throw new e_model('Период задан не верно.');
+      throw new e_model('Период задан не верно.');
   }
 
   public static function verify_rates($rates){

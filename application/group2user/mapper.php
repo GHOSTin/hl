@@ -3,6 +3,7 @@ class mapper_group2user{
 
   private $company;
   private $group;
+  private $pdo;
 
   private static $insert = "INSERT INTO `group2user` (`group_id`, `user_id`)
     VALUES (:group_id, :user_id)";
@@ -22,6 +23,7 @@ class mapper_group2user{
     $this->group = $group;
     data_company::verify_id($this->company->get_id());
     data_group::verify_id($this->group->get_id());
+    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){
@@ -35,28 +37,27 @@ class mapper_group2user{
 
   public function insert(data_user $user){
     $user->verify('id');
-    $sql = new sql();
-    $sql->query(self::$insert);
-    $sql->bind(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
-    $sql->bind(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
-    $sql->execute('Ошибка при добавлении пользователя в группу.');
+    $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 
   public function delete(data_user $user){
     $user->verify('id');
-    $sql = new sql();
-    $sql->query(self::$delete);
-    $sql->bind(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
-    $sql->bind(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
-    $sql->execute('Ошибка при исключении пользователя из группы.');
+    $stmt = $this->pdo->prepare(self::$delete);
+    $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
   }
 
   public function get_users(){
-    $sql = new sql();
-    $sql->query(self::$many);
-    $sql->bind(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
-    $sql->execute('Проблема при выборки пользователей группы.');
-    $stmt = $sql->get_stm();
+    $stmt = $this->pdo->prepare(self::$many);
+    $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new e_model(self::$alert);
     $users = [];
     while($row = $stmt->fetch()){
       $user = $this->create_object($row);
@@ -74,7 +75,7 @@ class mapper_group2user{
 
   public function update(){
     try{
-      sql::begin();
+      $this->pdo->beginTransaction();
       $new = $this->group->get_users();
       $old = $this->get_users();
       $deleted = array_diff_key($old, $new);
@@ -85,10 +86,10 @@ class mapper_group2user{
       if(!empty($deleted))
         foreach($deleted as $user)
           $this->delete($user);
-      sql::commit();
+      $this->pdo->commit();
       return $this->group;
     }catch(exception $e){
-      sql::rollback();
+      $this->pdo->rollBack();
       throw new e_model('Проблемы при обновлении списка пользователей.');
     }
   }
