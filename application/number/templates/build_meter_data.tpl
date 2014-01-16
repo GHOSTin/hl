@@ -4,7 +4,7 @@
     <tr class="month" time="{{ date|date("U") }}">
 
         <td class="col-md-2">{{ months[i] }}</td>
-        {% for val data.get_values() %}
+        {% for val in data.get_values() %}
             <td class="col-md-2">{{ val }}</td>
         {% else %}
             <td class="col-md-2"></td>
