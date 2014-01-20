@@ -18,4 +18,5 @@
     <script src="/templates/default/js/jquery.ui.widget.js"></script>
     <script src="/templates/default/js/jquery.iframe-transport.js"></script>
     <script src="/templates/default/js/jupload.js"></script>
+    <script src="/?js=component.js&p=import"></script>
 {% endblock javascript %}

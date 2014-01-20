@@ -95,9 +95,10 @@ class model_import{
 	*/
 	public function analize_import_street($file){
 		$import = new data_import($file['tmp_name']);
-		$street = (new mapper_city2street($import->get_city()))
+		$city = $import->get_city();
+		$street = (new mapper_city2street($city))
 			->get_street_by_name((string) $import->get_street()->get_name());
-		return ['import' => $import, 'street' => $street];
+		return ['import' => $import, 'street' => $street, 'city' => $city];
 	}
 	
 	/*
