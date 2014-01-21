@@ -27,6 +27,7 @@
 }
 .streets, .houses, .numbers{
     list-style:none;
+    border: none;
 }
 
 .houses{
