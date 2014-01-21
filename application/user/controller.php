@@ -95,25 +95,23 @@ class controller_user{
 
   public static function private_get_restriction_content(model_request $request){
     $company = new data_company();
-    $company->id = $_GET['company_id'];
-    $company->verify('id');
+    $company->set_id($request->GET('company_id'));
     $user = new data_user();
-    $user->id = $_GET['user_id'];
-    $user->verify('id');
-    $profile = $_GET['profile'];
+    $user->set_id($request->GET('user_id'));
+    $profile = $request->GET('profile');
     $restriction = $_GET['restriction'];
     if($profile !== 'query')
         throw new e_model('Нет ограничения для профиля.');
     if(!in_array($restriction, ['departments', 'worktypes']))
         throw new e_model('Нет ограничения для профиля.');
     if($restriction === 'departments')
-        $items = model_department::get_departments($company, new data_department());
+        $items = (new model_department($company))->get_departments();
     if($restriction === 'worktypes')
-        $items = model_query_work_type::get_query_work_types($company, new data_query_work_type());
+        $items = (new model_query_work_type($company))->get_query_work_types();
     return ['user' => $user, 'company' => $company,
-      'profile_name' => $_GET['profile'],
       'restriction_name' => $restriction, 'items' => $items,
-      'profile' => model_profile::get_profile($company, $user, $_GET['profile'])];
+      'profile' => (new model_user2profile($company, $user))
+        ->get_profile($request->take_get('profile'))];
   }
 
   public static function private_get_dialog_create_group(
