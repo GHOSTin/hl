@@ -51,6 +51,10 @@ ul.query-sub, ul.query-general{
     z-index: 1060!important;
 }
 
+.query_controls + .page-header{
+    z-index: 1;
+}
+
 @media (max-width: 768px){
     .query_controls {margin: 0 !important;}
 }
