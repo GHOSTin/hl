@@ -154,6 +154,17 @@ class model_user2profile{
         $restrictions[$restriction] = array_values($restrictions[$restriction]);
       }
     }
+    if($restriction === 'worktypes'){
+      $type = (new mapper_query_work_type($this->company))->find($item);
+      if(!is_null($type)){
+        $pos = array_search($type->get_id(), $restrictions[$restriction]);
+        if($pos === false)
+          $restrictions[$restriction][] = $type->get_id();
+        else
+          unset($restrictions[$restriction][$pos]);
+        $restrictions[$restriction] = array_values($restrictions[$restriction]);
+      }
+    }
     $stmt = $this->pdo->prepare(self::$update_restriction);
     $stmt->bindValue(':restrictions', (string) json_encode($restrictions), PDO::PARAM_STR);
     $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
