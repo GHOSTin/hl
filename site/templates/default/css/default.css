@@ -117,8 +117,8 @@ div[class^=chat-col-]{
 #chat-user-filter-clear {
     float: none;
     position: absolute;
-    right: 8px;
-    top: 8px;
+    right: 14px;
+    top: 18px;
 }
 
 .chat-user-list{
