@@ -24,9 +24,9 @@ class mapper_city{
   }
 
   public function get_city_by_name($name){
-    $stmt = $this->pro->prepare(self::$one_by_name);
+    $stmt = $this->pdo->prepare(self::$one_by_name);
     $stmt->bindValue(':name', (string) $name, PDO::PARAM_STR);
-    if(!$stmt->execute(self::$alert))
+    if(!$stmt->execute())
       throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)
@@ -40,7 +40,7 @@ class mapper_city{
   public function find($id){
     $stmt = $this->pdo->prepare(self::$one);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
-    if(!$stmt->execute(self::$alert))
+    if(!$stmt->execute())
       throw new e_model(self::$alert);
     $count = $stmt->rowCount();
     if($count === 0)

@@ -11,7 +11,7 @@
             </div>
             <div  class="page-header col-xs-12 col-lg-10 col-lg-push-1">
                 <h4 class="view-toggle-filters">Фильтры
-                <small class="pull-right cm clear_filters absolute_hide">сбросить</small></h4>
+                </h4><a class="pull-right cm clear_filters absolute_hide">сбросить</a>
             </div>
             {% include '@query/filters.tpl' %}
         </div>

@@ -75,8 +75,6 @@
 		<div class="form-group dialog-trouble">
 			<textarea class="form-control dialog-description" rows="5"></textarea>
 		</div>
-
-	{% endif %}
 	</div>
 	<div class="modal-footer">
 		<div class="btn btn-primary create_query">Создать</div>

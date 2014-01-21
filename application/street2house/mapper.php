@@ -103,7 +103,7 @@ class mapper_street2house{
       throw new e_model('Неожиданное количество домов');
   }
 
-  public static function get_insert_id(){
+  public function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
       throw new e_model(self::$alert);

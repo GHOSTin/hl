@@ -31,7 +31,8 @@ class model_import{
 	* Анализирует файт импорта лицевых счетов
 	*/
 	public function analize_import_numbers($file){
-		$xml = $this->get_xml_file($file['tmp_name']);
+		$import = new data_import($file['tmp_name']);
+		$xml = $import->get_xml();
 		$house_node = $xml->attributes();
 		$city = (new model_city)->get_city_by_name((string) $house_node->city);
 		$street = (new model_city2street($city))
@@ -95,9 +96,10 @@ class model_import{
 	*/
 	public function analize_import_street($file){
 		$import = new data_import($file['tmp_name']);
-		$street = (new mapper_city2street($import->get_city()))
+		$city = $import->get_city();
+		$street = (new mapper_city2street($city))
 			->get_street_by_name((string) $import->get_street()->get_name());
-		return ['import' => $import, 'street' => $street];
+		return ['import' => $import, 'street' => $street, 'city' => $city];
 	}
 	
 	/*
