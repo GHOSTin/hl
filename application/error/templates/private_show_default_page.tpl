@@ -10,3 +10,6 @@
   {% endfor %}
   </ul>
 {% endblock component %}
+{% block javascript %}
+    <script src="/?js=component.js&p=error"></script>
+{% endblock javascript %}
