@@ -245,8 +245,8 @@ class controller_user{
     $user = new data_user();
     $user->set_id($request->GET('id'));
     return ['user' => $user,
-      'companies' => (new model_user2profile(model_session::get_company(), $user))
-      ->get_companies()];
+      'companies' => (new mapper_user2company(di::get('pdo'), $user))
+      ->find_all()];
   }
 
   public static function private_get_user_letters(model_request $request){

@@ -93,7 +93,7 @@ class mapper_number{
     public function find_by_number($num){
         $number = new data_number();
         $number->set_number($num);
-        $number->verify('number');
+        data_number::verify_num($number->get_number());
         $stmt = $this->pdo->prepare(self::$find_by_number);
         $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
         $stmt->bindValue(':number', (string) $num, PDO::PARAM_STR);
