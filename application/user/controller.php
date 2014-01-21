@@ -285,21 +285,17 @@ class controller_user{
     (new model_user2profile($company, $user))
       ->update_rule($request->take_get('profile'), $request->take_get('rule'));
     exit();
-    return ['user' => $user, 'company' => $company];
   }
 
   public static function private_update_restriction(model_request $request){
     $company = new data_company();
-    $company->id = $_GET['company_id'];
-    $company->verify('id');
+    $company->set_id($request->GET('company_id'));
     $user = new data_user();
-    $user->id = $_GET['user_id'];
-    $user->verify('id');
-    return ['user' => $user, 'company' => $company,
-      'profile_name' => $_GET['profile'],
-      'restriction_name' => $_GET['restriction'], 'item' => $_GET['item'],
-      'status' => model_profile::update_restriction($company, $user,
-      $_GET['profile'], $_GET['restriction'], $_GET['item'])];
+    $user->set_id($request->GET('user_id'));
+    (new model_user2profile($company, $user))
+      ->update_restriction($request->GET('profile'),
+      $request->GET('restriction'), $request->GET('item'));
+    exit();
   }
 
   public static function private_update_login(model_request $request){
