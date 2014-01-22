@@ -1,7 +1,7 @@
 {% if component.queries != false %}
     <div class="muted">
         <small>
-	        Количество: {{ component.queries.count() }} заявок
+	        Количество заявок: {{ component.queries.count() }}
         </small>
     </div>
 	{% for query in component.queries.get_queries() %}
