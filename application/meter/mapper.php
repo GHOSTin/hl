@@ -63,7 +63,7 @@ class mapper_meter{
     $stmt = $this->pdo->prepare(self::$all_by_service);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':service', (string) $service, PDO::PARAM_STR);
-    if($stmt->execute())
+    if(!$stmt->execute())
       throw new e_model('Проблема при выборке счетчиков.');
     $meters = [];
     while($row = $stmt->fetch())
