@@ -44,8 +44,10 @@ class controller_query{
 	}
 
 	public static function private_close_query(model_request $request){
+		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
+			$request->GET('reason'), $matches);
 		$model = new model_query(model_session::get_company());
-		$query = $model->close_query($request->GET('id'), $request->GET('reason'));
+		$query = $model->close_query($request->GET('id'), implode('', $matches[0]));
 		$model->init_numbers($query);
 		$model->init_users($query);
 		return ['query' => $query];
@@ -82,10 +84,12 @@ class controller_query{
 	}
 
 	public static function private_create_query(model_request $request){
+		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
+			$request->GET('description'), $matches);
 		$company = model_session::get_company();
 		$model = new model_query($company);
 		$query = $model->create_query($request->GET('initiator'),
-			$request->GET('id'), $request->GET('description'),
+			$request->GET('id'), implode('', $matches[0]),
 			$request->GET('work_type'), $request->GET('fio'),
 			$request->GET('telephone'), $request->GET('cellphone'));
 		$collection = new collection_query($company, $model->get_queries());
@@ -446,13 +450,17 @@ class controller_query{
 	}
 
 	public static function private_update_description(model_request $request){
+		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
+			$request->GET('description'), $matches);
 		return ['query' => (new model_query(model_session::get_company()))
-			->update_description($request->GET('id'), $request->GET('description'))];
+			->update_description($request->GET('id'), implode('', $matches[0]))];
 	}
 
 	public static function private_update_reason(model_request $request){
+		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
+			$request->GET('reason'), $matches);
 		return ['query' => (new model_query(model_session::get_company()))
-			->update_reason($request->GET('id'), $request->GET('reason'))];
+			->update_reason($request->GET('id'), implode('', $matches[0]))];
 	}
 
 	public static function private_update_contact_information(

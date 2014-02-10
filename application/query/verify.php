@@ -105,16 +105,16 @@ class verify_query{
   * Верификация описания заявки.
   */
   public static function verify_description($text){
-    // if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{1,65535}$/u', $text))
-    //   throw new e_model('Описание заявки заданы не верно.');
+    if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u', $text))
+      throw new e_model('Описание заявки заданы не верно.');
   }
 
   /**
   * Верификация причины закрытия заявки.
   */
   public static function verify_close_reason($text){
-    // if(!preg_match('/^[А-Яа-яA-Za-z0-9\.,\?\'":;№\- ]{0,65535}$/u', $text)))
-    //   throw new e_model('Описание заявки заданы не верно.');
+    if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u', $text))
+      throw new e_model('Описание заявки заданы не верно.');
   }
 
   /**
