@@ -19,6 +19,7 @@ final class data_number extends data_object{
   private $status;
   private $telephone;
   private $type;
+  private $email;
 
   public static function __callStatic($method, $args){
     if(!in_array($method, get_class_methods('verify_number'), true))
@@ -51,6 +52,10 @@ final class data_number extends data_object{
 
   public function get_cellphone(){
     return $this->cellphone;
+  }
+
+  public function get_email(){
+    return $this->email;
   }
 
   public function get_fio(){
@@ -98,6 +103,12 @@ final class data_number extends data_object{
 
   public function set_cellphone($cellphone){
   	$this->cellphone = (string) $cellphone;
+  }
+
+  public function set_email($email){
+    if(!preg_match('|[0-9A-Za-z.@]{0,128}|', $email))
+      throw new e_model('Не валидный email.');
+    $this->email = $email;
   }
 
   public function set_fio($fio){

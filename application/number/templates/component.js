@@ -414,6 +414,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    // выводит диалог редактирования сотового телефона владельца лицевого счета
+    }).on('click', '.get_dialog_edit_number_email', function(){
+        $.get('get_dialog_edit_number_email',{
+            id: get_number_id($(this))
+            },function(r){
+                init_content(r);
+            });
+
     // выводит диалог редактирования серийного номера счетчика
     }).on('click', '.get_dialog_edit_serial', function(){
         $.get('get_dialog_edit_serial',{

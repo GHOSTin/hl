@@ -69,6 +69,14 @@ class model_number{
 		return $number;
 	}
 
+	public function update_number_email($id, $email){
+		$number = $this->get_number($id);
+		$number->set_email($email);
+		$mapper = new mapper_number($this->company);
+		$mapper->update($number);
+		return $number;
+	}
+
 	/**
 	* Обновляет телефон владельца лицевого счета
 	* @return object data_number

@@ -10,7 +10,7 @@ class mapper_number{
     `numbers`.`city_id`, `numbers`.`house_id`, 
     `numbers`.`flat_id`, `numbers`.`number`,
     `numbers`.`type`, `numbers`.`status`,
-    `numbers`.`fio`, `numbers`.`telephone`,
+    `numbers`.`fio`, `numbers`.`email`, `numbers`.`telephone`,
     `numbers`.`cellphone`, `numbers`.`password`,
     `numbers`.`contact-fio` as `contact_fio`,
     `numbers`.`contact-telephone` as `contact_telephone`,
@@ -30,7 +30,7 @@ class mapper_number{
     `numbers`.`city_id`, `numbers`.`house_id`, 
     `numbers`.`flat_id`, `numbers`.`number`,
     `numbers`.`type`, `numbers`.`status`,
-    `numbers`.`fio`, `numbers`.`telephone`,
+    `numbers`.`fio`, `numbers`.`email`, `numbers`.`telephone`,
     `numbers`.`cellphone`, `numbers`.`password`,
     `numbers`.`contact-fio` as `contact_fio`,
     `numbers`.`contact-telephone` as `contact_telephone`,
@@ -47,8 +47,8 @@ class mapper_number{
     AND `houses`.`street_id` = `streets`.`id`";
 
   private static $update = 'UPDATE `numbers` SET `number` = :number, `fio` = :fio,
-    `cellphone` = :cellphone, `telephone` = :telephone, `password` = :hash
-    WHERE `company_id` = :company_id AND `id` = :id';
+    `email` = :email, `cellphone` = :cellphone, `telephone` = :telephone,
+    `password` = :hash WHERE `company_id` = :company_id AND `id` = :id';
 
     public function __construct(data_company $company){
         $this->company = $company;
@@ -60,6 +60,7 @@ class mapper_number{
         $number = new data_number();
         $number->set_id($row['id']);
         $number->set_fio($row['fio']);
+        $number->set_email($row['email']);
         $number->set_number($row['number']);
         $number->set_status($row['status']);
         $number->set_hash($row['password']);
@@ -115,6 +116,7 @@ class mapper_number{
         $stmt->bindValue(':id', $number->get_id(), PDO::PARAM_INT);
         $stmt->bindValue(':number', $number->get_number(), PDO::PARAM_STR);
         $stmt->bindValue(':fio', $number->get_fio(), PDO::PARAM_STR);
+        $stmt->bindValue(':email', $number->get_email(), PDO::PARAM_STR);
         $stmt->bindValue(':telephone', $number->get_telephone(), PDO::PARAM_STR);
         $stmt->bindValue(':cellphone', $number->get_cellphone(), PDO::PARAM_STR);
         $stmt->bindValue(':hash', $number->get_hash(), PDO::PARAM_STR);

@@ -388,6 +388,11 @@ class controller_number{
     return self::data_for_dialog_number($request);
   }
 
+  public static function private_get_dialog_edit_number_email(
+    model_request $request){
+    return self::data_for_dialog_number($request);
+  }
+
   public static function private_get_dialog_edit_meter_data(
     model_request $request){
     $company = model_session::get_company();
@@ -455,6 +460,13 @@ class controller_number{
       $cellphone = substr($cellphone, 1, 10);
     return ['number' => (new model_number(model_session::get_company()))
     ->update_number_cellphone($request->GET('id'), $cellphone)];
+  }
+
+  public static function private_update_number_email(
+    model_request $request){
+    preg_match_all('/[0-9A-Za-z.@]/', $request->GET('email'), $matches);
+    return ['number' => (new model_number(model_session::get_company()))
+    ->update_number_email($request->GET('id'), implode('', $matches[0]))];
   }
 
   public static function private_update_number_telephone(model_request $request){
