@@ -51,3 +51,5 @@ while($row = $stmt->fetch()){
     $s->execute();
   }
 }
+
+$stmt = $pdo->exec('ALTER TABLE `numbers` ADD COLUMN email VARCHAR(128) AFTER `fio`');
