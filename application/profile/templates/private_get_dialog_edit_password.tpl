@@ -16,13 +16,15 @@
 	<p>
 		Сменить пароль пользователю "{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}"?
 	</p>
-	<dl class="dl-horizontal">
-		<dt>Новый пароль</dt>
-		<dd><input type="text" class="dialog-new_password"></dd>
-		<dt>Подтверждение</dt>
-		<dd><input type="text" class="dialog-confirm_password"></dd>
-	</dl>
+	<div class="form-group">
+		<label>Новый пароль</label>
+		<input type="password" class="form-control dialog-new_password" required>
+	</div>
+	<div class="form-group">
+		<label>Подтверждение</label>
+		<input type="password" class="form-control dialog-confirm_password" required>
+	</div>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_password">Сохранить</div>
+	<div class="btn btn-default update_password">Сохранить</div>
 {% endblock buttons %}

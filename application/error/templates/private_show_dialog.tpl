@@ -1,10 +1,12 @@
 {% extends "dialog.tpl" %}
 {% block title %}Диалог ошибки{% endblock title %}
 {% block dialog %}
-	<textarea class="dialog-send_error" style="width:90%"></textarea>
+<form role="form">
+	<textarea class="form-control dialog-send_error" placeholder="Опишите произошедшую ошибку."></textarea>
+</form>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn send_error">Отправить</div>
+	<div class="btn btn-default send_error">Отправить</div>
 {% endblock buttons %}
 {% block script %}
 // Добавляет идентификатор в процессинговом центре

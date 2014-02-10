@@ -12,8 +12,8 @@
 {% endblock script %}
 {% block title %}Смена номера телефона{% endblock title %}
 {% block dialog %}
-	<input type="text" value="{{ user.get_telephone() }}" class="dialog-telephone">
+	<input type="text" value="{{ user.get_telephone() }}" class="dialog-telephone form-control">
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn update_telephone">Сохранить</div>
+	<div class="btn btn-default update_telephone">Сохранить</div>
 {% endblock buttons %}	

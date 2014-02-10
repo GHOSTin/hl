@@ -2,7 +2,8 @@
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
-		'processing_center', 'import', 'meter', 'error', 'company', 'report'];
+		'processing_center', 'import', 'meter', 'error', 'company', 'report',
+		'about'];
 
 	/*
 	* Возвращает содержимое страницы.
@@ -42,7 +43,6 @@ class model_environment{
 			$data['rules'] = $profile->get_rules();
 		$data['component'] = $controller::$method($request);
 		$data['request'] = $request;
-		$data['version'] = file_get_contents(ROOT.'/version');
 		return $data;
 	}
 

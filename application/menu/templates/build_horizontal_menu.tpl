@@ -44,6 +44,7 @@
                     {% endfor %}
                     <li><a tabindex="-1" href="/report/">Отчеты</a></li>
                     <li class="divider"></li>
+                    <li><a tabindex="-1" href="/about/">О программе</a></li>
                     <li><a tabindex="-1" href="/exit/">Выход</a></li>
                 </ul>
             </li>
