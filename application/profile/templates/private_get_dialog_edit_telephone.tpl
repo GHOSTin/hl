@@ -1,7 +1,6 @@
-{% extends "ajax.tpl" %}
+{% extends "dialog.tpl" %}
 {% set user = component.user %}
-{% block js %}
-	show_dialog(get_hidden_content());
+{% block script %}
 	$('.update_telephone').click(function(){
 		$.get('update_telephone',{
 			telephone: $('.dialog-telephone').val()
@@ -10,18 +9,11 @@
 				$('.dialog').modal('hide');
 			});
 	});
-{% endblock js %}
-{% block html %}
-<div class="modal">
-    <div class="modal-header">
-        <h3>Смена номера телефона</h3>
-    </div>	
-	<div class="modal-body">
-		<input type="text" value="{{ user.get_telephone() }}" class="dialog-telephone">
-	</div>
-	<div class="modal-footer">
-		<div class="btn update_telephone">Сохранить</div>
-		<div class="btn close_dialog">Отмена</div>
-	</div>	  
-</div>
-{% endblock html %}
+{% endblock script %}
+{% block title %}Смена номера телефона{% endblock title %}
+{% block dialog %}
+	<input type="text" value="{{ user.get_telephone() }}" class="dialog-telephone">
+{% endblock dialog %}
+{% block buttons %}
+	<div class="btn update_telephone">Сохранить</div>
+{% endblock buttons %}	
