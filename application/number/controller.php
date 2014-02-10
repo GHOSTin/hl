@@ -456,7 +456,7 @@ class controller_number{
     model_request $request){
     preg_match_all('/[0-9]/', $request->GET('cellphone'), $matches);
     $cellphone = implode('', $matches[0]);
-    if(preg_match('|^[7,8]|', $cellphone))
+    if(preg_match('|^[78]|', $cellphone))
       $cellphone = substr($cellphone, 1, 10);
     return ['number' => (new model_number(model_session::get_company()))
     ->update_number_cellphone($request->GET('id'), $cellphone)];
