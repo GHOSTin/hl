@@ -4,9 +4,9 @@ class verify_number{
     /**
     * Верификация сотового телефона лицевого счета.
     */
-    public static function cellphone(data_number $number){
-        if(!empty($number->get_cellphone()))
-            if(!preg_match('/^\+7[0-9]{10}$/', $number->get_cellphone()))
+    public static function verify_cellphone($cellphone){
+        if(!empty($cellphone))
+            if(!preg_match('/^[0-9]{10}$/', $cellphone))
                 throw new e_model('Номер сотового телефона задан не верно.');
     }
 

@@ -129,5 +129,6 @@ class mapper_number{
         data_number::verify_num($number->get_number());
         data_number::verify_fio($number->get_fio());
         data_number::verify_telephone($number->get_telephone());
+        data_number::verify_cellphone($number->get_cellphone());
     }
 }

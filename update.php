@@ -26,7 +26,7 @@ while($row = $stmt->fetch()){
 $queries = "SELECT `id`, `description-open` FROM `queries`";
 $stmt = $pdo->query($queries);
 while($row = $stmt->fetch()){
-  if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{1,65535}$|u', $row['description-open'])){
+  if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u', $row['description-open'])){
     $s = $pdo->prepare('UPDATE `queries` SET `description-open` = :description
       WHERE `id` = :id');
     preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $row['description-open'], $matches);
