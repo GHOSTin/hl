@@ -1,7 +1,5 @@
 <?php
-class mapper_client_query{
-
-  private $pdo;
+class mapper_client_query extends mapper{
 
   private static $find = 'SELECT * FROM `client_queries`
     WHERE `company_id` = :company_id AND `number_id` = :number_id
@@ -15,10 +13,6 @@ class mapper_client_query{
     `status` = :status, `text` = :text, `reason` = :reason, `query_id` = :query_id
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `time` = :time";
-
-  public function __construct(PDO $pdo){
-    $this->pdo = $pdo;
-  }
 
   public function find(data_company $company, $number_id, $time){
     $stmt = $this->pdo->prepare(self::$find);

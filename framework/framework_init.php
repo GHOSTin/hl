@@ -126,3 +126,12 @@ function load_template($name, array $args = []){
   $loader->prependPath($template_dir, $component);
   return $twig->render('@'.$component.'/'.$template.'.tpl', $args);
 }
+
+class mapper{
+
+  protected $pdo;
+
+  public function __construct(PDO $pdo){
+    $this->pdo = $pdo;
+  }
+}
