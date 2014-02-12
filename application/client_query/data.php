@@ -1,7 +1,5 @@
 <?php
 
-use \DomainException;
-
 class data_client_query{
 
   private $time;
@@ -9,9 +7,14 @@ class data_client_query{
   private $status;
   private $reason;
   private $query_id;
+  private $number_id;
 
   private static $status_list = ['new', 'accepted', 'canceled'];
   private static $re = '|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{6,255}$|u';
+
+  public function get_number_id(){
+    return $this->number_id;
+  }
 
   public function get_query_id(){
     return $this->query_id;
@@ -31,6 +34,10 @@ class data_client_query{
 
   public function get_text(){
     return $this->text;
+  }
+
+  public function set_number_id($id){
+    $this->number_id = (int) $id;
   }
 
   public function set_query_id($id){

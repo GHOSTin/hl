@@ -269,6 +269,15 @@ $(document).ready(function(){
 			});
 	})
 
+	$('body').on('click', '.get_dialog_cancel_client_query', function(){
+		$.get('get_dialog_cancel_client_query',{
+			number_id: $(this).parent().parent().attr('number_id'),
+			time: $(this).parent().parent().attr('time')
+			},function(r){
+				init_content(r);
+			});
+	})
+
 	$('body').on('click', '.get_dialog_to_working_query', function(){
 		$.get('get_dialog_to_working_query',{
 			id: get_query_id($(this))

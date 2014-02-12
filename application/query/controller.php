@@ -31,6 +31,20 @@ class controller_query{
 			->add_work($request->GET('id'), $request->GET('work_id'), $begin, $end)];
 	}
 
+	public static function private_cancel_client_query(model_request $request){
+		$reason = '';
+    if(!empty($request->GET('reason'))){
+      if(preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->GET('reason'), $matches) > 0)
+        $reason = implode('', $matches[0]);
+    }
+    $company = model_session::get_company();
+		(new model_client_query($company))
+			->cancel_client_query($request->GET('number_id'), $request->GET('time'),
+			$reason);
+		return ['client_queries' => (new mapper_client_query(di::get('pdo'), $company))
+		->find_all_new()];
+	}
+
 	public static function private_clear_filters(model_request $request){
 		$company = model_session::get_company();
 		$model = new model_query($company);
@@ -114,6 +128,10 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_add_comment(model_request $request){
+		return true;
+	}
+
+	public static function private_get_dialog_cancel_client_query(model_request $request){
 		return true;
 	}
 
