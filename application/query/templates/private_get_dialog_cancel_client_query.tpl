@@ -1,7 +1,7 @@
 {% extends "dialog.tpl" %}
 {% block title %}Отклонение заявки{% endblock title %}
 {% block dialog %}
-	<p>Описание причины отказа, не более 255 символов</p>
+	<p>Описание причины отказа, не меннее 6 и не более 255 символов</p>
 	<textarea class="dialog-reason form-control" maxlength="255"></textarea>
 {% endblock dialog %}
 {% block buttons %}
