@@ -427,7 +427,9 @@ class controller_query{
 		}
 		$collection = new collection_query($company, $model->get_queries());
 		$collection->init_numbers();
-		return ['queries' => $collection,
+		$client_queries = (new mapper_client_query(di::get('pdo'), $company))
+			->find_all_new();
+		return ['queries' => $collection, 'client_queries' => $client_queries,
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
