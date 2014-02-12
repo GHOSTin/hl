@@ -2,7 +2,6 @@
 class mapper_client_query{
 
   private $pdo;
-  private $company;
 
   private static $find = 'SELECT * FROM `client_queries`
     WHERE `company_id` = :company_id AND `number_id` = :number_id
@@ -17,14 +16,13 @@ class mapper_client_query{
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `time` = :time";
 
-  public function __construct(PDO $pdo, data_company $company){
+  public function __construct(PDO $pdo){
     $this->pdo = $pdo;
-    $this->company = $company;
   }
 
-  public function find($number_id, $time){
+  public function find(data_company $company, $number_id, $time){
     $stmt = $this->pdo->prepare(self::$find);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number_id', $number_id, PDO::PARAM_INT);
     $stmt->bindValue(':time', $time, PDO::PARAM_INT);
     if(!$stmt->execute())
@@ -38,9 +36,9 @@ class mapper_client_query{
       throw new RuntimeException();
   }
 
-  public function find_all_new(){
+  public function find_all_new(data_company $company){
     $stmt = $this->pdo->prepare(self::$find_all);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new alert(self::$error);
     $queries = [];
@@ -52,7 +50,7 @@ class mapper_client_query{
 
   public function update(data_client_query $query){
     $stmt = $this->pdo->prepare(self::$update);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $query->get_company_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number_id', $query->get_number_id(), PDO::PARAM_INT);
     $stmt->bindValue(':time', $query->get_time(), PDO::PARAM_INT);
     $stmt->bindValue(':status', $query->get_status(), PDO::PARAM_STR);

@@ -41,8 +41,8 @@ class controller_query{
 		(new model_client_query($company))
 			->cancel_client_query($request->GET('number_id'), $request->GET('time'),
 			$reason);
-		return ['client_queries' => (new mapper_client_query(di::get('pdo'), $company))
-		->find_all_new()];
+		return ['client_queries' => (new mapper_client_query(di::get('pdo')))
+		->find_all_new($company)];
 	}
 
 	public static function private_clear_filters(model_request $request){
@@ -445,8 +445,8 @@ class controller_query{
 		}
 		$collection = new collection_query($company, $model->get_queries());
 		$collection->init_numbers();
-		$client_queries = (new mapper_client_query(di::get('pdo'), $company))
-			->find_all_new();
+		$client_queries = (new mapper_client_query(di::get('pdo')))
+			->find_all_new($company);
 		return ['queries' => $collection, 'client_queries' => $client_queries,
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),

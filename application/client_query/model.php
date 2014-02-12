@@ -9,8 +9,8 @@ class model_client_query{
   }
 
   public function cancel_client_query($number_id, $time, $reason){
-    $mapper = new mapper_client_query(di::get('pdo'), $this->company);
-    $query = $mapper->find($number_id, $time);
+    $mapper = new mapper_client_query(di::get('pdo'));
+    $query = $mapper->find($this->company, $number_id, $time);
     $query->set_status('canceled');
     $query->set_reason($reason);
     $mapper->update($query);

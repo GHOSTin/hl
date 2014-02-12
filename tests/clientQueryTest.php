@@ -100,6 +100,11 @@ class clientQueryTest extends PHPUnit_Framework_TestCase{
     $this->assertEquals(123, $this->query->get_number_id());
   }
 
+  public function test_company_id_1(){
+    $this->query->set_company_id(123);
+    $this->assertEquals(123, $this->query->get_company_id());
+  }
+
   public function test_query_id_2(){
     try{
       $this->query->set_query_id();

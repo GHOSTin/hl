@@ -8,6 +8,7 @@ class factory_client_query{
     $client_query->set_text($data['text']);
     $client_query->set_status($data['status']);
     $client_query->set_number_id($data['number_id']);
+    $client_query->set_company_id($data['company_id']);
     if(!empty($data['reason']))
       $client_query->set_reason($data['reason']);
     if(!empty($data['query_id']))
