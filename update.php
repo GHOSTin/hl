@@ -8,7 +8,7 @@ $stmt = $pdo->exec('CREATE TABLE `client_queries` (
   `company_id` TINYINT(3) UNSIGNED NOT NULL,
   `number_id` MEDIUMINT(8) NOT NULL,
   `time` INT(10) UNSIGNED NOT NULL,
-  `status` enum("new", "working", "aborted") NOT NULL,
+  `status` enum("new", "accepted", "canceled") NOT NULL,
   `text` VARCHAR(255),
   `reason` VARCHAR(255),
   `query_id` INT(10) UNSIGNED,
