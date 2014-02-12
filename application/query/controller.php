@@ -7,6 +7,25 @@ class controller_query{
 	static $name = 'Заявки';
 	static $rules = [];
 
+	public static function private_accept_client_query(model_request $request){
+		di::get('pdo')->beginTransaction();
+		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
+			$request->GET('description'), $matches);
+		$company = model_session::get_company();
+		$model = new model_query($company);
+		$query = $model->create_query('number',
+			$request->GET('id'), implode('', $matches[0]),
+			$request->GET('work_type'), $request->GET('fio'),
+			$request->GET('telephone'), $request->GET('cellphone'));
+		$collection = new collection_query($company, $model->get_queries());
+		(new model_client_query($company))
+			->accept_client_query($query, $request->GET('id'), $request->GET('time'));
+		di::get('pdo')->commit();
+		return ['queries' => $collection, 
+			'client_queries' => (new mapper_client_query(di::get('pdo')))
+			->find_all_new($company)];
+	}
+
 	public static function private_add_user(model_request $request){
 		return ['query' => (new model_query(model_session::get_company()))
 			->add_user($request->GET('id'), $request->GET('user_id'),
@@ -129,6 +148,17 @@ class controller_query{
 
 	public static function private_get_dialog_add_comment(model_request $request){
 		return true;
+	}
+
+	public static function private_get_dialog_accept_client_query(model_request $request){
+		$company = model_session::get_company();
+		$types = (new model_query_work_type($company))->get_query_work_types();
+		$client_query = (new mapper_client_query(di::get('pdo')))
+			->find($company, $request->GET('number_id'), $request->GET('time'));
+		if(is_null($client_query)) die('no client query');
+		return ['number' => (new model_number($company))
+			->get_number($request->GET('number_id')), 'query_work_types' => $types,
+			'client_query' => $client_query];
 	}
 
 	public static function private_get_dialog_cancel_client_query(model_request $request){

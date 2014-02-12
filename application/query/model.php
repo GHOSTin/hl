@@ -265,7 +265,10 @@ class model_query{
 	public function create_query($initiator, $id, $description, $work_type,
 										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{
-			$this->pdo->beginTransaction();
+			if(!$this->pdo->inTransaction()){
+				$this->pdo->beginTransaction();
+				$trans = true;
+			}
 			$time = time();
 			$query = new data_query();
       $query->set_status('open');
@@ -310,7 +313,8 @@ class model_query{
       $query->add_manager($user);
       $query->add_observer($user);
       (new mapper_query2user($this->company, $query))->update_users();
-			$this->pdo->commit();
+      if($trans)
+				$this->pdo->commit();
 			return $query;
 		}catch(exception $e){
 			die($e->getMessage());
