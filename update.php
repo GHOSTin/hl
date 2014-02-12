@@ -11,7 +11,7 @@ $stmt = $pdo->exec('CREATE TABLE `client_queries` (
   `status` enum("new", "working", "aborted") NOT NULL,
   `text` VARCHAR(255),
   `reason` VARCHAR(255),
-  `query_id` INT(10) UNSIGNED NOT NULL,
+  `query_id` INT(10) UNSIGNED,
   UNIQUE KEY `id` (`company_id`, `number_id`, `time`),
   KEY (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8');
