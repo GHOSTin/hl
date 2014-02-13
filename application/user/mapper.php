@@ -3,8 +3,6 @@
 
   private $pdo;
 
-  private static $alert = 'Проблема в мапере пользователя.';
-
   private static $LOGIN = "SELECT `id`, `company_id`, `status`,
     `username` as `login`, `firstname`, `lastname`,
     `midlename` as `middlename`, `password`, 
@@ -54,14 +52,14 @@
     $stmt = $this->pdo->prepare(self::$find);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     if($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество пользователей.');
+      throw new RuntimeException();
   }
 
   public function find_by_login_and_password($login, $password){
@@ -69,22 +67,22 @@
     $stmt->bindValue(':login', htmlspecialchars($login), PDO::PARAM_STR);
     $stmt->bindValue(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   private function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
-      throw new e_model($alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-        throw new e_model('Проблема при опредении следующего user_id.');
+        throw new RuntimeException();
     $user_id = (int) $stmt->fetch()['max_user_id'] + 1;
     return $user_id;
   }
@@ -92,7 +90,7 @@
   public function get_users(){
     $stmt = $this->pdo->prepare(self::$get_users);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $users = [];
     while($row = $stmt->fetch())
       $users[] = $this->create_object($row);
@@ -103,9 +101,9 @@
     $stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `username` = :login");
     $stmt->bindValue(':login', $user->get_login(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 0)
-        throw new e_model('Пользователь с таким логином уже существует.');
+        throw new RuntimeException();
     $user->set_id($this->get_insert_id());
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
@@ -119,7 +117,7 @@
     $stmt->bindValue(':telephone', $user->get_telephone(), PDO::PARAM_STR);
     $stmt->bindValue(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $user;
   }
 
@@ -135,6 +133,6 @@
     $stmt->bindValue(':password', $user->get_hash(), PDO::PARAM_STR);
     $stmt->bindValue(':id', $user->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 }

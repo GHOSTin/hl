@@ -1,8 +1,6 @@
 <?php
 class mapper_house{
 
-  private static $alert = 'Проблема в мапере дома';
-
   private static $one = "SELECT `houses`.`id`, `houses`.`city_id`,
     `houses`.`street_id`, `houses`.`department_id`, `houses`.`status`,
     `houses`.`housenumber`, `streets`.`name`
@@ -36,14 +34,14 @@ class mapper_house{
     $stmt = $this->pdo->prepare(self::$one);
     $stmt->bindValue(':house_id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество домов');
+      throw new RuntimeException();
   }
 }
 

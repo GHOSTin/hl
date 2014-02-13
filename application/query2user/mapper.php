@@ -5,8 +5,6 @@ class mapper_query2user{
   private $query;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере соотношения заявки и пользователя.';
-
   private static $classes = ['creator', 'manager', 'performer', 'observer'];
 
   private static $all = "SELECT `query2user`.`query_id`,
@@ -48,7 +46,7 @@ class mapper_query2user{
     $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $users = ['creator' => null, 'manager' => [],
               'observer' => [], 'performer' => []];
     while($row = $stmt->fetch()){
@@ -65,14 +63,14 @@ class mapper_query2user{
   */
   private function insert(data_user $user, $class){
     if(!in_array($class, self::$classes, true))
-      throw new e_model('Не соответсвует тип пользователя.');
+      throw new RuntimeException();
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':class', $class, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   /**
@@ -80,14 +78,14 @@ class mapper_query2user{
   */
   public function delete(data_user $user, $class){
     if(!in_array($class, self::$classes, true))
-      throw new e_model('Не соответсвует тип пользователя.');
+      throw new RuntimeException();
     $stmt = $this->pdo->prepare(self::$delete);
     $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':class', $class, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $query;
   }
 
@@ -145,7 +143,7 @@ class mapper_query2user{
               $this->delete($number, 'observer');
       if(empty($users['creator']))
         if(empty($this->query->get_creator()))
-          throw new e_model('Создатель заявки не может быть пустым.');
+          throw new RuntimeException();
         else
           $this->insert($this->query->get_creator(), 'creator');
       return $this->query;

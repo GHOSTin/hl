@@ -4,8 +4,6 @@ class mapper_work{
 	private $company;
 	private $pdo;
 
-	private static $alert = "Проблема в мапере работ.";
-
 	private static $find = "SELECT `id`,`company_id`, `status`, `name`
 		FROM `works` WHERE `company_id` = :company_id  AND `id` = :id";
 
@@ -20,7 +18,7 @@ class mapper_work{
 		$stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
 		$stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
 		if(!$stmt->execute())
-			throw new e_model(self::$alert);
+			throw new RuntimeException();
 		$count = $stmt->rowCount();
 		$factory = new factory_work();
 		if($count === 0)
@@ -28,6 +26,6 @@ class mapper_work{
 		elseif($count === 1)
 			return $factory->create($stmt->fetch());
 		else
-			throw new e_model(self::$alert);
+			throw new RuntimeException();
 	}
 }

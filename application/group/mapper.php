@@ -4,8 +4,6 @@ class mapper_group{
   private $company;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере групп.';
-
   private static $find = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id AND `id` = :id";
 
@@ -43,7 +41,7 @@ class mapper_group{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0){
       $stmt->closeCursor();
@@ -53,8 +51,7 @@ class mapper_group{
       $stmt->closeCursor();
       return $user;
     }else{
-      $stmt->closeCursor();
-      throw new e_model('Неожиданное количество записей.');
+      throw new RuntimeException();
     }
   }
 
@@ -63,7 +60,7 @@ class mapper_group{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':name', (string) $name, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0){
       $stmt->closeCursor();
@@ -73,8 +70,7 @@ class mapper_group{
       $stmt->closeCursor();
       return $user;
     }else{
-      $stmt->closeCursor();
-      throw new e_model('Неожиданное количество записей.');
+      throw new RuntimeException();
     }
   }
 
@@ -82,32 +78,24 @@ class mapper_group{
     return $this->company->get_id();
   }
 
-  /**
-  * Возвращает список групп.
-  * @return array
-  */
   public function get_groups(){
     $stmt = $this->pdo->prepare(self::$groups);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $groups = [];
     while($row = $stmt->fetch())
       $groups[] = $this->create_object($row);
     return $groups;
   }
 
-  /**
-  * Возвращает следующий для вставки идентификатор группы.
-  * @return int
-  */
   public function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-        throw new e_model('Проблема при опредении следующего group_id.');
+      throw new RuntimeException();
     $id = (int) $stmt->fetch()['max_id'] + 1;
     return $id;
   }
@@ -120,7 +108,7 @@ class mapper_group{
     $stmt->bindValue(':name', (string) $group->get_name(), PDO::PARAM_STR);
     $stmt->bindValue(':status', (string) $group->get_status(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $group;
   }
 
@@ -131,7 +119,7 @@ class mapper_group{
     $stmt->bindValue(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
     $stmt->bindValue(':name', (string) $group->get_name(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $group;
   }
 }

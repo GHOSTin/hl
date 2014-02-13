@@ -5,8 +5,6 @@ class mapper_street2house{
   private $street;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере сотношения цлиу и домов.';
-
   private static $houses = "SELECT `id`, `company_id`, `city_id`, `street_id`,
     `department_id`, `status`, `housenumber` as `number` FROM `houses`
     WHERE `street_id` = :street_id  ORDER BY (`houses`.`housenumber` + 0)";
@@ -46,7 +44,7 @@ class mapper_street2house{
     $stmt = $this->pdo->prepare(self::$houses);
     $stmt->bindValue(':street_id', $this->street->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $houses = [];
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch()){
@@ -69,7 +67,7 @@ class mapper_street2house{
     $stmt->bindValue(':status', (string) $house->get_status(), PDO::PARAM_STR);
     $stmt->bindValue(':number', (string) $house->get_number(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $house;
   }
 
@@ -78,14 +76,14 @@ class mapper_street2house{
     $stmt->bindValue(':house_id', (int) $id, PDO::PARAM_INT);
     $stmt->bindValue(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество домов');
+      throw new RuntimeException();
   }
 
   public function find_by_number($number){
@@ -93,22 +91,22 @@ class mapper_street2house{
     $stmt->bindValue(':number', (string) $number, PDO::PARAM_STR);
     $stmt->bindValue(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество домов');
+      throw new RuntimeException();
   }
 
   public function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-      throw new e_model('Проблема при опредении следующего house_id.');
+      throw new RuntimeException();
     $house_id = (int) $stmt->fetch()['max_house_id'] + 1;
     return $house_id;
   }

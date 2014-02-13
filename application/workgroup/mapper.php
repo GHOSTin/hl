@@ -4,8 +4,6 @@ class mapper_workgroup{
 	private $company;
 	private $pdo;
 
-	private static $alert = "Проблема в мапере работ.";
-
 	private static $many = "SELECT `id`,`company_id`, `status`,
 		`name` FROM `workgroups` WHERE `company_id` = :company_id";
 
@@ -27,7 +25,7 @@ class mapper_workgroup{
 		$stmt = $this->pdo->prepare(self::$many);
 		$stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
 		if(!$stmt->execute())
-			throw new e_model(self::$alert);
+			throw new RuntimeException();
 		$groups = [];
 		while($row = $stmt->fetch())
 			$groups[] = $this->create_object($row);

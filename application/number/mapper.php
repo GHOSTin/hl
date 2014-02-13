@@ -4,8 +4,6 @@ class mapper_number{
   private $company;
   private $pdo;
 
-  private static $alert = 'Проблемы в мапере лицевого счета.';
-
   private static $find = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
     `numbers`.`city_id`, `numbers`.`house_id`, 
     `numbers`.`flat_id`, `numbers`.`number`,
@@ -81,14 +79,14 @@ class mapper_number{
         $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
         $stmt->bindValue(':number_id', $id, PDO::PARAM_INT);
         if(!$stmt->execute())
-          throw new e_model(self::$alert);
+          throw new RuntimeException();
         $count = $stmt->rowCount();
         if($count === 0)
             return null;
         elseif($count === 1)
             return $this->create_object($stmt->fetch());
         if($count !== 1)
-            throw new e_model('Неожиданное количество возвращаемых лицевых счетов.');
+            throw new RuntimeException();
     }
 
     public function find_by_number($num){
@@ -99,14 +97,14 @@ class mapper_number{
         $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
         $stmt->bindValue(':number', (string) $num, PDO::PARAM_STR);
         if(!$stmt->execute())
-          throw new e_model(self::$alert);
+          throw new RuntimeException();
         $count = $stmt->rowCount();
         if($count === 0)
             return null;
         elseif($count === 1)
             return $this->create_object($stmt->fetch());
         if($count !== 1)
-            throw new e_model('Неожиданное количество возвращаемых лицевых счетов.');
+            throw new RuntimeException();
     }
 
     public function update(data_number $number){
@@ -121,7 +119,7 @@ class mapper_number{
         $stmt->bindValue(':cellphone', $number->get_cellphone(), PDO::PARAM_STR);
         $stmt->bindValue(':hash', $number->get_hash(), PDO::PARAM_STR);
         if(!$stmt->execute())
-          throw new e_model(self::$alert);
+          throw new RuntimeException();
         return $number;
     }
 

@@ -5,8 +5,6 @@ class mapper_user2profile{
   private $user;
   private $pdo;
 
-  private $alert = 'Проблема в мапере соотношения пользователя и профиля.';
-
   private static $many = "SELECT `profile` FROM `profiles`
     WHERE  `user_id` = :user_id AND `company_id` = :company_id";
 
@@ -42,7 +40,7 @@ class mapper_user2profile{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function find_all(){
@@ -50,7 +48,7 @@ class mapper_user2profile{
     $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $profiles = [];
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch())
@@ -64,14 +62,14 @@ class mapper_user2profile{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function insert(data_profile $profile){
@@ -83,6 +81,6 @@ class mapper_user2profile{
     $stmt->bindValue(':restrictions', json_encode($profile->get_restrictions()), PDO::PARAM_STR);
     $stmt->bindValue(':settings', '[]', PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 }

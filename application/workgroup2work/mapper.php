@@ -5,8 +5,6 @@ class mapper_workgroup2work{
   private $pdo;
   private $group;
 
-  private static $alert = "Проблема в мапере работ.";
-
   private static $many = "SELECT `id`,`company_id`, `status`, `name`
     FROM `works` WHERE `company_id` = :company_id
     AND `workgroup_id` = :group_id";
@@ -25,7 +23,7 @@ class mapper_workgroup2work{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $works = [];
     $factory = new factory_work();
     while($row = $stmt->fetch())

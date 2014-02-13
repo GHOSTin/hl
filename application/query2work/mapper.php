@@ -5,8 +5,6 @@ class mapper_query2work{
   private $query;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере соотношения заявки и работы.';
-
   private static $many = "SELECT `query2work`.`opentime` as `time_open`,
     `query2work`.`closetime` as `time_close`, `query2work`.`value`,
     `works`.`id`, `works`.`name`
@@ -48,7 +46,7 @@ class mapper_query2work{
     $stmt->bindValue(':work_id', $work->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $query;
   }
 
@@ -60,7 +58,7 @@ class mapper_query2work{
     $stmt->bindValue(':time_open', $work->get_time_open(), PDO::PARAM_INT);
     $stmt->bindValue(':time_close', $work->get_time_close(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $this->query;
   }
 
@@ -69,7 +67,7 @@ class mapper_query2work{
     $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $works = [];
     while($row = $stmt->fetch())
       $works[] = $this->create_object($row);

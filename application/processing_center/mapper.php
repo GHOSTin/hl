@@ -3,8 +3,6 @@ class mapper_processing_center{
 
   private $pdo;
 
-  private static $alert = 'Проблема в мапере процессинговых центров.';
-
   private static $all = "SELECT `id`, `name`
     FROM `processing_centers` ORDER BY `name`";
 
@@ -38,46 +36,38 @@ class mapper_processing_center{
     $stmt->bindValue(':id', (int) $center->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':name', (string) $center->get_name(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $center;
   }
 
   public function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$insert_id);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
     $user_id = (int) $stmt->fetch()['max_id'] + 1;
     return $user_id;
   }
 
-  /**
-  * Возвращает список процессинговых центров
-  * @return list object data_processing_center
-  */
   public function find($id){
     $stmt = $this->pdo->prepare(self::$one);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество процессинговых центров.');
+      throw new RuntimeException();
   }
 
-  /**
-  * Возвращает список процессинговых центров
-  * @return list object data_processing_center
-  */
   public function get_processing_centers(){
     $stmt = $this->pdo->prepare(self::$all);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $centers = [];
     while($row = $stmt->fetch())
       $centers[] = $this->create_object($row);
@@ -90,7 +80,7 @@ class mapper_processing_center{
     $stmt->bindValue(':id', (int) $center->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':name', (string) $center->get_name(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $center;
   }
 

@@ -5,8 +5,6 @@ class mapper_query2number{
   private $query;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере соотношения заявки и лицевых счетов.';
-
   private static $all = "SELECT `query2number`.* , `numbers`.`number`,
     `numbers`.`fio`, `flats`.`flatnumber`
     FROM `query2number`, `numbers`, `flats`
@@ -50,7 +48,7 @@ class mapper_query2number{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   private function insert(data_number $number){
@@ -61,7 +59,7 @@ class mapper_query2number{
     $stmt->bindValue(':default', 'false', PDO::PARAM_STR);
     $stmt->bindValue(':number_id', (int) $number->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $number;
   }
 
@@ -70,7 +68,7 @@ class mapper_query2number{
     $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $numbers = [];
     while($row = $stmt->fetch())
       $numbers[] = $this->create_object($row);
@@ -84,7 +82,7 @@ class mapper_query2number{
     $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $numbers = [];
     while($row = $stmt->fetch())
       $numbers[] = $this->create_object($row);

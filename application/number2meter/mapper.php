@@ -5,8 +5,6 @@ class mapper_number2meter{
   private $company;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере соотношения лицевого счета и счетчиков.';
-
   private static $get_meters = "SELECT `number2meter`.`meter_id`,
           `number2meter`.`status`,
           `meters`.`name`, `meters`.`rates`, `meters`.`capacity`,
@@ -120,14 +118,14 @@ class mapper_number2meter{
     $stmt->bindValue(':meter_id', $meter->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':serial', $meter->get_serial(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $stmt = $this->pdo->prepare(self::$delete_values);
     $stmt->bindValue(':number_id', $this->number->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':meter_id', $meter->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':serial', $meter->get_serial(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function init_meters(){
@@ -145,7 +143,7 @@ class mapper_number2meter{
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $meters = [];
     while($row = $stmt->fetch())
         $meters[] = $this->create_object($row);
@@ -159,14 +157,14 @@ class mapper_number2meter{
     $stmt->bindValue(':meter_id', (int) $meter_id, PDO::PARAM_INT);
     $stmt->bindValue(':serial', (string) $serial, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
         return null;
     elseif($count === 1)
         return $this->create_object($stmt->fetch());
     else
-        throw new e_model('Неожиданное количество возвращаемых счетчиков.');
+        throw new RuntimeException();
   }
 
   public function insert(data_number2meter $meter){
@@ -185,7 +183,7 @@ class mapper_number2meter{
     $stmt->bindValue(':period', (int) $meter->get_period(), PDO::PARAM_INT);
     $stmt->bindValue(':comment', (string) $meter->get_comment(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $meter;
   }
 
@@ -204,7 +202,7 @@ class mapper_number2meter{
     $stmt->bindValue(':place', (string) $meter->get_place(), PDO::PARAM_STR);
     $stmt->bindValue(':comment', (string) $meter->get_comment(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $meter;
   }
 
@@ -229,7 +227,7 @@ class mapper_number2meter{
       $stmt->bindValue(':new_serial', (string) $meter->get_serial(), PDO::PARAM_STR);
       $stmt->bindValue(':comment', (string) $meter->get_comment(), PDO::PARAM_STR);
       if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
       $stmt = $this->pdo->prepare(self::$change_values_serial);
       $stmt->bindValue(':number_id', $this->number->get_id(), PDO::PARAM_INT);
       $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -237,12 +235,12 @@ class mapper_number2meter{
       $stmt->bindValue(':old_meter_id', $meter->get_id(), PDO::PARAM_INT);
       $stmt->bindValue(':old_serial', $old_serial, PDO::PARAM_STR);
       if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
       $this->pdo->commit();
       return $meter;
     }catch(exception $e){
       $this->pdo->rollBack();
-      throw new e_model('Проблемы при изменении лицевого счета.');
+      throw new RuntimeException();
     }
   }
 
@@ -260,7 +258,7 @@ class mapper_number2meter{
       $stmt->bindValue(':old_meter_id', (int) $old_meter_id, PDO::PARAM_INT);
       $stmt->bindValue(':old_serial', (string) $old_serial, PDO::PARAM_STR);
       if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
       $stmt = $this->pdo->prepare(self::$change_values);
       $stmt->bindValue(':number_id', $this->number->get_id(), PDO::PARAM_INT);
       $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -268,12 +266,12 @@ class mapper_number2meter{
       $stmt->bindValue(':new_meter_id', $meter->get_id(), PDO::PARAM_INT);
       $stmt->bindValue(':old_serial', $meter->get_serial(), PDO::PARAM_STR);
       if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
       $this->pdo->commit();
       return $meter;
     }catch(exception $e){
       $this->pdo->rollBack();
-      throw new e_model('Проблема при изменении значений счетчика');
+      throw new RuntimeException();
     }
   }
 
@@ -298,7 +296,7 @@ class mapper_number2meter{
       return $this->number;
     }catch(exception $e){
       $this->pdo->rollBack();
-      throw new e_model('Проблема при обновлении списка счетчиков.');
+      throw new RuntimeException();
     }
   }
 

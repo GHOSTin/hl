@@ -6,8 +6,6 @@ class mapper_query2comment{
   private $company;
   private $query;
 
-  private static $alert = 'Проблема в мапере соотношения заявки и комментариев.';
-
   private static $find_all = "SELECT `query2comment`.`time`,
     `query2comment`.`message`, `users`.`id`, `users`.`lastname`,
     `users`.`firstname`, `users`.`midlename`
@@ -44,7 +42,7 @@ class mapper_query2comment{
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $comments = [];
     while($row = $stmt->fetch())
       $comments[] = $this->create_object($row);
@@ -67,7 +65,7 @@ class mapper_query2comment{
     $stmt->bindValue(':time', $comment->get_time(), PDO::PARAM_INT);
     $stmt->bindValue(':message', $comment->get_message(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function update(){

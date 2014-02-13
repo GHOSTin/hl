@@ -41,7 +41,7 @@ class mapper_group2user{
     $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function delete(data_user $user){
@@ -50,14 +50,14 @@ class mapper_group2user{
     $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function get_users(){
     $stmt = $this->pdo->prepare(self::$many);
     $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $users = [];
     while($row = $stmt->fetch()){
       $user = $this->create_object($row);
@@ -90,7 +90,7 @@ class mapper_group2user{
       return $this->group;
     }catch(exception $e){
       $this->pdo->rollBack();
-      throw new e_model('Проблемы при обновлении списка пользователей.');
+        throw new RuntimeException();
     }
   }
 }

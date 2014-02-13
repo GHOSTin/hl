@@ -5,8 +5,6 @@ class mapper_house2flat{
   private $house;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере ассоциации дома и квартиры.';
-
   private static $get_flats = "SELECT `id`, `house_id`, `status`,
     `flatnumber` as `number` FROM `flats` WHERE `house_id` = :house_id
     ORDER BY (`flatnumber` + 0)";
@@ -29,7 +27,7 @@ class mapper_house2flat{
     $stmt = $this->pdo->prepare(self::$get_flats);
     $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $flats = [];
     $factory = new factory_flat();
     while($row = $stmt->fetch())
@@ -40,9 +38,9 @@ class mapper_house2flat{
   public function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $flat_id = (int) $stmt->fetch()['max_flat_id'] + 1;
     return $flat_id;
   }
@@ -63,7 +61,7 @@ class mapper_house2flat{
     $stmt->bindValue(':status', (string) $flat->get_status(), PDO::PARAM_STR);
     $stmt->bindValue(':number', (string) $flat->get_number(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $flat;
   }
 

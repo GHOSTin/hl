@@ -44,7 +44,7 @@ class mapper_error{
     $stmt->bindValue(':time', (int) $error->get_time(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', (int) $error->get_user()->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model('Проблема при удалении сообщения об ошибке.');
+      throw new RuntimeException();
   }
 
   public function find($time, $user_id){
@@ -52,20 +52,20 @@ class mapper_error{
     $stmt->bindValue(':time', (int) $time, PDO::PARAM_INT);
     $stmt->bindValue(':user_id', (int) $user_id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model('Проблема при получения сообщения об ошибке.');
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Проблема при получения сообщения об ошибке.');
+      throw new RuntimeException();
   }
 
   public function find_all(){
     $stmt = $this->pdo->prepare(self::$find_all);
     if(!$stmt->execute())
-      throw new e_model('Проблема при выборке сообщений об ошибке.');
+      throw new RuntimeException();
     $errors = [];
     while($row = $stmt->fetch())
       $errors[] = $this->create_object($row);
@@ -78,7 +78,7 @@ class mapper_error{
     $stmt->bindValue(':user_id', $error->get_user()->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':text', $error->get_text(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model('Проблема при вставке сообщения об ошибке.');
+      throw new RuntimeException();
     return $error;
   }
 }

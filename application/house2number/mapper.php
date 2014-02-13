@@ -5,8 +5,6 @@ class mapper_house2number{
   private $house;
   private $pdo;
 
-  private static $alert = 'Проблемы в мапере ассоциации дома и лицевого счета.';
-
   private static $many = "SELECT `numbers`.`id`, `numbers`.`company_id`,
     `numbers`.`city_id`, `numbers`.`house_id`, `numbers`.`flat_id`,
     `numbers`.`number`, `numbers`.`type`, `numbers`.`status`, `numbers`.`fio`,
@@ -82,14 +80,14 @@ class mapper_house2number{
     $stmt->bindValue(':house_id', $this->house->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number', (string) $number, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное колличество записей');
+      throw new RuntimeException();
   }
 
   private function get_numbers(){
@@ -97,7 +95,7 @@ class mapper_house2number{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $numbers = [];
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch())
@@ -130,7 +128,7 @@ class mapper_house2number{
     $stmt->bindValue(':contact_telephone', '', PDO::PARAM_STR);
     $stmt->bindValue(':contact_cellphone', '', PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $number;
   }
 
@@ -139,9 +137,9 @@ class mapper_house2number{
     $stmt->bindValue(':city_id', (int) $this->house->get_city()->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $number_id = (int) $stmt->fetch()['max_number_id'] + 1;
     return $number_id;
   }

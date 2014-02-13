@@ -8,10 +8,6 @@ class model_group{
 		data_company::verify_id($this->company->get_id());
 	}
 
-	/**
-	* Создает группу.
-	* @return object data_group
-	*/
 	public function create_group($name, $status){
 		$mapper = new mapper_group($this->company);
 		if(!is_null($mapper->find_by_name($name)))

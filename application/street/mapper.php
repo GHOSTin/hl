@@ -4,8 +4,6 @@ class mapper_street{
 
   private $pdo;
 
-  private static $alert = 'Проблема в мапере улицы.';
-
   private static $many = "SELECT DISTINCT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` ORDER BY `name`";
 
@@ -20,7 +18,7 @@ class mapper_street{
     $stmt = $this->pdo->prepare(self::$one);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);;
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     $factory = new factory_street();
     if($count === 0)
@@ -28,13 +26,13 @@ class mapper_street{
     elseif($count === 1)
       return $factory->create($stmt->fetch());
     else
-      throw new e_model('Неожиданное чисто записей');
+      throw new RuntimeException();
   }
 
   public function get_streets(){
     $stmt = $this->pdo->prepare(self::$many);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $streets = [];
     $factory = new factory_street();
     if($stmt->rowCount() > 0)

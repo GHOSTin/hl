@@ -49,14 +49,14 @@ class mapper_meter{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model('Проблема при запросе счетчика.');
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество возвращаемых счетчиков.');
+      throw new RuntimeException();
   }
 
   public function get_meters_by_service($service){
@@ -64,7 +64,7 @@ class mapper_meter{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':service', (string) $service, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model('Проблема при выборке счетчиков.');
+      throw new RuntimeException();
     $meters = [];
     while($row = $stmt->fetch())
       $meters[] = $this->create_object($row);
@@ -75,7 +75,7 @@ class mapper_meter{
     $stmt = $this->pdo->prepare(self::$all);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model('Проблема при выборке счетчиков.');
+      throw new RuntimeException();
     $meters = [];
     while($row = $stmt->fetch())
       $meters[] = $this->create_object($row);

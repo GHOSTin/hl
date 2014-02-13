@@ -3,8 +3,6 @@ class mapper_city{
 
   private $pdo;
 
-  private static $alert = 'Проблема в мапере города.';
-
   private static $one_by_name = "SELECT `id`, `status`, `name`
     FROM `cities` WHERE `name` = :name";
 
@@ -27,27 +25,27 @@ class mapper_city{
     $stmt = $this->pdo->prepare(self::$one_by_name);
     $stmt->bindValue(':name', (string) $name, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество записей.');
+      throw new RuntimeException();
   }
 
   public function find($id){
     $stmt = $this->pdo->prepare(self::$one);
     $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
       return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-      throw new e_model('Неожиданное количество записей.');
+      throw new RuntimeException();
   }
 }

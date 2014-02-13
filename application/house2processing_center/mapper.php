@@ -6,8 +6,6 @@ class mapper_house2processing_center{
   private $centers;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере ассоциаций дома и процессингового центра.';
-
   private static $delete = "DELETE FROM `house2processing_center`
     WHERE `company_id` = :company_id AND `house_id` = :house_id
     AND `center_id` = :center_id";
@@ -46,7 +44,7 @@ class mapper_house2processing_center{
     $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':center_id', (int) $center->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function init_processing_centers(){
@@ -63,7 +61,7 @@ class mapper_house2processing_center{
     $stmt->bindValue(':center_id', (int) $center->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':identifier', (string) $center->get_identifier(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   private function get_processing_centers(){
@@ -71,7 +69,7 @@ class mapper_house2processing_center{
     $stmt->bindValue(':house_id', (int) $this->house->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $centers = [];
     if($stmt->rowCount() > 0)
     while($row = $stmt->fetch())
@@ -97,7 +95,7 @@ class mapper_house2processing_center{
       return $this->house;
     }catch(exception $e){
       $this->pdo->rollBack();
-      throw new e_model('Проблема при обновлении списка процессинговых центров.');
+      throw new RuntimeException();
     }
   }
 }

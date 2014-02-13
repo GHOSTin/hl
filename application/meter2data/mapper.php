@@ -7,8 +7,6 @@ class mapper_meter2data{
   private $number;
   private $meter;
 
-  private static $alert = 'Проблема в мапере соотношения счетчиков и показаний';
-
   private static $all = "SELECT `time`, `value`, `comment`, `way`, `timestamp`
     FROM `meter2data` WHERE `meter2data`.`company_id` = :company_id
     AND `meter2data`.`number_id` = :number_id AND `meter2data`.`meter_id` = :meter_id
@@ -78,7 +76,7 @@ class mapper_meter2data{
     $stmt->bindValue(':way', (string) $value->get_way(), PDO::PARAM_STR);
     $stmt->bindValue(':comment', (string) $value->get_comment(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $value;
   }
 
@@ -92,14 +90,14 @@ class mapper_meter2data{
     $stmt->bindValue(':serial', (int) $this->meter->get_serial(), PDO::PARAM_STR);
     $stmt->bindValue(':time', (int) $time, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
         return null;
     elseif($count === 1)
         return $this->create_object($stmt->fetch());
     else
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
   }
 
   public function get_values($begin, $end){
@@ -111,7 +109,7 @@ class mapper_meter2data{
     $stmt->bindValue(':time_begin', (int) $begin, PDO::PARAM_INT);
     $stmt->bindValue(':time_end', (int) $end, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $values = [];
     while($row = $stmt->fetch())
       $values[] = $this->create_object($row);
@@ -132,7 +130,7 @@ class mapper_meter2data{
     $stmt->bindValue(':way', (string) $data->get_way(), PDO::PARAM_STR);
     $stmt->bindValue(':comment', (string) $data->get_comment(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $data;
   }
 

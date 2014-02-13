@@ -5,8 +5,6 @@ class mapper_number2processing_center{
   private $number;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере соотношения лицевого счета и процессинговго центра.';
-
   private static $all = "SELECT
     `processing_center2number`.`company_id`,
     `processing_center2number`.`processing_center_id`, 
@@ -43,7 +41,7 @@ class mapper_number2processing_center{
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':identifier', (string) $n2c->get_identifier(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function delete(data_number2processing_center $n2c){
@@ -52,7 +50,7 @@ class mapper_number2processing_center{
     $stmt->bindValue(':processing_center_id', (int) $n2c->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
   }
 
   public function create_object(array $row){
@@ -76,7 +74,7 @@ class mapper_number2processing_center{
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $centers = [];
     while($row = $stmt->fetch())
       $centers[] = $this->create_object($row);

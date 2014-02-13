@@ -4,8 +4,6 @@ class mapper_query{
   private $company;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере заявок.';
-
   private static $find_by_number = "SELECT `queries`.`id`,
     `queries`.`status`, `queries`.`initiator-type` as `initiator`,
     `queries`.`payment-status` as `payment_status`,
@@ -190,7 +188,7 @@ class mapper_query{
     $stmt->bindValue(':description', $query->get_description(), PDO::PARAM_STR);
     $stmt->bindValue(':number', $query->get_number(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $query;
   }
 
@@ -199,14 +197,14 @@ class mapper_query{
     $stmt->bindValue(':id', (int) $query_id, PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
         return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-        throw new e_model('Неожиданное количество возвращаемых заявок.');
+        throw new RuntimeException();
   }
 
   public function get_queries_by_number($number){
@@ -214,7 +212,7 @@ class mapper_query{
     $stmt->bindValue(':number', (int) $number, PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
     $queries = [];
     while($row = $stmt->fetch())
       $queries[] = $this->create_object($row);
@@ -242,7 +240,7 @@ class mapper_query{
     $stmt->bindValue(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':initiator', $query->get_initiator(), PDO::PARAM_STR);
     if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
     return $query;
   }
 
@@ -250,9 +248,9 @@ class mapper_query{
     $stmt = $this->pdo->prepare(self::$id);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $query_id = (int) $stmt->fetch()['max_query_id'] + 1;
     return $query_id;
   }
@@ -264,9 +262,9 @@ class mapper_query{
     $stmt->bindValue(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
     $stmt->bindValue(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
     if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $query_number = (int) $stmt->fetch()['querynumber'] + 1;
     return $query_number;
   }
@@ -306,7 +304,7 @@ class mapper_query{
       foreach($prms as $param)
         $stmt->bindValue($param[0], $param[1], $param[2]);
     if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
     $queries = [];
     while($row = $stmt->fetch())
       $queries[] = $this->create_object($row);

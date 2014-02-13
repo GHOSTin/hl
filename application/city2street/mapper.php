@@ -4,8 +4,6 @@ class mapper_city2street{
   private $city;
   private $pdo;
 
-  private static $alert = 'Проблема в мапере соотношения города и улиц.';
-
   private static $one = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
     FROM `streets` WHERE `city_id` = :city_id AND `id` = :street_id";
 
@@ -27,9 +25,9 @@ class mapper_city2street{
   public function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
-      throw new e_model('Проблема при опредении следующего street_id.');
+      throw new RuntimeException();
     $street_id = (int) $stmt->fetch()['max_street_id'] + 1;
     return $street_id;
   }
@@ -39,7 +37,7 @@ class mapper_city2street{
     $stmt->bindValue(':city_id', (int) $this->city->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':street_id', (int) $id, PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     $factory = new factory_street();
     if($count === 0)
@@ -47,7 +45,7 @@ class mapper_city2street{
     elseif($count === 1)
       return $factory->create($stmt->fetch());
     else
-      throw new e_model('Неожиданное чисто записей');
+      throw new RuntimeException();
   }
 
   public function get_street_by_name($name){
@@ -55,7 +53,7 @@ class mapper_city2street{
     $stmt->bindValue(':city_id', (int) $this->city->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':name', (string) $name, PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     $count = $stmt->rowCount();
     $factory = new factory_street();
     if($count === 0)
@@ -63,7 +61,7 @@ class mapper_city2street{
     elseif($count === 1)
       return $factory->create($stmt->fetch());
     else
-      throw new e_model('Неожиданное чисто записей');
+      throw new RuntimeException();
   }
 
   public function insert(data_street $street){
@@ -74,7 +72,7 @@ class mapper_city2street{
     $stmt->bindValue(':status', $street->get_status(), PDO::PARAM_STR);
     $stmt->bindValue(':name', $street->get_name(), PDO::PARAM_STR);
     if(!$stmt->execute())
-      throw new e_model(self::$alert);
+      throw new RuntimeException();
     return $street;
   }
 

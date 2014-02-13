@@ -13,8 +13,6 @@ class collection_query{
   private $query2user = [];
   private $query2work = [];
 
-  private static $alert = 'Проблема в коллекции.';
-
   public function __construct(data_company $company, array $queries){
     $this->company = $company;
     data_company::verify_id($this->company->get_id());
@@ -99,7 +97,7 @@ class collection_query{
           AND `numbers`.`flat_id` = `flats`.`id`");
       $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
       if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
       while($row = $stmt->fetch()){
         $number = $this->create_number($row);
         $this->numbers[$number->get_id()] = $number;
@@ -120,7 +118,7 @@ class collection_query{
       AND `query2user`.`query_id` IN(".$ids.")");
       $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
       if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
       while($row = $stmt->fetch()){
         $user = $this->create_user($row);
         $this->users[$user->get_id()] = $user;
@@ -142,7 +140,7 @@ class collection_query{
         AND `query2work`.`query_id` IN(".$ids.")");
       $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
       if(!$stmt->execute())
-        throw new e_model(self::$alert);
+        throw new RuntimeException();
       while($row = $stmt->fetch()){
         $work = $this->create_work($row);
         $this->works[$work->get_id()] = $work;
