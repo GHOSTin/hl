@@ -107,7 +107,6 @@
     if($stmt->rowCount() !== 0)
         throw new e_model('Пользователь с таким логином уже существует.');
     $user->set_id($this->get_insert_id());
-    $user->verify('firstname', 'lastname', 'middlename', 'login', 'status');
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', 2, PDO::PARAM_INT);
@@ -119,14 +118,12 @@
     $stmt->bindValue(':password', $user->get_hash(), PDO::PARAM_STR);
     $stmt->bindValue(':telephone', $user->get_telephone(), PDO::PARAM_STR);
     $stmt->bindValue(':cellphone', $user->get_cellphone(), PDO::PARAM_STR);
-    if($stmt->execute())
+    if(!$stmt->execute())
       throw new e_model(self::$alert);
     return $user;
   }
 
   public function update(data_user $user){
-    // $user->verify('id', 'firstname', 'middlename', 'lastname', 'status',
-    //   'login', 'telephone');
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':firstname', $user->get_firstname(), PDO::PARAM_STR);
     $stmt->bindValue(':lastname', $user->get_lastname(), PDO::PARAM_STR);
