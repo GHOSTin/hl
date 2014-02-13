@@ -1,4 +1,5 @@
 {% extends "default.tpl" %}
+{% set client_queries = component.client_queries %}
 {% block component %}
     <!-- begin left block -->
     <div class="col-sm-3 col-lg-3">
@@ -22,6 +23,9 @@
             <nav class="timeline row">
                 {% include '@query/timeline.tpl' %}
             </nav>
+            <div class="client_queries row">
+                {% include '@query/build_client_query_titles.tpl' %}
+            </div>
             <!-- end timeline, begin queries -->
             <div class="queries row">
                 {% include '@query/query_titles.tpl' %}
