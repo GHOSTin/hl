@@ -39,7 +39,7 @@ class data_import{
     $flats = [];
     if(!empty($this->xml->flat))
       foreach($this->xml->flat as $flat_node)
-        $flats[] = (string) $flat_node->attributes()->number;
+        $flats[] = trim((string) $flat_node->attributes()->number);
     return $flats;
   }
 

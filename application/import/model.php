@@ -47,7 +47,7 @@ class model_import{
 		$i = 0;
 		$mapper = new mapper_house2number($this->company, $house);
 		foreach($xml->flat as $flat_node){
-			$flat_number = (string) $flat_node->attributes()->number;
+			$flat_number = trim((string) $flat_node->attributes()->number);
 			if(!array_key_exists($flat_number, $old))
 				throw new e_model('Не существует такой квартиры.');
 			if(count($flat_node->number) > 0)
@@ -139,8 +139,8 @@ class model_import{
 			else{
 				$number = new data_number();
 				$number->set_id($mapper->get_insert_id());
-				$number->set_number($number_data['number']);
-				$number->set_fio($number_data['fio']);
+				$number->set_number(trim($number_data['number']));
+				$number->set_fio(trim($number_data['fio']));
 				$number->set_flat($old[$number_data['flat']]);
 				$number->set_status('true');
 				$mapper->insert($number);
@@ -162,7 +162,7 @@ class model_import{
 			if(!in_array($flat_data, $old)){
 				$flat = new data_flat();
 				$flat->set_id($mapper->get_insert_id());
-				$flat->set_number($flat_data);
+				$flat->set_number(trim($flat_data));
 				$flat->set_status('true');
 				$mapper->insert($flat);
 			}
