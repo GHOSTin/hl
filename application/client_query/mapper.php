@@ -36,7 +36,7 @@ class mapper_client_query extends mapper{
     if(!$stmt->execute())
       throw new RuntimeException();
     $queries = [];
-    $factory = new factory_client_query();
+    $factory = di::get('factory_client_query');
     while($row = $stmt->fetch())
       $queries[] = $factory->build($row);
     return $queries;

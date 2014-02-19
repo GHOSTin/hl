@@ -2,6 +2,13 @@
 
 class mapper_client_query_Test extends PHPUnit_Framework_TestCase{
 
+  public static function setUpBeforeClass(){
+    $pimple = di::get_instance();
+    $pimple['factory_client_query'] = function($p){
+      return new factory_client_query();
+    };
+  }
+
   public function setUp(){
     $this->pdo = $this->getMock('pdo_mock');
     $this->stmt = $this->getMock('PDOStatement');

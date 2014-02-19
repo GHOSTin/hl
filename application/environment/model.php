@@ -71,5 +71,10 @@ class model_environment{
 			model_session::set_user($_SESSION['user']);
 			model_session::set_company($_SESSION['company']);
 		}
+
+		$pimple = di::get_instance();
+		$pimple['factory_client_query'] = function($p){
+			return new factory_client_query();
+		};
 	}
 }

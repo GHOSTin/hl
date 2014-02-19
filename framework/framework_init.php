@@ -27,38 +27,6 @@ function framework_autoload($class_name){
 }
 spl_autoload_register('framework_autoload');
 
-class component_session_manager{
-
-	public $component;
-	public $storage;
-
-	public function __construct($storage, $component){
-		if(strlen($component) < 1)
-			throw new e_model('Проблема в сесси компонента.');
-		$this->component = $component;
-		$this->storage = $storage;
-	}
-
-	public function set($key, $value){
-		$this->storage->set($this, $key, $value);
-	}
-
-	public function get($key){
-		return $this->storage->get($this, $key);
-	}
-}
-
-class php_session_storage{
-
-	public function set($manager, $key, $value){
-		$_SESSION['components'][$manager->component][$key] = $value;
-	}
-
-	public function get($manager, $key){
-		return $_SESSION['components'][$manager->component][$key];
-	}
-}
-
 class mem{
 
 	private $name;
@@ -73,29 +41,6 @@ class mem{
 
 	public function save(array $params){
 		$_SESSION['model'][$this->name] = $params;
-	}
-}
-
-
-require_once(ROOT.'/libs/Pimple.php');
-
-class di{
-
-	private static $instance;
-
-	private function __construct(){}
-	private function __clone(){}
-	private function __wakeup(){}
-
-	public static function get_instance(){
-		if(is_null(self::$instance))
-			self::$instance = new Pimple();
-		return self::$instance;
-	}
-
-	public static function get($key){
-		$pimple = self::get_instance();
-		return $pimple[$key];
 	}
 }
 
@@ -125,13 +70,4 @@ function load_template($name, array $args = []){
   $loader = $twig->getLoader();
   $loader->prependPath($template_dir, $component);
   return $twig->render('@'.$component.'/'.$template.'.tpl', $args);
-}
-
-class mapper{
-
-  protected $pdo;
-
-  public function __construct(PDO $pdo){
-    $this->pdo = $pdo;
-  }
 }
