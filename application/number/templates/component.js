@@ -240,6 +240,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    }).on('click', '.get_dialog_edit_department', function(){
+        $.get('get_dialog_edit_department',{
+            house_id: get_house_id($(this))
+            },function(r){
+                init_content(r);
+            });
+        
+
     // выводит содержимое счетчика
     }).on('click', '.get_meter_data', function(){
         if($(this).siblings().is('.meter-data'))
