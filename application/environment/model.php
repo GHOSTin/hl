@@ -67,14 +67,20 @@ class model_environment{
 	}
 
 	public static function before(){
+		$pimple = di::get_instance();
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
 			model_session::set_user($_SESSION['user']);
 			model_session::set_company($_SESSION['company']);
+			$pimple['user'] = $_SESSION['user'];
+			$pimple['company'] = $_SESSION['company'];
 		}
 
-		$pimple = di::get_instance();
 		$pimple['factory_client_query'] = function($p){
 			return new factory_client_query();
+		};
+
+		$pimple['mapper_number'] = function($p){
+			return new mapper_number($p['pdo'], $p['company']);
 		};
 	}
 }

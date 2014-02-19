@@ -9,20 +9,15 @@ class model_number{
 	}
 	
 	public function get_number($id){
-		$mapper = new mapper_number($this->company);
-		$number = $mapper->find($id);
+		$number = di::get('mapper_number')->find($id);
 		if(!($number instanceof data_number))
 			throw new e_model('Счетчика не существует.');			
 		return $number;
 	}
 
-	/**
-	* Обновляет номер лицевого счета
-	* @return object data_number
-	*/
 	public function update_number($id, $num){
 		$number = $this->get_number($id);
-		$mapper = new mapper_number($this->company);
+		$mapper = di::get('mapper_number');
 		$old_number = $mapper->find_by_number($num);
 		if(!is_null($old_number))
 			if($number->get_id() != $old_number->get_id())
@@ -32,39 +27,27 @@ class model_number{
 		return $number;
 	}
 
-	/**
-	* Обновляет номер лицевого счета
-	* @return object data_number
-	*/
 	public function update_password($id, $password){
 		$number = $this->get_number($id);
-		$mapper = new mapper_number($this->company);
+		$mapper = di::get('mapper_number');
 		$hash = md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
 		$number->set_hash($hash);
 		$mapper->update($number);
 		return $number;
 	}
 
-	/**
-	* Обновляет ФИО владельца лицевого счета
-	* @return object data_number
-	*/
 	public function update_number_fio($id, $fio){
 		$number = $this->get_number($id);
 		$number->set_fio($fio);
-		$mapper = new mapper_number($this->company);
+		$mapper = di::get('mapper_number');
 		$mapper->update($number);
 		return $number;
 	}
 
-	/**
-	* Обновляет сотовый телефон владельца лицевого счета
-	* @return object data_number
-	*/
 	public function update_number_cellphone($id, $cellphone){
 		$number = $this->get_number($id);
 		$number->set_cellphone($cellphone);
-		$mapper = new mapper_number($this->company);
+		$mapper = di::get('mapper_number');
 		$mapper->update($number);
 		return $number;
 	}
@@ -72,19 +55,15 @@ class model_number{
 	public function update_number_email($id, $email){
 		$number = $this->get_number($id);
 		$number->set_email($email);
-		$mapper = new mapper_number($this->company);
+		$mapper = di::get('mapper_number');
 		$mapper->update($number);
 		return $number;
 	}
 
-	/**
-	* Обновляет телефон владельца лицевого счета
-	* @return object data_number
-	*/
 	public function update_number_telephone($id, $telephone){
 		$number = $this->get_number($id);
 		$number->set_telephone($telephone);
-		$mapper = new mapper_number($this->company);
+		$mapper = di::get('mapper_number');
 		$mapper->update($number);
 		return $number;
 	}
