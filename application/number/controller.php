@@ -48,6 +48,19 @@ class controller_number{
     return ['house' => $house];
   }
 
+  public static function private_edit_department(
+    model_request $request){
+    $house = (new model_house)->edit_department($request->GET('house_id'),
+      $request->GET('department_id'));
+    $departments = (new model_department(model_session::get_company()))
+      ->get_departments();
+    $dep = [];
+    if(!empty($departments))
+      foreach($departments as $department)
+        $dep[$department->get_id()] = $department->get_name();
+    return ['house' => $house, 'departments' => $dep];
+  }
+
   public static function private_remove_house_processing_center(
     model_request $request){
     $house = new data_house($request->GET('house_id'));
@@ -158,6 +171,7 @@ class controller_number{
     $house = (new model_house)->get_house($request->GET('house_id'));
     $departments = (new model_department(model_session::get_company()))
       ->get_departments();
+
     return ['house' => $house, 'departments' => $departments];
   }
 

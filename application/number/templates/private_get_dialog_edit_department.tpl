@@ -11,7 +11,7 @@
 	</select>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn edit_department">Добавить</div>
+	<div class="btn edit_department">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 // Добавляет идентификатор в процессинговом центре
