@@ -34,7 +34,7 @@ class mapper_client_query extends mapper{
     $stmt = $this->pdo->prepare(self::$find_all);
     $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-      throw new alert(self::$error);
+      throw new RuntimeException();
     $queries = [];
     $factory = new factory_client_query();
     while($row = $stmt->fetch())
