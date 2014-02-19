@@ -25,7 +25,7 @@ class mapper_client_query extends mapper{
     if($count === 0)
       return null;
     elseif($count === 1)
-      return (new factory_client_query)->build($stmt->fetch());
+      return di::get('factory_client_query')->build($stmt->fetch());
     else
       throw new RuntimeException();
   }
