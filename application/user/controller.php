@@ -10,8 +10,8 @@ class controller_user{
     $user->set_id($request->take_get('user_id'));
     (new model_user2profile($company, $user))
       ->add_profile($request->take_get('profile'));
-    return ['companies' => (new model_user2profile($company, $user))
-      ->get_companies()];
+    return ['companies' => (new mapper_user2company(di::get('pdo'), $user))
+      ->find_all()];
   }
 
   public static function private_add_user(model_request $request){

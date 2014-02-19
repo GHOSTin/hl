@@ -2,6 +2,7 @@
 <ul class="unstyled">
   <li>ID: {{ house.get_id() }}</li>
   <li>Номер: {{ house.get_number() }}</li>
+  <li>Участок: {{ departments[house.get_department().get_id()] }} <a class="cm get_dialog_edit_department">изменить</a></li>
 </ul>
 <h5>Процессинговые центры</h5>
 <a class="get_dialog_add_house_processing_center">Добавить</a>

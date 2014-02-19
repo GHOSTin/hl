@@ -48,6 +48,19 @@ class controller_number{
     return ['house' => $house];
   }
 
+  public static function private_edit_department(
+    model_request $request){
+    $house = (new model_house)->edit_department($request->GET('house_id'),
+      $request->GET('department_id'));
+    $departments = (new model_department(model_session::get_company()))
+      ->get_departments();
+    $dep = [];
+    if(!empty($departments))
+      foreach($departments as $department)
+        $dep[$department->get_id()] = $department->get_name();
+    return ['house' => $house, 'departments' => $dep];
+  }
+
   public static function private_remove_house_processing_center(
     model_request $request){
     $house = new data_house($request->GET('house_id'));
@@ -153,6 +166,15 @@ class controller_number{
       ->get_processing_centers()];
   }
 
+  public static function private_get_dialog_edit_department(
+    model_request $request){
+    $house = (new model_house)->get_house($request->GET('house_id'));
+    $departments = (new model_department(model_session::get_company()))
+      ->get_departments();
+
+    return ['house' => $house, 'departments' => $departments];
+  }
+
   public static function private_get_dialog_change_meter(
     model_request $request){
     return self::data_for_meters_dialog($request);
@@ -220,14 +242,20 @@ class controller_number{
     $house = (new model_house)->get_house($request->take_get('id'));
     (new model_house2number(model_session::get_company(), $house))
       ->init_numbers();
-    return ['house' => $house];
+    return ['house' => $house, 'departments' => $dep];
   }
 
   public static function private_get_house_information(model_request $request){
     $house = (new model_house)->get_house($request->GET('id'));
     (new model_house2processing_center(
       model_session::get_company(), $house))->init_processing_centers();
-    return ['house' => $house];
+        $departments = (new model_department(model_session::get_company()))
+      ->get_departments();
+    $dep = [];
+    if(!empty($departments))
+      foreach($departments as $department)
+        $dep[$department->get_id()] = $department->get_name();
+    return ['house' => $house, 'departments' => $dep];
   }
 
   public static function private_get_house_numbers(model_request $request){

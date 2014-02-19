@@ -7,4 +7,13 @@ class model_house{
 			throw new e_model('Дом не существует.');
 		return $house;
 	}
+
+  public function edit_department($house_id, $department_id){
+    $house = $this->get_house($house_id);
+    $department = (new model_department(model_session::get_company()))
+      ->get_department($department_id);
+    $house->set_department($department);
+    (new mapper_house)->update($house);
+    return $house;
+  }
 }
