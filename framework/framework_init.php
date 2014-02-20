@@ -43,25 +43,9 @@ class mem{
 		$_SESSION['model'][$this->name] = $params;
 	}
 }
-
-$pimple = di::get_instance();
-
-$pimple['pdo'] = $pimple->share(function($pimple){
-	$pdo = new PDO('mysql:host='.application_configuration::database_host.';dbname='.application_configuration::database_name, application_configuration::database_user, application_configuration::database_password);
-	$pdo->exec("SET NAMES utf8");
-	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-  return $pdo;
-});
-
 require_once ROOT.'/libs/Twig/Autoloader.php';
 Twig_Autoloader::register();
 
-$pimple['twig'] = $pimple->share(function($pimple){
-	$options = [];
-	$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
-	return new Twig_Environment($loader, $options);
-});
 
 function load_template($name, array $args = []){
   $twig = di::get_instance()['twig'];

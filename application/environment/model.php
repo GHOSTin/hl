@@ -67,7 +67,8 @@ class model_environment{
 	}
 
 	public static function before(){
-		$pimple = di::get_instance();
+		$pimple = new Pimple();
+
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
 			model_session::set_user($_SESSION['user']);
 			model_session::set_company($_SESSION['company']);
@@ -86,5 +87,21 @@ class model_environment{
 		$pimple['mapper_user'] = function($p){
 			return new mapper_user($p['pdo']);
 		};
+
+		$pimple['twig'] = $pimple->share(function($pimple){
+			$options = [];
+			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
+			return new Twig_Environment($loader, $options);
+		});
+
+		$pimple['pdo'] = $pimple->share(function($pimple){
+			$pdo = new PDO('mysql:host='.application_configuration::database_host.';dbname='.application_configuration::database_name, application_configuration::database_user, application_configuration::database_password);
+			$pdo->exec("SET NAMES utf8");
+			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		  return $pdo;
+		});
+		
+		di::set_instance($pimple);
 	}
 }

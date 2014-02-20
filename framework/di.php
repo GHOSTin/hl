@@ -6,14 +6,13 @@ class di{
 
   private static $instance;
 
-  private function __construct(){}
-  private function __clone(){}
-  private function __wakeup(){}
 
   public static function get_instance(){
-    if(is_null(self::$instance))
-      self::$instance = new Pimple();
     return self::$instance;
+  }
+
+  public static function set_instance($instance){
+    return self::$instance = $instance;
   }
 
   public static function get($key){
