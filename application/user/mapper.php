@@ -1,7 +1,5 @@
   <?php
-  class mapper_user{
-
-  private $pdo;
+  class mapper_user extends mapper{
 
   private static $LOGIN = "SELECT `id`, `company_id`, `status`,
     `username` as `login`, `firstname`, `lastname`,
@@ -28,10 +26,6 @@
   private static $get_users = "SELECT `id`, `company_id`, `status`,
     `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
     `password`, `telephone`, `cellphone` FROM `users` ORDER BY `lastname`";
-
-  public function __construct(){
-    $this->pdo = di::get('pdo');
-  }
 
   public function create_object(array $row){
     $user = new data_user();

@@ -8,7 +8,7 @@ class controller_default_page{
   public static function public_show_default_page(model_request $request){
     if(!is_null($request->take_post('login'))
       AND !is_null($request->take_post('password'))){
-      $mapper = new mapper_user();
+      $mapper = di::get('mapper_user');
       $user = $mapper->find_by_login_and_password($request->take_post('login'),
                                               $request->take_post('password'));
       if(!is_null($user)){

@@ -82,5 +82,9 @@ class model_environment{
 		$pimple['mapper_number'] = function($p){
 			return new mapper_number($p['pdo'], $p['company']);
 		};
+
+		$pimple['mapper_user'] = function($p){
+			return new mapper_user($p['pdo']);
+		};
 	}
 }
