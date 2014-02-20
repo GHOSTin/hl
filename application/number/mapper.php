@@ -66,7 +66,7 @@ class mapper_number extends mapper{
         $house->set_id($row['house_id']);
         $house->set_number($row['house_number']);
         $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
-        $flat = (new factory_flat)->create($flat);
+        $flat = di::get('factory_flat')->create($flat);
         $flat->set_house($house);
         $number->set_flat($flat);
         return $number;
@@ -88,9 +88,6 @@ class mapper_number extends mapper{
     }
 
     public function find_by_number($num){
-        $number = new data_number();
-        $number->set_number($num);
-        data_number::verify_num($number->get_number());
         $stmt = $this->pdo->prepare(self::$find_by_number);
         $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
         $stmt->bindValue(':number', (string) $num, PDO::PARAM_STR);
