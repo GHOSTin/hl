@@ -2,13 +2,6 @@
 
 class mapper_client_query_Test extends PHPUnit_Framework_TestCase{
 
-  public static function setUpBeforeClass(){
-    $pimple = di::get_instance();
-    $pimple['factory_client_query'] = function($p){
-      return new factory_client_query();
-    };
-  }
-
   public function setUp(){
     $this->pdo = $this->getMock('pdo_mock');
     $this->stmt = $this->getMock('PDOStatement');
@@ -16,6 +9,11 @@ class mapper_client_query_Test extends PHPUnit_Framework_TestCase{
     $this->number = new data_number();
     $this->user_data = ['time' => 123, 'text' => 'Порвало трубу',
       'status' => 'accepted', 'number_id' => 123, 'company_id' => 2];
+    $pimple = new Pimple();
+    $pimple['factory_client_query'] = function($p){
+      return new factory_client_query();
+    };
+    di::set_instance($pimple);
   }
 
   public function test_mapper_1_1(){

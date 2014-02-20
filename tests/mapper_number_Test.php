@@ -2,14 +2,6 @@
 
 class mapper_number_Test extends PHPUnit_Framework_TestCase{
 
-  public static function setUpBeforeClass(){
-    $pimple = di::get_instance();
-    $pimple['factory_flat'] = function($p){
-      return new factory_flat();
-    };
-  }
-
-
   public function setUp(){
     $this->pdo = $this->getMock('pdo_mock');
     $this->stmt = $this->getMock('PDOStatement');
@@ -23,6 +15,11 @@ class mapper_number_Test extends PHPUnit_Framework_TestCase{
       'email' => 'nekrasov@mlsco.ru', 'telephone' => null, 'cellphone' => null,
       'house_id' => 234, 'house_number' => 12, 'flat_id' => 1,
       'flat_number' => 19];
+    $pimple = new Pimple();
+    $pimple['factory_flat'] = function($p){
+      return new factory_flat();
+    };
+    di::set_instance($pimple);
   }
 
   public function test_mapper_1_1(){
