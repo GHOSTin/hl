@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mshc-client" default="main" basedir=".">
+  <property name="BUILD_DIR" value="${user.home}/builds/mshc2/" override="false"/>
+  <target name="main"  depends="phplint">
+    <echo>Создание проекта</echo>
+    <delete dir="${BUILD_DIR}" includeemptydirs="true" verbose="true" failonerror="true" />
+    <copy todir="${BUILD_DIR}" overwrite="true">
+      <fileset dir=".">
+          <include name="application/**"/>
+          <include name="framework/**"/>
+          <include name="libs/**"/>
+          <include name="site/**"/>
+          <include name="templates/**"/>
+          <include name="version"/>
+          <include name="install.php"/>
+          <include name="update.php"/>
+          <include name="version.php"/>
+      </fileset>
+    </copy> 
+    <mkdir dir="${BUILD_DIR}/cache" />
+  </target>
+  <target name="phplint">
+    <echo>phplint</echo>
+    <phplint haltonfailure="true">
+      <fileset dir="${project.basedir}">
+        <include name="**/*.php"/>
+        <include name="cache/**/*.php"/>
+      </fileset>
+    </phplint>
+  </target>
+</project>
