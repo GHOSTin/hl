@@ -2,14 +2,24 @@
 
 class mapper_company extends mapper{
 
+  private static $find = "SELECT `id`, `name` FROM `companies`
+    WHERE `id` = :id";
+
   private static $find_all = "SELECT `id`, `name` FROM `companies`
     ORDER BY `name`";
 
-  public function create_object(array $row){
-    $company = new data_company();
-    $company->set_id($row['id']);
-    $company->set_name($row['name']);
-    return $company;
+  public function find($id){
+    $stmt = $this->pdo->prepare(self::$find);
+    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new RuntimeException();
+    $count = $stmt->rowCount();
+    if($count === 0)
+      return null;
+    elseif($count === 1)
+      return di::get('factory_company')->build($stmt->fetch());
+    else
+      throw new RuntimeException();
   }
 
   public function find_all(){
@@ -17,8 +27,9 @@ class mapper_company extends mapper{
     if(!$stmt->execute())
       throw new RuntimeException();
     $companies = [];
+    $factory = di::get('factory_company');
     while($row = $stmt->fetch())
-      $companies[] = $this->create_object($row);
+      $companies[] = $factory->build($row);
     return $companies;
   }
 }

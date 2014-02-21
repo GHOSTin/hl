@@ -14,10 +14,9 @@ class controller_default_page{
       if(!is_null($user)){
         if($user->get_status() !== 'true')
           die('Вы заблокированы и не можете войти в систему.');
-        data_company::verify_id($user->get_company_id());
-        $company = new data_company();
-        $company->set_id($user->get_company_id());
-        data_company::verify_id($company->get_id());
+        $company = di::get('mapper_company')->find($user->get_company_id());
+        if(is_null($company))
+          die('Нет такой компании.');
         $_SESSION['user'] = $user;
         $_SESSION['company'] = $company;
         header('Location:/');

@@ -4,8 +4,8 @@ class controller_user{
 	public static $name = 'Пользователи';
 
   public static function private_add_profile(model_request $request){
-    $company = new data_company();
-    $company->set_id($request->take_get('company_id'));
+    $company = di::get('mapper_company')
+      ->find($request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
     (new model_user2profile($company, $user))
@@ -56,8 +56,8 @@ class controller_user{
   }
 
   public static function private_delete_profile(model_request $request){
-    $company = new data_company();
-    $company->set_id($request->take_get('company_id'));
+    $company = di::get('mapper_company')
+      ->find($request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
     (new model_user2profile($company, $user))
@@ -77,15 +77,15 @@ class controller_user{
   public static function private_get_company_content(model_request $request){
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
-    $company = new data_company();
-    $company->set_id($request->take_get('company_id'));
+    $company = di::get('mapper_company')
+      ->find($request->take_get('company_id'));
     $profiles = (new model_user2profile($company, $user))->get_profiles();
     return ['user' => $user, 'company' => $company, 'profiles' => $profiles];
   }
 
   public static function private_get_profile_content(model_request $request){
-    $company = new data_company();
-    $company->set_id($request->take_get('company_id'));
+    $company = di::get('mapper_company')
+      ->find($request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
     return ['user' => $user, 'company' => $company,
@@ -94,8 +94,8 @@ class controller_user{
   }
 
   public static function private_get_restriction_content(model_request $request){
-    $company = new data_company();
-    $company->set_id($request->GET('company_id'));
+    $company = di::get('mapper_company')
+      ->find($request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->GET('user_id'));
     $profile = $request->GET('profile');
@@ -124,7 +124,7 @@ class controller_user{
   }
 
   public static function private_get_dialog_add_profile(model_request $request){
-    return ['companies' => model_company::get_companies(new data_company())];
+    return ['companies' => model_company::get_companies()];
   }
 
   public static function private_get_dialog_add_user(model_request $request){
@@ -278,8 +278,8 @@ class controller_user{
   }
 
   public static function private_update_rule(model_request $request){
-    $company = new data_company();
-    $company->set_id($request->take_get('company_id'));
+    $company = di::get('mapper_company')
+      ->find($request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
     (new model_user2profile($company, $user))
@@ -288,8 +288,8 @@ class controller_user{
   }
 
   public static function private_update_restriction(model_request $request){
-    $company = new data_company();
-    $company->set_id($request->GET('company_id'));
+    $company = di::get('mapper_company')
+      ->find($request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->GET('user_id'));
     (new model_user2profile($company, $user))

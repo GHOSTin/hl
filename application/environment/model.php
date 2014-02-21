@@ -137,6 +137,10 @@ class model_environment{
 			return new mapper_meter($p['pdo'], $p['company']);
 		};
 
+		$pimple['factory_company'] = function($p){
+			return new factory_company();
+		};
+
 		$pimple['twig'] = $pimple->share(function($pimple){
 			$options = [];
 			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
