@@ -1,16 +1,14 @@
 <?php
-class mapper_workgroup{
+class mapper_workgroup extends mapper{
 
 	private $company;
-	private $pdo;
 
 	private static $many = "SELECT `id`,`company_id`, `status`,
 		`name` FROM `workgroups` WHERE `company_id` = :company_id";
 
-	public function __construct($company){
+	public function __construct(PDO $pdo, data_company $company){
+		parent::__construct($pdo);
 		$this->company = $company;
-		data_company::verify_id($this->company->get_id());
-		$this->pdo = di::get('pdo');
 	}
 
 	public function create_object(array $row){

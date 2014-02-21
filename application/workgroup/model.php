@@ -5,13 +5,9 @@ class model_workgroup{
 
 	public function __construct($company){
 		$this->company = $company;
-		data_company::verify_id($this->company->get_id());
 	}
 
-	/**
-	* Возвращает список групп работ
-	*/
 	public function get_workgroups(){
-		return (new mapper_workgroup($this->company))->get_workgroups();
+		return di::get('mapper_workgroup')->get_workgroups();
 	}
 }

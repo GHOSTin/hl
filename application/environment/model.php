@@ -116,6 +116,10 @@ class model_environment{
 			return new mapper_work($p['pdo'], $p['company']);
 		};
 
+		$pimple['mapper_workgroup'] = function($p){
+			return new mapper_workgroup($p['pdo'], $p['company']);
+		};
+
 		$pimple['twig'] = $pimple->share(function($pimple){
 			$options = [];
 			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
