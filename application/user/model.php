@@ -3,14 +3,17 @@ class model_user{
 
 	public function create_user($lastname, $firstname, $middlename, $login,
 		$password, $status){
+		$mapper = di::get('mapper_user');
+		if(!is_null($mapper->find_user_by_login($login)))
+      throw new RuntimeException();
 		$user = new data_user();
+		$user->set_id($mapper->get_insert_id());
 		$user->set_lastname($lastname);
 		$user->set_firstname($firstname);
 		$user->set_middlename($middlename);
 		$user->set_login($login);
 		$user->set_hash($this->get_password_hash($password));
 		$user->set_status($status);
-		$mapper = di::get('mapper_user');
 		return $mapper->insert($user);
 	}
 

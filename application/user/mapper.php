@@ -71,7 +71,7 @@
       throw new RuntimeException();
   }
 
-  private function get_insert_id(){
+  public function get_insert_id(){
     $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
       throw new RuntimeException();
@@ -91,14 +91,21 @@
     return $users;
   }
 
-  public function insert(data_user $user){
+  public function find_user_by_login($login){
     $stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `username` = :login");
-    $stmt->bindValue(':login', $user->get_login(), PDO::PARAM_STR);
+    $stmt->bindValue(':login', $login, PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();
-    if($stmt->rowCount() !== 0)
-        throw new RuntimeException();
-    $user->set_id($this->get_insert_id());
+    $count = $stmt->rowCount();
+    if($count === 0)
+      return null;
+    elseif($count === 1)
+      return $this->create_object($stmt->fetch());
+    else
+      throw new RuntimeException();
+  }
+
+  public function insert(data_user $user){
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', 2, PDO::PARAM_INT);
