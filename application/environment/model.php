@@ -26,6 +26,7 @@ class model_environment{
         else
             return load_template('error.show_html_error', $args);
 			}else{
+				die($e);
 				die('Problem');
 			}
 		}
@@ -80,6 +81,10 @@ class model_environment{
 			return new factory_client_query();
 		};
 
+		$pimple['factory_flat'] = function($p){
+			return new factory_flat();
+		};
+
 		$pimple['mapper_number'] = function($p){
 			return new mapper_number($p['pdo'], $p['company']);
 		};
@@ -118,6 +123,10 @@ class model_environment{
 
 		$pimple['mapper_workgroup'] = function($p){
 			return new mapper_workgroup($p['pdo'], $p['company']);
+		};
+
+		$pimple['mapper_processing_center'] = function($p){
+			return new mapper_processing_center($p['pdo']);
 		};
 
 		$pimple['twig'] = $pimple->share(function($pimple){

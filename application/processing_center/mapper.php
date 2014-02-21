@@ -1,7 +1,5 @@
 <?php
-class mapper_processing_center{
-
-  private $pdo;
+class mapper_processing_center extends mapper{
 
   private static $all = "SELECT `id`, `name`
     FROM `processing_centers` ORDER BY `name`";
@@ -17,11 +15,6 @@ class mapper_processing_center{
 
   private static $insert_id = "SELECT MAX(`id`) as `max_id`
     FROM `processing_centers`";
-
-
-  public function __construct(){
-    $this->pdo = di::get('pdo');
-  }
 
   public function create_object(array $row){
     $center = new data_processing_center();
