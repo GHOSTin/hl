@@ -100,6 +100,10 @@ class model_environment{
 			return new mapper_department($p['pdo'], $p['company']);
 		};
 
+		$pimple['mapper_street'] = function($p){
+			return new mapper_street($p['pdo']);
+		};
+
 		$pimple['twig'] = $pimple->share(function($pimple){
 			$options = [];
 			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');

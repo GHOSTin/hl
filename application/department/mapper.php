@@ -1,5 +1,5 @@
 <?php
-class mapper_department{
+class mapper_department extends mapper{
 
 	private $company;
 

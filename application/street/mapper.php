@@ -1,18 +1,12 @@
 <?php
 
-class mapper_street{
-
-  private $pdo;
+class mapper_street extends mapper{
 
   private static $many = "SELECT DISTINCT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` ORDER BY `name`";
 
   private static $one = "SELECT DISTINCT `id`, `company_id`, 
     `city_id`, `status`, `name` FROM `streets` WHERE `id` = :id";
-
-  public function __construct(){
-    $this->pdo = di::get('pdo');
-  }
 
   public function find($id){
     $stmt = $this->pdo->prepare(self::$one);
