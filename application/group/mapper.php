@@ -1,8 +1,7 @@
 <?php
-class mapper_group{
+class mapper_group extends mapper{
 
   private $company;
-  private $pdo;
 
   private static $find = "SELECT `id`, `company_id`, `status`, `name`
     FROM `groups` WHERE `company_id` = :company_id AND `id` = :id";
@@ -22,10 +21,9 @@ class mapper_group{
   private static $update = "UPDATE `groups` SET `name` = :name
     WHERE `company_id` = :company_id AND `id` = :id";
 
-  public function __construct(data_company $company){
+  public function __construct(PDO $pdo, data_company $company){
+    parent::__construct($pdo);
     $this->company = $company;
-    data_company::verify_id($this->company->get_id());
-    $this->pdo = di::get('pdo');
   }
 
   private function create_object(array $row){

@@ -9,7 +9,7 @@ class model_group{
 	}
 
 	public function create_group($name, $status){
-		$mapper = new mapper_group($this->company);
+		$mapper = di::get('mapper_group');
 		if(!is_null($mapper->find_by_name($name)))
 			throw new e_model('Группа с таким название уже существует.');
 		$group = new data_group();
@@ -20,9 +20,6 @@ class model_group{
 		return $mapper->insert($group);
 	}
 
-	/**
-	* Добавляет в группу нового пользователя.
-	*/
 	public function add_user($group_id, $user_id){
 		$group = new data_group();
 		$group->set_id($group_id);
@@ -33,9 +30,6 @@ class model_group{
 		return $mapper->update();
 	}
 
-	/**
-	* Исключает из группы пользователя.
-	*/
 	public function exclude_user($group_id, $user_id){
 		$group = new data_group();
 		$group->set_id($group_id);
@@ -47,33 +41,21 @@ class model_group{
 		return $mapper->update();
 	}
 
-	/**
-	* Возвращает список групп.
-	* @return array из data_group
-	*/
 	public function get_group($id){
-		$group = (new mapper_group(model_session::get_company()))->find($id);
+		$group = di::get('mapper_group')->find($id);
 		if(!($group instanceof data_group))
 			throw new e_model('Объект не является группой.');
 		return $group;
 	}
 
-	/**
-	* Возвращает список групп.
-	* @return array
-	*/
 	public function get_groups(){
-		return (new mapper_group($this->company))->get_groups();
+		return di::get('mapper_group')->get_groups();
 	}
 
-	/**
-	* Обновляет название группы.
-	* @return object data_group
-	*/
 	public function update_name($id, $name){
 		$group = $this->get_group($id);
 		$group->set_name($name);
-		$mapper = new mapper_group($this->company);		
+		$mapper = di::get('mapper_group');		
 		return $mapper->update($group);
 	}
 }
