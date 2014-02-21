@@ -1,5 +1,5 @@
 <?php
-class mapper_house{
+class mapper_house extends mapper{
 
   private static $one = "SELECT `houses`.`id`, `houses`.`city_id`,
     `houses`.`street_id`, `houses`.`department_id`, `houses`.`status`,
@@ -11,10 +11,6 @@ class mapper_house{
     `company_id` = :company_id, `city_id` = :city_id, `street_id` = :street_id,
     `department_id` = :department_id, `status` = :status,
     `housenumber` = :number WHERE `id` = :id';
-
-  public function __construct(){
-    $this->pdo = di::get('pdo');
-  }
 
   public function create_object(array $row){
     $house = new data_house();

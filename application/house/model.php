@@ -2,7 +2,7 @@
 class model_house{
 
 	public function get_house($id){
-		$house = (new mapper_house())->find($id);
+		$house = di::get('mapper_house')->find($id);
 		if(!($house instanceof data_house))
 			throw new e_model('Дом не существует.');
 		return $house;
@@ -13,7 +13,7 @@ class model_house{
     $department = (new model_department(model_session::get_company()))
       ->get_department($department_id);
     $house->set_department($department);
-    (new mapper_house)->update($house);
+    di::get('mapper_house')->update($house);
     return $house;
   }
 }
