@@ -144,7 +144,7 @@ class model_user2profile{
     if(!array_key_exists($restriction, $restrictions))
       throw new e_model('Нет такого ограничения.');
     if($restriction === 'departments'){
-      $department = (new mapper_department($this->company))->find($item);
+      $department = di::get('mapper_department')->find($item);
       if(!is_null($department)){
         $pos = array_search($department->get_id(), $restrictions[$restriction]);
         if($pos === false)

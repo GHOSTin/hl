@@ -9,13 +9,13 @@ class model_department{
 	}
 
 	public function get_department($id){
-		$department = (new mapper_department($this->company))->find($id);
+		$department = di::get('mapper_department')->find($id);
 		if(!($department instanceof data_department))
 			throw new e_model('Нет такого участка.');
 		return $department;
 	}
 
 	public function get_departments(){
-		return (new mapper_department($this->company))->get_departments();
+		return di::get('mapper_department')->get_departments();
 	}
 }
