@@ -30,7 +30,7 @@ class controller_report{
     public static function private_report_query_one(model_request $request){
         $company = model_session::get_company();
         $params = (new model_report('query'))->get_params();
-        $queries = (new mapper_query($company))->get_queries($params);
+        $queries = di::get('mapper_query')->get_queries($params);
         $collection = new collection_query($company, $queries);
         $collection->init_numbers();
         $collection->init_users();
@@ -43,7 +43,7 @@ class controller_report{
         header('Content-type: application/octet-stream');
         $company = model_session::get_company();
         $params = (new model_report('query'))->get_params();
-        $queries = (new mapper_query($company))->get_queries($params);
+        $queries = di::get('mapper_query')->get_queries($params);
         $collection = new collection_query($company, $queries);
         $collection->init_numbers();
         $collection->init_users();

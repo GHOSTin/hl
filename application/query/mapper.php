@@ -1,8 +1,7 @@
 <?php
-class mapper_query{
+class mapper_query extends mapper{
 
   private $company;
-  private $pdo;
 
   private static $find_by_number = "SELECT `queries`.`id`,
     `queries`.`status`, `queries`.`initiator-type` as `initiator`,
@@ -122,10 +121,9 @@ class mapper_query{
     AND `opentime` <= :time_close AND `departments`.`company_id` = :company_id
     AND `queries`.`department_id` = `departments`.`id`";
 
-  public function __construct(data_company $company){
+  public function __construct(PDO $pdo, data_company $company){
+    parent::__construct($pdo);
     $this->company = $company;
-    data_company::verify_id($this->company->get_id());
-    $this->pdo = di::get('pdo');
   }
 
   public function create_object(array $row){

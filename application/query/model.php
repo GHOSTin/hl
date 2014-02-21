@@ -179,7 +179,7 @@ class model_query{
 		$query->set_status('close');
 		$query->set_close_reason($reason);
 		$query->set_time_close(time());
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -211,7 +211,7 @@ class model_query{
 				$mapper_q2n->update();
 			}else
 				throw new e_model('initiator wrong');
-			$mapper = new mapper_query($this->company);
+			$mapper = di::get('mapper_query');
 			$query = $mapper->update($query);
 			$this->pdo->commit();
 			return $query;
@@ -229,7 +229,7 @@ class model_query{
 		if($query->get_status() !== 'reopen')
 			throw new e_model('Заявка не может быть перезакрыта.');
 		$query->set_status('close');
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -241,7 +241,7 @@ class model_query{
 		if($query->get_status() !== 'close')
 			throw new e_model('Заявка не в том статусе чтобы её можно было переоткрыть.');
 		$query->set_status('reopen');
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -254,7 +254,7 @@ class model_query{
 			throw new e_model('Заявка имеет статус не позволяющий её передать в работу.');
 		$query->set_status('working');
 		$query->set_time_work(time());
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -303,7 +303,7 @@ class model_query{
 			$query_work_type = (new model_query_work_type($this->company))
 				->get_query_work_type($work_type);
       $query->add_work_type($query_work_type);
-			$mapper = new mapper_query($this->company);
+			$mapper = di::get('mapper_query');
 			$query->set_id($mapper->get_insert_id());
 			$query->set_number($mapper->get_insert_query_number($time));
       $query = $mapper->insert($query);
@@ -327,7 +327,7 @@ class model_query{
 	}
 
 	public function get_query($id){
-		$query = (new mapper_query($this->company))->find($id);
+		$query = di::get('mapper_query')->find($id);
 		if(!($query instanceof data_query))
 			throw new e_model('Проблема при выборке заявки');
 		return $query;
@@ -355,7 +355,7 @@ class model_query{
 	* @return array
 	*/
 	public function get_queries_by_number($number){
-		return (new mapper_query($this->company))->get_queries_by_number($number);
+		return di::get('mapper_query')->get_queries_by_number($number);
 	}
 
 	/**
@@ -363,7 +363,7 @@ class model_query{
 	* @return array
 	*/
 	public function get_queries(){
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->get_queries($this->params);
 	}
 
@@ -386,7 +386,7 @@ class model_query{
 	public function update_description($id, $description){
 		$query = $this->get_query($id);
 		$query->set_description($description);
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -396,7 +396,7 @@ class model_query{
 	public function update_reason($id, $reason){
 		$query = $this->get_query($id);
 		$query->set_close_reason($reason);
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -408,7 +408,7 @@ class model_query{
 		$query->set_contact_fio($fio);
 		$query->set_contact_telephone($telephone);
 		$query->set_contact_cellphone($cellphone);
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -418,7 +418,7 @@ class model_query{
 	public function update_payment_status($id, $status){
 		$query = $this->get_query($id);
 		$query->set_payment_status($status);
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -428,7 +428,7 @@ class model_query{
 	public function update_warning_status($id, $status){
 		$query = $this->get_query($id);
 		$query->set_warning_status($status);
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
@@ -440,7 +440,7 @@ class model_query{
 			->get_query_work_type($type_id);
 		$query = $this->get_query($id);
 		$query->add_work_type($type);
-		$mapper = new mapper_query($this->company);
+		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 }
