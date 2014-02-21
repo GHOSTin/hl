@@ -219,8 +219,6 @@ class mapper_query extends mapper{
 
   public function update(data_query $query){
     $this->verify($query);
-    data_house::verify_id($query->get_house()->get_id());
-    data_query_work_type::verify_id($query->get_work_type()->get_id());
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':id', $query->get_id(), PDO::PARAM_INT);

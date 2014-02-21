@@ -242,7 +242,6 @@ class data_query extends data_object{
 
 	public function set_house(data_house $house){
 		$this->house = $house;
-		data_house::verify_id($this->house->get_id());
 	}
 
 	public function set_street(data_street $street){
