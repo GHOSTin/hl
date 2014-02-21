@@ -35,7 +35,7 @@ class model_environment{
 	public static function prepare_answer($controller, $component, $method, $request){
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
 			self::init_profile($component);
-			$data['user'] = model_session::get_user();
+			$data['user'] = di::get('user');
 			$data['menu'] = model_menu::build_menu($component);
 		}
 		$profile = model_session::get_profile();
@@ -55,8 +55,8 @@ class model_environment{
 	}
 
 	public static function init_profile($component){
-		$profile = (new mapper_user2profile(model_session::get_company(),
-			model_session::get_user()))->find($component);
+		$profile = (new mapper_user2profile(di::get('company'),
+			di::get('user')))->find($component);
 		if(in_array($component, self::$profiles, true))
 			return;
 		elseif($profile instanceof data_profile){
@@ -71,8 +71,6 @@ class model_environment{
 		$pimple = new Pimple();
 
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
-			model_session::set_user($_SESSION['user']);
-			model_session::set_company($_SESSION['company']);
 			$pimple['user'] = $_SESSION['user'];
 			$pimple['company'] = $_SESSION['company'];
 		}

@@ -9,7 +9,7 @@ class model_menu{
 			if(property_exists($controller, 'name'))
 				$args['menu'][] = ['href' => $profile, 'title' => $controller::$name];
 		}
-		$args['user'] = model_session::get_user();
+		$args['user'] = di::get('user');
 		$args['comp'] = $component;
     return load_template('menu.build_horizontal_menu', $args);
 	}

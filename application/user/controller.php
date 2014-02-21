@@ -15,13 +15,13 @@ class controller_user{
   }
 
   public static function private_add_user(model_request $request){
-    return ['group' => (new model_group(model_session::get_company()))
+    return ['group' => (new model_group(di::get('company')))
       ->add_user($request->take_get('group_id'),
       $request->take_get('user_id'))];
   }
 
   public static function private_create_group(model_request $request){
-    $model = new model_group(model_session::get_company());
+    $model = new model_group(di::get('company'));
     $group = $model->create_group($request->take_get('name'), 'true');
     $letter_group = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
     $letters = [];
@@ -66,7 +66,7 @@ class controller_user{
   }
 
   public static function private_exclude_user(model_request $request){
-    $company = model_session::get_company();
+    $company = di::get('company');
     $group = (new model_group($company))
       ->get_group($request->take_get('group_id'));
     $user = (new model_user)->get_user($request->take_get('user_id'));
@@ -138,7 +138,7 @@ class controller_user{
 
   public static function private_get_dialog_edit_group_name(
     model_request $request){
-    return ['group' => (new model_group(model_session::get_company()))
+    return ['group' => (new model_group(di::get('company')))
       ->get_group($request->take_get('id'))];
   }
 
@@ -160,13 +160,13 @@ class controller_user{
       model_request $request){
       return [
         'user' => (new model_user)->get_user($request->take_get('user_id')),
-        'group' => (new model_group(model_session::get_company()))
+        'group' => (new model_group(di::get('company')))
         ->get_group($request->take_get('group_id'))];
     }
 
   public static function private_get_group_letters(model_request $request){
     $letters = [];
-    $groups = (new model_group(model_session::get_company()))->get_groups();
+    $groups = (new model_group(di::get('company')))->get_groups();
     if(!empty($groups))
       foreach($groups as $group){
         $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
@@ -176,14 +176,14 @@ class controller_user{
   }
 
   public static function private_get_group_profile(model_request $request){
-    return ['group' => (new model_group(model_session::get_company()))
+    return ['group' => (new model_group(di::get('company')))
       ->get_group($request->take_get('id'))];
   }
 
   public static function private_get_group_users(model_request $request){
     $group = new data_group();
     $group->set_id($request->take_get('id'));
-    (new mapper_group2user(model_session::get_company(), $group))->init_users($group);
+    (new mapper_group2user(di::get('company'), $group))->init_users($group);
     return ['group' => $group];
   }
 
@@ -204,7 +204,7 @@ class controller_user{
 
   public static function private_get_group_letter(model_request $request){
     $letters = [];
-    $groups = (new model_group(model_session::get_company()))->get_groups();
+    $groups = (new model_group(di::get('company')))->get_groups();
     if(!empty($groups))
       foreach($groups as $group){
         $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
@@ -227,7 +227,7 @@ class controller_user{
   }
 
   public static function private_get_group_content(model_request $request){
-    return ['group' => (new model_group(model_session::get_company()))
+    return ['group' => (new model_group(di::get('company')))
       ->get_group($request->take_get('id'))];
   }
 
@@ -259,7 +259,7 @@ class controller_user{
   }
 
   public static function private_update_group_name(model_request $request){
-    return ['group' => (new model_group(model_session::get_company()))
+    return ['group' => (new model_group(di::get('company')))
       ->update_name($request->take_get('id'), $request->take_get('name'))];
   }
 

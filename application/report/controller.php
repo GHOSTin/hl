@@ -9,7 +9,7 @@ class controller_report{
 
     public static function private_get_query_reports(model_request $request){
         $model = new model_report('query');
-        $company = model_session::get_company();
+        $company = di::get('company');
         $params = $model->get_params();
         
         if($params['street'] > 0){
@@ -28,7 +28,7 @@ class controller_report{
     }
 
     public static function private_report_query_one(model_request $request){
-        $company = model_session::get_company();
+        $company = di::get('company');
         $params = (new model_report('query'))->get_params();
         $queries = di::get('mapper_query')->get_queries($params);
         $collection = new collection_query($company, $queries);
@@ -41,7 +41,7 @@ class controller_report{
     public static function private_report_query_one_xls(model_request $request){
         header('Content-Disposition: attachment; filename=export.xml');
         header('Content-type: application/octet-stream');
-        $company = model_session::get_company();
+        $company = di::get('company');
         $params = (new model_report('query'))->get_params();
         $queries = di::get('mapper_query')->get_queries($params);
         $collection = new collection_query($company, $queries);

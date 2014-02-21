@@ -13,7 +13,7 @@ class model_error{
   public function send_error($text){
     $error = new data_error();
     $error->set_text($text);
-    $error->set_user(model_session::get_user());
+    $error->set_user(di::get('user'));
     $error->set_time(time());
     return (new mapper_error(di::get('pdo')))->insert($error);
   }

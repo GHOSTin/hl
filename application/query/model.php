@@ -189,7 +189,7 @@ class model_query{
 	public function change_initiator($id, $house_id = null, $number_id = null){
 		try{
 			$this->pdo->beginTransaction();
-			$company = model_session::get_company();
+			$company = di::get('company');
 			$query = $this->get_query($id);
 			$mapper_q2n = new mapper_query2number($company, $query);
 			if(!is_null($number_id)){
@@ -308,7 +308,7 @@ class model_query{
 			$query->set_number($mapper->get_insert_query_number($time));
       $query = $mapper->insert($query);
       (new mapper_query2number($this->company, $query))->update();
-			$user = model_session::get_user();
+			$user = di::get('user');
       $query->add_creator($user);
       $query->add_manager($user);
       $query->add_observer($user);
@@ -436,7 +436,7 @@ class model_query{
 	* Обновляет тип работ.
 	*/
 	public function update_work_type($id, $type_id){
-		$type = (new model_query_work_type(model_session::get_company()))
+		$type = (new model_query_work_type(di::get('company')))
 			->get_query_work_type($type_id);
 		$query = $this->get_query($id);
 		$query->add_work_type($type);

@@ -85,7 +85,7 @@ class model_import{
 			->get_street_by_name((string) $house_node->street);
 		$house = (new model_street2house($street))
 			->get_house_by_number((string) $house_node->number);
-		(new model_house2number(model_session::get_company(), $house))->init_numbers();
+		(new model_house2number(di::get('company'), $house))->init_numbers();
 		if(!empty($house->get_numbers))
 		return ['file' => $file, 'city' => $city, 'street' => $street,
 			'house' => $house, 'numbers' => $numbers];

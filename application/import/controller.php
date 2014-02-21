@@ -43,7 +43,7 @@ class controller_import{
   }
 
   public static function private_load_numbers(model_request $request){
-    (new model_import(model_session::get_company()))
+    (new model_import(di::get('company')))
       ->load_numbers($request->POST('city_id'), $request->POST('street_id'),
       $request->POST('house_id'), $request->POST('numbers'));
     return true;
@@ -57,33 +57,33 @@ class controller_import{
     $house = (new model_street2house($street))
       ->get_house($request->POST('house_id'));
     $flats = $_POST['flats'];
-    (new model_import(model_session::get_company()))
+    (new model_import(di::get('company')))
       ->load_flats($house, $request->POST('flats'));
     return true;
   }
 
   public static function private_import_numbers(model_request $request){
-    return (new model_import(model_session::get_company()))
+    return (new model_import(di::get('company')))
       ->analize_import_numbers($request->FILES('file'));
   }
 
   public static function private_import_meters(model_request $request){
-    return (new model_import(model_session::get_company()))
+    return (new model_import(di::get('company')))
       ->analize_import_meters($request->FILES('file'));
   }
 
   public static function private_analize_street(model_request $request){
-    return (new model_import(model_session::get_company()))
+    return (new model_import(di::get('company')))
       ->analize_import_street($request->FILES('file'));
   }
 
   public static function private_analize_house(model_request $request){
-    return (new model_import(model_session::get_company()))
+    return (new model_import(di::get('company')))
       ->analize_import_house($request->FILES('file'));
   }
 
   public static function private_analize_flats(model_request $request){
-    return (new model_import(model_session::get_company()))
+    return (new model_import(di::get('company')))
     ->analize_import_flats($request->FILES('file'));
   }
 }

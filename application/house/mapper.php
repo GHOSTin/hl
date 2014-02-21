@@ -46,7 +46,7 @@ class mapper_house extends mapper{
   }
 
   public function update(data_house $house){
-    $company = model_session::get_company();
+    $company = di::get('company');
     data_company::verify_id($company->get_id());
     data_house::verify_id($house->get_id());
     data_house::verify_status($house->get_status());

@@ -10,7 +10,7 @@ class model_house{
 
   public function edit_department($house_id, $department_id){
     $house = $this->get_house($house_id);
-    $department = (new model_department(model_session::get_company()))
+    $department = (new model_department(di::get('company')))
       ->get_department($department_id);
     $house->set_department($department);
     di::get('mapper_house')->update($house);

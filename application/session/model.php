@@ -1,8 +1,6 @@
 <?php
 class model_session{
 
-    private static $user;
-    private static $company;
     private static $rules;
     private static $restrictions;
     private static $links;
@@ -18,14 +16,6 @@ class model_session{
         return self::$rules;
     }
 
-    public static function get_user(){
-        return self::$user;
-    }
-    
-    public static function get_company(){
-        return self::$company;
-    }
-
     public static function get_profile(){
         return self::$profile;
     }
@@ -34,24 +24,6 @@ class model_session{
         self::$profile = $profile;
     }
 
-    public static function set_user(data_user $user){
-        if(!isset(self::$user)){
-            self::set_cockies();
-            $_SESSION['user'] = $user;
-            self::$user = $user;
-            setcookie("uid", $user->get_id(), 0);
-        }else
-            throw new exception('Нельзя дважды определить пользователя.');
-    }
-
-    public static function set_company(data_company $company){
-        if(!isset(self::$company)){
-            $_SESSION['company'] = $company;
-            self::$company = $company;
-        }else
-            throw new exception('Нельзя дважды определить компанию.');
-    }
-    
     public static function set_restrictions($restrictions){
         if(!isset(self::$restrictions)){
             self::$restrictions = $restrictions;
