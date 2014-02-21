@@ -9,17 +9,17 @@ class model_meter{
 	}
 
 	public function get_meter($id){
-		$meter = (new mapper_meter(di::get('pdo'), $this->company))->find($id);
+		$meter = di::get('mapper_meter')->find($id);
 		if(!($meter instanceof data_meter))
 			throw new e_model('Счетчика не существует.');
 		return $meter;
 	}
 
 	public function get_meters(){
-		return (new mapper_meter(di::get('pdo'), $this->company))->get_meters();
+		return di::get('mapper_meter')->get_meters();
 	}
 
 	public function get_meters_by_service($service){
-	    return (new mapper_meter(di::get('pdo'), $this->company))->get_meters_by_service($service);
+	    return di::get('mapper_meter')->get_meters_by_service($service);
 	}
 }

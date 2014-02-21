@@ -1,6 +1,6 @@
 <?php
 
-class mapper_meter{
+class mapper_meter extends mapper{
 
   private $company;
 
@@ -18,9 +18,8 @@ class mapper_meter{
     WHERE `company_id` = :company_id ORDER BY `name`";
 
   public function __construct(PDO $pdo, data_company $company){
-    $this->pdo = $pdo;
+    parent::__construct($pdo);
     $this->company = $company;
-    data_company::verify_id($this->company->get_id());
   }
 
   public function create_object(array $row){
