@@ -1,17 +1,11 @@
 <?php
-class mapper_city{
-
-  private $pdo;
+class mapper_city extends mapper{
 
   private static $one_by_name = "SELECT `id`, `status`, `name`
     FROM `cities` WHERE `name` = :name";
 
   private static $one = "SELECT `id`, `status`, `name`
     FROM `cities` WHERE `id` = :id";
-
-  public function __construct(){
-    $this->pdo = di::get('pdo');
-  }
 
   public function create_object(array $row){
     $city = new data_city();

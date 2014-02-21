@@ -129,6 +129,10 @@ class model_environment{
 			return new mapper_processing_center($p['pdo']);
 		};
 
+		$pimple['mapper_city'] = function($p){
+			return new mapper_city($p['pdo']);
+		};
+
 		$pimple['twig'] = $pimple->share(function($pimple){
 			$options = [];
 			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
