@@ -1,15 +1,9 @@
 <?php
 
-class mapper_company{
-
-  private $pdo;
+class mapper_company extends mapper{
 
   private static $find_all = "SELECT `id`, `name` FROM `companies`
     ORDER BY `name`";
-
-  public function __construct(PDO $pdo){
-    $this->pdo = $pdo;
-  }
 
   public function create_object(array $row){
     $company = new data_company();

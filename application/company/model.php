@@ -2,6 +2,6 @@
 class model_company{
 
 	public static function get_companies(){
-		return (new mapper_company(di::get('pdo')))->find_all();
+		return di::get('mapper_company')->find_all();
 	}
 }

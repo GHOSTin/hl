@@ -92,6 +92,10 @@ class model_environment{
 			return new mapper_query($p['pdo'], $p['company']);
 		};
 
+		$pimple['mapper_company'] = function($p){
+			return new mapper_company($p['pdo']);
+		};
+
 		$pimple['twig'] = $pimple->share(function($pimple){
 			$options = [];
 			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
