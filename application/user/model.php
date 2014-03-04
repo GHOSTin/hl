@@ -52,15 +52,9 @@ class model_user{
 	}
 
 	public function update_login($id, $login){
-		// проверка на существование идентичного логина
-		$stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `username` = :login");
-		$$tmt->bindValue(':login', $login, PDO::PARAM_STR);
-		if($stmt->execute("Ошибка при поиске идентичного логина."))
-			throw new e_model('pdoblem');
-		if($stmt->rowCount() !== 0)
-			throw new e_model('Такой логин уже существует.');
-		// обвноление логина пользователя в базе данных
 		$mapper = di::get('mapper_user');
+		if(!is_null($mapper->find_user_by_login($login)))
+			throw new RuntimeException();
 		$user = $mapper->find($id);
 		$user->set_login($login);
 		$mapper->update($user);
