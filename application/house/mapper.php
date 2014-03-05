@@ -25,7 +25,7 @@ class mapper_house extends mapper{
     $house->set_department(di::get('factory_department')->build($dep));
     // street
     $street = ['id' => $row['street_id'], 'name' => $row['name']];
-    $house->set_street((new factory_street)->create($street));
+    $house->set_street(di::get('factory_street')->build($street));
     return $house;
   }
 

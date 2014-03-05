@@ -39,11 +39,11 @@ class mapper_city2street{
     if(!$stmt->execute())
       throw new RuntimeException();
     $count = $stmt->rowCount();
-    $factory = new factory_street();
+    $factory = di::get('factory_street');
     if($count === 0)
       return null;
     elseif($count === 1)
-      return $factory->create($stmt->fetch());
+      return $factory->build($stmt->fetch());
     else
       throw new RuntimeException();
   }
@@ -55,11 +55,11 @@ class mapper_city2street{
     if(!$stmt->execute())
       throw new RuntimeException();
     $count = $stmt->rowCount();
-    $factory = new factory_street();
+    $factory = di::get('factory_street');
     if($count === 0)
       return null;
     elseif($count === 1)
-      return $factory->create($stmt->fetch());
+      return $factory->build($stmt->fetch());
     else
       throw new RuntimeException();
   }

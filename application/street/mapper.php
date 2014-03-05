@@ -14,11 +14,11 @@ class mapper_street extends mapper{
     if(!$stmt->execute())
       throw new RuntimeException();
     $count = $stmt->rowCount();
-    $factory = new factory_street();
+    $factory = di::get('factory_street');
     if($count === 0)
       return null;
     elseif($count === 1)
-      return $factory->create($stmt->fetch());
+      return $factory->build($stmt->fetch());
     else
       throw new RuntimeException();
   }
@@ -28,10 +28,10 @@ class mapper_street extends mapper{
     if(!$stmt->execute())
       throw new RuntimeException();
     $streets = [];
-    $factory = new factory_street();
+    $factory = di::get('factory_street');
     if($stmt->rowCount() > 0)
       while($row = $stmt->fetch())
-        $streets[] = $factory->create($row);
+        $streets[] = $factory->build($row);
     return $streets;
   }
 }

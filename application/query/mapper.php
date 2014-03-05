@@ -130,6 +130,7 @@ class mapper_query extends mapper{
     $d_array = ['id' =>$row['department_id'],
         'name' => $row['department_name']];
     $h_array = ['id' => $row['house_id'], 'number' => $row['house_number']];
+    $street = ['id' => $row['street_id'], 'name' => $row['street_name']];
     $query = new data_query();
     $query->set_id($row['id']);
     $query->set_status($row['status']);
@@ -147,14 +148,11 @@ class mapper_query extends mapper{
     $query->set_contact_cellphone($row['contact_cellphone']);
     $query->set_department(di::get('factory_department')->build($d_array));
     $query->set_house(di::get('factory_house')->build($h_array));
-    $street = ['id' => $row['street_id'], 'name' => $row['street_name']];
-    $query->set_street((new factory_street)->create($street));
-
+    $query->set_street(di::get('factory_street')->build($street));
     $wt = new data_query_work_type();
     $wt->set_id($row['worktype_id']);
     $wt->set_name($row['work_type_name']);
     $query->add_work_type($wt);
-
     return $query;
   }
 

@@ -95,6 +95,10 @@ class model_environment{
 			return new factory_house();
 		};
 
+		$pimple['factory_street'] = function($p){
+			return new factory_street();
+		};
+
 		$pimple['mapper_number'] = function($p){
 			return new mapper_number($p['pdo'], $p['company']);
 		};
@@ -160,7 +164,6 @@ class model_environment{
 			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		  return $pdo;
 		});
-		
 		di::set_instance($pimple);
 	}
 }
