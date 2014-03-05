@@ -3,9 +3,10 @@ class mapper_house extends mapper{
 
   private static $one = "SELECT `houses`.`id`, `houses`.`city_id`,
     `houses`.`street_id`, `houses`.`department_id`, `houses`.`status`,
-    `houses`.`housenumber`, `streets`.`name`
-    FROM `houses`, `streets` WHERE `houses`.`id` = :house_id
-    AND `houses`.`street_id` = `streets`.`id`";
+    `houses`.`housenumber`, `streets`.`name`, `departments`.`name` as `d_name`
+    FROM `houses`, `streets`, `departments` WHERE `houses`.`id` = :house_id
+    AND `houses`.`street_id` = `streets`.`id`
+    AND `houses`.`department_id` = `departments`.`id`";
 
   private static $update = 'UPDATE `houses` SET `id` = :id,
     `company_id` = :company_id, `city_id` = :city_id, `street_id` = :street_id,
@@ -22,9 +23,8 @@ class mapper_house extends mapper{
     $city->set_id($row['city_id']);
     $house->set_city($city);
     // department
-    $department = new data_department();
-    $department->set_id($row['department_id']);
-    $house->set_department($department);
+    $dep = ['id' => $row['department_id'], 'name' => $row['d_name']];
+    $house->set_department(di::get('factory_department')->build($dep));
     // street
     $street = ['id' => $row['street_id'], 'name' => $row['name']];
     $house->set_street((new factory_street)->create($street));

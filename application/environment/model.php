@@ -75,12 +75,24 @@ class model_environment{
 			$pimple['company'] = $_SESSION['company'];
 		}
 
+		$pimple['data_department'] = function($p){
+			return new data_department();
+		};
+
 		$pimple['factory_client_query'] = function($p){
 			return new factory_client_query();
 		};
 
 		$pimple['factory_flat'] = function($p){
 			return new factory_flat();
+		};
+
+		$pimple['factory_company'] = function($p){
+			return new factory_company();
+		};
+
+		$pimple['factory_department'] = function($p){
+			return new factory_department();
 		};
 
 		$pimple['mapper_number'] = function($p){
@@ -133,10 +145,6 @@ class model_environment{
 
 		$pimple['mapper_meter'] = function($p){
 			return new mapper_meter($p['pdo'], $p['company']);
-		};
-
-		$pimple['factory_company'] = function($p){
-			return new factory_company();
 		};
 
 		$pimple['twig'] = $pimple->share(function($pimple){

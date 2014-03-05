@@ -143,10 +143,8 @@ class mapper_query extends mapper{
     $query->set_contact_telephone($row['contact_telephone']);
     $query->set_contact_cellphone($row['contact_cellphone']);
 
-    $department = new data_department();
-    $department->set_id($row['department_id']);
-    $department->set_name($row['department_name']);
-    $query->set_department($department);
+    $dep = ['id' =>$row['department_id'], 'name' => $row['department_name']];
+    $query->set_department(di::get('factory_department')->build($dep));
 
     $house = new data_house();
     $house->set_id($row['house_id']);

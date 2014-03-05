@@ -14,14 +14,6 @@ class mapper_department extends mapper{
 		$this->company = $company;
 	}
 
-	public function create_object(array $row){
-		$department = new data_department();
-		$department->set_id($row['id']);
-		$department->set_name($row['name']);
-		$department->set_status($row['status']);
-		return $department;
-	}
-
 	public function find($id){
 		$stmt = $this->pdo->prepare(self::$one);
 		$stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -32,7 +24,7 @@ class mapper_department extends mapper{
 		if($count === 0)
 			return null;
 		elseif($count === 1)
-			return $this->create_object($stmt->fetch());
+			return di::get('factory_department')->build($stmt->fetch());
 		else
 			throw new RuntimeException();
 	}
@@ -43,8 +35,9 @@ class mapper_department extends mapper{
 		if(!$stmt->execute())
 			throw new RuntimeException();
 		$departments = [];
+		$factory = di::get('factory_department');
 		while($row = $stmt->fetch())
-			$departments[] = $this->create_object($row);
+			$departments[] = $factory->build($row);
 		return $departments;
 	}
 }
