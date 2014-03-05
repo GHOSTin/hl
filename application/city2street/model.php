@@ -10,11 +10,8 @@ class model_city2street{
     $mapper = new mapper_city2street($this->city);
     if(!is_null($mapper->get_street_by_name($street_name)))
       throw new e_model('Такая улица уже существует.');
-    $street = new data_street();
-    $street->set_id($mapper->get_insert_id());
-    $street->set_name($street_name);
-    $street->set_status('true');
-    return $mapper->insert($street);
+    $s_array = ['id' => $mapper->get_insert_id(), 'name' => $street_name];
+    return $mapper->insert(di::get('factory_street')->build($s_array));
   }
 
   public function get_street($id){

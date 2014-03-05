@@ -128,8 +128,7 @@ class controller_number{
 	}
 
   public static function private_get_street_content(model_request $request){
-    $street = new data_street();
-    $street->set_id($request->take_get('id'));
+    $street = (new model_street) ->get_street($request->GET('id'));
     (new model_street2house($street))->init_houses();
     return ['street' => $street];
   }

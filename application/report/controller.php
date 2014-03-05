@@ -13,8 +13,7 @@ class controller_report{
         $params = $model->get_params();
         
         if($params['street'] > 0){
-            $street = new data_street();
-            $street->set_id($params['street']);
+            $street (new model_street)->get_street($params['street']);
             (new model_street2house($street))->init_houses();
             $houses = $street->get_houses();
         }

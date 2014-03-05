@@ -69,7 +69,7 @@ class mapper_city2street{
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':street_id', $street->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':city_id', $this->city->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':status', $street->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':status', 'true', PDO::PARAM_STR);
     $stmt->bindValue(':name', $street->get_name(), PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();
