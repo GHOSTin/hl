@@ -53,6 +53,7 @@ class mapper_number extends mapper{
     }
 
     public function create_object(array $row){
+        $h_array = ['id' => $row['house_id'], 'number' => $row['house_number']];
         $number = new data_number();
         $number->set_id($row['id']);
         $number->set_fio($row['fio']);
@@ -62,12 +63,9 @@ class mapper_number extends mapper{
         $number->set_hash($row['password']);
         $number->set_telephone($row['telephone']);
         $number->set_cellphone($row['cellphone']);
-        $house = new data_house();
-        $house->set_id($row['house_id']);
-        $house->set_number($row['house_number']);
         $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
         $flat = di::get('factory_flat')->create($flat);
-        $flat->set_house($house);
+        $flat->set_house(di::get('factory_house')->build($h_array));
         $number->set_flat($flat);
         return $number;
     }

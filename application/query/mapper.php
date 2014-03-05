@@ -127,6 +127,9 @@ class mapper_query extends mapper{
   }
 
   public function create_object(array $row){
+    $d_array = ['id' =>$row['department_id'],
+        'name' => $row['department_name']];
+    $h_array = ['id' => $row['house_id'], 'number' => $row['house_number']];
     $query = new data_query();
     $query->set_id($row['id']);
     $query->set_status($row['status']);
@@ -142,14 +145,8 @@ class mapper_query extends mapper{
     $query->set_contact_fio($row['contact_fio']);
     $query->set_contact_telephone($row['contact_telephone']);
     $query->set_contact_cellphone($row['contact_cellphone']);
-
-    $dep = ['id' =>$row['department_id'], 'name' => $row['department_name']];
-    $query->set_department(di::get('factory_department')->build($dep));
-
-    $house = new data_house();
-    $house->set_id($row['house_id']);
-    $house->set_number($row['house_number']);
-    $query->set_house($house);
+    $query->set_department(di::get('factory_department')->build($d_array));
+    $query->set_house(di::get('factory_house')->build($h_array));
     $street = ['id' => $row['street_id'], 'name' => $row['street_name']];
     $query->set_street((new factory_street)->create($street));
 

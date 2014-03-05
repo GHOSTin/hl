@@ -40,7 +40,7 @@ class controller_number{
 
   public static function private_add_house_processing_center(
     model_request $request){
-    $house = new data_house($request->GET('house_id'));
+    $house = (new model_house)->get_house($request->GET('house_id'));
     $house = (new model_house2processing_center(
       di::get('company'), $house))
       ->add_processing_center($request->GET('center_id'),
@@ -63,7 +63,7 @@ class controller_number{
 
   public static function private_remove_house_processing_center(
     model_request $request){
-    $house = new data_house($request->GET('house_id'));
+    $house = (new model_house)->get_house($request->GET('house_id'));
     return ['house' => (new model_house2processing_center(
       di::get('company'), $house))
       ->remove_processing_center($request->GET('center_id'))];
@@ -146,7 +146,7 @@ class controller_number{
 
   public static function private_get_dialog_remove_house_processing_center(
     model_request $request){
-    $house = new data_house($request->GET('house_id'));
+    $house = (new model_house)->get_house($request->GET('house_id'));
     (new mapper_house2processing_center(
       di::get('company'), $house))->init_processing_centers();
     return ['house' => $house];

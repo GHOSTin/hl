@@ -30,10 +30,8 @@ class mapper_street2house{
   }
 
   public function create_object(array $row){
-    $house = new data_house();
-    $house->set_id($row['id']);
-    $house->set_status($row['status']);
-    $house->set_number($row['number']);
+    $h_array = ['id' => $row['id'], 'number' => $row['number']];
+    $house = di::get('factory_house')->build($h_array);
     $city = new data_city();
     $city->set_id($row['city_id']);
     $house->set_city($city);
@@ -46,10 +44,9 @@ class mapper_street2house{
     if(!$stmt->execute())
       throw new RuntimeException();
     $houses = [];
-    if($stmt->rowCount() > 0)
-      while($row = $stmt->fetch()){
-        $houses[] = $this->create_object($row);
-      }
+    while($row = $stmt->fetch()){
+      $houses[] = $this->create_object($row);
+    }
     return $houses;
   }
 
@@ -64,7 +61,7 @@ class mapper_street2house{
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':house_id', (int) $house->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':street_id', (int) $this->street->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':status', (string) $house->get_status(), PDO::PARAM_STR);
+    $stmt->bindValue(':status', (string) 'true', PDO::PARAM_STR);
     $stmt->bindValue(':number', (string) $house->get_number(), PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();

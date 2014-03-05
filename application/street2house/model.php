@@ -18,10 +18,8 @@ class model_street2house{
     $mapper = new mapper_street2house($this->street);
     if(!is_null($mapper->find_by_number($house_number)))
       throw new e_model('Такой дом уже существует.');
-    $house = new data_house();
-    $house->set_id($mapper->get_insert_id());
-    $house->set_number($house_number);
-    $house->set_status('true');
+    $h_array = ['id' => $mapper->get_insert_id(), 'number' => $house_number];
+    $house = di::get('factory_house')->build($h_array);
     return $mapper->insert($house);
   }
 

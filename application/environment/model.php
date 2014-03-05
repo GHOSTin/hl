@@ -75,10 +75,6 @@ class model_environment{
 			$pimple['company'] = $_SESSION['company'];
 		}
 
-		$pimple['data_department'] = function($p){
-			return new data_department();
-		};
-
 		$pimple['factory_client_query'] = function($p){
 			return new factory_client_query();
 		};
@@ -93,6 +89,10 @@ class model_environment{
 
 		$pimple['factory_department'] = function($p){
 			return new factory_department();
+		};
+
+		$pimple['factory_house'] = function($p){
+			return new factory_house();
 		};
 
 		$pimple['mapper_number'] = function($p){

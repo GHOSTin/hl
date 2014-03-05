@@ -14,10 +14,8 @@ class mapper_house extends mapper{
     `housenumber` = :number WHERE `id` = :id';
 
   public function create_object(array $row){
-    $house = new data_house();
-    $house->set_id($row['id']);
-    $house->set_number($row['housenumber']);
-    $house->set_status($row['status']);
+    $h_array = ['id' =>$row['id'], 'number' => $row['housenumber']];
+    $house = di::get('factory_house')->build($h_array);
     // city
     $city = new data_city();
     $city->set_id($row['city_id']);
