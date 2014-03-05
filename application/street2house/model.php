@@ -10,8 +10,7 @@ class model_street2house{
   }
 
   public function init_houses(){
-    $mapper = new mapper_street2house($this->street);
-    $mapper->init_houses();
+    (new mapper_street2house($this->street))->init_houses();
   }
 
   public function create_house($house_number){

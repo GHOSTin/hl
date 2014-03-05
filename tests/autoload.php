@@ -8,6 +8,7 @@ require_once(ROOT.'/framework/e_model.php');
 require_once(ROOT.'/application/application_configuration.php');
 # data
 require_once(ROOT.'/application/client_query/data.php');
+require_once(ROOT.'/application/street/data.php');
 require_once(ROOT.'/application/company/data.php');
 require_once(ROOT.'/application/number/data.php');
 require_once(ROOT.'/application/house/data.php');
@@ -30,11 +31,13 @@ require_once(ROOT.'/application/number/verify.php');
 require_once(ROOT.'/application/company/verify.php');
 require_once(ROOT.'/application/query/verify.php');
 require_once(ROOT.'/application/query_work_type/verify.php');
+require_once(ROOT.'/application/street/verify.php');
 # factory
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');
 require_once(ROOT.'/application/house/factory.php');
 require_once(ROOT.'/application/number/factory.php');
+require_once(ROOT.'/application/street/factory.php');
 
 class pdo_mock extends PDO{
 

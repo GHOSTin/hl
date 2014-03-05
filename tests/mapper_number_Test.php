@@ -14,7 +14,7 @@ class mapper_number_Test extends PHPUnit_Framework_TestCase{
       'number' => 3456, 'status' => false, 'password' => 'sfsdfsdf',
       'email' => 'nekrasov@mlsco.ru', 'telephone' => null, 'cellphone' => null,
       'house_id' => 234, 'house_number' => 12, 'flat_id' => 1,
-      'flat_number' => 19];
+      'flat_number' => 19, 'street_id' => 1, 'street_name' => 'Ватутина'];
     $pimple = new Pimple();
     $pimple['factory_flat'] = function($p){
       return new factory_flat();
@@ -24,6 +24,9 @@ class mapper_number_Test extends PHPUnit_Framework_TestCase{
     };
     $pimple['factory_number'] = function($p){
       return new factory_number();
+    };
+    $pimple['factory_street'] = function($p){
+      return new factory_street();
     };
     di::set_instance($pimple);
   }

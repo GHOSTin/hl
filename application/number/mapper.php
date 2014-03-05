@@ -15,7 +15,8 @@ class mapper_number extends mapper{
     `flats`.`flatnumber` as `flat_number`,
     `houses`.`housenumber` as `house_number`,
     `houses`.`department_id`,
-    `streets`.`name` as `street_name`
+    `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`
     FROM `numbers`, `flats`, `houses`, `streets`
     WHERE `numbers`.`company_id` = :company_id
     AND `numbers`.`id` = :number_id
@@ -35,7 +36,8 @@ class mapper_number extends mapper{
     `flats`.`flatnumber` as `flat_number`,
     `houses`.`housenumber` as `house_number`,
     `houses`.`department_id`,
-    `streets`.`name` as `street_name`
+    `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`,
     FROM `numbers`, `flats`, `houses`, `streets`
     WHERE `numbers`.`company_id` = :company_id
     AND `numbers`.`number` = :number
@@ -53,7 +55,9 @@ class mapper_number extends mapper{
     }
 
     public function create_object(array $row){
-        $h_array = ['id' => $row['house_id'], 'number' => $row['house_number']];
+        $s_array = ['id' => $row['street_id'], 'name' => $row['street_name']];
+        $h_array = ['id' => $row['house_id'], 'number' => $row['house_number'],
+            'street' => di::get('factory_street')->build($s_array)];
         $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
         $flat = di::get('factory_flat')->build($flat);
         $flat->set_house(di::get('factory_house')->build($h_array));

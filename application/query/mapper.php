@@ -132,8 +132,9 @@ class mapper_query extends mapper{
     $wt->set_name($row['work_type_name']);
     $d_array = ['id' =>$row['department_id'],
         'name' => $row['department_name']];
-    $h_array = ['id' => $row['house_id'], 'number' => $row['house_number']];
-    $street = ['id' => $row['street_id'], 'name' => $row['street_name']];
+    $s_array = ['id' => $row['street_id'], 'name' => $row['street_name']];
+    $h_array = ['id' => $row['house_id'], 'number' => $row['house_number'],
+      'street' => di::get('factory_street')->build($s_array)];
     $q_array = ['id' => $row['id'], 'status' => $row['status'],
       'initiator' => $row['initiator'],
       'payment_status' => $row['payment_status'],
@@ -149,7 +150,6 @@ class mapper_query extends mapper{
       'contact_cellphone' => $row['contact_cellphone'],
       'department' => di::get('factory_department')->build($d_array),
       'house' => di::get('factory_house')->build($h_array),
-      'street' => di::get('factory_street')->build($street),
       'type' => $wt
       ];
     return di::get('factory_query')->build($q_array);
