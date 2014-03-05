@@ -19,6 +19,9 @@ class mapper_number_Test extends PHPUnit_Framework_TestCase{
     $pimple['factory_flat'] = function($p){
       return new factory_flat();
     };
+    $pimple['factory_house'] = function($p){
+      return new factory_house();
+    };
     di::set_instance($pimple);
   }
 

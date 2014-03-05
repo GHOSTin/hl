@@ -22,6 +22,7 @@ require_once(ROOT.'/application/query/mapper.php');
 require_once(ROOT.'/application/user/mapper.php');
 # model
 require_once(ROOT.'/application/user/model.php');
+require_once(ROOT.'/application/number/model.php');
 # verify
 require_once(ROOT.'/application/house/verify.php');
 require_once(ROOT.'/application/flat/verify.php');
@@ -32,7 +33,7 @@ require_once(ROOT.'/application/query_work_type/verify.php');
 # factory
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');
-require_once(ROOT.'/application/number/model.php');
+require_once(ROOT.'/application/house/factory.php');
 
 class pdo_mock extends PDO{
 

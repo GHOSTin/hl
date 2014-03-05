@@ -64,7 +64,7 @@ class mapper_number extends mapper{
         $number->set_telephone($row['telephone']);
         $number->set_cellphone($row['cellphone']);
         $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
-        $flat = di::get('factory_flat')->create($flat);
+        $flat = di::get('factory_flat')->build($flat);
         $flat->set_house(di::get('factory_house')->build($h_array));
         $number->set_flat($flat);
         return $number;

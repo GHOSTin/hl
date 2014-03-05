@@ -29,9 +29,9 @@ class mapper_house2flat{
     if(!$stmt->execute())
       throw new RuntimeException();
     $flats = [];
-    $factory = new factory_flat();
+    $factory = di::get('factory_flat');
     while($row = $stmt->fetch())
-      $flats[] = $factory->create($row);
+      $flats[] = $factory->build($row);
     return $flats;
   }
 

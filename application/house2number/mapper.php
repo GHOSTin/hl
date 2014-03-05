@@ -70,7 +70,7 @@ class mapper_house2number{
     $number->set_status($row['status']);
     $number->set_telephone($row['telephone']);
     $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
-    $number->set_flat((new factory_flat)->create($flat));
+    $number->set_flat(di::get('factory_flat')->build($flat));
     return $number;
   }
 
