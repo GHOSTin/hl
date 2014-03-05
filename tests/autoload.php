@@ -34,6 +34,7 @@ require_once(ROOT.'/application/query_work_type/verify.php');
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');
 require_once(ROOT.'/application/house/factory.php');
+require_once(ROOT.'/application/number/factory.php');
 
 class pdo_mock extends PDO{
 

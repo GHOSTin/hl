@@ -54,18 +54,10 @@ class mapper_number extends mapper{
 
     public function create_object(array $row){
         $h_array = ['id' => $row['house_id'], 'number' => $row['house_number']];
-        $number = new data_number();
-        $number->set_id($row['id']);
-        $number->set_fio($row['fio']);
-        $number->set_email($row['email']);
-        $number->set_number($row['number']);
-        $number->set_status($row['status']);
-        $number->set_hash($row['password']);
-        $number->set_telephone($row['telephone']);
-        $number->set_cellphone($row['cellphone']);
         $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
         $flat = di::get('factory_flat')->build($flat);
         $flat->set_house(di::get('factory_house')->build($h_array));
+        $number = di::get('factory_number')->build($row);
         $number->set_flat($flat);
         return $number;
     }

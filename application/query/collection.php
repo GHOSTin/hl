@@ -57,10 +57,11 @@ class collection_query{
 
   public function create_number(array $row){
     $f_array = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
-    $number = new data_number();
-    $number->set_id($row['number_id']);
-    $number->set_number($row['number']);
-    $number->set_fio($row['fio']);
+    $n_array = ['id' => $row['number_id'], 'fio' => $row['fio'],
+      'number' => $row['number'], 'email' => $row['email'],
+      'cellphone' => $row['cellphone'], 'telephone' => $row['telephone'],
+      'status' => $row['status']];
+    $number = di::get('factory_number')->build($n_array);
     $number->set_flat(di::get('factory_flat')->build($f_array));
     return $number;
   }
@@ -87,7 +88,9 @@ class collection_query{
     if(!empty($this->id)){
       $ids = implode(', ', $this->id);
       $stmt = $this->pdo->prepare("SELECT DISTINCT `query2number`.* , `numbers`.`number`,
-          `numbers`.`fio`, `flats`.`flatnumber` as `flat_number`, `flats`.`id` as `flat_id`
+          `numbers`.`fio`, `numbers`.`email`, `numbers`.`status`, 
+          `numbers`.`cellphone`, `numbers`.`telephone`, 
+          `flats`.`flatnumber` as `flat_number`, `flats`.`id` as `flat_id`
           FROM `query2number`, `numbers`, `flats`
           WHERE `query2number`.`company_id` = :company_id
           AND `numbers`.`company_id` = :company_id

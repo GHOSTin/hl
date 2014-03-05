@@ -1,10 +1,6 @@
 <?php
-/*
-* Связь с таблицей `numbers`.
-* Лицевые счета ассоциированы с компанией и с городом.
-* В одном городе у одной компании не может быть два одинаковых лицевых счета.
-*/
-final class data_number extends data_object{
+
+class data_number extends data_object{
 
   private $cellphone;
   private $centers = [];
@@ -18,7 +14,6 @@ final class data_number extends data_object{
   private $number;
   private $status;
   private $telephone;
-  private $type;
   private $email;
 
   public static function __callStatic($method, $args){
@@ -141,9 +136,5 @@ final class data_number extends data_object{
 
   public function set_telephone($telephone){
   	$this->telephone = (string) $telephone;
-  }
-
-  public function set_type($type){
-    $this->type = (string) $type;
   }
 }

@@ -91,6 +91,10 @@ class model_environment{
 			return new factory_department();
 		};
 
+		$pimple['factory_number'] = function($p){
+			return new factory_number();
+		};
+
 		$pimple['factory_house'] = function($p){
 			return new factory_house();
 		};
@@ -149,6 +153,10 @@ class model_environment{
 
 		$pimple['mapper_meter'] = function($p){
 			return new mapper_meter($p['pdo'], $p['company']);
+		};
+
+		$pimple['model_number'] = function($p){
+			return new model_number($p['company']);
 		};
 
 		$pimple['twig'] = $pimple->share(function($pimple){
