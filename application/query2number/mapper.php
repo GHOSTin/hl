@@ -6,7 +6,7 @@ class mapper_query2number{
   private $pdo;
 
   private static $all = "SELECT `query2number`.* , `numbers`.`number`,
-    `numbers`.`fio`, `flats`.`flatnumber`
+    `numbers`.`fio`, `flats`.`flatnumber`, `flats`.`id` as `f_id`
     FROM `query2number`, `numbers`, `flats`
     WHERE `query2number`.`company_id` = :company_id
     AND `numbers`.`company_id` = :company_id
@@ -35,9 +35,8 @@ class mapper_query2number{
     $number->set_id($row['number_id']);
     $number->set_number($row['number']);
     $number->set_fio($row['fio']);
-    $flat = new data_flat();
-    $flat->set_number($row['flatnumber']);
-    $number->set_flat($flat);
+    $f_array = ['id' => $row['f_id'], 'number' => $row['flatnumber']];
+    $number->set_flat(di::get('factory_flat')->build($f_array));
     return $number;
   }
 

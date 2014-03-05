@@ -8,4 +8,8 @@ class factory_flat{
     $flat->set_number($row['number']);
     return $flat;
   }
+
+  public function build(array $row){
+    return $this->create($row);
+  }
 }
