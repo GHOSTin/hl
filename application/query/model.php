@@ -258,10 +258,6 @@ class model_query{
 		return $mapper->update($query);
 	}
 
-	/**
-	* Создает новую заявку.
-	* @retrun array из data_query
-	*/
 	public function create_query($initiator, $id, $description, $work_type,
 										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{
@@ -270,43 +266,35 @@ class model_query{
 				$trans = true;
 			}
 			$time = time();
-			$query = new data_query();
-      $query->set_status('open');
-      $query->set_payment_status('unpaid');
-      $query->set_warning_status('normal');
-			$query->set_time_open($time);
-			$query->set_time_work($time);
-			$query->set_initiator($initiator);
-      $query->set_description($description);
-      $query->set_contact_fio($contact_fio);
-      $query->set_contact_telephone($contact_telephone);
-      $query->set_contact_cellphone($contact_cellphone);
-
-      // получение идентификатора дома
+			$q_array = ['status' => 'open', 'payment_status' => 'unpaid',
+				'warning_status' => 'normal', 'time_open' => $time,
+				'time_work' => $time, 'initiator' => $initiator,
+				'description' => $description, 'contact_fio' => $contact_fio,
+				'contact_telephone' => $contact_telephone,
+				'contact_cellphone' => $contact_cellphone
+				];
 			if($initiator === 'house'){
 				$house = (new model_house)->get_house($id);
 				(new mapper_house2number($this->company, $house))->init_numbers();
-				if(!empty($house->get_numbers()))
-					foreach($house->get_numbers() as $number)
-						$query->add_number($number);
-				$query->set_house($house);
-        $query->set_department($house->get_department());
+				$numbers = $house->get_numbers();
 			}elseif($initiator === 'number'){
 				$number = (new model_number($this->company))->get_number($id);
 				$house = (new model_house)
 					->get_house($number->get_flat()->get_house()->get_id());
-				$query->add_number($number);
-				$query->set_house($house);
-        $query->set_department($house->get_department());
-			}else
-				throw new e_model('Инициатор не корректен.');
-			$query_work_type = (new model_query_work_type($this->company))
+				$numbers[] = $number;
+			}
+			$q_array['house'] = $house;
+			$q_array['department'] = $house->get_department();
+			$q_array['type'] = (new model_query_work_type($this->company))
 				->get_query_work_type($work_type);
-      $query->add_work_type($query_work_type);
 			$mapper = di::get('mapper_query');
-			$query->set_id($mapper->get_insert_id());
-			$query->set_number($mapper->get_insert_query_number($time));
+			$q_array['id'] = $mapper->get_insert_id();
+			$q_array['number'] = $mapper->get_insert_query_number($time);
+			$query = di::get('factory_query')->build($q_array);
       $query = $mapper->insert($query);
+			if(!empty($house->get_numbers()))
+				foreach($house->get_numbers() as $number)
+					$query->add_number($number);
       (new mapper_query2number($this->company, $query))->update();
 			$user = di::get('user');
       $query->add_creator($user);

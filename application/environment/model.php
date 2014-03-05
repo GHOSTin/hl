@@ -95,6 +95,10 @@ class model_environment{
 			return new factory_number();
 		};
 
+		$pimple['factory_query'] = function($p){
+			return new factory_query();
+		};
+
 		$pimple['factory_house'] = function($p){
 			return new factory_house();
 		};

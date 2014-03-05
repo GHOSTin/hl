@@ -127,33 +127,32 @@ class mapper_query extends mapper{
   }
 
   public function create_object(array $row){
+    $wt = new data_query_work_type();
+    $wt->set_id($row['worktype_id']);
+    $wt->set_name($row['work_type_name']);
     $d_array = ['id' =>$row['department_id'],
         'name' => $row['department_name']];
     $h_array = ['id' => $row['house_id'], 'number' => $row['house_number']];
     $street = ['id' => $row['street_id'], 'name' => $row['street_name']];
-    $query = new data_query();
-    $query->set_id($row['id']);
-    $query->set_status($row['status']);
-    $query->set_initiator($row['initiator']);
-    $query->set_payment_status($row['payment_status']);
-    $query->set_warning_status($row['warning_status']);
-    $query->set_close_reason($row['close_reason']);
-    $query->set_time_open($row['time_open']);
-    $query->set_time_work($row['time_work']);
-    $query->set_time_close($row['time_close']);
-    $query->set_description($row['description']);
-    $query->set_number($row['number']);
-    $query->set_contact_fio($row['contact_fio']);
-    $query->set_contact_telephone($row['contact_telephone']);
-    $query->set_contact_cellphone($row['contact_cellphone']);
-    $query->set_department(di::get('factory_department')->build($d_array));
-    $query->set_house(di::get('factory_house')->build($h_array));
-    $query->set_street(di::get('factory_street')->build($street));
-    $wt = new data_query_work_type();
-    $wt->set_id($row['worktype_id']);
-    $wt->set_name($row['work_type_name']);
-    $query->add_work_type($wt);
-    return $query;
+    $q_array = ['id' => $row['id'], 'status' => $row['status'],
+      'initiator' => $row['initiator'],
+      'payment_status' => $row['payment_status'],
+      'warning_status' => $row['warning_status'],
+      'close_reason' => $row['close_reason'],
+      'time_open' => $row['time_open'],
+      'time_work' => $row['time_work'],
+      'time_close' => $row['time_close'],
+      'description' => $row['description'],
+      'number' => $row['number'],
+      'contact_fio' => $row['contact_fio'],
+      'contact_telephone' => $row['contact_telephone'],
+      'contact_cellphone' => $row['contact_cellphone'],
+      'department' => di::get('factory_department')->build($d_array),
+      'house' => di::get('factory_house')->build($h_array),
+      'street' => di::get('factory_street')->build($street),
+      'type' => $wt
+      ];
+    return di::get('factory_query')->build($q_array);
   }
 
   public function insert(data_query $query){
