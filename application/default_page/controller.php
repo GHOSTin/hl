@@ -19,6 +19,8 @@ class controller_default_page{
           die('Нет такой компании.');
         $_SESSION['user'] = $user;
         $_SESSION['company'] = $company;
+        setcookie("chat_host", application_configuration::chat_host, 0);
+        setcookie("chat_port", application_configuration::chat_port, 0);
         header('Location:/');
       }
     }
