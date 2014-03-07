@@ -131,7 +131,7 @@ class mapper_query extends mapper{
     $wt->set_id($row['worktype_id']);
     $wt->set_name($row['work_type_name']);
     $d_array = ['id' =>$row['department_id'],
-        'name' => $row['department_name']];
+      'name' => $row['department_name']];
     $s_array = ['id' => $row['street_id'], 'name' => $row['street_name']];
     $h_array = ['id' => $row['house_id'], 'number' => $row['house_number'],
       'street' => di::get('factory_street')->build($s_array)];
@@ -150,8 +150,7 @@ class mapper_query extends mapper{
       'contact_cellphone' => $row['contact_cellphone'],
       'department' => di::get('factory_department')->build($d_array),
       'house' => di::get('factory_house')->build($h_array),
-      'type' => $wt
-      ];
+      'type' => $wt];
     return di::get('factory_query')->build($q_array);
   }
 
@@ -187,11 +186,11 @@ class mapper_query extends mapper{
       throw new RuntimeException();
     $count = $stmt->rowCount();
     if($count === 0)
-        return null;
+      return null;
     elseif($count === 1)
       return $this->create_object($stmt->fetch());
     else
-        throw new RuntimeException();
+      throw new RuntimeException();
   }
 
   public function get_queries_by_number($number){
@@ -199,7 +198,7 @@ class mapper_query extends mapper{
     $stmt->bindValue(':number', (int) $number, PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
-        throw new RuntimeException();
+      throw new RuntimeException();
     $queries = [];
     while($row = $stmt->fetch())
       $queries[] = $this->create_object($row);
@@ -246,7 +245,7 @@ class mapper_query extends mapper{
     $stmt->bindValue(':begin', mktime(0, 0, 0, 1, 1, $time['year']), PDO::PARAM_INT);
     $stmt->bindValue(':end', mktime(23, 59, 59, 12, 31, $time['year']), PDO::PARAM_INT);
     if(!$stmt->execute())
-        throw new RuntimeException();
+      throw new RuntimeException();
     if($stmt->rowCount() !== 1)
       throw new RuntimeException();
     return (int) $stmt->fetch()['querynumber'] + 1;
