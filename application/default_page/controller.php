@@ -21,6 +21,7 @@ class controller_default_page{
         $_SESSION['company'] = $company;
         setcookie("chat_host", application_configuration::chat_host, 0);
         setcookie("chat_port", application_configuration::chat_port, 0);
+        setcookie("uid", $user->get_id(), 0);
         header('Location:/');
       }
     }
