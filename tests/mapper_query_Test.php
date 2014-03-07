@@ -6,6 +6,12 @@ class mapper_query_Test extends PHPUnit_Framework_TestCase{
     $this->pdo = $this->getMock('pdo_mock');
     $this->stmt = $this->getMock('PDOStatement');
     $this->company = new data_company();
+    $this->house = new data_house();
+    $this->house->set_id(1);
+    $this->department = new data_department();
+    $this->department->set_id(1);
+    $this->type = new data_query_work_type();
+    $this->type->set_id(1);
     $this->params = ['time_open_begin' => 123, 'time_open_end' => 456];
     $this->query = new data_query();
     $this->query->set_id(1);
@@ -16,8 +22,9 @@ class mapper_query_Test extends PHPUnit_Framework_TestCase{
     $this->query->set_time_work(456456);
     $this->query->set_initiator('number');
     $this->query->set_number(2145);
-    $this->query->set_house(new data_house());
-    $this->query->add_work_type(new data_query_work_type());
+    $this->query->set_house($this->house);
+    $this->query->set_department($this->department);
+    $this->query->add_work_type($this->type);
   }
 
   public function test_mapper_1_1(){
@@ -90,5 +97,17 @@ class mapper_query_Test extends PHPUnit_Framework_TestCase{
       ->will($this->returnValue($this->stmt));
     (new mapper_query($this->pdo, $this->company))
       ->update($this->query);
+  }
+
+  public function test_mapper_1_7(){
+    $this->setExpectedException('RuntimeException');
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(false));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    (new mapper_query($this->pdo, $this->company))
+      ->insert($this->query);
   }
 }

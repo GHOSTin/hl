@@ -157,9 +157,6 @@ class mapper_query extends mapper{
 
   public function insert(data_query $query){
     $this->verify($query);
-    data_house::verify_id($query->get_house()->get_id());
-    data_department::verify_id($query->get_department()->get_id());
-    data_query_work_type::verify_id($query->get_work_type()->get_id());
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':id', $query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -313,5 +310,8 @@ class mapper_query extends mapper{
     data_query::verify_time_work($query->get_time_work());
     data_query::verify_initiator($query->get_initiator());
     data_query::verify_number($query->get_number());
+    data_house::verify_id($query->get_house()->get_id());
+    data_department::verify_id($query->get_department()->get_id());
+    data_query_work_type::verify_id($query->get_work_type()->get_id());
   }
 }
