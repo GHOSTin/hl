@@ -12,39 +12,23 @@ class clientQueryTest extends PHPUnit_Framework_TestCase{
   }
 
   public function testTime2(){
-    try{
-      $this->query->set_time();
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Пропустило установку времени без аргумента.');
+    $this->setExpectedException('Exception');
+    $this->query->set_time();
   }
 
   public function testTime3(){
-    try{
-      $this->query->set_time(0);
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Пропустило установку времени нулем.');
+    $this->setExpectedException('DomainException');
+    $this->query->set_time(0);
   }
 
   public function testTime4(){
-    try{
-      $this->query->set_time(2145916801);
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Пропустило установку времени больше 2145916800.');
+    $this->setExpectedException('DomainException');
+    $this->query->set_time(2145916801);
   }
 
   public function testTime5(){
-    try{
-      $this->query->set_time(-1);
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Пропустило установку времени отрицательным значением.');
+    $this->setExpectedException('DomainException');
+    $this->query->set_time(-1);
   }
 
   public function testStatus1(){
@@ -55,44 +39,21 @@ class clientQueryTest extends PHPUnit_Framework_TestCase{
   public function test_status_2(){
     try{
       $this->query->set_status('new');
-    }catch(exception $e){
-      $this->fail('Не прошел статус new.');
-    }
-  }
-
-  public function test_status_3(){
-    try{
       $this->query->set_status('accepted');
-    }catch(exception $e){
-      $this->fail('Не прошел статус accepted.');
-    }
-  }
-
-  public function test_status_4(){
-    try{
       $this->query->set_status('canceled');
     }catch(exception $e){
-      $this->fail('Не прошел статус canceled.');
+      $this->fail('Не прошел статус');
     }
   }
 
   public function test_status_5(){
-    try{
-      $this->query->set_status('opened');
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Прошел невалидный статус.');
+    $this->setExpectedException('DomainException');
+    $this->query->set_status('opened');
   }
 
   public function test_reason_1(){
     $this->query->set_reason('Не указано описание');
     $this->assertEquals('Не указано описание', $this->query->get_reason());
-  }
-
-  public function test_query_id_1(){
-    $this->query->set_query_id(123);
-    $this->assertEquals(123, $this->query->get_query_id());
   }
 
   public function test_number_id_1(){
@@ -105,13 +66,14 @@ class clientQueryTest extends PHPUnit_Framework_TestCase{
     $this->assertEquals(123, $this->query->get_company_id());
   }
 
+  public function test_query_id_1(){
+    $this->query->set_query_id(123);
+    $this->assertEquals(123, $this->query->get_query_id());
+  }
+
   public function test_query_id_2(){
-    try{
-      $this->query->set_query_id();
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Прошел пустой аргумент.');
+    $this->setExpectedException('Exception');
+    $this->query->set_query_id();
   }
 
   public function testText1(){
@@ -120,29 +82,17 @@ class clientQueryTest extends PHPUnit_Framework_TestCase{
   }
 
   public function testText2(){
-    try{
-      $this->query->set_text();
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Пропустило с пустым аргументом.');
+    $this->setExpectedException('Exception');
+    $this->query->set_text();
   }
 
   public function testText3(){
-    try{
-      $this->query->set_text('Hello world!');
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Пропустило с английскими бувками.');
+    $this->setExpectedException('DomainException');
+    $this->query->set_text('Hello world!');
   }
 
   public function testText4(){
-    try{
-      $this->query->set_text('Буква');
-    }catch(exception $e){
-      return;
-    }
-    $this->fail('Пропустило меньше шести букв.');
+    $this->setExpectedException('DomainException');
+    $this->query->set_text('Буква');
   }
 }
