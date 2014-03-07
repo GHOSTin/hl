@@ -290,11 +290,33 @@ class mapper_query_Test extends PHPUnit_Framework_TestCase{
       ->update($this->query);
   }
 
+  public function test_update_2(){
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(true));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    (new mapper_query($this->pdo, $this->company))
+      ->update($this->query);
+  }
+
   public function test_insert_1(){
     $this->setExpectedException('RuntimeException');
     $this->stmt->expects($this->once())
       ->method('execute')
       ->will($this->returnValue(false));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    (new mapper_query($this->pdo, $this->company))
+      ->insert($this->query);
+  }
+
+  public function test_insert_2(){
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(true));
     $this->pdo->expects($this->once())
       ->method('prepare')
       ->will($this->returnValue($this->stmt));
