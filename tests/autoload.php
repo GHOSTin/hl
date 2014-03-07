@@ -17,11 +17,13 @@ require_once(ROOT.'/application/query/data.php');
 require_once(ROOT.'/application/query_work_type/data.php');
 require_once(ROOT.'/application/user/data.php');
 require_once(ROOT.'/application/department/data.php');
+require_once(ROOT.'/application/error/data.php');
 # mapa
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');
 require_once(ROOT.'/application/query/mapper.php');
 require_once(ROOT.'/application/user/mapper.php');
+require_once(ROOT.'/application/error/mapper.php');
 # model
 require_once(ROOT.'/application/user/model.php');
 require_once(ROOT.'/application/number/model.php');
@@ -34,12 +36,14 @@ require_once(ROOT.'/application/query/verify.php');
 require_once(ROOT.'/application/query_work_type/verify.php');
 require_once(ROOT.'/application/street/verify.php');
 require_once(ROOT.'/application/department/verify.php');
+require_once(ROOT.'/application/user/verify.php');
 # factory
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');
 require_once(ROOT.'/application/house/factory.php');
 require_once(ROOT.'/application/number/factory.php');
 require_once(ROOT.'/application/street/factory.php');
+require_once(ROOT.'/application/error/factory.php');
 
 class pdo_mock extends PDO{
 
