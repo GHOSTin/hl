@@ -225,7 +225,7 @@ class mapper_query extends mapper{
     $stmt->bindValue(':house_id', $query->get_house()->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':initiator', $query->get_initiator(), PDO::PARAM_STR);
     if(!$stmt->execute())
-        throw new RuntimeException();
+      throw new RuntimeException();
     return $query;
   }
 
@@ -236,8 +236,7 @@ class mapper_query extends mapper{
         throw new RuntimeException();
     if($stmt->rowCount() !== 1)
       throw new RuntimeException();
-    $query_id = (int) $stmt->fetch()['max_query_id'] + 1;
-    return $query_id;
+    return (int) $stmt->fetch()['max_query_id'] + 1;
   }
 
   public function get_insert_query_number($time){
@@ -250,8 +249,7 @@ class mapper_query extends mapper{
         throw new RuntimeException();
     if($stmt->rowCount() !== 1)
       throw new RuntimeException();
-    $query_number = (int) $stmt->fetch()['querynumber'] + 1;
-    return $query_number;
+    return (int) $stmt->fetch()['querynumber'] + 1;
   }
 
   public function get_queries(array $params){
