@@ -1,8 +1,6 @@
 <?php
 
-class mapper_error{
-
-  private $pdo;
+class mapper_error extends mapper{
 
   private static $delete = "DELETE FROM `errors` WHERE `time` = :time
     AND `user_id` = :user_id";
@@ -21,22 +19,15 @@ class mapper_error{
   private static $insert = "INSERT INTO `errors` (`time`, `user_id`, `text`)
     VALUES (:time, :user_id, :text)";
 
-  public function __construct(PDO $pdo){
-    $this->pdo = $pdo;
-  }
-
   public function create_object(array $row){
     $user = new data_user();
     $user->set_id($row['id']);
     $user->set_firstname($row['firstname']);
     $user->set_middlename($row['midlename']);
     $user->set_lastname($row['lastname']);
-    // ошибка
-    $error = new data_error();
-    $error->set_time($row['time']);
-    $error->set_text($row['text']);
-    $error->set_user($user);
-    return $error;
+    $e_array = ['text' => $row['text'], 'user' => $user,
+      'time' => $row['time']];
+    return di::get('factory_error')->build($e_array);
   }
 
   public function delete(data_error $error){

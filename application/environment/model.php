@@ -107,6 +107,10 @@ class model_environment{
 			return new factory_street();
 		};
 
+		$pimple['factory_error'] = function($p){
+			return new factory_error();
+		};
+
 		$pimple['mapper_number'] = function($p){
 			return new mapper_number($p['pdo'], $p['company']);
 		};
@@ -153,6 +157,10 @@ class model_environment{
 
 		$pimple['mapper_city'] = function($p){
 			return new mapper_city($p['pdo']);
+		};
+
+		$pimple['mapper_error'] = function($p){
+			return new mapper_error($p['pdo']);
 		};
 
 		$pimple['mapper_meter'] = function($p){
