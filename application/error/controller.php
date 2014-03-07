@@ -2,11 +2,11 @@
 class controller_error{
   
   public static function error404(model_request $request){
-    return true;
+    return null;
   }
 
   public static function private_show_dialog(model_request $request){
-    return true;
+    return null;
   }
 
   public static function private_delete_error(model_request $request){
@@ -19,6 +19,6 @@ class controller_error{
   }
 
   public static function private_show_default_page(model_request $request){
-    return ['errors' => (new model_error)->get_errors()];
+    return ['errors' => di::get('mapper_error')->find_all()];
   }
 }

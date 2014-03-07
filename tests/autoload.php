@@ -27,6 +27,7 @@ require_once(ROOT.'/application/error/mapper.php');
 # model
 require_once(ROOT.'/application/user/model.php');
 require_once(ROOT.'/application/number/model.php');
+require_once(ROOT.'/application/error/model.php');
 # verify
 require_once(ROOT.'/application/house/verify.php');
 require_once(ROOT.'/application/flat/verify.php');

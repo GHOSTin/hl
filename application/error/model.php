@@ -5,8 +5,8 @@ class model_error{
   public function delete_error($time, $user_id){
     $mapper = di::get('mapper_error');
     $error = $mapper->find($time, $user_id);
-    if(!($error instanceof data_error))
-      throw new e_model('Нет такой ошибки!');
+    if(is_null($error))
+      throw new RuntimeException();
     $mapper->delete($error);
   }
 
@@ -14,13 +14,10 @@ class model_error{
     $time = time();
     $user = di::get('user');
     $mapper = di::get('mapper_error');
-    $e = ['text' => $text, 'user' => $user, 'time' => $time];
+    $error_array = ['text' => $text, 'user' => $user, 'time' => $time];
     if(!is_null($mapper->find($time, $user->get_id())))
       throw new RuntimeException();
-    return $mapper->insert(di::get('factory_error')->build($e));
-  }
-
-  public function get_errors(){
-    return di::get('mapper_error')->find_all();
+    $error = di::get('factory_error')->build($error_array);
+    $mapper->insert($error);
   }
 }
