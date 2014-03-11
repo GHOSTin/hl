@@ -278,6 +278,34 @@ class mapper_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals(2, count($queries));
   }
 
+  public function test_get_queries_by_house_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(false));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    (new mapper_query($this->pdo, $this->company))
+      ->get_queries_by_house($this->house);
+  }
+
+  public function test_get_queries_by_house_2(){
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(true));
+    $this->stmt->expects($this->exactly(3))
+      ->method('fetch')
+      ->will($this->onConsecutiveCalls($this->query_row,
+      $this->query_row, false));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    $queries = (new mapper_query($this->pdo, $this->company))
+      ->get_queries_by_house($this->house);
+    $this->assertEquals(2, count($queries));
+  }
+
   public function test_update_1(){
     $this->setExpectedException('RuntimeException');
     $this->stmt->expects($this->once())

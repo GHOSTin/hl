@@ -1,4 +1,5 @@
 {% extends "ajax.tpl" %}
+{% set queries = component.queries %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.create_query').click(function(){
@@ -26,16 +27,27 @@
         <h3>Форма создания заявки</h3>
     </div>
     <div class="modal-body">
+      {% if queries is not empty %}
+      <h5>Последние заявки на этот дом</h5>
+       <ul class="list-unstyled">
+          {% for query in component.queries  %}
+            <li><strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    <h5>Информация об инициаторе заявке</h5>
 		{% if request.GET('initiator') == 'number' %}
-				<ul>
-					<li>л/с №{{ component.number.get_number() }}</li>
-					<li>Владелец: {{ component.number.get_fio() }}</li>
-					<li>Телефон: {{ component.number.get_telephone() }}</li>
-					<li>Сотовый: {{ component.number.get_cellphone() }}</li>
-					{#<li>Контактное лицо: {#{ component.number.get_contact_fio() }}</li>
-					<li>Телефон контактного лица: {{ component.number.get_contact_telephone()}}</li>
-					<li>Сотовые телефон контактного лица: {{ component.number.get_contact_cellphone() }}</li>#}
-				</ul>
+        <div>
+  				<ul>
+  					<li>л/с №{{ component.number.get_number() }}</li>
+  					<li>Владелец: {{ component.number.get_fio() }}</li>
+  					<li>Телефон: {{ component.number.get_telephone() }}</li>
+  					<li>Сотовый: {{ component.number.get_cellphone() }}</li>
+  					{#<li>Контактное лицо: {#{ component.number.get_contact_fio() }}</li>
+  					<li>Телефон контактного лица: {{ component.number.get_contact_telephone()}}</li>
+  					<li>Сотовые телефон контактного лица: {{ component.number.get_contact_cellphone() }}</li>#}
+  				</ul>
+        </div>
 		{% else %}
 				<div>
 					{{ component.house.get_street().get_name() }}, дом №{{ component.house.get_number() }}

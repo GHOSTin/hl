@@ -293,6 +293,50 @@ class mapper_query extends mapper{
     return $queries;
   }
 
+
+  public function get_queries_by_house(data_house $house){
+    $query = "SELECT `q`.`id`, `q`.`company_id`,
+    `q`.`status`, `q`.`initiator-type` as `initiator`,
+    `q`.`payment-status` as `payment_status`,
+    `q`.`warning-type` as `warning_status`,
+    `q`.`department_id`, `q`.`house_id`,
+    `q`.`query_close_reason_id` as `close_reason_id`,
+    `q`.`query_worktype_id` as `worktype_id`,
+    `q`.`opentime` as `time_open`,
+    `q`.`worktime` as `time_work`,
+    `q`.`closetime` as `time_close`,
+    `q`.`addinfo-name` as `contact_fio`,
+    `q`.`addinfo-telephone` as `contact_telephone`,
+    `q`.`addinfo-cellphone` as `contact_cellphone`,
+    `q`.`description-open` as `description`,
+    `q`.`description-close` as `close_reason`,
+    `q`.`querynumber` as `number`,
+    `q`.`query_inspection` as `inspection`,
+    `houses`.`housenumber` as `house_number`,
+    `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`,
+    `query_worktypes`.`name` as `work_type_name`,
+    `departments`.`name` as `department_name`
+    FROM `queries` as `q`, `houses`, `streets`, `query_worktypes`, `departments`
+    WHERE `q`.`company_id` = :company_id
+    AND `q`.`house_id` = `houses`.`id`
+    AND `houses`.`street_id` = `streets`.`id`
+    AND `q`.`query_worktype_id` = `query_worktypes`.`id`
+    AND `opentime` > :time_open AND `departments`.`company_id` = :company_id
+    AND `q`.`department_id` = `departments`.`id` AND `q`.`house_id` = :house_id 
+    ORDER BY `q`.`opentime` DESC LIMIT 5";
+    $stmt = $this->pdo->prepare($query);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_open', time() - 86400 * 30, PDO::PARAM_INT);
+    $stmt->bindValue(':house_id', $house->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+        throw new RuntimeException();
+    $queries = [];
+    while($row = $stmt->fetch())
+      $queries[] = $this->create_object($row);
+    return $queries;
+  }
+
   private function verify(data_query $query){
     data_query::verify_id($query->get_id());
     data_query::verify_status($query->get_status());

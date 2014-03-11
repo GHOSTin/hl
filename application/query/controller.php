@@ -266,12 +266,18 @@ class controller_query{
 		$types = (new model_query_work_type($company))->get_query_work_types();
 		switch($request->GET('initiator')){
 			case 'number':
-				return ['number' => (new model_number($company))
-					->get_number($request->GET('id')), 'query_work_types' => $types];
+				$number = (new model_number($company))
+					->get_number($request->GET('id'));
+				$house = $number->get_flat()->get_house();
+				$queries = di::get('mapper_query')->get_queries_by_house($house);
+				return ['number' => $number, 'query_work_types' => $types, 
+					'queries' => $queries];
 			break;
 			case 'house':
-				return ['house' => (new model_house)->get_house($request->GET('id')),
-					'query_work_types' => $types];
+				$house = (new model_house)->get_house($request->GET('id'));
+				$queries = di::get('mapper_query')->get_queries_by_house($house);
+				return ['house' => $house, 'query_work_types' => $types,
+					'queries' => $queries];
 			break;
 			default:
 				throw new e_model('Проблема типа инициатора.');
