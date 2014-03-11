@@ -193,7 +193,7 @@
 		<div class="main-block">
 			<div class="ttle">Заявка №{{ query.get_number() }} от {{ query.get_time_open()|date('H:i d.m.Y')}}</div>
 			<div class="ttle">
-					{{ query.get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
+					{{ query.get_house().get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
 					{% if query.get_initiator() == 'number' %}
                         {% for number in query.get_numbers() %}
 							, кв.{{ number.get_flat().get_number() }}  (л/с №{{ number.get_number() }}, {{ number.get_fio() }})
