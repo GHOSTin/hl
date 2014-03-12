@@ -49,7 +49,7 @@
 	</ul>
 	<ul class="query-general">
 		<li>Время открытия: {{query.get_time_open()|date('H:i d.m.Y')}}</li>
-		<li>Адрес: {{ query.get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
+		<li>Адрес: {{ query.get_house().get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
 			{% if query.get_initiator() == 'number' %}
 				{% if component.numbers.numbers != false %}
 					, кв. {{number.flat_number}}

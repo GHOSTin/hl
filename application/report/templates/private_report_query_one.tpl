@@ -42,7 +42,7 @@
         <td>{{ query.get_work_type().get_name() }}</td>
         <td>{{ payment_statuses[query.get_payment_status()] }}</td>
         <td>{{ query.get_department().get_name() }}</td>
-        <td>{{ query.get_street().get_name() }}</td>
+        <td>{{ query.get_house().get_street().get_name() }}</td>
         <td>{{ query.get_house().get_number() }}</td>
         <td>
             {% if query.get_initiator() == 'number' %}

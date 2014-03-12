@@ -51,7 +51,7 @@
                 <Cell><Data ss:Type="String">{{ query.get_work_type().get_name() }}</Data></Cell> 
                 <Cell><Data ss:Type="String">{{ payment_statuses[query.get_payment_status()] }}</Data></Cell> 
                 <Cell><Data ss:Type="String">{{ query.get_department().get_name() }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_street().get_name() }}</Data></Cell> 
+                <Cell><Data ss:Type="String">{{ query.get_house().get_street().get_name() }}</Data></Cell> 
                 <Cell><Data ss:Type="String">{{ query.get_house().get_number() }}</Data></Cell> 
                 <Cell><Data ss:Type="String">
                     {% if query.get_initiator() == 'number' %}
