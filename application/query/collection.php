@@ -60,7 +60,7 @@ class collection_query{
     $n_array = ['id' => $row['number_id'], 'fio' => $row['fio'],
       'number' => $row['number'], 'email' => $row['email'],
       'cellphone' => $row['cellphone'], 'telephone' => $row['telephone'],
-      'status' => $row['status']];
+      'status' => $row['status'], 'password' => $row['password']];
     $number = di::get('factory_number')->build($n_array);
     $number->set_flat(di::get('factory_flat')->build($f_array));
     return $number;
@@ -89,7 +89,7 @@ class collection_query{
       $ids = implode(', ', $this->id);
       $stmt = $this->pdo->prepare("SELECT DISTINCT `query2number`.* , `numbers`.`number`,
           `numbers`.`fio`, `numbers`.`email`, `numbers`.`status`, 
-          `numbers`.`cellphone`, `numbers`.`telephone`, 
+          `numbers`.`cellphone`, `numbers`.`telephone`, `numbers`.`password`,
           `flats`.`flatnumber` as `flat_number`, `flats`.`id` as `flat_id`
           FROM `query2number`, `numbers`, `flats`
           WHERE `query2number`.`company_id` = :company_id
@@ -113,7 +113,8 @@ class collection_query{
       $ids = implode(', ', $this->id);
       $stmt = $this->pdo->prepare("SELECT `query2user`.`query_id`,
       `query2user`.`class`, `users`.`id`,
-      `users`.`firstname`, `users`.`lastname`, `users`.`midlename`
+      `users`.`firstname`, `users`.`lastname`,
+      `users`.`midlename` as `middlename`
       FROM `query2user`, `users`
       WHERE `query2user`.`company_id` = :company_id
       AND `users`.`id` = `query2user`.`user_id`
