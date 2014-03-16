@@ -197,7 +197,10 @@ class controller_user{
     if(!empty($users))
       foreach($users as $user){
         $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
-        $letters[$letter]++;
+        if(isset($letters[$letter]))
+          $letters[$letter]++;
+        else
+          $letters[$letter] = 1;
       }
     return ['letters' => $letters];
 	}
@@ -212,6 +215,10 @@ class controller_user{
           $letters[] = $group;
       }
     return ['groups' => $letters];
+  }
+
+  public static function private_logs(model_request $request){
+    return ['sessions' => di::get('mapper_session')->find_all()];
   }
 
   public static function private_get_user_letter(model_request $request){
@@ -264,7 +271,7 @@ class controller_user{
   }
 
   public static function private_update_fio(model_request $request){
-    return ['user' => (new model_user)->update_fio($request->take_get('id'), 
+    return ['user' => (new model_user)->update_fio($request->take_get('id'),
       $request->take_get('lastname'), $request->take_get('firstname'),
       $request->take_get('middlename'))];
   }

@@ -5,6 +5,7 @@
         <button class="btn btn-default active get_user_letters">Пользователи</button>
         <button class="btn btn-default get_group_letters">Группы</button>
     </div>
+    <a href="/user/logs">Логи</a>
     <div class="letters">
     {% include '@user/build_user_letters.tpl' %}
     </div>

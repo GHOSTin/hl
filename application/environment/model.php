@@ -107,6 +107,10 @@ class model_environment{
 			return new factory_house();
 		};
 
+		$pimple['factory_user'] = function($p){
+			return new factory_user();
+		};
+
 		$pimple['factory_street'] = function($p){
 			return new factory_street();
 		};

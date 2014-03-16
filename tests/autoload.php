@@ -49,6 +49,8 @@ require_once(ROOT.'/application/street/factory.php');
 require_once(ROOT.'/application/error/factory.php');
 require_once(ROOT.'/application/department/factory.php');
 require_once(ROOT.'/application/query/factory.php');
+require_once(ROOT.'/application/session/factory.php');
+require_once(ROOT.'/application/user/factory.php');
 
 class pdo_mock extends PDO{
 
