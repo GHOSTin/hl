@@ -17,6 +17,10 @@ class controller_default_page{
         $company = di::get('mapper_company')->find($user->get_company_id());
         if(is_null($company))
           die('Нет такой компании.');
+        $session = ['user' => $user, 'time' => time(),
+          'ip' => $_SERVER['REMOTE_ADDR']];
+        $ses = di::get('factory_session')->build($session);
+        di::get('mapper_session')->insert($ses);
         $_SESSION['user'] = $user;
         $_SESSION['company'] = $company;
         setcookie("chat_host", application_configuration::chat_host, 0);

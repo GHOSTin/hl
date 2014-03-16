@@ -83,6 +83,10 @@ class model_environment{
 			return new factory_flat();
 		};
 
+		$pimple['factory_session'] = function($p){
+			return new factory_session();
+		};
+
 		$pimple['factory_company'] = function($p){
 			return new factory_company();
 		};
@@ -121,6 +125,10 @@ class model_environment{
 
 		$pimple['mapper_query'] = function($p){
 			return new mapper_query($p['pdo'], $p['company']);
+		};
+
+		$pimple['mapper_session'] = function($p){
+			return new mapper_session($p['pdo']);
 		};
 
 		$pimple['mapper_company'] = function($p){

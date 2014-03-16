@@ -18,12 +18,14 @@ require_once(ROOT.'/application/query_work_type/data.php');
 require_once(ROOT.'/application/user/data.php');
 require_once(ROOT.'/application/department/data.php');
 require_once(ROOT.'/application/error/data.php');
+require_once(ROOT.'/application/session/data.php');
 # mapa
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');
 require_once(ROOT.'/application/query/mapper.php');
 require_once(ROOT.'/application/user/mapper.php');
 require_once(ROOT.'/application/error/mapper.php');
+require_once(ROOT.'/application/session/mapper.php');
 # model
 require_once(ROOT.'/application/user/model.php');
 require_once(ROOT.'/application/number/model.php');
