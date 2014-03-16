@@ -183,6 +183,10 @@ class model_environment{
 			return new model_number($p['company']);
 		};
 
+		$pimple['model_query'] = function($p){
+			return new model_query($p['company']);
+		};
+
 		$pimple['twig'] = $pimple->share(function($pimple){
 			$options = [];
 			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');

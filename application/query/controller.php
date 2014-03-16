@@ -1,7 +1,5 @@
 <?php
-/*
-* Контроллер компонента заявок.
-*/
+
 class controller_query{
 
 	static $name = 'Заявки';
@@ -21,22 +19,25 @@ class controller_query{
 		(new model_client_query($company))
 			->accept_client_query($query, $request->GET('id'), $request->GET('time'));
 		di::get('pdo')->commit();
-		return ['queries' => $collection, 
+		return ['queries' => $collection,
 			'client_queries' => (new mapper_client_query(di::get('pdo')))
 			->find_all_new($company)];
 	}
 
+	// test
 	public static function private_add_user(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->add_user($request->GET('id'), $request->GET('user_id'),
 			$request->GET('type'))];
 	}
 
+	// test
 	public static function private_add_comment(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->add_comment($request->GET('query_id'), $request->GET('message'))];
 	}
 
+	// test
 	public static function private_add_work(model_request $request){
 		$begin_hours = (int) $request->GET('begin_hours');
 		$begin_minutes = (int) $request->GET('begin_minutes');
@@ -46,7 +47,7 @@ class controller_query{
 		$end_date = (string) $request->GET('end_date');
 		$begin = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
 		$end = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->add_work($request->GET('id'), $request->GET('work_id'), $begin, $end)];
 	}
 
@@ -76,40 +77,45 @@ class controller_query{
 			'timeline' =>  $timeline, 'now' =>  $timeline];
 	}
 
+	// test
 	public static function private_close_query(model_request $request){
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('reason'), $matches);
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->close_query($request->GET('id'), implode('', $matches[0]));
 		$model->init_numbers($query);
 		$model->init_users($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_change_initiator(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->change_initiator($request->GET('query_id'),
 			$request->GET('house_id'), $request->GET('number_id'))];
 	}
 
+	//test
 	public static function private_reclose_query(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->reclose_query($request->GET('id'));
 		$model->init_numbers($query);
 		$model->init_users($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_reopen_query(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->reopen_query($request->GET('id'));
 		$model->init_numbers($query);
 		$model->init_users($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_to_working_query(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->to_working_query($request->GET('id'));
 		$model->init_numbers($query);
 		$model->init_users($query);
@@ -129,8 +135,9 @@ class controller_query{
 		return ['queries' => $collection];
 	}
 
+	// test
 	public static function private_get_documents(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->get_query($request->GET('id'))];
 	}
 
@@ -146,8 +153,9 @@ class controller_query{
 		return ['queries' => $collection];
 	}
 
+	// test
 	public static function private_get_dialog_add_comment(model_request $request){
-		return true;
+		return null;
 	}
 
 	public static function private_get_dialog_accept_client_query(model_request $request){
@@ -270,7 +278,7 @@ class controller_query{
 					->get_number($request->GET('id'));
 				$house = $number->get_flat()->get_house();
 				$queries = di::get('mapper_query')->get_queries_by_house($house);
-				return ['number' => $number, 'query_work_types' => $types, 
+				return ['number' => $number, 'query_work_types' => $types,
 					'queries' => $queries];
 			break;
 			case 'house':
