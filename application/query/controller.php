@@ -169,103 +169,109 @@ class controller_query{
 			'client_query' => $client_query];
 	}
 
+	// test
 	public static function private_get_dialog_cancel_client_query(model_request $request){
-		return true;
+		return null;
 	}
 
+	// test
 	public static function private_get_dialog_add_user(model_request $request){
-		$company = di::get('company');
-		return ['query' => (new model_query($company))
-			->get_query($request->GET('id')),
-			'groups' => (new model_group($company))->get_groups()];
+		return ['query' => di::get('model_query')->get_query($request->GET('id')),
+			'groups' => di::get('model_group')->get_groups()];
 	}
 
+	// test
 	public static function private_get_dialog_add_work(model_request $request){
-		return ['workgroups' => (new model_workgroup(di::get('company')))
-			->get_workgroups()];
+		return ['workgroups' => di::get('model_workgroup')->get_workgroups()];
 	}
 
+	// test
 	public static function private_get_dialog_create_query(
 		model_request $request){
-		return true;
+		return null;
 	}
 
+	// test
 	public static function private_get_dialog_close_query(
 		model_request $request){
-		return true;
+		return null;
 	}
 
+	// test
 	public static function private_get_dialog_reclose_query(
 		model_request $request){
-		return true;
+		return null;
 	}
 
+	// test
 	public static function private_get_dialog_reopen_query(
 		model_request $request){
-		return true;
+		return null;
 	}
 
+	// test
 	public static function private_get_dialog_to_working_query(
 		model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->get_query($request->GET('id'))];
+		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
 	}
 
+	// test
 	public static function private_get_dialog_change_initiator(
 		model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->get_query($request->GET('id')),
-			'streets' => (new model_street)->get_streets()];
+		return ['query' => di::get('model_query')->get_query($request->GET('id')),
+			'streets' => di::get('model_street')->get_streets()];
 	}
 
+	// test
 	public static function private_get_dialog_edit_description(
 		model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->get_query($request->GET('id'))];
+		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
 	}
 
+	// test
 	public static function private_get_dialog_edit_reason(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->get_query($request->GET('id'))];
+		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
 	}
 
+	// test
 	public static function private_get_dialog_edit_contact_information(
 		model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->get_query($request->GET('id'))];
+		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
 	}
 
+	// test
 	public static function private_get_dialog_edit_payment_status(
 		model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->get_query($request->GET('id'))];
+		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
 	}
 
+	// test
 	public static function private_get_dialog_edit_warning_status(
 		model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->get_query($request->GET('id'))];
+		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
 	}
 
+	// test
 	public static function private_get_dialog_edit_work_type(
 		model_request $request){
-		$company = di::get('company');
-		return ['query' => (new model_query($company))
-			->get_query($request->GET('id')),
-			'work_types' => (new model_query_work_type($company))
-			->get_query_work_types()];
+		return ['query' => di::get('model_query')->get_query($request->GET('id')),
+			'work_types' => di::get('model_query_work_type')->get_query_work_types()];
 	}
 
+	// test
 	public static function private_get_dialog_initiator(model_request $request){
-		return ['streets' => (new model_street)->get_streets()];
+		return ['streets' => di::get('model_street')->get_streets()];
 	}
 
+	// test
 	public static function private_get_dialog_remove_user(model_request $request){
-		return ['user' => (new model_user)->get_user($request->GET('user_id'))];
+		return ['user' => di::get('model_user')
+			->get_user($request->GET('user_id'))];
 	}
 
+	// test
 	public static function private_get_dialog_remove_work(model_request $request){
-		return ['work' => (new model_work(di::get('company')))
+		return ['work' => di::get('model_work')
 			->get_work($request->GET('work_id'))];
 	}
 
@@ -492,7 +498,7 @@ class controller_query{
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
-			'streets' => model_street::get_streets(),
+			'streets' => di::get('model_street')->get_streets(),
 			'departments' => (new model_department($company))->get_departments(),
 			'query_work_types' => (new model_query_work_type($company))
 				->get_query_work_types(),

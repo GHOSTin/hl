@@ -19,6 +19,9 @@ require_once(ROOT.'/application/user/data.php');
 require_once(ROOT.'/application/department/data.php');
 require_once(ROOT.'/application/error/data.php');
 require_once(ROOT.'/application/session/data.php');
+require_once(ROOT.'/application/group/data.php');
+require_once(ROOT.'/application/work/data.php');
+require_once(ROOT.'/application/workgroup/data.php');
 # mapa
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');
@@ -32,6 +35,11 @@ require_once(ROOT.'/application/number/model.php');
 require_once(ROOT.'/application/error/model.php');
 require_once(ROOT.'/application/request/model.php');
 require_once(ROOT.'/application/query/model.php');
+require_once(ROOT.'/application/group/model.php');
+require_once(ROOT.'/application/work/model.php');
+require_once(ROOT.'/application/workgroup/model.php');
+require_once(ROOT.'/application/street/model.php');
+require_once(ROOT.'/application/query_work_type/model.php');
 # verify
 require_once(ROOT.'/application/house/verify.php');
 require_once(ROOT.'/application/flat/verify.php');

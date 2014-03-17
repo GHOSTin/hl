@@ -8,6 +8,11 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->company = new data_company();
     $this->request = new model_request();
     $this->query = new data_query();
+    $this->group = new data_group();
+    $this->workgroup = new data_workgroup();
+    $this->street = new data_street();
+    $this->query_work_type = new data_query_work_type();
+    $this->work = new data_work();
   }
 
   public function test_private_add_user(){
@@ -184,5 +189,257 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
   public function test_private_get_dialog_add_comment(){
     $res = controller_query::private_get_dialog_add_comment($this->request);
     $this->assertNull($res);
+  }
+
+  public function test_private_get_dialog_cancel_client_query(){
+    $res = controller_query::private_get_dialog_cancel_client_query($this->request);
+    $this->assertNull($res);
+  }
+
+  public function test_private_get_dialog_add_user(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    $this->pimple['model_group'] = function($p){
+      $model = $this->getMockBuilder('model_group')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_groups')
+        ->will($this->returnValue([$this->group]));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_add_user($this->request);
+    $this->assertSame($this->query, $array['query']);
+    $this->assertSame($this->group, $array['groups'][0]);
+  }
+
+  public function test_private_get_dialog_add_work(){
+    $this->pimple['model_workgroup'] = function($p){
+      $model = $this->getMockBuilder('model_workgroup')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_workgroups')
+        ->will($this->returnValue([$this->workgroup]));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $array = controller_query::private_get_dialog_add_work($this->request);
+    $this->assertSame($this->workgroup, $array['workgroups'][0]);
+  }
+
+  public function test_private_get_dialog_create_query(){
+    $res = controller_query::private_get_dialog_create_query($this->request);
+    $this->assertNull($res);
+  }
+
+  public function test_private_get_dialog_close_query(){
+    $res = controller_query::private_get_dialog_close_query($this->request);
+    $this->assertNull($res);
+  }
+
+  public function test_private_get_dialog_reclose_query(){
+    $res = controller_query::private_get_dialog_reclose_query($this->request);
+    $this->assertNull($res);
+  }
+
+  public function test_private_get_dialog_reopen_query(){
+    $res = controller_query::private_get_dialog_reopen_query($this->request);
+    $this->assertNull($res);
+  }
+
+  public function test_private_get_dialog_to_working_query(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_to_working_query($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_dialog_change_initiator(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    $this->pimple['model_street'] = function($p){
+      $model = $this->getMock('model_street');
+      $model->expects($this->once())
+        ->method('get_streets')
+        ->will($this->returnValue([$this->street]));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_change_initiator($this->request);
+    $this->assertSame($this->query, $array['query']);
+    $this->assertSame($this->street, $array['streets'][0]);
+  }
+
+  public function test_private_get_dialog_edit_description(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_edit_description($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_dialog_edit_reason(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_edit_reason($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_dialog_edit_contact_information(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_edit_contact_information($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_dialog_edit_payment_status(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_edit_payment_status($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_dialog_edit_warning_status(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_edit_warning_status($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_dialog_edit_work_type(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+
+    $this->pimple['model_query_work_type'] = function($p){
+      $model = $this->getMockBuilder('model_query_work_type')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query_work_types')
+        ->will($this->returnValue([$this->query_work_type]));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_dialog_edit_work_type($this->request);
+    $this->assertSame($this->query, $array['query']);
+    $this->assertSame($this->query_work_type, $array['work_types'][0]);
+  }
+
+  public function test_private_get_dialog_initiator(){
+    $this->pimple['model_street'] = function($p){
+      $model = $this->getMock('model_street');
+      $model->expects($this->once())
+        ->method('get_streets')
+        ->will($this->returnValue([$this->street]));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $array = controller_query::private_get_dialog_initiator($this->request);
+    $this->assertSame($this->street, $array['streets'][0]);
+  }
+
+  public function test_private_get_dialog_remove_work(){
+    $this->pimple['model_work'] = function($p){
+      $model = $this->getMockBuilder('model_work')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_work')
+        ->with(10)
+        ->will($this->returnValue($this->work));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['work_id' => 10];
+    $array = controller_query::private_get_dialog_remove_work($this->request);
+    $this->assertSame($this->work, $array['work']);
   }
 }
