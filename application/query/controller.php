@@ -311,64 +311,67 @@ class controller_query{
 		return ['house' => $house];
 	}
 
+	// test
 	public static function private_print_query(model_request $request){
-		$company = di::get('company');
-		$model = new model_query($company);
+		$model = di::get('model_query');
 		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
 		$model->init_users($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_get_query_content(model_request $request){
-		$company = di::get('company');
-		$model = new model_query($company);
+		$model = di::get('model_query');
 		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
 		$model->init_users($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_get_query_title(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_get_query_numbers(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_get_query_users(model_request $request){
-		$company = di::get('company');
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->get_query($request->GET('id'));
 		$model->init_users($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_get_query_works(model_request $request){
-		$company = di::get('company');
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->get_query($request->GET('id'));
 		$model->init_works($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_get_query_comments(model_request $request){
-		$company = di::get('company');
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$query = $model->get_query($request->GET('id'));
 		$model->init_comments($query);
 		return ['query' => $query];
 	}
 
+	// test
 	public static function private_get_search(model_request $request){
-		return true;
+		return null;
 	}
 
 	public static function private_get_search_result(model_request $request){
@@ -505,50 +508,57 @@ class controller_query{
 			'houses' => $houses];
 	}
 
+	// test
 	public static function private_remove_user(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
-			->remove_user($request->GET('id'), $request->GET('user_id'),
-			$request->GET('type'))];
+		return ['query' => di::get('model_query')->remove_user($request->GET('id'),
+			$request->GET('user_id'), $request->GET('type'))];
 	}
 
+	// test
 	public static function private_remove_work(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->remove_work($request->GET('id'), $request->GET('work_id'))];
 	}
 
+	// test
 	public static function private_update_description(model_request $request){
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('description'), $matches);
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->update_description($request->GET('id'), implode('', $matches[0]))];
 	}
 
+	// test
 	public static function private_update_reason(model_request $request){
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('reason'), $matches);
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->update_reason($request->GET('id'), implode('', $matches[0]))];
 	}
 
+	// test
 	public static function private_update_contact_information(
 		model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->update_contact_information($request->GET('id'), $request->GET('fio'),
 			$request->GET('telephone'), $request->GET('cellphone'))];
 	}
 
+	// test
 	public static function private_update_payment_status(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->update_payment_status($request->GET('id'), $request->GET('status'))];
 	}
 
+	// test
 	public static function private_update_warning_status(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->update_warning_status($request->GET('id'), $request->GET('status'))];
 	}
 
+	// test
 	public static function private_update_work_type(model_request $request){
-		return ['query' => (new model_query(di::get('company')))
+		return ['query' => di::get('model_query')
 			->update_work_type($request->GET('id'), $request->GET('type'))];
 	}
 }

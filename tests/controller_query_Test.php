@@ -442,4 +442,283 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $array = controller_query::private_get_dialog_remove_work($this->request);
     $this->assertSame($this->work, $array['work']);
   }
+
+  public function test_private_print_query(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      $model->expects($this->once())
+        ->method('init_users');
+      $model->expects($this->once())
+        ->method('init_numbers');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_print_query($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_query_content(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      $model->expects($this->once())
+        ->method('init_users');
+      $model->expects($this->once())
+        ->method('init_numbers');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_query_content($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_query_title(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      $model->expects($this->once())
+        ->method('init_numbers');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_query_title($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_query_numbers(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      $model->expects($this->once())
+        ->method('init_numbers');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_query_numbers($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_query_users(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      $model->expects($this->once())
+        ->method('init_users');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_query_users($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_query_works(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      $model->expects($this->once())
+        ->method('init_works');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_query_works($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_query_comments(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query')
+        ->with(10)
+        ->will($this->returnValue($this->query));
+      $model->expects($this->once())
+        ->method('init_comments');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10];
+    $array = controller_query::private_get_query_comments($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_get_search(){
+    $res = controller_query::private_get_search($this->request);
+    $this->assertNull($res);
+  }
+
+  public function test_private_remove_user(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('remove_user')
+        ->with(10, 15, 'manager')
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'user_id' => 15, 'type' => 'manager'];
+    $array = controller_query::private_remove_user($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_remove_work(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('remove_work')
+        ->with(10, 15)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'work_id' => 15];
+    $array = controller_query::private_remove_work($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_update_description(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('update_description')
+        ->with(10, 'Привет')
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'description' => 'Привет'];
+    $array = controller_query::private_update_description($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_update_reason(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('update_reason')
+        ->with(10, 'Привет')
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'reason' => 'Привет'];
+    $array = controller_query::private_update_reason($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_update_contact_information(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('update_contact_information')
+        ->with(10, 'Некрасов', 83439647957, 89222944742)
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'fio' => 'Некрасов', 'telephone' => 83439647957,
+     'cellphone' => 89222944742];
+    $array = controller_query::private_update_contact_information($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_update_payment_status(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('update_payment_status')
+        ->with(10, 'unpaid')
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'status' => 'unpaid'];
+    $array = controller_query::private_update_payment_status($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_update_warning_status(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('update_warning_status')
+        ->with(10, 'normal')
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'status' => 'normal'];
+    $array = controller_query::private_update_warning_status($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
+
+  public function test_private_update_work_type(){
+    $this->pimple['model_query'] = function($p){
+      $model = $this->getMockBuilder('model_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('update_work_type')
+        ->with(10, 'elect')
+        ->will($this->returnValue($this->query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $_GET = ['id' => 10, 'type' => 'elect'];
+    $array = controller_query::private_update_work_type($this->request);
+    $this->assertSame($this->query, $array['query']);
+  }
 }
