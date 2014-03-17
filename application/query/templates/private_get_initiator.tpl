@@ -29,9 +29,13 @@
     <div class="modal-body">
       {% if queries is not empty %}
       <h5>Последние заявки на этот дом</h5>
-       <ul class="list-unstyled">
+       <ul class="list-unstyled old-queries">
           {% for query in component.queries  %}
-            <li><strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}</li>
+            <li class="query_status_{{ query.get_status() }}"><strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
+              {% if query.get_status() in ['close', 'reopen'] %}
+              <p class="label label-default">{{ query.get_close_reason() }}</p>
+              {% endif %}
+            </li>
           {% endfor %}
         </ul>
       {% endif %}

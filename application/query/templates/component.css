@@ -7,6 +7,11 @@
     padding:3px 5px;
 }
 
+.old-queries li{
+    margin:2px;
+    padding:2px;
+}
+
 .query_controls{
    margin-top: 20px;
 }
