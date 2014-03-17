@@ -6,7 +6,8 @@ class mapper_session extends mapper{
     `u`.`id` as `u_id`, `u`.`status` as `u_status`, `u`.`username` as `u_login`,
     `u`.`firstname` as `u_firstname`, `u`.`midlename` as `u_middlename`,
     `u`.`lastname` as `u_lastname`
-    FROM `sessions_logs` as `s`, `users` as `u` WHERE `s`.`user_id` = `u`.`id`';
+    FROM `sessions_logs` as `s`, `users` as `u` WHERE `s`.`user_id` = `u`.`id`
+    ORDER BY `s`.`time` DESC';
 
   private static $insert = 'INSERT INTO `sessions_logs` (`user_id`, `time`, `ip`
     ) VALUES (:user_id, :time, :ip)';
