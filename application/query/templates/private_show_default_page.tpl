@@ -1,7 +1,7 @@
 {% extends "default.tpl" %}
 {% set client_queries = component.client_queries %}
 {% block component %}
-    <div class="alert alert-info">Внимание. При создании заявки теперь выводится список из 5 последних заявок за месяц на дом. Теперь вы можете зря не создавать лишние заявки.</div>
+    <div class="alert alert-success">Внимание. Теперь комментарии если они есть в заявке показываются в зеленом квардрате. Теперь нет смысла писать "смотри коментарии".</div>
     <!-- begin left block -->
     <div class="col-sm-3 col-lg-3">
         <div class="row">
@@ -20,7 +20,6 @@
     </div>
     <!-- end left block, begin right block -->
     <div class="col-sm-9 col-lg-9">
-
             <!-- begin timeline -->
             <nav class="timeline row">
                 {% include '@query/timeline.tpl' %}

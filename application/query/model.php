@@ -30,7 +30,6 @@ class model_query{
     $this->params['street'] = null;
     $this->params['house'] = null;
     $this->params['work_type'] = null;
-
     $this->params['department'] = null;
 		if(!empty($this->restrictions['departments']))
 			$this->params['department'] = $this->restrictions['departments'];

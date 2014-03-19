@@ -477,6 +477,8 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
         ->method('init_users');
       $model->expects($this->once())
         ->method('init_numbers');
+      $model->expects($this->once())
+        ->method('init_comments');
       return $model;
     };
     di::set_instance($this->pimple);

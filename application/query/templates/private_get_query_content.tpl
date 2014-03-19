@@ -116,7 +116,7 @@
 			<h5>Работы</h5>
 		</li>
 		<li class="query-comments">
-			<h5>Служебные комментарии</h5>
+			<h5>Служебные комментарии{% if query.get_comments() is not empty %} <span class="label label-success">{{ query.get_comments()|length }}</span>{% endif %}</h5>
 		</li>
 	</ul>
 	</div>

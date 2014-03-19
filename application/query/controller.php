@@ -326,6 +326,7 @@ class controller_query{
 		$query = $model->get_query($request->GET('id'));
 		$model->init_numbers($query);
 		$model->init_users($query);
+		$model->init_comments($query);
 		return ['query' => $query];
 	}
 
