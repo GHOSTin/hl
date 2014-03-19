@@ -37,8 +37,11 @@ class model_environment{
 			self::init_profile($component);
 			$data['user'] = di::get('user');
 			$data['menu'] = model_menu::build_menu($component);
+		}else{
+			$pimple = di::get_instance();
+			$pimple['profile'] = null;
 		}
-		$profile = model_session::get_profile();
+		$profile = di::get('profile');;
 		if($profile instanceof data_profile)
 			$data['rules'] = $profile->get_rules();
 		$data['component'] = $controller::$method($request);
@@ -57,12 +60,15 @@ class model_environment{
 	public static function init_profile($component){
 		$profile = (new mapper_user2profile(di::get('company'),
 			di::get('user')))->find($component);
-		if(in_array($component, self::$profiles, true))
+		if(in_array($component, self::$profiles, true)){
+			$pimple = di::get_instance();
+			$pimple['profile'] = null;
 			return;
-		elseif($profile instanceof data_profile){
+		}elseif($profile instanceof data_profile){
 			if($profile->get_rules()['generalAccess'] !== true)
 				throw new e_model('Доступа нет.');
-			model_session::set_profile($profile);
+			$pimple = di::get_instance();
+			$pimple['profile'] = $profile;
 		}else
 			throw new e_model('Доступа нет.');
 	}
@@ -205,6 +211,10 @@ class model_environment{
 
 		$pimple['model_street'] = function($p){
 			return new model_street();
+		};
+
+		$pimple['model_house'] = function($p){
+			return new model_house();
 		};
 
 		$pimple['model_query_work_type'] = function($p){

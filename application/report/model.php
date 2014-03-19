@@ -39,16 +39,6 @@ class model_report{
     (new mem(__CLASS__))->save($this->params);
   }
 
-  public static function set_filter($key, $value){
-      $session = model_session::get_session();
-      $filters = $session->get('filters');
-      if(!is_array($filters))
-          $filters = [];
-      $filters[$key] = $value;
-      $session->set('filters', $filters);
-  }
-
-
   public function set_time_begin($time){
     $this->params['time_open_begin'] = $time;
     (new mem(__CLASS__))->save($this->params);

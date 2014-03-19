@@ -8,9 +8,7 @@ class model_query{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-    data_company::verify_id($this->company->get_id());
-    $this->pdo = di::get('pdo');
-	  $profile = model_session::get_profile();
+	  $profile = di::get('profile');
 	  if((string) $profile === 'query')
 	  	$this->restrictions = $profile->get_restrictions();
     if(!empty($_SESSION['model']) AND $_SESSION['model']['model'] === 'query'){
@@ -70,33 +68,38 @@ class model_query{
 			$this->set_param('department', []);
 	}
 
+	// test
 	public function set_street($id){
 		if($id > 0){
-			$street = (new model_street($this->company))->get_street($id);
+			$street = di::get('model_street')->get_street($id);
 			$this->set_param('street', $street->get_id());
 		}else
 			$this->set_param('street', null);
 	}
 
+	// test
 	public function set_time_open_begin($time){
 		$this->set_param('time_open_begin', (int) $time);
 	}
 
+	// test
 	public function set_time_open_end($time){
 		$this->set_param('time_open_end', (int) $time);
 	}
 
+	// test
 	public function set_house($id){
 		if($id > 0){
-			$house = (new model_house($this->company))->get_house($id);
+			$house = di::get('model_house')->get_house($id);
 			$this->set_param('house', $house->get_id());
 		}else
 			$this->set_param('house', null);
 	}
 
+	// test
 	public function set_work_type($id){
 		if($id > 0){
-			$work_type = (new model_query_work_type($this->company))
+			$work_type = di::get('model_query_work_type')
 				->get_query_work_type($id);
 			$this->set_param('work_type', $work_type->get_id());
 		}else
@@ -187,7 +190,8 @@ class model_query{
 	*/
 	public function change_initiator($id, $house_id = null, $number_id = null){
 		try{
-			$this->pdo->beginTransaction();
+			$pdo = di::get('pdo');
+			$pdo->beginTransaction();
 			$company = di::get('company');
 			$query = $this->get_query($id);
 			$mapper_q2n = new mapper_query2number($company, $query);
@@ -212,10 +216,10 @@ class model_query{
 				throw new e_model('initiator wrong');
 			$mapper = di::get('mapper_query');
 			$query = $mapper->update($query);
-			$this->pdo->commit();
+			$pdo->commit();
 			return $query;
 		}catch(exception $e){
-			$this->pdo->rollBack();
+			$pdo->rollBack();
 			throw new e_model('Проблема');
 		}
 	}
@@ -260,8 +264,9 @@ class model_query{
 	public function create_query($initiator, $id, $description, $work_type,
 										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{
-			if(!$this->pdo->inTransaction()){
-				$this->pdo->beginTransaction();
+			$pdo = di::get('pdo');
+			if(!$pdo->inTransaction()){
+				$pdo->beginTransaction();
 				$trans = true;
 			}
 			$time = time();
@@ -301,11 +306,11 @@ class model_query{
       $query->add_observer($user);
       (new mapper_query2user($this->company, $query))->update_users();
       if($trans)
-				$this->pdo->commit();
+				$pdo->commit();
 			return $query;
 		}catch(exception $e){
 			die($e->getMessage());
-			$this->pdo->rollBack();
+			$pdo->rollBack();
 			if($e instanceof e_model)
 				throw new e_model($e->getMessage());
 			else

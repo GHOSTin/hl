@@ -1,5 +1,6 @@
 <?php
-final class data_query_work_type extends data_object{
+
+class data_query_work_type extends data_object{
 
   private $id;
   private $name;
