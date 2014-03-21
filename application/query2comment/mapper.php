@@ -1,10 +1,6 @@
 <?php
 
-class mapper_query2comment{
-
-  private $pdo;
-  private $company;
-  private $query;
+class mapper_query2comment extends mapper{
 
   private static $find_all = "SELECT `query2comment`.`time`,
     `query2comment`.`message`, `users`.`id`, `users`.`lastname`,
@@ -19,12 +15,6 @@ class mapper_query2comment{
     `user_id`, `time`, `message`) VALUES (:company_id, :query_id, :user_id,
     :time, :message)';
 
-  public function __construct(PDO $pdo, data_company $company, data_query $query){
-    $this->pdo = $pdo;
-    $this->company = $company;
-    $this->query = $query;
-  }
-
   private function create_object(array $row){
     $user = new data_user();
     $user->set_id($row['id']);
@@ -37,10 +27,10 @@ class mapper_query2comment{
     return $comment;
   }
 
-  private function find_all(){
+  public function find_all(data_company $company, data_query $query){
     $stmt = $this->pdo->prepare(self::$find_all);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':query_id', $query->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new RuntimeException();
     $comments = [];
@@ -49,18 +39,18 @@ class mapper_query2comment{
     return $comments;
   }
 
-  public function init_comments(){
-    $comments = $this->find_all();
+  public function init_comments(data_company $company, data_query $query){
+    $comments = $this->find_all($company, $query);
     if(!empty($comments))
       foreach($comments as $comment)
-        $this->query->add_comment($comment);
-    return $this->query;
+        $query->add_comment($comment);
+    return $query;
   }
 
-  private function insert(data_query2comment $comment){
+  public function insert(data_company $company, data_query $query, data_query2comment $comment){
     $stmt = $this->pdo->prepare(self::$insert);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':query_id', $query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', $comment->get_user()->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':time', $comment->get_time(), PDO::PARAM_INT);
     $stmt->bindValue(':message', $comment->get_message(), PDO::PARAM_STR);
@@ -68,23 +58,19 @@ class mapper_query2comment{
       throw new RuntimeException();
   }
 
-  public function update(){
+  public function update(data_company $company, data_query $query){
     $old = [];
-    $comments = $this->find_all();
+    $comments = $this->find_all($company, $query);
     if(!empty($comments))
       foreach($comments as $comment){
         $id = $comment->get_user()->get_id().'_'.$comment->get_time();
         $old[$id] = $comment;
       }
-    $new = $this->query->get_comments();
-    $deleted = array_diff_key($old, $new);
+    $new = $query->get_comments();
     $inserted = array_diff_key($new, $old);
     if(!empty($inserted))
       foreach($inserted as $comment)
-        $this->insert($comment);
-    if(!empty($deleted))
-      foreach($deleted as $comment)
-        $this->delete($comment);
-    return $this->query;
+        $this->insert($company, $query, $comment);
+    return $query;
   }
 }

@@ -111,10 +111,10 @@ class model_query{
 		$comment->set_time(time());
 		$comment->set_message($message);
 		$query = $this->get_query($query_id);
-		$mapper = new mapper_query2comment(di::get('pdo'), $this->company, $query);
-		$mapper->init_comments();
+		$mapper = di::get('mapper_query2comment');
+		$mapper->init_comments($this->company, $query);
 		$query->add_comment($comment);
-		$mapper->update();
+		$mapper->update($this->company, $query);
 		return $query;
 	}
 
@@ -338,8 +338,8 @@ class model_query{
 	}
 
 	public function init_comments(data_query $query){
-		return (new mapper_query2comment(di::get('pdo'), $this->company, $query))
-			->init_comments();
+		return di::get('mapper_query2comment')
+			->init_comments($this->company, $query);
 	}
 
 	/**
