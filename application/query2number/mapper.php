@@ -6,7 +6,7 @@ class mapper_query2number{
   private $pdo;
 
   private static $all = "SELECT `query2number`.* , `numbers`.`number`,
-    `numbers`.`fio`, `numbers`.`email`, `numbers`.`status`, 
+    `numbers`.`fio`, `numbers`.`email`, `numbers`.`status`,
     `numbers`.`cellphone`, `numbers`.`telephone`,
     `flats`.`flatnumber`, `flats`.`id` as `f_id`
     FROM `query2number`, `numbers`, `flats`
@@ -21,7 +21,7 @@ class mapper_query2number{
     AND `query_id` = :query_id AND `number_id` = :number_id";
 
   private static $insert = "INSERT INTO `query2number`
-    (`query_id`, `number_id`, `company_id`, `default`) 
+    (`query_id`, `number_id`, `company_id`, `default`)
     VALUES (:query_id, :number_id, :company_id, :default)";
 
   public function __construct($company, $query){

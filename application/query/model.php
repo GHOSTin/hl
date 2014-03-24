@@ -294,8 +294,8 @@ class model_query{
 			$q_array['number'] = $mapper->get_insert_query_number($time);
 			$query = di::get('factory_query')->build($q_array);
       $query = $mapper->insert($query);
-			if(!empty($house->get_numbers()))
-				foreach($house->get_numbers() as $number)
+			if(!empty($numbers))
+				foreach($numbers as $number)
 					$query->add_number($number);
       (new mapper_query2number($this->company, $query))->update();
 			$user = di::get('user');
