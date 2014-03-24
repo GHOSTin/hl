@@ -10,7 +10,7 @@ class controller_query{
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('description'), $matches);
 		$company = di::get('company');
-		$model = new model_query($company);
+		$model = di::get('model_query');
 		$query = $model->create_query('number',
 			$request->GET('id'), implode('', $matches[0]),
 			$request->GET('work_type'), $request->GET('fio'),
@@ -67,7 +67,7 @@ class controller_query{
 
 	public static function private_clear_filters(model_request $request){
 		$company = di::get('company');
-		$model = new model_query($company);
+		$model = di::get('model_query');
 		$model->init_params();
 		$time = getdate($model->get_params()['time_open_begin']);
 		$timeline = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
@@ -126,7 +126,7 @@ class controller_query{
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('description'), $matches);
 		$company = di::get('company');
-		$model = new model_query($company);
+		$model = di::get('model_query');
 		$query = $model->create_query($request->GET('initiator'),
 			$request->GET('id'), implode('', $matches[0]),
 			$request->GET('work_type'), $request->GET('fio'),
@@ -144,7 +144,7 @@ class controller_query{
 	public static function private_get_day(model_request $request){
 		$time = getdate($request->GET('time'));
 		$begin = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$model->set_time_open_begin($begin);
 		$model->set_time_open_end($begin + 86399);
 		$collection = new collection_query(di::get('company'),
@@ -376,14 +376,14 @@ class controller_query{
 	}
 
 	public static function private_get_search_result(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$collection = new collection_query(di::get('company'),
 			$model->get_queries_by_number($request->GET('param')));
 		return ['queries' => $collection];
 	}
 
 	public static function private_set_status(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$model->set_status($request->GET('value'));
 		$collection = new collection_query(di::get('company'),
 			$model->get_queries());
@@ -392,7 +392,7 @@ class controller_query{
 	}
 
 	public static function private_set_street(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$model->set_department('all');
 		$model->set_street($request->GET('value'));
 		$model->set_house('all');
@@ -407,7 +407,7 @@ class controller_query{
 	}
 
 	public static function private_set_house(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$model->set_house($request->GET('value'));
 		$collection = new collection_query(di::get('company'),
 		 $model->get_queries());
@@ -416,7 +416,7 @@ class controller_query{
 	}
 
 	public static function private_set_department(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$model->set_department($request->GET('value'));
 		$model->set_street('all');
 		$model->set_house('all');
@@ -427,7 +427,7 @@ class controller_query{
 	}
 
 	public static function private_set_work_type(model_request $request){
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		$model->set_work_type($request->GET('value'));
 		$collection = new collection_query(di::get('company'),
 		 $model->get_queries());
@@ -444,7 +444,7 @@ class controller_query{
 		$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
 		$now = getdate();
 		$now = mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']);
-		$model = new model_query(di::get('company'));
+		$model = di::get('model_query');
 		switch ($request->GET('act')) {
 			case 'next':
 				$begin = strtotime("+1 month", $time);
@@ -486,7 +486,7 @@ class controller_query{
 		$now = getdate();
 		$houses = [];
 		$company = di::get('company');
-		$model = new model_query($company);
+		$model = di::get('model_query');
 		$params = $model->get_params();
 		$time = getdate($params['time_open_begin']);
 		if($params['street'] > 0){
