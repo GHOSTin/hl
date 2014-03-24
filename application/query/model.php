@@ -169,23 +169,20 @@ class model_query{
 		return $query;
 	}
 
-	/**
-	* Закрывает заявку.
-	*/
+	// test
 	public function close_query($id, $reason){
-		$query = $this->get_query($id);
+		$mapper = di::get('mapper_query');
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
 		if(!in_array($query->get_status(), ['working', 'open'], true))
-			throw new e_model('Заявка не может быть закрыта.');
+			throw new RuntimeException('Заявка не может быть закрыта.');
 		$query->set_status('close');
 		$query->set_close_reason($reason);
 		$query->set_time_close(time());
-		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
-	/**
-	* Закрывает заявку.
-	*/
 	public function change_initiator($id, $house_id = null, $number_id = null){
 		try{
 			$pdo = di::get('pdo');
@@ -222,40 +219,40 @@ class model_query{
 		}
 	}
 
-	/**
-	* Закрывает заявку.
-	*/
+	// test
 	public function reclose_query($id){
-		$query = $this->get_query($id);
+		$mapper = di::get('mapper_query');
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
 		if($query->get_status() !== 'reopen')
-			throw new e_model('Заявка не может быть перезакрыта.');
+			throw new RuntimeException();
 		$query->set_status('close');
-		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 
-	/**
-	* Переоткрывает заявку.
-	*/
+	// test
 	public function reopen_query($id){
-		$query = $this->get_query($id);
-		if($query->get_status() !== 'close')
-			throw new e_model('Заявка не в том статусе чтобы её можно было переоткрыть.');
-		$query->set_status('reopen');
 		$mapper = di::get('mapper_query');
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
+		if($query->get_status() !== 'close')
+			throw new RuntimeException();
+		$query->set_status('reopen');
 		return $mapper->update($query);
 	}
 
-	/**
-	* Передает заявку в работу.
-	*/
+	// test
 	public function to_working_query($id){
-		$query = $this->get_query($id);
+		$mapper = di::get('mapper_query');
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
 		if($query->get_status() !== 'open')
-			throw new e_model('Заявка имеет статус не позволяющий её передать в работу.');
+			throw new RuntimeException();
 		$query->set_status('working');
 		$query->set_time_work(time());
-		$mapper = di::get('mapper_query');
 		return $mapper->update($query);
 	}
 

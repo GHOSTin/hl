@@ -144,4 +144,251 @@ class model_query_Test extends PHPUnit_Framework_TestCase{
     di::set_instance($this->pimple);
     (new model_query($this->company))->add_comment(5, 'Привет');
   }
+
+  public function test_close_query_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('open'));
+    $query->expects($this->once())
+      ->method('set_status')
+      ->with('close');
+    $query->expects($this->once())
+      ->method('set_close_reason')
+      ->with('Причина закрытия');
+    $query->expects($this->once())
+      ->method('set_time_close');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->close_query(5, 'Причина закрытия');
+  }
+
+  public function test_close_query_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->close_query(5, 'Причина закрытия');
+  }
+
+  public function test_close_query_3(){
+    $this->setExpectedException('RuntimeException');
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('close'));
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->close_query(5, 'Причина закрытия');
+  }
+
+  public function test_reclose_query_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('reopen'));
+    $query->expects($this->once())
+      ->method('set_status')
+      ->with('close');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->reclose_query(5);
+  }
+
+  public function test_reclose_query_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->reclose_query(5);
+  }
+
+  public function test_reclose_query_3(){
+    $this->setExpectedException('RuntimeException');
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('open'));
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->reclose_query(5);
+  }
+
+  public function test_reopen_query_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('close'));
+    $query->expects($this->once())
+      ->method('set_status')
+      ->with('reopen');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->reopen_query(5);
+  }
+
+  public function test_reopen_query_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->reopen_query(5);
+  }
+
+  public function test_reopen_query_3(){
+    $this->setExpectedException('RuntimeException');
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('open'));
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->reopen_query(5);
+  }
+
+  public function test_to_working_query_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('open'));
+    $query->expects($this->once())
+      ->method('set_status')
+      ->with('working');
+    $query->expects($this->once())
+      ->method('set_time_work');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->to_working_query(5);
+  }
+
+  public function test_to_working_query_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->to_working_query(5);
+  }
+
+  public function test_to_working_query_3(){
+    $this->setExpectedException('RuntimeException');
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('get_status')
+      ->will($this->returnValue('close'));
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->to_working_query(5);
+  }
 }
