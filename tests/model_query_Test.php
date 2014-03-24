@@ -104,4 +104,44 @@ class model_query_Test extends PHPUnit_Framework_TestCase{
     di::set_instance($this->pimple);
     (new model_query($this->company))->set_work_type(0);
   }
+
+  public function test_add_comment_1(){
+    $q2c = new data_query2comment();
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('add_comment')
+      ->with($this->identicalTo($q2c));
+    $this->pimple['user'] = new data_user();
+    $this->pimple['factory_query2comment'] = function($p) use ($q2c){
+      $model = $this->getMock('factory_query2comment');
+      $model->expects($this->once())
+        ->method('build')
+        ->will($this->returnValue($q2c));
+      return $model;
+    };
+    $this->pimple['mapper_query2comment'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query2comment')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('init_comments')
+        ->with($this->identicalTo($this->company), $this->identicalTo($query));
+      $model->expects($this->once())
+        ->method('update')
+        ->with($this->identicalTo($this->company), $this->identicalTo($query));
+      return $model;
+    };
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->add_comment(5, 'Привет');
+  }
 }

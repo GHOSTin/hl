@@ -106,6 +106,7 @@ class model_query{
 			$this->set_param('work_type', null);
 	}
 
+	// test
 	public function add_comment($query_id, $message){
 		$c_array = ['user' => di::get('user'), 'time' => time(),
 			'message' => $message];
