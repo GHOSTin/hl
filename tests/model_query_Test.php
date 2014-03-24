@@ -171,7 +171,9 @@ class model_query_Test extends PHPUnit_Framework_TestCase{
       return $model;
     };
     di::set_instance($this->pimple);
-    (new model_query($this->company))->close_query(5, 'Причина закрытия');
+    $res = (new model_query($this->company))
+      ->close_query(5, 'Причина закрытия');
+    $this->assertSame($query, $res);
   }
 
   public function test_close_query_2(){
@@ -231,7 +233,8 @@ class model_query_Test extends PHPUnit_Framework_TestCase{
       return $model;
     };
     di::set_instance($this->pimple);
-    (new model_query($this->company))->reclose_query(5);
+    $res = (new model_query($this->company))->reclose_query(5);
+    $this->assertSame($query, $res);
   }
 
   public function test_reclose_query_2(){
@@ -291,7 +294,8 @@ class model_query_Test extends PHPUnit_Framework_TestCase{
       return $model;
     };
     di::set_instance($this->pimple);
-    (new model_query($this->company))->reopen_query(5);
+    $res = (new model_query($this->company))->reopen_query(5);
+    $this->assertSame($query, $res);
   }
 
   public function test_reopen_query_2(){
@@ -353,7 +357,8 @@ class model_query_Test extends PHPUnit_Framework_TestCase{
       return $model;
     };
     di::set_instance($this->pimple);
-    (new model_query($this->company))->to_working_query(5);
+    $res = (new model_query($this->company))->to_working_query(5);
+    $this->assertSame($query, $res);
   }
 
   public function test_to_working_query_2(){
@@ -390,5 +395,321 @@ class model_query_Test extends PHPUnit_Framework_TestCase{
     };
     di::set_instance($this->pimple);
     (new model_query($this->company))->to_working_query(5);
+  }
+
+  public function test_get_query_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->get_query(5);
+  }
+
+  public function test_get_query_2(){
+    $query = new data_query();
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->get_query(5);
+    $this->assertSame($query, $res);
+  }
+
+  public function test_init_comments(){
+    $query = new data_query();
+    $this->pimple['mapper_query2comment'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query2comment')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('init_comments')
+        ->with($this->identicalTo($this->company),
+        $this->identicalTo($query));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->init_comments($query);
+    $this->assertSame($query, $res);
+  }
+
+  public function test_get_queries_by_number(){
+    $query = new data_query();
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_queries_by_number')
+        ->with(4567)
+        ->will($this->returnValue([$query, $query]));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->get_queries_by_number(4567);
+    $this->assertCount(2, $res);
+  }
+
+  public function test_get_queries(){
+    $query = new data_query();
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_queries')
+        ->will($this->returnValue([$query, $query]));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->get_queries();
+    $this->assertCount(2, $res);
+  }
+
+  public function test_update_description_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('set_description')
+      ->with('Описание');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->update_description(5, 'Описание');
+    $this->assertSame($query, $res);
+  }
+
+  public function test_update_description_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->update_description(5, 'Описание');
+  }
+
+  public function test_update_reason_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('set_close_reason')
+      ->with('Описание');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->update_reason(5, 'Описание');
+    $this->assertSame($query, $res);
+  }
+
+  public function test_update_reason_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->update_reason(5, 'Описание');
+  }
+
+  public function test_update_contact_information_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('set_contact_fio')
+      ->with('Некрасов Евгений Валерьевич');
+    $query->expects($this->once())
+      ->method('set_contact_telephone')
+      ->with(83439647957);
+    $query->expects($this->once())
+      ->method('set_contact_cellphone')
+      ->with(89222944742);
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))
+      ->update_contact_information(5, 'Некрасов Евгений Валерьевич',
+      83439647957, 89222944742);
+    $this->assertSame($query, $res);
+  }
+
+  public function test_update_contact_information_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))
+      ->update_contact_information(5, 'Некрасов Евгений Валерьевич',
+      83439647957, 89222944742);
+  }
+
+  public function test_update_payment_status_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('set_payment_status')
+      ->with('paid');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->update_payment_status(5, 'paid');
+    $this->assertSame($query, $res);
+  }
+
+  public function test_update_payment_status_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->update_payment_status(5, 'paid');
+  }
+
+  public function test_update_warning_status_1(){
+    $query = $this->getMock('data_query');
+    $query->expects($this->once())
+      ->method('set_warning_status')
+      ->with('normal');
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->update_warning_status(5, 'normal');
+    $this->assertSame($query, $res);
+  }
+
+  public function test_update_warning_status_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->pimple['mapper_query'] = function($p){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue(null));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    (new model_query($this->company))->update_warning_status(5, 'normal');
+  }
+
+  public function test_update_work_type_1(){
+    $query = $this->getMock('data_query');
+    $type = new data_query_work_type();
+    $query->expects($this->once())
+      ->method('add_work_type')
+      ->with($this->identicalTo($type));
+    $this->pimple['mapper_query'] = function($p) use ($query){
+      $model = $this->getMockBuilder('mapper_query')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('find')
+        ->with(5)
+        ->will($this->returnValue($query));
+      $model->expects($this->once())
+        ->method('update');
+      return $model;
+    };
+    $this->pimple['model_query_work_type'] = function($p) use ($type){
+      $model = $this->getMockBuilder('model_query_work_type')
+        ->disableOriginalConstructor()
+        ->getMock();
+      $model->expects($this->once())
+        ->method('get_query_work_type')
+        ->with(7)
+        ->will($this->returnValue($type));
+      return $model;
+    };
+    di::set_instance($this->pimple);
+    $res = (new model_query($this->company))->update_work_type(5, 7);
+    $this->assertSame($query, $res);
   }
 }

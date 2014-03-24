@@ -180,7 +180,8 @@ class model_query{
 		$query->set_status('close');
 		$query->set_close_reason($reason);
 		$query->set_time_close(time());
-		return $mapper->update($query);
+		$mapper->update($query);
+		return $query;
 	}
 
 	public function change_initiator($id, $house_id = null, $number_id = null){
@@ -228,7 +229,8 @@ class model_query{
 		if($query->get_status() !== 'reopen')
 			throw new RuntimeException();
 		$query->set_status('close');
-		return $mapper->update($query);
+		$mapper->update($query);
+		return $query;
 	}
 
 	// test
@@ -240,7 +242,8 @@ class model_query{
 		if($query->get_status() !== 'close')
 			throw new RuntimeException();
 		$query->set_status('reopen');
-		return $mapper->update($query);
+		$mapper->update($query);
+		return $query;
 	}
 
 	// test
@@ -253,7 +256,8 @@ class model_query{
 			throw new RuntimeException();
 		$query->set_status('working');
 		$query->set_time_work(time());
-		return $mapper->update($query);
+		$mapper->update($query);
+		return $query;
 	}
 
 	public function create_query($initiator, $id, $description, $work_type,
@@ -313,10 +317,11 @@ class model_query{
 		}
 	}
 
+	// test
 	public function get_query($id){
 		$query = di::get('mapper_query')->find($id);
 		if(!($query instanceof data_query))
-			throw new e_model('Проблема при выборке заявки');
+			throw new RuntimeException();
 		return $query;
 	}
 
@@ -332,31 +337,22 @@ class model_query{
 		return (new mapper_query2work($this->company, $query))->init_works();
 	}
 
+	// test
 	public function init_comments(data_query $query){
-		return di::get('mapper_query2comment')
-			->init_comments($this->company, $query);
+		di::get('mapper_query2comment')->init_comments($this->company, $query);
+		return $query;
 	}
 
-	/**
-	* Возвращает заявки.
-	* @return array
-	*/
+	// test
 	public function get_queries_by_number($number){
 		return di::get('mapper_query')->get_queries_by_number($number);
 	}
 
-	/**
-	* Возвращает заявки.
-	* @return array
-	*/
+	// test
 	public function get_queries(){
-		$mapper = di::get('mapper_query');
-		return $mapper->get_queries($this->params);
+		return di::get('mapper_query')->get_queries($this->params);
 	}
 
-	/**
-	* Обновляет работу из заявки.
-	*/
 	public function remove_work($query_id, $work_id){
 		$query = $this->get_query($query_id);
 		(new mapper_query2work($this->company, $query))->init_works();
@@ -367,67 +363,72 @@ class model_query{
 		return $query;
 	}
 
-	/**
-	* Обновляет описание заявки.
-	*/
+	// test
 	public function update_description($id, $description){
-		$query = $this->get_query($id);
+		$mapper = di::get('mapper_query');
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
 		$query->set_description($description);
-		$mapper = di::get('mapper_query');
-		return $mapper->update($query);
+		$mapper->update($query);
+		return $query;
 	}
 
-	/**
-	* Обновляет описание заявки.
-	*/
+	// test
 	public function update_reason($id, $reason){
-		$query = $this->get_query($id);
-		$query->set_close_reason($reason);
 		$mapper = di::get('mapper_query');
-		return $mapper->update($query);
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->set_close_reason($reason);
+		$mapper->update($query);
+		return $query;
 	}
 
-	/**
-	* Обновляет контактную информацию.
-	*/
+	// test
 	public function update_contact_information($id, $fio, $telephone, $cellphone){
-		$query = $this->get_query($id);
+		$mapper = di::get('mapper_query');
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
 		$query->set_contact_fio($fio);
 		$query->set_contact_telephone($telephone);
 		$query->set_contact_cellphone($cellphone);
-		$mapper = di::get('mapper_query');
-		return $mapper->update($query);
+		$mapper->update($query);
+		return $query;
 	}
 
-	/**
-	* Обновляет статус оплаты.
-	*/
+	// test
 	public function update_payment_status($id, $status){
-		$query = $this->get_query($id);
+		$mapper = di::get('mapper_query');
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
 		$query->set_payment_status($status);
-		$mapper = di::get('mapper_query');
-		return $mapper->update($query);
+		$mapper->update($query);
+		return $query;
 	}
 
-	/**
-	* Обновляет статус реакции.
-	*/
+	// test
 	public function update_warning_status($id, $status){
-		$query = $this->get_query($id);
-		$query->set_warning_status($status);
 		$mapper = di::get('mapper_query');
-		return $mapper->update($query);
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->set_warning_status($status);
+		$mapper->update($query);
+		return $query;
 	}
 
-	/**
-	* Обновляет тип работ.
-	*/
+	// test
 	public function update_work_type($id, $type_id){
-		$type = (new model_query_work_type(di::get('company')))
-			->get_query_work_type($type_id);
-		$query = $this->get_query($id);
-		$query->add_work_type($type);
+		$type = di::get('model_query_work_type')->get_query_work_type($type_id);
 		$mapper = di::get('mapper_query');
-		return $mapper->update($query);
+		$query = $mapper->find($id);
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->add_work_type($type);
+		$mapper->update($query);
+		return $query;
 	}
 }
