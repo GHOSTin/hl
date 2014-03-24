@@ -81,6 +81,10 @@ class model_environment{
 			$pimple['company'] = $_SESSION['company'];
 		}
 
+		$pimple['factory_query2comment'] = function($p){
+			return new factory_query2comment();
+		};
+
 		$pimple['factory_client_query'] = function($p){
 			return new factory_client_query();
 		};

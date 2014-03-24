@@ -6,10 +6,6 @@ class data_query2comment{
   private $message;
   private $user;
 
-  public function __construct(data_user $user){
-    $this->user = $user;
-  }
-
   public function get_user(){
     return $this->user;
   }
@@ -28,5 +24,9 @@ class data_query2comment{
 
   public function set_message($message){
     $this->message = (string) $message;
+  }
+
+  public function set_user(data_user $user){
+    $this->user = $user;
   }
 }

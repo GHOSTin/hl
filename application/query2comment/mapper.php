@@ -21,10 +21,9 @@ class mapper_query2comment extends mapper{
     $user->set_lastname($row['lastname']);
     $user->set_firstname($row['firstname']);
     $user->set_middlename($row['midlename']);
-    $comment = new data_query2comment($user);
-    $comment->set_time($row['time']);
-    $comment->set_message($row['message']);
-    return $comment;
+    $c_array = ['user' => $user, 'time' => $row['time'],
+      'message' => $row['message']];
+    return di::get('factory_query2comment')->build($c_array);
   }
 
   public function find_all(data_company $company, data_query $query){

@@ -19,6 +19,11 @@ class mapper_query2comment_Test extends PHPUnit_Framework_TestCase{
     $this->query2comment = $this->getMockBuilder('data_query2comment')
       ->disableOriginalConstructor()
       ->getMock();
+    $pimple = new Pimple();
+    $pimple['factory_query2comment'] = function($p){
+      return new factory_query2comment();
+    };
+    di::set_instance($pimple);
 
   }
 

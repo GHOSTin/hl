@@ -64,6 +64,7 @@ require_once(ROOT.'/application/department/factory.php');
 require_once(ROOT.'/application/query/factory.php');
 require_once(ROOT.'/application/session/factory.php');
 require_once(ROOT.'/application/user/factory.php');
+require_once(ROOT.'/application/query2comment/factory.php');
 # controllers
 require_once(ROOT.'/application/query/controller.php');
 

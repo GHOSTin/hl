@@ -107,9 +107,9 @@ class model_query{
 	}
 
 	public function add_comment($query_id, $message){
-		$comment = new data_query2comment($_SESSION['user']);
-		$comment->set_time(time());
-		$comment->set_message($message);
+		$c_array = ['user' => di::get('user'), 'time' => time(),
+			'message' => $message];
+		$comment = di::get('factory_query2comment')->build($c_array);
 		$query = $this->get_query($query_id);
 		$mapper = di::get('mapper_query2comment');
 		$mapper->init_comments($this->company, $query);
@@ -118,9 +118,6 @@ class model_query{
 		return $query;
 	}
 
-	/**
-	* Добавляет ассоциацию заявка-пользователь.
-	*/
 	public function add_user($query_id, $user_id, $class){
 		$user = (new model_user)->get_user($user_id);
 		$query = $this->get_query($query_id);
