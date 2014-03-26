@@ -23,6 +23,7 @@ require_once(ROOT.'/application/group/data.php');
 require_once(ROOT.'/application/work/data.php');
 require_once(ROOT.'/application/workgroup/data.php');
 require_once(ROOT.'/application/query2comment/data.php');
+require_once(ROOT.'/application/query2work/data.php');
 # mapa
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');
@@ -31,6 +32,7 @@ require_once(ROOT.'/application/user/mapper.php');
 require_once(ROOT.'/application/error/mapper.php');
 require_once(ROOT.'/application/session/mapper.php');
 require_once(ROOT.'/application/query2comment/mapper.php');
+require_once(ROOT.'/application/query2work/mapper.php');
 # model
 require_once(ROOT.'/application/user/model.php');
 require_once(ROOT.'/application/number/model.php');
@@ -53,6 +55,7 @@ require_once(ROOT.'/application/query_work_type/verify.php');
 require_once(ROOT.'/application/street/verify.php');
 require_once(ROOT.'/application/department/verify.php');
 require_once(ROOT.'/application/user/verify.php');
+require_once(ROOT.'/application/work/verify.php');
 # factory
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');
@@ -65,6 +68,7 @@ require_once(ROOT.'/application/query/factory.php');
 require_once(ROOT.'/application/session/factory.php');
 require_once(ROOT.'/application/user/factory.php');
 require_once(ROOT.'/application/query2comment/factory.php');
+require_once(ROOT.'/application/work/factory.php');
 # controllers
 require_once(ROOT.'/application/query/controller.php');
 

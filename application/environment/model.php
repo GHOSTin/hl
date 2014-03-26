@@ -129,6 +129,10 @@ class model_environment{
 			return new factory_error();
 		};
 
+		$pimple['factory_work'] = function($p){
+			return new factory_work();
+		};
+
 		$pimple['mapper_number'] = function($p){
 			return new mapper_number($p['pdo'], $p['company']);
 		};

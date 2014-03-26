@@ -24,7 +24,6 @@ class mapper_query2comment_Test extends PHPUnit_Framework_TestCase{
       return new factory_query2comment();
     };
     di::set_instance($pimple);
-
   }
 
   public function test_find_all_1(){
