@@ -159,13 +159,14 @@ class model_query{
 		if($begin_time > $end_time)
 			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
 		$query = $this->get_query($query_id);
-		(new mapper_query2work($this->company, $query))->init_works();
+		$mapper = di::get('mapper_query2work');
+		$mapper->init_works($this->company, $query);
 		$work = new data_query2work((new model_work($this->company))
 			->get_work($work_id));
 		$work->set_time_open($begin_time);
 		$work->set_time_close($end_time);
 		$query->add_work($work);
-		(new mapper_query2work($this->company, $query))->update_works();
+		$mapper->update_works($this->company, $query);
 		return $query;
 	}
 
@@ -334,7 +335,7 @@ class model_query{
 	}
 
 	public function init_works(data_query $query){
-		return (new mapper_query2work($this->company, $query))->init_works();
+		return di::get('mapper_query2work')->init_works($this->company, $query);
 	}
 
 	// test
@@ -355,11 +356,12 @@ class model_query{
 
 	public function remove_work($query_id, $work_id){
 		$query = $this->get_query($query_id);
-		(new mapper_query2work($this->company, $query))->init_works();
+		$mapper = di::get('mapper_query2work');
+		$mapper->init_works($this->company, $query);
 		$work = new data_query2work((new model_work($this->company))
 			->get_work($work_id));
 		$query->remove_work($work);
-		(new mapper_query2work($this->company, $query))->update_works();
+		$mapper->update_works($this->company, $query);
 		return $query;
 	}
 

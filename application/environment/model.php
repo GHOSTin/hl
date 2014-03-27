@@ -145,6 +145,10 @@ class model_environment{
 			return new mapper_query($p['pdo'], $p['company']);
 		};
 
+		$pimple['mapper_query2work'] = function($p){
+			return new mapper_query2work($p['pdo']);
+		};
+
 		$pimple['mapper_session'] = function($p){
 			return new mapper_session($p['pdo']);
 		};

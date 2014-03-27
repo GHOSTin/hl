@@ -9,10 +9,10 @@ class application_configuration{
 	const database_user 		= 'mshc2_test';
 	const database_password 	= 'mshc2_test';
 	// auth option
-	const authSalt 			= 'GbpltwGjkysqFYtGfhjkm';	
+	const authSalt 			= 'GbpltwGjkysqFYtGfhjkm';
 	//chat
 	const chat_enable = false;
-	const chat_host = 'mshc22.local';
+	const chat_host = 'mshc2.local';
 	const chat_port = 3000;
 	// twig
 	const twig_reload_template = true;
