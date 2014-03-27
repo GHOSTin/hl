@@ -31,7 +31,7 @@ class mapper_street2house{
 
   public function create_object(array $row){
     $h_array = ['id' => $row['id'], 'number' => $row['number'],
-      'street' => $this->street];
+      'street' => $this->street, 'status' => $row['status']];
     $house = di::get('factory_house')->build($h_array);
     $city = new data_city();
     $city->set_id($row['city_id']);

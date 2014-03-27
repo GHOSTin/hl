@@ -21,6 +21,7 @@ class mapper_query extends mapper{
     `queries`.`querynumber` as `number`,
     `queries`.`query_inspection` as `inspection`,
     `houses`.`housenumber` as `house_number`,
+    `houses`.`status` as `house_status`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
     `query_worktypes`.`name` as `work_type_name`,
@@ -52,6 +53,7 @@ class mapper_query extends mapper{
     `queries`.`querynumber` as `number`,
     `queries`.`query_inspection` as `inspection`,
     `houses`.`housenumber` as `house_number`,
+    `houses`.`status` as `house_status`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
     `query_worktypes`.`name` as `work_type_name`,
@@ -108,6 +110,7 @@ class mapper_query extends mapper{
     `queries`.`querynumber` as `number`,
     `queries`.`query_inspection` as `inspection`,
     `houses`.`housenumber` as `house_number`,
+    `houses`.`status` as `house_status`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
     `query_worktypes`.`name` as `work_type_name`,
@@ -134,6 +137,7 @@ class mapper_query extends mapper{
       'name' => $row['department_name']];
     $s_array = ['id' => $row['street_id'], 'name' => $row['street_name']];
     $h_array = ['id' => $row['house_id'], 'number' => $row['house_number'],
+      'status' => $row['house_status'],
       'street' => di::get('factory_street')->build($s_array)];
     $q_array = ['id' => $row['id'], 'status' => $row['status'],
       'initiator' => $row['initiator'],
@@ -313,6 +317,7 @@ class mapper_query extends mapper{
     `q`.`querynumber` as `number`,
     `q`.`query_inspection` as `inspection`,
     `houses`.`housenumber` as `house_number`,
+    `houses`.`status` as `house_status`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
     `query_worktypes`.`name` as `work_type_name`,
@@ -323,7 +328,7 @@ class mapper_query extends mapper{
     AND `houses`.`street_id` = `streets`.`id`
     AND `q`.`query_worktype_id` = `query_worktypes`.`id`
     AND `opentime` > :time_open AND `departments`.`company_id` = :company_id
-    AND `q`.`department_id` = `departments`.`id` AND `q`.`house_id` = :house_id 
+    AND `q`.`department_id` = `departments`.`id` AND `q`.`house_id` = :house_id
     ORDER BY `q`.`opentime` DESC LIMIT 5";
     $stmt = $this->pdo->prepare($query);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);

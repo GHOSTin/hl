@@ -3,8 +3,8 @@ class mapper_number extends mapper{
 
   private $company;
 
-  private static $find = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
-    `numbers`.`city_id`, `numbers`.`house_id`, 
+  private static $find = "SELECT `numbers`.`id`, `numbers`.`company_id`,
+    `numbers`.`city_id`, `numbers`.`house_id`,
     `numbers`.`flat_id`, `numbers`.`number`,
     `numbers`.`type`, `numbers`.`status`,
     `numbers`.`fio`, `numbers`.`email`, `numbers`.`telephone`,
@@ -14,6 +14,7 @@ class mapper_number extends mapper{
     `numbers`.`contact-cellphone` as `contact_cellphone`,
     `flats`.`flatnumber` as `flat_number`,
     `houses`.`housenumber` as `house_number`,
+    `houses`.`status` as `house_status`,
     `houses`.`department_id`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`
@@ -24,8 +25,8 @@ class mapper_number extends mapper{
     AND `numbers`.`house_id` = `houses`.`id`
     AND `houses`.`street_id` = `streets`.`id`";
 
-  private static $find_by_number = "SELECT `numbers`.`id`, `numbers`.`company_id`, 
-    `numbers`.`city_id`, `numbers`.`house_id`, 
+  private static $find_by_number = "SELECT `numbers`.`id`, `numbers`.`company_id`,
+    `numbers`.`city_id`, `numbers`.`house_id`,
     `numbers`.`flat_id`, `numbers`.`number`,
     `numbers`.`type`, `numbers`.`status`,
     `numbers`.`fio`, `numbers`.`email`, `numbers`.`telephone`,
@@ -36,6 +37,7 @@ class mapper_number extends mapper{
     `flats`.`flatnumber` as `flat_number`,
     `houses`.`housenumber` as `house_number`,
     `houses`.`department_id`,
+    `houses`.`status` as `house_status`,
     `streets`.`name` as `street_name`,
     `streets`.`id` as `street_id`,
     FROM `numbers`, `flats`, `houses`, `streets`
@@ -57,6 +59,7 @@ class mapper_number extends mapper{
     public function create_object(array $row){
         $s_array = ['id' => $row['street_id'], 'name' => $row['street_name']];
         $h_array = ['id' => $row['house_id'], 'number' => $row['house_number'],
+            'status' => $row['house_status'],
             'street' => di::get('factory_street')->build($s_array)];
         $flat = ['id' => $row['flat_id'], 'number' => $row['flat_number']];
         $flat = di::get('factory_flat')->build($flat);

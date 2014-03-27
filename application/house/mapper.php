@@ -15,8 +15,10 @@ class mapper_house extends mapper{
 
   public function create_object(array $row){
     $street = ['id' => $row['street_id'], 'name' => $row['name']];
+    $street = di::get('factory_street')->build($street);
     $h_array = ['id' =>$row['id'], 'number' => $row['housenumber'],
-      'street' => di::get('factory_street')->build($street)];
+      'status' => $row['status'],
+      'street' => $street];
     $house = di::get('factory_house')->build($h_array);
     // city
     $city = new data_city();

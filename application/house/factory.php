@@ -7,6 +7,7 @@ class factory_house{
     $house->set_id($data['id']);
     $house->set_number($data['number']);
     $house->set_street($data['street']);
+    $house->set_status($data['status']);
     return $house;
   }
 }

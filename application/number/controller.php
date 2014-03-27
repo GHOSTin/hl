@@ -82,8 +82,8 @@ class controller_number{
     $number = (new model_number($company))
       ->get_number($request->GET('number_id'));
     $model = new model_number2meter($company, $number);
-    $model->change_meter($request->GET('meter_id'), $request->GET('serial'), 
-      $request->GET('new_meter_id'), $request->GET('service'), 
+    $model->change_meter($request->GET('meter_id'), $request->GET('serial'),
+      $request->GET('new_meter_id'), $request->GET('service'),
       $request->GET('period'));
     $model->init_meters();
     $enable_meters = $disable_meters = [];
@@ -346,7 +346,7 @@ class controller_number{
     $data = self::private_get_meter_data($request);
     $begin = mktime(12, 0, 0, 1, 1, $time['year']);
     $end = mktime(12, 0, 0, 12, 1, $time['year']);
-    (new model_meter2data(di::get('company'), 
+    (new model_meter2data(di::get('company'),
       $data['number'], $data['meter']))->init_values($begin, $end);
     return $data;
   }
@@ -370,7 +370,7 @@ class controller_number{
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['number' => $number, 'meter' => $meter];
   }
-    
+
   public static function private_get_meter_options(model_request $request){
     return ['meters' => (new model_meter(di::get('company')))
     ->get_meters_by_service($request->GET('service'))];
@@ -507,7 +507,7 @@ class controller_number{
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
 
     (new model_meter2data($company, $number, $meter))
-      ->update_value($request->GET('time'), $request->GET('tarif'), 
+      ->update_value($request->GET('time'), $request->GET('tarif'),
         $request->GET('way'), $request->GET('comment'), $timestamp);
     if($request->GET('time') > 0)
         $time = getdate($request->GET('time'));
