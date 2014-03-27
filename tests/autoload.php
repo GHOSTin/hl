@@ -47,6 +47,7 @@ require_once(ROOT.'/application/workgroup/model.php');
 require_once(ROOT.'/application/street/model.php');
 require_once(ROOT.'/application/house/model.php');
 require_once(ROOT.'/application/query_work_type/model.php');
+require_once(ROOT.'/application/street2house/model.php');
 # verify
 require_once(ROOT.'/application/house/verify.php');
 require_once(ROOT.'/application/flat/verify.php');
