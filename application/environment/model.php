@@ -201,6 +201,10 @@ class model_environment{
 			return new mapper_meter($p['pdo'], $p['company']);
 		};
 
+		$pimple['mapper_street2house'] = function($p){
+			return new mapper_street2house($p['pdo']);
+		};
+
 		$pimple['model_number'] = function($p){
 			return new model_number($p['company']);
 		};

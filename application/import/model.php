@@ -15,8 +15,8 @@ class model_import{
 		$import = new data_import($file['tmp_name']);
 		$street = (new mapper_city2street($import->get_city()))
 			->get_street_by_name($import->get_street()->get_name());
-		$house = (new mapper_street2house($street))
-			->find_by_number($import->get_house()->get_number());
+		$house = di::get('mapper_street2house')
+			->find_by_number($street, $import->get_house()->get_number());
 		(new mapper_house2flat($this->company, $house))->init_flats();
 		$old_flats = $new_flats = [];
 		if(!empty($house->get_flats()))
@@ -90,7 +90,7 @@ class model_import{
 		return ['file' => $file, 'city' => $city, 'street' => $street,
 			'house' => $house, 'numbers' => $numbers];
 	}
- 
+
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
@@ -101,16 +101,13 @@ class model_import{
 			->get_street_by_name((string) $import->get_street()->get_name());
 		return ['import' => $import, 'street' => $street, 'city' => $city];
 	}
-	
-	/*
-	* Анализирует файт импорта лицевых счетов
-	*/
+
 	public function analize_import_house($file){
 		$import = new data_import($file['tmp_name']);
 		$street = (new mapper_city2street($import->get_city()))
 			->get_street_by_name($import->get_street()->get_name());
-		$house = (new mapper_street2house($street))
-			->find_by_number($import->get_house()->get_number());
+		$house = di::get('mapper_street2house')
+			->find_by_number($street, $import->get_house()->get_number());
 		return ['import' => $import, 'street' => $street, 'house' => $house];
 	}
 

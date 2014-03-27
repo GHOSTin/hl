@@ -300,7 +300,7 @@ class controller_query{
 
 	public static function private_get_houses(model_request $request){
 		$street = (new model_street)->get_street($request->GET('id'));
-		(new mapper_street2house($street))->init_houses();
+		di::get('mapper_street2house')->init_houses($street);
 		return ['street' => $street];
 	}
 
@@ -398,7 +398,7 @@ class controller_query{
 		$model->set_house('all');
 		if($request->GET('value') > 0){
 			$street = (new model_street)->get_street($request->GET('value'));
-			(new mapper_street2house($street))->init_houses();
+			di::get('mapper_street2house')->init_houses($street);
 		}
 		$collection = new collection_query(di::get('company'),
 		 $model->get_queries());
@@ -491,7 +491,7 @@ class controller_query{
 		$time = getdate($params['time_open_begin']);
 		if($params['street'] > 0){
 			$street = (new model_street)->get_street($params['street']);
-			(new mapper_street2house($street))->init_houses();
+			di::get('mapper_street2house')->init_houses($street);
 			$houses = $street->get_houses();
 		}
 		$collection = new collection_query($company, $model->get_queries());
