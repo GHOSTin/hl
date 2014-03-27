@@ -132,4 +132,22 @@ class mapper_query2work_Test extends PHPUnit_Framework_TestCase{
     $res = (new mapper_query2work($this->pdo))
       ->init_works($this->company, $this->query);
   }
+
+  public function test_update_works(){
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(true));
+    $this->stmt->expects($this->once())
+      ->method('fetch')
+      ->will($this->returnValue(false));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    $query = $this->getMock('data_query');
+    $this->query->expects($this->once())
+      ->method('get_works')
+      ->will($this->returnValue([]));
+    $res = (new mapper_query2work($this->pdo))
+      ->update_works($this->company, $this->query);
+  }
 }
