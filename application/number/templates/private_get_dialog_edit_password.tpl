@@ -1,11 +1,11 @@
 {% extends "dialog.tpl" %}
 {% block title %}Диалог редактирования пароля в личный кабинет{% endblock title %}
 {% block dialog %}
-	<div>
-	Пароль: <input type="password" class="dialog-input-password">
+	<div class="form-group">
+	Пароль: <input type="password" class="dialog-input-password form-control">
 	</div>
-	<div>
-	Подтверждение: <input type="password" class="dialog-input-confirm">
+	<div class="form-group">
+	Подтверждение: <input type="password" class="dialog-input-confirm form-control">
 	</div>
 {% endblock dialog %}
 {% block buttons %}

@@ -3,15 +3,17 @@
 {% set departments = component.departments %}
 {% block title %}Диалог редактирования участка{% endblock title %}
 {% block dialog %}
-	<select class="dialog-select-department">
-		<option value="">Выберите участок</option>
-		{% for department in departments %}
-		<option value="{{ department.get_id() }}"{%if department.get_id() == house.get_department().get_id()%} selected{% endif %}>{{ department.get_name() }}</option>
-		{% endfor %}
-	</select>
+	<div class="form-group">
+		<select class="dialog-select-department form-control">
+			<option value="">Выберите участок</option>
+			{% for department in departments %}
+			<option value="{{ department.get_id() }}"{%if department.get_id() == house.get_department().get_id()%} selected{% endif %}>{{ department.get_name() }}</option>
+			{% endfor %}
+		</select>
+	</div>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn edit_department">Изменить</div>
+	<div class="btn btn-default edit_department">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 // Добавляет идентификатор в процессинговом центре

@@ -1,10 +1,12 @@
 {% extends "dialog.tpl" %}
 {% block title %}Добавление комментария{% endblock title %}
 {% block dialog %}
-	<textarea class="dialog-message" style="width:500px; height:100px;"></textarea>
+<div class="form-group">
+	<textarea class="dialog-message form-control" style="width:500px; height:100px;"></textarea>
+</div>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn add_comment">Сохранить</div>
+	<div class="btn btn-default add_comment">Сохранить</div>
 {% endblock buttons %}
 {% block script %}
 	$('.add_comment').click(function(){

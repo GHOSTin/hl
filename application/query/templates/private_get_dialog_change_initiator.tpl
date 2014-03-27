@@ -31,7 +31,7 @@
 	</div>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn change_initiator">Изменить</div>
+	<div class="btn btn-default change_initiator">Изменить</div>
 {% endblock buttons %}
 {% block script %}
 	// Добавляет нового пользователя
@@ -69,7 +69,7 @@
 		}
 		$('.dialog-select-house').val(0);
 	});
-	
+
 	// получает дома
 	$('.dialog-select-street').change(function(){
 		var street_id = $(this).val();
@@ -82,7 +82,7 @@
 			});
 		}
 	});
-	
+
 	$('.dialog-select-house').change(function(){
 		if($('.dialog-select-initiator').val() == 'number'){
 			var house_id = $(this).val();

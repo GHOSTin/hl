@@ -2,19 +2,21 @@
 {% set centers = component.centers %}
 {% block title %}Диалог добавления процессингового центра{% endblock title %}
 {% block dialog %}
-	<select class="dialog-select-centers">
-		<option value="">Выберите процессинговый центр</option>
-		{% for center in centers %}
-		<option value="{{ center.get_id() }}">{{ center.get_name() }}</option>
-		{% endfor %}
-	</select>
-	<div>
+	<div class="form-group">
+		<select class="dialog-select-centers form-control">
+			<option value="">Выберите процессинговый центр</option>
+			{% for center in centers %}
+			<option value="{{ center.get_id() }}">{{ center.get_name() }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="form-group">
 		<label>Идентификатор</label>
-		<input type="text" class="dialog-input-identifier">
+		<input type="text" class="dialog-input-identifier form-control">
 	</div>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn add_house_processing_center">Добавить</div>
+	<div class="btn btn-default add_house_processing_center">Добавить</div>
 {% endblock buttons %}
 {% block script %}
 // Добавляет идентификатор в процессинговом центре
