@@ -39,7 +39,7 @@ class mapper_number extends mapper{
     `houses`.`department_id`,
     `houses`.`status` as `house_status`,
     `streets`.`name` as `street_name`,
-    `streets`.`id` as `street_id`,
+    `streets`.`id` as `street_id`
     FROM `numbers`, `flats`, `houses`, `streets`
     WHERE `numbers`.`company_id` = :company_id
     AND `numbers`.`number` = :number
