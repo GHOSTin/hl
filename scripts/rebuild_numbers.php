@@ -16,7 +16,7 @@ if(!empty($argv[1]) & file_exists($argv[1])){
     if($stmt->rowCount() > 0)
       $i++;
   }
-  // $pdo->commit();
+  $pdo->commit();
   print 'Переразмечено лицевых: '.$i.PHP_EOL;
 }else
   print 'Не задан  файл соответствия'.PHP_EOL;
