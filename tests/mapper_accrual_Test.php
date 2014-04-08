@@ -17,7 +17,7 @@ class mapper_accrual_Test extends PHPUnit_Framework_TestCase{
       'recalculation' => 127.56, 'facilities' => 127.56, 'total' => 127.56];
   }
 
-  public function test_insert_1(){
+  public function test_find_all_1(){
     $this->setExpectedException('RuntimeException');
     $this->stmt->expects($this->once())
       ->method('execute')
@@ -35,7 +35,7 @@ class mapper_accrual_Test extends PHPUnit_Framework_TestCase{
       ->find_all($company, $number);
   }
 
-  public function test_insert_2(){
+  public function test_find_all_2(){
     $this->stmt->expects($this->once())
       ->method('execute')
       ->will($this->returnValue(true));
@@ -56,4 +56,94 @@ class mapper_accrual_Test extends PHPUnit_Framework_TestCase{
       ->find_all($company, $number);
     $this->assertCount(2, $accruals);
   }
+
+  public function test_insert_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(false));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    $company = $this->getMock('data_company');
+    $company->expects($this->once())
+      ->method('get_id');
+    $number = $this->getMock('data_number');
+    $number->expects($this->once())
+      ->method('get_id');
+    $accrual = $this->getMock('data_accrual');
+    $accrual->expects($this->once())
+      ->method('get_company')
+      ->will($this->returnValue($company));
+    $accrual->expects($this->once())
+      ->method('get_number')
+      ->will($this->returnValue($number));
+    $accrual->expects($this->once())
+      ->method('get_time');
+    $accrual->expects($this->once())
+      ->method('get_service');
+    $accrual->expects($this->once())
+    ->method('get_tarif');
+    $accrual->expects($this->once())
+    ->method('get_ind');
+    $accrual->expects($this->once())
+    ->method('get_odn');
+    $accrual->expects($this->once())
+    ->method('get_sum_ind');
+    $accrual->expects($this->once())
+    ->method('get_sum_odn');
+    $accrual->expects($this->once())
+    ->method('get_recalculation');
+    $accrual->expects($this->once())
+    ->method('get_facilities');
+    $accrual->expects($this->once())
+    ->method('get_total');
+    (new mapper_accrual($this->pdo))
+      ->insert($accrual);
+  }
+
+  public function test_insert_2(){
+    $this->stmt->expects($this->once())
+      ->method('execute')
+      ->will($this->returnValue(true));
+    $this->pdo->expects($this->once())
+      ->method('prepare')
+      ->will($this->returnValue($this->stmt));
+    $company = $this->getMock('data_company');
+    $company->expects($this->once())
+      ->method('get_id');
+    $number = $this->getMock('data_number');
+    $number->expects($this->once())
+      ->method('get_id');
+    $accrual = $this->getMock('data_accrual');
+    $accrual->expects($this->once())
+      ->method('get_company')
+      ->will($this->returnValue($company));
+    $accrual->expects($this->once())
+      ->method('get_number')
+      ->will($this->returnValue($number));
+    $accrual->expects($this->once())
+      ->method('get_time');
+    $accrual->expects($this->once())
+      ->method('get_service');
+    $accrual->expects($this->once())
+    ->method('get_tarif');
+    $accrual->expects($this->once())
+    ->method('get_ind');
+    $accrual->expects($this->once())
+    ->method('get_odn');
+    $accrual->expects($this->once())
+    ->method('get_sum_ind');
+    $accrual->expects($this->once())
+    ->method('get_sum_odn');
+    $accrual->expects($this->once())
+    ->method('get_recalculation');
+    $accrual->expects($this->once())
+    ->method('get_facilities');
+    $accrual->expects($this->once())
+    ->method('get_total');
+    (new mapper_accrual($this->pdo))
+      ->insert($accrual);
+  }
+
 }

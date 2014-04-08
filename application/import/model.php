@@ -32,26 +32,20 @@ class model_import{
 			}else
 				$number = $numbers[$num];
 			if(!is_null($number)){
-				$stmt = $pdo->prepare('INSERT INTO accruals
-					SET company_id = :company_id, number_id = :number_id, time = :time,
-					service = :service, tarif = :tarif, ind = :ind, odn = :odn,
-					sum_ind = :sum_ind, sum_odn = :sum_odn,
-					recalculation = :recalculation, facilities = :facilities,
-					total = :total');
-				$stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
-				$stmt->bindValue(':number_id', $number->get_id(), PDO::PARAM_INT);
-				$stmt->bindValue(':time', $time, PDO::PARAM_INT);
-				$stmt->bindValue(':service', $row['1'], PDO::PARAM_STR);
-				$stmt->bindValue(':tarif', $row[2], PDO::PARAM_INT);
-				$stmt->bindValue(':ind', $row[3], PDO::PARAM_INT);
-				$stmt->bindValue(':odn', $row[4], PDO::PARAM_INT);
-				$stmt->bindValue(':sum_ind', $row[5], PDO::PARAM_INT);
-				$stmt->bindValue(':sum_odn', $row[6], PDO::PARAM_INT);
-				$stmt->bindValue(':recalculation', $row[7], PDO::PARAM_INT);
-				$stmt->bindValue(':facilities', $row[8], PDO::PARAM_INT);
-				$stmt->bindValue(':total', $row[9], PDO::PARAM_INT);
-				if(!$stmt->execute())
-					throw new RuntimeException();
+				$ac['number'] = $number;
+				$ac['company'] = $this->company;
+				$ac['service'] = $row[1];
+				$ac['tarif'] = $row[2];
+				$ac['ind'] = $row[3];
+				$ac['odn'] = $row[4];
+				$ac['sum_ind'] = $row[5];
+				$ac['sum_odn'] = $row[6];
+				$ac['recalculation'] = $row[7];
+				$ac['facilities'] = $row[8];
+				$ac['total'] = $row[9];
+				$ac['time'] = $time;
+				$accrual = di::get('factory_accrual')->build($ac);
+				di::get('mapper_accrual')->insert($accrual);
 			}
 		}
 		$pdo->commit();
