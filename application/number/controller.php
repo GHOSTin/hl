@@ -393,6 +393,15 @@ class controller_number{
                         ->get_number($request->GET('id'))];
   }
 
+  public static function private_accruals(
+    model_request $request){
+    $number = (new model_number(di::get('company')))
+      ->get_number($request->GET('id'));
+    $accruals = di::get('mapper_accrual')
+      ->find_all(di::get('company'), $number);
+    return ['number' => $number, 'accruals' => $accruals];
+  }
+
   public static function private_get_dialog_edit_number_fio(
     model_request $request){
     return self::data_for_dialog_number($request);

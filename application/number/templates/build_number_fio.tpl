@@ -11,4 +11,6 @@
     <dd>{{ number.get_email() }} <a class="get_dialog_edit_number_email">изменить</a></dd>
     <dt>Пароль в личный кабинет:</dt>
     <dd>******** <a class="get_dialog_edit_password">изменить</a></dd>
+    <dt>Начисления:</dt>
+    <dd><a href="/number/accruals?id={{ number.get_id() }}" target="_blank">в новом окне</a></dd>
 </dl>

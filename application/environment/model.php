@@ -81,6 +81,10 @@ class model_environment{
 			$pimple['company'] = $_SESSION['company'];
 		}
 
+		$pimple['factory_accrual'] = function($p){
+			return new factory_accrual();
+		};
+
 		$pimple['factory_query2comment'] = function($p){
 			return new factory_query2comment();
 		};
@@ -147,6 +151,10 @@ class model_environment{
 
 		$pimple['mapper_query2work'] = function($p){
 			return new mapper_query2work($p['pdo']);
+		};
+
+		$pimple['mapper_accrual'] = function($p){
+			return new mapper_accrual($p['pdo']);
 		};
 
 		$pimple['mapper_session'] = function($p){
