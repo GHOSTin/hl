@@ -42,7 +42,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <h3>Работы</h3>
-    </div>	
+    </div>
 	<div class="modal-body">
 		<div class="form-group">
 			<select class="dialog-select-workgroup form-control">
@@ -87,6 +87,6 @@
 	<div class="modal-footer">
 		<div class="btn btn-primary add_work">Сохранить</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

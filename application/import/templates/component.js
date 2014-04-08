@@ -29,6 +29,12 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.get_dialog_import_accruals', function(){
+        $.get('get_dialog_import_accruals',{
+            },function(r){
+                init_content(r);
+            });
+    });
     $('body').on('click', '.create_street', function(){
         $.get('create_street',{
             name: $('.dialog-street').text(),

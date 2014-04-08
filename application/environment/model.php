@@ -241,6 +241,10 @@ class model_environment{
 			return new model_query_work_type($p['company']);
 		};
 
+		$pimple['model_import'] = function($p){
+			return new model_import($p['company']);
+		};
+
 		$pimple['twig'] = $pimple->share(function($pimple){
 			$options = [];
 			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');

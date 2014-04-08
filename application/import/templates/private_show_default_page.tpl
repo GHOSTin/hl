@@ -8,7 +8,7 @@
                 <li class="get_dialog_import_house"><a href="#">Импорт дома</a></li>
                 <li class="get_dialog_import_flats"><a href="#">Импорт квартир</a></li>
                 <li class="get_dialog_import_numbers"><a href="#">Импорт лицевых счетов</a></li>
-                <li class="get_dialog_import_meters"><a href="#">Импорт счетчиков</a></li>
+                <li class="get_dialog_import_accruals"><a href="#">Импорт начислений</a></li>
             </ul>
         </div>
         <div class="col-md-9 import-form"></div>
@@ -18,5 +18,6 @@
     <script src="/templates/default/js/jquery.ui.widget.js"></script>
     <script src="/templates/default/js/jquery.iframe-transport.js"></script>
     <script src="/templates/default/js/jupload.js"></script>
+    <script src="/templates/default/js/bootstrap-datepicker.js"></script>
     <script src="/?js=component.js&p=import"></script>
 {% endblock javascript %}

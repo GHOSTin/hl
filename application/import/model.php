@@ -8,6 +8,42 @@ class model_import{
 		data_company::verify_id($this->company->get_id());
 	}
 
+
+	public function analize_import_accruals($time, $file){
+		set_time_limit(0);
+		if(!file_exists($file))
+			throw new RuntimeException();
+		$numbers = [];
+		$no_numbers = [];
+		$hndl = fopen($file, 'r');
+		$pdo = di::get('pdo');
+		$pdo->beginTransaction();
+		while($row = fgetcsv($hndl, 0, ';')){
+			if(count($row) !== 10)
+				throw new RuntimeException();
+
+			$num = trim($row[0]);
+			if(!isset($numbers[$num]))
+				$number = di::get('mapper_number')->find_by_number($num);
+				if(!is_null($number))
+					$numbers[$number->get_number()] = $number;
+				else
+					$old_numbers[] = $num;
+			}else{
+				$number = $numbers[$num];
+			if(!is_null($number)){
+				$stmt = $pdo->prepare('INSERT INTO accruals
+					SET company_id = :company_id, number_id = :number_id,
+					service = :service, tarif = :tarif, ind = :ind, odn = :odn,
+					sum_ind = :sum_ind, sum_odn = :sum_odn,
+					recalculation = :recalculation, facilities = :facilities,
+					total = :total');
+			}
+		}
+		exit();
+		fclose($hndl);
+	}
+
 	/*
 	* Анализирует файт импорта лицевых счетов
 	*/
