@@ -15,6 +15,14 @@ class data_accrual{
   private $facilities;
   private $total;
 
+  public function get_company(){
+    return $this->company;
+  }
+
+  public function get_number(){
+    return $this->number;
+  }
+
   public function get_time(){
     return $this->time;
   }

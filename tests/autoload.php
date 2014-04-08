@@ -25,6 +25,7 @@ require_once(ROOT.'/application/workgroup/data.php');
 require_once(ROOT.'/application/query2comment/data.php');
 require_once(ROOT.'/application/query2work/data.php');
 require_once(ROOT.'/application/city/data.php');
+require_once(ROOT.'/application/accrual/data.php');
 # mapa
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');
@@ -35,6 +36,7 @@ require_once(ROOT.'/application/session/mapper.php');
 require_once(ROOT.'/application/query2comment/mapper.php');
 require_once(ROOT.'/application/query2work/mapper.php');
 require_once(ROOT.'/application/street2house/mapper.php');
+require_once(ROOT.'/application/accrual/mapper.php');
 # model
 require_once(ROOT.'/application/user/model.php');
 require_once(ROOT.'/application/number/model.php');
@@ -73,6 +75,7 @@ require_once(ROOT.'/application/session/factory.php');
 require_once(ROOT.'/application/user/factory.php');
 require_once(ROOT.'/application/query2comment/factory.php');
 require_once(ROOT.'/application/work/factory.php');
+require_once(ROOT.'/application/accrual/factory.php');
 # controllers
 require_once(ROOT.'/application/query/controller.php');
 
