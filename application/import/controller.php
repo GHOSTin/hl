@@ -77,9 +77,14 @@ class controller_import{
   }
 
   public static function private_import_accruals(model_request $request){
-    $file = $request->FILES('file')['tmp_name'];
-    return di::get('model_import')
-      ->analize_import_accruals($request->GET('date'), $file);
+    try{
+      $file = $request->FILES('file')['tmp_name'];
+      di::get('model_import')
+        ->analize_import_accruals($request->GET('date'), $file);
+      return 'Успешно';
+    }catch(Exception $e){
+      return 'Проблема';
+    }
   }
 
   public static function private_analize_street(model_request $request){

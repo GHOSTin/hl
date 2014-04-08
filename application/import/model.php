@@ -18,28 +18,43 @@ class model_import{
 		$hndl = fopen($file, 'r');
 		$pdo = di::get('pdo');
 		$pdo->beginTransaction();
+		$time = strtotime($time, '+12 hours');
 		while($row = fgetcsv($hndl, 0, ';')){
 			if(count($row) !== 10)
 				throw new RuntimeException();
 			$num = trim($row[0]);
-			if(!isset($numbers[$num]))
+			if(!isset($numbers[$num])){
 				$number = di::get('mapper_number')->find_by_number($num);
 				if(!is_null($number))
 					$numbers[$number->get_number()] = $number;
 				else
 					$old_numbers[] = $num;
-			}else{
+			}else
 				$number = $numbers[$num];
 			if(!is_null($number)){
 				$stmt = $pdo->prepare('INSERT INTO accruals
-					SET company_id = :company_id, number_id = :number_id,
+					SET company_id = :company_id, number_id = :number_id, time = :time,
 					service = :service, tarif = :tarif, ind = :ind, odn = :odn,
 					sum_ind = :sum_ind, sum_odn = :sum_odn,
 					recalculation = :recalculation, facilities = :facilities,
 					total = :total');
+				$stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+				$stmt->bindValue(':number_id', $number->get_id(), PDO::PARAM_INT);
+				$stmt->bindValue(':time', $time, PDO::PARAM_INT);
+				$stmt->bindValue(':service', $row['1'], PDO::PARAM_STR);
+				$stmt->bindValue(':tarif', $row[2], PDO::PARAM_INT);
+				$stmt->bindValue(':ind', $row[3], PDO::PARAM_INT);
+				$stmt->bindValue(':odn', $row[4], PDO::PARAM_INT);
+				$stmt->bindValue(':sum_ind', $row[5], PDO::PARAM_INT);
+				$stmt->bindValue(':sum_odn', $row[6], PDO::PARAM_INT);
+				$stmt->bindValue(':recalculation', $row[7], PDO::PARAM_INT);
+				$stmt->bindValue(':facilities', $row[8], PDO::PARAM_INT);
+				$stmt->bindValue(':total', $row[9], PDO::PARAM_INT);
+				if(!$stmt->execute())
+					throw new RuntimeException();
 			}
 		}
-		exit();
+		$pdo->commit();
 		fclose($hndl);
 	}
 
