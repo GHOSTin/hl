@@ -21,7 +21,6 @@ class model_import{
 		while($row = fgetcsv($hndl, 0, ';')){
 			if(count($row) !== 10)
 				throw new RuntimeException();
-
 			$num = trim($row[0]);
 			if(!isset($numbers[$num]))
 				$number = di::get('mapper_number')->find_by_number($num);
