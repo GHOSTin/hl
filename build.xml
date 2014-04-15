@@ -9,6 +9,7 @@
           <include name="application/**"/>
           <include name="framework/**"/>
           <include name="libs/**"/>
+          <include name="scripts/**"/>
           <include name="site/**"/>
           <include name="templates/**"/>
           <include name="version"/>
@@ -16,7 +17,7 @@
           <include name="update.php"/>
           <include name="version.php"/>
       </fileset>
-    </copy> 
+    </copy>
     <mkdir dir="${BUILD_DIR}/cache" />
   </target>
   <target name="phplint">
