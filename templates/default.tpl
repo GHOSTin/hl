@@ -33,10 +33,15 @@
                 Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a>. {% if user is not empty %}<a class="get_dialog_error_message pull-right btn btn-danger fixed-right">Сообщить об ошибке.</a>{% endif %}
             </p>
         </div>
-    </footer>        
+    </footer>
+    <div id="modal" class="modal fade"></div>
 </body>
     <script src="/templates/default/js/jquery.min.js"></script>
+    <script src="/templates/default/js/underscore.js"></script>
+    <script src="/templates/default/js/backbone.js"></script>
+    <script src="/templates/default/js/backbone.marionette.js"></script>
     <script src="/templates/default/js/bootstrap.min.js"></script>
+    <script src="/templates/default/js/twig.js"></script>
     {% if user is not empty %}
 	    <script src="/templates/default/js/socket.io.js"></script>
 	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>

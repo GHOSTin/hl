@@ -1,8 +1,7 @@
-{% extends "ajax.tpl" %}
 {% set user = component.user %}
-{% block js %}
-    $('.profile-content').html(get_hidden_content());
-{% endblock js %}
-{% block html %}
-    {% include '@profile/build_user_info.tpl' %}
-{% endblock html %}
+{
+"id": {{ user.get_id() }},
+"fio": "{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}",
+"telephone": "{{ user.get_telephone() }}",
+"cellphone": "{{ user.get_cellphone() }}"
+}

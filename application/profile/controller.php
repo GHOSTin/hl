@@ -15,6 +15,11 @@ class controller_profile{
 		$id = di::get('user')->get_id();
 		return ['user' => (new model_user)->get_user($id)];
 	}
+
+  public static function private_get_userinfo(model_request $request){
+		$id = di::get('user')->get_id();
+		return ['user' => (new model_user)->get_user($id)];
+	}
 	
 	public static function private_get_notification_center_content(model_request $request){
 		return ['users' => (new model_user)->get_users()];
