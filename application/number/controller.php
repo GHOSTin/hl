@@ -497,7 +497,7 @@ class controller_number{
 
   public static function private_update_number_email(
     model_request $request){
-    preg_match_all('/[0-9A-Za-z.@]/', $request->GET('email'), $matches);
+    preg_match_all('/[0-9A-Za-z.@-]/', $request->GET('email'), $matches);
     return ['number' => (new model_number(di::get('company')))
     ->update_number_email($request->GET('id'), implode('', $matches[0]))];
   }

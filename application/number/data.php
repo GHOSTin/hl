@@ -101,7 +101,7 @@ class data_number extends data_object{
   }
 
   public function set_email($email){
-    if(!preg_match('|[0-9A-Za-z.@]{0,128}|', $email))
+    if(!preg_match('|[0-9A-Za-z.@-]{0,128}|', $email))
       throw new e_model('Не валидный email.');
     $this->email = $email;
   }
