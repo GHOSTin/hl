@@ -26,6 +26,9 @@ require_once(ROOT.'/application/query2comment/data.php');
 require_once(ROOT.'/application/query2work/data.php');
 require_once(ROOT.'/application/city/data.php');
 require_once(ROOT.'/application/accrual/data.php');
+require_once(ROOT.'/application/number2meter/data.php');
+require_once(ROOT.'/application/number2processing_center/data.php');
+require_once(ROOT.'/application/house2processing_center/data.php');
 # mapa
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');

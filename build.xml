@@ -29,4 +29,8 @@
       </fileset>
     </phplint>
   </target>
+  <target name="phpunit">
+    <echo>Запуск юнит тестов</echo>
+    <exec command="phpunit --bootstrap tests/autoload.php tests/" passthru="true" checkreturn="true" />
+  </target>
 </project>
