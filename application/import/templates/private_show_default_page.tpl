@@ -9,6 +9,7 @@
                 <li class="get_dialog_import_flats"><a href="#">Импорт квартир</a></li>
                 <li class="get_dialog_import_numbers"><a href="#">Импорт лицевых счетов</a></li>
                 <li class="get_dialog_import_accruals"><a href="#">Импорт начислений</a></li>
+                <li class="get_dialog_import_statements"><a href="#">Импорт показаний</a></li>
             </ul>
         </div>
         <div class="col-md-9 import-form"></div>

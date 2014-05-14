@@ -10,6 +10,11 @@ class controller_import{
       return true;
   }
 
+  public static function private_get_dialog_import_statements(
+      model_request $request){
+      return true;
+  }
+
   public static function private_get_dialog_import_numbers(
       model_request $request){
       return true;
