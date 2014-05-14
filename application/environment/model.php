@@ -3,7 +3,7 @@ class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
 		'processing_center', 'import', 'meter', 'error', 'company', 'report',
-		'about'];
+		'about', 'export'];
 
 	/*
 	* Возвращает содержимое страницы.
@@ -213,6 +213,10 @@ class model_environment{
 			return new mapper_street2house($p['pdo']);
 		};
 
+    $pimple['mapper_export'] = function($p){
+			return new mapper_export($p['pdo']);
+		};
+
 		$pimple['model_number'] = function($p){
 			return new model_number($p['company']);
 		};
@@ -251,6 +255,10 @@ class model_environment{
 
 		$pimple['model_import'] = function($p){
 			return new model_import($p['company']);
+		};
+
+    $pimple['model_export'] = function($p){
+			return new model_export();
 		};
 
 		$pimple['twig'] = $pimple->share(function($pimple){
