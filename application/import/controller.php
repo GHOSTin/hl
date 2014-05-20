@@ -92,6 +92,17 @@ class controller_import{
     }
   }
 
+  public static function private_import_statements(model_request $request){
+    try{
+      $file = $request->FILES('file')['tmp_name'];
+      di::get('model_import')
+        ->analize_import_statements($request->GET('date'), $file);
+      return 'Успешно';
+    }catch(Exception $e){
+      return 'Проблема';
+    }
+  }
+
   public static function private_analize_street(model_request $request){
     return di::get('model_import')
       ->analize_import_street($request->FILES('file'));
