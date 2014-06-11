@@ -3,9 +3,9 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, maximum-scale = 1, minimum-scale = 1">
+  <meta name="viewport" content="width=device-width, maximum-scale = 1, minimum-scale = 1">
+  <meta name="apple-mobile-web-app-capable" content="yes" />
 	<link rel="stylesheet" href="/templates/default/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="/templates/default/css/bootstrap-glyphicons.css" >
     <link rel="stylesheet" href="/templates/default/css/default.css" >
     <title>MSHC2</title>
     <link rel="stylesheet" href="/templates/default/css/libs.css" >

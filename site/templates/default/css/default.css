@@ -69,10 +69,6 @@ footer, #push{
     cursor: pointer;
 }
 
-.modal{
-    min-width: 560px;
-}
-
 .icon-white{
     color: white;
 }
@@ -303,9 +299,11 @@ div[class^=chat-col-]{
     overflow: hidden;
 }
 
-/*@media (max-width: 979px){*/
-    /*.main {margin: 0;}*/
-/*}*/
+@media (min-width: 48em){
+    .modal{
+        min-width: 560px;
+    }
+}
 
 @media print{
     #print{

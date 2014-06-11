@@ -6,9 +6,13 @@ class model_export {
     $filename = 'export_numbers.csv';
     @set_time_limit(0);
     if($attachment) {
-      header( 'Content-Type: text/csv; charset=utf-8' );
+      header('Content-Description: File Transfer');
+      header('Content-Type: application/octet-stream; charset=utf-8');
       header( 'Content-Disposition: attachment;filename='.$filename);
-      $fp = fopen('php://output', 'w');
+      header('Expires: 0');
+      header('Cache-Control: must-revalidate');
+      header('Pragma: public');
+      $fp = tmpfile();
     } else {
       $fp = fopen($filename, 'w');
     }
@@ -20,6 +24,7 @@ class model_export {
     while (list($key, $value) = each($data))
       fputcsv($fp, $value);
 
+    readfile($fp);
     fclose($fp);
   }
 

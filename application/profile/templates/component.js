@@ -1,3 +1,7 @@
+_.templateSettings = {
+    interpolate : /\{\{(.+?)\}\}/g
+};
+
 MyApp = new Backbone.Marionette.Application();
 
 var ModalRegion = Backbone.Marionette.Region.extend({
@@ -30,11 +34,59 @@ MyApp.addRegions({
     modal: ModalRegion
 });
 
+MyApp.AlertView = Backbone.View.extend({
+
+    tagName: "div",
+
+    className: "alert fade alert-dismissable",
+
+    template: _.template("<a href='#' data-dismiss='alert' aria-hidden='true' class='close'>&times;</a><strong>{{ title }}</strong>{{ message }}"),
+
+    initialize: function (options) {
+
+        _.bindAll(this, "render", "remove");
+
+        if (options) {
+            this.alert = options.alert || "info";
+            this.title = options.title || "";
+            this.message = options.message || "";
+            this.fixed = options.fixed || false;
+        }
+
+    },
+
+    render: function () {
+        var that = this,
+            output = this.template({ title: this.title, message: this.message });
+
+        this.$el.addClass("alert-" + this.alert).html(output).alert();
+
+        if (this.fixed) {
+            this.$el.addClass("fixed");
+        }
+
+        window.setTimeout(function () {
+            that.$el.addClass("in");
+        }, 20);
+
+        return this;
+    },
+
+    remove: function () {
+        var that = this;
+
+        this.$el.removeClass("in");
+
+        window.setTimeout(function () {
+            that.$el.remove();
+        }, 1000);
+    }
+});
+
 MyApp.ProfileApp = function(){
     'use strict';
 
     var ProfileApp = {};
-
 
     var ChangePasswordView = Backbone.Marionette.ItemView.extend({
         events: {
@@ -55,18 +107,30 @@ MyApp.ProfileApp = function(){
         update_password: function(){
             var password = $('.dialog-new_password').val();
             var confirm_password = $('.dialog-confirm_password').val();
-            this.model.save({
-                    wait: true,
-                    url: 'update_password?new_password='+password+'&confirm_password='+confirm_password,
-                    success: function(model, response, options){
-                        MyApp.modal.hideModal();
-                        MyApp.ProfileApp.layout.render({model: model});
-                    },
-                    error: function(model, response, options){
-                        console.log(response)
+            if(_.isEqual(password, confirm_password)){
+                this.model.sync(
+                    "read"
+                    , this
+                    ,{
+                        wait: true,
+                        url: 'update_password?new_password='+password+'&confirm_password='+confirm_password,
+                        success: function(model, response, options){
+                            MyApp.modal.hideModal();
+                            MyApp.ProfileApp.layout.render({model: model});
+                        },
+                        error: function(model, response, options){
+                            console.log(response)
+                        }
                     }
-                }
-            );
+                )
+            }
+            else {
+                var alert = new MyApp.AlertView({
+                    alert: 'danger',
+                    message: 'Введенные пароли не совпадают'
+                });
+                $('.modal-body').prepend(alert.render().el);
+            }
         }
     });
 
@@ -163,6 +227,11 @@ MyApp.ProfileApp = function(){
                     throw new Error('Не могу получить модель пользователя');
                 }
             });
+        },
+        validate: function(attrs, options){
+            if(/8[0-9]{10, 10}/.test(attrs.cellphone)){
+                return 'Телефон указан не верно.'
+            }
         },
         initializeLayout: function(options){
             ProfileApp.layout = new Layout(options);

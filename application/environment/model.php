@@ -3,7 +3,7 @@ class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
 		'processing_center', 'import', 'meter', 'error', 'company', 'report',
-		'about', 'export'];
+		'about', 'export', 'task'];
 
 	/*
 	* Возвращает содержимое страницы.
@@ -137,6 +137,10 @@ class model_environment{
 			return new factory_work();
 		};
 
+    $pimple['factory_task'] = function($p){
+			return new factory_task();
+		};
+
 		$pimple['mapper_number'] = function($p){
 			return new mapper_number($p['pdo'], $p['company']);
 		};
@@ -217,6 +221,10 @@ class model_environment{
 			return new mapper_export($p['pdo']);
 		};
 
+    $pimple['mapper_task'] = function($p){
+			return new mapper_task($p['pdo']);
+		};
+
 		$pimple['model_number'] = function($p){
 			return new model_number($p['company']);
 		};
@@ -259,6 +267,10 @@ class model_environment{
 
     $pimple['model_export'] = function($p){
 			return new model_export();
+		};
+
+    $pimple['model_task'] = function($p){
+			return new model_task();
 		};
 
 		$pimple['twig'] = $pimple->share(function($pimple){

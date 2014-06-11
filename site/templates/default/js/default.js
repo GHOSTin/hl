@@ -27,6 +27,7 @@ $('body').on('click', '.close_dialog', function(){
 });
 
 $(document).ready(function(){
+    setTimeout(function(){window.scrollTo( 0, 1 );}, 0);
     $(document).on('click', '.get_dialog_error_message', function(){
         $.get('/error/show_dialog',{
             },function(r){

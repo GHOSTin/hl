@@ -6,6 +6,6 @@
 {% block html %}
   <h3>Экспорт жилфонда</h3>
   <div>
-    <button class="btn btn-default export_numbers" type="button">Экспортировать жилфонд</button>
+    <a class="btn btn-default export_numbers" href="/export/export_numbers">Экспортировать жилфонд</a>
   </div>
 {% endblock html %}
