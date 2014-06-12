@@ -1,0 +1,25 @@
+.btn-group .btn{
+    font-size: .9em;
+}
+.task-media{
+    height: 64px;
+    width: 64px;
+    border-radius: 50%;
+    line-height: 64px;
+    padding: 0;
+    font-size: 1.8em;
+}
+.glyphicon.task-media{
+    width: 25px;
+}
+.list-group-item-heading{
+    height: 3.3em;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    display: -webkit-box;
+}

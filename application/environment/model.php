@@ -225,6 +225,10 @@ class model_environment{
 			return new mapper_task($p['pdo']);
 		};
 
+    $pimple['mapper_user2task'] = function($p){
+			return new mapper_user2task($p['pdo']);
+		};
+
 		$pimple['model_number'] = function($p){
 			return new model_number($p['company']);
 		};
@@ -271,6 +275,10 @@ class model_environment{
 
     $pimple['model_task'] = function($p){
 			return new model_task();
+		};
+
+    $pimple['model_user2task'] = function($p){
+			return new model_user2task();
 		};
 
 		$pimple['twig'] = $pimple->share(function($pimple){

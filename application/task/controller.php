@@ -14,4 +14,8 @@ class controller_task {
     di::get('model_task')->add_task($request->GET('description'), (int) $request->GET('time_close'), $request->GET('performers'));
     return true;
   }
+
+  public static function private_show_active_tasks(model_request $request){
+    return ['tasks' => di::get('mapper_task')->find_active_tasks()];
+  }
 }

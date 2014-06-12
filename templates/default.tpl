@@ -30,7 +30,7 @@
     <footer>
         <div class="container">
             <p class="col-xs-12 muted credit">
-                Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a>. {% if user is not empty %}<a class="get_dialog_error_message pull-right btn btn-danger fixed-right">Сообщить об ошибке.</a>{% endif %}
+                Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a>. {% if user is not empty %}<a class="get_dialog_error_message pull-right btn btn-danger fixed-right hidden-xs">Сообщить об ошибке.</a>{% endif %}
             </p>
         </div>
     </footer>
