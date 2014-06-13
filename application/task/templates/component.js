@@ -11,4 +11,32 @@ $(document).ready(function(){
             init_content(r);
         });
     });
+    $('a').on('click', function() {
+        if($(this).attr('data-ajax') === 'true'){
+            var link = $(this).attr('href');
+            location.hash = link;
+            return false;
+        }
+        return true;
+    });
+    $(window).on('hashchange', function() {
+        var link = location.hash.replace('#', '');
+        if(link)
+            $.get('get_task_content', {
+                id: link
+            },function(r) {
+                init_content(r);
+            });
+        else
+            $('#task_content').find('section').html('');
+    }).trigger('hashchange');
+    $(document).on('click', '#task_edit', function(){
+        var link = location.hash.replace('#', '');
+        if(link)
+            $.get('edit_task_content', {
+                id: link
+            },function(r) {
+                init_content(r);
+            });
+    });
 });

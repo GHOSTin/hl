@@ -28,6 +28,11 @@ $('body').on('click', '.close_dialog', function(){
 
 $(document).ready(function(){
     setTimeout(function(){window.scrollTo( 0, 1 );}, 0);
+    $.valHooks.textarea = {
+        get: function(elem) {
+            return elem.value.replace(/\r?\n/g, "\r\n");
+        }
+    };
     $(document).on('click', '.get_dialog_error_message', function(){
         $.get('/error/show_dialog',{
             },function(r){

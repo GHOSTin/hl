@@ -32,7 +32,8 @@
     weekStart: 1,
     todayBtn: "linked",
     language: "ru",
-    autoclose: true
+    autoclose: true,
+    todayHighlight: true
   });
   $('.add_task').click(function(){
     $.get('add_task',{

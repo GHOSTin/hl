@@ -3,8 +3,8 @@
   <div>
     <p>
     <div class="btn-group">
-      <a type="button" class="btn btn-default active" id="get_active_tasks">Текущие задачи</a>
-      <a type="button" class="btn btn-default get_finished_tasks">Законченные задачи</a>
+      <a type="button" class="btn btn-default active" id="get_active_tasks" href="#">Текущие задачи</a>
+      <a type="button" class="btn btn-default get_finished_tasks" href="#">Законченные задачи</a>
     </div>
     </p>
     <p>
@@ -16,6 +16,9 @@
   </div>
   <div class="row">
     <div id="task_container" class="col-xs-12 col-sm-5 col-lg-4"></div>
+    <div id="task_content" class="col-xs-12 col-sm-7 col-lg-8">
+      <section></section>
+    </div>
   </div>
 {% endblock%}
 {% block javascript %}

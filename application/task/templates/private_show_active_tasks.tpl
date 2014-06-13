@@ -11,13 +11,13 @@
         {% set number = "-" %}
         {% set label = 'danger' %}
       {% endif %}
-    <a href="#" class="list-group-item">
+    <a href="#{{ task.get_id() }}/" class="list-group-item" data-ajax="true">
       <div class="media">
         <div class="pull-left">
           <span class="label label-{{ label }} media-object task-media">{{ number }}{{ days }}</span>
         </div>
         <div class="media-body">
-          <h5 class="list-group-item-heading media-heading"><strong>{{ task.get_description() }}</strong></h5>
+          <h5 class="list-group-item-heading media-heading"><strong>{{ task.get_description()|nl2br }}</strong></h5>
           {% set creator = task.get_creator() %}
           <p class="list-group-item-text">
             <i class="glyphicon glyphicon-user" style="font-size: 20px;"></i>

@@ -12,10 +12,18 @@ class controller_task {
 
   public static function private_add_task(model_request $request){
     di::get('model_task')->add_task($request->GET('description'), (int) $request->GET('time_close'), $request->GET('performers'));
-    return true;
+    return ['tasks' => di::get('mapper_task')->find_active_tasks()];
   }
 
   public static function private_show_active_tasks(model_request $request){
     return ['tasks' => di::get('mapper_task')->find_active_tasks()];
+  }
+
+  public static function private_get_task_content(model_request $request){
+    return ['task'=> di::get('mapper_task')->find($request->GET('id'))];
+  }
+
+  public static function private_edit_task_content(model_request $request){
+    return ['task'=> di::get('mapper_task')->find($request->GET('id'))];
   }
 }
