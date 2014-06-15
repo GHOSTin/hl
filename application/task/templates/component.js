@@ -30,13 +30,4 @@ $(document).ready(function(){
         else
             $('#task_content').find('section').html('');
     }).trigger('hashchange');
-    $(document).on('click', '#task_edit', function(){
-        var link = location.hash.replace('#', '');
-        if(link)
-            $.get('edit_task_content', {
-                id: link
-            },function(r) {
-                init_content(r);
-            });
-    });
 });

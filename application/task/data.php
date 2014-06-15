@@ -15,7 +15,7 @@ class data_task {
   private $status;
 
   /**
-   * @param mixed $id
+   * @param Integer $id
    */
   public function set_id($id)
   {
@@ -23,7 +23,7 @@ class data_task {
   }
 
   /**
-   * @return mixed
+   * @return Integer
    */
   public function get_id()
   {

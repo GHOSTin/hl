@@ -3,14 +3,18 @@
 {% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set close_date = task.get_time_close()|date('d.m.Y') %}
+{% set performers = [] %}
+{% for performer in task.get_performers() %}
+  {% set performers = performers|merge([performer.get_id()]) %}
+{% endfor %}
 {% block html %}
-  <div class="row">
+  <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <form class="navbar-form pull-right">
-            <input type="text" class="form-control" id="task_time_close" value="{{ close_date }}">
-            <button type="button" class="btn btn-default" id="task_edit">
+            <input type="text" class="form-control task_time_close" value="{{ close_date }}" readonly="true">
+            <button type="button" class="btn btn-default" id="task_save">
               <i class="glyphicon glyphicon-save"></i><span class="hidden-xs hidden-sm">Сохранить</span>
             </button>
           </form>
@@ -25,8 +29,7 @@
     </nav>
     <div class="col-xs-12">
       <textarea type="text" name="description" id="task-description"
-                class="form-control" placeholder="Что нужно сделать" rows="5">
-        {{ task.get_description() }}
+                class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description() }}
       </textarea>
       <p>
       <ul class="list-group">
@@ -39,11 +42,13 @@
         <li class="list-group-item list-group-item-info">
           Исполнители:
           <strong>
-            {% for performer in task.get_performers() %}
-              <span class="task_performer">
-                {{ performer.get_lastname()}} {{ performer.get_firstname()|first|upper }}.{{ performer.get_middlename()|first|upper }}.{% if loop.revindex > 1 %}, {% endif%}
-              </span>
-            {% endfor %}
+            <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" multiple tabindex="-1" id="task-performers" name="performers">
+              {% for user in component.users %}
+                <option value="{{ user.get_id() }}"
+                        {% if user.get_id() in performers %}selected="selected" {% endif %}>{{ user.get_lastname() }} {{ user.get_firstname() }}
+                </option>
+              {% endfor %}
+            </select>
           </strong>
         </li>
       </ul>
@@ -52,13 +57,29 @@
   </div>
 {% endblock %}
 {% block js %}
-  $('#task_time_close').datepicker({
+  $('#task_content').find('section').html(get_hidden_content());
+
+  $(".chosen-select").chosen({width: '100%'});
+
+  $('.task_time_close').datepicker({
   format: "dd.mm.yyyy",
+  startDate: "{{ open_date }}",
   weekStart: 1,
   todayBtn: "linked",
   language: "ru",
   autoclose: true,
   todayHighlight: true
   });
-  $('#task_content').find('section').html(get_hidden_content());
+  $(document).on('click', '#task_save', function(){
+    var link = location.hash.replace('#', '');
+    if(link)
+      $.get('save_task_content', {
+          id: $('div#task').attr('data-id'),
+          description: $('#task-description').val(),
+          performers: $('#task-performers').val(),
+          time_close: $('.task_time_close').datepicker('getDate').getTime()/1000
+        },function(r) {
+          init_content(r);
+        });
+  });
 {% endblock %}

@@ -21,4 +21,24 @@ class model_task {
     $pdo->commit();
     return $task;
   }
+
+  public function save_task($id, $description, $time_close, array $performers) {
+    $pdo = di::get('pdo');
+    $pdo->beginTransaction();
+    $mapper = di::get('mapper_task');
+    $model_user = di::get('model_user2task');
+    $task = $mapper->find($id);
+    $task->set_description($description);
+    $task->set_time_close($time_close);
+    $task_performers = [];
+    foreach($performers as $value){
+      $user = di::get('model_user')->get_user($value);
+      array_push($task_performers, $user);
+    }
+    $task->set_performers($task_performers);
+    $mapper->update($task);
+    $model_user->update($task);
+    $pdo->commit();
+    return $task;
+  }
 } 

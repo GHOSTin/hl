@@ -4,7 +4,7 @@
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set close_date = task.get_time_close()|date('d.m.Y') %}
 {% block html %}
-  <div class="row">
+  <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -52,4 +52,14 @@
 {% endblock %}
 {% block js %}
   $('#task_content').find('section').html(get_hidden_content());
+
+  $(document).on('click', '#task_edit', function(){
+    var link = location.hash.replace('#', '');
+    if(link)
+      $.get('edit_task_content', {
+        id: $('div#task').attr('data-id')
+      },function(r) {
+        init_content(r);
+      });
+  });
 {% endblock %}

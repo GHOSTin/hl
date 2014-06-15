@@ -18,7 +18,8 @@
   <div class="form-group">
     <label for="task-time_close">Крайний срок</label>
     <div class="input-group date">
-      <input type="text" class="form-control" id="task-time_close" disabled><span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+      <input type="text" class="form-control" id="task-time_close" readonly="true">
+      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>
   </div>
 {% endblock dialog %}
@@ -29,6 +30,7 @@
   $(".chosen-select").chosen({width: '100%'});
   $('.input-group.date').datepicker({
     format: "dd.mm.yyyy",
+    startDate: "today",
     weekStart: 1,
     todayBtn: "linked",
     language: "ru",

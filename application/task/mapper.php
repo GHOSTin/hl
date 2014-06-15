@@ -9,6 +9,11 @@ class mapper_task extends mapper{
     SET id = :id, description = :description, time_open = :time_open, time_close = :time_close,
     time_target = :time_target, rating = :rating, reason = :reason, status = :status";
 
+  private static $update = "UPDATE tasks
+    SET description = :description, time_open = :time_open, time_close = :time_close,
+    time_target = :time_target, rating = :rating, reason = :reason, status = :status
+    WHERE id = :id";
+
   private static $find_active_tasks = "SELECT t.*, GROUP_CONCAT(u2t.user_id) as users_id,
     GROUP_CONCAT(u2t.user_type) AS users_type FROM tasks as t, user2task as u2t
     WHERE t.id = u2t.task_id AND t.id IN (SELECT DISTINCT task_id FROM user2task WHERE user_id = :user_id)
@@ -60,6 +65,7 @@ class mapper_task extends mapper{
   }
 
   public function find($id){
+    var_dump($id);
     $stmt = $this->pdo->prepare(self::$find);
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     if(!$stmt->execute())
@@ -86,6 +92,20 @@ class mapper_task extends mapper{
 
   public function insert(data_task $task){
     $stmt = $this->pdo->prepare(self::$insert);
+    $stmt->bindValue(':id', $task->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':description', $task->get_description(), PDO::PARAM_STR);
+    $stmt->bindValue(':time_open', $task->get_time_open(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_close', $task->get_time_close(), PDO::PARAM_INT);
+    $stmt->bindValue(':time_target', $task->get_time_target(), PDO::PARAM_INT);
+    $stmt->bindValue(':rating', $task->get_rating(), PDO::PARAM_INT);
+    $stmt->bindValue(':reason', $task->get_reason(), PDO::PARAM_STR);
+    $stmt->bindValue(':status', $task->get_status(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new RuntimeException();
+  }
+
+  public function update(data_task $task){
+    $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':id', $task->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':description', $task->get_description(), PDO::PARAM_STR);
     $stmt->bindValue(':time_open', $task->get_time_open(), PDO::PARAM_INT);

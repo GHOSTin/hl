@@ -24,6 +24,12 @@ class controller_task {
   }
 
   public static function private_edit_task_content(model_request $request){
-    return ['task'=> di::get('mapper_task')->find($request->GET('id'))];
+    return ['task'=> di::get('mapper_task')->find($request->GET('id')), 'users' => di::get('model_user')->get_users()];
+  }
+
+  public static function private_save_task_content(model_request $request){
+    $task = di::get('model_task')->save_task($request->GET('id'), $request->GET('description'),
+        (int) $request->GET('time_close'), $request->GET('performers'));
+    return ['task'=> $task, 'tasks'=> di::get('mapper_task')->find_active_tasks()];
   }
 }
