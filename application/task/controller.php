@@ -11,8 +11,14 @@ class controller_task {
   }
 
   public static function private_add_task(model_request $request){
-    di::get('model_task')->add_task($request->GET('description'), (int) $request->GET('time_close'), $request->GET('performers'));
+    di::get('model_task')->add_task($request->GET('description'), (int) $request->GET('time_target'), $request->GET('performers'));
     return ['tasks' => di::get('mapper_task')->find_active_tasks()];
+  }
+
+  public static function private_close_task(model_request $request){
+    di::get('model_task')->close_task($request->GET('id'),
+        $request->GET('reason'), $request->GET('rating'), (int) $request->GET('time_close'));
+    return true;
   }
 
   public static function private_show_active_tasks(model_request $request){
@@ -29,7 +35,11 @@ class controller_task {
 
   public static function private_save_task_content(model_request $request){
     $task = di::get('model_task')->save_task($request->GET('id'), $request->GET('description'),
-        (int) $request->GET('time_close'), $request->GET('performers'));
+        (int) $request->GET('time_target'), $request->GET('performers'));
     return ['task'=> $task, 'tasks'=> di::get('mapper_task')->find_active_tasks()];
+  }
+
+  public static function private_get_dialog_close_task(model_request $request){
+    return ['task'=> di::get('mapper_task')->find($request->GET('id'))];
   }
 }

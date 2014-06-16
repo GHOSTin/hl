@@ -2,27 +2,30 @@
 {% set task = component.task %}
 {% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
-{% set close_date = task.get_time_close()|date('d.m.Y') %}
+{% set close_date = task.get_time_target()|date('d.m.Y') %}
 {% block html %}
   <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
-          <button type="button" class="btn btn-default navbar-btn pull-left visible-xs visible-sm">
+          <a href="#" class="btn btn-default navbar-btn pull-left visible-xs visible-sm">
             <i class="glyphicon glyphicon-chevron-left"></i>
-          </button>
-          {% if task.get_creator().get_id() == user.get_id() %}
-          <form class="navbar-form pull-right">
-            <button type="button" class="btn btn-default" id="task_edit">
-              <i class="glyphicon glyphicon-edit"></i><span class="hidden-xs hidden-sm">Редактировать</span>
-            </button>
-          </form>
-          {% endif %}
+          </a>
           <p class="navbar-text">
             <span class="visible-xs visible-sm text-center">{{ open_date }} - {{ close_date }}</span>
-            <span class="hidden-xs hidden-sm">Выполняется с {{ open_date }} по {{ close_date }}</span>
+            <span class="hidden-xs hidden-sm">с {{ open_date }} по {{ close_date }}</span>
           </p>
         </div>
+        {% if task.get_creator().get_id() == user.get_id() %}
+          <form class="navbar-form text-center">
+            <button type="button" class="btn btn-default" id="task_edit">
+              <i class="glyphicon glyphicon-edit"></i> Редактировать
+            </button>
+            <button type="button" class="btn btn-default" id="get_dialog_close_task">
+              <i class="glyphicon glyphicon-lock"> </i> Завершить
+            </button>
+          </form>
+        {% endif %}
       </div>
     </nav>
     <div class="col-xs-12">
@@ -61,5 +64,12 @@
       },function(r) {
         init_content(r);
       });
+  });
+  $(document).on('click', '#get_dialog_close_task', function(){
+    $.get('get_dialog_close_task', {
+      id: $('div#task').attr('data-id')
+    },function(r){
+      init_content(r);
+    });
   });
 {% endblock %}

@@ -2,7 +2,7 @@
 {% set task = component.task %}
 {% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
-{% set close_date = task.get_time_close()|date('d.m.Y') %}
+{% set close_date = task.get_time_target()|date('d.m.Y') %}
 {% set performers = [] %}
 {% for performer in task.get_performers() %}
   {% set performers = performers|merge([performer.get_id()]) %}
@@ -13,10 +13,7 @@
       <div class="container-fluid">
         <div class="navbar-header">
           <form class="navbar-form pull-right">
-            <input type="text" class="form-control task_time_close" value="{{ close_date }}" readonly="true">
-            <button type="button" class="btn btn-default" id="task_save">
-              <i class="glyphicon glyphicon-save"></i><span class="hidden-xs hidden-sm">Сохранить</span>
-            </button>
+            <input type="text" class="form-control task_time_target" value="{{ close_date }}" readonly="true">
           </form>
           <p class="navbar-text">
             <span class="visible-xs visible-sm text-center">{{ open_date }} -</span>
@@ -25,6 +22,14 @@
             </span>
           </p>
         </div>
+        <form class="navbar-form text-center">
+          <button type="button" class="btn btn-default" id="task_save">
+            <i class="glyphicon glyphicon-save"></i>Сохранить
+          </button>
+          <button type="button" class="btn btn-default" id="task_cancel_save">
+            <i class="glyphicon glyphicon-remove"></i>Отменить
+          </button>
+        </form>
       </div>
     </nav>
     <div class="col-xs-12">
@@ -60,7 +65,7 @@
 
   $(".chosen-select").chosen({width: '100%'});
 
-  $('.task_time_close').datepicker({
+  $('.task_time_target').datepicker({
   format: "dd.mm.yyyy",
   startDate: "{{ open_date }}",
   weekStart: 1,
@@ -76,9 +81,18 @@
           id: $('div#task').attr('data-id'),
           description: $('#task-description').val(),
           performers: $('#task-performers').val(),
-          time_close: $('.task_time_close').datepicker('getDate').getTime()/1000
+          time_target: $('.task_time_target').datepicker('getDate').getTime()/1000
         },function(r) {
           init_content(r);
         });
+  });
+  $(document).on('click', '#task_cancel_save', function(){
+    var link = location.hash.replace('#', '');
+    if(link)
+      $.get('get_task_content', {
+        id: $('div#task').attr('data-id')
+      }, function(r) {
+        init_content(r);
+      });
   });
 {% endblock %}

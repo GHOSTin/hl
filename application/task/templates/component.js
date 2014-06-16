@@ -21,13 +21,18 @@ $(document).ready(function(){
     });
     $(window).on('hashchange', function() {
         var link = location.hash.replace('#', '');
-        if(link)
+        if(link) {
+            $('#task_container').addClass('hidden-xs');
+            $('#task_content').addClass('show').removeClass('hidden-xs');
             $.get('get_task_content', {
                 id: link
             },function(r) {
                 init_content(r);
             });
-        else
-            $('#task_content').find('section').html('');
+        }
+        else {
+            $('#task_container').addClass('show').removeClass('hidden-xs');
+            $('#task_content').addClass('hidden-xs').find('section').html('');
+        }
     }).trigger('hashchange');
 });

@@ -17,7 +17,7 @@ class mapper_task extends mapper{
   private static $find_active_tasks = "SELECT t.*, GROUP_CONCAT(u2t.user_id) as users_id,
     GROUP_CONCAT(u2t.user_type) AS users_type FROM tasks as t, user2task as u2t
     WHERE t.id = u2t.task_id AND t.id IN (SELECT DISTINCT task_id FROM user2task WHERE user_id = :user_id)
-    AND (t.status = 'open' OR t.status = 'reopen') GROUP BY t.id ORDER BY t.time_close";
+    AND (t.status = 'open' OR t.status = 'reopen') GROUP BY t.id ORDER BY t.time_target";
 
   private static $find = "SELECT t.*, GROUP_CONCAT(u2t.user_id) as users_id,
     GROUP_CONCAT(u2t.user_type) AS users_type FROM tasks as t, user2task as u2t

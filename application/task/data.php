@@ -5,9 +5,9 @@ class data_task {
   private $id;
   private $description;
   private $time_open;
-  private $time_close; //дата до которой нужно выполнить задачу
-  private $time_target; //время выполнеия
-  private $rating;
+  private $time_close; //время выполнеия
+  private $time_target; //дата до которой нужно выполнить задачу
+  private $rating = 0;
   private $creator;
   private $performers = [];
   private $comments = [];

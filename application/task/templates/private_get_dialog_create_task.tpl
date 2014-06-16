@@ -18,7 +18,7 @@
   <div class="form-group">
     <label for="task-time_close">Крайний срок</label>
     <div class="input-group date">
-      <input type="text" class="form-control" id="task-time_close" readonly="true">
+      <input type="text" class="form-control" id="task-time_target" readonly="true">
       <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>
   </div>
@@ -41,7 +41,7 @@
     $.get('add_task',{
       description: $('#task-description').val(),
       performers: $('#task-performers').val(),
-      time_close: $('.input-group.date').datepicker('getDate').getTime()/1000
+      time_target: $('.input-group.date').datepicker('getDate').getTime()/1000
       },function(r){
         init_content(r);
         $('.dialog').modal('hide');

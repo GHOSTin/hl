@@ -3,11 +3,11 @@
 {% block html %}
   <div class="list-group">
     {% for task in tasks %}
-      {% set days = ((task.get_time_close() - "now"|date("U"))/86400)|round(0, 'floor')|abs %}
+      {% set days = ((task.get_time_target() - "now"|date("U"))/86400)|round(0, 'floor')|abs %}
       {% if days == 0 %}
-        {% set hours = ((task.get_time_close() - "now"|date("U"))/3600)|round(0, 'floor')|abs %}
+        {% set hours = ((task.get_time_target() - "now"|date("U"))/3600)|round(0, 'floor')|abs %}
       {% endif %}
-      {%  if task.get_time_close() > "now"|date("U")%}
+      {%  if task.get_time_target() > "now"|date("U")%}
         {% set number = "+" %}
         {% set label = 'success' %}
       {% else %}

@@ -2,14 +2,14 @@
 
 class model_task {
 
-  public function add_task($description, $time_close, array $performers){
+  public function add_task($description, $time_target, array $performers){
     $pdo = di::get('pdo');
     $pdo->beginTransaction();
     $mapper = di::get('mapper_task');
     $model_user = di::get('model_user2task');
     $id = $mapper->get_insert_id();
     $data = ['id'=> $id, 'description'=> $description, 'time_open'=> time(), 'creator'=> di::get('user'),
-      'time_close'=> $time_close, 'time_target'=> null, 'rating'=> 0, 'reason'=> null, 'status'=> 'open'];
+      'time_target'=> $time_target, 'time_close'=> null, 'rating'=> 0, 'reason'=> null, 'status'=> 'open'];
     $data['performers'] = [];
     foreach($performers as $value){
       $user = di::get('model_user')->get_user($value);
@@ -22,14 +22,14 @@ class model_task {
     return $task;
   }
 
-  public function save_task($id, $description, $time_close, array $performers) {
+  public function save_task($id, $description, $time_target, array $performers) {
     $pdo = di::get('pdo');
     $pdo->beginTransaction();
     $mapper = di::get('mapper_task');
     $model_user = di::get('model_user2task');
     $task = $mapper->find($id);
     $task->set_description($description);
-    $task->set_time_close($time_close);
+    $task->set_time_target($time_target);
     $task_performers = [];
     foreach($performers as $value){
       $user = di::get('model_user')->get_user($value);
@@ -40,5 +40,20 @@ class model_task {
     $model_user->update($task);
     $pdo->commit();
     return $task;
+  }
+
+  public function close_task($id, $reason, $rating, $time_close){
+    var_dump($id);
+    $pdo = di::get('pdo');
+    $pdo->beginTransaction();
+    $mapper = di::get('mapper_task');
+    $task = $mapper->find($id);
+    $task->set_reason($reason);
+    $task->set_rating((int) substr($rating, -1));
+    $task->set_time_close($time_close);
+    $task->set_status('close');
+    $mapper->update($task);
+    $pdo->commit();
+    return true;
   }
 } 

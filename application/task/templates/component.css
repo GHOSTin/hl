@@ -1,5 +1,12 @@
 .btn-group .btn{
     font-size: .9em;
+    margin: 0;
+}
+.btn {
+    margin: 0 2px;
+}
+.btn:first-child{
+    margin-left: 0!important;
 }
 .task-media{
     height: 38px;
@@ -42,13 +49,13 @@
     word-wrap: break-word;
     padding: 0 15px;
 }
-#task_content .navbar-form{
-    padding: 0 15px;
-    border-color: transparent!important;
-}
-
-.form-control.task_time_close[readonly]{
+.form-control.task_time_target[readonly]{
+    width: 130px;
     margin: 0 5px 0 -20px;
+}
+#task-time_close.form-control[readonly],
+#task-time_target.form-control[readonly],
+.form-control.task_time_target[readonly]{
     display: inline-block;
     cursor: default;
     background-color: #fff;
