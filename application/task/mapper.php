@@ -65,7 +65,6 @@ class mapper_task extends mapper{
   }
 
   public function find($id){
-    var_dump($id);
     $stmt = $this->pdo->prepare(self::$find);
     $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     if(!$stmt->execute())

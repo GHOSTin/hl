@@ -6,7 +6,7 @@
 {% block html %}
   <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="btn btn-default navbar-btn pull-left visible-xs visible-sm">
             <i class="glyphicon glyphicon-chevron-left"></i>

@@ -29,29 +29,28 @@
     </nav>
     <div class="col-xs-12">
       <textarea type="text" name="description" id="task-description"
-                class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description() }}
-      </textarea>
+                class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description() }}</textarea>
       <p>
-      <ul class="list-group">
-        <li class="list-group-item list-group-item-info">
-          Постановщик:
-          <strong>
-            {{ creator.get_lastname()}} {{ creator.get_firstname()|first|upper }}.{{ creator.get_middlename()|first|upper }}.
-          </strong>
-        </li>
-        <li class="list-group-item list-group-item-info">
-          Исполнители:
-          <strong>
-            <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" multiple tabindex="-1" id="task-performers" name="performers">
-              {% for user in component.users %}
-                <option value="{{ user.get_id() }}"
-                        {% if user.get_id() in performers %}selected="selected" {% endif %}>{{ user.get_lastname() }} {{ user.get_firstname() }}
-                </option>
-              {% endfor %}
-            </select>
-          </strong>
-        </li>
-      </ul>
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-info">
+            Постановщик:
+            <strong>
+              {{ creator.get_lastname()}} {{ creator.get_firstname()|first|upper }}.{{ creator.get_middlename()|first|upper }}.
+            </strong>
+          </li>
+          <li class="list-group-item list-group-item-info">
+            Исполнители:
+            <strong>
+              <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" multiple tabindex="-1" id="task-performers" name="performers">
+                {% for user in component.users %}
+                  <option value="{{ user.get_id() }}"
+                          {% if user.get_id() in performers %}selected="selected" {% endif %}>{{ user.get_lastname() }} {{ user.get_firstname() }}
+                  </option>
+                {% endfor %}
+              </select>
+            </strong>
+          </li>
+        </ul>
       </p>
     </div>
   </div>
