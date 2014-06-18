@@ -2,6 +2,9 @@
 
 class controller_task {
 
+  static $name = 'Задачи';
+  static $rules = [];
+
   public static function private_show_default_page(model_request $request){
     return true;
   }
