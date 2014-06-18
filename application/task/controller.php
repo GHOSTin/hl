@@ -18,11 +18,15 @@ class controller_task {
   public static function private_close_task(model_request $request){
     di::get('model_task')->close_task($request->GET('id'),
         $request->GET('reason'), $request->GET('rating'), (int) $request->GET('time_close'));
-    return true;
+    return ['tasks'=> di::get('mapper_task')->find_active_tasks()];
   }
 
   public static function private_show_active_tasks(model_request $request){
     return ['tasks' => di::get('mapper_task')->find_active_tasks()];
+  }
+
+  public static function private_show_finished_tasks(model_request $request){
+    return ['tasks' => di::get('mapper_task')->find_finished_tasks()];
   }
 
   public static function private_get_task_content(model_request $request){

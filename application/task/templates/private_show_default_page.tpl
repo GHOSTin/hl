@@ -2,16 +2,10 @@
 {% block component %}
   <div>
     <p>
-    <div class="btn-group">
-      <a type="button" class="btn btn-default active" id="get_active_tasks" href="#">Текущие задачи</a>
-      <a type="button" class="btn btn-default get_finished_tasks" href="#">Законченные задачи</a>
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-default" id="get_active_tasks"><input type="radio" name="options" id="option1">Текущие задачи</label>
+      <label class="btn btn-default" id="get_finished_tasks"><input type="radio" name="options" id="option2">Законченные задачи</label>
     </div>
-    </p>
-    <p>
-      <a class="btn btn-success get_dialog_create_task">
-        <span class="glyphicon glyphicon-plus"></span>
-        Добавить задачу
-      </a>
     </p>
   </div>
   <div class="row">

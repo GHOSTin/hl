@@ -16,7 +16,15 @@
             <span class="hidden-xs hidden-sm">с {{ open_date }} по {{ close_date }}</span>
           </p>
         </div>
-        {% if task.get_creator().get_id() == user.get_id() %}
+        {% if task.get_status() == 'close' %}
+        <p class="navbar-text navbar-right text-right task_rating">
+          Оценка:
+          {% for i in 0..4 %}
+            <label {% if loop.index0 <= task.get_rating() %}class="color-star"{% endif %}></label>
+          {% endfor %}
+        </p>
+        {% endif %}
+        {% if task.get_creator().get_id() == user.get_id() and task.get_status() != 'close' %}
           <form class="navbar-form text-center">
             <button type="button" class="btn btn-default" id="task_edit">
               <i class="glyphicon glyphicon-edit"></i> Редактировать
@@ -29,6 +37,12 @@
       </div>
     </nav>
     <div class="col-xs-12">
+      <p>
+        <strong>Дата закрытия:</strong> {{ task.get_close_time()|date('d.m.Y') }}
+      </p>
+      <p>
+        <strong>Причина закрытия:</strong> {{ task.get_reason() }}
+      </p>
       <p id="task_description">{{ task.get_description()|nl2br }}</p>
       <p>
         <ul class="list-group">
@@ -56,6 +70,7 @@
 {% block js %}
   $('#task_content').find('section').html(get_hidden_content());
 
+  {% if task.get_status() != 'close' %}
   $(document).on('click', '#task_edit', function(){
     var link = location.hash.replace('#', '');
     if(link)
@@ -72,4 +87,5 @@
       init_content(r);
     });
   });
+  {% endif %}
 {% endblock %}

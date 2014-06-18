@@ -64,3 +64,17 @@
 .well.bg-info{
     background-color: #d9edf7;
 }
+
+.task_rating label{
+    width: 22px;
+    height: 20px;
+    background: url('/templates/default/images/ico-s71a7fdede6.png') no-repeat;
+    background-size: cover;
+    -webkit-background-size: cover;
+    -o-background-size: cover;
+    -moz-background-size: cover;
+    margin: -5px 0 0;
+}
+.task_rating label.color-star{
+    background-position: 0 -21.5px;
+}
