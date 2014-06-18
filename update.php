@@ -15,4 +15,9 @@ $pdo->exec("
   `reason` varchar(255) DEFAULT NULL,
   `status` enum('open','close','reopen') DEFAULT 'open'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  CREATE TABLE IF NOT EXISTS `user2task` (
+    `task_id` bigint(14) NOT NULL,
+    `user_id` int(8) NOT NULL,
+    `user_type` enum('creator','performer') NOT NULL DEFAULT 'performer'
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ");
