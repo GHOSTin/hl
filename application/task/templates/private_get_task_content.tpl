@@ -37,7 +37,7 @@
         <p>
           <strong>Причина закрытия:</strong> {{ task.get_reason() }}
         </p>
-        <p class="navbar-text navbar-right task_rating">
+        <p class="task_rating">
           <strong>Оценка:</strong>
           {% for i in 0..4 %}
             <label {% if loop.index0 <= task.get_rating() %}class="color-star"{% endif %}></label>

@@ -11,16 +11,16 @@
   <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container-fluid">
-        <div class="navbar-header">
-          <form class="navbar-form pull-right">
-            <input type="text" class="form-control task_time_target" value="{{ close_date }}" readonly="true">
-          </form>
+        <div class="navbar-header col-sm-12 col-lg-7">
           <p class="navbar-text">
             <span class="visible-xs visible-sm text-center">{{ open_date }} -</span>
             <span class="hidden-xs hidden-sm">
               Выполняется с {{ open_date }} по
             </span>
           </p>
+          <form class="navbar-form pull-left">
+            <input type="text" class="form-control task_time_target" value="{{ close_date }}" readonly="true">
+          </form>
         </div>
         <form class="navbar-form text-center">
           <button type="button" class="btn btn-default" id="task_save">
