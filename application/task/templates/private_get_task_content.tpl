@@ -8,7 +8,8 @@
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a href="#" class="btn btn-default navbar-btn pull-left visible-xs visible-sm">
+          <a href="#" class="btn btn-default navbar-btn pull-left visible-xs visible-sm"
+             style="margin: 10px 0 0 10px!important;">
             <i class="glyphicon glyphicon-chevron-left"></i>
           </a>
           <p class="navbar-text">
@@ -16,14 +17,6 @@
             <span class="hidden-xs hidden-sm">с {{ open_date }} по {{ close_date }}</span>
           </p>
         </div>
-        {% if task.get_status() == 'close' %}
-        <p class="navbar-text navbar-right text-right task_rating">
-          Оценка:
-          {% for i in 0..4 %}
-            <label {% if loop.index0 <= task.get_rating() %}class="color-star"{% endif %}></label>
-          {% endfor %}
-        </p>
-        {% endif %}
         {% if task.get_creator().get_id() == user.get_id() and task.get_status() != 'close' %}
           <form class="navbar-form text-center">
             <button type="button" class="btn btn-default" id="task_edit">
@@ -37,12 +30,20 @@
       </div>
     </nav>
     <div class="col-xs-12">
-      <p>
-        <strong>Дата закрытия:</strong> {{ task.get_close_time()|date('d.m.Y') }}
-      </p>
-      <p>
-        <strong>Причина закрытия:</strong> {{ task.get_reason() }}
-      </p>
+      {% if task.get_status() == 'close' %}
+        <p>
+          <strong>Дата закрытия:</strong> {{ task.get_close_time()|date('d.m.Y') }}
+        </p>
+        <p>
+          <strong>Причина закрытия:</strong> {{ task.get_reason() }}
+        </p>
+        <p class="navbar-text navbar-right task_rating">
+          <strong>Оценка:</strong>
+          {% for i in 0..4 %}
+            <label {% if loop.index0 <= task.get_rating() %}class="color-star"{% endif %}></label>
+          {% endfor %}
+        </p>
+      {% endif %}
       <p id="task_description">{{ task.get_description()|nl2br }}</p>
       <p>
         <ul class="list-group">
