@@ -7,8 +7,8 @@
   <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
       <div class="container-fluid">
-        <div class="navbar-header">
-          <a href="#" class="btn btn-default navbar-btn pull-left visible-xs visible-sm"
+        <div class="navbar-header col-sm-12 col-lg-7">
+          <a href="#" class="btn btn-default navbar-btn pull-left visible-xs"
              style="margin: 10px 0 0 10px!important;">
             <i class="glyphicon glyphicon-chevron-left"></i>
           </a>
