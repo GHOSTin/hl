@@ -9,8 +9,8 @@ $pdo->exec("
   `id` bigint(14) NOT NULL,
   `description` varchar(255) NOT NULL,
   `time_open` int(16) NOT NULL,
-  `time_close` int(16) NOT NULL,
-  `time_target` int(16) DEFAULT NULL,
+  `time_close` int(16) DEFAULT NULL,
+  `time_target` int(16) NOT NULL,
   `rating` int(5) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `status` enum('open','close','reopen') DEFAULT 'open'
