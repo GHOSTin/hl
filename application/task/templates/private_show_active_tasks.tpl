@@ -27,6 +27,7 @@
             {{ number }}{% if days != 0 %}{{ days }}<small>дней</small>
             {% else %}{{ hours }}<small>часов</small>{% endif %}
           </span>
+          <span class="glyphicon glyphicon-comment task-comment">{{ task.get_comments()|length }}</span>
         </div>
         <div class="media-body">
           <h5 class="list-group-item-heading media-heading"><strong>{{ task.get_description()|nl2br }}</strong></h5>

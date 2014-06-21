@@ -49,4 +49,9 @@ class controller_task {
   public static function private_get_dialog_close_task(model_request $request){
     return ['task'=> di::get('mapper_task')->find($request->GET('id'))];
   }
+
+  public static function private_send_task_comment(model_request $request){
+    di::get('model_task')->add_comment($request->GET('id'), $request->GET('message'));
+    return ['comments'=> di::get('mapper_task2comment')->find_all($request->GET('id'))];
+  }
 }

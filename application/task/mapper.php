@@ -64,7 +64,9 @@ class mapper_task extends mapper{
         else
           $data['performers'][] = $user_model->get_user($users_id[$key]);
       }
-      $tasks[] = $task_factory->build($data);
+      $task = $task_factory->build($data);
+      $task->set_comments(di::get('mapper_task2comment')->find_all($row['id']));
+      $tasks[] = $task;
     }
     return $tasks;
   }
@@ -89,7 +91,9 @@ class mapper_task extends mapper{
         else
           $data['performers'][] = $user_model->get_user($users_id[$key]);
       }
-      $tasks[] = $task_factory->build($data);
+      $task = $task_factory->build($data);
+      $task->set_comments(di::get('mapper_task2comment')->find_all($row['id']));
+      $tasks[] = $task;
     }
     return $tasks;
   }
@@ -116,6 +120,7 @@ class mapper_task extends mapper{
         $data['performers'][] = $user_model->get_user($users_id[$key]);
     }
     $task = $task_factory->build($data);
+    $task->set_comments(di::get('mapper_task2comment')->find_all($row['id']));
     return $task;
   }
 
