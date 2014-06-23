@@ -42,6 +42,7 @@
     <script src="/templates/default/js/backbone.marionette.js"></script>
     <script src="/templates/default/js/bootstrap.min.js"></script>
     <script src="/templates/default/js/twig.js"></script>
+    <script src="/templates/default/js/jBootValidator.js"></script>
     {% if user is not empty %}
 	    <script src="/templates/default/js/socket.io.js"></script>
 	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>

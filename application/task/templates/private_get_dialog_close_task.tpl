@@ -2,9 +2,10 @@
 {% set task = component.task %}
 {% block title %}Задача "{{ task.get_description()[:15] }}..." от {{ task.get_time_open()|date('d.m.Y') }}{% endblock title %}
 {% block dialog %}
+<form role="form">
   <div class="form-group">
     <label for="task-reason">Причина закрытия</label>
-    <textarea type="text" name="reason" id="task-reason"
+    <textarea type="text" name="reason" id="task-reason" tabindex="1" autofocus required
               class="form-control" placeholder="Причина закрытия задачи. Например 'Выполнена в срок.'" rows="5">
     </textarea>
   </div>
@@ -12,7 +13,7 @@
     <label for="task-rating" style="display: block;">Оценка выполнения</label>
     <!--[if lte IE 7]><style>#reviewStars-input{display:none}</style><![endif]-->
 
-    <div id="reviewStars-input">
+    <div id="reviewStars-input" tabindex="2">
       <input id="star-4" type="radio" name="task-rating">
       <label title="отлично" for="star-4"></label>
 
@@ -32,10 +33,11 @@
   <div class="form-group">
     <label for="task-time_target">Дата закрытия</label>
     <div class="input-group date">
-      <input type="text" class="form-control" id="task-time_close" readonly="true">
+      <input type="text" class="form-control" id="task-time_close" readonly="true" tabindex="3" required>
       <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>
   </div>
+</form>
 {% endblock dialog %}
 {% block buttons %}
   <div class="btn btn-default close_task">Закрыть задачу</div>
@@ -50,15 +52,17 @@
     autoclose: true,
     todayHighlight: true
   }).datepicker('update', new Date());
+  $('form').jBootValidator({validateOnSubmit: true});
   $('.close_task').click(function(){
-    $.get('close_task',{
-      id: {{ task.get_id() }},
-      reason: $('#task-reason').val(),
-      rating: $('[name="task-rating"]:checked').attr('id'),
-      time_close: $('.input-group.date').datepicker('getDate').getTime()/1000
-      },function(r){
-        init_content(r);
-        $('.dialog').modal('hide');
-    });
+    if ($('form').find('.form-group.has-error').length == 0)
+      $.get('close_task',{
+        id: {{ task.get_id() }},
+        reason: $('#task-reason').val(),
+        rating: $('[name="task-rating"]:checked').attr('id'),
+        time_close: $('.input-group.date').datepicker('getDate').getTime()/1000
+        },function(r){
+          init_content(r);
+          $('.dialog').modal('hide');
+      });
   });
 {% endblock script %}
