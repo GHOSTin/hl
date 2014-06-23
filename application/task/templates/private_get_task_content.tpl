@@ -3,6 +3,10 @@
 {% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set close_date = task.get_time_target()|date('d.m.Y') %}
+{% macro declension(number, forms) %}
+  {% set cases = [2, 0, 1, 1, 1, 2] %}
+  {{ number }} {{ forms[ ( number%100>4 and number%100<20)? 2 : cases[min(number%10, 5)] ] }}
+{% endmacro %}
 {% block html %}
   <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -66,13 +70,32 @@
         </ul>
       </p>
     </div>
+    <div class="col-xs-12" id="comments">
+      <p class="bg-info"><strong>{{ _self.declension(task.get_comments()|length, ['комментарий','комментария','комментариев']) }}</strong></p>
+      <div id="comments_messages">
+        {% for comment in task.get_comments() %}
+          {% include '@task/task_comment.tpl' with {'comment': comment} %}
+        {% endfor %}
+      </div>
+      {% if task.get_status() != 'close' %}
+      <p>
+        <textarea name="message" class="form-control" rows="2" id="comment_message"></textarea>
+      </p>
+      <p>
+        <input class="btn btn-primary send_comment" value="Отправить">
+      </p>
+      {% endif %}
+    </div>
   </div>
 {% endblock %}
 {% block js %}
   $('#task_content').find('section').html(get_hidden_content());
 
   {% if task.get_status() != 'close' %}
-  $(document).on('click', '#task_edit', function(){
+  $(document).off('click.Comment')
+    .off('click.EditTask')
+    .off('click.CloseTask');
+  $(document).on('click.EditTask', '#task_edit', function(){
     var link = location.hash.replace('#', '');
     if(link)
       $.get('edit_task_content', {
@@ -81,12 +104,21 @@
         init_content(r);
       });
   });
-  $(document).on('click', '#get_dialog_close_task', function(){
+  $(document).on('click.CloseTask', '#get_dialog_close_task', function(){
     $.get('get_dialog_close_task', {
       id: $('div#task').attr('data-id')
     },function(r){
       init_content(r);
     });
+  });
+  $(document).on('click.Comment', '.send_comment', function(){
+    if($('#comment_message').val() != '')
+      $.get('send_task_comment', {
+        id: $('div#task').attr('data-id'),
+        message: $('#comment_message').val()
+      },function(r){
+        init_content(r);
+      });
   });
   {% endif %}
 {% endblock %}

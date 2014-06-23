@@ -43,7 +43,6 @@ class model_task {
   }
 
   public function close_task($id, $reason, $rating, $time_close){
-    var_dump($id);
     $pdo = di::get('pdo');
     $pdo->beginTransaction();
     $mapper = di::get('mapper_task');
@@ -53,6 +52,15 @@ class model_task {
     $task->set_time_close($time_close);
     $task->set_status('close');
     $mapper->update($task);
+    $pdo->commit();
+    return true;
+  }
+
+  public function add_comment($task_id, $message){
+    $pdo = di::get('pdo');
+    $pdo->beginTransaction();
+    $mapper = di::get('mapper_task2comment');
+    $mapper->insert($task_id, $message);
     $pdo->commit();
     return true;
   }

@@ -141,6 +141,10 @@ class model_environment{
 			return new factory_task();
 		};
 
+    $pimple['factory_task2comment'] = function($p){
+			return new factory_task2comment();
+		};
+
 		$pimple['mapper_number'] = function($p){
 			return new mapper_number($p['pdo'], $p['company']);
 		};
@@ -227,6 +231,10 @@ class model_environment{
 
     $pimple['mapper_user2task'] = function($p){
 			return new mapper_user2task($p['pdo']);
+		};
+
+    $pimple['mapper_task2comment'] = function($p){
+			return new mapper_task2comment($p['pdo']);
 		};
 
 		$pimple['model_number'] = function($p){
