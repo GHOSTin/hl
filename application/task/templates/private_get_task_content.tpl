@@ -34,6 +34,7 @@
       </div>
     </nav>
     <div class="col-xs-12">
+      <p id="task_description">{{ task.get_description()|nl2br }}</p>
       {% if task.get_status() == 'close' %}
         <p>
           <strong>Дата закрытия:</strong> {{ task.get_close_time()|date('d.m.Y') }}
@@ -48,7 +49,6 @@
           {% endfor %}
         </p>
       {% endif %}
-      <p id="task_description">{{ task.get_description()|nl2br }}</p>
       <p>
         <ul class="list-group">
           <li class="list-group-item list-group-item-info">

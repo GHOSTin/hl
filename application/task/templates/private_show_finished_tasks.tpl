@@ -9,6 +9,7 @@
           <span class="label label-success media-object task-media">
             <i class="glyphicon glyphicon-lock"></i>
           </span>
+          <span class="glyphicon glyphicon-comment task-comment">{{ task.get_comments()|length }}</span>
         </div>
         <div class="media-body">
           <h5 class="list-group-item-heading media-heading"><strong>{{ task.get_description()|nl2br }}</strong></h5>
