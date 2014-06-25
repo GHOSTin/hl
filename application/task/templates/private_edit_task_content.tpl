@@ -35,7 +35,7 @@
     </nav>
     <div class="col-xs-12">
       <textarea type="text" name="description" id="task-description"
-                class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description()|nl2br }}</textarea>
+                class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description() }}</textarea>
       {% if task.get_status() == 'close' %}
         <p>
           <strong>Дата закрытия:</strong>
@@ -44,7 +44,7 @@
         <p>
           <strong>Причина закрытия:</strong>
           <textarea type="text" name="reason" id="task-reason"
-                    class="form-control" placeholder="Причина закрытия" rows="10">{{ task.get_reason()|nl2br }}</textarea>
+                    class="form-control" placeholder="Причина закрытия" rows="10">{{ task.get_reason() }}</textarea>
         </p>
         <p class="task_rating">
           <strong>Оценка:</strong>
