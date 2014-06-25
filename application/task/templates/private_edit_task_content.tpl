@@ -2,7 +2,8 @@
 {% set task = component.task %}
 {% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
-{% set close_date = task.get_time_target()|date('d.m.Y') %}
+{% set target_date = task.get_time_target()|date('d.m.Y') %}
+{% set close_date = task.get_time_close()|date('d.m.Y') %}
 {% set performers = [] %}
 {% for performer in task.get_performers() %}
   {% set performers = performers|merge([performer.get_id()]) %}
@@ -19,7 +20,7 @@
             </span>
           </p>
           <form class="navbar-form pull-left">
-            <input type="text" class="form-control task_time_target" value="{{ close_date }}" readonly="true">
+            <input type="text" class="form-control task_time_target" value="{{ target_date }}" readonly="true">
           </form>
         </div>
         <form class="navbar-form text-center">
@@ -34,7 +35,30 @@
     </nav>
     <div class="col-xs-12">
       <textarea type="text" name="description" id="task-description"
-                class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description() }}</textarea>
+                class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description()|nl2br }}</textarea>
+      {% if task.get_status() == 'close' %}
+        <p>
+          <strong>Дата закрытия:</strong>
+          <input type="text" class="form-control task_time_close" value="{{ close_date }}" readonly="true">
+        </p>
+        <p>
+          <strong>Причина закрытия:</strong>
+          <textarea type="text" name="reason" id="task-reason"
+                    class="form-control" placeholder="Причина закрытия" rows="10">{{ task.get_reason()|nl2br }}</textarea>
+        </p>
+        <p class="task_rating">
+          <strong>Оценка:</strong>
+          <!--[if lte IE 7]><style>#reviewStars-input{display:none}</style><![endif]-->
+
+          <div id="reviewStars-input" tabindex="2">
+          {% for i in 0..4 %}
+            <input id="star-{{ loop.revindex0 }}" type="radio" name="task-rating"
+              {% if loop.revindex0 == task.get_rating() %}checked {% endif %}>
+            <label for="star-{{ loop.revindex0 }}"></label>
+          {% endfor %}
+          </div>
+        </p>
+      {% endif %}
       <p>
         <ul class="list-group">
           <li class="list-group-item list-group-item-info">
@@ -65,7 +89,7 @@
 
   $(".chosen-select").chosen({width: '100%'});
 
-  $('.task_time_target').datepicker({
+  $('.task_time_target, .task_time_close').datepicker({
   format: "dd.mm.yyyy",
   startDate: "{{ open_date }}",
   weekStart: 1,
@@ -81,7 +105,13 @@
           id: $('div#task').attr('data-id'),
           description: $('#task-description').val(),
           performers: $('#task-performers').val(),
-          time_target: $('.task_time_target').datepicker('getDate').getTime()/1000
+          time_target: $('.task_time_target').datepicker('getDate').getTime()/1000,
+          status: "{{ task.get_status() }}",
+          {% if task.get_status() == 'close' %}
+            reason: $('#task-reason').val(),
+            rating: $('[name="task-rating"]:checked').attr('id'),
+            time_close: $('.task_time_close').datepicker('getDate').getTime()/1000,
+          {% endif %}
         },function(r) {
           init_content(r);
         });

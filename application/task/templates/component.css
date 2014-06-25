@@ -73,7 +73,8 @@
 }
 #task-time_close.form-control[readonly],
 #task-time_target.form-control[readonly],
-.form-control.task_time_target[readonly]{
+.form-control.task_time_target[readonly],
+.form-control.task_time_close[readonly]{
     display: inline-block;
     cursor: default;
     background-color: #fff;

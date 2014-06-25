@@ -22,7 +22,7 @@ class model_task {
     return $task;
   }
 
-  public function save_task($id, $description, $time_target, array $performers) {
+  public function save_task($id, $description, $time_target, array $performers,array $options) {
     $pdo = di::get('pdo');
     $pdo->beginTransaction();
     $mapper = di::get('mapper_task');
@@ -30,6 +30,11 @@ class model_task {
     $task = $mapper->find($id);
     $task->set_description($description);
     $task->set_time_target($time_target);
+    if($options['status'] == 'close'){
+      $task->set_reason($options['reason']);
+      $task->set_rating((int) substr($options['rating'], -1));
+      $task->set_time_close($options['time_close']);
+    }
     $task_performers = [];
     foreach($performers as $value){
       $user = di::get('model_user')->get_user($value);
