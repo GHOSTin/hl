@@ -41,9 +41,15 @@ class controller_task {
   }
 
   public static function private_save_task_content(model_request $request){
+    $options['status'] = $request->GET('status');
+    if ($request->GET('status') == 'close'){
+      $options['reason'] = $request->GET('reason');
+      $options['rating'] = $request->GET('rating');
+      $options['time_close'] = (int) $request->GET('time_close');
+    }
     $task = di::get('model_task')->save_task($request->GET('id'), $request->GET('description'),
-        (int) $request->GET('time_target'), $request->GET('performers'));
-    return ['task'=> $task, 'tasks'=> di::get('mapper_task')->find_active_tasks()];
+        (int) $request->GET('time_target'), $request->GET('performers'), $options);
+    return ['task'=> $task];
   }
 
   public static function private_get_dialog_close_task(model_request $request){
