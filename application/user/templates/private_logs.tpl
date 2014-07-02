@@ -9,7 +9,7 @@
         </tr>
         {% for session in sessions %}
         <tr>
-            <td>{{ session.get_time()|date('h:i d.m.Y') }}</td>
+            <td>{{ session.get_time()|date('H:i d.m.Y') }}</td>
             <td>{{ session.get_user().get_lastname() }} {{ session.get_user().get_firstname() }} {{ session.get_user().get_middlename() }}</td>
             <td>{{ session.get_ip() }}</td>
         </tr>
