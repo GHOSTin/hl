@@ -12,6 +12,8 @@ class mapper_session extends mapper{
   private static $insert = 'INSERT INTO `sessions_logs` (`user_id`, `time`, `ip`
     ) VALUES (:user_id, :time, :ip)';
 
+  private static $truncate = "TRUNCATE TABLE sessions_logs";
+
   public function find_all(){
     $stmt = $this->pdo->prepare(self::$find_all);
     if(!$stmt->execute())
@@ -36,6 +38,12 @@ class mapper_session extends mapper{
     $stmt->bindValue(':user_id', $session->get_user()->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':time', $session->get_time(), PDO::PARAM_INT);
     $stmt->bindValue(':ip', $session->get_ip(), PDO::PARAM_STR);
+    if(!$stmt->execute())
+      throw new RuntimeException();
+  }
+
+  public function truncate(){
+    $stmt = $this->pdo->prepare(self::$truncate);
     if(!$stmt->execute())
       throw new RuntimeException();
   }

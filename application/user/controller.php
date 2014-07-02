@@ -65,6 +65,11 @@ class controller_user{
     return true;
   }
 
+  public static function private_clear_logs(model_request $request){
+    di::get('mapper_session')->truncate();
+    return true;
+  }
+
   public static function private_exclude_user(model_request $request){
     $company = di::get('company');
     $group = (new model_group($company))
@@ -120,6 +125,10 @@ class controller_user{
   }
 
   public static function private_get_dialog_create_user(model_request $request){
+    return true;
+  }
+
+  public static function private_get_dialog_clear_logs(model_request $request){
     return true;
   }
 

@@ -238,6 +238,12 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+    //выводит диалог очистки логов
+    }).on('click', '.get_dialog_clear_logs', function(){
+        $.get('get_dialog_clear_logs', {
+            }, function(r){
+                init_content(r);
+        });
     });
 });
 
