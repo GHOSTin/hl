@@ -6,11 +6,11 @@ class mapper_task extends mapper{
     FROM tasks WHERE id > :id";
 
   private static $insert = "INSERT INTO tasks
-    SET id = :id, description = :description, time_open = :time_open, time_close = :time_close,
-    time_target = :time_target, rating = :rating, reason = :reason, status = :status";
+    SET id = :id, title = :title, description = :description, time_open = :time_open,
+    time_close = :time_close, time_target = :time_target, rating = :rating, reason = :reason, status = :status";
 
   private static $update = "UPDATE tasks
-    SET description = :description, time_open = :time_open, time_close = :time_close,
+    SET title = :title, description = :description, time_open = :time_open, time_close = :time_close,
     time_target = :time_target, rating = :rating, reason = :reason, status = :status
     WHERE id = :id";
 
@@ -53,7 +53,7 @@ class mapper_task extends mapper{
     $task_factory = di::get('factory_task');
     $user_model = di::get('model_user');
     while($row = $stmt->fetch()){
-      $data = ['id'=> $row['id'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
+      $data = ['id'=> $row['id'], 'title'=> $row['title'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
         'time_close'=>$row['time_close'], 'time_target'=>$row['time_target'], 'rating'=>$row['rating'],
         'reason'=>$row['reason'], 'status'=>$row['status']];
       $users_id = explode(',', $row['users_id']);
@@ -80,7 +80,7 @@ class mapper_task extends mapper{
     $task_factory = di::get('factory_task');
     $user_model = di::get('model_user');
     while($row = $stmt->fetch()){
-      $data = ['id'=> $row['id'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
+      $data = ['id'=> $row['id'], 'title'=> $row['title'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
         'time_close'=>$row['time_close'], 'time_target'=>$row['time_target'], 'rating'=>$row['rating'],
         'reason'=>$row['reason'], 'status'=>$row['status']];
       $users_id = explode(',', $row['users_id']);
@@ -108,7 +108,7 @@ class mapper_task extends mapper{
     $row = $stmt->fetch();
     $task_factory = di::get('factory_task');
     $user_model = di::get('model_user');
-    $data = ['id'=> $row['id'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
+    $data = ['id'=> $row['id'], 'title'=> $row['title'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
         'time_close'=>$row['time_close'], 'time_target'=>$row['time_target'], 'rating'=>$row['rating'],
         'reason'=>$row['reason'], 'status'=>$row['status']];
     $users_id = explode(',', $row['users_id']);
@@ -127,6 +127,7 @@ class mapper_task extends mapper{
   public function insert(data_task $task){
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':id', $task->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':title', $task->get_title(), PDO::PARAM_STR);
     $stmt->bindValue(':description', $task->get_description(), PDO::PARAM_STR);
     $stmt->bindValue(':time_open', $task->get_time_open(), PDO::PARAM_INT);
     $stmt->bindValue(':time_close', $task->get_time_close(), PDO::PARAM_INT);
@@ -141,6 +142,7 @@ class mapper_task extends mapper{
   public function update(data_task $task){
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':id', $task->get_id(), PDO::PARAM_INT);
+    $stmt->bindValue(':title', $task->get_title(), PDO::PARAM_STR);
     $stmt->bindValue(':description', $task->get_description(), PDO::PARAM_STR);
     $stmt->bindValue(':time_open', $task->get_time_open(), PDO::PARAM_INT);
     $stmt->bindValue(':time_close', $task->get_time_close(), PDO::PARAM_INT);

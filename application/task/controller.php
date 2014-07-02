@@ -14,7 +14,7 @@ class controller_task {
   }
 
   public static function private_add_task(model_request $request){
-    di::get('model_task')->add_task($request->GET('description'), (int) $request->GET('time_target'), $request->GET('performers'));
+    di::get('model_task')->add_task($request->GET('title'), $request->GET('description'), (int) $request->GET('time_target'), $request->GET('performers'));
     return ['tasks' => di::get('mapper_task')->find_active_tasks()];
   }
 
@@ -47,7 +47,7 @@ class controller_task {
       $options['rating'] = $request->GET('rating');
       $options['time_close'] = (int) $request->GET('time_close');
     }
-    $task = di::get('model_task')->save_task($request->GET('id'), $request->GET('description'),
+    $task = di::get('model_task')->save_task($request->GET('id'), $request->GET('title'), $request->GET('description'),
         (int) $request->GET('time_target'), $request->GET('performers'), $options);
     return ['task'=> $task];
   }

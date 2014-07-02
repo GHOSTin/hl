@@ -3,6 +3,7 @@
 class data_task {
 
   private $id;
+  private $title;
   private $description;
   private $time_open;
   private $time_close; //время выполнеия
@@ -13,6 +14,23 @@ class data_task {
   private $comments = [];
   private $reason;
   private $status;
+
+  /**
+   * @param mixed $title
+   */
+  public function set_title($title)
+  {
+    $this->title = $title;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function get_title()
+  {
+    return $this->title;
+  }
+
 
   /**
    * @param Integer $id

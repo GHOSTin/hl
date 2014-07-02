@@ -34,6 +34,9 @@
       </div>
     </nav>
     <div class="col-xs-12">
+      <p>
+        <input type="text" name="title" id="task-title" class="form-control" value="{{ task.get_title() }}">
+      </p>
       <textarea type="text" name="description" id="task-description"
                 class="form-control" placeholder="Что нужно сделать" rows="10">{{ task.get_description() }}</textarea>
       {% if task.get_status() == 'close' %}
@@ -103,6 +106,7 @@
     if(link)
       $.get('save_task_content', {
           id: $('div#task').attr('data-id'),
+          title: $('#task-title').val(),
           description: $('#task-description').val(),
           performers: $('#task-performers').val(),
           time_target: $('.task_time_target').datepicker('getDate').getTime()/1000,

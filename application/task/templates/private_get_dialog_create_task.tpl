@@ -3,15 +3,20 @@
 {% block dialog %}
 <form role="form">
   <div class="form-group">
+    <label for="task-title">Тема</label>
+    <input type="text" name="title" id="task-title" tabindex="1" autofocus
+              class="form-control" placeholder="Что нужно сделать" required>
+  </div>
+  <div class="form-group">
     <label for="task-description">Задача</label>
-    <textarea type="text" name="description" id="task-description" tabindex="1" autofocus
+    <textarea type="text" name="description" id="task-description" tabindex="2"
               class="form-control" placeholder="Что нужно сделать" rows="5" required>
     </textarea>
   </div>
   <div class="form-group">
     <label for="task-performers">Исполнители</label>
     <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" aria-required="true"
-            multiple tabindex="2" id="task-performers" name="performers" required>
+            multiple tabindex="3" id="task-performers" name="performers" required>
       {% for user in component.users %}
         <option value="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }}</option>
       {% endfor %}
@@ -20,7 +25,7 @@
   <div class="form-group">
     <label for="task-time_close">Крайний срок</label>
     <div class="input-group date">
-      <input type="text" class="form-control" id="task-time_target" readonly="true" tabindex="3" required>
+      <input type="text" class="form-control" id="task-time_target" readonly="true" tabindex="4" required>
       <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>
   </div>
@@ -44,6 +49,7 @@
   $('.add_task').click(function(){
     if ($('form').find('.form-group.has-error').length == 0)
       $.get('add_task',{
+        title: $('#task-title').val(),
         description: $('#task-description').val(),
         performers: $('#task-performers').val(),
         time_target: $('.input-group.date').datepicker('getDate').getTime()/1000

@@ -28,7 +28,7 @@
       <span class="glyphicon glyphicon-comment task-comment">{{ task.get_comments()|length }}</span>
     </div>
     <div class="media-body">
-      <h5 class="list-group-item-heading media-heading"><strong>{{ task.get_description()|nl2br }}</strong></h5>
+      <h5 class="list-group-item-heading media-heading"><strong>{{ task.get_title()|nl2br }}</strong></h5>
       {% set creator = task.get_creator() %}
       <p class="list-group-item-text">
         <i class="glyphicon glyphicon-user" style="font-size: 20px;"></i>

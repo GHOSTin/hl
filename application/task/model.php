@@ -2,13 +2,13 @@
 
 class model_task {
 
-  public function add_task($description, $time_target, array $performers){
+  public function add_task($title, $description, $time_target, array $performers){
     $pdo = di::get('pdo');
     $pdo->beginTransaction();
     $mapper = di::get('mapper_task');
     $model_user = di::get('model_user2task');
     $id = $mapper->get_insert_id();
-    $data = ['id'=> $id, 'description'=> $description, 'time_open'=> time(), 'creator'=> di::get('user'),
+    $data = ['id'=> $id, 'title'=> $title, 'description'=> $description, 'time_open'=> time(), 'creator'=> di::get('user'),
       'time_target'=> $time_target, 'time_close'=> null, 'rating'=> 0, 'reason'=> null, 'status'=> 'open'];
     $data['performers'] = [];
     foreach($performers as $value){
@@ -22,12 +22,13 @@ class model_task {
     return $task;
   }
 
-  public function save_task($id, $description, $time_target, array $performers,array $options) {
+  public function save_task($id, $title, $description, $time_target, array $performers,array $options) {
     $pdo = di::get('pdo');
     $pdo->beginTransaction();
     $mapper = di::get('mapper_task');
     $model_user = di::get('model_user2task');
     $task = $mapper->find($id);
+    $task->set_title($title);
     $task->set_description($description);
     $task->set_time_target($time_target);
     if($options['status'] == 'close'){

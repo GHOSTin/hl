@@ -33,6 +33,7 @@
     </div>
   </nav>
   <div class="col-xs-12">
+    <p><strong>{{ task.get_title()|nl2br }}</strong></p>
     <p id="task_description">{{ task.get_description()|nl2br }}</p>
     {% if task.get_status() == 'close' %}
       <p>
