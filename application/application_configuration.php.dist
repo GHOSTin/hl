@@ -1,0 +1,22 @@
+<?php
+
+class application_configuration{
+
+	const templateName = 'default';
+	// database option
+	const database_name 		= '';
+	const database_host 		= 'localhost';
+	const database_user 		= '';
+	const database_password 	= '';
+	// auth option
+	const authSalt 			= '1234567890';
+	//chat
+	const chat_enable = false;
+	const chat_host = '';
+	const chat_port = 0;
+	// twig
+	const twig_reload_template = true;
+	const twig_cache = '/cache';
+	// php
+	const php_timezone = 'Asia/Yekaterinburg';
+}
