@@ -1,0 +1,15 @@
+{
+    "name": "mlsco/mshc2",
+    "description": "Система управления жилфондом",
+    "minimum-stability": "dev",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "mlsco",
+            "email": "nekrasov@mlsco.ru"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "4.1.3"
+    }
+}
