@@ -29,6 +29,7 @@ require_once(ROOT.'/application/accrual/data.php');
 require_once(ROOT.'/application/number2meter/data.php');
 require_once(ROOT.'/application/number2processing_center/data.php');
 require_once(ROOT.'/application/house2processing_center/data.php');
+require_once(ROOT.'/application/task/data.php');
 # mapa
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');
@@ -40,6 +41,9 @@ require_once(ROOT.'/application/query2comment/mapper.php');
 require_once(ROOT.'/application/query2work/mapper.php');
 require_once(ROOT.'/application/street2house/mapper.php');
 require_once(ROOT.'/application/accrual/mapper.php');
+require_once(ROOT.'/application/task/mapper.php');
+require_once(ROOT.'/application/task2comment/mapper.php');
+require_once(ROOT.'/application/user2task/mapper.php');
 # model
 require_once(ROOT.'/application/user/model.php');
 require_once(ROOT.'/application/number/model.php');
@@ -53,6 +57,8 @@ require_once(ROOT.'/application/street/model.php');
 require_once(ROOT.'/application/house/model.php');
 require_once(ROOT.'/application/query_work_type/model.php');
 require_once(ROOT.'/application/street2house/model.php');
+require_once(ROOT.'/application/task/model.php');
+require_once(ROOT.'/application/user2task/model.php');
 # verify
 require_once(ROOT.'/application/house/verify.php');
 require_once(ROOT.'/application/flat/verify.php');
@@ -79,8 +85,10 @@ require_once(ROOT.'/application/user/factory.php');
 require_once(ROOT.'/application/query2comment/factory.php');
 require_once(ROOT.'/application/work/factory.php');
 require_once(ROOT.'/application/accrual/factory.php');
+require_once(ROOT.'/application/task/factory.php');
 # controllers
 require_once(ROOT.'/application/query/controller.php');
+require_once(ROOT.'/application/task/controller.php');
 
 class pdo_mock extends PDO{
 
