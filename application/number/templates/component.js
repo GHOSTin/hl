@@ -26,16 +26,20 @@ $(document).ready(function(){
     };
 
     $(document).on('click', '#filter-numbers span a.close', function(){
+        console.log(1);
         switch(true){
             case $(this).closest('.label').hasClass('street'):
+                $('.get_street_content').siblings('.houses').remove();
                 remove_badges('street');
                 scrollTo($('body'));
                 break;
             case $(this).closest('.label').hasClass('house'):
+                $('.get_house_content').siblings('.house-content').remove();
                 remove_badges('house');
                 scrollTo($('ul.streets > li.street.active'));
                 break;
             case $(this).closest('.label').hasClass('flat'):
+                $('.get_number_content').siblings('.number-content').remove();
                 remove_badges('flat');
                 scrollTo($('ul.houses > li.house.active'));
                 break;

@@ -30,6 +30,12 @@
     border: none;
 }
 
+.streets.nav>li>a,
+.houses.nav>li>a,
+.numbers.nav>li>a{
+    padding: 5px 15px;
+}
+
 .houses{
     margin: 0 0 10px 25px;
 }
