@@ -185,7 +185,7 @@ $(document).on('keypress', '.chat.active textarea',function (event) {
     var keyCode = (event.which ? event.which : event.keyCode);
 
     if (keyCode === 10 || keyCode == 13 && event.ctrlKey) {
-        $(this).parent().submit();
+        $('.chat.active').find('form.message').submit();
     }
 });
 /**
