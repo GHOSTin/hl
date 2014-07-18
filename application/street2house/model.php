@@ -13,7 +13,7 @@ class model_street2house{
     if(!is_null($mapper->find_by_number($this->street, $house_number)))
       throw new RuntimeException();
     $h_array = ['id' => $mapper->get_insert_id(), 'number' => $house_number,
-    'street' => $this->street];
+    'street' => $this->street, 'status' => 'true'];
     $house = di::get('factory_house')->build($h_array);
     return $mapper->insert($this->street, $house);
   }
@@ -28,6 +28,9 @@ class model_street2house{
   public function get_house_by_number($number){
     $house = di::get('mapper_street2house')
       ->find_by_number($this->street, $number);
+
+    var_dump($house);
+    exit();
     if(!($house instanceof data_house))
       throw new RuntimeException();
     return $house;
