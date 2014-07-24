@@ -11,9 +11,11 @@ class data_accrual{
   private $odn;
   private $sum_odn;
   private $sum_ind;
+  private $sum_total;
   private $recalculation;
   private $facilities;
   private $total;
+  private $unit;
 
   public function get_company(){
     return $this->company;
@@ -72,7 +74,7 @@ class data_accrual{
   }
 
   public function set_time($time){
-    $this->time = $time;
+    $this->time = strtotime('first day of this month + 12 hours', $time);
   }
 
   public function set_service($service){
@@ -99,6 +101,10 @@ class data_accrual{
     $this->sum_odn = $sum_odn;
   }
 
+  public function set_sum_total($sum_total){
+    $this->sum_total = $sum_total;
+  }
+
   public function set_recalculation($recalculation){
     $this->recalculation = $recalculation;
   }
@@ -109,5 +115,9 @@ class data_accrual{
 
   public function set_total($total){
     $this->total = $total;
+  }
+
+  public function set_unit($unit){
+    $this->unit = $unit;
   }
 }

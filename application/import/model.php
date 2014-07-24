@@ -13,43 +13,39 @@ class model_import{
 		set_time_limit(0);
 		if(!file_exists($file))
 			throw new RuntimeException();
-		$numbers = [];
 		$no_numbers = [];
 		$hndl = fopen($file, 'r');
 		$pdo = di::get('pdo');
 		$pdo->beginTransaction();
-		$time = strtotime($time, '+12 hours');
+		$no_numbers = [];
 		while($row = fgetcsv($hndl, 0, ';')){
-			if(count($row) !== 10)
+			if(count($row) !== 12)
 				throw new RuntimeException();
 			$num = trim($row[0]);
-			if(!isset($numbers[$num])){
-				$number = di::get('mapper_number')->find_by_number($num);
-				if(!is_null($number))
-					$numbers[$number->get_number()] = $number;
-				else
-					$old_numbers[] = $num;
-			}else
-				$number = $numbers[$num];
+			$number = di::get('mapper_number')->find_by_number($num);
 			if(!is_null($number)){
 				$ac['number'] = $number;
 				$ac['company'] = $this->company;
-				$ac['service'] = $row[1];
-				$ac['tarif'] = $row[2];
-				$ac['ind'] = $row[3];
-				$ac['odn'] = $row[4];
-				$ac['sum_ind'] = $row[5];
-				$ac['sum_odn'] = $row[6];
-				$ac['recalculation'] = $row[7];
-				$ac['facilities'] = $row[8];
-				$ac['total'] = $row[9];
+				$ac['service'] = trim($row[1]);
+				$ac['unit'] = trim($row[2]);
+				$ac['tarif'] = trim($row[3]);
+				$ac['ind'] = trim($row[4]);
+				$ac['odn'] = trim($row[5]);
+				$ac['sum_ind'] = trim($row[6]);
+				$ac['sum_odn'] = trim($row[7]);
+				$ac['sum_total'] = trim($row[8]);
+				$ac['facilities'] = trim($row[9]);
+				$ac['recalculation'] = trim($row[10]);
+				$ac['total'] = trim($row[11]);
 				$ac['time'] = $time;
 				$accrual = di::get('factory_accrual')->build($ac);
 				di::get('mapper_accrual')->insert($accrual);
-			}
+			}else
+				$no_numbers[$num] = $num;
 		}
 		$pdo->commit();
 		fclose($hndl);
+		return $no_numbers;
 	}
 
 	public function analize_import_statements($time, $file){
@@ -63,8 +59,6 @@ class model_import{
 		$pdo->beginTransaction();
 		$time = strtotime($time, '+12 hours');
 		while($row = fgetcsv($hndl, 0, ';')){
-			var_dump($row);
-			exit();
 			if(count($row) !== 10)
 				throw new RuntimeException();
 			$num = trim($row[0]);

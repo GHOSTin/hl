@@ -8,11 +8,13 @@ class factory_accrual{
     $accrual->set_number($row['number']);
     $accrual->set_time($row['time']);
     $accrual->set_service($row['service']);
+    $accrual->set_unit($row['unit']);
     $accrual->set_tarif($row['tarif']);
     $accrual->set_ind($row['ind']);
     $accrual->set_odn($row['odn']);
     $accrual->set_sum_ind($row['sum_ind']);
     $accrual->set_sum_odn($row['sum_odn']);
+    $accrual->set_sum_total($row['sum_total']);
     $accrual->set_recalculation($row['recalculation']);
     $accrual->set_facilities($row['facilities']);
     $accrual->set_total($row['total']);

@@ -84,10 +84,10 @@ class controller_import{
   public static function private_import_accruals(model_request $request){
     try{
       $file = $request->FILES('file')['tmp_name'];
-      di::get('model_import')
-        ->analize_import_accruals($request->GET('date'), $file);
-      return 'Успешно';
+      return implode(';', di::get('model_import')
+        ->analize_import_accruals($request->GET('date'), $file));
     }catch(Exception $e){
+      die($e);
       return 'Проблема';
     }
   }
