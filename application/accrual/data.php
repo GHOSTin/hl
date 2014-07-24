@@ -49,6 +49,10 @@ class data_accrual{
     return $this->sum_ind;
   }
 
+  public function get_sum_total(){
+    return $this->sum_total;
+  }
+
   public function get_sum_odn(){
     return $this->sum_odn;
   }
@@ -63,6 +67,10 @@ class data_accrual{
 
   public function get_total(){
     return $this->total;
+  }
+
+  public function get_unit(){
+    return $this->unit;
   }
 
   public function set_company(data_company $company){

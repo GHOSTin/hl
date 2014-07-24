@@ -18,6 +18,7 @@ class model_import{
 		$pdo = di::get('pdo');
 		$pdo->beginTransaction();
 		$no_numbers = [];
+		$time = strtotime($time, '+12 hours');
 		while($row = fgetcsv($hndl, 0, ';')){
 			if(count($row) !== 12)
 				throw new RuntimeException();
