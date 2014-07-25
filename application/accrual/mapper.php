@@ -2,6 +2,8 @@
 
 class mapper_accrual extends mapper{
 
+  private static $delete_all = 'DELETE FROM accruals WHERE time = :time';
+
   private static $find_all = "SELECT * FROM accruals
     WHERE company_id = :company_id AND number_id = :number_id ORDER BY time DESC";
 
@@ -11,6 +13,13 @@ class mapper_accrual extends mapper{
       sum_ind = :sum_ind, sum_odn = :sum_odn, sum_total = :sum_total,
       recalculation = :recalculation, facilities = :facilities,
       total = :total';
+
+  public function delete_all($time){
+    $stmt = $this->pdo->prepare(self::$delete_all);
+    $stmt->bindValue(':time', $time, PDO::PARAM_INT);
+    if(!$stmt->execute())
+      throw new RuntimeException();
+  }
 
   public function find_all(data_company $company, data_number $number){
     $stmt = $this->pdo->prepare(self::$find_all);

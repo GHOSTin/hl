@@ -35,6 +35,12 @@ $(document).ready(function(){
                 init_content(r);
             });
     });
+    $('body').on('click', '.get_dialog_delete_accruals', function(){
+        $.get('get_dialog_delete_accruals',{
+            },function(r){
+                init_content(r);
+            });
+    });
     $('body').on('click', '.get_dialog_import_statements', function(){
         $.get('get_dialog_import_statements',{
             },function(r){

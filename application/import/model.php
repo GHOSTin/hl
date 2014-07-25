@@ -49,6 +49,15 @@ class model_import{
 		return $no_numbers;
 	}
 
+	public function delete_accruals($time){
+		$pdo = di::get('pdo');
+		$pdo->beginTransaction();
+		$time = strtotime($time, '+12 hours');
+		$time = strtotime('first day of this month + 12 hours', $time);
+		di::get('mapper_accrual')->delete_all($time);
+		$pdo->commit();
+	}
+
 	public function analize_import_statements($time, $file){
 		set_time_limit(0);
 		if(!file_exists($file))

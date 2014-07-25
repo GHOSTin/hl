@@ -5,6 +5,11 @@ class controller_import{
 		return true;
 	}
 
+  public static function private_get_dialog_delete_accruals(
+      model_request $request){
+      return true;
+  }
+
   public static function private_get_dialog_import_accruals(
       model_request $request){
       return true;
@@ -87,7 +92,16 @@ class controller_import{
       return implode(';', di::get('model_import')
         ->analize_import_accruals($request->GET('date'), $file));
     }catch(Exception $e){
-      die($e);
+      return 'Проблема';
+    }
+  }
+
+  public static function private_delete_accruals(model_request $request){
+    try{
+      di::get('model_import')
+        ->delete_accruals($request->GET('month'));
+        return 'Все хорошо';
+    }catch(Exception $e){
       return 'Проблема';
     }
   }
