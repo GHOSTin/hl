@@ -1,4 +1,4 @@
-{% extends '../default/dialog.tpl' %}
+{% extends '../dialog.tpl' %}
 {% block title %}Смена пароля{% endblock title %}
 {% block dialog %}
 	<p>

@@ -1,4 +1,4 @@
-{% extends "../default/dialog.tpl" %}
+{% extends "../dialog.tpl" %}
 {% block title %}Смена номера сотового телефона{% endblock title %}
 {% block dialog %}
 		<input type="text" value="{{ user.cellphone }}" class="dialog-cellphone form-control">
