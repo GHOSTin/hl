@@ -1,45 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="mshc-client" default="main" basedir=".">
   <property name="BUILD_DIR" value="${user.home}/builds/" override="false"/>
+  <fileset id="app" dir="${project.basedir}">
+    <include name="**/**"/>
+    <exclude name="application/application_configuration.php"/>
+    <exclude name="build.xml"/>
+  </fileset>
+  <fileset id="php_files" dir="${project.basedir}">
+    <include name="**/*.php"/>
+    <include name="cache/**/*.php"/>
+  </fileset>
   <target name="main"  depends="phplint, phpunit, clean, tar">
-    <echo>Создание проекта</echo>
   </target>
   <target name="phplint">
-    <echo>phplint</echo>
     <phplint haltonfailure="true">
-      <fileset dir="${project.basedir}">
-        <include name="**/*.php"/>
-        <include name="cache/**/*.php"/>
-      </fileset>
+      <fileset refid="php_files" />
     </phplint>
   </target>
   <target name="phpunit">
-    <echo>Запуск юнит тестов</echo>
     <exec command="phpunit --bootstrap ./tests/autoload.php tests/" passthru="true" checkreturn="true" />
   </target>
-    <target name="clean">
-        <delete includeemptydirs="true" verbose="true" failonerror="true">
-            <fileset dir="${BUILD_DIR}">
-                <include name="mshc2.tar.gz" />
-            </fileset>
-        </delete>
-    </target>
-    <target name="tar">
-        <tar destfile="${BUILD_DIR}/mshc2.tar.gz" compression="gzip">
-            <fileset dir=".">
-                <include name="application/**"/>
-                <include name="framework/**"/>
-                <include name="libs/**"/>
-                <include name="scripts/**"/>
-                <include name="site/**"/>
-                <include name="templates/**"/>
-                <include name="cache/"/>
-                <include name="version"/>
-                <include name="install.php"/>
-                <include name="update.php"/>
-                <include name="version.php"/>
-                <exclude name="application/application_configuration.php"/>
-            </fileset>
-        </tar>
-    </target>
+  <target name="clean">
+    <delete includeemptydirs="true" verbose="true" failonerror="true">
+      <fileset dir="${BUILD_DIR}">
+        <include name="mshc.tar.gz" />
+      </fileset>
+    </delete>
+  </target>
+  <target name="tar">
+    <tar destfile="${BUILD_DIR}/mshc.tar.gz" compression="gzip">
+      <fileset refid="app" />
+    </tar>
+  </target>
 </project>

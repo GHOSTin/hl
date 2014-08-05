@@ -11,10 +11,11 @@ class mapper_accrual_Test extends PHPUnit_Framework_TestCase{
     };
     di::set_instance($pimple);
     $this->row = ['company' => new data_company(),
-      'number' => new data_number(), 'time' => 1396893600,
+      'number' => new data_number(), 'time' => 1396893600, 'unit' => 'м3',
       'service' => 'Утилизация', 'tarif' => 127.56, 'ind' => 127.56,
       'odn' => 127.56, 'sum_ind' => 127.56, 'sum_odn' => 127.56,
-      'recalculation' => 127.56, 'facilities' => 127.56, 'total' => 127.56];
+      'sum_total' => 40.7, 'recalculation' => 127.56, 'facilities' => 127.56,
+      'total' => 127.56];
   }
 
   public function test_find_all_1(){
