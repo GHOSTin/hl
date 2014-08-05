@@ -28,9 +28,6 @@ class model_street2house{
   public function get_house_by_number($number){
     $house = di::get('mapper_street2house')
       ->find_by_number($this->street, $number);
-
-    var_dump($house);
-    exit();
     if(!($house instanceof data_house))
       throw new RuntimeException();
     return $house;
