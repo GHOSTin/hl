@@ -4,17 +4,16 @@ class mapper_city2street{
   private $city;
   private $pdo;
 
-  private static $one = "SELECT `id`, `company_id`, `city_id`, `status`, `name`
-    FROM `streets` WHERE `city_id` = :city_id AND `id` = :street_id";
+  private static $one = "SELECT id, company_id, city_id, status, name
+    FROM streets WHERE city_id = :city_id AND id = :street_id";
 
-  private static $one_by_name = "SELECT `id`, `company_id`, `city_id`, `status`,
-   `name` FROM `streets` WHERE `city_id` = :city_id AND `name` = :name";
+  private static $one_by_name = "SELECT id, company_id, city_id, status,
+   name FROM streets WHERE city_id = :city_id AND name = :name";
 
-  private static $id = "SELECT MAX(`id`) as `max_street_id` FROM `streets`";
+  private static $id = "SELECT MAX(id) as max_street_id FROM streets";
 
-  private static $insert = "INSERT INTO `streets` (`id`, `company_id`,
-    `city_id`, `status`, `name`) VALUES
-    (:street_id, 2, :city_id, :status, :name)";
+  private static $insert = "INSERT INTO streets (id, company_id,
+    city_id, status, name) VALUES (:street_id, 2, :city_id, :status, :name)";
 
   public function __construct(data_city $city){
     $this->city = $city;

@@ -14,7 +14,6 @@ class verify_flat{
   */
   public static function verify_number($number){
     if(!preg_match('|^[0-9]{1,3}.{0,1}[0-9]{0,1}$|', $number)){
-      var_dump($number);
       throw new e_model('Номер квартиры задан не верно.');
     }
   }

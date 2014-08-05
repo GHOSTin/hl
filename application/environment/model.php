@@ -5,9 +5,6 @@ class model_environment{
 		'processing_center', 'import', 'meter', 'error', 'company', 'report',
 		'about', 'export', 'task'];
 
-	/*
-	* Возвращает содержимое страницы.
-	*/
 	public static function get_page_content(){
 		try{
 			session_start();
@@ -19,16 +16,7 @@ class model_environment{
 			$data = self::prepare_answer($controller, $component, $method, $request);
 			return self::render_template($component, $method, $data);
 		}catch(exception $e){
-			if(in_array(get_class($e), ['e_model', 'DomainException'], true)){
-				$args['error'] = $e;
-        if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']))
-            return load_template('error.show_ajax_error', $args);
-        else
-            return load_template('error.show_html_error', $args);
-			}else{
-				die($e);
-				die('Problem');
-			}
+			die($e);
 		}
 	}
 

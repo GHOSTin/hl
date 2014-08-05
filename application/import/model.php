@@ -161,32 +161,6 @@ class model_import{
 			'house' => $house, 'numbers' => $numbers];
 	}
 
-	/*
-	* Анализирует файт импорта лицевых счетов
-	*/
-	public function analize_import_meters($file){
-		$import = new data_import(ROOT.'/specifications/import_numbers.xml');
-
-		var_dump($import->get_street());
-		var_dump($import->get_city());
-		var_dump($import->get_house());
-
-		exit();
-		$house_node = $xml->attributes();
-		$city = (new model_city)->get_city_by_name((string) $house_node->city);
-		$street = (new model_city2street($city))
-			->get_street_by_name((string) $house_node->street);
-		$house = (new model_street2house($street))
-			->get_house_by_number((string) $house_node->number);
-		(new model_house2number(di::get('company'), $house))->init_numbers();
-		if(!empty($house->get_numbers))
-		return ['file' => $file, 'city' => $city, 'street' => $street,
-			'house' => $house, 'numbers' => $numbers];
-	}
-
-	/*
-	* Анализирует файт импорта лицевых счетов
-	*/
 	public function analize_import_street($file){
 		$import = new data_import($file['tmp_name']);
 		$city = $import->get_city();
