@@ -38,11 +38,7 @@ class model_environment{
 	}
 
 	public static function render_template($component, $method, $data){
-		$template = ROOT.'/application/'.$component.'/templates/'.$method.'.tpl';
-		if(file_exists($template))
-			return load_template($component.'.'.$method, $data);
-		else
-			return load_template('error.no_template', $data);
+		return load_template($component.'.'.$method, $data);
 	}
 
 	public static function init_profile($component){

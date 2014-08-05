@@ -9,8 +9,8 @@ else
 // автозагрузка классов
 function framework_autoload($class_name){
 	if(
-		(0 === strpos($class_name, 'model_')) 
-	 	OR (0 === strpos($class_name, 'view_')) 
+		(0 === strpos($class_name, 'model_'))
+	 	OR (0 === strpos($class_name, 'view_'))
 	 	OR (0 === strpos($class_name, 'controller_'))
 	 	OR (0 === strpos($class_name, 'data_'))
 	 	OR (0 === strpos($class_name, 'verify_'))
@@ -50,7 +50,7 @@ Twig_Autoloader::register();
 function load_template($name, array $args = []){
   $twig = di::get_instance()['twig'];
   list($component, $template) = explode('.', $name, 2);
-  $template_dir = ROOT.'/'.framework_configuration::application_folder.'/'.$component.'/templates/';
+  $template_dir = ROOT.'/templates/'.$component.'/';
   $loader = $twig->getLoader();
   $loader->prependPath($template_dir, $component);
   return $twig->render('@'.$component.'/'.$template.'.tpl', $args);
