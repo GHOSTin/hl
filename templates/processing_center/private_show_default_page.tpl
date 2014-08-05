@@ -9,8 +9,8 @@
     </ul>
 {% endblock component %}
 {% block javascript %}
-    <script src="/?js=component.js&p=processing_center"></script>
+    <script src="/js/processing_center.js"></script>
 {% endblock javascript %}
 {% block css %}
-    <link rel="stylesheet" href="/?css=component.css&p=processing_center" >
+    <link rel="stylesheet" href="/css/processing_center.css">
 {% endblock css %}

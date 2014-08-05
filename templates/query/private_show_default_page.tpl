@@ -36,10 +36,10 @@
     <!-- end right block -->
 {% endblock component %}
 {% block javascript %}
-    <script src="/?js=component.js&p=query"></script>
-    <script src="/templates/default/js/bootstrap-datepicker.js"></script>
+    <script src="/js/query.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
 {% endblock javascript %}
 {% block css %}
-    <link rel="stylesheet" href="/?css=component.css&p=query" >
-    <link rel="stylesheet" href="/templates/default/css/datepicker.css" >
+    <link rel="stylesheet" href="/css/query.css" >
+    <link rel="stylesheet" href="/css/datepicker.css" >
 {% endblock css %}

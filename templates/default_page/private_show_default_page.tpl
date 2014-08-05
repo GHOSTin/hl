@@ -5,8 +5,8 @@
 </div>
 {% endblock component %}
 {% block javascript %}
-    <script src="/?js=component.js&p=default_page"></script>
+    <script src="/css/default_page.css"></script>
 {% endblock javascript %}
 {% block css %}
-    <link rel="stylesheet" href="/?css=component.css&p=default_page" >
+    <link rel="stylesheet" href="/js/default_page.js" >
 {% endblock css %}

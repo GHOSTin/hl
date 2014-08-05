@@ -7,5 +7,5 @@
 	</div>
 {% endblock component %}
 {% block javascript %}
-    <script src="/?js=component.js&p=profile"></script>
+    <script src="/js/profile.js"></script>
 {% endblock javascript %}

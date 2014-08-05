@@ -9,9 +9,9 @@
 <div class="col-xs-12 col-sm-10 col-lg-10 report-content"></div>
 {% endblock component %}
 {% block javascript %}
-    <script src="/?js=component.js&p=report"></script>
-    <script src="/templates/default/js/bootstrap-datepicker.js"></script>
+    <script src="/js/report.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
 {% endblock javascript %}
 {% block css %}
-    <link rel="stylesheet" href="/templates/default/css/datepicker.css" >
+    <link rel="stylesheet" href="/css/datepicker.css" >
 {% endblock css %}

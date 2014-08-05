@@ -8,8 +8,8 @@
 </ul>
 {% endblock component %}
 {% block javascript %}
-    <script src="/?js=component.js&p=meter"></script>
+    <script src="/js/meter.js"></script>
 {% endblock javascript %}
 {% block css %}
-    <link rel="stylesheet" href="/?css=component.css&p=meter" >
+    <link rel="stylesheet" href="/css/meter.css">
 {% endblock css %}

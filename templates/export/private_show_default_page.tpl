@@ -11,5 +11,5 @@
     </div>
 {% endblock component %}
 {% block javascript %}
-  <script src="/?js=component.js&p=export"></script>
+  <script src="/js/export.js"></script>
 {% endblock javascript %}

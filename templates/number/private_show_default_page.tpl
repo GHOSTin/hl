@@ -11,11 +11,11 @@
     {% include '@number/build_street_titles.tpl' %}
 {% endblock component %}
 {% block javascript %}
-    <script src="/?js=component.js&p=number"></script>
-    <script src="/templates/default/js/bootstrap-datepicker.js"></script>
-    <script src="/templates/default/js/typeahead.min.js"></script>
+    <script src="/js/number.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/typeahead.min.js"></script>
 {% endblock javascript %}
 {% block css %}
-    <link rel="stylesheet" href="/?css=component.css&p=number" >
-    <link rel="stylesheet" href="/templates/default/css/datepicker.css" >
+    <link rel="stylesheet" href="/css/number.css" >
+    <link rel="stylesheet" href="/css/datepicker.css" >
 {% endblock css %}

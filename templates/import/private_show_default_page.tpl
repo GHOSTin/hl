@@ -17,9 +17,9 @@
     </div>
 {% endblock component %}
 {% block javascript %}
-    <script src="/templates/default/js/jquery.ui.widget.js"></script>
-    <script src="/templates/default/js/jquery.iframe-transport.js"></script>
-    <script src="/templates/default/js/jupload.js"></script>
-    <script src="/templates/default/js/bootstrap-datepicker.js"></script>
-    <script src="/?js=component.js&p=import"></script>
+    <script src="/js/jquery.ui.widget.js"></script>
+    <script src="/js/jquery.iframe-transport.js"></script>
+    <script src="/js/jupload.js"></script>
+    <script src="/js/bootstrap-datepicker.js"></script>
+    <script src="/js/import.js"></script>
 {% endblock javascript %}

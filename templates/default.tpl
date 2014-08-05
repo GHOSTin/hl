@@ -5,10 +5,10 @@
 	<meta charset="utf-8">
   <meta name="viewport" content="width=device-width, maximum-scale = 1, minimum-scale = 1">
   <meta name="apple-mobile-web-app-capable" content="yes" />
-	<link rel="stylesheet" href="/templates/default/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="/templates/default/css/default.css" >
+	<link rel="stylesheet" href="/css/bootstrap.min.css" >
+    <link rel="stylesheet" href="/css/default.css" >
     <title>MSHC2</title>
-    <link rel="stylesheet" href="/templates/default/css/libs.css" >
+    <link rel="stylesheet" href="/css/libs.css" >
     {% block css %}{% endblock css %}
 </head>
 <body>
@@ -36,21 +36,21 @@
     </footer>
     <div id="modal" class="modal fade"></div>
 </body>
-    <script src="/templates/default/js/jquery.min.js"></script>
-    <script src="/templates/default/js/underscore.js"></script>
-    <script src="/templates/default/js/backbone.js"></script>
-    <script src="/templates/default/js/backbone.marionette.js"></script>
-    <script src="/templates/default/js/bootstrap.min.js"></script>
-    <script src="/templates/default/js/twig.js"></script>
-    <script src="/templates/default/js/jBootValidator.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/underscore.js"></script>
+    <script src="/js/backbone.js"></script>
+    <script src="/js/backbone.marionette.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/twig.js"></script>
+    <script src="/js/jBootValidator.js"></script>
     {% if user is not empty %}
-	    <script src="/templates/default/js/socket.io.js"></script>
-	    <script src="/templates/default/js/jquery.mCustomScrollbar.concat.min.js"></script>
-	    <script src="/templates/default/js/notification-center.js"></script>
-        <script src="/templates/default/js/chat.js"></script>
+	    <script src="/js/socket.io.js"></script>
+	    <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
+	    <script src="/js/notification-center.js"></script>
+        <script src="/js/chat.js"></script>
     {% endif %}
-	<script src="/templates/default/js/default.js"></script>
-	
+	<script src="/js/default.js"></script>
+
     {% block javascript %}{% endblock javascript %}
 </html>
 {% endspaceless %}
