@@ -1,7 +1,4 @@
 <?php
-
-require_once(ROOT.'/libs/Pimple.php');
-
 class di{
 
   private static $instance;

@@ -38,7 +38,11 @@ class model_environment{
 	}
 
 	public static function render_template($component, $method, $data){
-		return load_template($component.'.'.$method, $data);
+		Twig_Autoloader::register();
+		$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
+	  $loader->prependPath(ROOT.'/templates/'.$component.'/', $component);
+		$twig=  new Twig_Environment($loader);
+	  return $twig->render('@'.$component.'/'.$method.'.tpl', $data);
 	}
 
 	public static function init_profile($component){
@@ -58,7 +62,7 @@ class model_environment{
 	}
 
 	public static function before(){
-		$pimple = new Pimple();
+		$pimple = new \Pimple\Container();
 
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
 			$pimple['user'] = $_SESSION['user'];
@@ -273,19 +277,13 @@ class model_environment{
 			return new model_user2task();
 		};
 
-		$pimple['twig'] = $pimple->share(function($pimple){
-			$options = [];
-			$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
-			return new Twig_Environment($loader, $options);
-		});
-
-		$pimple['pdo'] = $pimple->share(function($pimple){
+		$pimple['pdo'] = function($pimple){
 			$pdo = new PDO('mysql:host='.application_configuration::database_host.';dbname='.application_configuration::database_name, application_configuration::database_user, application_configuration::database_password);
 			$pdo->exec("SET NAMES utf8");
 			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		  return $pdo;
-		});
+		};
 		di::set_instance($pimple);
 	}
 }

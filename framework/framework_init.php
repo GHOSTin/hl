@@ -43,15 +43,7 @@ class mem{
 		$_SESSION['model'][$this->name] = $params;
 	}
 }
-require_once ROOT.'/libs/Twig/Autoloader.php';
-Twig_Autoloader::register();
-
 
 function load_template($name, array $args = []){
-  $twig = di::get_instance()['twig'];
-  list($component, $template) = explode('.', $name, 2);
-  $template_dir = ROOT.'/templates/'.$component.'/';
-  $loader = $twig->getLoader();
-  $loader->prependPath($template_dir, $component);
-  return $twig->render('@'.$component.'/'.$template.'.tpl', $args);
+
 }

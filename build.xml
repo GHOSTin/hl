@@ -5,6 +5,9 @@
     <include name="**/**"/>
     <exclude name="application/application_configuration.php"/>
     <exclude name="build.xml"/>
+    <exclude name="vendor/**"/>
+    <exclude name="tests/**"/>
+    <exclude name="composer.lock"/>
   </fileset>
   <fileset id="php_files" dir="${project.basedir}">
     <include name="**/*.php"/>

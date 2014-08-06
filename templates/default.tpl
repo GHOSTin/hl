@@ -15,9 +15,7 @@
     <div id="wrap">
         {% if user is not empty %}
             <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
-            {% autoescape false %}
-                    {{menu}}
-            {% endautoescape %}
+            {% include 'menu.tpl' %}
             </header>
         {% endif %}
     	<div class="container">
