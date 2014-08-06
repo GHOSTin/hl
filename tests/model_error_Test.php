@@ -3,7 +3,7 @@
 class model_error_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
     $this->error = new data_error();
     $this->mapper = $this->getMockBuilder('mapper_error')
       ->disableOriginalConstructor()->getMock();

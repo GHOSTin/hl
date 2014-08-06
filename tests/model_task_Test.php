@@ -10,7 +10,7 @@
 class model_task_Test extends PHPUnit_Framework_TestCase {
 
   protected function setUp(){
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
     $this->pdo = $this->getMock('pdo_mock');
     $this->stmt = $this->getMock('PDOStatement');
     $this->task = new data_task();
@@ -147,4 +147,3 @@ class model_task_Test extends PHPUnit_Framework_TestCase {
     $this->assertTrue($result);
   }
 }
- 

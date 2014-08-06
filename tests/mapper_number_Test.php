@@ -16,7 +16,7 @@ class mapper_number_Test extends PHPUnit_Framework_TestCase{
       'house_id' => 234, 'house_number' => 12, 'house_status' => 'false',
       'flat_id' => 1,
       'flat_number' => 19, 'street_id' => 1, 'street_name' => 'Ватутина'];
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_flat'] = function($p){
       return new factory_flat();
     };

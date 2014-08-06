@@ -3,7 +3,7 @@
 class controller_query_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
     $this->user = new data_user();
     $this->company = new data_company();
     $this->request = new model_request();

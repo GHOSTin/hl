@@ -9,7 +9,7 @@ class mapper_client_query_Test extends PHPUnit_Framework_TestCase{
     $this->number = new data_number();
     $this->user_data = ['time' => 123, 'text' => 'Порвало трубу',
       'status' => 'accepted', 'number_id' => 123, 'company_id' => 2];
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_client_query'] = function($p){
       return new factory_client_query();
     };
@@ -103,12 +103,12 @@ class mapper_client_query_Test extends PHPUnit_Framework_TestCase{
       ->will($this->returnValue(true));
     $this->stmt->expects($this->exactly(3))
       ->method('fetch')
-      ->will($this->onConsecutiveCalls($this->user_data, 
+      ->will($this->onConsecutiveCalls($this->user_data,
         $this->user_data, false));
     $this->pdo->expects($this->once())
       ->method('prepare')
       ->will($this->returnValue($this->stmt));
-    $this->assertEquals(2, 
+    $this->assertEquals(2,
       count((new mapper_client_query($this->pdo))
       ->find_all_new($this->company, $this->number, 123)));
   }

@@ -8,7 +8,7 @@ class mapper_error_Test extends PHPUnit_Framework_TestCase{
     $this->user = new data_user();
     $this->error = new data_error();
     $this->error->set_user($this->user);
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_error'] = function($p){
       return new factory_error();
     };

@@ -17,7 +17,7 @@
                     .main {margin-top: 0;}
                 }
             </style>
-    <link rel="stylesheet" href="/templates/default/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     {% block css %}{% endblock css %}
 </head>
 <body>
@@ -41,7 +41,7 @@
             <section id="push"></section>
         </div>
     </div>
-     
+
 </body>
     {% block javascript %}{% endblock javascript %}
 </html>

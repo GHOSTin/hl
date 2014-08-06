@@ -17,7 +17,7 @@ class mapper_query2work_Test extends PHPUnit_Framework_TestCase{
     $this->query2work = $this->getMockBuilder('data_query2work')
       ->disableOriginalConstructor()
       ->getMock();
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_work'] = function($p){
       return new factory_work();
     };

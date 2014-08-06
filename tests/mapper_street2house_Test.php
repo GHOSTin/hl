@@ -7,7 +7,7 @@ class mapper_street2house_Test extends PHPUnit_Framework_TestCase{
     $this->stmt = $this->getMock('PDOStatement');
     $this->street = $this->getMock('data_street');
     $this->house = $this->getMock('data_house');
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_house'] = function($p){
       return new factory_house();
     };

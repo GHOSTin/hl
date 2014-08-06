@@ -39,7 +39,7 @@ class mapper_query_Test extends PHPUnit_Framework_TestCase{
       'contact_cellphone' => 89222944742, 'department' => $this->department,
       'house' => $this->house, 'type' => $this->type
       ];
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_department'] = function($p){
       return new factory_department();
     };

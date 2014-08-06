@@ -6,7 +6,7 @@ class model_number_Test extends PHPUnit_Framework_TestCase{
     $this->company = new data_company();
     $this->company->set_id(1);
     $this->number = new data_number();
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
   }
 
   public function test_model_1_1(){

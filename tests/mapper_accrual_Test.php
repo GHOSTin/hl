@@ -5,7 +5,7 @@ class mapper_accrual_Test extends PHPUnit_Framework_TestCase{
   public function setUp(){
     $this->pdo = $this->getMock('pdo_mock');
     $this->stmt = $this->getMock('PDOStatement');
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_accrual'] = function($p){
       return new factory_accrual();
     };

@@ -19,9 +19,9 @@
 {% endif %}">
 	<h4>
 		{% if query.get_initiator() == 'number' %}
-			<img src="/templates/default/images/icons/xfn-friend.png" />
+			<img src="/images/icons/xfn-friend.png" />
 		{% else %}
-			<img src="/templates/default/images/icons/home-medium.png" />
+			<img src="/images/icons/home-medium.png" />
 		{% endif %}
 		Заявка №{{ query.get_number() }} (
 		{% if query.get_status() in statuses|keys %}

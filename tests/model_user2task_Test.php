@@ -10,7 +10,7 @@ class model_user2task_Test extends PHPUnit_Framework_TestCase {
 
   protected function setUp(){
     $this->pdo = $this->getMock('pdo_mock');
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
     $this->task = new data_task();
     $this->user = new data_user();
   }
@@ -47,4 +47,3 @@ class model_user2task_Test extends PHPUnit_Framework_TestCase {
   }
 
 }
- 

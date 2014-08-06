@@ -14,7 +14,7 @@ class mapper_task2comment_Test extends PHPUnit_Framework_TestCase {
     $this->stmt = $this->getMock('PDOStatement');
     $this->task = new data_task();
     $this->user = new data_user();
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
     $this->pimple['user'] = $this->user;
     $this->pimple['factory_task2comment'] = function($p){
       return new factory_task2comment();
@@ -76,4 +76,3 @@ class mapper_task2comment_Test extends PHPUnit_Framework_TestCase {
   }
 
 }
- 

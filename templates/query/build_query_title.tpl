@@ -4,9 +4,9 @@
 {% endif %}">
 	<div>
 		{% if query.get_initiator() == 'number' %}
-			<img src="/templates/default/images/icons/xfn-friend.png" />
+			<img src="/images/icons/xfn-friend.png" />
 		{% else %}
-			<img src="/templates/default/images/icons/home-medium.png" />
+			<img src="/images/icons/home-medium.png" />
 		{% endif %}
 		<b>№{{ query.get_number() }}</b> {{ query.get_time_open()|date("H:i d.m.y") }} {{ query.get_house().get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
 		{% if query.get_initiator() == 'number' %}

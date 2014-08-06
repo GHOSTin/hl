@@ -3,7 +3,7 @@
 class model_query_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
     $this->pimple['profile'] = null;
     $this->company = new data_company();
   }

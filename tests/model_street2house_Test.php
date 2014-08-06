@@ -3,7 +3,7 @@
 class model_street2house_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->pimple = new Pimple();
+    $this->pimple = new \Pimple\Container();
     $this->street = new data_street();
     $this->house = new data_house();
   }

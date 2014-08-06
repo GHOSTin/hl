@@ -5,5 +5,5 @@
         К сожалению такой страницы не существует. Возможно, она была удалена.<br>
         Попробуйте <a href="/">вернутся на главную</a>
     </p>
-    <img src="/templates/default/images/pic1.png" alt="404">
+    <img src="/images/pic1.png" alt="404">
 {% endblock component %}

@@ -14,7 +14,7 @@ class mapper_task_Test extends PHPUnit_Framework_TestCase {
     $this->stmt = $this->getMock('PDOStatement');
     $this->user = new data_user();
     $this->task = new data_task();
-    $pimple = new Pimple();
+    $pimple = new \Pimple\Container();
     $pimple['factory_task'] = function($p){
       return new factory_task();
     };
@@ -292,4 +292,3 @@ class mapper_task_Test extends PHPUnit_Framework_TestCase {
   }
 
 }
- 

@@ -4,8 +4,6 @@ http_router::build_route();
 $file = ROOT.'/'.framework_configuration::application_folder.'/application_configuration.php';
 if(file_exists($file))
 	require_once $file;
-else
-	die('application_configuration not found');
 // автозагрузка классов
 function framework_autoload($class_name){
 	if(
@@ -42,8 +40,4 @@ class mem{
 	public function save(array $params){
 		$_SESSION['model'][$this->name] = $params;
 	}
-}
-
-function load_template($name, array $args = []){
-
 }
