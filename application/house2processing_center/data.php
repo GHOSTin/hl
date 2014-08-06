@@ -24,6 +24,6 @@ class data_house2processing_center{
 
   public static function verify_identifier($ident){
     if(!preg_match('/^[а-яА-Яa-zA-Z0-9]{0,20}$/u', $ident))
-      throw new e_model('Идентификатор лицевого счета задан не верно.');
+      throw new DomainException('Идентификатор лицевого счета задан не верно.');
   }
 }

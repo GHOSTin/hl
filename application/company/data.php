@@ -5,13 +5,7 @@ class data_company{
   private $name;
 	private $status;
 
-  public static $statuses = ['true', 'false'];
-
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_company'), true))
-      throw new BadMethodCallException();
-    return verify_company::$method($args[0]);
-  }
+  private static $statuses = ['true', 'false'];
 
   public function get_id(){
     return $this->id;
@@ -26,17 +20,20 @@ class data_company{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 255 OR $id < 1)
+      throw new DomainException('Идентификатор компании задан не верно.');
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
-    self::verify_name($this->name);
+    if(!preg_match('/^[А-Я][а-я]{0,19}$/', $name))
+      throw new DomainException('Название компании задано не верно.');
+    $this->name = $name;
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
-    self::verify_status($this->status);
+    if(!in_array($status, self::$statuses))
+      throw new DomainException('Статус компании задан не верно.');
+    $this->status = $status;
   }
 }

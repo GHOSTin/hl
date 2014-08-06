@@ -11,13 +11,7 @@ class data_group extends data_object{
   private $status;
   private $users = [];
 
-  public static $statuses = ['false', 'true'];
-
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_group'), true))
-      throw new BadMethodCallException();
-    return verify_group::$method($args[0]);
-  }
+  private static $statuses = ['false', 'true'];
 
   public function add_user(data_user $user){
     if(array_key_exists($user->get_id(), $this->users))
@@ -48,17 +42,20 @@ class data_group extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 65535 OR $id < 1)
+      throw new DomainException('Идентификатор группы задан не верно.');
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
-    self::verify_name($this->name);
+    if(!preg_match('/^[0-9а-яА-Я ]{1,50}$/u', $name))
+      throw new DomainException('Название группы задано не верно.');
+    $this->name = $name;
   }
 
   public function set_status($status){
+    if(!in_array($status, self::$statuses))
+      throw new DomainException('Статус группы задан не верно.');
     $this->status = (string) $status;
-    self::verify_status($this->status);
   }
 }

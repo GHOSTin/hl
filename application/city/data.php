@@ -5,13 +5,7 @@ class data_city extends data_object{
   private $name;
 	private $status;
 
-  public static $status_list = ['false', 'true'];
-
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_city'), true))
-      throw new BadMethodCallException();
-    return verify_city::$method($args[0]);
-  }
+  private static $status_list = ['false', 'true'];
 
   public function get_id(){
     return $this->id;
@@ -26,17 +20,20 @@ class data_city extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 65535 OR $id < 1)
+      throw new DomainException('Идентификатор города задан не верно.');
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
-    self::verify_name($this->name);
+    if(!preg_match('/^[а-яА-Я ]{0,20}$/u', $name))
+      throw new DomainException('Название города задано не верно.');
+    $this->name = $name;
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
-    self::verify_status($this->status);
+    if(!in_array($status, self::$status_list, true))
+      throw new DomainException('Статус города задан не верно.');
+    $this->status = $status;
   }
 }

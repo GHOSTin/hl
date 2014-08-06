@@ -20,12 +20,14 @@ class data_query_work_type extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 255 OR $id < 1)
+      throw new e_model('Идентификатор типа заявки задан не верно.');
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
-    self::verify_name($this->name);
+    if(!in_array($query_work_type->status, ['active', 'deactive']))
+      throw new e_model('Статус типа работ задан не верно.');
+    $this->name = $name;
   }
 }

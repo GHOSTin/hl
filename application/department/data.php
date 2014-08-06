@@ -5,13 +5,7 @@ class data_department extends data_object{
   private $name;
   private $status;
 
-  public static $statuses = ['active', 'deactive'];
-
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_department'), true))
-      throw new BadMethodCallException();
-    return verify_department::$method($args[0]);
-  }
+  private static $statuses = ['active', 'deactive'];
 
   public function get_id(){
     return $this->id;
@@ -26,17 +20,20 @@ class data_department extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 255 OR $id < 1)
+      throw new DomainException('Идентификатор участка задан не верно.');
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
-    self::verify_name($this->name);
+    if(!preg_match('/^[0-9а-яА-Я №]{3,19}$/u', $name))
+      throw new DomainException('Название участка задано не верно.');
+    $this->name = $name;
   }
 
   public function set_status($status){
+    if(!in_array($status, self::$statuses))
+      throw new DomainException('Статус участка задан не верно.');
     $this->status = (string) $status;
-    self::verify_status($this->status);
   }
 }

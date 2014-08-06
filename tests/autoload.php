@@ -61,18 +61,6 @@ require_once(ROOT.'/application/query_work_type/model.php');
 require_once(ROOT.'/application/street2house/model.php');
 require_once(ROOT.'/application/task/model.php');
 require_once(ROOT.'/application/user2task/model.php');
-# verify
-require_once(ROOT.'/application/house/verify.php');
-require_once(ROOT.'/application/flat/verify.php');
-require_once(ROOT.'/application/number/verify.php');
-require_once(ROOT.'/application/company/verify.php');
-require_once(ROOT.'/application/query/verify.php');
-require_once(ROOT.'/application/query_work_type/verify.php');
-require_once(ROOT.'/application/street/verify.php');
-require_once(ROOT.'/application/department/verify.php');
-require_once(ROOT.'/application/user/verify.php');
-require_once(ROOT.'/application/work/verify.php');
-require_once(ROOT.'/application/city/verify.php');
 # factory
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');

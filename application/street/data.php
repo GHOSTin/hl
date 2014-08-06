@@ -12,15 +12,9 @@ class data_street extends data_object{
 
   public static $statuses = ['true', 'false'];
 
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_street'), true))
-      throw new BadMethodCallException();
-    return verify_street::$method($args[0]);
-  }
-
   public function add_house(data_house $house){
     if(array_key_exists($house->get_id(), $this->houses))
-      throw new e_model('Дом уже добавлен в улицу.');
+      throw new DomainException('Дом уже добавлен в улицу.');
     $this->houses[$house->get_id()] = $house;
   }
 
@@ -41,17 +35,20 @@ class data_street extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 65535 OR $id < 1)
+      throw new DomainException('Идентификатор улицы задан не верно.');
+    $this->id = $id;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
-    self::verify_name($this->name);
+    if(!preg_match('/^[0-9а-яА-Я-_ ]{3,20}$/u', $name))
+      throw new DomainException('Название улицы задано не верно.');
+    $this->name = $name;
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
-    self::verify_status($status);
+    if(!in_array($status, self::$statuses))
+      throw new DomainException('Статус улицы задан не верно.');
+    $this->status = $status;
   }
 }

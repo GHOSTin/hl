@@ -12,13 +12,7 @@ class data_house{
   private $flats = [];
   private $numbers = [];
 
-  public static $statuses = ['true', 'false'];
-
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_house'), true))
-      throw new BadMethodCallException();
-    return verify_house::$method($args[0]);
-  }
+  private static $statuses = ['true', 'false'];
 
   public function __construct($id = null){
     $this->id = (int) $id;
@@ -77,19 +71,20 @@ class data_house{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 65535 OR $id < 1)
+      throw new DomainException('Идентификатор дома задан не верно.');
+    $this->id = $id;
   }
 
   public function set_number($number){
-    if($number > 65535 OR $number < 1)
-      throw new e_model('Идентификатор дома задан не верно.');
+    if(!preg_match('|^[0-9]{1,3}[/]{0,1}[А-Яа-я0-9]{0,2}$|u', $number))
+      throw new DomainException('Номер дома задан не верно.');
     $this->number = $number;
   }
 
   public function set_status($status){
     if(!in_array($status, self::$statuses))
-      throw new e_model('Статус дома задан не верно.');
+      throw new DomainException('Статус дома задан не верно.');
     $this->status = $status;
   }
 

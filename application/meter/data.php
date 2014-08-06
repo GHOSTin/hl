@@ -10,26 +10,22 @@ final class data_meter extends data_object{
   private $periods = [];
   private $services = [];
 
-  public static $service_list = ['cold_water', 'hot_water', 'electrical'];
-
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_meter'), true))
-      throw new BadMethodCallException();
-    return verify_meter::$method($args[0]);
-  }
+  private static $service_list = ['cold_water', 'hot_water', 'electrical'];
 
   public function add_period($period){
-    $period = (int) $period;
-    self::verify_period($period);
+    if($period < 0 OR $period > 241)
+      throw new DomainException('Период задан не верно.');
+    $period = $period;
     if(in_array($period, $this->periods, true))
-      throw new e_model('Такой период уже задан в счетчике.');
+      throw new DomainException('Такой период уже задан в счетчике.');
     $this->periods[] = $period;
   }
 
   public function add_service($service){
-    self::verify_service($service);
+    if(!in_array($service, self::$service_list))
+      throw new DomainException('Услуга задана не верно.');
     if(in_array($service, $this->services, true))
-      throw new e_model('Такая служба уже привязана к счетчику.');
+      throw new DomainException('Такая служба уже привязана к счетчику.');
     $this->services[] = $service;
   }
 
@@ -37,7 +33,7 @@ final class data_meter extends data_object{
     self::verify_period($period);
     $rs = array_search($period, $this->periods);
     if($rs === false)
-      throw new e_model('Периода не было в этом счетчике.');
+      throw new DomainException('Периода не было в этом счетчике.');
     unset($this->periods[$rs]);
   }
 
@@ -45,7 +41,7 @@ final class data_meter extends data_object{
     self::verify_service($service);
     $rs = array_search($service, $this->services);
     if($rs === false)
-      throw new e_model('Службы не было в этом счетчике.');
+      throw new DomainException('Службы не было в этом счетчике.');
     unset($this->services[$rs]);
   }
 
@@ -74,8 +70,9 @@ final class data_meter extends data_object{
   }
 
   public function set_id($id){
+    if($id > 16777215 OR $id < 1)
+      throw new DomainException('Идентификатор счетчика задан не верно.');
     $this->id = (int) $id;
-    self::verify_id($this->id);
   }
 
   public function set_service($service){
@@ -92,18 +89,21 @@ final class data_meter extends data_object{
   }
 
   public function set_name($name){
+    if(!preg_match('/^[а-яА-Яa-zA-Z0-9 -]{1,20}$/u', $name))
+      throw new DomainException('Название счетчика задано не верно.');
     $this->name = (string) $name;
-    self::verify_name($name);
   }
 
   public function set_capacity($capacity){
-    $this->capacity = (int) $capacity;
-    self::verify_capacity($this->capacity);
+    if($capacity < 1 OR $capacity > 9)
+      throw new DomainException('Разрядность задана не верно.');
+    $this->capacity = $capacity;
   }
 
   public function set_rates($rates){
+    if($rates < 1 OR $rates > 3)
+      throw new DomainException('Тарифность задана не верно.');
     $this->rates = (int) $rates;
-    self::verify_rates($this->rates);
   }
 
   public function get_periods(){

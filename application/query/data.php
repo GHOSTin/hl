@@ -37,12 +37,6 @@ class data_query extends data_object{
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
 	public static $warning_status_list = ['hight', 'normal', 'planned'];
 
-	public static function __callStatic($method, $args){
-	  if(!in_array($method, get_class_methods('verify_query'), true))
-	    throw new BadMethodCallException();
-	  return verify_query::$method($args[0]);
-	}
-
 	public function add_number(data_number $number){
 		if(array_key_exists($number->get_id(), $this->numbers))
 			throw new e_model('Лицевой счет уже добавлен в заявку.');
@@ -211,33 +205,37 @@ class data_query extends data_object{
 	}
 
 	public function set_id($id){
-		$this->id = (int) $id;
-		self::verify_id($this->id);
+		if($id > 4294967295 OR $id < 1)
+      throw new DomainException('Идентификатор заявки задан не верно.');
+		$this->id = $id;
 	}
 
 	public function set_number($number){
+		if(!preg_match('/^[0-9]{1,6}$/', $number))
+        throw new DomainException('Номер заявки задан не верно.');
 		$this->number = (int) $number;
-		self::verify_number($this->number);
 	}
 
 	public function set_time_open($time){
+		if($time < 1)
+      throw new DomainException('Время открытия заявки задано не верно.');
 		$this->time_open = (int) $time;
-		self::verify_time_open($this->time_open);
 	}
 
 	public function set_close_reason($reason){
+		if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u', $reason))
+      throw new DomainException('Описание заявки заданы не верно.');
 		$this->close_reason = (string) $reason;
-		self::verify_close_reason($this->close_reason);
 	}
 
 	public function set_department(data_department $department){
 		$this->department = $department;
-		data_department::verify_id($this->department->get_id());
 	}
 
 	public function set_initiator($initiator){
-		$this->initiator = (string) $initiator;
-		self::verify_initiator($this->initiator);
+		if(!in_array($initiator, self::$initiator_list, true))
+      throw new DomainException('Инициатор заявки задан не верно.');
+		$this->initiator = $initiator;
 	}
 
 	public function set_house(data_house $house){
@@ -250,32 +248,32 @@ class data_query extends data_object{
 
 	public function set_contact_cellphone($cellphone){
 		$this->contact_cellphone = $cellphone;
-		self::verify_contact_telephone($this->contact_cellphone);
 	}
 
 	public function set_contact_fio($fio){
 		$this->contact_fio = $fio;
-		self::verify_contact_fio($this->contact_fio);
 	}
 
 	public function set_contact_telephone($telephone){
 		$this->contact_telephone = $telephone;
-		self::verify_contact_telephone($this->contact_telephone);
 	}
 
 	public function set_description($description){
+		if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u', $description))
+      throw new DomainException('Описание заявки заданы не верно.');
 		$this->description = $description;
-		self::verify_description($this->description);
 	}
 
 	public function set_payment_status($status){
+		if(!in_array($status, self::$payment_status_list, true))
+      throw new DomainException('Статус оплаты заявки задан не верно.');
 		$this->payment_status = (string) $status;
-		self::verify_payment_status($this->payment_status);
 	}
 
 	public function set_status($status){
-		$this->status = (string) $status;
-		self::verify_status($this->status);
+		if(!in_array($status, self::$status_list, true))
+      throw new DomainException('Статус заявки задан не верно.');
+		$this->status = $status;
 	}
 
 	public function set_time_close($time){
@@ -285,17 +283,18 @@ class data_query extends data_object{
 			if($time < $this->time_work)
 				throw new e_model('Время закрытия заявки не может быть меньше времени передачи в работу.');
 		}
-		$this->time_close = (int) $time;
+		$this->time_close = $time;
 	}
 
 	public function set_time_work($time){
 		if($this->time_open > $time)
 			throw new e_model('Время закрытия заявки не может быть меньше времени открытия.');
-		$this->time_work = (int) $time;
+		$this->time_work = $time;
 	}
 
 	public function set_warning_status($status){
+		if(!in_array($status, self::$warning_status_list, true))
+      throw new DomainException('Статус ворнинга заявки задан не верно.');
 		$this->warning_status = (string) $status;
-		self::verify_warning_status($this->warning_status);
 	}
 }

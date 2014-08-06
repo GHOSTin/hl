@@ -7,13 +7,7 @@ class data_flat extends data_object{
   private $number;
   private $status;
 
-  public static $statuses = ['true', 'false'];
-
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_flat'), true))
-      throw new BadMethodCallException();
-    return verify_flat::$method($args[0]);
-  }
+  private static $statuses = ['true', 'false'];
 
   public function get_house(){
     return $this->house;
@@ -36,17 +30,20 @@ class data_flat extends data_object{
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 16777215 OR $id < 1)
+      throw new DomainException('Идентификатор квартиры задан не верно.');
+    $this->id = $id;
   }
 
   public function set_number($number){
-    $this->number = (string) $number;
-    self::verify_number($this->number);
+    if(!preg_match('|^[0-9]{1,3}.{0,1}[0-9]{0,1}$|', $number))
+      throw new DomainException('Номер квартиры задан не верно.');
+    $this->number = $number;
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
-    self::verify_status($this->status);
+    if(!in_array($status, self::$statuses, true))
+      throw new DomainException('Статус квартиры задан не верно.');
+    $this->status = $status;
   }
 }
