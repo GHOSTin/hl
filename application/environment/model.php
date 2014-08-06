@@ -16,7 +16,10 @@ class model_environment{
 			$data = self::prepare_answer($controller, $component, $method, $request);
 			return self::render_template($component, $method, $data);
 		}catch(exception $e){
-			die($e);
+			if(application_configuration::status === development)
+				die($e);
+			else
+				exit();
 		}
 	}
 
@@ -29,7 +32,7 @@ class model_environment{
 			$pimple = di::get_instance();
 			$pimple['profile'] = null;
 		}
-		$profile = di::get('profile');;
+		$profile = di::get('profile');
 		if($profile instanceof data_profile)
 			$data['rules'] = $profile->get_rules();
 		$data['response'] = $controller::$method($request);
