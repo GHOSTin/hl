@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meter %}
+{% set meter = response.meter %}
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}

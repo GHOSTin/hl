@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set center = component.center %}
+{% set center = response.center %}
 {% block title %}Диалог исключения процессингового центра{% endblock title %}
 {% block dialog %}
 	Вы действительно хотите удалить идентификатор <b>{{ request.GET('identifier') }}</b> расчетного центра <b>{{ center.get_name() }}</b>?

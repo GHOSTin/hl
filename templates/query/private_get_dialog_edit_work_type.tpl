@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
+{% set query = response.query %}
 {% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'}%}
 {% block js %}
 	show_dialog(get_hidden_content());
@@ -17,11 +17,11 @@
 <div class="modal-content">
     <div class="modal-header">
         <h3>Тип оплаты заявки</h3>
-    </div>	
+    </div>
 	<div class="modal-body">
 		<label>Тип оплаты:</label>
 		<select class="dialog-work_type form-control">
-			{% for work_type in component.work_types %}
+			{% for work_type in response.work_types %}
 				<option value="{{ work_type.get_id() }}"
 				{% if query.get_work_type().get_id() == work_type.get_id() %}
 					selected
@@ -33,6 +33,6 @@
 	<div class="modal-footer">
 		<div class="btn btn-primary update_work_type">Сохранить</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

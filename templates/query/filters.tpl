@@ -1,4 +1,4 @@
-{% set params = component.params %}
+{% set params = response.params %}
 <!-- begin filters -->
 <div class="filters col-xs-12">
 	<!-- begin filter status -->
@@ -21,8 +21,8 @@
         <label>по участку</label>
         <select class="filter-content-select-department form-control">
             <option value="all">Все участки</option>
-            {% if component.departments != false %}
-                {% for department in component.departments %}
+            {% if response.departments != false %}
+                {% for department in response.departments %}
                     {% if params['department'] is empty %}
                         <option value="{{ department.get_id() }}"
                         {% if department.get_id() == params['department'] %}
@@ -47,8 +47,8 @@
 	    <label>по улице и дому</label>
         <select class="filter-content-select-street form-control">
             <option value="all">Все улицы</option>
-            {% if component.streets != false %}
-                {% for street in component.streets %}
+            {% if response.streets != false %}
+                {% for street in response.streets %}
                     <option value="{{ street.get_id() }}"
                     {% if street.get_id() == params['street'] %}
                         selected
@@ -58,16 +58,16 @@
             {% endif %}
         </select>
         <select class="filter-content-select-house form-control"
-            {% if component.houses|length < 1 %}
+            {% if response.houses|length < 1 %}
                 disabled="disabled"
             {% endif %}
             >
-            {% if component.houses|length >0 %}
+            {% if response.houses|length >0 %}
                 <option value="all">Все дома</option>
             {% else %}
                 <option value="all">Ожидание...</option>
             {% endif %}
-            {% for house in component.houses %}
+            {% for house in response.houses %}
                     <option value="{{ house.get_id() }}"
                     {% if house.get_id() == params['house'] %}
                         selected
@@ -81,8 +81,8 @@
 	    <label>по типу работ</label>
         <select class="filter-content-select-work_type form-control">
             <option value="all">Все типы</option>
-            {% if component.query_work_types != false %}
-                {% for query_work_type in component.query_work_types %}
+            {% if response.query_work_types != false %}
+                {% for query_work_type in response.query_work_types %}
                     <option value="{{ query_work_type.get_id() }}"
                     {% if query_work_type.get_id() == params['work_type'] %}
                     selected
@@ -98,8 +98,8 @@
 	    <label>по пользователю</label>
         <select class="filter-content-select-user form-control">
             <option value="all">Все пользователи</option>
-            {% if component.users != false %}
-                {% for user in component.users %}
+            {% if response.users != false %}
+                {% for user in response.users %}
                     <option value="{{user.id}}">{{user.lastname}} {{user.firstname}}</option>
                 {% endfor %}
             {% endif %}

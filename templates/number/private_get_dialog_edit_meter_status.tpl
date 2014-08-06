@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
+{% set number = response.number %}
+{% set meter = response.meter %}
 {% block title %}Диалог редактирования статуса счетчика{% endblock title %}
 {% block dialog %}
 	{% if meter.get_status() == 'enabled' %}

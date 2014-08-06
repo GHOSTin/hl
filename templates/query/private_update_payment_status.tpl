@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
+{% set query = response.query %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'}%}
 {% block js %}
 	$('.query[query_id = {{ query.get_id() }}] .query-general-payment_status').html(get_hidden_content());

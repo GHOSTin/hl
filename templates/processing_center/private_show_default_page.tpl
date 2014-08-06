@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set centers = component.centers %}
+{% set centers = response.centers %}
 {% block component %}
     <div>
         <a class="get_dialog_create_processing_center">Создать</a>

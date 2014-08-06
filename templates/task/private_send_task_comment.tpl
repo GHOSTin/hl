@@ -3,7 +3,7 @@
   {% set cases = [2, 0, 1, 1, 1, 2] %}
   {{ number }} {{ forms[ ( number%100>4 and number%100<20)? 2 : cases[min(number%10, 5)] ] }}
 {% endmacro %}
-{% set comments = component.comments %}
+{% set comments = response.comments %}
 {% block html %}
   <p class="bg-info"><strong>{{ _self.declension(comments|length, ['комментарий','комментария','комментариев']) }}</strong></p>
   <div id="comments_messages">

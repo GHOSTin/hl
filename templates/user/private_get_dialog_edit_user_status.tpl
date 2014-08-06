@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set user = component.user %}
+{% set user = response.user %}
 {% block title %}Диалог изменения статуса пользователя{% endblock title %}
 {% block dialog %}
 	{% if user.get_status() == 'false' %}

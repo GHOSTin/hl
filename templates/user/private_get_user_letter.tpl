@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set users = component.users %}
+{% set users = response.users %}
 {% block js %}
     $('.letter-content').html(get_hidden_content())
 {% endblock js %}

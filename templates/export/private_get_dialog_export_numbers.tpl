@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.queries[0] %}
+{% set query = response.queries[0] %}
 {% block js %}
   $('.export-form').html(get_hidden_content());
 {% endblock js %}

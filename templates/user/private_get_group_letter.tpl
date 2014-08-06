@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set groups = component.groups %}
+{% set groups = response.groups %}
 {% block js %}
     $('.letter-content').html(get_hidden_content())
 {% endblock js %}

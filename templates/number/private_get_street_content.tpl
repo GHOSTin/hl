@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set street = component.street %}
+{% set street = response.street %}
 {% block js %}
     $('.street[street = {{ street.get_id() }}]').append(get_hidden_content())
 {% endblock js %}

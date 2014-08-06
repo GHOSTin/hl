@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meter %}
+{% set meter = response.meter %}
 {% block html %}
     <option value="0">Выберите период</option>
    {% for period in meter.get_periods() %}

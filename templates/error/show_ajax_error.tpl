@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.queries[0] %}
+{% set query = response.queries[0] %}
 {% block js %}
     show_dialog(get_hidden_content());
 {% endblock js %}
@@ -8,12 +8,12 @@
     <div class="modal-header">
         <h3>Ошибки
         </h3>
-    </div>  
+    </div>
     <div class="modal-body">
        {{ error.getMessage() }}
     </div>
     <div class="modal-footer">
         <div class="btn close_dialog">Отмена</div>
-    </div>    
+    </div>
 </div>
 {% endblock html %}

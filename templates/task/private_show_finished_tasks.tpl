@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set tasks = component.tasks %}
+{% set tasks = response.tasks %}
 {% block html %}
   <div class="list-group">
     {% for task in tasks %}

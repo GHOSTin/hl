@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set group = component.group %}
+{% set group = response.group %}
 {% block js %}
     $('.group[group = {{ group.get_id() }}]').append(get_hidden_content())
 {% endblock js %}

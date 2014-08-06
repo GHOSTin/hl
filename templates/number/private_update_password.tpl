@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set user = component.user %}
+{% set user = response.user %}
 {% block js %}
     $('.profile-content').html(get_hidden_content());
 {% endblock js %}

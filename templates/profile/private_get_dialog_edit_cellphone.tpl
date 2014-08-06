@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set user = component.user %}
+{% set user = response.user %}
 {% block script %}
 	$('.update_cellphone').click(function(){
 		$.get('update_cellphone',{

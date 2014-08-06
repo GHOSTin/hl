@@ -1,14 +1,14 @@
 {% extends "ajax.tpl" %}
-{% set queries = component.queries %}
+{% set queries = response.queries %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.create_query').click(function(){
 		$.get('create_query',{
 			initiator: '{{ request.GET('initiator') }}',
 			{% if request.GET('initiator') == 'number' %}
-				id: {{ component.number.get_id() }},
+				id: {{ response.number.get_id() }},
 			{% else %}
-				id: {{ component.house.get_id() }},
+				id: {{ response.house.get_id() }},
 			{% endif %}
 			fio: $('.dialog-fio').val(),
 			work_type: $('.dialog-worktype').val(),
@@ -30,7 +30,7 @@
       {% if queries is not empty %}
       <h5>Последние заявки на этот дом</h5>
        <ul class="list-unstyled old-queries">
-          {% for query in component.queries  %}
+          {% for query in response.queries  %}
             <li class="query_status_{{ query.get_status() }}"><strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
               {% if query.get_status() in ['close', 'reopen'] %}
               <p class="label label-default">{{ query.get_close_reason() }}</p>
@@ -43,18 +43,18 @@
 		{% if request.GET('initiator') == 'number' %}
         <div>
   				<ul>
-  					<li>л/с №{{ component.number.get_number() }}</li>
-  					<li>Владелец: {{ component.number.get_fio() }}</li>
-  					<li>Телефон: {{ component.number.get_telephone() }}</li>
-  					<li>Сотовый: {{ component.number.get_cellphone() }}</li>
-  					{#<li>Контактное лицо: {#{ component.number.get_contact_fio() }}</li>
-  					<li>Телефон контактного лица: {{ component.number.get_contact_telephone()}}</li>
-  					<li>Сотовые телефон контактного лица: {{ component.number.get_contact_cellphone() }}</li>#}
+  					<li>л/с №{{ response.number.get_number() }}</li>
+  					<li>Владелец: {{ response.number.get_fio() }}</li>
+  					<li>Телефон: {{ response.number.get_telephone() }}</li>
+  					<li>Сотовый: {{ response.number.get_cellphone() }}</li>
+  					{#<li>Контактное лицо: {#{ response.number.get_contact_fio() }}</li>
+  					<li>Телефон контактного лица: {{ response.number.get_contact_telephone()}}</li>
+  					<li>Сотовые телефон контактного лица: {{ response.number.get_contact_cellphone() }}</li>#}
   				</ul>
         </div>
 		{% else %}
 				<div>
-					{{ component.house.get_street().get_name() }}, дом №{{ component.house.get_number() }}
+					{{ response.house.get_street().get_name() }}, дом №{{ response.house.get_number() }}
 				</div>
 		{% endif %}
         <p><strong>Данные контактного лица по заявке</strong></p>
@@ -75,8 +75,8 @@
         <div class="form-group">
             <p><strong>Выберите тип работ по заявке</strong></p>
             <select class="form-control dialog-worktype">
-                {% if component.query_work_types != false %}
-                    {% for query_work_type in component.query_work_types %}
+                {% if response.query_work_types != false %}
+                    {% for query_work_type in response.query_work_types %}
                         <option value="{{query_work_type.get_id()}}">{{query_work_type.get_name()}}</option>
                     {% endfor %}
                 {% endif %}

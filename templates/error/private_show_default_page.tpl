@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set errors = component.errors %}
+{% set errors = response.errors %}
 {% block component %}
   <ul>
   {% for error in errors %}

@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set centers = component.centers %}
-{% set number = component.number %}
+{% set centers = response.centers %}
+{% set number = response.number %}
 {% block title %}Диалог добавления процессингового центра{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-centers form-control">

@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set users = component.users %}
-{% set group = component.group %}
+{% set users = response.users %}
+{% set group = response.group %}
 {% block js %}
     $('.group[group = {{ group.get_id() }}] .group-users').html(get_hidden_content())
 {% endblock js %}

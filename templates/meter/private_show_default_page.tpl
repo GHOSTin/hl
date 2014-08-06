@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set meters = component.meters %}
+{% set meters = response.meters %}
 {% block component %}
 <ul class="meters nav nav-tabs nav-stacked">
     {% for meter in meters %}

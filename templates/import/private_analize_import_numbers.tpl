@@ -4,12 +4,12 @@
 {% endblock js %}
 {% block html %}
 {% if 'error' in component|keys() %}
-    {{ component.error }}
+    {{ response.error }}
 {% else %}
-    <h5>Файл "{{ component.file.name }}"<br>
-        <span class="dialog-city_id" city_id="{{ component.city.get_id() }}">{{ component.city.get_name() }}</span>,
-        <span class="dialog-street_id" street_id="{{ component.street.get_id() }}">{{ component.street.get_name() }}</span>,
-        <span class="dialog-house_id" house_id="{{ component.house.get_id() }}">дом №{{ component.house.get_number() }}</span>
+    <h5>Файл "{{ response.file.name }}"<br>
+        <span class="dialog-city_id" city_id="{{ response.city.get_id() }}">{{ response.city.get_name() }}</span>,
+        <span class="dialog-street_id" street_id="{{ response.street.get_id() }}">{{ response.street.get_name() }}</span>,
+        <span class="dialog-house_id" house_id="{{ response.house.get_id() }}">дом №{{ response.house.get_number() }}</span>
     </h5>
     <div>
         <table class="table table-striped">
@@ -23,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-            {% for number in component.numbers %}
+            {% for number in response.numbers %}
                 {% set new = number['new'] %}
                 {% set old = number['old'] %}
                 <tr>
@@ -61,5 +61,5 @@
         <button class="btn btn-default get_dialog_import_numbers">Отменить</button>
     </div>
 {% endif %}
-{{ component.flats }}
+{{ response.flats }}
 {% endblock html %}

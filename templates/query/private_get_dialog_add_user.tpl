@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
-{% set groups = component.groups %}
+{% set query = response.query %}
+{% set groups = response.groups %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.add_user').click(function(){
@@ -36,7 +36,7 @@
         		Исполнители
         	{% endif %}
         </h3>
-    </div>	
+    </div>
 	<div class="modal-body">
 		<select class="dialog-select-group form-control">
 			<option value="0">Выберите группу</option>
@@ -51,6 +51,6 @@
 	<div class="modal-footer">
 		<div class="btn btn-primary add_user">Сохранить</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

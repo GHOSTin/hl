@@ -1,8 +1,8 @@
 {% extends "ajax.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
-{% set current = component.meter_data %}
-{% set time = component.time %}
+{% set number = response.number %}
+{% set meter = response.meter %}
+{% set current = response.meter_data %}
+{% set time = response.time %}
 {% set months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август',
     'сентябрь', 'октябрь', 'ноябрь', 'декабрь'] %}
 {% set ways = {'answerphone':'Автоответчик', 'telephone':'Телефон', 'fax':'Факс', 'personally':'Лично'}%}
@@ -75,6 +75,6 @@
     <div class="modal-footer">
         <div class="btn update_meter_data">Сохранить</div>
         <div class="btn close_dialog">Отмена</div>
-    </div>    
+    </div>
 </div>
 {% endblock html %}

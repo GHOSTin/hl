@@ -1,11 +1,11 @@
 {% extends "ajax.tpl" %}
-	{% set query = component.query %}
+	{% set query = response.query %}
 	{% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'}%}
 	{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'}%}
 	{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'}%}
 	{% if query.get_initiator() == 'number' %}
-				{% if component.numbers.numbers != false %}
-					{% set number = component.numbers.numbers[component.numbers.structure[query.id].true[0]] %}
+				{% if response.numbers.numbers != false %}
+					{% set number = response.numbers.numbers[response.numbers.structure[query.id].true[0]] %}
 				{% endif %}
 			{% endif %}
 	{% block js %}
@@ -51,7 +51,7 @@
 		<li>Время открытия: {{query.get_time_open()|date('H:i d.m.Y')}}</li>
 		<li>Адрес: {{ query.get_house().get_street().get_name() }}, дом №{{ query.get_house().get_number() }}
 			{% if query.get_initiator() == 'number' %}
-				{% if component.numbers.numbers != false %}
+				{% if response.numbers.numbers != false %}
 					, кв. {{number.flat_number}}
 					<li>Владелец: {{number.fio}}</li>
 					<li>Лицевой счет: №{{number.number}}</li>

@@ -1,9 +1,9 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
+{% set number = response.number %}
+{% set meter = response.meter %}
 {% block title %}Диалог редактирования времени производства счетчика{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-date_release" value="{{ meter.get_date_release()|date('d.m.Y') }}">	
+	<input type="text" class="dialog-input-date_release" value="{{ meter.get_date_release()|date('d.m.Y') }}">
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn update_date_release">Изменить</div>

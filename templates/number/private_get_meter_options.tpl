@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set meters = component.meters %}
+{% set meters = response.meters %}
 {% block html %}
     <option value="0">Выберите счетчик</option>
    {% for meter in meters %}

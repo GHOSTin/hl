@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set filters = component.filters %}
-{% set houses = component.houses %}
+{% set filters = response.filters %}
+{% set houses = response.houses %}
 {% block js %}
     $('.report-content').html(get_hidden_content());
 
@@ -22,7 +22,7 @@
                 init_content(r);
             });
     });
-    
+
     // изменяет фильтр статуса
     $('.filter-status').change(function(){
         $.get('set_filter_query_status', {
@@ -103,8 +103,8 @@
                     <label>по дому и улице</label>
                     <select class="filter-select-street form-control">
                         <option value="all">Все улицы</option>
-                        {% if component.streets != false %}
-                            {% for street in component.streets %}
+                        {% if response.streets != false %}
+                            {% for street in response.streets %}
                                 <option value="{{ street.get_id() }}"{% if street.get_id() == filters.street %} selected{% endif %}>{{ street.get_name() }}</option>
                             {% endfor %}
                         {% endif %}
@@ -121,13 +121,13 @@
                             <option>Ожидание...</option>
                         </select>
                     {% endif %}
-                    
+
                 </li>
                 <li class="form-group">
                     <label>по участку</label>
                     <select class="filter-select-department form-control">
                         <option value="all">Все участки</option>
-                    {% for department in component.departments %}
+                    {% for department in response.departments %}
                         <option value="{{ department.get_id() }}"{% if department.get_id() == filters.department[0] %} selected{% endif %}>{{ department.get_name() }}</option>
                     {% endfor %}
                     </select>
@@ -136,7 +136,7 @@
                     <label>по типу работ</label>
                     <select class="filter-select-worktype form-control">
                         <option value="all">Все работы</option>
-                    {% for query_work_type in component.query_work_types %}
+                    {% for query_work_type in response.query_work_types %}
                         <option value="{{ query_work_type.get_id() }}"{% if query_work_type.get_id() == filters.work_type %} selected{% endif %}>{{ query_work_type.get_name() }}</option>
                     {% endfor %}
                     </select>
@@ -145,7 +145,7 @@
         </div>
         <div class="col-xs-12 col-sm-9 col-lg-9">
             <ul class="list-unstyled">
-                <li>Отчет №1 
+                <li>Отчет №1
                     <div>
                         <a class="btn btn-link" href="/report/report_query_one" target="_blank">Просмотреть</a>
                         <a class="btn btn-link" href="/report/report_query_one_xls" target="_blank">Выгрузить</a>

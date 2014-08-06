@@ -1,4 +1,4 @@
-{% set query = component.query %}
+{% set query = response.query %}
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
@@ -208,13 +208,13 @@
 							<td style="border-bottom: 1px solid black; width:70%; height:8mm;"></td>
 							<td style="height:8mm;">с</td>
 							<td style="border-bottom: 1px solid black; width:4%; height:8mm;"></td>
-							<td style="border-bottom: 1px solid black; width:4%; height:8mm;"></td>		
+							<td style="border-bottom: 1px solid black; width:4%; height:8mm;"></td>
 							<td style="height:8mm;">до</td>
 							<td style="border-bottom: 1px solid black; width:4%; height:8mm;"></td>
-							<td style="border-bottom: 1px solid black; width:4%; height:8mm;"></td>		
+							<td style="border-bottom: 1px solid black; width:4%; height:8mm;"></td>
 							<td style="height:8mm;">-</td>
-							<td style="border-bottom: 1px solid black; width:15%; height:8mm;"></td>		
-							<td style="height:8mm;">г.</td>													
+							<td style="border-bottom: 1px solid black; width:15%; height:8mm;"></td>
+							<td style="height:8mm;">г.</td>
 						</tr>
 			{% endfor %}
 			</table>
@@ -229,7 +229,7 @@
 					<td>Телефон</td>
 					<td style="border-bottom: 1px solid black; width:20%;"></td>
 				</tr>
-			</table>		
+			</table>
 	</div>
 	<!-- end 1 block, begin 2 block -->
 	<div class="main-block">
@@ -266,7 +266,7 @@
 				<td style="border-bottom: 1px solid black; width:49%; height:8mm;"></td>
 				<td style="width:1%; height:8mm;"></td>
 				<td style="border-bottom: 1px solid black; width:50%; height:8mm;"></td>
-			</tr>			
+			</tr>
 		</table>
 	</div>
 <!-- end 2 block -->

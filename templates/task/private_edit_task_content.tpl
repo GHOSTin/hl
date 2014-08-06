@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set task = component.task %}
+{% set task = response.task %}
 {% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set target_date = task.get_time_target()|date('d.m.Y') %}
@@ -74,7 +74,7 @@
             Исполнители:
             <strong>
               <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" multiple tabindex="-1" id="task-performers" name="performers">
-                {% for user in component.users %}
+                {% for user in response.users %}
                   <option value="{{ user.get_id() }}"
                           {% if user.get_id() in performers %}selected="selected" {% endif %}>{{ user.get_lastname() }} {{ user.get_firstname() }}
                   </option>

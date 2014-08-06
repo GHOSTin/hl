@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
+{% set query = response.query %}
 {% block js %}
 	$('.query[query_id={{ query.get_id() }}]').html(get_hidden_content()).addClass('get_query_content');
 {% endblock js %}

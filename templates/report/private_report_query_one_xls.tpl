@@ -1,4 +1,4 @@
-{% set queries = component.queries.get_queries() %}
+{% set queries = response.queries.get_queries() %}
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
 {% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'} %}
@@ -33,7 +33,7 @@
             <Cell><Data ss:Type="String">Дом</Data></Cell>
             <Cell><Data ss:Type="String">Лицевые счета</Data></Cell>
             <Cell><Data ss:Type="String">Время открытия задачи</Data></Cell>
-            <Cell><Data ss:Type="String">Время закрытия задачи</Data></Cell>    
+            <Cell><Data ss:Type="String">Время закрытия задачи</Data></Cell>
             <Cell><Data ss:Type="String">Описание окрытия</Data></Cell>
             <Cell><Data ss:Type="String">Описание закрытия</Data></Cell>
             <Cell><Data ss:Type="String">Работы</Data></Cell>
@@ -45,14 +45,14 @@
                 {% set work_time = 0 %}
                 {% set users_string = '' %}
             <Row>
-                <Cell><Data ss:Type="String">{{ query.get_number() }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ statuses[query.get_status()] }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ warning_statuses[query.get_warning_status()] }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_work_type().get_name() }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ payment_statuses[query.get_payment_status()] }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_department().get_name() }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_house().get_street().get_name() }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_house().get_number() }}</Data></Cell> 
+                <Cell><Data ss:Type="String">{{ query.get_number() }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ statuses[query.get_status()] }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ warning_statuses[query.get_warning_status()] }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_work_type().get_name() }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ payment_statuses[query.get_payment_status()] }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_department().get_name() }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_house().get_street().get_name() }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_house().get_number() }}</Data></Cell>
                 <Cell><Data ss:Type="String">
                     {% if query.get_initiator() == 'number' %}
                         {% for number_id in numbers.structure[query.get_id()]['true'] %}
@@ -60,18 +60,18 @@
                             {{ number.fio }} (№{{ number.number }}), кв. {{ number.flat_number }}
                         {% endfor %}
                     {% endif %}
-                </Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_time_open()|date("h.i d.m.Y") }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{% if query.get_status() == 'close' or query.get_status() == 'reclose' %}{{ query.get_time_close()|date("h.i d.m.Y") }}{% endif %}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_description() }}</Data></Cell> 
-                <Cell><Data ss:Type="String">{{ query.get_close_reason() }}</Data></Cell> 
+                </Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_time_open()|date("h.i d.m.Y") }}</Data></Cell>
+                <Cell><Data ss:Type="String">{% if query.get_status() == 'close' or query.get_status() == 'reclose' %}{{ query.get_time_close()|date("h.i d.m.Y") }}{% endif %}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_description() }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_close_reason() }}</Data></Cell>
                 <Cell><Data ss:Type="String">
                     {%- for work in query.get_works() -%}
                         {{- work.get_name() -}}
                         {% set work_time = (work_time + (work.get_time_close() - work.get_time_open())) // 60 %}
                     {%- endfor -%}
-                </Data></Cell> 
-                <Cell><Data ss:Type="String">{{ work_time }}</Data></Cell> 
+                </Data></Cell>
+                <Cell><Data ss:Type="String">{{ work_time }}</Data></Cell>
                 <Cell><Data ss:Type="String">
                     {% set user = query.get_creator() %}
                     {{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }} (диспетчер)
@@ -81,8 +81,8 @@
                     {%- for user in query.get_performers() -%}
                         {{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }} (исполнитель)
                     {%- endfor -%}
-                </Data></Cell> 
-                <Cell><Data ss:Type="String"></Data></Cell> 
+                </Data></Cell>
+                <Cell><Data ss:Type="String"></Data></Cell>
             </Row>
             {% endfor %}
         </Table>

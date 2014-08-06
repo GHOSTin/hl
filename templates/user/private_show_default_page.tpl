@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set letters = component.letters %}
+{% set letters = response.letters %}
 {% block component %}
     <div class="btn-group">
         <button class="btn btn-default active get_user_letters">Пользователи</button>

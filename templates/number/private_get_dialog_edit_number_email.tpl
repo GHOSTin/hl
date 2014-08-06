@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
+{% set number = response.number %}
 {% block title %}Диалог редактирования почты владельца{% endblock title %}
 {% block dialog %}
 	<input type="text" class="dialog-input-email form-control" value="{{ number.get_email() }}">

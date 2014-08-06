@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set user = component.user %}
+{% set user = response.user %}
 {% block script %}
 	$('.update_telephone').click(function(){
 		$.get('update_telephone',{
@@ -16,4 +16,4 @@
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn btn-default update_telephone">Сохранить</div>
-{% endblock buttons %}	
+{% endblock buttons %}

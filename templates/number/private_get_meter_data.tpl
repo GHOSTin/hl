@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set meter = component.meter %}
-{% set number = component.number %}
-{% set date = component.time %}
+{% set meter = response.meter %}
+{% set number = response.number %}
+{% set date = response.time %}
 {% set months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август',
     'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] %}
 {% block js %}
@@ -19,14 +19,14 @@
     <div class="meter-data-content">
         <ul class="list-inline text-center">
             <li class="previous">
-                <a class="btn btn-default get_meter_data_year" act='{{ component.time|date_modify("-1 year")|date("U")}}'><i class="glyphicon glyphicon-chevron-left"></i></a>
+                <a class="btn btn-default get_meter_data_year" act='{{ response.time|date_modify("-1 year")|date("U")}}'><i class="glyphicon glyphicon-chevron-left"></i></a>
             </li>
             <li>
                 <h3>{{ date|date('Y')}}</h3>
             </li>
             <li class="next">
-                <a class="btn btn-default get_meter_data_year" act='{{ component.time|date_modify("+1 year")|date("U")}}'
-                {% if component.time|date('Y')=="now"|date('Y') %}
+                <a class="btn btn-default get_meter_data_year" act='{{ response.time|date_modify("+1 year")|date("U")}}'
+                {% if response.time|date('Y')=="now"|date('Y') %}
                     disabled
                 {% endif %}
                 ><i class="glyphicon glyphicon-chevron-right"></i></a>

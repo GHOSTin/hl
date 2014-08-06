@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set house = component.house %}
+{% set house = response.house %}
 {% set center = house.get_processing_centers()[request.GET('center_id')] %}
 {% block title %}Диалог добавления процессингового центра{% endblock title %}
 {% block dialog %}

@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set task = component.task %}
+{% set task = response.task %}
 {% block title %}Задача "{{ task.get_description()[:15] }}..." от {{ task.get_time_open()|date('d.m.Y') }}{% endblock title %}
 {% block dialog %}
 <form role="form">

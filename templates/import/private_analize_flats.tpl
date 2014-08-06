@@ -1,8 +1,8 @@
 {% extends "ajax.tpl" %}
-{% set import = component.import %}
+{% set import = response.import %}
 {% set city = import.get_city() %}
-{% set street = component.street %}
-{% set house = component.house %}
+{% set street = response.street %}
+{% set house = response.house %}
 {% block js %}
     $('.import-form').html(get_hidden_content());
 {% endblock js %}
@@ -22,14 +22,14 @@
             </tr>
         </thead>
         <tbody>
-        {% for flat in component.old_flats %}
+        {% for flat in response.old_flats %}
             <tr>
                 <td></td>
                 <td><span style="color:blue">OLD</span></td>
                 <td>{{ flat }}</td>
             </tr>
         {% endfor %}
-        {% for flat in component.new_flats %}
+        {% for flat in response.new_flats %}
             <tr>
                 <td><input type="checkbox"></td>
                 <td><span style="color:green">NEW</span></td>

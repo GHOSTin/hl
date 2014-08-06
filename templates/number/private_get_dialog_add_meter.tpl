@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
+{% set number = response.number %}
 {% block title %}Диалог добавления счетчика{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-service form-control">

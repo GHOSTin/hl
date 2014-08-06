@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set house = component.house %}
-{% set departments = component.departments %}
+{% set house = response.house %}
+{% set departments = response.departments %}
 {% block title %}Диалог редактирования участка{% endblock title %}
 {% block dialog %}
 	<div class="form-group">

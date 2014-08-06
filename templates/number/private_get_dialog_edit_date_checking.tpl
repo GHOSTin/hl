@@ -1,9 +1,9 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
+{% set number = response.number %}
+{% set meter = response.meter %}
 {% block title %}Диалог редактирования времени поверки счетчика{% endblock title %}
 {% block dialog %}
-	<input type="text" class="dialog-input-date_checking form-control" value="{{ meter.get_date_checking()|date('d.m.Y') }}">	
+	<input type="text" class="dialog-input-date_checking form-control" value="{{ meter.get_date_checking()|date('d.m.Y') }}">
 {% endblock dialog %}
 {% block buttons %}
 	<div class="btn btn-primary update_date_checking">Изменить</div>

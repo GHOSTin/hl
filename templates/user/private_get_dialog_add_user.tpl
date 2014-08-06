@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set users = component.users %}
+{% set users = response.users %}
 {% block title %}Диалог нового пользователя пользователя{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-user_id form-control">

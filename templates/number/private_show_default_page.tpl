@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set streets = component.streets %}
+{% set streets = response.streets %}
 {% block component %}
     <div class="navbar navbar-default col-xs-12">
         <form class="navbar-form pull-left col-xs-12" id="filter-numbers">

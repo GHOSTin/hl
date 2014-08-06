@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set user = component.user %}
-{% set company = component.company %}
-{% set profiles = component.profiles %}
+{% set user = response.user %}
+{% set company = response.company %}
+{% set profiles = response.profiles %}
 {% block js %}
     $('.user[user = {{ user.get_id() }}] .company[company = {{ company.get_id() }}]').append(get_hidden_content());
 {% endblock js %}

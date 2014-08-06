@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set client_queries = component.client_queries %}
-{% set queries = component.queries %}
+{% set client_queries = response.client_queries %}
+{% set queries = response.queries %}
 {% block js %}
 	$('.client_queries').html($('._hidden_content .client_queries').html());
   $('.queries').html($('._hidden_content .queries').html());

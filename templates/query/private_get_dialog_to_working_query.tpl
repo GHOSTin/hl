@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
+{% set query = response.query %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.to_working_query').click(function(){
@@ -15,13 +15,13 @@
 <div class="modal-content">
     <div class="modal-header">
         <h3>Передача заявки в работу.</h3>
-    </div>	
+    </div>
 	<div class="modal-body">
 		Передать заявку в работу?
 	</div>
 	<div class="modal-footer">
 		<div class="btn btn-primary to_working_query">Передать</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

@@ -17,7 +17,7 @@
     <label for="task-performers">Исполнители</label>
     <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" aria-required="true"
             multiple tabindex="3" id="task-performers" name="performers" required>
-      {% for user in component.users %}
+      {% for user in response.users %}
         <option value="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }}</option>
       {% endfor %}
     </select>

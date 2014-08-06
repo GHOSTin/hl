@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set center = component.center %}
+{% set center = response.center %}
 {% block title %}Диалог переименования процессингового центра{% endblock title %}
 {% block dialog %}
 	<input type="text" class="dialog-input-name" value="{{ center.get_name() }}">

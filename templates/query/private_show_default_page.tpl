@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set client_queries = component.client_queries %}
+{% set client_queries = response.client_queries %}
 {% block component %}
     <div class="alert alert-success">Внимание. Теперь комментарии если они есть в заявке показываются в зеленом квардрате. Теперь нет смысла писать "смотри коментарии".</div>
     <!-- begin left block -->

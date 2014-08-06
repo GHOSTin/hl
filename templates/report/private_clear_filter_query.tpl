@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set filters = component.filters %}
+{% set filters = response.filters %}
 {% block js %}
     $('.query_time_begin').val('{{ filters.time_begin|date('d.m.Y') }}');
     $('.query_time_end').val('{{ filters.time_end|date('d.m.Y') }}');

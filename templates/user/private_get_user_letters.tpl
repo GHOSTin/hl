@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set letters = component.letters %}
+{% set letters = response.letters %}
 {% block js %}
     $('.letters').html(get_hidden_content('._users'))
     $('.get_group_letters').removeClass('active');

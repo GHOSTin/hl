@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set tasks = component.tasks %}
+{% set tasks = response.tasks %}
 {% block html %}
   <p>
     <a class="btn btn-success get_dialog_create_task">

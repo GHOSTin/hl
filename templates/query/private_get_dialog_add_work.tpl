@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
-{% set workgroups = component.workgroups %}
+{% set query = response.query %}
+{% set workgroups = response.workgroups %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.add_work').click(function(){

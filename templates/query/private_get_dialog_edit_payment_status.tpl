@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
+{% set query = response.query %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'}%}
 {% block js %}
 	show_dialog(get_hidden_content());
@@ -17,7 +17,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <h3>Тип оплаты заявки</h3>
-    </div>	
+    </div>
 	<div class="modal-body">
 		<label>Тип оплаты:</label>
 		<select class="dialog-payment_status form-control">
@@ -33,6 +33,6 @@
 	<div class="modal-footer">
 		<div class="btn btn-primary update_payment_status">Сохранить</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

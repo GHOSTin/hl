@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set street = component.street %}
+{% set street = response.street %}
 {% block js %}
     {% if street.get_houses() is not empty %}
         $('.filter-select-house').html(get_hidden_content()).attr('disabled', false);

@@ -1,4 +1,4 @@
-{% set current_day_time = component.timeline %}
+{% set current_day_time = response.timeline %}
 {% set m = current_day_time|date("n") %}
 {% set f = current_day_time|date("F") %}
 {% set y = current_day_time|date("Y") %}
@@ -21,7 +21,7 @@
             {% if day|date('U') == current_day_time %}
                 active
             {% endif %}
-            {% if day|date('U') == component.now %}
+            {% if day|date('U') == response.now %}
                 btn-info
             {% endif %}
             " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">

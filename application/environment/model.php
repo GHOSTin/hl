@@ -32,7 +32,7 @@ class model_environment{
 		$profile = di::get('profile');;
 		if($profile instanceof data_profile)
 			$data['rules'] = $profile->get_rules();
-		$data['component'] = $controller::$method($request);
+		$data['response'] = $controller::$method($request);
 		$data['request'] = $request;
 		return $data;
 	}

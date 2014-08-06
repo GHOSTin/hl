@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set number = component.number %}
+{% set number = response.number %}
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% block js %}

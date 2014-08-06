@@ -1,10 +1,10 @@
 {% extends "ajax.tpl" %}
-{% set user = component.user %}
-{% set company = component.company %}
-{% set profile = component.profile %}
-{% set restriction_name = component.restriction_name %}
+{% set user = response.user %}
+{% set company = response.company %}
+{% set profile = response.profile %}
+{% set restriction_name = response.restriction_name %}
 {% set rest = profile.get_restrictions()[restriction_name] %}
-{% set items = component.items %}
+{% set items = response.items %}
 {% block js %}
     $('.user[user = {{ user.get_id() }}] .company[company = {{ company.get_id() }}] .profile[profile = "{{ profile }}"] .restriction[restriction = "{{ restriction_name }}"]').append(get_hidden_content());
 {% endblock js %}

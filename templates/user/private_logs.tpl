@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set sessions = component.sessions %}
+{% set sessions = response.sessions %}
 {% block component %}
     <p>
       <a class="btn btn-success get_dialog_clear_logs">Очистить логи</a>
@@ -24,5 +24,5 @@
     </table>
 {% endblock component %}
 {% block javascript %}
-  <script src="/?js=component.js&p=user"></script>
+  <script src="/?js=response.js&p=user"></script>
 {% endblock javascript %}

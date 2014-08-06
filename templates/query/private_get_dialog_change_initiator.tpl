@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set query = component.query %}
-{% set streets = component.streets %}
+{% set query = response.query %}
+{% set streets = response.streets %}
 {% block title %}Диалог смены инициатор{% endblock title %}
 {% block dialog %}
 	<div>

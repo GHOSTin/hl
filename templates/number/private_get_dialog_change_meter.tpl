@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
+{% set number = response.number %}
+{% set meter = response.meter %}
 {% block title %}Диалог перепривязки счетчика{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-service form-control">

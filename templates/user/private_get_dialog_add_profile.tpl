@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set user = component.user %}
-{% set companies = component.companies %}
+{% set user = response.user %}
+{% set companies = response.companies %}
 {% block title %}Диалог добавления нового профиля{% endblock title %}
 {% block dialog %}
 	<select class="dialog-select-company form-control">

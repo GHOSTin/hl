@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set import = component.import %}
-{% set city = component.city %}
-{% set street = component.street %}
+{% set import = response.import %}
+{% set city = response.city %}
+{% set street = response.street %}
 {% block js %}
     $('.import-form').html(get_hidden_content());
 {% endblock js %}

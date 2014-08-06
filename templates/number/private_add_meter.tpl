@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
-{% set number = component.number %}
-{% set enable_meters = component.enable_meters %}
-{% set disable_meters = component.disable_meters %}
+{% set number = response.number %}
+{% set enable_meters = response.enable_meters %}
+{% set disable_meters = response.disable_meters %}
 {% block js %}
     $('.number[number = {{ number.get_id() }}] .number-meters').html(get_hidden_content())
 {% endblock js %}

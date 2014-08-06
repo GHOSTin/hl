@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set numbers = component.numbers %}
-{% set house = component.house %}
+{% set numbers = response.numbers %}
+{% set house = response.house %}
 {% block js %}
     $('.house[house = {{ house.get_id() }}] .house-content-content').html(get_hidden_content());
 {% endblock js %}

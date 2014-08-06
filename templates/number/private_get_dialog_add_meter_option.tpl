@@ -1,8 +1,8 @@
 {% extends "dialog.tpl" %}
-{% set meter = component.meter %}
-{% set number = component.number %}
-{% set service = component.service %}
-{% set time = component.time %}
+{% set meter = response.meter %}
+{% set number = response.number %}
+{% set service = response.service %}
+{% set time = response.time %}
 {% set services = {'cold_water':'Холодное водоснабжение',
     'hot_water':'Горячее водоснабжение', 'electrical':'Электроэнергия'} %}
 {% set rates = ['однотарифный', 'двухтарифный', 'трехтарифный'] %}

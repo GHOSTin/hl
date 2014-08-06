@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
+{% set query = response.query %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.reclose_query').click(function(){
@@ -15,13 +15,13 @@
 <div class="modal-content">
     <div class="modal-header">
         <h3>Перезакрытие заявки</h3>
-    </div>	
+    </div>
 	<div class="modal-body">
 		Перезакрыть заявку?
 	</div>
 	<div class="modal-footer">
 		<div class="btn btn-primary reclose_query">Перезакрыть</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

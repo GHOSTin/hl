@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set task = component.task %}
+{% set task = response.task %}
 {% block html %}
   {% include '@task/task_content.tpl' with {'task': task} %}
 {% endblock %}

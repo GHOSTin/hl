@@ -1,6 +1,6 @@
 {% extends "default.tpl" %}
-{% set number = component.number %}
-{% set accruals = component.accruals %}
+{% set number = response.number %}
+{% set accruals = response.accruals %}
 {% block component %}
   <div class="row">
     <div class="col-md-6">

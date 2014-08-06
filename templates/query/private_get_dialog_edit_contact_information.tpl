@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set query = component.query %}
+{% set query = response.query %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.update_contact_information').click(function(){
@@ -18,7 +18,7 @@
 <div class="modal-content">
     <div class="modal-header">
         <h3>Контактная информация</h3>
-    </div>	
+    </div>
 	<div class="modal-body row">
         <div class="col-lg-8">
             <div class="form-group">
@@ -38,6 +38,6 @@
 	<div class="modal-footer">
 		<div class="btn btn-primary update_contact_information">Сохранить</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

@@ -1,6 +1,6 @@
 {% extends "print.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
+{% set number = response.number %}
+{% set meter = response.meter %}
 {% set services = {'cold_water':'холодного водоснабжения',
     'hot_water':'горячего водоснабжения', 'electrical':'электроэнергии'} %}
 {% set rates = ['Однотарифный', 'Двухтарифный', 'Трехтарифный'] %}
@@ -19,7 +19,7 @@
     Период поверки: {{ meter.get_period() // 12 }} г {{ meter.get_period() % 12 }} мес.
     Дата следующей поверки: {{ meter.get_date_next_checking()|date('d.m.Y') }}
 </p>
-{% if component.n2m_data|length >0 %}
+{% if response.n2m_data|length >0 %}
     <table>
         <tr>
             <td>Время</td>
@@ -36,7 +36,7 @@
                 <td>3 тариф</td>
             {% endif %}
         </tr>
-    {% for data in component.n2m_data %} 
+    {% for data in response.n2m_data %}
         <tr>
             <td>{{data.time|date('m.Y')}}</td>
             {% if n2m.get_rates() == 1 %}

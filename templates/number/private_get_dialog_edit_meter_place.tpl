@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
+{% set number = response.number %}
+{% set meter = response.meter %}
 {% set places = {'kitchen':'Кухня', 'toilet':'Туалет', 'bathroom':'Ванна'} %}
 {% block title %}Диалог редактирования места установки счетчика{% endblock title %}
 {% block dialog %}

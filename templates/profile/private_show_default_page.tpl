@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set user = component.user %}
+{% set user = response.user %}
 {% block component %}
 	<div class="profile">
 		<div class="profile-content">

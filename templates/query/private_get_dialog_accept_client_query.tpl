@@ -1,6 +1,6 @@
 {% extends "ajax.tpl" %}
-{% set client_query = component.client_query %}
-{% set number = component.number %}
+{% set client_query = response.client_query %}
+{% set number = response.number %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.accept_client_query').click(function(){
@@ -51,8 +51,8 @@
         <div class="form-group">
             <p><strong>Выберите тип работ по заявке</strong></p>
             <select class="form-control dialog-worktype">
-                {% if component.query_work_types != false %}
-                    {% for query_work_type in component.query_work_types %}
+                {% if response.query_work_types != false %}
+                    {% for query_work_type in response.query_work_types %}
                         <option value="{{query_work_type.get_id()}}">{{query_work_type.get_name()}}</option>
                     {% endfor %}
                 {% endif %}

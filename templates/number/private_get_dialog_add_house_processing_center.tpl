@@ -1,5 +1,5 @@
 {% extends "dialog.tpl" %}
-{% set centers = component.centers %}
+{% set centers = response.centers %}
 {% block title %}Диалог добавления процессингового центра{% endblock title %}
 {% block dialog %}
 	<div class="form-group">

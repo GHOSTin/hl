@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set work = component.work %}
+{% set work = response.work %}
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.remove_work').click(function(){
@@ -16,13 +16,13 @@
 <div class="modal-content">
     <div class="modal-header">
         <h3>Удаление работы</h3>
-    </div>	
+    </div>
 	<div class="modal-body">
 		Удалить из заявки работу "{{ work.get_name() }}"?
 	</div>
 	<div class="modal-footer">
 		<div class="btn btn-primary remove_work">Удалить</div>
 		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>	  
+	</div>
 </div>
 {% endblock html %}

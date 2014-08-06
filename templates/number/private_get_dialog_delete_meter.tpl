@@ -1,6 +1,6 @@
 {% extends "dialog.tpl" %}
-{% set number = component.number %}
-{% set meter = component.meter %}
+{% set number = response.number %}
+{% set meter = response.meter %}
 {% block title %}Диалог удаления привязки счетчика{% endblock title %}
 {% block dialog %}
 Вы действительно хотите удалить привязку счетчика к лицевому счете, а также показания?

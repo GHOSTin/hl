@@ -1,9 +1,9 @@
 {% extends "default.tpl" %}
-{% set companies = component.companies %}
+{% set companies = response.companies %}
 {% block component %}
   <ul>
   {% for company in companies %}
     <li>{{ company.get_name() }}</li>
-  {% endfor %}   
+  {% endfor %}
   </ul>
 {% endblock component %}
