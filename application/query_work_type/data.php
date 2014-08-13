@@ -5,12 +5,6 @@ class data_query_work_type extends data_object{
   private $id;
   private $name;
 
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_query_work_type'), true))
-      throw new BadMethodCallException();
-    return verify_query_work_type::$method($args[0]);
-  }
-
   public function get_id(){
     return $this->id;
   }

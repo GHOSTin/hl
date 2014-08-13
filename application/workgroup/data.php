@@ -8,12 +8,6 @@ class data_workgroup extends data_object{
 
   public static $statuses = ['active', 'deactive'];
 
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_workgroup'), true))
-      throw new BadMethodCallException();
-    return verify_workgroup::$method($args[0]);
-  }
-
   public function add_work(data_work $work){
     if(array_key_exists($work->get_id(), $this->works))
       throw new e_model('Такая работа уже добавлена в группу.');
@@ -37,17 +31,18 @@ class data_workgroup extends data_object{
   }
 
   public function set_id($id){
+    if($id > 65535 OR $id < 1)
+      throw new e_model('Идентификатор группы работ задан не верно.');
     $this->id = (int) $id;
-    self::verify_id($this->id);
   }
 
   public function set_name($name){
     $this->name = (string) $name;
-    self::verify_name($this->name);
   }
 
   public function set_status($status){
+    if(!in_array($status, self::$statuses, true))
+      throw new e_model('Статус группы работ задан не верно.');
     $this->status = (string) $status;
-    self::verify_status($this->status);
   }
 }

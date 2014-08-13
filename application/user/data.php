@@ -16,12 +16,6 @@ class data_user extends data_object{
 
   public static $statuses = ['true', 'false'];
 
-  public static function __callStatic($method, $args){
-    if(!in_array($method, get_class_methods('verify_user'), true))
-      throw new BadMethodCallException();
-    return verify_user::$method($args[0]);
-  }
-
   public function get_cellphone(){
     return $this->cellphone;
   }
@@ -62,13 +56,13 @@ class data_user extends data_object{
   }
 
   public function set_cellphone($cellphone){
-    $this->cellphone = (string) $cellphone;
-    self::verify_cellphone($this->cellphone);
+    $this->cellphone = $cellphone;
   }
 
   public function set_id($id){
-    $this->id = (int) $id;
-    self::verify_id($this->id);
+    if($id > 65535 OR $id < 1)
+      throw new e_model('Идентификатор пользователя задан не верно.');
+    $this->id = $id;
   }
 
   public function set_company_id($id){
@@ -77,7 +71,6 @@ class data_user extends data_object{
 
   public function set_firstname($firstname){
     $this->firstname = (string) $firstname;
-    self::verify_firstname($this->firstname);
   }
 
   public function set_hash($hash){
@@ -86,26 +79,23 @@ class data_user extends data_object{
 
   public function set_lastname($lastname){
     $this->lastname = (string) $lastname;
-    self::verify_lastname($this->lastname);
   }
 
   public function set_login($login){
     $this->login = (string) $login;
-    self::verify_login($this->login);
   }
 
   public function set_middlename($middlename){
     $this->middlename = (string) $middlename;
-    self::verify_middlename($this->middlename);
   }
 
   public function set_status($status){
-    $this->status = (string) $status;
-    self::verify_status($this->status);
+    if(!in_array($status, self::$statuses, true))
+        throw new e_model('Статус пользователя задан не верно.');
+    $this->status = $status;
   }
 
   public function set_telephone($telephone){
     $this->telephone = (string) $telephone;
-    self::verify_telephone($this->telephone);
   }
 }
