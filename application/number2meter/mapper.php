@@ -80,8 +80,6 @@ class mapper_number2meter{
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;
     $this->number = $number;
-    data_company::verify_id($this->company->get_id());
-    data_number::verify_id($this->number->get_id());
     $this->pdo = di::get('pdo');
   }
 
@@ -111,7 +109,6 @@ class mapper_number2meter{
   }
 
   public function delete(data_number2meter $meter){
-    $this->verify($meter);
     $stmt = $this->pdo->prepare(self::$delete);
     $stmt->bindValue(':number_id', $this->number->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -168,7 +165,6 @@ class mapper_number2meter{
   }
 
   public function insert(data_number2meter $meter){
-    $this->verify($meter);
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -188,7 +184,6 @@ class mapper_number2meter{
   }
 
   public function update(data_number2meter $meter){
-    $this->verify($meter);
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -209,10 +204,8 @@ class mapper_number2meter{
   public function update_serial(data_number2meter $meter, $serial){
     try{
       $this->pdo->beginTransaction();
-      $this->verify($meter);
       $old_serial = $meter->get_serial();
       $meter->set_serial($serial);
-      data_number2meter::verify_serial($meter->get_serial());
       $stmt = $this->pdo->prepare(self::$update_serial);
       $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
       $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -247,7 +240,6 @@ class mapper_number2meter{
   public function change(data_number2meter $meter, $old_meter_id, $old_serial){
     try{
       $this->pdo->beginTransaction();
-      $this->verify($meter);
       $stmt = $this->pdo->prepare(self::$change);
       $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
       $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -298,18 +290,5 @@ class mapper_number2meter{
       $this->pdo->rollBack();
       throw new RuntimeException();
     }
-  }
-
-  private function verify(data_number2meter $meter){
-    data_meter::verify_id($meter->get_id());
-    data_meter::verify_period($meter->get_period());
-    data_number2meter::verify_serial($meter->get_serial());
-    data_number2meter::verify_service($meter->get_service());
-    data_number2meter::verify_status($meter->get_status());
-    data_number2meter::verify_place($meter->get_place());
-    data_number2meter::verify_comment($meter->get_comment());
-    data_number2meter::verify_date_release($meter->get_date_release());
-    data_number2meter::verify_date_install($meter->get_date_install());
-    data_number2meter::verify_date_checking($meter->get_date_checking());
   }
 }

@@ -159,7 +159,6 @@ class mapper_query extends mapper{
   }
 
   public function insert(data_query $query){
-    $this->verify($query);
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':id', $query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
@@ -210,7 +209,6 @@ class mapper_query extends mapper{
   }
 
   public function update(data_query $query){
-    $this->verify($query);
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':id', $query->get_id(), PDO::PARAM_INT);
@@ -340,24 +338,5 @@ class mapper_query extends mapper{
     while($row = $stmt->fetch())
       $queries[] = $this->create_object($row);
     return $queries;
-  }
-
-  private function verify(data_query $query){
-    data_query::verify_id($query->get_id());
-    data_query::verify_status($query->get_status());
-    data_query::verify_payment_status($query->get_payment_status());
-    data_query::verify_warning_status($query->get_warning_status());
-    data_query::verify_contact_fio($query->get_contact_fio());
-    data_query::verify_contact_telephone($query->get_contact_telephone());
-    data_query::verify_close_reason($query->get_close_reason());
-    data_query::verify_description($query->get_description());
-    data_query::verify_status($query->get_status());
-    data_query::verify_time_open($query->get_time_open());
-    data_query::verify_time_work($query->get_time_work());
-    data_query::verify_initiator($query->get_initiator());
-    data_query::verify_number($query->get_number());
-    data_house::verify_id($query->get_house()->get_id());
-    data_department::verify_id($query->get_department()->get_id());
-    data_query_work_type::verify_id($query->get_work_type()->get_id());
   }
 }

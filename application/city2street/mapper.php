@@ -17,7 +17,6 @@ class mapper_city2street{
 
   public function __construct(data_city $city){
     $this->city = $city;
-    data_city::verify_id($this->city->get_id());
     $this->pdo = di::get('pdo');
   }
 
@@ -64,7 +63,6 @@ class mapper_city2street{
   }
 
   public function insert(data_street $street){
-    $this->verify($street);
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':street_id', $street->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':city_id', $this->city->get_id(), PDO::PARAM_INT);
@@ -73,11 +71,5 @@ class mapper_city2street{
     if(!$stmt->execute())
       throw new RuntimeException();
     return $street;
-  }
-
-  private function verify(data_street $street){
-    data_street::verify_id($street->get_id());
-    data_street::verify_name($street->get_name());
-    data_street::verify_status($street->get_status());
   }
 }

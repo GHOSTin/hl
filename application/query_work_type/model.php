@@ -5,7 +5,6 @@ class model_query_work_type{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-    data_company::verify_id($this->company->get_id());
 	}
 
 
@@ -15,7 +14,7 @@ class model_query_work_type{
 			throw new e_model('Нет такого типа работ.');
 		return $type;
 	}
-	
+
 	/**
 	* Возвращает список работ заявки
 	* @return array из data_query_work_type

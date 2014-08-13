@@ -15,7 +15,6 @@ class collection_query{
 
   public function __construct(data_company $company, array $queries){
     $this->company = $company;
-    data_company::verify_id($this->company->get_id());
     $this->queries = $queries;
     $this->pdo = di::get('pdo');
     if(!empty($this->queries))
@@ -88,7 +87,7 @@ class collection_query{
     if(!empty($this->id)){
       $ids = implode(', ', $this->id);
       $stmt = $this->pdo->prepare("SELECT DISTINCT `query2number`.* , `numbers`.`number`,
-          `numbers`.`fio`, `numbers`.`email`, `numbers`.`status`, 
+          `numbers`.`fio`, `numbers`.`email`, `numbers`.`status`,
           `numbers`.`cellphone`, `numbers`.`telephone`, `numbers`.`password`,
           `flats`.`flatnumber` as `flat_number`, `flats`.`id` as `flat_id`
           FROM `query2number`, `numbers`, `flats`

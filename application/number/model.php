@@ -5,13 +5,12 @@ class model_number{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-		data_company::verify_id($this->company->get_id());
 	}
-	
+
 	public function get_number($id){
 		$number = di::get('mapper_number')->find($id);
 		if(!($number instanceof data_number))
-			throw new e_model('Счетчика не существует.');			
+			throw new e_model('Счетчика не существует.');
 		return $number;
 	}
 

@@ -10,7 +10,6 @@ class data_house2processing_center{
 
   public function __construct(data_processing_center $center){
     $this->processing_center = $center;
-    data_processing_center::verify_id($this->processing_center->get_id());
   }
 
   public function get_identifier(){
@@ -18,12 +17,8 @@ class data_house2processing_center{
   }
 
   public function set_identifier($identifier){
-    $this->identifier = (string) $identifier;
-    self::verify_identifier($identifier);
-  }
-
-  public static function verify_identifier($ident){
-    if(!preg_match('/^[а-яА-Яa-zA-Z0-9]{0,20}$/u', $ident))
+    if(!preg_match('/^[а-яА-Яa-zA-Z0-9]{0,20}$/u', $identifier))
       throw new DomainException('Идентификатор лицевого счета задан не верно.');
+    $this->identifier = (string) $identifier;
   }
 }

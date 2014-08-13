@@ -21,8 +21,6 @@ class mapper_group2user{
   public function __construct(data_company $company, data_group $group){
     $this->company = $company;
     $this->group = $group;
-    data_company::verify_id($this->company->get_id());
-    data_group::verify_id($this->group->get_id());
     $this->pdo = di::get('pdo');
   }
 
@@ -36,7 +34,6 @@ class mapper_group2user{
   }
 
   public function insert(data_user $user){
-    $user->verify('id');
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', (int) $user->get_id(), PDO::PARAM_INT);
@@ -45,7 +42,6 @@ class mapper_group2user{
   }
 
   public function delete(data_user $user){
-    $user->verify('id');
     $stmt = $this->pdo->prepare(self::$delete);
     $stmt->bindValue(':group_id', (int) $this->group->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', (int) $user->get_id(), PDO::PARAM_INT);

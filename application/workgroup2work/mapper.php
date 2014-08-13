@@ -13,8 +13,6 @@ class mapper_workgroup2work{
     data_workgroup $work_group){
     $this->company = $company;
     $this->group = $work_group;
-    data_company::verify_id($this->company->get_id());
-    data_workgroup::verify_id($this->group->get_id());
     $this->pdo = di::get('pdo');
   }
 

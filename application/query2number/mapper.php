@@ -27,8 +27,6 @@ class mapper_query2number{
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
-    data_company::verify_id($this->company->get_id());
-    data_query::verify_id($this->query->get_id());
     $this->pdo = di::get('pdo');
   }
 
@@ -44,7 +42,6 @@ class mapper_query2number{
   }
 
   private function delete(data_number $number){
-    data_number::verify_id($number->get_id());
     $stmt = $this->pdo->prepare(self::$delete);
     $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -54,7 +51,6 @@ class mapper_query2number{
   }
 
   private function insert(data_number $number){
-    data_number::verify_id($number->get_id());
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);

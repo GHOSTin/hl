@@ -5,7 +5,6 @@ class model_import{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-		data_company::verify_id($this->company->get_id());
 	}
 
 

@@ -54,9 +54,6 @@ class mapper_house2number{
   public function __construct(data_company $company, data_house $house){
     $this->company = $company;
     $this->house = $house;
-    data_company::verify_id($this->company->get_id());
-    data_house::verify_id($this->house->get_id());
-    data_city::verify_id($this->house->get_city()->get_id());
     $this->pdo = di::get('pdo');
   }
 
@@ -135,13 +132,5 @@ class mapper_house2number{
       throw new RuntimeException();
     $number_id = (int) $stmt->fetch()['max_number_id'] + 1;
     return $number_id;
-  }
-
-  private function verify(data_number $number){
-    data_number::verify_id($number->get_id());
-    data_number::verify_number($number->get_number());
-    data_number::verify_fio($number->get_fio());
-    data_number::verify_status($number->get_status());
-    data_flat::verify_id($number->get_flat()->get_id());
   }
 }

@@ -30,7 +30,6 @@ final class data_meter extends data_object{
   }
 
   public function remove_period($period){
-    self::verify_period($period);
     $rs = array_search($period, $this->periods);
     if($rs === false)
       throw new DomainException('Периода не было в этом счетчике.');
@@ -38,7 +37,6 @@ final class data_meter extends data_object{
   }
 
   public function remove_service($service){
-    self::verify_service($service);
     $rs = array_search($service, $this->services);
     if($rs === false)
       throw new DomainException('Службы не было в этом счетчике.');
@@ -76,7 +74,6 @@ final class data_meter extends data_object{
   }
 
   public function set_service($service){
-    self::verify_service($service);
     $this->services[] = $service;
   }
 

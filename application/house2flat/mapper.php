@@ -18,8 +18,6 @@ class mapper_house2flat{
   public function __construct(data_company $company, data_house $house){
     $this->company = $company;
     $this->house = $house;
-    data_company::verify_id($this->company->get_id());
-    data_house::verify_id($this->house->get_id());
     $this->pdo = di::get('pdo');
   }
 
@@ -53,7 +51,6 @@ class mapper_house2flat{
   }
 
   public function insert(data_flat $flat){
-    $this->verify($flat);
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':id', (int) $flat->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
@@ -63,11 +60,5 @@ class mapper_house2flat{
     if(!$stmt->execute())
       throw new RuntimeException();
     return $flat;
-  }
-
-  private function verify(data_flat $flat){
-    data_flat::verify_id($flat->get_id());
-    data_flat::verify_number($flat->get_number());
-    data_flat::verify_status($flat->get_status());
   }
 }

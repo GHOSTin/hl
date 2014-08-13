@@ -26,8 +26,6 @@ class mapper_query2user{
   public function __construct($company, $query){
     $this->company = $company;
     $this->query = $query;
-    data_company::verify_id($this->company->get_id());
-    data_query::verify_id($this->query->get_id());
     $this->pdo = di::get('pdo');
   }
 

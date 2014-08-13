@@ -4,16 +4,12 @@ class model_meter2data{
   private $company;
   private $number;
   private $meter;
-  
+
   public function __construct(data_company $company, data_number $number,
     data_number2meter $meter){
     $this->company = $company;
     $this->number = $number;
     $this->meter = $meter;
-    data_company::verify_id($this->company->get_id());
-    data_number::verify_id($this->number->get_id());
-    data_meter::verify_id($this->meter->get_id());
-    data_meter::verify_rates($this->meter->get_rates());
   }
 
   public function get_values($begin, $end){

@@ -43,7 +43,6 @@ class model_user{
 	}
 
 	public function update_password($id, $password){
-		data_user::verify_password($password);
     $mapper = di::get('mapper_user');
 		$user = $mapper->find($id);
 		$user->set_hash($this->get_password_hash($password));

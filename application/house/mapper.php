@@ -47,13 +47,6 @@ class mapper_house extends mapper{
 
   public function update(data_house $house){
     $company = di::get('company');
-    data_company::verify_id($company->get_id());
-    data_house::verify_id($house->get_id());
-    data_house::verify_status($house->get_status());
-    data_house::verify_number($house->get_number());
-    data_city::verify_id($house->get_city()->get_id());
-    data_street::verify_id($house->get_street()->get_id());
-    data_department::verify_id($house->get_department()->get_id());
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':id', $house->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);

@@ -5,7 +5,6 @@ class model_group{
 
 	public function __construct(data_company $company){
 		$this->company = $company;
-		data_company::verify_id($this->company->get_id());
 	}
 
 	public function create_group($name, $status){
@@ -55,7 +54,7 @@ class model_group{
 	public function update_name($id, $name){
 		$group = $this->get_group($id);
 		$group->set_name($name);
-		$mapper = di::get('mapper_group');		
+		$mapper = di::get('mapper_group');
 		return $mapper->update($group);
 	}
 }

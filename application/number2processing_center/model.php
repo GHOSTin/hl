@@ -7,8 +7,6 @@ class model_number2processing_center{
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;
     $this->number = $number;
-    data_company::verify_id($this->company->get_id());
-    data_number::verify_id($this->number->get_id());
   }
 
   public function add_processing_center($center_id, $identifier){

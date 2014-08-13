@@ -99,7 +99,6 @@ class mapper_group extends mapper{
   }
 
   public function insert(data_group $group){
-    $group->verify('id', 'name', 'status', 'company_id');
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':id', (int) $group->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);
@@ -111,7 +110,6 @@ class mapper_group extends mapper{
   }
 
   public function update(data_group $group){
-    $group->verify('id', 'name', 'status', 'company_id');
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':id', (int) $group->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':company_id', (int) $group->get_company_id(), PDO::PARAM_INT);

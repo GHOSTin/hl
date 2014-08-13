@@ -22,8 +22,6 @@ class mapper_user2profile{
   public function __construct(data_company $company, data_user $user){
     $this->company = $company;
     $this->user = $user;
-    data_company::verify_id($this->company->get_id());
-    data_user::verify_id($this->user->get_id());
     $this->pdo = di::get('pdo');
   }
 

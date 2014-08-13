@@ -66,7 +66,6 @@ class model_report{
     if($status === 'all')
       $this->params['status'] = null;
     else{
-      data_query::verify_status($status);
       $this->params['status'] = $status;
     }
     (new mem(__CLASS__))->save($this->params);

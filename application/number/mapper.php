@@ -100,7 +100,6 @@ class mapper_number extends mapper{
     }
 
     public function update(data_number $number){
-        $this->verify($number);
         $stmt = $this->pdo->prepare(self::$update);
         $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
         $stmt->bindValue(':id', $number->get_id(), PDO::PARAM_INT);
@@ -113,14 +112,5 @@ class mapper_number extends mapper{
         if(!$stmt->execute())
           throw new RuntimeException();
         return $number;
-    }
-
-
-    private function verify(data_number $number){
-        data_number::verify_id($number->get_id());
-        data_number::verify_num($number->get_number());
-        data_number::verify_fio($number->get_fio());
-        data_number::verify_telephone($number->get_telephone());
-        data_number::verify_cellphone($number->get_cellphone());
     }
 }

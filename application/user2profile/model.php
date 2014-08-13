@@ -79,8 +79,6 @@ class model_user2profile{
     $this->company = $company;
     $this->user = $user;
     $this->pdo = di::get('pdo');
-    data_company::verify_id($this->company->get_id());
-    data_user::verify_id($this->user->get_id());
   }
 
   public function add_profile($profile){

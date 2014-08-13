@@ -18,7 +18,7 @@ class mapper_meter2data{
     AND `meter2data`.`serial` = :serial AND `meter2data`.`time` >= :time_begin
     AND `meter2data`.`time` <= :time_end";
 
-  private static $update = "UPDATE`meter2data` SET `timestamp` = :timestamp, 
+  private static $update = "UPDATE`meter2data` SET `timestamp` = :timestamp,
     `value` = :value, `way` = :way, `comment` = :comment
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `meter_id` = :meter_id AND `serial` = :serial AND `time` = :time";
@@ -32,7 +32,7 @@ class mapper_meter2data{
     `time`, `timestamp`, `value`, `way`, `comment` FROM `meter2data`
     WHERE `company_id` = :company_id AND `number_id` = :number_id
     AND `meter_id` = :meter_id AND `serial` = :serial
-    AND `time` = (SELECT MAX(`time`) FROM `meter2data` WHERE 
+    AND `time` = (SELECT MAX(`time`) FROM `meter2data` WHERE
     `company_id` = :company_id AND `number_id` = :number_id
     AND `meter_id` = :meter_id AND `serial` = :serial AND `time` < :time)";
 
@@ -41,10 +41,6 @@ class mapper_meter2data{
     $this->company = $company;
     $this->number = $number;
     $this->meter = $meter;
-    data_company::verify_id($this->company->get_id());
-    data_number::verify_id($this->number->get_id());
-    data_meter::verify_id($this->meter->get_id());
-    data_meter::verify_rates($this->meter->get_rates());
     $this->pdo = di::get('pdo');
   }
 
@@ -64,7 +60,6 @@ class mapper_meter2data{
   }
 
   public function insert(data_meter2data $value){
-    $this->verify($value);
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
@@ -118,7 +113,6 @@ class mapper_meter2data{
   }
 
   public function update(data_meter2data $data){
-    $this->verify($data);
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':number_id', (int) $this->number->get_id(), PDO::PARAM_INT);
@@ -132,11 +126,5 @@ class mapper_meter2data{
     if(!$stmt->execute())
       throw new RuntimeException();
     return $data;
-  }
-
-  private function verify(data_meter2data $data){
-    verify_environment::verify_time($data->get_time());
-    data_meter2data::verify_comment($data->get_comment());
-    data_meter2data::verify_way($data->get_way());
   }
 }

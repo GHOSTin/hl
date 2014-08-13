@@ -7,13 +7,13 @@ class mapper_number2processing_center{
 
   private static $all = "SELECT
     `processing_center2number`.`company_id`,
-    `processing_center2number`.`processing_center_id`, 
+    `processing_center2number`.`processing_center_id`,
     `processing_center2number`.`number_id`,
-    `processing_center2number`.`identifier`, 
+    `processing_center2number`.`identifier`,
     `processing_centers`.`name` as `processing_center_name`
     FROM `processing_center2number`, `processing_centers`
     WHERE `processing_center2number`.`company_id` = :company_id
-    AND `processing_center2number`.`processing_center_id` 
+    AND `processing_center2number`.`processing_center_id`
     = `processing_centers`.`id`
     AND `processing_center2number`.`number_id` = :number_id
     ORDER BY `processing_centers`.`name`";
@@ -29,8 +29,6 @@ class mapper_number2processing_center{
   public function __construct(data_company $company, data_number $number){
     $this->company = $company;
     $this->number = $number;
-    data_company::verify_id($this->company->get_id());
-    data_number::verify_id($this->number->get_id());
     $this->pdo = di::get('pdo');
   }
 

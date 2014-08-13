@@ -24,7 +24,6 @@ class mapper_processing_center extends mapper{
   }
 
   public function insert(data_processing_center $center){
-    $this->verify($center);
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':id', (int) $center->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':name', (string) $center->get_name(), PDO::PARAM_STR);
@@ -68,17 +67,11 @@ class mapper_processing_center extends mapper{
   }
 
   public function update(data_processing_center $center){
-    $this->verify($center);
     $stmt = $this->pdo->prepare(self::$update);
     $stmt->bindValue(':id', (int) $center->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':name', (string) $center->get_name(), PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();
     return $center;
-  }
-
-  private function verify(data_processing_center $center){
-    data_processing_center::verify_id($center->get_id());
-    data_processing_center::verify_name($center->get_name());
   }
 }
