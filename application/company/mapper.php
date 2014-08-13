@@ -2,15 +2,12 @@
 
 class mapper_company extends mapper{
 
-  private static $find = "SELECT `id`, `name` FROM `companies`
-    WHERE `id` = :id";
-
-  private static $find_all = "SELECT `id`, `name` FROM `companies`
-    ORDER BY `name`";
+  private static $find = "SELECT id, name FROM companies WHERE id = :id";
+  private static $find_all = "SELECT id, name FROM companies ORDER BY name";
 
   public function find($id){
     $stmt = $this->pdo->prepare(self::$find);
-    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new RuntimeException();
     $count = $stmt->rowCount();

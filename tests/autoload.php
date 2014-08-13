@@ -33,6 +33,7 @@ require_once(ROOT.'/application/house2processing_center/data.php');
 require_once(ROOT.'/application/task/data.php');
 require_once(ROOT.'/application/task2comment/data.php');
 # mapa
+require_once(ROOT.'/application/company/mapper.php');
 require_once(ROOT.'/application/client_query/mapper.php');
 require_once(ROOT.'/application/number/mapper.php');
 require_once(ROOT.'/application/query/mapper.php');
@@ -62,6 +63,7 @@ require_once(ROOT.'/application/street2house/model.php');
 require_once(ROOT.'/application/task/model.php');
 require_once(ROOT.'/application/user2task/model.php');
 # factory
+require_once(ROOT.'/application/company/factory.php');
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');
 require_once(ROOT.'/application/house/factory.php');
