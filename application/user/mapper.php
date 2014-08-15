@@ -3,13 +3,16 @@
 
   private static $LOGIN = "SELECT id, company_id, status,
     username as login, firstname, lastname,
-    midlename as middlename, password,
-    telephone, cellphone FROM users WHERE username = :login
-    AND password = :hash";
+    midlename as middlename, password, telephone, cellphone
+    FROM users WHERE username = :login AND password = :hash";
 
   private static $find = "SELECT id, company_id, status,
     username as login, firstname, lastname, midlename as middlename,
     password, telephone, cellphone FROM users WHERE id = :id";
+
+  private static $find_by_login = "SELECT id, company_id, status,
+    username as login, firstname, lastname, midlename as middlename,
+    password, telephone, cellphone FROM users WHERE username = :login";
 
   private static $id = "SELECT MAX(id) as max_user_id FROM users";
 
@@ -23,7 +26,7 @@
     cellphone) VALUES (:user_id, :company_id, :status, :login, :firstname,
     :lastname, :middlename, :password, :telephone, :cellphone)";
 
-  private static $get_users = "SELECT id, company_id, status,
+  private static $find_all = "SELECT id, company_id, status,
     username as login, firstname, lastname, midlename as middlename,
     password, telephone, cellphone FROM users ORDER BY lastname";
 
@@ -33,7 +36,7 @@
 
   public function find($id){
     $stmt = $this->pdo->prepare(self::$find);
-    $stmt->bindValue(':id', (int) $id, PDO::PARAM_INT);
+    $stmt->bindValue(':id', $id, PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new RuntimeException();
     $count = $stmt->rowCount();
@@ -45,10 +48,10 @@
       throw new RuntimeException();
   }
 
-  public function find_by_login_and_password($login, $password){
+  public function find_by_login_and_password($login, $hash){
     $stmt = $this->pdo->prepare(self::$LOGIN);
-    $stmt->bindValue(':login', htmlspecialchars($login), PDO::PARAM_STR);
-    $stmt->bindValue(':hash', (new model_user)->get_password_hash($password) , PDO::PARAM_STR);
+    $stmt->bindValue(':login', $login, PDO::PARAM_STR);
+    $stmt->bindValue(':hash', $hash, PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();
     $count = $stmt->rowCount();
@@ -71,7 +74,7 @@
   }
 
   public function get_users(){
-    $stmt = $this->pdo->prepare(self::$get_users);
+    $stmt = $this->pdo->prepare(self::$find_all);
     if(!$stmt->execute())
       throw new RuntimeException();
     $users = [];
@@ -80,8 +83,8 @@
     return $users;
   }
 
-  public function find_user_by_login($login){
-    $stmt = $this->pdo->prepare("SELECT id FROM users WHERE username = :login");
+  public function find_by_login($login){
+    $stmt = $this->pdo->prepare(self::$find_by_login);
     $stmt->bindValue(':login', $login, PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();

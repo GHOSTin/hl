@@ -4,7 +4,7 @@ class model_user{
 	public function create_user($lastname, $firstname, $middlename, $login,
 		$password, $status){
 		$mapper = di::get('mapper_user');
-		if(!is_null($mapper->find_user_by_login($login)))
+		if(!is_null($mapper->find_by_login($login)))
       throw new RuntimeException();
 		$user = new data_user();
 		$user->set_id($mapper->get_insert_id());
@@ -52,7 +52,7 @@ class model_user{
 
 	public function update_login($id, $login){
 		$mapper = di::get('mapper_user');
-		if(!is_null($mapper->find_user_by_login($login)))
+		if(!is_null($mapper->find_by_login($login)))
 			throw new RuntimeException();
 		$user = $mapper->find($id);
 		$user->set_login($login);

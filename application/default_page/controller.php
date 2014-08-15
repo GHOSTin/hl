@@ -9,8 +9,8 @@ class controller_default_page{
     if(!is_null($request->take_post('login'))
       AND !is_null($request->take_post('password'))){
       $mapper = di::get('mapper_user');
-      $user = $mapper->find_by_login_and_password($request->take_post('login'),
-                                              $request->take_post('password'));
+      $user = $mapper->find_by_login_and_password(htmlspecialchars($request->take_post('login')),
+                                              (new model_user)->get_password_hash($request->take_post('password')));
       if(!is_null($user)){
         if($user->get_status() !== 'true')
           die('Вы заблокированы и не можете войти в систему.');
