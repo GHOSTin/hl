@@ -10,6 +10,10 @@ class factory_user{
     $user->set_firstname($data['firstname']);
     $user->set_middlename($data['middlename']);
     $user->set_lastname($data['lastname']);
+    $user->set_company_id($data['company_id']);
+    $user->set_hash($data['password']);
+    $user->set_telephone($data['telephone']);
+    $user->set_cellphone($data['cellphone']);
     return $user;
   }
 }

@@ -1,45 +1,34 @@
   <?php
   class mapper_user extends mapper{
 
-  private static $LOGIN = "SELECT `id`, `company_id`, `status`,
-    `username` as `login`, `firstname`, `lastname`,
-    `midlename` as `middlename`, `password`, 
-    `telephone`, `cellphone` FROM `users` WHERE `username` = :login
-    AND `password` = :hash";
+  private static $LOGIN = "SELECT id, company_id, status,
+    username as login, firstname, lastname,
+    midlename as middlename, password,
+    telephone, cellphone FROM users WHERE username = :login
+    AND password = :hash";
 
-  private static $find = "SELECT `id`, `company_id`, `status`,
-    `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
-    `password`, `telephone`, `cellphone` FROM `users` WHERE `id` = :id";
+  private static $find = "SELECT id, company_id, status,
+    username as login, firstname, lastname, midlename as middlename,
+    password, telephone, cellphone FROM users WHERE id = :id";
 
-  private static $id = "SELECT MAX(`id`) as `max_user_id` FROM `users`";
+  private static $id = "SELECT MAX(id) as max_user_id FROM users";
 
-  private static $update = "UPDATE `users` SET `firstname` = :firstname,
-    `lastname` = :lastname, `midlename` = :middlename, `status` = :status,
-    `password` = :password, `telephone` = :telephone, `cellphone` = :cellphone,
-    `username` = :login WHERE `id` = :id";
+  private static $update = "UPDATE users SET firstname = :firstname,
+    lastname = :lastname, midlename = :middlename, status = :status,
+    password = :password, telephone = :telephone, cellphone = :cellphone,
+    username = :login WHERE id = :id";
 
-  private static $insert = "INSERT INTO `users` (`id`, `company_id`, `status`,
-    `username`, `firstname`, `lastname`, `midlename`, `password`, `telephone`,
-    `cellphone`) VALUES (:user_id, :company_id, :status, :login, :firstname,
+  private static $insert = "INSERT INTO users (id, company_id, status,
+    username, firstname, lastname, midlename, password, telephone,
+    cellphone) VALUES (:user_id, :company_id, :status, :login, :firstname,
     :lastname, :middlename, :password, :telephone, :cellphone)";
-  
-  private static $get_users = "SELECT `id`, `company_id`, `status`,
-    `username` as `login`, `firstname`, `lastname`, `midlename` as `middlename`,
-    `password`, `telephone`, `cellphone` FROM `users` ORDER BY `lastname`";
+
+  private static $get_users = "SELECT id, company_id, status,
+    username as login, firstname, lastname, midlename as middlename,
+    password, telephone, cellphone FROM users ORDER BY lastname";
 
   public function create_object(array $row){
-    $user = new data_user();
-    $user->set_id($row['id']);
-    $user->set_company_id($row['company_id']);
-    $user->set_status($row['status']);
-    $user->set_login($row['login']);
-    $user->set_firstname($row['firstname']);
-    $user->set_lastname($row['lastname']);
-    $user->set_middlename($row['middlename']);
-    $user->set_hash($row['password']);
-    $user->set_telephone($row['telephone']);
-    $user->set_cellphone($row['cellphone']);
-    return $user;
+    return di::get('factory_user')->build($row);
   }
 
   public function find($id){
@@ -92,7 +81,7 @@
   }
 
   public function find_user_by_login($login){
-    $stmt = $this->pdo->prepare("SELECT `id` FROM `users` WHERE `username` = :login");
+    $stmt = $this->pdo->prepare("SELECT id FROM users WHERE username = :login");
     $stmt->bindValue(':login', $login, PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();

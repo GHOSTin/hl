@@ -56,46 +56,60 @@ class data_user extends data_object{
   }
 
   public function set_cellphone($cellphone){
+    if(!preg_match('/^[0-9+]{0,11}$/', $cellphone))
+      throw new DomainException('Wrong user cellphone '.$cellphone);
     $this->cellphone = $cellphone;
   }
 
   public function set_id($id){
     if($id > 65535 OR $id < 1)
-      throw new e_model('Идентификатор пользователя задан не верно.');
+      throw new DomainException('Идентификатор пользователя задан не верно.');
     $this->id = $id;
   }
 
   public function set_company_id($id){
-    $this->company_id = (int) $id;
+    if($id > 255 OR $id < 1)
+      throw new DomainException('Wrong company id '.$id);
+    $this->company_id = $id;
   }
 
   public function set_firstname($firstname){
-    $this->firstname = (string) $firstname;
+    if(!preg_match('/^[а-яА-Я]{1,255}$/u', $firstname))
+      throw new DomainException('Wrong user firstname '.$firstname);
+    $this->firstname = $firstname;
   }
 
   public function set_hash($hash){
-    $this->hash = (string) $hash;
+    $this->hash = $hash;
   }
 
   public function set_lastname($lastname){
-    $this->lastname = (string) $lastname;
+    if(!preg_match('/^[а-яА-Я]{1,255}$/u', $lastname))
+      throw new DomainException('Wrong user lastname '.$lastname);
+    $this->lastname = $lastname;
   }
 
   public function set_login($login){
-    $this->login = (string) $login;
+    if(!preg_match('/^[а-яА-ЯA-Za-z0-9]{1,255}$/u', $login))
+      throw new DomainException('Wrong user login '.$login);
+    $this->login = $login;
   }
 
   public function set_middlename($middlename){
-    $this->middlename = (string) $middlename;
+    if(!preg_match('/^[а-яА-Я]{0,255}$/u', $middlename))
+      throw new DomainException('Wrong user middlename '.$middlename);
+    $this->middlename = $middlename;
   }
 
   public function set_status($status){
     if(!in_array($status, self::$statuses, true))
-        throw new e_model('Статус пользователя задан не верно.');
+      throw new DomainException('wrong user status '.$status);
     $this->status = $status;
   }
 
   public function set_telephone($telephone){
-    $this->telephone = (string) $telephone;
+    if(!preg_match('/^[0-9]{0,11}$/', $telephone))
+      throw new DomainException('Wrong user telephone '.$telephone);
+    $this->telephone = $telephone;
   }
 }
