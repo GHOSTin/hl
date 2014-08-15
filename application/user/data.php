@@ -90,7 +90,7 @@ class data_user extends data_object{
   }
 
   public function set_login($login){
-    if(!preg_match('/^[а-яА-ЯA-Za-z0-9]{1,255}$/u', $login))
+    if(!preg_match('/^[а-яА-ЯA-Za-z0-9]{3,255}$/u', $login))
       throw new DomainException('Wrong user login '.$login);
     $this->login = $login;
   }
