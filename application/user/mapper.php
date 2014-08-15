@@ -67,10 +67,7 @@
     $stmt = $this->pdo->prepare(self::$id);
     if(!$stmt->execute())
       throw new RuntimeException();
-    if($stmt->rowCount() !== 1)
-        throw new RuntimeException();
-    $user_id = (int) $stmt->fetch()['max_user_id'] + 1;
-    return $user_id;
+    return (int) $stmt->fetch()['max_user_id'] + 1;
   }
 
   public function get_users(){
