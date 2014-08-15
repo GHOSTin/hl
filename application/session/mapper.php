@@ -2,14 +2,16 @@
 
 class mapper_session extends mapper{
 
-  private static $find_all = 'SELECT `s`.`time` as `s_time`, `s`.`ip` as `s_ip`,
-    `u`.`id` as `u_id`, `u`.`status` as `u_status`, `u`.`username` as `u_login`,
-    `u`.`firstname` as `u_firstname`, `u`.`midlename` as `u_middlename`,
-    `u`.`lastname` as `u_lastname`
-    FROM `sessions_logs` as `s`, `users` as `u` WHERE `s`.`user_id` = `u`.`id`
-    ORDER BY `s`.`time` DESC';
+  private static $find_all = 'SELECT s.time as s_time, s.ip as s_ip,
+    u.id as u_id, u.status as u_status, u.username as u_login,
+    u.firstname as u_firstname, u.midlename as u_middlename,
+    u.lastname as u_lastname, u.company_id as u_company_id,
+    u.password as u_password, u.telephone as u_telephone,
+    u.cellphone as u_cellphone
+    FROM sessions_logs as s, users as u WHERE s.user_id = u.id
+    ORDER BY s.time DESC';
 
-  private static $insert = 'INSERT INTO `sessions_logs` (`user_id`, `time`, `ip`
+  private static $insert = 'INSERT INTO sessions_logs (user_id, time, ip
     ) VALUES (:user_id, :time, :ip)';
 
   private static $truncate = "TRUNCATE TABLE sessions_logs";
@@ -24,7 +26,9 @@ class mapper_session extends mapper{
     while($row = $stmt->fetch()){
       $u_array = ['id' => $row['u_id'], 'status' => $row['u_status'],
         'login' => $row['u_login'], 'firstname' => $row['u_firstname'],
-        'middlename' => $row['u_middlename'], 'lastname' => $row['u_lastname']];
+        'middlename' => $row['u_middlename'], 'lastname' => $row['u_lastname'],
+        'company_id' => $row['u_company_id'], 'telephone' => $row['u_telephone'],
+        'cellphone' => $row['u_cellphone']];
       $user = $factory_user->build($u_array);
       $s_array = ['user' => $user, 'time' => $row['s_time'],
         'ip' => $row['s_ip']];
