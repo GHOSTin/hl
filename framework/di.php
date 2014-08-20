@@ -15,6 +15,10 @@ class di{
     return self::$instance = $instance;
   }
 
+  /**
+   * @param string $key
+   * @return object $key()
+   */
   public static function get($key){
     $pimple = self::get_instance();
     return $pimple[$key];
