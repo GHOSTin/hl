@@ -1,8 +1,4 @@
 <?php
-$file = ROOT.'/'.framework_configuration::application_folder.'/application_configuration.php';
-if(file_exists($file))
-	require_once $file;
-// автозагрузка классов
 function framework_autoload($class_name){
 	if(
 		(0 === strpos($class_name, 'model_'))

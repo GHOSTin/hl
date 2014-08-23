@@ -65,6 +65,8 @@ class model_environment{
 	}
 
 	public static function before(){
+		require_once ROOT.'/'.framework_configuration::application_folder.'/application_configuration.php';
+		date_default_timezone_set(application_configuration::php_timezone);
 		$pimple = new \Pimple\Container();
 
 		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
