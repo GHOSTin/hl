@@ -11,7 +11,6 @@ function framework_autoload($class_name){
 	 	OR (0 === strpos($class_name, 'view_'))
 	 	OR (0 === strpos($class_name, 'controller_'))
 	 	OR (0 === strpos($class_name, 'data_'))
-	 	OR (0 === strpos($class_name, 'verify_'))
 	 	OR (0 === strpos($class_name, 'mapper_'))
 	 	OR (0 === strpos($class_name, 'collection_'))
 	 	OR (0 === strpos($class_name, 'factory_'))
