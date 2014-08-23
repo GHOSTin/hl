@@ -177,7 +177,7 @@ class controller_query{
 	// test
 	public static function private_get_dialog_add_user(model_request $request){
 		return ['query' => di::get('model_query')->get_query($request->GET('id')),
-			'groups' => di::get('model_group')->get_groups()];
+			'groups' => di::get('em')->getRepository('data_group')->findAll()];
 	}
 
 	// test

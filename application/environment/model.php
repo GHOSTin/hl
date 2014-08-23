@@ -172,10 +172,6 @@ class model_environment{
 			return new mapper_house($p['pdo']);
 		};
 
-		$pimple['mapper_group'] = function($p){
-			return new mapper_group($p['pdo'], $p['company']);
-		};
-
 		$pimple['mapper_work'] = function($p){
 			return new mapper_work($p['pdo'], $p['company']);
 		};

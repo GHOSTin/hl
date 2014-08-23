@@ -10,9 +10,11 @@ class model_user{
 		$user->set_lastname($lastname);
 		$user->set_firstname($firstname);
 		$user->set_middlename($middlename);
+		$user->set_company_id(di::get('company')->get_id());
 		$user->set_login($login);
 		$user->set_hash($this->get_password_hash($password));
 		$user->set_status($status);
+		$em->persist($user);
 		$em->flush();
 		return $user;
 	}

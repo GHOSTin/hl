@@ -8,53 +8,41 @@ class model_group{
 	}
 
 	public function create_group($name, $status){
-		$mapper = di::get('mapper_group');
-		if(!is_null($mapper->find_by_name($name)))
+		$em = di::get('em');
+		if(!is_null($em->getRepository('data_group')->findOneByName($name)))
 			throw new RuntimeException('Группа с таким название уже существует.');
 		$group = new data_group();
-		$group->set_id($mapper->get_insert_id());
-		$group->set_company_id($mapper->get_company_id());
+		$group->set_company_id(di::get('company')->get_id());
 		$group->set_name($name);
 		$group->set_status($status);
-		return $mapper->insert($group);
-	}
-
-	public function add_user($group_id, $user_id){
-		$group = new data_group();
-		$group->set_id($group_id);
-		$user = di::get('em')->find($user_id);
-		$mapper = new mapper_group2user($this->company, $group);
-		$mapper->init_users();
-		$group->add_user($user);
-		return $mapper->update();
-	}
-
-	public function exclude_user($group_id, $user_id){
-		$group = new data_group();
-		$group->set_id($group_id);
-		$user = new data_user();
-		$user->set_id($user_id);
-		$mapper = new mapper_group2user($this->company, $group);
-		$mapper->init_users();
-		$group->exclude_user($user);
-		return $mapper->update();
-	}
-
-	public function get_group($id){
-		$group = di::get('mapper_group')->find($id);
-		if(!($group instanceof data_group))
-			throw new RuntimeException('Объект не является группой.');
+		$em->persist($group);
+		$em->flush();
 		return $group;
 	}
 
-	public function get_groups(){
-		return di::get('mapper_group')->get_groups();
+	public function add_user($group_id, $user_id){
+		$em = di::get('em');
+		$group = $em->find('data_group', $group_id);
+		$user = $em->find('data_user', $user_id);
+		$group->add_user($user);
+		$em->flush();
+		return $group;
+	}
+
+	public function exclude_user($group_id, $user_id){
+		$em = di::get('em');
+		$group = $em->find('data_group', $group_id);
+		$user = $em->find('data_user', $user_id);
+		$group->exclude_user($user);
+		$em->flush();
+		return $group;
 	}
 
 	public function update_name($id, $name){
-		$group = $this->get_group($id);
+		$em = di::get('em');
+		$group = $em->find('data_group', $id);
 		$group->set_name($name);
-		$mapper = di::get('mapper_group');
-		return $mapper->update($group);
+		$em->flush();
+		return $group;
 	}
 }

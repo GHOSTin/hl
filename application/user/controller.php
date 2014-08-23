@@ -25,7 +25,7 @@ class controller_user{
     $group = $model->create_group($request->take_get('name'), 'true');
     $letter_group = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
     $letters = [];
-    $groups = $model->get_groups();
+    $groups = di::get('em')->getRepository('data_group')->findAll();
     if(!empty($groups))
       foreach($groups as $group){
         $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
@@ -71,12 +71,8 @@ class controller_user{
   }
 
   public static function private_exclude_user(model_request $request){
-    $company = di::get('company');
-    $group = (new model_group($company))
-      ->get_group($request->take_get('group_id'));
-    $user = di::get('em')->find('data_user', $request->take_get('user_id'));
-    return ['group' => (new model_group2user($company))
-      ->exclude_user($user)];
+    return ['group' => di::get('model_group')
+      ->exclude_user($request->take_get('group_id'), $request->take_get('user_id'))];
   }
 
   public static function private_get_company_content(model_request $request){
@@ -137,7 +133,7 @@ class controller_user{
   }
 
   public static function private_get_dialog_add_user(model_request $request){
-    return ['users' => di::get('em')->getRepository('data_company')->findAll()];
+    return ['users' => di::get('em')->getRepository('data_user')->findAll()];
   }
 
   public static function private_get_dialog_delete_profile(
@@ -147,8 +143,7 @@ class controller_user{
 
   public static function private_get_dialog_edit_group_name(
     model_request $request){
-    return ['group' => (new model_group(di::get('company')))
-      ->get_group($request->take_get('id'))];
+    return ['group' => di::get('em')->find('data_group', $request->take_get('id'))];
   }
 
   public static function private_get_dialog_edit_fio(model_request $request){
@@ -167,15 +162,15 @@ class controller_user{
 
     public static function private_get_dialog_exclude_user(
       model_request $request){
+      $em = di::get('em');
       return [
-        'user' => di::get('em')->find('data_user', $request->take_get('user_id')),
-        'group' => (new model_group(di::get('company')))
-        ->get_group($request->take_get('group_id'))];
+        'user' => $em->find('data_user', $request->take_get('user_id')),
+        'group' => $em->find('data_group', $request->take_get('group_id'))];
     }
 
   public static function private_get_group_letters(model_request $request){
     $letters = [];
-    $groups = (new model_group(di::get('company')))->get_groups();
+    $groups = di::get('em')->getRepository('data_group')->findAll();
     if(!empty($groups))
       foreach($groups as $group){
         $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
@@ -185,15 +180,11 @@ class controller_user{
   }
 
   public static function private_get_group_profile(model_request $request){
-    return ['group' => (new model_group(di::get('company')))
-      ->get_group($request->take_get('id'))];
+    return ['group' => di::get('em')->find('data_group', $request->take_get('id'))];
   }
 
   public static function private_get_group_users(model_request $request){
-    $group = new data_group();
-    $group->set_id($request->take_get('id'));
-    (new mapper_group2user(di::get('company'), $group))->init_users($group);
-    return ['group' => $group];
+    return ['group' => di::get('em')->find('data_group', $request->take_get('id'))];
   }
 
   public static function private_get_dialog_edit_login(model_request $request){
@@ -216,7 +207,7 @@ class controller_user{
 
   public static function private_get_group_letter(model_request $request){
     $letters = [];
-    $groups = (new model_group(di::get('company')))->get_groups();
+    $groups = di::get('em')->getRepository('data_group')->findAll();
     if(!empty($groups))
       foreach($groups as $group){
         $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
@@ -243,8 +234,7 @@ class controller_user{
   }
 
   public static function private_get_group_content(model_request $request){
-    return ['group' => (new model_group(di::get('company')))
-      ->get_group($request->take_get('id'))];
+    return ['group' => di::get('em')->find('data_group', $request->take_get('id'))];
   }
 
   public static function private_get_user_content(model_request $request){
