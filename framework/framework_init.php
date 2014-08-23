@@ -10,7 +10,7 @@ function framework_autoload($class_name){
 	 	OR (0 === strpos($class_name, 'factory_'))
 	){
 		list($folder, $component) = explode('_', $class_name, 2);
-		$file_path = ROOT.'/'.framework_configuration::application_folder.'/'.$component.'/'.$folder.'.php';
+		$file_path = ROOT.'/application/'.$component.'/'.$folder.'.php';
 		if(file_exists($file_path))
 			require_once $file_path;
 	}else

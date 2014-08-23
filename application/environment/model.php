@@ -68,7 +68,7 @@ class model_environment{
 	}
 
 	public static function before(){
-		require_once ROOT.'/'.framework_configuration::application_folder.'/application_configuration.php';
+		require_once ROOT.'/application/application_configuration.php';
 		date_default_timezone_set(application_configuration::php_timezone);
 		$pimple = new \Pimple\Container();
 
