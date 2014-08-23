@@ -12,7 +12,7 @@ class model_processing_center{
   public function get_processing_center($id){
     $center = di::get('mapper_processing_center')->find($id);
     if(!($center instanceof data_processing_center))
-      throw new e_model('Процессингового центра не существует.');
+      throw new RuntimeException('Процессингового центра не существует.');
     return $center;
   }
 

@@ -10,7 +10,7 @@ class model_number{
 	public function get_number($id){
 		$number = di::get('mapper_number')->find($id);
 		if(!($number instanceof data_number))
-			throw new e_model('Счетчика не существует.');
+			throw new RuntimeException('Счетчика не существует.');
 		return $number;
 	}
 
@@ -20,7 +20,7 @@ class model_number{
 		$old_number = $mapper->find_by_number($num);
 		if(!is_null($old_number))
 			if($number->get_id() != $old_number->get_id())
-				throw new e_model('В базе уже есть лицевой счет с таким номером.');
+				throw new RuntimeException('В базе уже есть лицевой счет с таким номером.');
 		$number->set_number($num);
 		$mapper->update($number);
 		return $number;

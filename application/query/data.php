@@ -1,9 +1,4 @@
 <?php
-/*
-* Связь с таблицей `queries`.
-* Заявки ассоциированы с компанией.
-* Каждый год номер заявки начинает идти с 1, а иджентификатор заявки увеличивается дальше.
-*/
 class data_query extends data_object{
 
 	private $id;
@@ -39,14 +34,14 @@ class data_query extends data_object{
 
 	public function add_number(data_number $number){
 		if(array_key_exists($number->get_id(), $this->numbers))
-			throw new e_model('Лицевой счет уже добавлен в заявку.');
+			throw new DomainException('Лицевой счет уже добавлен в заявку.');
 		$this->numbers[$number->get_id()] = $number;
 	}
 
 	public function add_comment(data_query2comment $comment){
 		$id = $comment->get_user()->get_id().'_'.$comment->get_time();
 		if(array_key_exists($id, $this->comments))
-			throw new e_model('Комментарий уже существует.');
+			throw new DomainException('Комментарий уже существует.');
 		$this->comments[$id] = $comment;
 	}
 
@@ -56,43 +51,43 @@ class data_query extends data_object{
 
 	public function add_manager(data_user $user){
 		if(array_key_exists($user->get_id(), $this->users['manager']))
-			throw new e_model("Менеджер уже добавлен в заявку.");
+			throw new DomainException("Менеджер уже добавлен в заявку.");
 		$this->users['manager'][$user->get_id()] = $user;
 	}
 
 	public function add_observer(data_user $user){
 		if(array_key_exists($user->get_id(), $this->users['observer']))
-			throw new e_model("Исполнитель уже добавлен в заявку.");
+			throw new DomainException("Исполнитель уже добавлен в заявку.");
 		$this->users['observer'][$user->get_id()] = $user;
 	}
 
 	public function add_performer(data_user $user){
 		if(array_key_exists($user->get_id(), $this->users['performer']))
-			throw new e_model("Исполнитель уже добавлен в заявку.");
+			throw new DomainException("Исполнитель уже добавлен в заявку.");
 		$this->users['performer'][$user->get_id()] = $user;
 	}
 
 	public function remove_performer(data_user $user){
 		if(!array_key_exists($user->get_id(), $this->users['performer']))
-			throw new e_model("Исполнителя нет в заявке.");
+			throw new DomainException("Исполнителя нет в заявке.");
 		unset($this->users['performer'][$user->get_id()]);
 	}
 
 	public function remove_manager(data_user $user){
 		if(!array_key_exists($user->get_id(), $this->users['manager']))
-			throw new e_model("Исполнителя нет в заявке.");
+			throw new DomainException("Исполнителя нет в заявке.");
 		unset($this->users['manager'][$user->get_id()]);
 	}
 
 	public function add_work(data_query2work $work){
 		if(array_key_exists($work->get_id(), $this->works))
-			throw new e_model("Работа уже добавлен в заявку.");
+			throw new DomainException("Работа уже добавлен в заявку.");
 		$this->works[$work->get_id()] = $work;
 	}
 
 	public function remove_work(data_query2work $work){
 		if(!array_key_exists($work->get_id(), $this->works))
-			throw new e_model("Работа не была в заявке.");
+			throw new DomainException("Работа не была в заявке.");
 		unset($this->works[$work->get_id()]);
 	}
 
@@ -279,16 +274,16 @@ class data_query extends data_object{
 	public function set_time_close($time){
 		if(!in_array($this->status, ['open', 'working'], true)){
 			if( $time < $this->time_open)
-				throw new e_model('Время закрытия заявки не может быть меньше времени открытия.');
+				throw new DomainException('Время закрытия заявки не может быть меньше времени открытия.');
 			if($time < $this->time_work)
-				throw new e_model('Время закрытия заявки не может быть меньше времени передачи в работу.');
+				throw new DomainException('Время закрытия заявки не может быть меньше времени передачи в работу.');
 		}
 		$this->time_close = $time;
 	}
 
 	public function set_time_work($time){
 		if($this->time_open > $time)
-			throw new e_model('Время закрытия заявки не может быть меньше времени открытия.');
+			throw new DomainException('Время закрытия заявки не может быть меньше времени открытия.');
 		$this->time_work = $time;
 	}
 

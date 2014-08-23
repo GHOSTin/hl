@@ -42,7 +42,7 @@ class model_query{
 
 	public function set_param($param, $value){
 		if(!array_key_exists($param, $this->params))
-			throw new e_model('Не существует такого параметра.');
+			throw new RuntimeException('Не существует такого параметра.');
 		$this->params[$param] = $value;
 		$_SESSION['model']['params'] = $this->params;
 	}
@@ -58,7 +58,7 @@ class model_query{
 		if($id > 0){
 			if(!empty($this->restrictions['departments']))
 				if(!in_array($id, $this->restrictions['departments']))
-					throw new e_model('Участок не может быть добавлен.');
+					throw new RuntimeException('Участок не может быть добавлен.');
 			$department = (new model_department($this->company))->get_department($id);
 			$this->set_param('department', [$department->get_id()]);
 		}else
@@ -128,7 +128,7 @@ class model_query{
 		elseif($class === 'performer')
 			$query->add_performer($user);
 		else
-			throw new e_model('Несоответствующие параметры: class.');
+			throw new RuntimeException('Несоответствующие параметры: class.');
 		(new mapper_query2user($this->company, $query))->update_users();
 		return $query;
 	}
@@ -145,7 +145,7 @@ class model_query{
 		elseif($class === 'performer')
 			$query->remove_performer($user);
 		else
-			throw new e_model('Несоответствующие параметры: class.');
+			throw new RuntimeException('Несоответствующие параметры: class.');
 		(new mapper_query2user($this->company, $query))->update_users();
 		return $query;
 	}
@@ -155,9 +155,9 @@ class model_query{
 	*/
 	public function add_work($query_id, $work_id, $begin_time, $end_time){
 		if(!is_int($begin_time) OR !is_int($end_time))
-			throw new e_model('Время задано не верно.');
+			throw new RuntimeException('Время задано не верно.');
 		if($begin_time > $end_time)
-			throw new e_model('Время начала работы не может быть меньше времени закрытия.');
+			throw new RuntimeException('Время начала работы не может быть меньше времени закрытия.');
 		$query = $this->get_query($query_id);
 		$mapper = di::get('mapper_query2work');
 		$mapper->init_works($this->company, $query);
@@ -210,14 +210,14 @@ class model_query{
 						$query->add_number($number);
 				$mapper_q2n->update();
 			}else
-				throw new e_model('initiator wrong');
+				throw new RuntimeException('initiator wrong');
 			$mapper = di::get('mapper_query');
 			$query = $mapper->update($query);
 			$pdo->commit();
 			return $query;
 		}catch(exception $e){
 			$pdo->rollBack();
-			throw new e_model('Проблема');
+			throw new RuntimeException('Проблема');
 		}
 	}
 
@@ -311,10 +311,10 @@ class model_query{
 		}catch(exception $e){
 			die($e->getMessage());
 			$pdo->rollBack();
-			if($e instanceof e_model)
-				throw new e_model($e->getMessage());
+			if($e instanceof RuntimeException)
+				throw new RuntimeException($e->getMessage());
 			else
-				throw new e_model('Ошибка при создании заявки.');
+				throw new RuntimeException('Ошибка при создании заявки.');
 		}
 	}
 

@@ -57,11 +57,11 @@ class model_environment{
 			return;
 		}elseif($profile instanceof data_profile){
 			if($profile->get_rules()['generalAccess'] !== true)
-				throw new e_model('Доступа нет.');
+				throw new RuntimeException('Доступа нет.');
 			$pimple = di::get_instance();
 			$pimple['profile'] = $profile;
 		}else
-			throw new e_model('Доступа нет.');
+			throw new RuntimeException('Доступа нет.');
 	}
 
 	public static function before(){

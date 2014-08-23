@@ -9,7 +9,7 @@ class model_report{
   public function __construct($name){
     $this->profile = (string) $name;
     if(!(in_array($this->profile, self::$profiles)))
-        throw new e_model('Нет такого профиля.');
+        throw new RuntimeException('Нет такого профиля.');
     $mem = new mem(__CLASS__);
     $this->params = $mem->get_params();
     if(empty($this->params)){

@@ -15,13 +15,13 @@ class data_group extends data_object{
 
   public function add_user(data_user $user){
     if(array_key_exists($user->get_id(), $this->users))
-      throw new e_model('Пользователь уже добавлен в группу.');
+      throw new DomainException('Пользователь уже добавлен в группу.');
     $this->users[$user->get_id()] = $user;
   }
 
   public function exclude_user(data_user $user){
     if(!array_key_exists($user->get_id(), $this->users))
-      throw new e_model('Пользователя нет в группе.');
+      throw new DomainException('Пользователя нет в группе.');
     unset($this->users[$user->get_id()]);
   }
 

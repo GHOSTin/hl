@@ -141,7 +141,7 @@ class model_import{
 		foreach($xml->flat as $flat_node){
 			$flat_number = trim((string) $flat_node->attributes()->number);
 			if(!array_key_exists($flat_number, $old))
-				throw new e_model('Не существует такой квартиры.');
+				throw new RuntimeException('Не существует такой квартиры.');
 			if(count($flat_node->number) > 0)
 				foreach($flat_node as $number_node){
 					$number_attr = $number_node->attributes();
@@ -179,7 +179,7 @@ class model_import{
 
 	public function load_numbers($city_id, $street_id, $house_id, $numbers){
 		if(empty($numbers))
-			throw new e_model('Нечего импортировать.');
+			throw new RuntimeException('Нечего импортировать.');
 		$city = new data_city();
 		$city->set_id($city_id);
 		$street = (new model_city2street($city))
@@ -193,7 +193,7 @@ class model_import{
 				$old[$flat->get_number()] = $flat;
 		foreach($numbers as $number_data){
 			if(!array_key_exists($number_data['flat'], $old))
-				throw new e_model('Квартиры не существует.');
+				throw new RuntimeException('Квартиры не существует.');
 			$number = (new mapper_house2number($this->company, $house))
 				->get_number_by_number($number_data['number']);
 			$mapper = new mapper_house2number($this->company, $house);
@@ -214,7 +214,7 @@ class model_import{
 
 	public function load_flats(data_house $house, $flats){
 		if(empty($flats))
-			throw new e_model('Нечего импортировать.');
+			throw new RuntimeException('Нечего импортировать.');
 		$mapper = new mapper_house2flat($this->company, $house);
 		$mapper->init_flats();
 		$old = [];

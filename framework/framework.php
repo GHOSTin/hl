@@ -6,5 +6,3 @@ require_once 'di.php';
 require_once 'mapper.php';
 // init
 require_once 'framework_init.php';
-// классы исключений MVC
-require_once 'e_model.php';

@@ -17,13 +17,13 @@ class data_processing_center extends data_object{
 
   public function set_id($id){
     if($id < 1 OR $id > 255)
-      throw new e_model('Идентификатор процессингового центра задан не верно.');
+      throw new DomainException('Идентификатор процессингового центра задан не верно.');
     $this->id = $id;
   }
 
   public function set_name($name){
     if(!preg_match('/^[А-Яа-я0-9 -]{2,20}$/u', $name))
-        throw new e_model('Название процессингового центра задано не верно.');
+        throw new DomainException('Название процессингового центра задано не верно.');
     $this->name = $name;
   }
 }

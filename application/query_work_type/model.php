@@ -11,7 +11,7 @@ class model_query_work_type{
 	public function get_query_work_type($id){
 		$type = (new mapper_query_work_type($this->company))->find($id);
 		if(!($type instanceof data_query_work_type))
-			throw new e_model('Нет такого типа работ.');
+			throw new RuntimeException('Нет такого типа работ.');
 		return $type;
 	}
 

@@ -475,7 +475,7 @@ class controller_number{
 
   public static function private_update_number_password(model_request $request){
     if($request->GET('password') !== $request->GET('confirm'))
-      throw new e_model('Подтверждение и пароль не совпадают.');
+      throw new RuntimeException('Подтверждение и пароль не совпадают.');
     return ['number' => (new model_number(di::get('company')))
             ->update_password($request->GET('id'), $request->GET('password'))];
   }

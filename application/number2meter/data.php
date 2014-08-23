@@ -17,7 +17,7 @@ class data_number2meter{
 
   public function __call($method, $args){
     if(!in_array($method, get_class_methods($this->meter), true))
-      throw new e_model('Вызван недопустимый метод.');
+      throw new RuntimeException('Вызван недопустимый метод.');
     return $this->meter->$method($args);
   }
 
@@ -27,7 +27,7 @@ class data_number2meter{
 
   public function add_value(data_meter2data $m2d){
     if(in_array($m2d->get_time(), $this->values, true))
-      throw new e_model('В счетчике уже добавлено показание за данный месяц.');
+      throw new RuntimeException('В счетчике уже добавлено показание за данный месяц.');
     $this->values[$m2d->get_time()] = $m2d;
   }
 
@@ -77,38 +77,38 @@ class data_number2meter{
 
   public function set_comment($comment){
     if(!preg_match('/^[А-Яа-я0-9\., ]{0,255}$/u', $comment))
-      throw new e_model('Комментарий задан не верно.');
+      throw new RuntimeException('Комментарий задан не верно.');
     $this->comment = $comment;
   }
 
   public function set_date_checking($time){
     if($time < 1)
-      throw new e_model('Время даты поверки задано не верно.');
+      throw new RuntimeException('Время даты поверки задано не верно.');
     if($this->date_install > $time)
-      throw new e_model('Время последней поверки счетчика не может быть
+      throw new RuntimeException('Время последней поверки счетчика не может быть
       больше времени установки счетчика.');
     $this->date_checking = $time;
   }
 
   public function set_date_install($time){
     if($time < 1)
-      throw new e_model('Время даты установки задано не верно.');
+      throw new RuntimeException('Время даты установки задано не верно.');
     if($this->date_release > $time)
-      throw new e_model('Время установки счетчика не может быть больше времени
+      throw new RuntimeException('Время установки счетчика не может быть больше времени
       произдовства счетчика.');
     if(!is_null($this->date_checking))
       if($this->date_checking < $time)
-        throw new e_model('Время установки счетчика не может быть больше времени
+        throw new RuntimeException('Время установки счетчика не может быть больше времени
         последней поверки счетчика.');
     $this->date_install = $time;
   }
 
   public function set_date_release($time){
     if($time < 1)
-      throw new e_model('Дата выпуска счетчика задана не верно.');
+      throw new RuntimeException('Дата выпуска счетчика задана не верно.');
     if(!is_null($this->date_install))
       if($this->date_install < $time)
-        throw new e_model('Время производства счетчика не может быть больше
+        throw new RuntimeException('Время производства счетчика не может быть больше
         времени установки счетчика');
     $this->date_release = $time;
   }
@@ -123,25 +123,25 @@ class data_number2meter{
 
   public function set_place($place){
     if(!in_array($place, ['bathroom', 'kitchen', 'toilet'], true))
-      throw new e_model('Место установки задано не верно.');
+      throw new RuntimeException('Место установки задано не верно.');
     $this->place = $place;
   }
 
   public function set_serial($serial){
     if(!preg_match('/^[а-яА-Я0-9]{1,20}$/u', $serial))
-      throw new e_model('Заводской номер счетчика задано не верно.');
+      throw new RuntimeException('Заводской номер счетчика задано не верно.');
     $this->serial = $serial;
   }
 
   public function set_service($service){
     if(!in_array($service, data_meter::get_service_list()))
-      throw new e_model('Услуга задана не верно.');
+      throw new RuntimeException('Услуга задана не верно.');
     $this->service = $service;
   }
 
   public function set_status($status){
     if(!in_array($status, ['enabled', 'disabled'], true))
-      throw new e_model('Статус счетчика задан не верно.');
+      throw new RuntimeException('Статус счетчика задан не верно.');
     $this->status = $status;
   }
 }

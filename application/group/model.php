@@ -10,7 +10,7 @@ class model_group{
 	public function create_group($name, $status){
 		$mapper = di::get('mapper_group');
 		if(!is_null($mapper->find_by_name($name)))
-			throw new e_model('Группа с таким название уже существует.');
+			throw new RuntimeException('Группа с таким название уже существует.');
 		$group = new data_group();
 		$group->set_id($mapper->get_insert_id());
 		$group->set_company_id($mapper->get_company_id());
@@ -43,7 +43,7 @@ class model_group{
 	public function get_group($id){
 		$group = di::get('mapper_group')->find($id);
 		if(!($group instanceof data_group))
-			throw new e_model('Объект не является группой.');
+			throw new RuntimeException('Объект не является группой.');
 		return $group;
 	}
 

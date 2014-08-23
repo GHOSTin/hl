@@ -10,7 +10,7 @@ class model_department{
 	public function get_department($id){
 		$department = di::get('mapper_department')->find($id);
 		if(!($department instanceof data_department))
-			throw new e_model('Нет такого участка.');
+			throw new RuntimeException('Нет такого участка.');
 		return $department;
 	}
 

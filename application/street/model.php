@@ -5,7 +5,7 @@ class model_street{
 	public function get_street($id){
 		$street = di::get('mapper_street')->find($id);
 		if(!($street instanceof data_street))
-			throw new e_model('Нет улицы');
+			throw new RuntimeException('Нет улицы');
 		return $street;
 	}
 

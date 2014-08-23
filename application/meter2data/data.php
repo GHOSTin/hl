@@ -51,7 +51,7 @@ final class data_meter2data extends data_object{
 
   public function set_comment($comment){
     if(!preg_match('/^[А-Яа-я0-9\., ]{0,255}$/u', $comment))
-      throw new e_model('Комментарий задан не верно.');
+      throw new DomainException('Комментарий задан не верно.');
     $this->comment = $comment;
   }
 
@@ -85,7 +85,7 @@ final class data_meter2data extends data_object{
 
   public function set_way($way){
     if(!in_array($way, self::$ways, true))
-      throw new e_model('Спсоб передачи показания задан не верно.');
+      throw new DomainException('Спсоб передачи показания задан не верно.');
     $this->way = $way;
   }
 }

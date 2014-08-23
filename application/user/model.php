@@ -24,7 +24,7 @@ class model_user{
 	public function get_user($id){
 		$user = di::get('mapper_user')->find($id);
 		if(!($user instanceof data_user))
-			throw new e_model('Не существует такого пользователя.');
+			throw new RuntimeException('Не существует такого пользователя.');
 		return $user;
 	}
 

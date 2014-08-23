@@ -10,7 +10,7 @@
 //   }
 
 //   public function test_model_1_1(){
-//     $this->setExpectedException('e_model');
+//     $this->setExpectedException('RuntimeException');
 //     $this->pimple['mapper_number'] = function($p){
 //       $mapper = $this->getMockBuilder('mapper_number')
 //         ->disableOriginalConstructor()

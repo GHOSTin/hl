@@ -294,7 +294,7 @@ class controller_query{
 					'queries' => $queries];
 			break;
 			default:
-				throw new e_model('Проблема типа инициатора.');
+				throw new RuntimeException('Проблема типа инициатора.');
 		}
 	}
 

@@ -34,14 +34,14 @@ class model_number2meter{
       $this->pdo->beginTransaction();
       $mapper = new mapper_number2meter($this->company, $this->number);
       if($mapper->find($new_meter_id, $old_serial) !== null)
-          throw new e_model('Счетчик с таким идентификатором
+          throw new RuntimeException('Счетчик с таким идентификатором
                               и серийным номером уже существует.');
       $new_meter = (new model_meter($this->company))->get_meter($new_meter_id);
       $old_meter = $this->get_meter($old_meter_id, $old_serial);
       if(!in_array($period, $new_meter->get_periods()))
-        throw new e_model('Такого периода нет в счетчикке.');
+        throw new RuntimeException('Такого периода нет в счетчикке.');
       if(!in_array($service, $new_meter->get_services()))
-        throw new e_model('Такой службы нет в счетчика.');
+        throw new RuntimeException('Такой службы нет в счетчика.');
       $old_meter->set_meter($new_meter);
       $old_meter->set_service($service);
       $old_meter->set_period($period);
@@ -55,7 +55,7 @@ class model_number2meter{
     $mapper = new mapper_number2meter($this->company, $this->number);
     $meter = $mapper->find($meter_id, $serial);
     if(!($meter instanceof data_number2meter))
-      throw new e_model('Связи счетчик лицевой не существует.');
+      throw new RuntimeException('Связи счетчик лицевой не существует.');
     return $meter;
   }
 
@@ -102,7 +102,7 @@ class model_number2meter{
   public function update_period($meter_id, $serial, $period){
     $meter = $this->get_meter($meter_id, $serial);
     if(!in_array($period, $meter->get_periods()))
-      throw new e_model('Нет такого периода в счетчике.');
+      throw new RuntimeException('Нет такого периода в счетчике.');
     $meter->set_period($period);
     $mapper = new mapper_number2meter($this->company, $this->number);
     return $mapper->update($meter);
@@ -111,7 +111,7 @@ class model_number2meter{
   public function update_place($meter_id, $serial, $place){
     $meter = $this->get_meter($meter_id, $serial);
     if(!in_array($meter->get_service(), ['cold_water', 'hot_water']))
-            throw new e_model('Вы не можете изменить место для счетчика с такой услугой.');
+            throw new RuntimeException('Вы не можете изменить место для счетчика с такой услугой.');
     $meter->set_place($place);
     $mapper = new mapper_number2meter($this->company, $this->number);
     return $mapper->update($meter);
@@ -121,7 +121,7 @@ class model_number2meter{
     $old_meter = $this->get_meter($meter_id, $old_serial);
     $mapper = new mapper_number2meter($this->company, $this->number);
     if(!is_null($mapper->find($meter_id, $new_serial)))
-        throw new e_model('Счетчик с таким серийным номером уже привязан.');
+        throw new RuntimeException('Счетчик с таким серийным номером уже привязан.');
     return $mapper->update_serial($old_meter, $new_serial);
   }
 

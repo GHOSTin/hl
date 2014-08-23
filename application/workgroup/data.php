@@ -10,7 +10,7 @@ class data_workgroup extends data_object{
 
   public function add_work(data_work $work){
     if(array_key_exists($work->get_id(), $this->works))
-      throw new e_model('Такая работа уже добавлена в группу.');
+      throw new DomainException('Такая работа уже добавлена в группу.');
     $this->works[$work->get_id()] = $work;
   }
 
@@ -32,7 +32,7 @@ class data_workgroup extends data_object{
 
   public function set_id($id){
     if($id > 65535 OR $id < 1)
-      throw new e_model('Идентификатор группы работ задан не верно.');
+      throw new DomainException('Идентификатор группы работ задан не верно.');
     $this->id = (int) $id;
   }
 
@@ -42,7 +42,7 @@ class data_workgroup extends data_object{
 
   public function set_status($status){
     if(!in_array($status, self::$statuses, true))
-      throw new e_model('Статус группы работ задан не верно.');
+      throw new DomainException('Статус группы работ задан не верно.');
     $this->status = (string) $status;
   }
 }

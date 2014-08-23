@@ -37,9 +37,9 @@ class controller_user{
 
   public static function private_create_user(model_request $request){
     if($request->take_get('password') !== $request->take_get('confirm'))
-      throw new e_model('Пароль и подтверждение не равны.');
+      throw new RuntimeException('Пароль и подтверждение не равны.');
     if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $request->take_get('password')))
-      throw new e_model('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
+      throw new RuntimeException('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
     $user = (new model_user)->create_user($request->take_get('lastname'),
       $request->take_get('firstname'), $request->take_get('middlename'),
       $request->take_get('login'), $request->take_get('password'), 'true');
@@ -106,9 +106,9 @@ class controller_user{
     $profile = $request->GET('profile');
     $restriction = $_GET['restriction'];
     if($profile !== 'query')
-        throw new e_model('Нет ограничения для профиля.');
+        throw new RuntimeException('Нет ограничения для профиля.');
     if(!in_array($restriction, ['departments', 'worktypes']))
-        throw new e_model('Нет ограничения для профиля.');
+        throw new RuntimeException('Нет ограничения для профиля.');
     if($restriction === 'departments')
         $items = (new model_department($company))->get_departments();
     if($restriction === 'worktypes')
@@ -287,7 +287,7 @@ class controller_user{
 
   public static function private_update_password(model_request $request){
     if($request->take_get('password') !== $request->take_get('confirm'))
-      throw new e_model('Пароль и подтверждение не идентичны.');
+      throw new RuntimeException('Пароль и подтверждение не идентичны.');
     return ['user' => (new model_user)
       ->update_password($request->take_get('id'),
       $request->take_get('password'))];

@@ -84,7 +84,7 @@ class model_user2profile{
   public function add_profile($profile){
     $mapper = new mapper_user2profile($this->company, $this->user);
     if(!is_null($mapper->find($profile)))
-      throw new e_model('Профиль уже существует.');
+      throw new RuntimeException('Профиль уже существует.');
     $p = new data_profile($profile);
     if(!empty(self::$rules[$profile]))
       $p->set_rules(self::$rules[$profile]);
@@ -113,7 +113,7 @@ class model_user2profile{
     $mapper = new mapper_user2profile($this->company, $this->user);
     $profile = $mapper->find($name);
     if(!($profile instanceof data_profile))
-      throw new e_model('Нет профиля.');
+      throw new RuntimeException('Нет профиля.');
     return $profile;
   }
 
@@ -132,7 +132,7 @@ class model_user2profile{
       if(!$stmt->execute())
         throw new RuntimeException();
     }else
-      throw new e_model('Правила '.$rule.' нет в профиле '.$profile);
+      throw new RuntimeException('Правила '.$rule.' нет в профиле '.$profile);
     return $rules[$rule];
   }
 
@@ -140,7 +140,7 @@ class model_user2profile{
     $profile = $this->get_profile($profile);
     $restrictions = $profile->get_restrictions();
     if(!array_key_exists($restriction, $restrictions))
-      throw new e_model('Нет такого ограничения.');
+      throw new RuntimeException('Нет такого ограничения.');
     if($restriction === 'departments'){
       $department = di::get('mapper_department')->find($item);
       if(!is_null($department)){

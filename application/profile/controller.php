@@ -20,7 +20,7 @@ class controller_profile{
 		$id = di::get('user')->get_id();
 		return ['user' => (new model_user)->get_user($id)];
 	}
-	
+
 	public static function private_get_notification_center_content(model_request $request){
 		return ['users' => (new model_user)->get_users()];
 	}
@@ -32,7 +32,7 @@ class controller_profile{
 
 	public static function private_update_password(model_request $request){
 		if($request->take_get('new_password') !== $request->take_get('confirm_password'))
-			throw new e_model('Введеные новый пароль и его подтверждение не совпадают.');
+			throw new RuntimeException('Введеные новый пароль и его подтверждение не совпадают.');
 		$id = di::get('user')->get_id();
 		return ['user' => (new model_user)->update_password($id, $request->take_get('new_password'))];
 	}

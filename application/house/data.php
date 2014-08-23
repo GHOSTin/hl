@@ -20,13 +20,13 @@ class data_house{
 
   public function add_number(data_number $number){
     if(array_key_exists($number->get_id(), $this->numbers))
-      throw new e_model('Дом уже добавлен в улицу.');
+      throw new DomainException('Дом уже добавлен в улицу.');
     $this->numbers[$number->get_id()] = $number;
   }
 
   public function add_flat(data_flat $flat){
     if(array_key_exists($flat->get_id(), $this->flats))
-      throw new e_model('В доме уже существует такая квартира.');
+      throw new DomainException('В доме уже существует такая квартира.');
     $this->flats[$flat->get_id()] = $flat;
   }
 
@@ -93,7 +93,7 @@ class data_house{
   }
 
   private function send_error($message){
-    throw new e_model($message);
+    throw new DomainException($message);
   }
 
   public function add_processing_center(data_house2processing_center $center){

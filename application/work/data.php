@@ -14,7 +14,7 @@ class data_work extends data_object{
 
   public function set_id($id){
     if($id > 65535 OR $id < 1)
-      throw new e_model('Идентификатор работы задан не верно.');
+      throw new DomainException('Идентификатор работы задан не верно.');
     $this->id = $id;
   }
 

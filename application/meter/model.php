@@ -11,7 +11,7 @@ class model_meter{
 	public function get_meter($id){
 		$meter = di::get('mapper_meter')->find($id);
 		if(!($meter instanceof data_meter))
-			throw new e_model('Счетчика не существует.');
+			throw new RuntimeException('Счетчика не существует.');
 		return $meter;
 	}
 
