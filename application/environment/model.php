@@ -1,4 +1,8 @@
 <?php
+
+use \Doctrine\ORM\Tools\Setup;
+use \Doctrine\ORM\EntityManager;
+
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
@@ -19,7 +23,7 @@ class model_environment{
 			$data = self::prepare_answer($controller, $component, $method, $request);
 			return self::render_template($component, $method, $data);
 		}catch(exception $e){
-			if(application_configuration::status === development)
+			if(application_configuration::status === 'development')
 				die($e);
 			else
 				exit();
@@ -296,10 +300,27 @@ class model_environment{
 		  return $pdo;
 		};
 
+		$pimple['em'] = function($pimple){
+		  $paths = array(__DIR__);
+		  $isDevMode = (application_configuration::status == 'development')? true: false;
+		  $dbParams = array(
+		      'driver'   => 'pdo_mysql',
+		      'host'     => application_configuration::database_host,
+		      'user'     => application_configuration::database_user,
+		      'password' => application_configuration::database_password,
+		      'dbname'   => application_configuration::database_name,
+		      'charset'  => 'utf8'
+		  );
+
+		  $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+		  return EntityManager::create($dbParams, $config);
+		};
+
 		di::set_instance($pimple);
 		if(isset($_SESSION['user'])){
-			$pimple['user'] = $pimple['mapper_user']->find($_SESSION['user']);
-			$pimple['company'] = $pimple['mapper_company']->find($_SESSION['company']);
+			$em = di::get('em');
+			$pimple['user'] = $em->find('data_user', $_SESSION['user']);
+			$pimple['company'] = $em->find('data_company', $_SESSION['company']);
 		}
 		di::set_instance($pimple);
 	}

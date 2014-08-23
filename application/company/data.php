@@ -1,8 +1,21 @@
 <?php
+/** @Entity
+*    @Table(name="companies")
+*/
 class data_company{
 
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  * @GeneratedValue
+  */
 	private $id;
+
+  /**
+  * @Column(name="name", type="string")
+  */
   private $name;
+
 
   public function get_id(){
     return $this->id;

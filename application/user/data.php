@@ -1,17 +1,53 @@
 <?php
+/** @Entity
+*    @Table(name="users")
+*/
 class data_user extends data_object{
 
 	private $cellphone;
+
+  /**
+  * @Column(name="company_id", type="integer")
+  */
 	private $company_id;
+  /**
+  * @Column(name="firstname", type="string")
+  */
 	private $firstname;
+
+  /**
+   * @Id
+   * @Column(name="id", type="integer")
+   * @GeneratedValue
+   */
 	private $id;
+
+  /**
+  * @Column(name="lastname", type="string")
+  */
 	private $lastname;
+
+  /**
+   * @Column(name="username", type="string")
+   */
 	private $login;
+
+  /**
+  * @Column(name="midlename", type="string")
+  */
 	private $middlename;
 	private $password;
 	private $session;
+
+  /**
+  * @Column(name="status", type="string")
+  */
 	private $status;
 	private $telephone;
+
+  /**
+  * @Column(name="password", type="string")
+  */
   private $hash;
 
   public static $statuses = ['true', 'false'];
