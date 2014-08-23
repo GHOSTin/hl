@@ -2,10 +2,10 @@
 
 class mapper_street extends mapper{
 
-  private static $many = "SELECT DISTINCT `id`, `company_id`, 
+  private static $many = "SELECT DISTINCT `id`, `company_id`,
     `city_id`, `status`, `name` FROM `streets` ORDER BY `name`";
 
-  private static $one = "SELECT DISTINCT `id`, `company_id`, 
+  private static $one = "SELECT DISTINCT `id`, `company_id`,
     `city_id`, `status`, `name` FROM `streets` WHERE `id` = :id";
 
   public function find($id){
