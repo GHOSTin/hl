@@ -21,17 +21,6 @@ class model_user{
 		return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
 	}
 
-	public function get_user($id){
-		$user = di::get('em')->find('data_user', $id);
-		if(!($user instanceof data_user))
-			throw new RuntimeException('Не существует такого пользователя.');
-		return $user;
-	}
-
-	public function get_users(){
-		return di::get('em')->getRepository('data_user')->findAll();
-	}
-
 	public function update_fio($id, $lastname, $firstname, $middlename){
 		$em = di::get('em');
 		$user = $em->find('data_user', $id);

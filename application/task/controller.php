@@ -10,7 +10,7 @@ class controller_task {
   }
 
   public static function private_get_dialog_create_task(model_request $request){
-    return ['users' => di::get('model_user')->get_users()];
+    return ['users' => di::get('em')->getRepository('data_user')->findAll()];
   }
 
   public static function private_add_task(model_request $request){
@@ -37,7 +37,7 @@ class controller_task {
   }
 
   public static function private_edit_task_content(model_request $request){
-    return ['task'=> di::get('mapper_task')->find($request->GET('id')), 'users' => di::get('model_user')->get_users()];
+    return ['task'=> di::get('mapper_task')->find($request->GET('id')), 'users' => di::get('em')->getRepository('data_user')->findAll()];
   }
 
   public static function private_save_task_content(model_request $request){

@@ -22,7 +22,7 @@ class model_group{
 	public function add_user($group_id, $user_id){
 		$group = new data_group();
 		$group->set_id($group_id);
-		$user = (new model_user)->get_user($user_id);
+		$user = di::get('em')->find($user_id);
 		$mapper = new mapper_group2user($this->company, $group);
 		$mapper->init_users();
 		$group->add_user($user);

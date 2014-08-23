@@ -14,10 +14,9 @@ class mapper_task2comment extends mapper{
     if(!$stmt->execute())
       throw new RuntimeException();
     $comments = [];
-    $user_model = di::get('model_user');
     while($row = $stmt->fetch()){
       $data = ['message'=> $row['message'], 'time'=> $row['time'],
-        'user'=> $user_model->get_user($row['user_id'])];
+        'user'=> di::get('em')->find('data_user', $row['user_id'])];
       $comments[] = di::get('factory_task2comment')->build($data);
     }
     return $comments;
@@ -33,4 +32,4 @@ class mapper_task2comment extends mapper{
       throw new RuntimeException();
   }
 
-} 
+}

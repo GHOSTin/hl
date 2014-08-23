@@ -265,8 +265,8 @@ class controller_query{
 
 	// test
 	public static function private_get_dialog_remove_user(model_request $request){
-		return ['user' => di::get('model_user')
-			->get_user($request->GET('user_id'))];
+		return ['user' => di::get('em')->getRepository('data_user')
+			->findOne($request->GET('user_id'))];
 	}
 
 	// test

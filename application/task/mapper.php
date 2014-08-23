@@ -51,7 +51,7 @@ class mapper_task extends mapper{
       throw new RuntimeException();
     $tasks = [];
     $task_factory = di::get('factory_task');
-    $user_model = di::get('model_user');
+    $em = di::get('em');
     while($row = $stmt->fetch()){
       $data = ['id'=> $row['id'], 'title'=> $row['title'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
         'time_close'=>$row['time_close'], 'time_target'=>$row['time_target'], 'rating'=>$row['rating'],
@@ -60,9 +60,9 @@ class mapper_task extends mapper{
       $users_type = explode(',', $row['users_type']);
       foreach($users_type as $key=>$type){
         if($type === 'creator')
-          $data['creator'] = $user_model->get_user($users_id[$key]);
+          $data['creator'] = $em->getRepository('data_user')->findOne($users_id[$key]);
         else
-          $data['performers'][] = $user_model->get_user($users_id[$key]);
+          $data['performers'][] = $em->getRepository('data_user')->findOne($users_id[$key]);
       }
       $task = $task_factory->build($data);
       $task->set_comments(di::get('mapper_task2comment')->find_all($row['id']));
@@ -78,7 +78,7 @@ class mapper_task extends mapper{
       throw new RuntimeException();
     $tasks = [];
     $task_factory = di::get('factory_task');
-    $user_model = di::get('model_user');
+    $em = di::get('em');
     while($row = $stmt->fetch()){
       $data = ['id'=> $row['id'], 'title'=> $row['title'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
         'time_close'=>$row['time_close'], 'time_target'=>$row['time_target'], 'rating'=>$row['rating'],
@@ -87,9 +87,9 @@ class mapper_task extends mapper{
       $users_type = explode(',', $row['users_type']);
       foreach($users_type as $key=>$type){
         if($type === 'creator')
-          $data['creator'] = $user_model->get_user($users_id[$key]);
+          $data['creator'] = $em->getRepository('data_user')->findOne($users_id[$key]);
         else
-          $data['performers'][] = $user_model->get_user($users_id[$key]);
+          $data['performers'][] = $em->getRepository('data_user')->findOne($users_id[$key]);
       }
       $task = $task_factory->build($data);
       $task->set_comments(di::get('mapper_task2comment')->find_all($row['id']));
@@ -107,7 +107,7 @@ class mapper_task extends mapper{
       throw new RuntimeException();
     $row = $stmt->fetch();
     $task_factory = di::get('factory_task');
-    $user_model = di::get('model_user');
+    $em = di::get('em');
     $data = ['id'=> $row['id'], 'title'=> $row['title'], 'description'=>$row['description'], 'time_open'=>$row['time_open'],
         'time_close'=>$row['time_close'], 'time_target'=>$row['time_target'], 'rating'=>$row['rating'],
         'reason'=>$row['reason'], 'status'=>$row['status']];
@@ -115,9 +115,9 @@ class mapper_task extends mapper{
     $users_type = explode(',', $row['users_type']);
     foreach($users_type as $key=>$type){
       if($type === 'creator')
-        $data['creator'] = $user_model->get_user($users_id[$key]);
+        $data['creator'] = $em->getRepository('data_user')->findOne($users_id[$key]);
       else
-        $data['performers'][] = $user_model->get_user($users_id[$key]);
+        $data['performers'][] = $em->getRepository('data_user')->findOne($users_id[$key]);
     }
     $task = $task_factory->build($data);
     $task->set_comments(di::get('mapper_task2comment')->find_all($row['id']));
@@ -154,4 +154,4 @@ class mapper_task extends mapper{
       throw new RuntimeException();
   }
 
-} 
+}

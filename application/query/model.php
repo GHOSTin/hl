@@ -120,7 +120,7 @@ class model_query{
 	}
 
 	public function add_user($query_id, $user_id, $class){
-		$user = (new model_user)->get_user($user_id);
+		$user = di::get('em')->find('data_user', $user_id);
 		$query = $this->get_query($query_id);
 		(new mapper_query2user($this->company, $query))->init_users();
 		if($class === 'manager')
@@ -137,7 +137,7 @@ class model_query{
 	* Добавляет ассоциацию заявка-пользователь.
 	*/
 	public function remove_user($query_id, $user_id, $class){
-		$user = (new model_user)->get_user($user_id);
+		$user = di::get('em')->find('data_user', $user_id);
 		$query = $this->get_query($query_id);
 		(new mapper_query2user($this->company, $query))->init_users();
 		if($class === 'manager')

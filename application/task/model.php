@@ -12,7 +12,7 @@ class model_task {
       'time_target'=> $time_target, 'time_close'=> null, 'rating'=> 0, 'reason'=> null, 'status'=> 'open'];
     $data['performers'] = [];
     foreach($performers as $value){
-      $user = di::get('model_user')->get_user($value);
+      $user = di::get('em')->find('data_user', $value)
       array_push($data['performers'], $user);
     }
     $task = di::get('factory_task')->build($data);
@@ -38,7 +38,7 @@ class model_task {
     }
     $task_performers = [];
     foreach($performers as $value){
-      $user = di::get('model_user')->get_user($value);
+      $user = di::get('em')->find('data_user', $value);
       array_push($task_performers, $user);
     }
     $task->set_performers($task_performers);
@@ -70,4 +70,4 @@ class model_task {
     $pdo->commit();
     return true;
   }
-} 
+}

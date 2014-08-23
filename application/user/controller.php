@@ -45,7 +45,7 @@ class controller_user{
       $request->take_get('login'), $request->take_get('password'), 'true');
     $letter_user = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
     $letter_users = [];
-    $users = (new model_user)->get_users();
+    $users = di::get('em')->getRepository('data_user')->findAll();
     if(!empty($users))
       foreach($users as $user){
         $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
@@ -74,7 +74,7 @@ class controller_user{
     $company = di::get('company');
     $group = (new model_group($company))
       ->get_group($request->take_get('group_id'));
-    $user = (new model_user)->get_user($request->take_get('user_id'));
+    $user = di::get('em')->find('data_user', $request->take_get('user_id'));
     return ['group' => (new model_group2user($company))
       ->exclude_user($user)];
   }
@@ -137,7 +137,7 @@ class controller_user{
   }
 
   public static function private_get_dialog_add_user(model_request $request){
-    return ['users' => (new model_user())->get_users()];
+    return ['users' => di::get('em')->getRepository('data_company')->findAll()];
   }
 
   public static function private_get_dialog_delete_profile(
@@ -152,23 +152,23 @@ class controller_user{
   }
 
   public static function private_get_dialog_edit_fio(model_request $request){
-    return ['user' => (new model_user)->get_user($request->take_get('id'))];
+    return ['user' => di::get('em')->find('data_user', $request->take_get('id'))];
   }
 
   public static function private_get_dialog_edit_password(
     model_request $request){
-    return ['user' => (new model_user)->get_user($request->take_get('id'))];
+    return ['user' => di::get('em')->find('data_user', $request->take_get('id'))];
   }
 
   public static function private_get_dialog_edit_user_status(
     model_request $request){
-    return ['user' => (new model_user)->get_user($request->take_get('id'))];
+    return ['user' => di::get('em')->find('data_user', $request->take_get('id'))];
   }
 
     public static function private_get_dialog_exclude_user(
       model_request $request){
       return [
-        'user' => (new model_user)->get_user($request->take_get('user_id')),
+        'user' => di::get('em')->find('data_user', $request->take_get('user_id')),
         'group' => (new model_group(di::get('company')))
         ->get_group($request->take_get('group_id'))];
     }
@@ -197,12 +197,12 @@ class controller_user{
   }
 
   public static function private_get_dialog_edit_login(model_request $request){
-    return ['user' => (new model_user)->get_user($request->take_get('id'))];
+    return ['user' => di::get('em')->find('data_user', $request->take_get('id'))];
   }
 
 	public static function private_show_default_page(model_request $request){
     $letters = [];
-    $users = (new model_user())->get_users();
+    $users = di::get('em')->getRepository('data_user')->findAll();
     if(!empty($users))
       foreach($users as $user){
         $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
@@ -232,7 +232,7 @@ class controller_user{
 
   public static function private_get_user_letter(model_request $request){
     $letter_users = [];
-    $users = (new model_user)->get_users();
+    $users = di::get('em')->getRepository('data_user')->findAll();
     if(!empty($users))
       foreach($users as $user){
         $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
@@ -248,11 +248,11 @@ class controller_user{
   }
 
   public static function private_get_user_content(model_request $request){
-    return ['user' => (new model_user)->get_user($request->take_get('id'))];
+    return ['user' => di::get('em')->find('data_user', $request->take_get('id'))];
   }
 
   public static function private_get_user_information(model_request $request){
-    return ['user' => (new model_user)->get_user($_GET['id'])];
+    return ['user' => di::get('em')->find('data_user', $_GET['id'])];
   }
 
   public static function private_get_user_profiles(model_request $request){
@@ -265,7 +265,7 @@ class controller_user{
 
   public static function private_get_user_letters(model_request $request){
     $letters = [];
-    $users = (new model_user())->get_users();
+    $users = di::get('em')->getRepository('data_user')->findAll();
     if(!empty($users))
       foreach($users as $user){
         $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
