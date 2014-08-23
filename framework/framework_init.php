@@ -1,6 +1,4 @@
 <?php
-http_router::build_route();
-// проверка на существования конфигурации приложения
 $file = ROOT.'/'.framework_configuration::application_folder.'/application_configuration.php';
 if(file_exists($file))
 	require_once $file;
