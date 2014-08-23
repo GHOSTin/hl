@@ -21,8 +21,8 @@ class controller_default_page{
           'ip' => $_SERVER['REMOTE_ADDR']];
         $ses = di::get('factory_session')->build($session);
         di::get('mapper_session')->insert($ses);
-        $_SESSION['user'] = $user;
-        $_SESSION['company'] = $company;
+        $_SESSION['user'] = $user->get_id();
+        $_SESSION['company'] = $company->get_id();
         setcookie("chat_host", application_configuration::chat_host, 0);
         setcookie("chat_port", application_configuration::chat_port, 0);
         setcookie("uid", $user->get_id(), 0);

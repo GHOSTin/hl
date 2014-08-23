@@ -27,7 +27,7 @@ class model_environment{
 	}
 
 	public static function prepare_answer($controller, $component, $method, $request){
-		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
+		if(isset($_SESSION['user'])){
 			self::init_profile($component);
 			$data['user'] = di::get('user');
 			$data['menu'] = model_menu::build_menu($component);
@@ -71,11 +71,6 @@ class model_environment{
 		require_once ROOT.'/'.framework_configuration::application_folder.'/application_configuration.php';
 		date_default_timezone_set(application_configuration::php_timezone);
 		$pimple = new \Pimple\Container();
-
-		if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user){
-			$pimple['user'] = $_SESSION['user'];
-			$pimple['company'] = $_SESSION['company'];
-		}
 
 		$pimple['factory_accrual'] = function($p){
 			return new factory_accrual();
@@ -300,6 +295,12 @@ class model_environment{
 			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 		  return $pdo;
 		};
+
+		di::set_instance($pimple);
+		if(isset($_SESSION['user'])){
+			$pimple['user'] = $pimple['mapper_user']->find($_SESSION['user']);
+			$pimple['company'] = $pimple['mapper_company']->find($_SESSION['company']);
+		}
 		di::set_instance($pimple);
 	}
 }

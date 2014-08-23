@@ -11,7 +11,7 @@ class model_resolver{
       $route = [$args[1][0], $args[2][0]];
     }else
       $route = ['error', 'error404'];
-    if(isset($_SESSION['user']) AND $_SESSION['user'] instanceof data_user)
+    if(isset($_SESSION['user']))
       $prefix = 'private_';
     else
       $prefix = 'public_';
