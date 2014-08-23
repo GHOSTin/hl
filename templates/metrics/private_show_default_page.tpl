@@ -30,7 +30,7 @@
   </div>
 {% endblock%}
 {% block javascript %}
-  <script src="/?js=component.js&p=metrics"></script>
+  <script src="/js/metrics.js"></script>
 {% endblock%}
 {% block css %}
 {% endblock css %}
