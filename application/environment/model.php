@@ -228,10 +228,6 @@ class model_environment{
 			return new model_query($p['company']);
 		};
 
-		$pimple['model_group'] = function($p){
-			return new model_group($p['company']);
-		};
-
 		$pimple['model_user'] = function($p){
 			return new model_user();
 		};

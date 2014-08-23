@@ -15,17 +15,27 @@ class controller_user{
   }
 
   public static function private_add_user(model_request $request){
-    return ['group' => (new model_group(di::get('company')))
-      ->add_user($request->take_get('group_id'),
-      $request->take_get('user_id'))];
+    $em = di::get('em');
+    $group = $em->find('data_group', $request->take_get('group_id'));
+    $user = $em->find('data_user', $request->take_get('user_id'));
+    $group->add_user($user);
+    $em->flush();
+    return ['group' => $group];
   }
 
   public static function private_create_group(model_request $request){
-    $model = new model_group(di::get('company'));
-    $group = $model->create_group($request->take_get('name'), 'true');
+    $em = di::get('em');
+    if(!is_null($em->getRepository('data_group')->findOneByName($request->take_get('name'))))
+      throw new RuntimeException('Группа с таким название уже существует.');
+    $group = new data_group();
+    $group->set_company_id(di::get('company')->get_id());
+    $group->set_name($request->take_get('name'));
+    $group->set_status('true');
+    $em->persist($group);
+    $em->flush();
     $letter_group = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
     $letters = [];
-    $groups = di::get('em')->getRepository('data_group')->findAll();
+    $groups = $em->getRepository('data_group')->findAll();
     if(!empty($groups))
       foreach($groups as $group){
         $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
@@ -71,8 +81,12 @@ class controller_user{
   }
 
   public static function private_exclude_user(model_request $request){
-    return ['group' => di::get('model_group')
-      ->exclude_user($request->take_get('group_id'), $request->take_get('user_id'))];
+    $em = di::get('em');
+    $group = $em->find('data_group', $request->take_get('group_id'));
+    $user = $em->find('data_user', $request->take_get('user_id'));
+    $group->exclude_user($user);
+    $em->flush();
+    return ['group' => $group];
   }
 
   public static function private_get_company_content(model_request $request){
@@ -265,8 +279,11 @@ class controller_user{
   }
 
   public static function private_update_group_name(model_request $request){
-    return ['group' => (new model_group(di::get('company')))
-      ->update_name($request->take_get('id'), $request->take_get('name'))];
+    $em = di::get('em');
+    $group = $em->find('data_group', $request->take_get('id'));
+    $group->set_name($request->take_get('name'));
+    $em->flush();
+    return ['group' => $group];
   }
 
   public static function private_update_fio(model_request $request){

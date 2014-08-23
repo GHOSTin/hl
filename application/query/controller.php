@@ -468,10 +468,7 @@ class controller_query{
 	}
 
 	public static function private_get_user_options(model_request $request){
-		$group = new data_group();
-		$group->set_id($request->GET('id'));
-		(new mapper_group2user(di::get('company'), $group))->init_users();
-		return ['group' => $group];
+		return ['group' => di::get('em')->find('data_user', $request->GET('id'))];
 	}
 
 	public static function private_get_work_options(model_request $request){
