@@ -1,10 +1,10 @@
 <?php
 define('ROOT' , substr(__DIR__, 0, (strlen(__DIR__) - strlen('/tests'))));
 date_default_timezone_set('Asia/Yekaterinburg');
-require_once(ROOT."/vendor/autoload.php");
 require_once(ROOT.'/framework/di.php');
 require_once(ROOT.'/framework/data_object.php');
 require_once(ROOT.'/framework/mapper.php');
+require_once(ROOT.'/framework/e_model.php');
 require_once(ROOT.'/application/application_configuration.php');
 # data
 require_once(ROOT.'/application/client_query/data.php');
@@ -31,6 +31,7 @@ require_once(ROOT.'/application/number2processing_center/data.php');
 require_once(ROOT.'/application/house2processing_center/data.php');
 require_once(ROOT.'/application/task/data.php');
 require_once(ROOT.'/application/task2comment/data.php');
+require_once(ROOT.'/application/metrics/data.php');
 # mapa
 require_once(ROOT.'/application/company/mapper.php');
 require_once(ROOT.'/application/client_query/mapper.php');
@@ -61,8 +62,19 @@ require_once(ROOT.'/application/query_work_type/model.php');
 require_once(ROOT.'/application/street2house/model.php');
 require_once(ROOT.'/application/task/model.php');
 require_once(ROOT.'/application/user2task/model.php');
+# verify
+require_once(ROOT.'/application/house/verify.php');
+require_once(ROOT.'/application/flat/verify.php');
+require_once(ROOT.'/application/number/verify.php');
+require_once(ROOT.'/application/company/verify.php');
+require_once(ROOT.'/application/query/verify.php');
+require_once(ROOT.'/application/query_work_type/verify.php');
+require_once(ROOT.'/application/street/verify.php');
+require_once(ROOT.'/application/department/verify.php');
+require_once(ROOT.'/application/user/verify.php');
+require_once(ROOT.'/application/work/verify.php');
+require_once(ROOT.'/application/city/verify.php');
 # factory
-require_once(ROOT.'/application/company/factory.php');
 require_once(ROOT.'/application/flat/factory.php');
 require_once(ROOT.'/application/client_query/factory.php');
 require_once(ROOT.'/application/house/factory.php');

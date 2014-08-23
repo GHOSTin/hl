@@ -3,8 +3,11 @@ class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
 		'processing_center', 'import', 'meter', 'error', 'company', 'report',
-		'about', 'export', 'task'];
+		'about', 'export', 'task', 'metrics'];
 
+	/*
+	* Возвращает содержимое страницы.
+	*/
 	public static function get_page_content(){
 		try{
 			session_start();
@@ -76,6 +79,10 @@ class model_environment{
 
 		$pimple['factory_accrual'] = function($p){
 			return new factory_accrual();
+		};
+
+		$pimple['factory_metrics'] = function($p){
+			return new factory_metrics();
 		};
 
 		$pimple['factory_query2comment'] = function($p){
@@ -156,6 +163,10 @@ class model_environment{
 
 		$pimple['mapper_accrual'] = function($p){
 			return new mapper_accrual($p['pdo']);
+		};
+
+		$pimple['mapper_metrics'] = function($p){
+			return new mapper_metrics($p['pdo']);
 		};
 
 		$pimple['mapper_session'] = function($p){
