@@ -8,4 +8,5 @@ $pimple = di::get_instance();
 $pimple['company'] = di::get('mapper_company')->find(2);
 di::get('mapper_company')->find_all();
 di::get('mapper_user')->get_users();
-di::get('mapper_number')->find_all();
+#di::get('mapper_number')->find_all();
+di::get('mapper_query')->find_all();

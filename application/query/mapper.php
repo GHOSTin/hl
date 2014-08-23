@@ -66,6 +66,37 @@ class mapper_query extends mapper{
     AND `queries`.`id` = :id AND `departments`.`company_id` = :company_id
     AND `queries`.`department_id` = `departments`.`id`";
 
+  private static $find_all = "SELECT `queries`.`id`, `queries`.`company_id`,
+    `queries`.`status`, `queries`.`initiator-type` as `initiator`,
+    `queries`.`payment-status` as `payment_status`,
+    `queries`.`warning-type` as `warning_status`,
+    `queries`.`department_id`, `queries`.`house_id`,
+    `queries`.`query_close_reason_id` as `close_reason_id`,
+    `queries`.`query_worktype_id` as `worktype_id`,
+    `queries`.`opentime` as `time_open`,
+    `queries`.`worktime` as `time_work`,
+    `queries`.`closetime` as `time_close`,
+    `queries`.`addinfo-name` as `contact_fio`,
+    `queries`.`addinfo-telephone` as `contact_telephone`,
+    `queries`.`addinfo-cellphone` as `contact_cellphone`,
+    `queries`.`description-open` as `description`,
+    `queries`.`description-close` as `close_reason`,
+    `queries`.`querynumber` as `number`,
+    `queries`.`query_inspection` as `inspection`,
+    `houses`.`housenumber` as `house_number`,
+    `houses`.`status` as `house_status`,
+    `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`,
+    `query_worktypes`.`name` as `work_type_name`,
+    `departments`.`name` as `department_name`
+    FROM `queries`, `houses`, `streets`, `query_worktypes`, `departments`
+    WHERE `queries`.`company_id` = :company_id
+    AND `queries`.`house_id` = `houses`.`id`
+    AND `houses`.`street_id` = `streets`.`id`
+    AND `queries`.`query_worktype_id` = `query_worktypes`.`id`
+    AND `departments`.`company_id` = :company_id
+    AND `queries`.`department_id` = `departments`.`id`";
+
   private static $insert =  "INSERT INTO `queries` (
     `id`, `company_id`, `status`, `initiator-type`, `payment-status`,
     `warning-type`, `department_id`, `house_id`, `query_worktype_id`,
@@ -194,6 +225,18 @@ class mapper_query extends mapper{
       return $this->create_object($stmt->fetch());
     else
       throw new RuntimeException();
+  }
+
+  public function find_all(){
+    $query = self::$find_all;
+    $stmt = $this->pdo->prepare($query);
+    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+    if(!$stmt->execute())
+        throw new RuntimeException();
+    $queries = [];
+    while($row = $stmt->fetch())
+      $queries[] = $this->create_object($row);
+    return $queries;
   }
 
   public function get_queries_by_number($number){
