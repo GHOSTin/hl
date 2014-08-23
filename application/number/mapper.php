@@ -25,6 +25,27 @@ class mapper_number extends mapper{
     AND `numbers`.`house_id` = `houses`.`id`
     AND `houses`.`street_id` = `streets`.`id`";
 
+  private static $find_all = "SELECT `numbers`.`id`, `numbers`.`company_id`,
+    `numbers`.`city_id`, `numbers`.`house_id`,
+    `numbers`.`flat_id`, `numbers`.`number`,
+    `numbers`.`type`, `numbers`.`status`,
+    `numbers`.`fio`, `numbers`.`email`, `numbers`.`telephone`,
+    `numbers`.`cellphone`, `numbers`.`password`,
+    `numbers`.`contact-fio` as `contact_fio`,
+    `numbers`.`contact-telephone` as `contact_telephone`,
+    `numbers`.`contact-cellphone` as `contact_cellphone`,
+    `flats`.`flatnumber` as `flat_number`,
+    `houses`.`housenumber` as `house_number`,
+    `houses`.`status` as `house_status`,
+    `houses`.`department_id`,
+    `streets`.`name` as `street_name`,
+    `streets`.`id` as `street_id`
+    FROM `numbers`, `flats`, `houses`, `streets`
+    WHERE `numbers`.`company_id` = :company_id
+    AND `numbers`.`flat_id` = `flats`.`id`
+    AND `numbers`.`house_id` = `houses`.`id`
+    AND `houses`.`street_id` = `streets`.`id`";
+
   private static $find_by_number = "SELECT `numbers`.`id`, `numbers`.`company_id`,
     `numbers`.`city_id`, `numbers`.`house_id`,
     `numbers`.`flat_id`, `numbers`.`number`,
@@ -82,6 +103,17 @@ class mapper_number extends mapper{
             return $this->create_object($stmt->fetch());
         if($count !== 1)
             throw new RuntimeException();
+    }
+
+    public function find_all(){
+        $stmt = $this->pdo->prepare(self::$find_all);
+        $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
+        if(!$stmt->execute())
+          throw new RuntimeException();
+        $numbers = [];
+        while($row = $stmt->fetch())
+          $numbers[] = $this->create_object($row);
+        return $numbers;
     }
 
     public function find_by_number($num){

@@ -104,8 +104,8 @@ class data_number extends data_object{
   }
 
   public function set_fio($fio){
-    if(!preg_match('/^[А-Яа-я0-9\. ]{3,255}$/u', $fio))
-      throw new DomainException('ФИО владельца лицевого счета заданы не верно.');
+    if(!preg_match('/^[А-ЯЁёа-я0-9\.,"№()* -<>]{1,255}$/u', $fio))
+      throw new DomainException('Wrong number fio '.$fio);
   	$this->fio = $fio;
   }
 
@@ -128,13 +128,13 @@ class data_number extends data_object{
   }
 
   public function set_number($number){
-    if(!preg_match('/^[0-9А-Яа-я]{1,20}$/u', $num))
-      throw new DomainException('Номер лицевого счета задан не верно.');
+    if(!preg_match('/^[0-9А-ЯA-Zа-яa-z]{0,20}$/u', $number))
+      throw new DomainException('Wrong number number '.$number);
     $this->number = $number;
   }
 
   public function set_status($status){
-    if(!in_array($number->get_status(), ['true', 'false']))
+    if(!in_array($status, ['true', 'false']))
       throw new DomainException('Статус лицевого счета задан не верно.');
     $this->status = $status;
   }

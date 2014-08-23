@@ -238,7 +238,7 @@ class controller_number{
 
   public static function private_get_house_content(model_request $request){
     $house = (new model_house)->get_house($request->take_get('id'));
-    (new model_house2number(di::get('company'), $house))
+    (new mapper_house2number(di::get('company'), $house))
       ->init_numbers();
     return ['house' => $house, 'departments' => $dep];
   }
@@ -258,7 +258,7 @@ class controller_number{
 
   public static function private_get_house_numbers(model_request $request){
     $house = (new model_house)->get_house($request->GET('id'));
-    (new model_house2number(di::get('company'), $house))
+    (new mapper_house2number(di::get('company'), $house))
       ->init_numbers();
     return ['house' => $house];
   }

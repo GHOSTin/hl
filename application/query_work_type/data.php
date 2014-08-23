@@ -20,8 +20,6 @@ class data_query_work_type extends data_object{
   }
 
   public function set_name($name){
-    if(!in_array($query_work_type->status, ['active', 'deactive']))
-      throw new DomainException('Статус типа работ задан не верно.');
     $this->name = $name;
   }
 }

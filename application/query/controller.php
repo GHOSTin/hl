@@ -306,7 +306,7 @@ class controller_query{
 
 	public static function private_get_numbers(model_request $request){
 		$house = (new model_house)->get_house($request->GET('id'));
-		(new model_house2number(di::get('company'), $house))
+		(new mapper_house2number(di::get('company'), $house))
 			->init_numbers();
 		return ['house' => $house];
 	}
