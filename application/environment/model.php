@@ -100,10 +100,6 @@ class model_environment{
 			return new factory_session();
 		};
 
-		$pimple['factory_company'] = function($p){
-			return new factory_company();
-		};
-
 		$pimple['factory_department'] = function($p){
 			return new factory_department();
 		};
@@ -170,10 +166,6 @@ class model_environment{
 
 		$pimple['mapper_session'] = function($p){
 			return new mapper_session($p['pdo']);
-		};
-
-		$pimple['mapper_company'] = function($p){
-			return new mapper_company($p['pdo']);
 		};
 
 		$pimple['mapper_department'] = function($p){

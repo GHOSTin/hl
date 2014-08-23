@@ -36,7 +36,6 @@ class data_user extends data_object{
   * @Column(name="midlename", type="string")
   */
 	private $middlename;
-	private $password;
 	private $session;
 
   /**

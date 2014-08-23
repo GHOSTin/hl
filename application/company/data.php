@@ -1,6 +1,7 @@
 <?php
-/** @Entity
-*    @Table(name="companies")
+/**
+* @Entity
+* @Table(name="companies")
 */
 class data_company{
 
@@ -15,7 +16,6 @@ class data_company{
   * @Column(name="name", type="string")
   */
   private $name;
-
 
   public function get_id(){
     return $this->id;
