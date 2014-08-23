@@ -4,6 +4,9 @@
 */
 class data_user extends data_object{
 
+  /**
+  * @Column(name="cellphone", type="string")
+  */
 	private $cellphone;
 
   /**
@@ -42,6 +45,10 @@ class data_user extends data_object{
   * @Column(name="status", type="string")
   */
 	private $status;
+
+  /**
+  * @Column(name="telephone", type="string")
+  */
 	private $telephone;
 
   /**

@@ -3,18 +3,18 @@ class model_user{
 
 	public function create_user($lastname, $firstname, $middlename, $login,
 		$password, $status){
-		$mapper = di::get('mapper_user');
-		if(!is_null($mapper->find_by_login($login)))
+		$em = di::get('em');
+		if(!is_null($em->getRepository('data_user')->findOneByLogin($login)))
       throw new RuntimeException();
 		$user = new data_user();
-		$user->set_id($mapper->get_insert_id());
 		$user->set_lastname($lastname);
 		$user->set_firstname($firstname);
 		$user->set_middlename($middlename);
 		$user->set_login($login);
 		$user->set_hash($this->get_password_hash($password));
 		$user->set_status($status);
-		return $mapper->insert($user);
+		$em->flush();
+		return $user;
 	}
 
 	public function get_password_hash($password){
@@ -22,68 +22,69 @@ class model_user{
 	}
 
 	public function get_user($id){
-		$user = di::get('mapper_user')->find($id);
+		$user = di::get('em')->find('data_user', $id);
 		if(!($user instanceof data_user))
 			throw new RuntimeException('Не существует такого пользователя.');
 		return $user;
 	}
 
 	public function get_users(){
-		return di::get('mapper_user')->get_users();
+		return di::get('em')->getRepository('data_user')->findAll();
 	}
 
 	public function update_fio($id, $lastname, $firstname, $middlename){
-		$mapper = di::get('mapper_user');
-		$user = $mapper->find($id);
+		$em = di::get('em');
+		$user = $em->find('data_user', $id);
 		$user->set_lastname($lastname);
 		$user->set_firstname($firstname);
 		$user->set_middlename($middlename);
-		$mapper->update($user);
+		$em->flush();
 		return $user;
 	}
 
 	public function update_password($id, $password){
-    $mapper = di::get('mapper_user');
-		$user = $mapper->find($id);
+    $em = di::get('em');
+		$user = $em->find('data_user', $id);
 		$user->set_hash($this->get_password_hash($password));
-		$mapper->update($user);
+		$em->flush();
 		return $user;
 	}
 
 	public function update_login($id, $login){
-		$mapper = di::get('mapper_user');
-		if(!is_null($mapper->find_by_login($login)))
+		$em = di::get('em');
+		$user = $em->getRepository('data_user')->findOneByLogin($login);
+		if(!is_null($user))
 			throw new RuntimeException();
-		$user = $mapper->find($id);
+		$user = $em->find('data_user', $id);
 		$user->set_login($login);
-		$mapper->update($user);
+		$em->flush();
 		return $user;
 	}
 
 	public function update_user_status($id){
-		$mapper = di::get('mapper_user');
-		$user = $mapper->find($id);
+		$em = di::get('em');
+		$user = $em->find('data_user', $id);
 		if($user->get_status() === 'true')
 			$user->set_status('false');
 		else
 			$user->set_status('true');
-		$mapper->update($user);
+		$em->flush();
 		return $user;
 	}
 
 	public static function update_cellphone($id, $cellphone){
-		$mapper = di::get('mapper_user');
-		$user = $mapper->find($id);
+		$em = di::get('em');
+		$user = $em->find('data_user', $id);;
 		$user->set_cellphone($cellphone);
-		$mapper->update($user);
+		$em->flush();
 		return $user;
 	}
 
 	public function update_telephone($id, $telephone){
-		$mapper = di::get('mapper_user');
-		$user = $mapper->find($id);
+		$em = di::get('em');
+		$user = $em->find('data_user', $id);
 		$user->set_telephone($telephone);
-		$mapper->update($user);
+		$em->flush();
 		return $user;
 	}
 }
