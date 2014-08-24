@@ -6,6 +6,11 @@
 class data_street extends data_object{
 
   /**
+  * @ManyToOne(targetEntity="data_city")
+  */
+  private $city;
+
+  /**
   * @Id
   * @Column(name="id", type="integer")
   */

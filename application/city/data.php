@@ -1,9 +1,35 @@
 <?php
+/**
+* @Entity
+* @Table(name="cities")
+*/
 class data_city extends data_object{
 
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
 	private $id;
+
+  /**
+  * @Column(name="name", type="string")
+  */
   private $name;
+
+  /**
+  * @ManyToOne(targetEntity="data_number")
+  */
+  private $numbers;
+
+  /**
+  * @Column(name="status", type="string")
+  */
 	private $status;
+
+  /**
+   * @OneToMany(targetEntity="data_street", mappedBy="city")
+   */
+  private $streets;
 
   private static $status_list = ['false', 'true'];
 

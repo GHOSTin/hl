@@ -5,9 +5,20 @@
 */
 class data_number extends data_object{
 
+  /**
+  * @Column(name="cellphone", type="string")
+  */
   private $cellphone;
   private $centers = [];
+
+  /**
+  * @OneToMany(targetEntity="data_city", mappedBy="city")
+  */
   private $city;
+
+  /**
+  * @Column(name="fio", type="string")
+  */
   private $fio;
 
   /**
@@ -32,8 +43,20 @@ class data_number extends data_object{
   * @Column(name="number", type="string")
   */
   private $number;
+
+  /**
+  * @Column(name="status", type="string")
+  */
   private $status;
+
+  /**
+  * @Column(name="telephone", type="string")
+  */
   private $telephone;
+
+  /**
+  * @Column(name="email", type="string")
+  */
   private $email;
 
   public function add_meter(data_number2meter $n2m){

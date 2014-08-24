@@ -172,10 +172,6 @@ class model_environment{
 			return new mapper_query2comment($p['pdo']);
 		};
 
-		$pimple['mapper_city'] = function($p){
-			return new mapper_city($p['pdo']);
-		};
-
 		$pimple['mapper_error'] = function($p){
 			return new mapper_error($p['pdo']);
 		};
