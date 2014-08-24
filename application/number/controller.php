@@ -40,7 +40,7 @@ class controller_number{
 
   public static function private_add_house_processing_center(
     model_request $request){
-    $house = (new model_house)->get_house($request->GET('house_id'));
+    $house = di::get('em')->find('data_house', $request->GET('house_id'));
     $house = (new model_house2processing_center(
       di::get('company'), $house))
       ->add_processing_center($request->GET('center_id'),
@@ -50,8 +50,11 @@ class controller_number{
 
   public static function private_edit_department(
     model_request $request){
-    $house = (new model_house)->edit_department($request->GET('house_id'),
-      $request->GET('department_id'));
+    $em = di::get('em');
+    $house = $em->find('data_house', $request->GET('house_id'));
+    $department = $em->find('data_department', $request->GET('department_id'));
+    $house->set_department($department);
+    $em->flush();
     $departments = (new model_department(di::get('company')))
       ->get_departments();
     $dep = [];
@@ -63,7 +66,7 @@ class controller_number{
 
   public static function private_remove_house_processing_center(
     model_request $request){
-    $house = (new model_house)->get_house($request->GET('house_id'));
+    $house = di::get('em')->find('data_house', $request->GET('house_id'));
     return ['house' => (new model_house2processing_center(
       di::get('company'), $house))
       ->remove_processing_center($request->GET('center_id'))];
@@ -144,7 +147,7 @@ class controller_number{
 
   public static function private_get_dialog_remove_house_processing_center(
     model_request $request){
-    $house = (new model_house)->get_house($request->GET('house_id'));
+    $house = di::get('em')->find('data_house', $request->GET('house_id'));
     (new mapper_house2processing_center(
       di::get('company'), $house))->init_processing_centers();
     return ['house' => $house];
@@ -166,7 +169,7 @@ class controller_number{
 
   public static function private_get_dialog_edit_department(
     model_request $request){
-    $house = (new model_house)->get_house($request->GET('house_id'));
+    $house = di::get('em')->find('data_house', $request->GET('house_id'));
     $departments = (new model_department(di::get('company')))
       ->get_departments();
 
@@ -237,14 +240,14 @@ class controller_number{
   }
 
   public static function private_get_house_content(model_request $request){
-    $house = (new model_house)->get_house($request->take_get('id'));
+    $house = di::get('em')->find('data_house', $request->take_get('id'));
     (new mapper_house2number(di::get('company'), $house))
       ->init_numbers();
     return ['house' => $house, 'departments' => $dep];
   }
 
   public static function private_get_house_information(model_request $request){
-    $house = (new model_house)->get_house($request->GET('id'));
+    $house = di::get('em')->find('data_house', $request->GET('id'));
     (new model_house2processing_center(
       di::get('company'), $house))->init_processing_centers();
         $departments = (new model_department(di::get('company')))
@@ -257,7 +260,7 @@ class controller_number{
   }
 
   public static function private_get_house_numbers(model_request $request){
-    $house = (new model_house)->get_house($request->GET('id'));
+    $house = di::get('em')->find('data_house', $request->GET('id'));
     (new mapper_house2number(di::get('company'), $house))
       ->init_numbers();
     return ['house' => $house];

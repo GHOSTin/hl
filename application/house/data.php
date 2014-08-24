@@ -1,10 +1,27 @@
 <?php
+/**
+* @Entity
+* @Table(name="houses")
+*/
 class data_house{
 
 	private $city;
   private $department;
+
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
 	private $id;
+
+  /**
+  * @Column(name="housenumber", type="string")
+  */
 	private $number;
+
+  /**
+  * @Column(name="status", type="string")
+  */
 	private $status;
 	private $street_id;
 	private $street_name;

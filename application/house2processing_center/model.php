@@ -10,7 +10,7 @@ class model_house2processing_center{
   }
 
   public function add_processing_center($center_id, $identifier){
-    $this->house = (new model_house)->get_house($this->house->get_id());
+    $this->house = di::get('em')->find('data_house', $this->house->get_id());
     $center = new data_house2processing_center(
       (new model_processing_center)->get_processing_center($center_id));
     $center->set_identifier($identifier);
@@ -22,7 +22,7 @@ class model_house2processing_center{
   }
 
   public function remove_processing_center($center_id){
-    $this->house = (new model_house)->get_house($this->house->get_id());
+    $this->house = di::get('em')->find('data_house', $this->house->get_id());
     $center = new data_house2processing_center(
       (new model_processing_center)->get_processing_center($center_id));
     $mapper = new mapper_house2processing_center($this->company, $this->house);

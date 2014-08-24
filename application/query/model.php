@@ -90,7 +90,7 @@ class model_query{
 	// test
 	public function set_house($id){
 		if($id > 0){
-			$house = di::get('model_house')->get_house($id);
+			$house = di::get('em')->find('data_house', $id);
 			$this->set_param('house', $house->get_id());
 		}else
 			$this->set_param('house', null);
@@ -195,14 +195,13 @@ class model_query{
 			if(!is_null($number_id)){
 				$query->set_initiator('number');
 				$number = (new model_number($company))->get_number($number_id);
-				$house = (new model_house)
-					->get_house($number->get_flat()->get_house()->get_id());
+				$house = di::get('em')->find('data_house', $number->get_flat()->get_house()->get_id());
 				$query->set_house($house);
 				$query->add_number($number);
 				$mapper_q2n->update();
 			}elseif(!is_null($house_id)){
 				$query->set_initiator('house');
-				$house = (new model_house)->get_house($house_id);
+				$house = di::get('em')->find('data_house', $house_id);
 				$query->set_house($house);
 				(new mapper_house2number($company, $house))->init_numbers();
 				if(!empty($house->get_numbers()))
@@ -278,13 +277,12 @@ class model_query{
 				'contact_cellphone' => $contact_cellphone
 				];
 			if($initiator === 'house'){
-				$house = (new model_house)->get_house($id);
+				$house = di::get('em')->find('data_house', $id);
 				(new mapper_house2number($this->company, $house))->init_numbers();
 				$numbers = $house->get_numbers();
 			}elseif($initiator === 'number'){
 				$number = (new model_number($this->company))->get_number($id);
-				$house = (new model_house)
-					->get_house($number->get_flat()->get_house()->get_id());
+				$house = di::get('em')->find('data_house', $number->get_flat()->get_house()->get_id());
 				$numbers[] = $number;
 			}
 			$q_array['house'] = $house;

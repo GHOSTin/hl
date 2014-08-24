@@ -89,7 +89,7 @@ class model_report{
     if($house_id === 'all'){
       $this->params['house'] = null;
     }else{
-      $house = (new model_house)->get_house($house_id);
+      $house = di::get('em')->find('data_house', $house_id);
       $this->params['house'] = $house->get_id();
     }
     (new mem(__CLASS__))->save($this->params);

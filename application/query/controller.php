@@ -288,7 +288,7 @@ class controller_query{
 					'queries' => $queries];
 			break;
 			case 'house':
-				$house = (new model_house)->get_house($request->GET('id'));
+				$house = di::get('em')->find('data_house', $request->GET('id'));
 				$queries = di::get('mapper_query')->get_queries_by_house($house);
 				return ['house' => $house, 'query_work_types' => $types,
 					'queries' => $queries];
@@ -305,7 +305,7 @@ class controller_query{
 	}
 
 	public static function private_get_numbers(model_request $request){
-		$house = (new model_house)->get_house($request->GET('id'));
+		$house = di::get('em')->find('data_house', $request->GET('id'));
 		(new mapper_house2number(di::get('company'), $house))
 			->init_numbers();
 		return ['house' => $house];
