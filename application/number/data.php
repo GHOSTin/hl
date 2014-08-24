@@ -1,5 +1,8 @@
 <?php
-
+/**
+* @Entity
+* @Table(name="numbers")
+*/
 class data_number extends data_object{
 
   private $cellphone;
@@ -9,8 +12,17 @@ class data_number extends data_object{
   private $flat;
   private $hash;
   private $house;
+
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
   private $id;
   private $meters = [];
+
+  /**
+  * @Column(name="number", type="string")
+  */
   private $number;
   private $status;
   private $telephone;

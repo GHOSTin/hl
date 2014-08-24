@@ -220,10 +220,6 @@ class model_environment{
 			return new mapper_task2comment($p['pdo']);
 		};
 
-		$pimple['model_number'] = function($p){
-			return new model_number($p['company']);
-		};
-
 		$pimple['model_query'] = function($p){
 			return new model_query($p['company']);
 		};

@@ -164,8 +164,8 @@ class controller_query{
 		$client_query = (new mapper_client_query(di::get('pdo')))
 			->find($company, $request->GET('number_id'), $request->GET('time'));
 		if(is_null($client_query)) die('no client query');
-		return ['number' => (new model_number($company))
-			->get_number($request->GET('number_id')), 'query_work_types' => $types,
+		return ['number' => di::get('em')->find('data_number', $request->GET('number_id')),
+			'query_work_types' => $types,
 			'client_query' => $client_query];
 	}
 
@@ -280,8 +280,7 @@ class controller_query{
 		$types = (new model_query_work_type($company))->get_query_work_types();
 		switch($request->GET('initiator')){
 			case 'number':
-				$number = (new model_number($company))
-					->get_number($request->GET('id'));
+				$number = di::get('em')->find('data_number', $request->GET('id'));
 				$house = $number->get_flat()->get_house();
 				$queries = di::get('mapper_query')->get_queries_by_house($house);
 				return ['number' => $number, 'query_work_types' => $types,

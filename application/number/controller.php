@@ -19,7 +19,7 @@ class controller_number{
     $date_release = explode('.', $request->GET('date_release'));
     $date_install = explode('.', $request->GET('date_install'));
     $date_checking = explode('.', $request->GET('date_checking'));
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     (new model_number2meter(di::get('company'), $number))
       ->add_meter($request->GET('meter_id'), $request->GET('serial'),
       $request->GET('service'), $request->GET('place'),
@@ -73,7 +73,7 @@ class controller_number{
   }
 
   public static function private_add_processing_center(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     (new model_number2processing_center(di::get('company'), $number))
       ->add_processing_center($request->GET('center_id'),
         $request->GET('identifier'));
@@ -82,8 +82,7 @@ class controller_number{
 
   public static function private_change_meter(model_request $request){
     $company = di::get('company');
-    $number = (new model_number($company))
-      ->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $model = new model_number2meter($company, $number);
     $model->change_meter($request->GET('meter_id'), $request->GET('serial'),
       $request->GET('new_meter_id'), $request->GET('service'),
@@ -103,7 +102,7 @@ class controller_number{
   }
 
   public static function private_delete_meter(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     (new model_number2meter(di::get('company'), $number))
       ->delete_meter($request->GET('meter_id'), $request->GET('serial'));
     $enable_meters = $disable_meters = [];
@@ -119,7 +118,7 @@ class controller_number{
 
   public static function private_exclude_processing_center(
     model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     (new model_number2processing_center(di::get('company'), $number))
       ->delete_processing_center($request->GET('center_id'));
     return ['number' => $number];
@@ -222,7 +221,7 @@ class controller_number{
   }
 
   private static function data_for_meters_dialog(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['number' => $number, 'meter' => $meter];
@@ -268,7 +267,7 @@ class controller_number{
 
   public static function private_get_meters(model_request $request){
     $company = di::get('company');
-    $number = di::get('model_number')->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     $model = new model_number2meter($company, $number);
     $model->init_meters();
     $enable_meters = $disable_meters = [];
@@ -279,16 +278,14 @@ class controller_number{
         elseif($meter->get_status() == 'disabled')
           $disable_meters[] = $meter;
     self::set_param('number_content', 'meters');
-    $model = new model_number($company);
-    return ['number' => $model->get_number($request->GET('id')),
+    return ['number' => di::get('em')->find('data_number', $request->GET('id')),
             'enable_meters' => $enable_meters,
             'disable_meters' => $disable_meters];
   }
 
   public static function private_get_number_content(model_request $request){
       $company = di::get('company');
-      $number = (new model_number(di::get('company')))
-                ->get_number($request->GET('id'));
+      $number = di::get('em')->find('data_number', $request->GET('id'));
       $switch = self::get_param('number_content');
       switch($switch){
         case 'meters':
@@ -320,13 +317,12 @@ class controller_number{
 
   public static function private_get_number_information(model_request $request){
       self::set_param('number_content', 'information');
-      $model = new model_number(di::get('company'));
-      return ['number' => $model->get_number($request->GET('id'))];
+      return ['number' => di::get('em')->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_meter_data(model_request $request){
     $company = di::get('company');
-    $number = di::get('model_number')->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     $meter = (new model_number2meter($company, $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     if($request->GET('time') > 0)
@@ -356,8 +352,7 @@ class controller_number{
 
   public static function private_get_meter_cart(model_request $request){
     $company = di::get('company');
-    $number = (new model_number($company))
-      ->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['number' => $number, 'meter' => $meter];
@@ -368,7 +363,7 @@ class controller_number{
   }
 
   public static function private_get_meter_info(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['number' => $number, 'meter' => $meter];
@@ -380,7 +375,7 @@ class controller_number{
   }
 
   public static function private_get_processing_centers(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     (new model_number2processing_center(di::get('company'), $number))
       ->init_processing_centers();
     self::set_param('number_content', 'processing_centers');
@@ -392,14 +387,13 @@ class controller_number{
   }
 
   private static function data_for_dialog_number(model_request $request){
-    return ['number' => (new model_number(di::get('company')))
-                        ->get_number($request->GET('id'))];
+    return ['number' => di::get('em')
+            ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_accruals(
     model_request $request){
-    $number = (new model_number(di::get('company')))
-      ->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     $accruals = di::get('mapper_accrual')
       ->find_all(di::get('company'), $number);
     return ['number' => $number, 'accruals' => $accruals];
@@ -432,7 +426,7 @@ class controller_number{
   public static function private_get_dialog_edit_meter_data(
     model_request $request){
     $company = di::get('company');
-    $number = di::get('model_number')->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     $meter = (new model_number2meter($company, $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
     return ['number' => $number, 'meter' => $meter,
@@ -444,7 +438,7 @@ class controller_number{
   public static function private_update_date_checking(model_request $request){
     $time = explode('.', $request->GET('date'));
     $time = mktime(12, 0, 0, $time[1], $time[0], $time[2]);
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->update_date_checking($request->GET('meter_id'),
       $request->GET('serial'), $time);
@@ -454,7 +448,7 @@ class controller_number{
   public static function private_update_date_install(model_request $request){
     $time = explode('.', $request->GET('date'));
     $time = mktime(12, 0, 0, $time[1], $time[0], $time[2]);
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->update_date_install($request->GET('meter_id'),
       $request->GET('serial'), $time);
@@ -464,7 +458,7 @@ class controller_number{
   public static function private_update_date_release(model_request $request){
     $time = explode('.', $request->GET('date'));
     $time = mktime(12, 0, 0, $time[1], $time[0], $time[2]);
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->update_date_release($request->GET('meter_id'),
       $request->GET('serial'), $time);
@@ -472,20 +466,35 @@ class controller_number{
   }
 
   public static function private_update_number(model_request $request){
-    return ['number' => (new model_number(di::get('company')))
-                ->update_number($request->GET('id'), $request->GET('number'))];
+    $em = di::get('em');
+    $number = $em->find('data_number', $request->GET('id'));
+    $old_number = $em->getRepository('data_number')
+                      ->findByNumber($request->GET('number'));
+    if(!is_null($old_number))
+      if($number->get_id() != $old_number->get_id())
+        throw new RuntimeException('В базе уже есть лицевой счет с таким номером.');
+    $number->set_number($request->GET('number'));
+    $em->flush();
+    return ['number' => $number];
   }
 
   public static function private_update_number_password(model_request $request){
     if($request->GET('password') !== $request->GET('confirm'))
       throw new RuntimeException('Подтверждение и пароль не совпадают.');
-    return ['number' => (new model_number(di::get('company')))
-            ->update_password($request->GET('id'), $request->GET('password'))];
+    $em = di::get('em');
+    $number = $em->find('data_number', $request->GET('id'));
+    $hash = md5(md5(htmlspecialchars($request->GET('password'))).application_configuration::authSalt);
+    $number->set_hash($hash);
+    $em->flush();
+    return ['number' => $number];
   }
 
   public static function private_update_number_fio(model_request $request){
-    return ['number' => (new model_number(di::get('company')))
-    ->update_number_fio($request->GET('id'), $request->GET('fio'))];
+    $em = di::get('em');
+    $number = $em->find('data_number', $request->GET('id'));
+    $number->set_fio($request->GET('fio'));
+    $em->flush();
+    return ['number' => $number];
   }
 
   public static function private_update_number_cellphone(
@@ -494,27 +503,36 @@ class controller_number{
     $cellphone = implode('', $matches[0]);
     if(preg_match('|^[78]|', $cellphone))
       $cellphone = substr($cellphone, 1, 10);
-    return ['number' => (new model_number(di::get('company')))
-    ->update_number_cellphone($request->GET('id'), $cellphone)];
+    $em = di::get('em');
+    $number = $em->find('data_number', $request->GET('id'));
+    $number->set_cellphone($cellphone);
+    $em->flush();
+    return ['number' => $number];
   }
 
   public static function private_update_number_email(
     model_request $request){
     preg_match_all('/[0-9A-Za-z.@-]/', $request->GET('email'), $matches);
-    return ['number' => (new model_number(di::get('company')))
-    ->update_number_email($request->GET('id'), implode('', $matches[0]))];
+    $em = di::get('em');
+    $number = $em->find('data_number', $request->GET('id'));
+    $number->set_email(implode('', $matches[0]));
+    $em->flush();
+    return ['number' => $number];
   }
 
   public static function private_update_number_telephone(model_request $request){
-    return ['number' => (new model_number(di::get('company')))
-    ->update_number_telephone($request->GET('id'), $request->GET('telephone'))];
+    $em = di::get('em');
+    $number = $em->find('data_number', $request->GET('id'));
+    $number->set_telephone($request->GET('telephone'));
+    $em->flush();
+    return ['number' => $number];
   }
 
   public static function private_update_meter_data(model_request $request){
     $timestamp = explode('.', $request->GET('timestamp'));
     $timestamp = mktime(12, 0, 0, (int) $timestamp[1], (int) $timestamp[0], (int) $timestamp[2]);
     $company = di::get('company');
-    $number = di::get('model_number')->get_number($request->GET('id'));
+    $number = di::get('em')->find('data_number', $request->GET('id'));
     $meter = (new model_number2meter($company, $number))
       ->get_meter($request->GET('meter_id'), $request->GET('serial'));
 
@@ -532,7 +550,7 @@ class controller_number{
   }
 
   public static function private_update_serial(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->update_serial($request->GET('meter_id'),
       $request->GET('serial'), $request->GET('new_serial'));
@@ -540,7 +558,7 @@ class controller_number{
   }
 
   public static function private_update_meter_comment(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->update_comment($request->GET('meter_id'),
       $request->GET('serial'), $request->GET('comment'));
@@ -548,7 +566,7 @@ class controller_number{
   }
 
   public static function private_update_period(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_number', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->update_period($request->GET('meter_id'), $request->GET('serial'),
       $request->GET('period'));
@@ -557,7 +575,7 @@ class controller_number{
 
   public static function private_update_meter_status(model_request $request){
     $company = di::get('company');
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find($request->GET('number_id'));
     $model = new model_number2meter($company, $number);
     $model->update_status($request->GET('meter_id'), $request->GET('serial'));
     $model->init_meters();
@@ -568,14 +586,13 @@ class controller_number{
                 $enable_meters[] = $meter;
             elseif($meter->get_status() == 'disabled')
                 $disable_meters[] = $meter;
-    $model = new model_number($company);
     return ['number' => $number,
             'enable_meters' => $enable_meters,
             'disable_meters' => $disable_meters];
   }
 
   public static function private_update_meter_place(model_request $request){
-    $number = di::get('model_number')->get_number($request->GET('number_id'));
+    $number = di::get('em')->find('data_nmber', $request->GET('number_id'));
     $meter = (new model_number2meter(di::get('company'), $number))
       ->update_place($request->GET('meter_id'), $request->GET('serial'),
       $request->GET('place'));

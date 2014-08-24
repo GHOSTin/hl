@@ -194,7 +194,7 @@ class model_query{
 			$mapper_q2n = new mapper_query2number($company, $query);
 			if(!is_null($number_id)){
 				$query->set_initiator('number');
-				$number = (new model_number($company))->get_number($number_id);
+				$number = di::get('em')->find('data_number', $number_id);
 				$house = di::get('em')->find('data_house', $number->get_flat()->get_house()->get_id());
 				$query->set_house($house);
 				$query->add_number($number);
@@ -281,7 +281,7 @@ class model_query{
 				(new mapper_house2number($this->company, $house))->init_numbers();
 				$numbers = $house->get_numbers();
 			}elseif($initiator === 'number'){
-				$number = (new model_number($this->company))->get_number($id);
+				$number = di::get('em')->find('data_number', $id);
 				$house = di::get('em')->find('data_house', $number->get_flat()->get_house()->get_id());
 				$numbers[] = $number;
 			}
