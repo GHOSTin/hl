@@ -203,7 +203,6 @@ class model_query{
 				$query->set_initiator('house');
 				$house = di::get('em')->find('data_house', $house_id);
 				$query->set_house($house);
-				(new mapper_house2number($company, $house))->init_numbers();
 				if(!empty($house->get_numbers()))
 					foreach($house->get_numbers() as $number)
 						$query->add_number($number);
@@ -278,7 +277,6 @@ class model_query{
 				];
 			if($initiator === 'house'){
 				$house = di::get('em')->find('data_house', $id);
-				(new mapper_house2number($this->company, $house))->init_numbers();
 				$numbers = $house->get_numbers();
 			}elseif($initiator === 'number'){
 				$number = di::get('em')->find('data_number', $id);

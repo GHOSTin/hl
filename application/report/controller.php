@@ -14,7 +14,6 @@ class controller_report{
 
         if($params['street'] > 0){
             $street = di::get('em')->find('data_street', $params['street']);
-            (new model_street2house($street))->init_houses();
             $houses = $street->get_houses();
         }
         return [
@@ -76,7 +75,6 @@ class controller_report{
         $street = (new model_report('query'))
             ->set_filter_query_street($request->GET('id'));
         if(!is_null($street)){
-            (new model_street2house($street))->init_houses();
             return ['street' => $street];
         }else
             return true;

@@ -5,7 +5,6 @@
 */
 class data_house{
 
-	private $city;
   private $department;
 
   /**
@@ -23,11 +22,18 @@ class data_house{
   * @Column(name="status", type="string")
   */
 	private $status;
-	private $street_id;
-	private $street_name;
+
+  /**
+  * @ManyToOne(targetEntity="data_street")
+  */
+	private $street;
   private $centers = [];
   private $flats = [];
-  private $numbers = [];
+
+  /**
+  * @OneToMany(targetEntity="data_number", mappedBy="house")
+  */
+  private $numbers;
 
   private static $statuses = ['true', 'false'];
 

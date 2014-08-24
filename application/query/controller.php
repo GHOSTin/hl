@@ -298,16 +298,12 @@ class controller_query{
 	}
 
 	public static function private_get_houses(model_request $request){
-		$street = di::get('em')->find('data_street', $request->GET('id'));
-		di::get('mapper_street2house')->init_houses($street);
-		return ['street' => $street];
+		return ['street' => di::get('em')
+							->find('data_street', $request->GET('id'))];
 	}
 
 	public static function private_get_numbers(model_request $request){
-		$house = di::get('em')->find('data_house', $request->GET('id'));
-		(new mapper_house2number(di::get('company'), $house))
-			->init_numbers();
-		return ['house' => $house];
+		return ['house' => di::get('em')->find('data_house', $request->GET('id'))];
 	}
 
 	// test
@@ -395,10 +391,8 @@ class controller_query{
 		$model->set_department('all');
 		$model->set_street($request->GET('value'));
 		$model->set_house('all');
-		if($request->GET('value') > 0){
+		if($request->GET('value') > 0)
 			$street = di::get('em')->find('data_street', $request->GET('value'));
-			di::get('mapper_street2house')->init_houses($street);
-		}
 		$collection = new collection_query(di::get('company'),
 		 $model->get_queries());
 		$collection->init_numbers();
@@ -487,7 +481,6 @@ class controller_query{
 		$time = getdate($params['time_open_begin']);
 		if($params['street'] > 0){
 			$street = di::get('em')->find('data_street', $params['street']);
-			di::get('mapper_street2house')->init_houses($street);
 			$houses = $street->get_houses();
 		}
 		$collection = new collection_query($company, $model->get_queries());

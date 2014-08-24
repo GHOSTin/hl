@@ -130,7 +130,6 @@ class controller_number{
 
   public static function private_get_street_content(model_request $request){
     $street = di::get('em')->find('data_street', $request->GET('id'));
-    (new model_street2house($street))->init_houses();
     return ['street' => $street];
   }
 
@@ -239,10 +238,8 @@ class controller_number{
   }
 
   public static function private_get_house_content(model_request $request){
-    $house = di::get('em')->find('data_house', $request->take_get('id'));
-    (new mapper_house2number(di::get('company'), $house))
-      ->init_numbers();
-    return ['house' => $house, 'departments' => $dep];
+    return ['house' => di::get('em')
+      ->find('data_house', $request->take_get('id'))];
   }
 
   public static function private_get_house_information(model_request $request){
@@ -259,10 +256,7 @@ class controller_number{
   }
 
   public static function private_get_house_numbers(model_request $request){
-    $house = di::get('em')->find('data_house', $request->GET('id'));
-    (new mapper_house2number(di::get('company'), $house))
-      ->init_numbers();
-    return ['house' => $house];
+    return ['house' => di::get('em')->find('data_house', $request->GET('id'))];
   }
 
   public static function private_get_meters(model_request $request){

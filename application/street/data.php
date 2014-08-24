@@ -5,10 +5,6 @@
 */
 class data_street extends data_object{
 
-  private $company_id;
-  private $city_id;
-  private $department_id;
-
   /**
   * @Id
   * @Column(name="id", type="integer")
@@ -25,14 +21,17 @@ class data_street extends data_object{
   */
   private $status;
 
-  private $houses = [];
+  /**
+   * @OneToMany(targetEntity="data_house", mappedBy="street")
+   */
+  private $houses;
 
   public static $statuses = ['true', 'false'];
 
   public function add_house(data_house $house){
-    if(array_key_exists($house->get_id(), $this->houses))
-      throw new DomainException('Дом уже добавлен в улицу.');
-    $this->houses[$house->get_id()] = $house;
+    if($this->houses->contains($house))
+      throw new DomainException('House exists.');
+    $this->houses->add($house);
   }
 
   public function get_houses(){

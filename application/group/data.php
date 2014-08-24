@@ -40,7 +40,7 @@ class data_group extends data_object{
   public function add_user(data_user $user){
     if($this->users->contains($user))
       throw new DomainException('Пользователь уже добавлен в группу.');
-    $this->users[] = $user;
+    $this->users->add($user);
   }
 
   public function exclude_user(data_user $user){

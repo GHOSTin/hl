@@ -11,6 +11,10 @@ class data_number extends data_object{
   private $fio;
   private $flat;
   private $hash;
+
+  /**
+  * @ManyToOne(targetEntity="data_house")
+  */
   private $house;
 
   /**

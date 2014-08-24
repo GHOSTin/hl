@@ -53,8 +53,7 @@ class controller_import{
 
   public static function private_create_house(model_request $request){
     $street = di::get('em')->find('data_street', $request->GET('street_id'));
-    return ['house' =>(new model_street2house($street))
-      ->create_house($request->GET('number'))];
+    return ['house' => $street->get_houses()];
   }
 
   public static function private_load_numbers(model_request $request){
