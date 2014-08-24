@@ -50,12 +50,22 @@ class controller_user{
       throw new RuntimeException('Пароль и подтверждение не равны.');
     if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $request->take_get('password')))
       throw new RuntimeException('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-    $user = (new model_user)->create_user($request->take_get('lastname'),
-      $request->take_get('firstname'), $request->take_get('middlename'),
-      $request->take_get('login'), $request->take_get('password'), 'true');
+    $em = di::get('em');
+    if(!is_null($em->getRepository('data_user')->findOneByLogin($login)))
+      throw new RuntimeException();
+    $user = new data_user();
+    $user->set_lastname($request->take_get('lastname'));
+    $user->set_firstname($request->take_get('firstname'));
+    $user->set_middlename($request->take_get('middlename'));
+    $user->set_company_id(di::get('company')->get_id());
+    $user->set_login($request->take_get('login'));
+    $user->set_hash($this->get_password_hash($request->take_get('password')));
+    $user->set_status($status);
+    $em->persist($user);
+    $em->flush();
     $letter_user = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
     $letter_users = [];
-    $users = di::get('em')->getRepository('data_user')->findAll();
+    $users = $em->getRepository('data_user')->findAll();
     if(!empty($users))
       foreach($users as $user){
         $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
@@ -287,17 +297,23 @@ class controller_user{
   }
 
   public static function private_update_fio(model_request $request){
-    return ['user' => (new model_user)->update_fio($request->take_get('id'),
-      $request->take_get('lastname'), $request->take_get('firstname'),
-      $request->take_get('middlename'))];
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('id'));
+    $user->set_lastname($request->take_get('lastname'));
+    $user->set_firstname($request->take_get('firstname'));
+    $user->set_middlename($request->take_get('middlename'));
+    $em->flush();
+    return ['user' => $user];
   }
 
   public static function private_update_password(model_request $request){
     if($request->take_get('password') !== $request->take_get('confirm'))
       throw new RuntimeException('Пароль и подтверждение не идентичны.');
-    return ['user' => (new model_user)
-      ->update_password($request->take_get('id'),
-      $request->take_get('password'))];
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('id'));
+    $user->set_hash($this->get_password_hash($request->take_get('password')));
+    $em->flush();
+    return ['user' => $user];
   }
 
   public static function private_update_rule(model_request $request){
@@ -322,12 +338,25 @@ class controller_user{
   }
 
   public static function private_update_login(model_request $request){
-    return ['user' => (new model_user)
-      ->update_login($request->take_get('id'), $request->take_get('login'))];
+    $em = di::get('em');
+    $user = $em->getRepository('data_user')
+      ->findOneByLogin($request->take_get('login'));
+    if(!is_null($user))
+      throw new RuntimeException();
+    $user = $em->find('data_user', $request->take_get('id'));
+    $user->set_login($request->take_get('login'));
+    $em->flush();
+    return ['user' => $user];
   }
 
   public static function private_update_user_status(model_request $request){
-    return ['user' => (new model_user)
-      ->update_user_status($request->take_get('id'))];
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('id'));
+    if($user->get_status() === 'true')
+      $user->set_status('false');
+    else
+      $user->set_status('true');
+    $em->flush();
+    return ['user' => $user];
   }
 }

@@ -28,14 +28,26 @@ class controller_profile{
 	public static function private_update_password(model_request $request){
 		if($request->take_get('new_password') !== $request->take_get('confirm_password'))
 			throw new RuntimeException('Введеные новый пароль и его подтверждение не совпадают.');
-		return ['user' => (new model_user)->update_password(di::get('user')->get_id(), $request->take_get('new_password'))];
+		$em = di::get('em');
+		$user = di::get('user');
+		$user->set_hash($this->get_password_hash($request->take_get('new_password')));
+		$em->flush();
+		return ['user' => $user];
 	}
 
 	public static function private_update_cellphone(model_request $request){
-		return ['user' => (new model_user)->update_cellphone(di::get('user')->get_id(), $request->take_get('cellphone'))];
+		$em = di::get('em');
+		$user = di::get('user');
+		$user->set_cellphone($request->take_get('cellphone'));
+		$em->flush();
+		return ['user' => $user];
 	}
 
 	public static function private_update_telephone(model_request $request){
-		return ['user' => (new model_user)->update_telephone(di::get('user')->get_id(), $request->take_get('telephone'))];
+		$em = di::get('em');
+		$user = di::get('user');
+		$user->set_telephone($request->take_get('telephone'));
+		$em->flush();
+		return ['user' => $user];
 	}
 }
