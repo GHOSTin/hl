@@ -1,8 +1,29 @@
 <?php
+/**
+* @Entity
+* @Table(name="departments")
+*/
 class data_department extends data_object{
 
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
   private $id;
+
+  /**
+  * @Column(name="name", type="string")
+  */
   private $name;
+
+  /**
+  * @OneToMany(targetEntity="data_house", mappedBy="department")
+  */
+  private $houses;
+
+  /**
+  * @Column(name="status", type="string")
+  */
   private $status;
 
   private static $statuses = ['active', 'deactive'];

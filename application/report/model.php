@@ -53,8 +53,7 @@ class model_report{
     if($department_id === 'all')
       $this->params['department'] = [];
     else{
-      $department = (new model_department(di::get('company')))
-        ->get_department($department_id);
+      $department = di::get('em')->find('data_department', $department_id);
       $this->params['department'][0] = $department->get_id();
     }
     $this->params['street'] = null;

@@ -5,6 +5,9 @@
 */
 class data_house{
 
+  /**
+  * @ManyToOne(targetEntity="data_department")
+  */
   private $department;
 
   /**

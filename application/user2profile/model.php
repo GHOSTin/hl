@@ -142,7 +142,7 @@ class model_user2profile{
     if(!array_key_exists($restriction, $restrictions))
       throw new RuntimeException('Нет такого ограничения.');
     if($restriction === 'departments'){
-      $department = di::get('mapper_department')->find($item);
+      $department = di::get('em')->find('data_department', $item);
       if(!is_null($department)){
         $pos = array_search($department->get_id(), $restrictions[$restriction]);
         if($pos === false)

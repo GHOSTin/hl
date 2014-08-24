@@ -59,7 +59,7 @@ class model_query{
 			if(!empty($this->restrictions['departments']))
 				if(!in_array($id, $this->restrictions['departments']))
 					throw new RuntimeException('Участок не может быть добавлен.');
-			$department = (new model_department($this->company))->get_department($id);
+			$department = di::get('em')->find('data_department', $id);
 			$this->set_param('department', [$department->get_id()]);
 		}else
 		if(!empty($this->restrictions['departments']))

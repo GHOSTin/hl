@@ -55,13 +55,7 @@ class controller_number{
     $department = $em->find('data_department', $request->GET('department_id'));
     $house->set_department($department);
     $em->flush();
-    $departments = (new model_department(di::get('company')))
-      ->get_departments();
-    $dep = [];
-    if(!empty($departments))
-      foreach($departments as $department)
-        $dep[$department->get_id()] = $department->get_name();
-    return ['house' => $house, 'departments' => $dep];
+    return ['house' => $house];
   }
 
   public static function private_remove_house_processing_center(
@@ -167,11 +161,9 @@ class controller_number{
 
   public static function private_get_dialog_edit_department(
     model_request $request){
-    $house = di::get('em')->find('data_house', $request->GET('house_id'));
-    $departments = (new model_department(di::get('company')))
-      ->get_departments();
-
-    return ['house' => $house, 'departments' => $departments];
+    $em = di::get('em');
+    return ['house' => $em->find('data_house', $request->GET('house_id')),
+            'departments' => $em->getRepository('data_department')->findAll()];
   }
 
   public static function private_get_dialog_change_meter(
@@ -246,13 +238,7 @@ class controller_number{
     $house = di::get('em')->find('data_house', $request->GET('id'));
     (new model_house2processing_center(
       di::get('company'), $house))->init_processing_centers();
-        $departments = (new model_department(di::get('company')))
-      ->get_departments();
-    $dep = [];
-    if(!empty($departments))
-      foreach($departments as $department)
-        $dep[$department->get_id()] = $department->get_name();
-    return ['house' => $house, 'departments' => $dep];
+    return ['house' => $house];
   }
 
   public static function private_get_house_numbers(model_request $request){

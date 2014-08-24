@@ -130,7 +130,7 @@ class controller_user{
     if(!in_array($restriction, ['departments', 'worktypes']))
         throw new RuntimeException('Нет ограничения для профиля.');
     if($restriction === 'departments')
-        $items = (new model_department($company))->get_departments();
+        $items = di::get('em')->getRepository('data_department')->findAll();
     if($restriction === 'worktypes')
         $items = (new model_query_work_type($company))->get_query_work_types();
     return ['user' => $user, 'company' => $company,

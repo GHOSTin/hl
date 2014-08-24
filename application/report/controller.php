@@ -19,7 +19,7 @@ class controller_report{
         return [
             'streets' => di::get('em')->getRepository('data_street')->findAll(),
             'users' => di::get('em')->getRepository('data_user')->findAll(),
-            'departments' => (new model_department($company))->get_departments(),
+            'departments' => di::get('em')->getRepository('data_department')->findAll(),
             'query_work_types' => (new model_query_work_type($company))->get_query_work_types(),
             'houses' => $houses,
             'filters' => $params];
