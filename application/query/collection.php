@@ -61,7 +61,6 @@ class collection_query{
       'cellphone' => $row['cellphone'], 'telephone' => $row['telephone'],
       'status' => $row['status'], 'password' => $row['password']];
     $number = di::get('factory_number')->build($n_array);
-    $number->set_flat(di::get('factory_flat')->build($f_array));
     return $number;
   }
 

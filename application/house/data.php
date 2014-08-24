@@ -31,7 +31,11 @@ class data_house{
   */
 	private $street;
   private $centers = [];
-  private $flats = [];
+
+  /**
+  * @OneToMany(targetEntity="data_flat", mappedBy="house")
+  */
+  private $flats;
 
   /**
   * @OneToMany(targetEntity="data_number", mappedBy="house")

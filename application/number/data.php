@@ -9,6 +9,10 @@ class data_number extends data_object{
   private $centers = [];
   private $city;
   private $fio;
+
+  /**
+  * @ManyToOne(targetEntity="data_flat")
+  */
   private $flat;
   private $hash;
 
@@ -31,10 +35,6 @@ class data_number extends data_object{
   private $status;
   private $telephone;
   private $email;
-
-  public function __construct($id = null){
-    $this->id = (int) $id;
-  }
 
   public function add_meter(data_number2meter $n2m){
     $id = $n2m->get_id().'_'.$n2m->get_serial();

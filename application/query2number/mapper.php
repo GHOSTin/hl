@@ -37,7 +37,6 @@ class mapper_query2number{
       'status' => $row['status']];
     $number = di::get('factory_number')->build($n_array);
     $f_array = ['id' => $row['f_id'], 'number' => $row['flatnumber']];
-    $number->set_flat(di::get('factory_flat')->build($f_array));
     return $number;
   }
 

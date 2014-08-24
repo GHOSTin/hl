@@ -92,10 +92,6 @@ class model_environment{
 			return new factory_client_query();
 		};
 
-		$pimple['factory_flat'] = function($p){
-			return new factory_flat();
-		};
-
 		$pimple['factory_session'] = function($p){
 			return new factory_session();
 		};

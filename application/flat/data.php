@@ -1,10 +1,34 @@
 <?php
+/**
+* @Entity
+* @Table(name="flats")
+*/
 class data_flat extends data_object{
 
-  private $company_id;
+  /**
+  * @ManyToOne(targetEntity="data_house")
+  */
   private $house;
+
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
   private $id;
+
+  /**
+  * @OneToMany(targetEntity="data_number", mappedBy="flat")
+  */
+  private $num;
+
+  /**
+  * @Column(name="flatnumber", type="string")
+  */
   private $number;
+
+  /**
+  * @Column(name="status", type="string")
+  */
   private $status;
 
   private static $statuses = ['true', 'false'];
