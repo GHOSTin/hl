@@ -22,7 +22,7 @@ class model_import{
 			if(count($row) !== 12)
 				throw new RuntimeException();
 			$num = trim($row[0]);
-			$number = di::get('mapper_number')->find_by_number($num);
+			$number = di::get('em')->getRepository('data_number')->findByNumber($num);
 			if(!is_null($number)){
 				$ac['number'] = $number;
 				$ac['company'] = $this->company;
@@ -72,7 +72,7 @@ class model_import{
 				throw new RuntimeException();
 			$num = trim($row[0]);
 			if(!isset($numbers[$num])){
-				$number = di::get('mapper_number')->find_by_number($num);
+				$number = di::get('em')->getRepository('data_number')->findByNumber($num);
 				if(!is_null($number))
 					$numbers[$number->get_number()] = $number;
 				else

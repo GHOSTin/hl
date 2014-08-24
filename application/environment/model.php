@@ -136,10 +136,6 @@ class model_environment{
 			return new factory_task2comment();
 		};
 
-		$pimple['mapper_number'] = function($p){
-			return new mapper_number($p['pdo'], $p['company']);
-		};
-
 		$pimple['mapper_query'] = function($p){
 			return new mapper_query($p['pdo'], $p['company']);
 		};
