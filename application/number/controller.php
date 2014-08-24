@@ -123,11 +123,11 @@ class controller_number{
   }
 
 	public static function private_show_default_page(model_request $request){
-    return ['streets' => (new model_street)->get_streets()];
+    return ['streets' => di::get('em')->getRepository('data_street')->findAll()];
 	}
 
   public static function private_get_street_content(model_request $request){
-    $street = (new model_street)->get_street($request->GET('id'));
+    $street = di::get('em')->find('data_street', $request->GET('id'));
     (new model_street2house($street))->init_houses();
     return ['street' => $street];
   }

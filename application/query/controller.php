@@ -219,7 +219,7 @@ class controller_query{
 	public static function private_get_dialog_change_initiator(
 		model_request $request){
 		return ['query' => di::get('model_query')->get_query($request->GET('id')),
-			'streets' => di::get('model_street')->get_streets()];
+			'streets' => di::get('em')->getRepository('data_street')->findAll()];
 	}
 
 	// test
@@ -260,7 +260,7 @@ class controller_query{
 
 	// test
 	public static function private_get_dialog_initiator(model_request $request){
-		return ['streets' => di::get('model_street')->get_streets()];
+		return ['streets' => di::get('em')->getRepository('data_street')->findAll()];
 	}
 
 	// test
@@ -299,7 +299,7 @@ class controller_query{
 	}
 
 	public static function private_get_houses(model_request $request){
-		$street = (new model_street)->get_street($request->GET('id'));
+		$street = di::get('em')->find('data_street', $request->GET('id'));
 		di::get('mapper_street2house')->init_houses($street);
 		return ['street' => $street];
 	}
@@ -397,7 +397,7 @@ class controller_query{
 		$model->set_street($request->GET('value'));
 		$model->set_house('all');
 		if($request->GET('value') > 0){
-			$street = (new model_street)->get_street($request->GET('value'));
+			$street = di::get('em')->find('data_street', $request->GET('value'));
 			di::get('mapper_street2house')->init_houses($street);
 		}
 		$collection = new collection_query(di::get('company'),
@@ -487,7 +487,7 @@ class controller_query{
 		$params = $model->get_params();
 		$time = getdate($params['time_open_begin']);
 		if($params['street'] > 0){
-			$street = (new model_street)->get_street($params['street']);
+			$street = di::get('em')->find('data_street', $params['street']);
 			di::get('mapper_street2house')->init_houses($street);
 			$houses = $street->get_houses();
 		}
@@ -499,7 +499,7 @@ class controller_query{
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
-			'streets' => di::get('model_street')->get_streets(),
+			'streets' => di::get('em')->getRepository('data_street')->findAll(),
 			'departments' => (new model_department($company))->get_departments(),
 			'query_work_types' => (new model_query_work_type($company))
 				->get_query_work_types(),

@@ -71,7 +71,7 @@ class model_query{
 	// test
 	public function set_street($id){
 		if($id > 0){
-			$street = di::get('model_street')->get_street($id);
+			$street = di::get('em')->find('data_street', $id);
 			$this->set_param('street', $street->get_id());
 		}else
 			$this->set_param('street', null);

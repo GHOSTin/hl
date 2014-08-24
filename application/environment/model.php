@@ -236,10 +236,6 @@ class model_environment{
 			return new model_workgroup($p['company']);
 		};
 
-		$pimple['model_street'] = function($p){
-			return new model_street();
-		};
-
 		$pimple['model_house'] = function($p){
 			return new model_house();
 		};

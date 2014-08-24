@@ -1,13 +1,30 @@
 <?php
-
+/**
+* @Entity
+* @Table(name="streets")
+*/
 class data_street extends data_object{
 
   private $company_id;
   private $city_id;
   private $department_id;
+
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
   private $id;
+
+  /**
+  * @Column(name="name", type="string")
+  */
   private $name;
+
+  /**
+  * @Column(name="status", type="string")
+  */
   private $status;
+
   private $houses = [];
 
   public static $statuses = ['true', 'false'];

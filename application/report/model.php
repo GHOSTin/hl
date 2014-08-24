@@ -76,7 +76,7 @@ class model_report{
       $this->params['street'] = null;
       $this->params['house'] = null;
     }else{
-      $street = (new model_street)->get_street($street_id);
+      $street = di::get('em')->find('data_street', $street_id);
       $this->params['street'] = $street->get_id();
       $this->params['house'] = null;
     }

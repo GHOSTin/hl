@@ -13,12 +13,12 @@ class controller_report{
         $params = $model->get_params();
 
         if($params['street'] > 0){
-            $street (new model_street)->get_street($params['street']);
+            $street = di::get('em')->find('data_street', $params['street']);
             (new model_street2house($street))->init_houses();
             $houses = $street->get_houses();
         }
         return [
-            'streets' => (new model_street)->get_streets(),
+            'streets' => di::get('em')->getRepository('data_street')->findAll(),
             'users' => di::get('em')->getRepository('data_user')->findAll(),
             'departments' => (new model_department($company))->get_departments(),
             'query_work_types' => (new model_query_work_type($company))->get_query_work_types(),
