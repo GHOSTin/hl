@@ -59,7 +59,7 @@ class controller_user{
     $user->set_middlename($request->take_get('middlename'));
     $user->set_company_id(di::get('company')->get_id());
     $user->set_login($request->take_get('login'));
-    $user->set_hash($this->get_password_hash($request->take_get('password')));
+    $user->set_hash(data_user::generate_hash($request->take_get('password')));
     $user->set_status($status);
     $em->persist($user);
     $em->flush();
@@ -311,7 +311,7 @@ class controller_user{
       throw new RuntimeException('Пароль и подтверждение не идентичны.');
     $em = di::get('em');
     $user = $em->find('data_user', $request->take_get('id'));
-    $user->set_hash($this->get_password_hash($request->take_get('password')));
+    $user->set_hash(data_user::generate_hash($request->take_get('password')));
     $em->flush();
     return ['user' => $user];
   }

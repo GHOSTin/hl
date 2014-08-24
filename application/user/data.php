@@ -69,6 +69,11 @@ class data_user extends data_object{
   public function get_firstname(){
     return $this->firstname;
   }
+
+  public static function generate_hash($password){
+    return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
+  }
+
   public function get_hash(){
     return $this->hash;
   }

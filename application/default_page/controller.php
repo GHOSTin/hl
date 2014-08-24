@@ -13,7 +13,7 @@ class controller_default_page{
       if(!is_null($user)){
         if($user->get_status() !== 'true')
           die('Вы заблокированы и не можете войти в систему.');
-        if(di::get('model_user')->get_password_hash($request->take_post('password')) === $user->get_hash()){
+        if(data_user::generate_hash($request->take_post('password')) === $user->get_hash()){
           $company = $em->find('data_company', $user->get_company_id());
           if(is_null($company))
             die('Нет такой компании.');

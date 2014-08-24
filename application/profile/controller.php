@@ -30,7 +30,7 @@ class controller_profile{
 			throw new RuntimeException('Введеные новый пароль и его подтверждение не совпадают.');
 		$em = di::get('em');
 		$user = di::get('user');
-		$user->set_hash($this->get_password_hash($request->take_get('new_password')));
+		$user->set_hash(data_user::generate_hash($request->take_get('new_password')));
 		$em->flush();
 		return ['user' => $user];
 	}
