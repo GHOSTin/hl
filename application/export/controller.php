@@ -20,7 +20,7 @@ class controller_export {
     header('Pragma: public');
     $fp = tmpfile();
     $uri = stream_get_meta_data($fp)['uri'];
-    fputcsv($fp, array('Улица', 'Дом', 'Квартира', 'Лицевой счет', 'ФИО'));
+    fputcsv($fp, ['Улица', 'Дом', 'Квартира', 'Лицевой счет', 'ФИО'], ';');
     $numbers = di::get('em')->getRepository('data_number')->findAll();
     foreach($numbers as $number){
       $value = [$number->get_flat()->get_house()->get_street()->get_name(),
