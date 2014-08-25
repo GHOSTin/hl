@@ -13,6 +13,13 @@ class data_user extends data_object{
   * @Column(name="company_id", type="integer")
   */
 	private $company_id;
+
+
+  /**
+  * @OneToMany(targetEntity="data_error", mappedBy="user")
+  */
+  private $errors;
+
   /**
   * @Column(name="firstname", type="string")
   */

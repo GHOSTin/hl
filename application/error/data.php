@@ -1,8 +1,24 @@
 <?php
+/**
+* @Entity
+* @Table(name="errors")
+*/
 class data_error{
 
+  /**
+  * @Column(name="text", type="string")
+  */
   private $text;
+
+  /**
+  * @ManyToOne(targetEntity="data_user")
+  */
   private $user;
+
+  /**
+  * @Id
+  * @Column(name="time", type="integer")
+  */
   private $time;
 
   public function get_user(){
@@ -22,10 +38,10 @@ class data_error{
   }
 
   public function set_text($text){
-    $this->text = (string) $text;
+    $this->text = $text;
   }
 
   public function set_time($time){
-    $this->time = (int) $time;
+    $this->time = $time;
   }
 }

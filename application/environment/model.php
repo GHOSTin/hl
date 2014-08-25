@@ -96,24 +96,8 @@ class model_environment{
 			return new factory_session();
 		};
 
-		$pimple['factory_number'] = function($p){
-			return new factory_number();
-		};
-
 		$pimple['factory_query'] = function($p){
 			return new factory_query();
-		};
-
-		$pimple['factory_house'] = function($p){
-			return new factory_house();
-		};
-
-		$pimple['factory_street'] = function($p){
-			return new factory_street();
-		};
-
-		$pimple['factory_error'] = function($p){
-			return new factory_error();
 		};
 
 		$pimple['factory_work'] = function($p){
@@ -172,16 +156,8 @@ class model_environment{
 			return new mapper_query2comment($p['pdo']);
 		};
 
-		$pimple['mapper_error'] = function($p){
-			return new mapper_error($p['pdo']);
-		};
-
 		$pimple['mapper_meter'] = function($p){
 			return new mapper_meter($p['pdo'], $p['company']);
-		};
-
-    $pimple['mapper_export'] = function($p){
-			return new mapper_export($p['pdo']);
 		};
 
     $pimple['mapper_task'] = function($p){

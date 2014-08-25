@@ -1,6 +1,6 @@
 <?php
 class controller_error{
-  
+
   public static function error404(model_request $request){
     return null;
   }
@@ -10,15 +10,28 @@ class controller_error{
   }
 
   public static function private_delete_error(model_request $request){
-    (new model_error)->delete_error($request->GET('time'),
-      $request->GET('user_id'));
+    $em = di::get('em');
+    $error = di::get('em')->find('data_error', $request->GET('time'));
+    if(is_null($error))
+      throw new RuntimeException();
+    $em->remove($error);
+    $em->flush();
   }
 
   public static function private_send_error(model_request $request){
-    (new model_error)->send_error($request->GET('text'));
+    $time = time();
+    $em = di::get('em');
+    if(!is_null($em->find('data_error', $time)))
+      throw new RuntimeException();
+    $error = new data_error();
+    $error->set_text($request->GET('text'));
+    $error->set_time($time);
+    $error->set_user(di::get('user'));
+    $em->persist($error);
+    $em->flush();
   }
 
   public static function private_show_default_page(model_request $request){
-    return ['errors' => di::get('mapper_error')->find_all()];
+    return ['errors' => di::get('em')->getRepository('data_error')->findAll()];
   }
 }
