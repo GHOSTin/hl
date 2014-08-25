@@ -216,10 +216,6 @@ class model_environment{
 			return new model_import($p['company']);
 		};
 
-    $pimple['model_export'] = function($p){
-			return new model_export();
-		};
-
     $pimple['model_task'] = function($p){
 			return new model_task();
 		};
