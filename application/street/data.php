@@ -28,6 +28,7 @@ class data_street extends data_object{
 
   /**
    * @OneToMany(targetEntity="data_house", mappedBy="street")
+   * @OrderBy({"number" = "ASC"})
    */
   private $houses;
 

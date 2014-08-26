@@ -119,7 +119,8 @@ class controller_number{
   }
 
 	public static function private_show_default_page(model_request $request){
-    return ['streets' => di::get('em')->getRepository('data_street')->findAll()];
+    return ['streets' => di::get('em')
+      ->getRepository('data_street')->findBy([], ['name' => 'ASC'])];
 	}
 
   public static function private_get_street_content(model_request $request){
