@@ -76,10 +76,6 @@ class model_environment{
 		date_default_timezone_set(application_configuration::php_timezone);
 		$pimple = new \Pimple\Container();
 
-		$pimple['factory_accrual'] = function($p){
-			return new factory_accrual();
-		};
-
 		$pimple['factory_metrics'] = function($p){
 			return new factory_metrics();
 		};
@@ -118,10 +114,6 @@ class model_environment{
 
 		$pimple['mapper_query2work'] = function($p){
 			return new mapper_query2work($p['pdo']);
-		};
-
-		$pimple['mapper_accrual'] = function($p){
-			return new mapper_accrual($p['pdo']);
 		};
 
 		$pimple['mapper_metrics'] = function($p){

@@ -374,9 +374,7 @@ class controller_number{
   public static function private_accruals(
     model_request $request){
     $number = di::get('em')->find('data_number', $request->GET('id'));
-    $accruals = di::get('mapper_accrual')
-      ->find_all(di::get('company'), $number);
-    return ['number' => $number, 'accruals' => $accruals];
+    return ['number' => $number];
   }
 
   public static function private_get_dialog_edit_number_fio(

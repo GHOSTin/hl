@@ -44,10 +44,6 @@ class data_house{
 
   private static $statuses = ['true', 'false'];
 
-  public function __construct($id = null){
-    $this->id = (int) $id;
-  }
-
   public function add_number(data_number $number){
     if(array_key_exists($number->get_id(), $this->numbers))
       throw new DomainException('Дом уже добавлен в улицу.');

@@ -1,25 +1,75 @@
 <?php
-
+/**
+* @Entity
+* @Table(name="accruals")
+*/
 class data_accrual{
 
-  private $company;
+  /**
+  * @ManyToOne(targetEntity="data_number")
+  */
   private $number;
-  private $time;
-  private $service;
-  private $tarif;
-  private $ind;
-  private $odn;
-  private $sum_odn;
-  private $sum_ind;
-  private $sum_total;
-  private $recalculation;
-  private $facilities;
-  private $total;
-  private $unit;
 
-  public function get_company(){
-    return $this->company;
-  }
+  /**
+  * @Id
+  * @Column(name="time", type="integer")
+  */
+  private $time;
+
+  /**
+  * @Id @Column(name="service", type="string")
+  */
+  private $service;
+
+  /**
+  * @Column(name="tarif", type="string")
+  */
+  private $tarif;
+
+  /**
+  * @Column(name="ind", type="string")
+  */
+  private $ind;
+
+  /**
+  * @Column(name="odn", type="string")
+  */
+  private $odn;
+
+  /**
+  * @Column(name="sum_odn", type="string")
+  */
+  private $sum_odn;
+
+  /**
+  * @Column(name="sum_ind", type="string")
+  */
+  private $sum_ind;
+
+  /**
+  * @Column(name="sum_total", type="string")
+  */
+  private $sum_total;
+
+  /**
+  * @Column(name="recalculation", type="string")
+  */
+  private $recalculation;
+
+  /**
+  * @Column(name="facilities", type="string")
+  */
+  private $facilities;
+
+  /**
+  * @Column(name="total", type="string")
+  */
+  private $total;
+
+  /**
+  * @Column(name="unit", type="string")
+  */
+  private $unit;
 
   public function get_number(){
     return $this->number;
@@ -71,10 +121,6 @@ class data_accrual{
 
   public function get_unit(){
     return $this->unit;
-  }
-
-  public function set_company(data_company $company){
-    $this->company = $company;
   }
 
   public function set_number(data_number $number){
