@@ -1,7 +1,7 @@
 {% if response.queries != false %}
     <div class="muted">
         <small>
-	        Количество заявок: {{ response.querie }}
+	        Количество заявок: {{ response.queries|length }}
         </small>
     </div>
 	{% for query in response.queries %}

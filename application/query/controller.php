@@ -139,19 +139,15 @@ class controller_query{
 
 
 	public static function private_get_documents(model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
 	public static function private_get_day(model_request $request){
 		$time = getdate($request->GET('time'));
-		$begin = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$model = di::get('model_query');
-		$model->set_time_open_begin($begin);
-		$model->set_time_open_end($begin + 86399);
-		$collection = new collection_query(di::get('company'),
-		 $model->get_queries());
-		$collection->init_numbers();
-		return ['queries' => $collection];
+		$params['time_open_begin'] = mktime(0, 0, 0, 5, $time['mday'], $time['year']);
+		$params['time_open_end'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		return ['queries' => di::get('em')->getRepository('data_query')
+			->findByParams($params)];
 	}
 
 
@@ -445,7 +441,7 @@ class controller_query{
 		$em = di::get('em');
 		$now = getdate();
 		// $params = $model->get_params();
-		$time = getdate($params['time_open_begin']);
+		$time = getdate();
 		if($params['street'] > 0){
 			$street = di::get('em')->find('data_street', $params['street']);
 			$houses = $street->get_houses();
