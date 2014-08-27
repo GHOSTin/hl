@@ -1,9 +1,25 @@
 <?php
-
+/**
+* @Entity
+* @Table(name="query_worktypes")
+*/
 class data_query_work_type extends data_object{
 
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
   private $id;
+
+  /**
+  * @Column(name="name", type="string")
+  */
   private $name;
+
+  /**
+  * @OneToMany(targetEntity="data_query", mappedBy="work_type")
+  */
+  private $query;
 
   public function get_id(){
     return $this->id;

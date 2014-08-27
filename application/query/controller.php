@@ -81,10 +81,16 @@ class controller_query{
 	public static function private_close_query(model_request $request){
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('reason'), $matches);
-		$model = di::get('model_query');
-		$query = $model->close_query($request->GET('id'), implode('', $matches[0]));
-		$model->init_numbers($query);
-		$model->init_users($query);
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		if(!in_array($query->get_status(), ['working', 'open'], true))
+			throw new RuntimeException('Заявка не может быть закрыта.');
+		$query->set_status('close');
+		$query->set_close_reason(implode('', $matches[0]));
+		$query->set_time_close(time());
+		$em->flush();
 		return ['query' => $query];
 	}
 
@@ -108,19 +114,28 @@ class controller_query{
 	}
 
 	public static function private_reopen_query(model_request $request){
-		$model = di::get('model_query');
-		$query = $model->reopen_query($request->GET('id'));
-		$model->init_numbers($query);
-		$model->init_users($query);
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		if($query->get_status() !== 'close')
+			throw new RuntimeException();
+		$query->set_status('reopen');
+		$em->flush();
 		return ['query' => $query];
 	}
 
 
 	public static function private_to_working_query(model_request $request){
-		$model = di::get('model_query');
-		$query = $model->to_working_query($request->GET('id'));
-		$model->init_numbers($query);
-		$model->init_users($query);
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		if($query->get_status() !== 'open')
+			throw new RuntimeException();
+		$query->set_status('working');
+		$query->set_time_work(time());
+		$em->flush();
 		return ['query' => $query];
 	}
 
@@ -251,8 +266,9 @@ class controller_query{
 
 	public static function private_get_dialog_edit_work_type(
 		model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id')),
-			'work_types' => di::get('model_query_work_type')->get_query_work_types()];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id')),
+			'work_types' => di::get('em')
+			->getRepository('data_query_work_type')->findBy([], ['name' => 'ASC'])];
 	}
 
 
@@ -530,7 +546,13 @@ class controller_query{
 	}
 
 	public static function private_update_work_type(model_request $request){
-		return ['query' => di::get('model_query')
-			->update_work_type($request->GET('id'), $request->GET('type'))];
+		$em = di::get('em');
+		$type = $em->find('data_query_work_type', $request->GET('type'));
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->add_work_type($type);
+		$em->flush();
+		return ['query' => $query];
 	}
 }

@@ -5,7 +5,7 @@
 */
 class data_query extends data_object{
 
-	 /**
+	/**
   * @Id
   * @Column(name="id", type="integer")
   */
@@ -41,6 +41,11 @@ class data_query extends data_object{
   */
 	private $house;
 	private $close_reason_id;
+
+	/**
+  * @ManyToOne(targetEntity="data_query_work_type")
+  * @JoinColumn(name="query_worktype_id", referencedColumnName="id")
+  */
 	private $work_type;
 
 	/**

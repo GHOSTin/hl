@@ -170,21 +170,6 @@ class model_query{
 		return $query;
 	}
 
-	// test
-	public function close_query($id, $reason){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		if(!in_array($query->get_status(), ['working', 'open'], true))
-			throw new RuntimeException('Заявка не может быть закрыта.');
-		$query->set_status('close');
-		$query->set_close_reason($reason);
-		$query->set_time_close(time());
-		$mapper->update($query);
-		return $query;
-	}
-
 	public function change_initiator($id, $house_id = null, $number_id = null){
 		try{
 			$pdo = di::get('pdo');
@@ -217,32 +202,6 @@ class model_query{
 			$pdo->rollBack();
 			throw new RuntimeException('Проблема');
 		}
-	}
-
-	public function reopen_query($id){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		if($query->get_status() !== 'close')
-			throw new RuntimeException();
-		$query->set_status('reopen');
-		$mapper->update($query);
-		return $query;
-	}
-
-	// test
-	public function to_working_query($id){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		if($query->get_status() !== 'open')
-			throw new RuntimeException();
-		$query->set_status('working');
-		$query->set_time_work(time());
-		$mapper->update($query);
-		return $query;
 	}
 
 	public function create_query($initiator, $id, $description, $work_type,
@@ -308,18 +267,6 @@ class model_query{
 			->get_work($work_id));
 		$query->remove_work($work);
 		$mapper->update_works($this->company, $query);
-		return $query;
-	}
-
-	// test
-	public function update_work_type($id, $type_id){
-		$type = di::get('model_query_work_type')->get_query_work_type($type_id);
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		$query->add_work_type($type);
-		$mapper->update($query);
 		return $query;
 	}
 }
