@@ -8,6 +8,7 @@ function framework_autoload($class_name){
 	 	OR (0 === strpos($class_name, 'mapper_'))
 	 	OR (0 === strpos($class_name, 'collection_'))
 	 	OR (0 === strpos($class_name, 'factory_'))
+	 	OR (0 === strpos($class_name, 'repository_'))
 	){
 		list($folder, $component) = explode('_', $class_name, 2);
 		$file_path = ROOT.'/application/'.$component.'/'.$folder.'.php';

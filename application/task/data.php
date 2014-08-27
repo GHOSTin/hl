@@ -1,19 +1,74 @@
 <?php
+use Doctrine\Common\Collections\Criteria;
+use \Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Table(name="tasks")
+ * @ORM\Entity
+ */
 class data_task {
 
+
+  /**
+   * @ORM\Id()
+   * @ORM\Column(name="id", type="string")
+   * @var string
+   */
   private $id;
+  /**
+   * @ORM\Column(name="title", type="string")
+   * @var string
+   */
   private $title;
+  /**
+   * @ORM\Column(name="description", type="string")
+   * @var string
+   */
   private $description;
+  /**
+   * @ORM\Column(name="time_open", type="integer")
+   * @var int
+   */
   private $time_open;
+  /**
+   * @ORM\Column(name="time_close", type="integer")
+   * @var int
+   */
   private $time_close; //время выполнеия
+  /**
+   * @ORM\Column(name="time_target", type="integer")
+   * @var int
+   */
   private $time_target; //дата до которой нужно выполнить задачу
+  /**
+   * @ORM\Column(name="rating", type="integer")
+   * @var int
+   */
   private $rating = 0;
-  private $creator;
-  private $performers = [];
+  /**
+   * @ORM\OneToMany(targetEntity="data_task2user", mappedBy="task", cascade={"persist", "remove"})
+   * @var \Doctrine\Common\Collections\ArrayCollection
+   */
+  private $users;
+  /**
+   * @var array
+   */
   private $comments = [];
+  /**
+   * @ORM\Column(name="reason", type="string")
+   * @var string
+   */
   private $reason;
+  /**
+   * @ORM\Column(name="status", type="string")
+   * @var string
+   */
   private $status;
+
+  function __construct()
+  {
+    $this->users = di::get('em')->getRepository('data_task2user')->findBy(array('task_id'=>$this->get_id()));
+  }
 
   /**
    * @param mixed $title
@@ -78,7 +133,9 @@ class data_task {
    */
   public function get_creator()
   {
-    return $this->creator;
+    $criteria = Criteria::create()
+        ->where(Criteria::expr()->eq("user_type", "creator"));
+    return $this->users->matching($criteria)->first();
   }
 
   /**
@@ -102,7 +159,9 @@ class data_task {
    */
   public function set_performers(array $performers)
   {
-    $this->performers = $performers;
+    $criteria = Criteria::create()
+        ->where(Criteria::expr()->eq("user_type", "performer"));
+    return $this->users->matching($criteria);
   }
 
   /**
@@ -110,7 +169,9 @@ class data_task {
    */
   public function get_performers()
   {
-    return $this->performers;
+    $criteria = Criteria::create()
+        ->where(Criteria::expr()->eq("user_type", "performer"));
+    return $this->users->matching($criteria);
   }
 
   /**

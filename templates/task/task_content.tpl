@@ -1,4 +1,4 @@
-{% set creator = task.get_creator() %}
+{% set creator = task.get_creator().get_user() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set close_date = task.get_time_target()|date('d.m.Y') %}
 {% macro declension(number, forms) %}
@@ -62,7 +62,7 @@
         <strong>
           {% for performer in task.get_performers() %}
             <span class="task_performer">
-                {{ performer.get_lastname()}} {{ performer.get_firstname()|first|upper }}.{{ performer.get_middlename()|first|upper }}.{% if loop.revindex > 1 %}, {% endif%}
+                {{ performer.get_user().get_lastname()}} {{ performer.get_user().get_firstname()|first|upper }}.{{ performer.get_user().get_middlename()|first|upper }}.{% if loop.revindex > 1 %}, {% endif%}
               </span>
           {% endfor %}
         </strong>

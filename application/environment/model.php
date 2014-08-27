@@ -196,7 +196,8 @@ class model_environment{
 		  return $pdo;
 		};
 
-		$pimple['em'] = function($pimple){
+    /** @return \Doctrine\ORM\EntityManager */
+    $pimple['em'] = function($pimple){
 		  $paths = array(__DIR__);
 		  $isDevMode = (application_configuration::status == 'development')? true: false;
 		  $dbParams = array(

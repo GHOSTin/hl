@@ -1,5 +1,9 @@
 <?php
 
+
+/**
+ * Class controller_task
+ */
 class controller_task {
 
   static $name = 'Задачи';
@@ -25,15 +29,15 @@ class controller_task {
   }
 
   public static function private_show_active_tasks(model_request $request){
-    return ['tasks' => di::get('mapper_task')->find_active_tasks()];
+    return ['tasks' => di::get('em')->find('data_task', '20140620000001')];
   }
 
   public static function private_show_finished_tasks(model_request $request){
-    return ['tasks' => di::get('mapper_task')->find_finished_tasks()];
+    return ['tasks' => di::get('em')->getRepository('data_task')->findBy(array('status'=> 'close'))];
   }
 
   public static function private_get_task_content(model_request $request){
-    return ['task'=> di::get('mapper_task')->find($request->GET('id'))];
+    return ['task'=> di::get('em')->find('data_task', $request->GET('id'))];
   }
 
   public static function private_edit_task_content(model_request $request){

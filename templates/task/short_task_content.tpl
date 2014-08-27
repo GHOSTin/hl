@@ -29,7 +29,7 @@
     </div>
     <div class="media-body">
       <h5 class="list-group-item-heading media-heading"><strong>{{ task.get_title()|nl2br }}</strong></h5>
-      {% set creator = task.get_creator() %}
+      {% set creator = task.get_creator().get_user() %}
       <p class="list-group-item-text">
         <i class="glyphicon glyphicon-user" style="font-size: 20px;"></i>
         {{ creator.get_lastname()}} {{ creator.get_firstname()|first|upper }}.{{ creator.get_middlename()|first|upper }}.</p>
