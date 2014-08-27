@@ -57,8 +57,20 @@ class data_query extends data_object{
   * @Column(name="closetime", type="string")
   */
 	private $time_close;
+
+	/**
+  * @Column(type="string")
+  */
 	private $contact_fio;
+
+	/**
+  * @Column(type="string")
+  */
 	private $contact_telephone;
+
+	/**
+  * @Column(type="string")
+  */
 	private $contact_cellphone;
 
 	/**
@@ -77,11 +89,11 @@ class data_query extends data_object{
 	private $number;
 	private $inspection;
 	private $street;
-	private $numbers = [];
-	private $works = [];
+	private $numbers;
+	private $works;
 	private $users = ['creator' => null, 'manager' => [],
 										'observer' => [], 'performer' => []];
-	private $comments = [];
+	private $comments;
 
 	public static $initiator_list = ['number', 'house'];
 	public static $payment_status_list = ['paid', 'unpaid', 'recalculation'];

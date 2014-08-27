@@ -219,20 +219,6 @@ class model_query{
 		}
 	}
 
-	// test
-	public function reclose_query($id){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		if($query->get_status() !== 'reopen')
-			throw new RuntimeException();
-		$query->set_status('close');
-		$mapper->update($query);
-		return $query;
-	}
-
-	// test
 	public function reopen_query($id){
 		$mapper = di::get('mapper_query');
 		$query = $mapper->find($id);
@@ -322,63 +308,6 @@ class model_query{
 			->get_work($work_id));
 		$query->remove_work($work);
 		$mapper->update_works($this->company, $query);
-		return $query;
-	}
-
-	// test
-	public function update_description($id, $description){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		$query->set_description($description);
-		$mapper->update($query);
-		return $query;
-	}
-
-	// test
-	public function update_reason($id, $reason){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		$query->set_close_reason($reason);
-		$mapper->update($query);
-		return $query;
-	}
-
-	// test
-	public function update_contact_information($id, $fio, $telephone, $cellphone){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		$query->set_contact_fio($fio);
-		$query->set_contact_telephone($telephone);
-		$query->set_contact_cellphone($cellphone);
-		$mapper->update($query);
-		return $query;
-	}
-
-	// test
-	public function update_payment_status($id, $status){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		$query->set_payment_status($status);
-		$mapper->update($query);
-		return $query;
-	}
-
-	// test
-	public function update_warning_status($id, $status){
-		$mapper = di::get('mapper_query');
-		$query = $mapper->find($id);
-		if(is_null($query))
-			throw new RuntimeException();
-		$query->set_warning_status($status);
-		$mapper->update($query);
 		return $query;
 	}
 

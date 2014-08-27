@@ -95,15 +95,17 @@ class controller_query{
 			$request->GET('house_id'), $request->GET('number_id'))];
 	}
 
-	//test
 	public static function private_reclose_query(model_request $request){
-		$model = di::get('model_query');
-		$query = $model->reclose_query($request->GET('id'));
-		$model->init_numbers($query);
-		$model->init_users($query);
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		if($query->get_status() !== 'reopen')
+			throw new RuntimeException();
+		$query->set_status('close');
+		$em->flush();
 		return ['query' => $query];
 	}
-
 
 	public static function private_reopen_query(model_request $request){
 		$model = di::get('model_query');
@@ -211,43 +213,43 @@ class controller_query{
 
 	public static function private_get_dialog_to_working_query(
 		model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
 
 	public static function private_get_dialog_change_initiator(
 		model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id')),
+		return ['query' => di::get('em')->find('data_query', $request->GET('id')),
 			'streets' => di::get('em')->getRepository('data_street')->findAll()];
 	}
 
 
 	public static function private_get_dialog_edit_description(
 		model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
 
 	public static function private_get_dialog_edit_reason(model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
 
 	public static function private_get_dialog_edit_contact_information(
 		model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
 
 	public static function private_get_dialog_edit_payment_status(
 		model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
 
 	public static function private_get_dialog_edit_warning_status(
 		model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id'))];
+		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
 
@@ -474,42 +476,62 @@ class controller_query{
 			->remove_work($request->GET('id'), $request->GET('work_id'))];
 	}
 
-
 	public static function private_update_description(model_request $request){
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('description'), $matches);
-		return ['query' => di::get('model_query')
-			->update_description($request->GET('id'), implode('', $matches[0]))];
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->set_description(implode('', $matches[0]));
+		$em->flush();
+		return ['query' => $query];
 	}
-
 
 	public static function private_update_reason(model_request $request){
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('reason'), $matches);
-		return ['query' => di::get('model_query')
-			->update_reason($request->GET('id'), implode('', $matches[0]))];
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->set_close_reason(implode('', $matches[0]));
+		$em->flush();
+		return ['query' => $query];
 	}
-
 
 	public static function private_update_contact_information(
 		model_request $request){
-		return ['query' => di::get('model_query')
-			->update_contact_information($request->GET('id'), $request->GET('fio'),
-			$request->GET('telephone'), $request->GET('cellphone'))];
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->set_contact_fio($request->GET('fio'));
+		$query->set_contact_telephone($request->GET('telephone'));
+		$query->set_contact_cellphone($request->GET('cellphone'));
+		$em->flush();
+		return ['query' => $query];
 	}
-
 
 	public static function private_update_payment_status(model_request $request){
-		return ['query' => di::get('model_query')
-			->update_payment_status($request->GET('id'), $request->GET('status'))];
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->set_payment_status($request->GET('status'));
+		$em->flush();
+		return ['query' => $query];
 	}
-
 
 	public static function private_update_warning_status(model_request $request){
-		return ['query' => di::get('model_query')
-			->update_warning_status($request->GET('id'), $request->GET('status'))];
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		if(is_null($query))
+			throw new RuntimeException();
+		$query->set_warning_status($request->GET('status'));
+		$em->flush();
+		return ['query' => $query];
 	}
-
 
 	public static function private_update_work_type(model_request $request){
 		return ['query' => di::get('model_query')
