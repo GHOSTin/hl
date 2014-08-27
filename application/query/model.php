@@ -314,42 +314,6 @@ class model_query{
 		}
 	}
 
-	// test
-	public function get_query($id){
-		$query = di::get('mapper_query')->find($id);
-		if(!($query instanceof data_query))
-			throw new RuntimeException();
-		return $query;
-	}
-
-	public function init_numbers(data_query $query){
-		return (new mapper_query2number($this->company, $query))->init_numbers();
-	}
-
-	public function init_users(data_query $query){
-		return (new mapper_query2user($this->company, $query))->init_users();
-	}
-
-	public function init_works(data_query $query){
-		return di::get('mapper_query2work')->init_works($this->company, $query);
-	}
-
-	// test
-	public function init_comments(data_query $query){
-		di::get('mapper_query2comment')->init_comments($this->company, $query);
-		return $query;
-	}
-
-	// test
-	public function get_queries_by_number($number){
-		return di::get('mapper_query')->get_queries_by_number($number);
-	}
-
-	// test
-	public function get_queries(){
-		return di::get('mapper_query')->get_queries($this->params);
-	}
-
 	public function remove_work($query_id, $work_id){
 		$query = $this->get_query($query_id);
 		$mapper = di::get('mapper_query2work');

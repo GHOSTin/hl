@@ -22,6 +22,11 @@ class data_department extends data_object{
   private $houses;
 
   /**
+  * @OneToMany(targetEntity="data_query", mappedBy="department")
+  */
+  private $queries;
+
+  /**
   * @Column(name="status", type="string")
   */
   private $status;

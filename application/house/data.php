@@ -42,6 +42,11 @@ class data_house{
   */
   private $numbers;
 
+  /**
+  * @OneToMany(targetEntity="data_query", mappedBy="house")
+  */
+  private $queries;
+
   private static $statuses = ['true', 'false'];
 
   public function add_number(data_number $number){

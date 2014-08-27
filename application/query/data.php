@@ -1,23 +1,79 @@
 <?php
+/**
+* @Entity
+* @Table(name="queries")
+*/
 class data_query extends data_object{
 
+	 /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
 	private $id;
+
+	/**
+  * @Column(name="status", type="string")
+  */
 	private $status;
+
+	/**
+  * @Column(name="initiator", type="string")
+  */
 	private $initiator;
+
+	/**
+  * @Column(name="payment_status", type="string")
+  */
 	private $payment_status;
+
+	/**
+  * @Column(name="warning_type", type="string")
+  */
 	private $warning_status;
+
+	/**
+  * @ManyToOne(targetEntity="data_department")
+  */
 	private $department;
+
+	/**
+  * @ManyToOne(targetEntity="data_house")
+  */
 	private $house;
 	private $close_reason_id;
 	private $work_type;
+
+	/**
+  * @Column(name="opentime", type="string")
+  */
 	private $time_open;
+
+	/**
+  * @Column(name="worktime", type="string")
+  */
 	private $time_work;
+
+	/**
+  * @Column(name="closetime", type="string")
+  */
 	private $time_close;
 	private $contact_fio;
 	private $contact_telephone;
 	private $contact_cellphone;
+
+	/**
+  * @Column(name="description", type="string")
+  */
 	private $description;
+
+	/**
+  * @Column(name="reason", type="string")
+  */
 	private $close_reason;
+
+	/**
+  * @Column(name="querynumber", type="string")
+  */
 	private $number;
 	private $inspection;
 	private $street;
