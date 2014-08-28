@@ -38,16 +38,6 @@ class controller_number{
             'disable_meters' => $disable_meters];
   }
 
-  public static function private_add_house_processing_center(
-    model_request $request){
-    $house = di::get('em')->find('data_house', $request->GET('house_id'));
-    $house = (new model_house2processing_center(
-      di::get('company'), $house))
-      ->add_processing_center($request->GET('center_id'),
-      $request->GET('identifier'));
-    return ['house' => $house];
-  }
-
   public static function private_edit_department(
     model_request $request){
     $em = di::get('em');
@@ -58,21 +48,6 @@ class controller_number{
     return ['house' => $house];
   }
 
-  public static function private_remove_house_processing_center(
-    model_request $request){
-    $house = di::get('em')->find('data_house', $request->GET('house_id'));
-    return ['house' => (new model_house2processing_center(
-      di::get('company'), $house))
-      ->remove_processing_center($request->GET('center_id'))];
-  }
-
-  public static function private_add_processing_center(model_request $request){
-    $number = di::get('em')->find('data_number', $request->GET('number_id'));
-    (new model_number2processing_center(di::get('company'), $number))
-      ->add_processing_center($request->GET('center_id'),
-        $request->GET('identifier'));
-    return ['number' => $number];
-  }
 
   public static function private_change_meter(model_request $request){
     $company = di::get('company');
@@ -110,14 +85,6 @@ class controller_number{
             'disable_meters' => $disable_meters];
   }
 
-  public static function private_exclude_processing_center(
-    model_request $request){
-    $number = di::get('em')->find('data_number', $request->GET('number_id'));
-    (new model_number2processing_center(di::get('company'), $number))
-      ->delete_processing_center($request->GET('center_id'));
-    return ['number' => $number];
-  }
-
 	public static function private_show_default_page(model_request $request){
     return ['streets' => di::get('em')
       ->getRepository('data_street')->findBy([], ['name' => 'ASC'])];
@@ -132,32 +99,12 @@ class controller_number{
     return true;
   }
 
-  public static function private_get_dialog_add_house_processing_center(
-    model_request $request){
-    return ['centers' => (new model_processing_center)
-      ->get_processing_centers()];
-  }
-
-  public static function private_get_dialog_remove_house_processing_center(
-    model_request $request){
-    $house = di::get('em')->find('data_house', $request->GET('house_id'));
-    (new mapper_house2processing_center(
-      di::get('company'), $house))->init_processing_centers();
-    return ['house' => $house];
-  }
-
   public static function private_get_dialog_add_meter_option(
     model_request $request){
     $time = getdate();
     return ['meter' => (new model_meter(di::get('company')))
       ->get_meter($request->GET('meter_id')),
       'time' => $time['mday'].'.'.$time['mon'].'.'.$time['year']];
-  }
-
-  public static function private_get_dialog_add_processing_center(
-    model_request $request){
-    return ['centers' => (new model_processing_center)
-      ->get_processing_centers()];
   }
 
   public static function private_get_dialog_edit_department(
@@ -224,22 +171,13 @@ class controller_number{
     return self::data_for_meters_dialog($request);
   }
 
-  public static function private_get_dialog_exclude_processing_center(
-    model_request $request){
-    return ['center' => (new model_processing_center)
-                        ->get_processing_center($request->GET('center_id'))];
-  }
-
   public static function private_get_house_content(model_request $request){
     return ['house' => di::get('em')
       ->find('data_house', $request->take_get('id'))];
   }
 
   public static function private_get_house_information(model_request $request){
-    $house = di::get('em')->find('data_house', $request->GET('id'));
-    (new model_house2processing_center(
-      di::get('company'), $house))->init_processing_centers();
-    return ['house' => $house];
+    return ['house' => di::get('em')->find('data_house', $request->GET('id'))];
   }
 
   public static function private_get_house_numbers(model_request $request){
@@ -283,12 +221,6 @@ class controller_number{
             'enable_meters' => $enable_meters,
             'disable_meters' => $disable_meters,
             'setting' => $switch];
-        break;
-
-        case 'processing_centers':
-            (new model_number2processing_center($company, $number))
-              ->init_processing_centers();
-            return ['number' => $number, 'setting' => $switch];
         break;
 
         default:
@@ -353,14 +285,6 @@ class controller_number{
   public static function private_get_meter_options(model_request $request){
     return ['meters' => (new model_meter(di::get('company')))
     ->get_meters_by_service($request->GET('service'))];
-  }
-
-  public static function private_get_processing_centers(model_request $request){
-    $number = di::get('em')->find('data_number', $request->GET('id'));
-    (new model_number2processing_center(di::get('company'), $number))
-      ->init_processing_centers();
-    self::set_param('number_content', 'processing_centers');
-    return ['number' => $number];
   }
 
   public static function private_get_dialog_edit_number(model_request $request){

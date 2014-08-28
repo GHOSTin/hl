@@ -1,1 +1,0 @@
-{% include '@number/private_get_house_information.tpl' %}

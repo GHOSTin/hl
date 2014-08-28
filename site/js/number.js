@@ -83,7 +83,7 @@ $(document).ready(function(){
             $('.navbar-fixed').removeClass('navbar-fixed');
         }
     });
-    
+
     // выводит содержимое улицы
     $('body').on('click', '.get_street_content', function(){
         if($(this).siblings().is('.houses')){
@@ -226,23 +226,6 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-        
-    // выводит диалог добавление процессингового центра
-    }).on('click', '.get_dialog_add_house_processing_center', function(){
-        $.get('get_dialog_add_house_processing_center',{
-            id: get_house_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог удаления процессингового центра
-    }).on('click', '.get_dialog_remove_house_processing_center', function(){
-        $.get('get_dialog_remove_house_processing_center',{
-            house_id: get_house_id($(this)),
-            center_id: $(this).parent().attr('center')
-            },function(r){
-                init_content(r);
-            });
 
     }).on('click', '.get_dialog_edit_department', function(){
         $.get('get_dialog_edit_department',{
@@ -250,7 +233,7 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-        
+
 
     // выводит содержимое счетчика
     }).on('click', '.get_meter_data', function(){
@@ -264,7 +247,7 @@ $(document).ready(function(){
                 },function(r){
                     init_content(r);
                 });
-    
+
     // возвращает показания счетчика привязаного к лицевому счету
     }).on('click', '.get_meter_value', function(){
         $.get('get_meter_value',{
@@ -295,33 +278,6 @@ $(document).ready(function(){
                 init_content(r);
             });
 
-    // выводит процессинговые центры привязанные к лицевому счету
-    }).on('click', '.get_processing_centers', function(){
-        $.get('get_processing_centers',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог добавления процессингового центра
-    }).on('click', '.get_dialog_add_processing_center', function(){
-        $.get('get_dialog_add_processing_center',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог исключения процессингового центра
-    }).on('click', '.get_dialog_exclude_processing_center', function(){
-        $.get('get_dialog_exclude_processing_center',{
-            number_id: get_number_id($(this)),
-            center_id: $(this).parent().attr('center'),
-            identifier: $(this).parent().attr('identifier'),
-            },function(r){
-                init_content(r);
-            });
-
-        
     // выводит диалог перепривязки счетчика
     }).on('click', '.get_dialog_change_meter', function(){
         $.get('get_dialog_change_meter',{

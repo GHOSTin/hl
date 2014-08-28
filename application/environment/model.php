@@ -6,7 +6,7 @@ use \Doctrine\ORM\EntityManager;
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
-		'processing_center', 'import', 'meter', 'error', 'company', 'report',
+		'import', 'meter', 'error', 'company', 'report',
 		'about', 'export', 'task', 'metrics'];
 
 	/*
@@ -122,10 +122,6 @@ class model_environment{
 
 		$pimple['mapper_house'] = function($p){
 			return new mapper_house($p['pdo']);
-		};
-
-		$pimple['mapper_processing_center'] = function($p){
-			return new mapper_processing_center($p['pdo']);
 		};
 
 		$pimple['mapper_query2comment'] = function($p){

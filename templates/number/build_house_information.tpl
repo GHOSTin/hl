@@ -4,10 +4,3 @@
   <li>Номер: {{ house.get_number() }}</li>
   <li>Участок: {{ house.get_department().get_name() }} <a class="cm get_dialog_edit_department">изменить</a></li>
 </ul>
-<h5>Процессинговые центры</h5>
-<a class="get_dialog_add_house_processing_center">Добавить</a>
-<ul class="house2pc">
-  {% for h2pc in house.get_processing_centers() %}
-    <li center="{{ h2pc.get_id() }}">{{ h2pc.get_name() }}({{ h2pc.get_identifier() }}) <a class="get_dialog_remove_house_processing_center">удалить</a></li>
-  {% endfor %}
-</ul>

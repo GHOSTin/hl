@@ -14,7 +14,6 @@ class data_number extends data_object{
   * @Column(name="cellphone", type="string")
   */
   private $cellphone;
-  private $centers = [];
 
   /**
   * @OneToMany(targetEntity="data_city", mappedBy="city")
@@ -71,18 +70,6 @@ class data_number extends data_object{
     $this->meters[$id] = $n2m;
   }
 
-  public function add_processing_center(data_number2processing_center $n2c){
-    if(array_key_exists($n2c->get_id(), $this->centers))
-      throw new DomainException('Центр уже добавлен.');
-    $this->centers[$n2c->get_id()] = $n2c;
-  }
-
-  public function delete_processing_center(data_number2processing_center $n2c){
-    if(!array_key_exists($n2c->get_id(), $this->centers))
-      throw new DomainException('Центр не привязан к лицевому счету.');
-    unset($this->centers[$n2c->get_id()]);
-  }
-
   public function get_accruals(){
     return $this->accruals;
   }
@@ -117,10 +104,6 @@ class data_number extends data_object{
 
   public function get_number(){
     return $this->number;
-  }
-
-  public function get_processing_centers(){
-    return $this->centers;
   }
 
   public function get_telephone(){

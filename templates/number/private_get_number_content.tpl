@@ -12,13 +12,10 @@
                     <a class="get_number_information">Информация о счете</a>
                 </li>
                 <li{% if stn == 'meters' %} class="active"{% endif %}><a class="get_meters">Счетчики</a></li>
-                <li{% if stn == 'centers' %} class="active"{% endif %}><a class="get_processing_centers">Расчетные центры</a></li>
             </ul>
         </li>
         <li class="number-content-content row">
-        {% if stn == 'processing_centers' %}
-            {% include '@number/build_processing_centers.tpl' %}
-        {% elseif stn == 'meters'%}
+        {% if stn == 'meters'%}
             <div>
                 <a class="get_dialog_add_meter">Привязать счетчик</a>
             </div>
