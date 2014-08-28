@@ -1,8 +1,25 @@
 <?php
+/**
+* @Entity
+* @Table(name="works")
+*/
 class data_work extends data_object{
 
+  /**
+   * @Id
+   * @Column(name="id", type="integer")
+   */
   private $id;
+
+  /**
+  * @Column(name="name", type="string")
+  */
   private $name;
+
+  /**
+  * @ManyToOne(targetEntity="data_workgroup")
+  */
+  private $workgroup;
 
   public function get_id(){
     return $this->id;

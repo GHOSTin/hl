@@ -96,10 +96,6 @@ class model_environment{
 			return new factory_query();
 		};
 
-		$pimple['factory_work'] = function($p){
-			return new factory_work();
-		};
-
     $pimple['factory_task'] = function($p){
 			return new factory_task();
 		};

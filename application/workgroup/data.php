@@ -20,6 +20,10 @@ class data_workgroup extends data_object{
   * @Column(name="status", type="string")
   */
 	private $status;
+
+  /**
+  * @OneToMany(targetEntity="data_work", mappedBy="workgroup")
+  */
   private $works;
 
   public static $statuses = ['active', 'deactive'];
