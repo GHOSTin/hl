@@ -1,10 +1,26 @@
 <?php
+/**
+* @Entity
+* @Table(name="workgroups")
+*/
 class data_workgroup extends data_object{
 
+  /**
+   * @Id
+   * @Column(name="id", type="integer")
+   */
   private $id;
+
+  /**
+  * @Column(name="name", type="string")
+  */
   private $name;
+
+  /**
+  * @Column(name="status", type="string")
+  */
 	private $status;
-  private $works = [];
+  private $works;
 
   public static $statuses = ['active', 'deactive'];
 

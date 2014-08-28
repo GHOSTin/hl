@@ -194,7 +194,8 @@ class controller_query{
 
 
 	public static function private_get_dialog_add_work(model_request $request){
-		return ['workgroups' => di::get('model_workgroup')->get_workgroups()];
+		return ['workgroups' => di::get('em')
+			->getRepository('data_workgroup')->findAll()];
 	}
 
 
@@ -446,11 +447,7 @@ class controller_query{
 	}
 
 	public static function private_get_work_options(model_request $request){
-		$work_group = new data_workgroup();
-		$work_group->set_id($request->GET('id'));
-		(new mapper_workgroup2work(di::get('company'), $work_group))
-			->init_works();
-		return ['work_group' => $work_group];
+		return ['work_group' => di::get('em')->find('data_workgroup', $request->GET('id'))];
 	}
 
 	public static function private_show_default_page(model_request $request){

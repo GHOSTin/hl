@@ -128,14 +128,6 @@ class model_environment{
 			return new mapper_house($p['pdo']);
 		};
 
-		$pimple['mapper_work'] = function($p){
-			return new mapper_work($p['pdo'], $p['company']);
-		};
-
-		$pimple['mapper_workgroup'] = function($p){
-			return new mapper_workgroup($p['pdo'], $p['company']);
-		};
-
 		$pimple['mapper_processing_center'] = function($p){
 			return new mapper_processing_center($p['pdo']);
 		};
@@ -162,18 +154,6 @@ class model_environment{
 
 		$pimple['model_query'] = function($p){
 			return new model_query($p['company']);
-		};
-
-		$pimple['model_work'] = function($p){
-			return new model_work($p['company']);
-		};
-
-		$pimple['model_workgroup'] = function($p){
-			return new model_workgroup($p['company']);
-		};
-
-		$pimple['model_query_work_type'] = function($p){
-			return new model_query_work_type($p['company']);
 		};
 
 		$pimple['model_import'] = function($p){
