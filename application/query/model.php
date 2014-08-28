@@ -106,19 +106,6 @@ class model_query{
 			$this->set_param('work_type', null);
 	}
 
-	// test
-	public function add_comment($query_id, $message){
-		$c_array = ['user' => di::get('user'), 'time' => time(),
-			'message' => $message];
-		$comment = di::get('factory_query2comment')->build($c_array);
-		$query = $this->get_query($query_id);
-		$mapper = di::get('mapper_query2comment');
-		$mapper->init_comments($this->company, $query);
-		$query->add_comment($comment);
-		$mapper->update($this->company, $query);
-		return $query;
-	}
-
 	public function add_user($query_id, $user_id, $class){
 		$user = di::get('em')->find('data_user', $user_id);
 		$query = $this->get_query($query_id);

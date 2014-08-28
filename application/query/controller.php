@@ -33,8 +33,15 @@ class controller_query{
 
 
 	public static function private_add_comment(model_request $request){
-		return ['query' => di::get('model_query')
-			->add_comment($request->GET('query_id'), $request->GET('message'))];
+		$em = di::get('em');
+		$comment = new data_query2comment();
+		$comment->set_user(di::get('user'));
+		$comment->set_time(time());
+		$comment->set_message($request->GET('message'));
+		$query = $em->find('data_query', $request->GET('query_id'));
+		$query->add_comment($comment);
+		$em->flush($query);
+		return ['query' => $query];
 	}
 
 

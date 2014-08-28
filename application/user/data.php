@@ -59,6 +59,11 @@ class data_user extends data_object{
 	private $telephone;
 
   /**
+  * @OneToMany(targetEntity="data_query2comment", mappedBy="user")
+  */
+  private $query2comments;
+
+  /**
   * @Column(name="password", type="string")
   */
   private $hash;

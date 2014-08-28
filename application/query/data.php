@@ -105,6 +105,10 @@ class data_query extends data_object{
 	private $works;
 	private $users = ['creator' => null, 'manager' => [],
 										'observer' => [], 'performer' => []];
+
+	/**
+  * @OneToMany(targetEntity="data_query2comment", mappedBy="query")
+  */
 	private $comments;
 
 	public static $initiator_list = ['number', 'house'];
@@ -119,10 +123,9 @@ class data_query extends data_object{
 	}
 
 	public function add_comment(data_query2comment $comment){
-		$id = $comment->get_user()->get_id().'_'.$comment->get_time();
-		if(array_key_exists($id, $this->comments))
+		if($this->comments->contains($comment))
 			throw new DomainException('Комментарий уже существует.');
-		$this->comments[$id] = $comment;
+		$this->comments->add($comment);
 	}
 
 	public function add_creator(data_user $user){
