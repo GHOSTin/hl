@@ -94,6 +94,13 @@ class data_query extends data_object{
 	private $number;
 	private $inspection;
 	private $street;
+
+	/**
+   * @ManyToMany(targetEntity="data_number")
+   * @JoinTable(name="query2number",
+   * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
+   * inverseJoinColumns={@JoinColumn(name="number_id", referencedColumnName="id")})
+   */
 	private $numbers;
 	private $works;
 	private $users = ['creator' => null, 'manager' => [],

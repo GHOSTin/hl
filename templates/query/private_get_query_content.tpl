@@ -107,7 +107,7 @@
 	</ul>
 	<ul>
 		<li class="query-numbers">
-			<h5>Лицевые счета</h5>
+			<h5>Лицевые счета({{ query.get_numbers|length }})</h5>
 		</li>
 		<li class="query-users">
 			<h5>Участники</h5>
