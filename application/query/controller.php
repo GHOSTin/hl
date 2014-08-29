@@ -360,10 +360,8 @@ class controller_query{
 	}
 
 	public static function private_get_search_result(model_request $request){
-		$model = di::get('model_query');
-		$collection = new collection_query(di::get('company'),
-			$model->get_queries_by_number($request->GET('param')));
-		return ['queries' => $collection];
+		return ['queries' => di::get('em')->getRepository('data_query')
+			->findByNumber($request->GET('param'))];
 	}
 
 	public static function private_set_status(model_request $request){
