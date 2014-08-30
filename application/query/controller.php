@@ -241,18 +241,19 @@ class controller_query{
 	}
 
 	public static function private_get_initiator(model_request $request){
-		$types = (new model_query_work_type)->get_query_work_types();
+		$em = di::get('em');
+		$types = $em->getRepository('data_query_work_type')
+			->findBy([], ['name'=> 'ASC']);
 		switch($request->GET('initiator')){
 			case 'number':
-				$number = di::get('em')->find('data_number', $request->GET('id'));
-				$house = $number->get_flat()->get_house();
-				$queries = di::get('mapper_query')->get_queries_by_house($house);
+				$number = $em->find('data_number', $request->GET('id'));
+				// $queries = di::get('mapper_query')->get_queries_by_house($house);
 				return ['number' => $number, 'query_work_types' => $types,
 					'queries' => $queries];
 			break;
 			case 'house':
 				$house = di::get('em')->find('data_house', $request->GET('id'));
-				$queries = di::get('mapper_query')->get_queries_by_house($house);
+				// $queries = di::get('mapper_query')->get_queries_by_house($house);
 				return ['house' => $house, 'query_work_types' => $types,
 					'queries' => $queries];
 			break;
