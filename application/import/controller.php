@@ -25,11 +25,6 @@ class controller_import{
       return true;
   }
 
-  public static function private_get_dialog_import_meters(
-      model_request $request){
-      return true;
-  }
-
   public static function private_get_dialog_import_street(
       model_request $request){
       return true;
@@ -78,11 +73,6 @@ class controller_import{
   public static function private_import_numbers(model_request $request){
     return di::get('model_import')
       ->analize_import_numbers($request->FILES('file'));
-  }
-
-  public static function private_import_meters(model_request $request){
-    return di::get('model_import')
-      ->analize_import_meters($request->FILES('file'));
   }
 
   public static function private_import_accruals(model_request $request){

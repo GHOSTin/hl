@@ -41,7 +41,6 @@ class data_number extends data_object{
   * @Column(name="id", type="integer")
   */
   private $id;
-  private $meters = [];
 
   /**
   * @Column(name="number", type="string")
@@ -62,13 +61,6 @@ class data_number extends data_object{
   * @Column(name="email", type="string")
   */
   private $email;
-
-  public function add_meter(data_number2meter $n2m){
-    $id = $n2m->get_id().'_'.$n2m->get_serial();
-    if(array_key_exists($id, $this->meters))
-      throw new DomainException('Счетчик уже добавлен.');
-    $this->meters[$id] = $n2m;
-  }
 
   public function get_accruals(){
     return $this->accruals;
@@ -98,10 +90,6 @@ class data_number extends data_object{
     return $this->id;
   }
 
-  public function get_meters(){
-    return $this->meters;
-  }
-
   public function get_number(){
     return $this->number;
   }
@@ -112,13 +100,6 @@ class data_number extends data_object{
 
   public function get_status(){
     return $this->status;
-  }
-
-  public function remove_n2m(data_number2meter $n2m){
-    $id = $n2m->get_id().'_'.$n2m->get_serial();
-    if(!array_key_exists($id, $this->meters))
-      throw new DomainException('Счетчик не привязан к лицевому счету.');
-    unset($this->meters[$id]);
   }
 
   public function set_cellphone($cellphone){

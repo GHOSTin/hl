@@ -6,7 +6,7 @@ use \Doctrine\ORM\EntityManager;
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
-		'import', 'meter', 'error', 'company', 'report',
+		'import', 'error', 'company', 'report',
 		'about', 'export', 'task', 'metrics'];
 
 	/*
@@ -126,10 +126,6 @@ class model_environment{
 
 		$pimple['mapper_query2comment'] = function($p){
 			return new mapper_query2comment($p['pdo']);
-		};
-
-		$pimple['mapper_meter'] = function($p){
-			return new mapper_meter($p['pdo'], $p['company']);
 		};
 
     $pimple['mapper_task'] = function($p){

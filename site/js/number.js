@@ -234,121 +234,6 @@ $(document).ready(function(){
                 init_content(r);
             });
 
-
-    // выводит содержимое счетчика
-    }).on('click', '.get_meter_data', function(){
-        if($(this).siblings().is('.meter-data'))
-            $(this).siblings('.meter-data').remove();
-        else
-            $.get('get_meter_data',{
-                id: get_number_id($(this)),
-                meter_id: $(this).parent().attr('meter'),
-                serial: $(this).parent().attr('serial')
-                },function(r){
-                    init_content(r);
-                });
-
-    // возвращает показания счетчика привязаного к лицевому счету
-    }).on('click', '.get_meter_value', function(){
-        $.get('get_meter_value',{
-            id: get_number_id($(this)),
-            meter_id: get_meter_id($(this)),
-            serial: get_meter_serial($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // возвращает информацию о счетчике привязаном к лицевому счету
-    }).on('click', '.get_meter_info', function(){
-        $.get('get_meter_info',{
-            id: get_number_id($(this)),
-            meter_id: get_meter_id($(this)),
-            serial: get_meter_serial($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // возвращает документы счетчика привязаном к лицевому счету
-    }).on('click', '.get_meter_docs', function(){
-        $.get('get_meter_docs',{
-            id: get_number_id($(this)),
-            meter_id: get_meter_id($(this)),
-            serial: get_meter_serial($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог перепривязки счетчика
-    }).on('click', '.get_dialog_change_meter', function(){
-        $.get('get_dialog_change_meter',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог удаления счетчика и показаний
-    }).on('click', '.get_dialog_delete_meter', function(){
-        $.get('get_dialog_delete_meter',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования времени поверки счетчика
-    }).on('click', '.get_dialog_edit_date_checking', function(){
-        $.get('get_dialog_edit_date_checking',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования комментария счетчика
-    }).on('click', '.get_dialog_edit_meter_comment', function(){
-        $.get('get_dialog_edit_meter_comment',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования времени установки счетчика
-    }).on('click', '.get_dialog_edit_date_install', function(){
-        $.get('get_dialog_edit_date_install',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования времени производства счетчика
-    }).on('click', '.get_dialog_edit_date_release', function(){
-        $.get('get_dialog_edit_date_release',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования показания счетчика
-    }).on('click', '.get_dialog_edit_meter_data', function(){
-        $.get('get_dialog_edit_meter_data',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial'),
-            time: $(this).parent().parent().attr('time')
-            },function(r){
-                init_content(r);
-            });
-
     // выводит диалог редактирования счетчика
     }).on('click', '.get_dialog_edit_number', function(){
         $.get('get_dialog_edit_number',{
@@ -389,59 +274,6 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
-
-    // выводит диалог редактирования серийного номера счетчика
-    }).on('click', '.get_dialog_edit_serial', function(){
-        $.get('get_dialog_edit_serial',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования периода поверки счетчика
-    }).on('click', '.get_dialog_edit_period', function(){
-        $.get('get_dialog_edit_period',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования места установки счетчика
-    }).on('click', '.get_dialog_edit_meter_place', function(){
-        $.get('get_dialog_edit_meter_place',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования статуса счетчика
-    }).on('click', '.get_dialog_edit_meter_status', function(){
-        $.get('get_dialog_edit_meter_status',{
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial')
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит данные конкретного года
-    }).on('click', '.get_meter_data_year', function(){
-        var self = $(this);
-        $.get('get_meter_data', {
-            id: get_number_id($(this)),
-            meter_id: $(this).closest('.meter').attr('meter'),
-            serial: $(this).closest('.meter').attr('serial'),
-            time: $(this).attr('act')
-            },function(r){
-                self.closest('.meter-data').remove();
-                init_content(r);
-            });
     });
 });
 
@@ -453,16 +285,6 @@ function get_number_id(obj){
 // возвращает идентификатор дома
 function get_house_id(obj){
     return obj.closest('.house').attr('house');
-}
-
-// возвращает идентификатор счетчика
-function get_meter_id(obj){
-    return obj.closest('.meter').attr('meter');
-}
-
-// возвращает серийный номер счетчика
-function get_meter_serial(obj){
-    return obj.closest('.meter').attr('serial');
 }
 
 function scrollTo(el){

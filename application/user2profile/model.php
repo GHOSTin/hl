@@ -13,7 +13,6 @@ class model_user2profile{
                         'deleteMaterialgroup' => false,
                         'editMaterial' => false,
                         'editMaterialgroup' => false],
-    'meter' => ['generalAccess' => false],
     'number' => ['generalAccess' => false,
                 'createDepartment' => false,
                 'createNumber' => false,
