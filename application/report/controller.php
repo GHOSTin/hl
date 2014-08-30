@@ -9,7 +9,6 @@ class controller_report{
 
     public static function private_get_query_reports(model_request $request){
         $model = new model_report('query');
-        $company = di::get('company');
         $params = $model->get_params();
 
         if($params['street'] > 0){
@@ -20,16 +19,15 @@ class controller_report{
             'streets' => di::get('em')->getRepository('data_street')->findAll(),
             'users' => di::get('em')->getRepository('data_user')->findAll(),
             'departments' => di::get('em')->getRepository('data_department')->findAll(),
-            'query_work_types' => (new model_query_work_type($company))->get_query_work_types(),
+            'query_work_types' => (new model_query_work_type)->get_query_work_types(),
             'houses' => $houses,
             'filters' => $params];
     }
 
     public static function private_report_query_one(model_request $request){
-        $company = di::get('company');
         $params = (new model_report('query'))->get_params();
         $queries = di::get('mapper_query')->get_queries($params);
-        $collection = new collection_query($company, $queries);
+        $collection = new collection_query($queries);
         $collection->init_numbers();
         $collection->init_users();
         $collection->init_works();
@@ -39,13 +37,8 @@ class controller_report{
     public static function private_report_query_one_xls(model_request $request){
         header('Content-Disposition: attachment; filename=export.xml');
         header('Content-type: application/octet-stream');
-        $company = di::get('company');
         $params = (new model_report('query'))->get_params();
         $queries = di::get('mapper_query')->get_queries($params);
-        $collection = new collection_query($company, $queries);
-        $collection->init_numbers();
-        $collection->init_users();
-        $collection->init_works();
         return ['queries' => $collection];
     }
 

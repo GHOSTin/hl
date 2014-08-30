@@ -1,13 +1,6 @@
 <?php
 class model_import{
 
-	private $company;
-
-	public function __construct(data_company $company){
-		$this->company = $company;
-	}
-
-
 	public function analize_import_accruals($time, $file){
 		set_time_limit(0);
 		if(!file_exists($file))

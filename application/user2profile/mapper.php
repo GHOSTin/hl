@@ -1,7 +1,6 @@
 <?php
 class mapper_user2profile{
 
-  private $company;
   private $user;
   private $pdo;
 
@@ -10,7 +9,7 @@ class mapper_user2profile{
 
   private static $one = "SELECT `profile`, `rules`, `restrictions`, `settings`
     FROM `profiles` WHERE  `user_id` = :user_id
-    AND `company_id` = :company_id AND `profile` = :profile";
+    AND `profile` = :profile";
 
   private static $delete = "DELETE FROM `profiles` WHERE  `user_id` = :user_id
     AND `company_id` = :company_id AND `profile` = :profile";
@@ -19,8 +18,7 @@ class mapper_user2profile{
     `profile`, `rules`, `restrictions`, `settings`) VALUES (:company_id,
     :user_id, :profile, :rules, :restrictions, :settings)";
 
-  public function __construct(data_company $company, data_user $user){
-    $this->company = $company;
+  public function __construct( data_user $user){
     $this->user = $user;
     $this->pdo = di::get('pdo');
   }
@@ -35,7 +33,6 @@ class mapper_user2profile{
   public function delete(data_profile $profile){
     $stmt = $this->pdo->prepare(self::$delete);
     $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();
@@ -44,7 +41,6 @@ class mapper_user2profile{
   public function find_all(){
     $stmt = $this->pdo->prepare(self::$many);
     $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new RuntimeException();
     $profiles = [];
@@ -57,7 +53,6 @@ class mapper_user2profile{
   public function find($profile){
     $stmt = $this->pdo->prepare(self::$one);
     $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();
@@ -73,7 +68,6 @@ class mapper_user2profile{
   public function insert(data_profile $profile){
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
     $stmt->bindValue(':rules', json_encode($profile->get_rules()), PDO::PARAM_STR);
     $stmt->bindValue(':restrictions', json_encode($profile->get_restrictions()), PDO::PARAM_STR);

@@ -1,7 +1,6 @@
 <?php
 class mapper_query2user{
 
-  private $company;
   private $query;
   private $pdo;
 
@@ -23,8 +22,7 @@ class mapper_query2user{
     WHERE `company_id` = :company_id AND `query_id` = :query_id
     AND `user_id` = :user_id AND `class` = :class";
 
-  public function __construct($company, $query){
-    $this->company = $company;
+  public function __construct($query){
     $this->query = $query;
     $this->pdo = di::get('pdo');
   }
@@ -42,7 +40,6 @@ class mapper_query2user{
   private function get_users(){
     $stmt = $this->pdo->prepare(self::$all);
     $stmt->bindValue(':query_id', (int) $this->query->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new RuntimeException();
     $users = ['creator' => null, 'manager' => [],
@@ -64,7 +61,6 @@ class mapper_query2user{
       throw new RuntimeException();
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':class', $class, PDO::PARAM_STR);
     if(!$stmt->execute())
@@ -79,7 +75,6 @@ class mapper_query2user{
       throw new RuntimeException();
     $stmt = $this->pdo->prepare(self::$delete);
     $stmt->bindValue(':query_id', $this->query->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':user_id', $user->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':class', $class, PDO::PARAM_STR);
     if(!$stmt->execute())

@@ -10,12 +10,6 @@ class data_user extends data_object{
 	private $cellphone;
 
   /**
-  * @Column(name="company_id", type="integer")
-  */
-	private $company_id;
-
-
-  /**
   * @OneToMany(targetEntity="data_error", mappedBy="user")
   */
   private $errors;
@@ -128,12 +122,6 @@ class data_user extends data_object{
     if($id > 65535 OR $id < 1)
       throw new DomainException('Идентификатор пользователя задан не верно.');
     $this->id = $id;
-  }
-
-  public function set_company_id($id){
-    if($id > 255 OR $id < 1)
-      throw new DomainException('Wrong company id '.$id);
-    $this->company_id = $id;
   }
 
   public function set_firstname($firstname){

@@ -1,7 +1,6 @@
 <?php
 class model_user2profile{
 
-  private $company;
   private $user;
 
   private static $rules = [
@@ -74,14 +73,13 @@ class model_user2profile{
     WHERE `company_id` = :company_id
     AND `user_id` = :user_id AND `profile` = :profile';
 
-  public function __construct(data_company $company, data_user $user){
-    $this->company = $company;
+  public function __construct(data_user $user){
     $this->user = $user;
     $this->pdo = di::get('pdo');
   }
 
   public function add_profile($profile){
-    $mapper = new mapper_user2profile($this->company, $this->user);
+    $mapper = new mapper_user2profile($this->user);
     if(!is_null($mapper->find($profile)))
       throw new RuntimeException('Профиль уже существует.');
     $p = new data_profile($profile);
@@ -99,17 +97,17 @@ class model_user2profile{
 
   public function delete($profile){
     $profile = new data_profile($profile);
-    $mapper = new mapper_user2profile($this->company, $this->user);
+    $mapper = new mapper_user2profile($this->user);
     $mapper->delete($profile);
   }
 
   public function get_profiles(){
-    $mapper = new mapper_user2profile($this->company, $this->user);
+    $mapper = new mapper_user2profile($this->user);
     return $mapper->find_all();
   }
 
   public function get_profile($name){
-    $mapper = new mapper_user2profile($this->company, $this->user);
+    $mapper = new mapper_user2profile($this->user);
     $profile = $mapper->find($name);
     if(!($profile instanceof data_profile))
       throw new RuntimeException('Нет профиля.');
@@ -126,7 +124,6 @@ class model_user2profile{
         AND `user_id` = :user_id AND `profile` = :profile');
       $stmt->bindValue(':rules', (string) json_encode($rules), PDO::PARAM_STR);
       $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-      $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
       $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
       if(!$stmt->execute())
         throw new RuntimeException();
@@ -152,7 +149,7 @@ class model_user2profile{
       }
     }
     if($restriction === 'worktypes'){
-      $type = (new mapper_query_work_type($this->company))->find($item);
+      $type = (new mapper_query_work_type)->find($item);
       if(!is_null($type)){
         $pos = array_search($type->get_id(), $restrictions[$restriction]);
         if($pos === false)
@@ -165,7 +162,6 @@ class model_user2profile{
     $stmt = $this->pdo->prepare(self::$update_restriction);
     $stmt->bindValue(':restrictions', (string) json_encode($restrictions), PDO::PARAM_STR);
     $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', (int) $this->company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
     if(!$stmt->execute())
       throw new RuntimeException();

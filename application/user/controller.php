@@ -4,11 +4,9 @@ class controller_user{
 	public static $name = 'Пользователи';
 
   public static function private_add_profile(model_request $request){
-    $company = di::get('em')
-      ->find('data_company', $request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
-    (new model_user2profile($company, $user))
+    (new model_user2profile($user))
       ->add_profile($request->take_get('profile'));
     return ['companies' => (new mapper_user2company(di::get('pdo'), $user))
       ->find_all()];
@@ -28,7 +26,6 @@ class controller_user{
     if(!is_null($em->getRepository('data_group')->findOneByName($request->take_get('name'))))
       throw new RuntimeException('Группа с таким название уже существует.');
     $group = new data_group();
-    $group->set_company_id(di::get('company')->get_id());
     $group->set_name($request->take_get('name'));
     $group->set_status('true');
     $em->persist($group);
@@ -57,7 +54,6 @@ class controller_user{
     $user->set_lastname($request->take_get('lastname'));
     $user->set_firstname($request->take_get('firstname'));
     $user->set_middlename($request->take_get('middlename'));
-    $user->set_company_id(di::get('company')->get_id());
     $user->set_login($request->take_get('login'));
     $user->set_hash(data_user::generate_hash($request->take_get('password')));
     $user->set_status($status);
@@ -76,11 +72,9 @@ class controller_user{
   }
 
   public static function private_delete_profile(model_request $request){
-    $company = di::get('em')
-      ->find('data_company', $request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
-    (new model_user2profile($company, $user))
+    (new model_user2profile($user))
       ->delete($request->take_get('profile'));
     return true;
   }
@@ -101,25 +95,19 @@ class controller_user{
   public static function private_get_company_content(model_request $request){
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
-    $company = di::get('em')
-      ->find('data_company', $request->take_get('company_id'));
-    $profiles = (new model_user2profile($company, $user))->get_profiles();
-    return ['user' => $user, 'company' => $company, 'profiles' => $profiles];
+    $profiles = (new model_user2profile($user))->get_profiles();
+    return ['user' => $user, 'profiles' => $profiles];
   }
 
   public static function private_get_profile_content(model_request $request){
-    $company = di::get('em')
-      ->find('data_company', $request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
-    return ['user' => $user, 'company' => $company,
-            'profile' => (new model_user2profile($company, $user))
+    return ['user' => $user,
+            'profile' => (new model_user2profile($user))
             ->get_profile($request->take_get('profile'))];
   }
 
   public static function private_get_restriction_content(model_request $request){
-    $company = di::get('em')
-      ->find('data_company', $request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->GET('user_id'));
     $profile = $request->GET('profile');
@@ -131,10 +119,10 @@ class controller_user{
     if($restriction === 'departments')
         $items = di::get('em')->getRepository('data_department')->findAll();
     if($restriction === 'worktypes')
-        $items = (new model_query_work_type($company))->get_query_work_types();
-    return ['user' => $user, 'company' => $company,
+        $items = (new model_query_work_type)->get_query_work_types();
+    return ['user' => $user,
       'restriction_name' => $restriction, 'items' => $items,
-      'profile' => (new model_user2profile($company, $user))
+      'profile' => (new model_user2profile($user))
         ->get_profile($request->take_get('profile'))];
   }
 
@@ -317,21 +305,17 @@ class controller_user{
   }
 
   public static function private_update_rule(model_request $request){
-    $company = di::get('em')
-      ->find('data_company', $request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->take_get('user_id'));
-    (new model_user2profile($company, $user))
+    (new model_user2profile($user))
       ->update_rule($request->take_get('profile'), $request->take_get('rule'));
     exit();
   }
 
   public static function private_update_restriction(model_request $request){
-    $company = di::get('em')
-      ->find('data_company', $request->take_get('company_id'));
     $user = new data_user();
     $user->set_id($request->GET('user_id'));
-    (new model_user2profile($company, $user))
+    (new model_user2profile($user))
       ->update_restriction($request->GET('profile'),
       $request->GET('restriction'), $request->GET('item'));
     exit();

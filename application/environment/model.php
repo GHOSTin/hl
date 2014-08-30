@@ -6,7 +6,7 @@ use \Doctrine\ORM\EntityManager;
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
-		'import', 'error', 'company', 'report',
+		'import', 'error', 'report',
 		'about', 'export', 'task', 'metrics'];
 
 	/*
@@ -56,8 +56,7 @@ class model_environment{
 	}
 
 	public static function init_profile($component){
-		$profile = (new mapper_user2profile(di::get('company'),
-			di::get('user')))->find($component);
+		$profile = (new mapper_user2profile(di::get('user')))->find($component);
 		if(in_array($component, self::$profiles, true)){
 			$pimple = di::get_instance();
 			$pimple['profile'] = null;
@@ -132,12 +131,8 @@ class model_environment{
 			return new mapper_task2comment($p['pdo']);
 		};
 
-		$pimple['model_query'] = function($p){
-			return new model_query($p['company']);
-		};
-
 		$pimple['model_import'] = function($p){
-			return new model_import($p['company']);
+			return new model_import();
 		};
 
     $pimple['model_task'] = function($p){
@@ -177,7 +172,6 @@ class model_environment{
 		if(isset($_SESSION['user'])){
 			$em = di::get('em');
 			$pimple['user'] = $em->find('data_user', $_SESSION['user']);
-			$pimple['company'] = $em->find('data_company', $_SESSION['company']);
 		}
 		di::set_instance($pimple);
 	}

@@ -27,22 +27,20 @@ class mapper_query2work extends mapper{
     return $q2w;
   }
 
-  public function delete(data_company $company, data_query $query,
+  public function delete(data_query $query,
                           data_query2work $work){
     $stmt = $this->pdo->prepare(self::$delete);
     $stmt->bindValue(':query_id', $query->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':work_id', $work->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new RuntimeException();
     return $query;
   }
 
-  public function insert(data_company $company, data_query $query,
+  public function insert(data_query $query,
                           data_query2work $work){
     $stmt = $this->pdo->prepare(self::$insert);
     $stmt->bindValue(':query_id', $query->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', $company->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':work_id', $work->get_id(), PDO::PARAM_INT);
     $stmt->bindValue(':time_open', $work->get_time_open(), PDO::PARAM_INT);
     $stmt->bindValue(':time_close', $work->get_time_close(), PDO::PARAM_INT);
@@ -50,10 +48,9 @@ class mapper_query2work extends mapper{
       throw new RuntimeException();
   }
 
-  public function get_works(data_company $company, data_query $query){
+  public function get_works(data_query $query){
     $stmt = $this->pdo->prepare(self::$many);
     $stmt->bindValue(':query_id', (int) $query->get_id(), PDO::PARAM_INT);
-    $stmt->bindValue(':company_id', (int) $company->get_id(), PDO::PARAM_INT);
     if(!$stmt->execute())
       throw new RuntimeException();
     $works = [];
@@ -62,16 +59,16 @@ class mapper_query2work extends mapper{
     return $works;
   }
 
-  public function init_works(data_company $company, data_query $query){
-    $works = $this->get_works($company, $query);
+  public function init_works(data_query $query){
+    $works = $this->get_works($query);
     if(!empty($works))
       foreach($works as $work)
         $query->add_work($work);
   }
 
-  public function update_works(data_company $company, data_query $query){
+  public function update_works(data_query $query){
     $old = [];
-    $works = $this->get_works($company, $query);
+    $works = $this->get_works($query);
     if(!empty($works))
       foreach($works as $work)
         $old[$work->get_id()] = $work;
@@ -80,10 +77,10 @@ class mapper_query2work extends mapper{
     $inserted = array_diff_key($new, $old);
     if(!empty($inserted))
       foreach($inserted as $work)
-        $this->insert($company, $query, $work);
+        $this->insert($query, $work);
     if(!empty($deleted))
       foreach($deleted as $work)
-        $this->delete($company, $query, $work);
+        $this->delete($query, $work);
     return $query;
   }
 }

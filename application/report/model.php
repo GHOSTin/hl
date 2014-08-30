@@ -98,7 +98,7 @@ class model_report{
     if($worktype_id === 'all')
       $this->params['work_type'] = null;
     else{
-      $work_type = (new model_query_work_type(di::get('company')))
+      $work_type = (new model_query_work_type())
         ->get_query_work_type($worktype_id);
       $this->params['work_type'] = $work_type->get_id();
     }

@@ -2,12 +2,10 @@
 class model_query{
 
 	private $pdo;
-	private $company;
 	private $params = [];
 	private $restrictions = [];
 
-	public function __construct(data_company $company){
-		$this->company = $company;
+	public function __construct(){
 	  $profile = di::get('profile');
 	  if((string) $profile === 'query')
 	  	$this->restrictions = $profile->get_restrictions();
@@ -109,14 +107,14 @@ class model_query{
 	public function add_user($query_id, $user_id, $class){
 		$user = di::get('em')->find('data_user', $user_id);
 		$query = $this->get_query($query_id);
-		(new mapper_query2user($this->company, $query))->init_users();
+		(new mapper_query2user($query))->init_users();
 		if($class === 'manager')
 			$query->add_manager($user);
 		elseif($class === 'performer')
 			$query->add_performer($user);
 		else
 			throw new RuntimeException('Несоответствующие параметры: class.');
-		(new mapper_query2user($this->company, $query))->update_users();
+		(new mapper_query2user($query))->update_users();
 		return $query;
 	}
 
@@ -126,14 +124,14 @@ class model_query{
 	public function remove_user($query_id, $user_id, $class){
 		$user = di::get('em')->find('data_user', $user_id);
 		$query = $this->get_query($query_id);
-		(new mapper_query2user($this->company, $query))->init_users();
+		(new mapper_query2user($query))->init_users();
 		if($class === 'manager')
 			$query->remove_manager($user);
 		elseif($class === 'performer')
 			$query->remove_performer($user);
 		else
 			throw new RuntimeException('Несоответствующие параметры: class.');
-		(new mapper_query2user($this->company, $query))->update_users();
+		(new mapper_query2user($query))->update_users();
 		return $query;
 	}
 
@@ -147,13 +145,13 @@ class model_query{
 			throw new RuntimeException('Время начала работы не может быть меньше времени закрытия.');
 		$query = $this->get_query($query_id);
 		$mapper = di::get('mapper_query2work');
-		$mapper->init_works($this->company, $query);
-		$work = new data_query2work((new model_work($this->company))
+		$mapper->init_works($query);
+		$work = new data_query2work((new model_work)
 			->get_work($work_id));
 		$work->set_time_open($begin_time);
 		$work->set_time_close($end_time);
 		$query->add_work($work);
-		$mapper->update_works($this->company, $query);
+		$mapper->update_works($query);
 		return $query;
 	}
 
@@ -161,9 +159,8 @@ class model_query{
 		try{
 			$pdo = di::get('pdo');
 			$pdo->beginTransaction();
-			$company = di::get('company');
 			$query = $this->get_query($id);
-			$mapper_q2n = new mapper_query2number($company, $query);
+			$mapper_q2n = new mapper_query2number($query);
 			if(!is_null($number_id)){
 				$query->set_initiator('number');
 				$number = di::get('em')->find('data_number', $number_id);
@@ -217,7 +214,7 @@ class model_query{
 			}
 			$q_array['house'] = $house;
 			$q_array['department'] = $house->get_department();
-			$q_array['type'] = (new model_query_work_type($this->company))
+			$q_array['type'] = (new model_query_work_type)
 				->get_query_work_type($work_type);
 			$mapper = di::get('mapper_query');
 			$q_array['id'] = $mapper->get_insert_id();
@@ -227,12 +224,12 @@ class model_query{
 			if(!empty($numbers))
 				foreach($numbers as $number)
 					$query->add_number($number);
-      (new mapper_query2number($this->company, $query))->update();
+      (new mapper_query2number($query))->update();
 			$user = di::get('user');
       $query->add_creator($user);
       $query->add_manager($user);
       $query->add_observer($user);
-      (new mapper_query2user($this->company, $query))->update_users();
+      (new mapper_query2user($query))->update_users();
       if($trans)
 				$pdo->commit();
 			return $query;
@@ -249,11 +246,11 @@ class model_query{
 	public function remove_work($query_id, $work_id){
 		$query = $this->get_query($query_id);
 		$mapper = di::get('mapper_query2work');
-		$mapper->init_works($this->company, $query);
-		$work = new data_query2work((new model_work($this->company))
+		$mapper->init_works($query);
+		$work = new data_query2work((new model_work)
 			->get_work($work_id));
 		$query->remove_work($work);
-		$mapper->update_works($this->company, $query);
+		$mapper->update_works($query);
 		return $query;
 	}
 }

@@ -2,18 +2,6 @@
 class controller_number{
 
 	static $name = 'Жилищный фонд';
-  private static $params = [];
-
-  public static function set_param($key, $value){
-    self::$params = $_SESSION['controller'];
-    self::$params[$key] = $value;
-    $_SESSION['controller'] = self::$params;
-  }
-
-  public static function get_param($key){
-    self::$params = $_SESSION['controller'];
-    return self::$params[$key];
-  }
 
   public static function private_edit_department(
     model_request $request){
@@ -56,17 +44,11 @@ class controller_number{
   }
 
   public static function private_get_number_content(model_request $request){
-      $company = di::get('company');
-      $number = di::get('em')->find('data_number', $request->GET('id'));
-      $switch = self::get_param('number_content');
-      switch($switch){
-        default:
-          return ['number' => $number];
-      }
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_number_information(model_request $request){
-      self::set_param('number_content', 'information');
       return ['number' => di::get('em')->find('data_number', $request->GET('id'))];
   }
 
