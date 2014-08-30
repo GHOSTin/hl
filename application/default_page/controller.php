@@ -17,10 +17,12 @@ class controller_default_page{
           $company = $em->find('data_company', $user->get_company_id());
           if(is_null($company))
             die('Нет такой компании.');
-          $session = ['user' => $user, 'time' => time(),
-            'ip' => $_SERVER['REMOTE_ADDR']];
-          $ses = di::get('factory_session')->build($session);
-          di::get('mapper_session')->insert($ses);
+          $session = new data_session();
+          $session->set_user($user);
+          $session->set_ip($_SERVER['REMOTE_ADDR']);
+          $session->set_time(time());
+          $em->persist($session);
+          $em->flush();
           $_SESSION['user'] = $user->get_id();
           $_SESSION['company'] = $company->get_id();
           setcookie("chat_host", application_configuration::chat_host, 0);

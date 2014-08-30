@@ -86,7 +86,6 @@ class controller_user{
   }
 
   public static function private_clear_logs(model_request $request){
-    di::get('mapper_session')->truncate();
     return true;
   }
 
@@ -242,7 +241,8 @@ class controller_user{
   }
 
   public static function private_logs(model_request $request){
-    return ['sessions' => di::get('mapper_session')->find_all()];
+    return ['sessions' => di::get('em')->getRepository('data_session')
+      ->findby([], ['time' => 'ASC'])];
   }
 
   public static function private_get_user_letter(model_request $request){

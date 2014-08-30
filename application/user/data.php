@@ -46,7 +46,11 @@ class data_user extends data_object{
   * @Column(name="midlename", type="string")
   */
 	private $middlename;
-	private $session;
+
+  /**
+  * @OneToMany(targetEntity="data_user", mappedBy="user")
+  */
+	private $sessions;
 
   /**
   * @Column(name="status", type="string")

@@ -88,10 +88,6 @@ class model_environment{
 			return new factory_client_query();
 		};
 
-		$pimple['factory_session'] = function($p){
-			return new factory_session();
-		};
-
 		$pimple['factory_query'] = function($p){
 			return new factory_query();
 		};
@@ -110,10 +106,6 @@ class model_environment{
 
 		$pimple['mapper_metrics'] = function($p){
 			return new mapper_metrics($p['pdo']);
-		};
-
-		$pimple['mapper_session'] = function($p){
-			return new mapper_session($p['pdo']);
 		};
 
 		$pimple['mapper_street'] = function($p){

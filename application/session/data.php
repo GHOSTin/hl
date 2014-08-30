@@ -1,9 +1,25 @@
 <?php
-
+/**
+* @Entity
+* @Table(name="sessions_logs")
+*/
 class data_session{
 
+  /**
+  * @Id
+  * @Column(name="ip", type="string")
+  */
   public $ip;
+
+  /**
+  * @Id
+  * @Column(name="time", type="integer")
+  */
   public $time;
+
+  /**
+  * @ManyToOne(targetEntity="data_user")
+  */
   public $user;
 
   public function get_ip(){
