@@ -56,7 +56,11 @@ class model_environment{
 	}
 
 	public static function init_profile($component){
-		$profile = (new mapper_user2profile(di::get('user')))->find($component);
+		$pimple = di::get_instance();
+			$pimple['profile'] = null;
+			return;
+
+		$profile = di::get('user')->get_profile($component);
 		if(in_array($component, self::$profiles, true)){
 			$pimple = di::get_instance();
 			$pimple['profile'] = null;

@@ -6,11 +6,6 @@
 class data_group extends data_object{
 
   /**
-  * @Column(name="company_id", type="string")
-  */
-	private $company_id;
-
-  /**
   * @Id
   * @Column(name="id", type="integer")
   * @GeneratedValue
@@ -63,10 +58,6 @@ class data_group extends data_object{
 
   public function get_users(){
     return $this->users;
-  }
-
-  public function set_company_id($id){
-    return $this->company_id = $id;
   }
 
   public function set_id($id){

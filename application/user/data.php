@@ -62,6 +62,11 @@ class data_user extends data_object{
   private $query2comments;
 
   /**
+  * @OneToMany(targetEntity="data_profile", mappedBy="user")
+  */
+  private $profiles;
+
+  /**
   * @Column(name="password", type="string")
   */
   private $hash;
@@ -70,10 +75,6 @@ class data_user extends data_object{
 
   public function get_cellphone(){
     return $this->cellphone;
-  }
-
-  public function get_company_id(){
-    return $this->company_id;
   }
 
   public function get_firstname(){
@@ -102,6 +103,14 @@ class data_user extends data_object{
 
   public function get_middlename(){
     return $this->middlename;
+  }
+
+  public function get_profile($name){
+    return null;
+  }
+
+  public function get_profiles(){
+    return $this->profiles;
   }
 
   public function get_status(){

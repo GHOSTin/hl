@@ -5,13 +5,6 @@ class model_user2profile{
 
   private static $rules = [
     'import' => ['generalAccess' => false],
-    'materialgroup' => ['generalAccess' => false,
-                        'createMaterial' => false,
-                        'createMaterialgroup' => false,
-                        'deleteMaterial' => false,
-                        'deleteMaterialgroup' => false,
-                        'editMaterial' => false,
-                        'editMaterialgroup' => false],
     'number' => ['generalAccess' => false,
                 'createDepartment' => false,
                 'createNumber' => false,
@@ -19,8 +12,6 @@ class model_user2profile{
                 'editNumber' => false,
                 'editNumberContact' => false,
                 'sendSms' => false],
-    'phrase' => ['generalAccess' => false,
-                'createPhrase' => false],
     'report' => ['generalAccess' => false],
     'query' => ['generalAccess' => false,
                 'createQuery' => false,
@@ -52,14 +43,7 @@ class model_user2profile{
               'editGroup' => false,
               'editUser' => false,
               'setPassword' => false,
-              'setRule' => false],
-    'workgroup' => ['generalAccess' => false,
-                    'createWork' => false,
-                    'createWorkgroup' => false,
-                    'deleteWork' => false,
-                    'deleteWorkgroup' => false,
-                    'editWork' => false,
-                    'editWorkgroup' => false]
+              'setRule' => false]
   ];
 
   private static $restrictions = [
@@ -72,11 +56,6 @@ class model_user2profile{
     SET `restrictions` = :restrictions
     WHERE `company_id` = :company_id
     AND `user_id` = :user_id AND `profile` = :profile';
-
-  public function __construct(data_user $user){
-    $this->user = $user;
-    $this->pdo = di::get('pdo');
-  }
 
   public function add_profile($profile){
     $mapper = new mapper_user2profile($this->user);
@@ -99,19 +78,6 @@ class model_user2profile{
     $profile = new data_profile($profile);
     $mapper = new mapper_user2profile($this->user);
     $mapper->delete($profile);
-  }
-
-  public function get_profiles(){
-    $mapper = new mapper_user2profile($this->user);
-    return $mapper->find_all();
-  }
-
-  public function get_profile($name){
-    $mapper = new mapper_user2profile($this->user);
-    $profile = $mapper->find($name);
-    if(!($profile instanceof data_profile))
-      throw new RuntimeException('Нет профиля.');
-    return $profile;
   }
 
   public function update_rule($profile, $rule){

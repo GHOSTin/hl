@@ -7,19 +7,6 @@ $(document).ready(function(){
                 init_content(r);
             });
 
-    // выводит информацию об группе
-    }).on('click', '.get_company_content', function(){
-        if($(this).siblings().is('.company-content')){
-            $(this).siblings('.company-content').remove();
-        }else{
-            $.get('get_company_content',{
-                company_id: get_company_id($(this)),
-                user_id: get_user_id($(this))
-                },function(r){
-                    init_content(r);
-                });
-        }
-
     // выводит информацию о профиле
     }).on('click', '.get_profile_content', function(){
         if($(this).siblings().is('.profile-content')){

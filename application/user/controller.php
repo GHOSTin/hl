@@ -8,8 +8,7 @@ class controller_user{
     $user->set_id($request->take_get('user_id'));
     (new model_user2profile($user))
       ->add_profile($request->take_get('profile'));
-    return ['companies' => (new mapper_user2company(di::get('pdo'), $user))
-      ->find_all()];
+    return ['companies' => null];
   }
 
   public static function private_add_user(model_request $request){
@@ -92,19 +91,9 @@ class controller_user{
     return ['group' => $group];
   }
 
-  public static function private_get_company_content(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->take_get('user_id'));
-    $profiles = (new model_user2profile($user))->get_profiles();
-    return ['user' => $user, 'profiles' => $profiles];
-  }
-
   public static function private_get_profile_content(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->take_get('user_id'));
-    return ['user' => $user,
-            'profile' => (new model_user2profile($user))
-            ->get_profile($request->take_get('profile'))];
+    return ['user' => di::get('em')->find('data_user', $request->take_get('user_id')),
+            'profile' => $request->take_get('profile')];
   }
 
   public static function private_get_restriction_content(model_request $request){
@@ -140,7 +129,7 @@ class controller_user{
   }
 
   public static function private_get_dialog_add_profile(model_request $request){
-    return ['companies' => di::get('em')->getRepository('data_company')->findAll()];
+    return ['companies' => null];
   }
 
   public static function private_get_dialog_add_user(model_request $request){
@@ -258,11 +247,7 @@ class controller_user{
   }
 
   public static function private_get_user_profiles(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->GET('id'));
-    return ['user' => $user,
-      'companies' => (new mapper_user2company(di::get('pdo'), $user))
-      ->find_all()];
+    return ['user' => di::get('em')->find('data_user', $request->GET('id'))];
   }
 
   public static function private_get_user_letters(model_request $request){

@@ -214,10 +214,6 @@ class data_query extends data_object{
 		return $this->works;
 	}
 
-	public function get_company_id(){
-		return $this->company_id;
-	}
-
 	public function get_contact_cellphone(){
 		return $this->contact_cellphone;
 	}

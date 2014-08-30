@@ -1,10 +1,8 @@
 {% extends "ajax.tpl" %}
 {% set user = response.user %}
-{% set company = response.company %}
 {% set profile = response.profile %}
-{% set profile_name = response.profile_name %}
 {% block js %}
-    $('.user[user = {{ user.get_id() }}] .company[company = {{ company.get_id() }}] .profile[profile = "{{ profile }}"]').append(get_hidden_content());
+    $('.user[user = {{ user.get_id() }}] .profile[profile = "{{ profile }}"]').append(get_hidden_content());
 {% endblock js %}
 {% block html %}
     <ul class="profile-content list-unstyled">

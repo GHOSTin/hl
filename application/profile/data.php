@@ -1,13 +1,38 @@
 <?php
+/**
+* @Entity
+* @Table(name="profiles")
+*/
 class data_profile extends data_object{
-  
-  private $profile;
-  private $rules;
-  private $restrictions;
 
-  public function __construct($profile){
-    $this->profile = (string) $profile;
-  }
+  /**
+  * @ManyToOne(targetEntity="data_user")
+  */
+  private $user;
+
+  /**
+  * @Id
+  * @Column(name="user_id", type="integer")
+  */
+  private $user_id;
+
+  /**
+  * @Id
+  * @Column(name="profile", type="string")
+  */
+  private $profile;
+
+  /**
+  * @Id
+  * @Column(name="rules", type="json_array")
+  */
+  private $rules;
+
+  /**
+  * @Id
+  * @Column(name="restrictions", type="json_array")
+  */
+  private $restrictions;
 
   public function __tostring(){
     return $this->profile;
