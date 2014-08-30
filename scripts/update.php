@@ -5,13 +5,13 @@ require_once(ROOT."/vendor/autoload.php");
 model_environment::before();
 $pdo = di::get('pdo');
 $pdo->beginTransaction();
-update_companies($pdo);
+drop_table($pdo);
 update_users($pdo);
 $pdo->commit();
 
-function update_companies(PDO $pdo){
-  $pdo->exec("UPDATE companies SET name = 'Тестовая' WHERE id = 1");
-  $pdo->exec("UPDATE companies SET name = 'Наш город' WHERE id = 2");
+function drop_table(PDO $pdo){
+  $pdo->exec("DROP table companies, sessions, phrases, sms, sms2number, sms2query, sms2user, smsgroup2number, smsgroups, processing_centers, processing_center2number, house2processing_center, materials, materialgroups, meters, meter2data, number2meter, query_close_reasons");
+  // $pdo->exec("UPDATE companies SET name = 'Наш город' WHERE id = 2");
 }
 
 function update_users(PDO $pdo){
