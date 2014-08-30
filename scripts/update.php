@@ -7,6 +7,7 @@ $pdo = di::get('pdo');
 $pdo->beginTransaction();
 drop_table($pdo);
 drop_company_id($pdo);
+alter($pdo);
 update_users($pdo);
 $pdo->commit();
 
@@ -35,6 +36,17 @@ function drop_company_id(PDO $pdo){
   $pdo->exec("ALTER TABLE users DROP company_id");
   $pdo->exec("ALTER TABLE workgroups DROP company_id");
   $pdo->exec("ALTER TABLE works DROP company_id");
+}
+
+function alter(PDO $pdo){
+  $pdo->exec("ALTER TABLE queries CHANGE `initiator-type` initiator enum('number','house') NOT NULL");
+  $pdo->exec("ALTER TABLE queries CHANGE `payment-status` payment_status enum('paid','unpaid','recalculation') NOT NULL DEFAULT 'unpaid'");
+  $pdo->exec("ALTER TABLE queries CHANGE `warning-type` warning_type enum('hight','normal','planned') NOT NULL DEFAULT 'normal'");
+  $pdo->exec("ALTER TABLE queries CHANGE `description-open` description text");
+  $pdo->exec("ALTER TABLE queries CHANGE `description-close` reason text");
+  $pdo->exec("ALTER TABLE queries CHANGE `addinfo-name` contact_fio varchar(255) DEFAULT NULL");
+  $pdo->exec("ALTER TABLE queries CHANGE  `addinfo-telephone` contact_telephone varchar(11) DEFAULT NULL");
+  $pdo->exec("ALTER TABLE queries CHANGE `addinfo-cellphone` contact_cellphone varchar(11) DEFAULT NULL");
 }
 
 function update_users(PDO $pdo){
