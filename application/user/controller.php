@@ -7,12 +7,12 @@ class controller_user{
     $em = di::get('em');
     $user = $em->find('data_user', $request->take_get('user_id'));
     $p = new data_profile($user, $request->take_get('profile'));
-    if(!empty(model_user2profile::$rules[$request->take_get('profile')]))
-      $p->set_rules(model_user2profile::$rules[$request->take_get('profile')]);
+    if(!empty(data_profile::$arrayRules[$request->take_get('profile')]))
+      $p->set_rules(data_profile::$arrayRules[$request->take_get('profile')]);
     else
       $p->set_rules([]);
-    if(!empty(model_user2profile::$restrictions[$request->take_get('profile')]))
-      $p->set_restrictions(model_user2profile::$restrictions[$request->take_get('profile')]);
+    if(!empty(data_profile::$arrayRestrictions[$request->take_get('profile')]))
+      $p->set_restrictions(data_profile::$arrayRestrictions[$request->take_get('profile')]);
     else
       $p->set_restrictions([]);
     $user->add_profile($p);
