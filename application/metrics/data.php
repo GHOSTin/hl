@@ -1,5 +1,8 @@
 <?php
-
+/**
+* @Entity
+* @Table(name="metrics")
+*/
 class data_metrics {
 
   private $id;

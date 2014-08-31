@@ -5,10 +5,11 @@ require_once(ROOT."/vendor/autoload.php");
 model_environment::before();
 $pdo = di::get('pdo');
 $pdo->beginTransaction();
-drop_table($pdo);
-drop_company_id($pdo);
-alter($pdo);
-update_users($pdo);
+// drop_table($pdo);
+// drop_company_id($pdo);
+// alter($pdo);
+// update_users($pdo);
+metrics($pdo);
 $pdo->commit();
 
 function drop_table(PDO $pdo){
@@ -55,4 +56,12 @@ function alter(PDO $pdo){
 function update_users(PDO $pdo){
   $pdo->exec("UPDATE users SET firstname = 'админ', lastname = 'админ',
     midlename = 'админ' WHERE id = 1");
+}
+
+function metrics(PDO $pdo){
+  $pdo->exec("CREATE TABLE IF NOT EXISTS `metrics` (
+    `id` varchar(128) NOT NULL,
+    `address` varchar(255) NOT NULL,
+    `metrics` varchar(255) NOT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
 }
