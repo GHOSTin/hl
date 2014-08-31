@@ -107,13 +107,13 @@
 	</ul>
 	<ul>
 		<li class="query-numbers">
-			<h5>Лицевые счета({{ query.get_numbers|length }})</h5>
+			<h5>Лицевые счета{% if query.get_numbers() is not empty %} <span class="label label-success">{{ query.get_numbers()|length }}</span>{% endif %}</h5>
 		</li>
 		<li class="query-users">
 			<h5>Участники</h5>
 		</li>
 		<li class="query-works">
-			<h5>Работы</h5>
+			<h5>Работы{% if query.get_works() is not empty %} <span class="label label-success">{{ query.get_works()|length }}</span>{% endif %}</h5>
 		</li>
 		<li class="query-comments">
 			<h5>Служебные комментарии{% if query.get_comments() is not empty %} <span class="label label-success">{{ query.get_comments()|length }}</span>{% endif %}</h5>
