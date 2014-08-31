@@ -21,6 +21,12 @@ class data_work extends data_object{
   */
   private $workgroup;
 
+
+  /**
+  * @OneToMany(targetEntity="data_query2work", mappedBy="work")
+  */
+  private $query2works;
+
   public function get_id(){
     return $this->id;
   }

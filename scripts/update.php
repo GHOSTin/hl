@@ -5,16 +5,15 @@ require_once(ROOT."/vendor/autoload.php");
 model_environment::before();
 $pdo = di::get('pdo');
 $pdo->beginTransaction();
-// drop_table($pdo);
-// drop_company_id($pdo);
-// alter($pdo);
-// update_users($pdo);
+drop_table($pdo);
+drop_company_id($pdo);
+alter($pdo);
+update_users($pdo);
 metrics($pdo);
 $pdo->commit();
 
 function drop_table(PDO $pdo){
-  $pdo->exec("DROP table companies, sessions, phrases, sms, sms2number, sms2query, sms2user, smsgroup2number, smsgroups, processing_centers, processing_center2number, house2processing_center, materials, materialgroups, meters, meter2data, number2meter, query_close_reasons, query2material");
-  $pdo->exec("UPDATE companies SET name = 'Наш город' WHERE id = 2");
+  // $pdo->exec("DROP table companies, sessions, phrases, sms, sms2number, sms2query, sms2user, smsgroup2number, smsgroups, processing_centers, processing_center2number, house2processing_center, materials, materialgroups, meters, meter2data, number2meter, query_close_reasons, query2material");
 }
 
 function drop_company_id(PDO $pdo){

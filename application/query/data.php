@@ -102,6 +102,13 @@ class data_query extends data_object{
    * inverseJoinColumns={@JoinColumn(name="number_id", referencedColumnName="id")})
    */
 	private $numbers;
+
+	/**
+   * @ManyToMany(targetEntity="data_query2work")
+   * @JoinTable(name="query2work",
+   * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
+   * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
+   */
 	private $works;
 	private $users = ['creator' => null, 'manager' => [],
 										'observer' => [], 'performer' => []];

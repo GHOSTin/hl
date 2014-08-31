@@ -1,9 +1,40 @@
 <?php
+/**
+* @Entity
+* @Table(name="query2work")
+*/
 class data_query2work{
 
+  /**
+  * @Id
+  * @Column(name="query_id", type="integer")
+  */
+  private $query_id;
+
+  /**
+  * @Id
+  * @Column(name="work_id", type="integer")
+  */
+  private $work_id;
+
+  /**
+  * @ManyToOne(targetEntity="data_work")
+  */
   private $work;
+
+  /**
+  * @Column(name="opentime", type="integer")
+  */
   private $time_open;
+
+  /**
+  * @Column(name="closetime", type="integer")
+  */
   private $time_close;
+
+  /**
+  * @Column(name="value", type="string")
+  */
   private $value;
 
   public function __call($method, $args){
