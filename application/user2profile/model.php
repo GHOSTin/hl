@@ -80,24 +80,6 @@ class model_user2profile{
     $mapper->delete($profile);
   }
 
-  public function update_rule($profile, $rule){
-    $profile = $this->get_profile($profile);
-    $rules = $profile->get_rules();
-    if(in_array($rule, array_keys($rules))){
-      $rules[$rule] = !$rules[$rule];
-      $stmt = di::get('pdo')->prepare('UPDATE `profiles` SET `rules` = :rules
-        WHERE `company_id` = :company_id
-        AND `user_id` = :user_id AND `profile` = :profile');
-      $stmt->bindValue(':rules', (string) json_encode($rules), PDO::PARAM_STR);
-      $stmt->bindValue(':user_id', (int) $this->user->get_id(), PDO::PARAM_INT);
-      $stmt->bindValue(':profile', (string) $profile, PDO::PARAM_STR);
-      if(!$stmt->execute())
-        throw new RuntimeException();
-    }else
-      throw new RuntimeException('Правила '.$rule.' нет в профиле '.$profile);
-    return $rules[$rule];
-  }
-
   public function update_restriction($profile, $restriction, $item){
     $profile = $this->get_profile($profile);
     $restrictions = $profile->get_restrictions();

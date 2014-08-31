@@ -23,13 +23,11 @@ class data_profile extends data_object{
   private $profile;
 
   /**
-  * @Id
   * @Column(name="rules", type="json_array")
   */
   private $rules;
 
   /**
-  * @Id
   * @Column(name="restrictions", type="json_array")
   */
   private $restrictions;

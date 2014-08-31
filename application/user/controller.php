@@ -290,11 +290,17 @@ class controller_user{
   }
 
   public static function private_update_rule(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->take_get('user_id'));
-    (new model_user2profile($user))
-      ->update_rule($request->take_get('profile'), $request->take_get('rule'));
-    exit();
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('user_id'));
+    $profile = $user->get_profile($request->take_get('profile'));
+    $rules = $profile->get_rules();
+    if(in_array($request->take_get('rule'), array_keys($rules))){
+      $rules[$request->take_get('rule')] = !$rules[$request->take_get('rule')];
+      $profile->set_rules($rules);
+      $em->flush();
+    }else
+      throw new RuntimeException('Правила '.$rule.' нет в профиле '.$profile);
+    return $rules[$rule];
   }
 
   public static function private_update_restriction(model_request $request){

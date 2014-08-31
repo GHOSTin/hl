@@ -106,6 +106,9 @@ class data_user extends data_object{
   }
 
   public function get_profile($name){
+    foreach($this->profiles as $profile)
+      if($profile == $name)
+        return $profile;
     return null;
   }
 
