@@ -5,8 +5,20 @@
 */
 class data_metrics {
 
+  /**
+  * @Id
+  * @Column(name="id", type="integer")
+  */
   private $id;
+
+  /**
+  * @Column(name="address", type="string")
+  */
   private $address;
+
+  /**
+  * @Column(name="metrics", type="string")
+  */
   private $metrics;
 
   /**

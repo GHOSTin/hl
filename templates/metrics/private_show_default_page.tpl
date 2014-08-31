@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set metrics = component.metrics %}
+{% set metrics = response.metrics %}
 {% block component %}
   <div class="row">
     <div class="col-md-2">
