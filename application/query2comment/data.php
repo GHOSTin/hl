@@ -50,6 +50,11 @@ class data_query2comment{
     return $this->time;
   }
 
+  public function set_query(data_query $query){
+    $this->query = $query;
+    $this->query_id = $query->get_id();
+  }
+
   public function set_time($time){
     $this->time = (int) $time;
   }
@@ -60,5 +65,6 @@ class data_query2comment{
 
   public function set_user(data_user $user){
     $this->user = $user;
+    $this->user_id = $user->get_id();
   }
 }

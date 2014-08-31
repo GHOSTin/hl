@@ -13,13 +13,15 @@ class controller_query{
 
 	public static function private_add_comment(model_request $request){
 		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('query_id'));
 		$comment = new data_query2comment();
 		$comment->set_user(di::get('user'));
+		$comment->set_query($query);
 		$comment->set_time(time());
 		$comment->set_message($request->GET('message'));
-		$query = $em->find('data_query', $request->GET('query_id'));
 		$query->add_comment($comment);
-		$em->flush($query);
+		$em->persist($comment);
+		$em->flush();
 		return ['query' => $query];
 	}
 
