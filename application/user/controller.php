@@ -108,10 +108,10 @@ class controller_user{
   }
 
   public static function private_get_restriction_content(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->GET('user_id'));
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('user_id'));
     $profile = $request->GET('profile');
-    $restriction = $_GET['restriction'];
+    $restriction = $request->GET('restriction');
     if($profile !== 'query')
         throw new RuntimeException('Нет ограничения для профиля.');
     if(!in_array($restriction, ['departments', 'worktypes']))
@@ -119,11 +119,10 @@ class controller_user{
     if($restriction === 'departments')
         $items = di::get('em')->getRepository('data_department')->findAll();
     if($restriction === 'worktypes')
-        $items = (new model_query_work_type)->get_query_work_types();
+        $items = $em->getRepository('data_query_work_type')->findAll();
     return ['user' => $user,
       'restriction_name' => $restriction, 'items' => $items,
-      'profile' => (new model_user2profile($user))
-        ->get_profile($request->take_get('profile'))];
+      'profile' => $user->get_profile($request->GET('profile'))];
   }
 
   public static function private_get_dialog_create_group(
@@ -315,11 +314,38 @@ class controller_user{
   }
 
   public static function private_update_restriction(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->GET('user_id'));
-    (new model_user2profile($user))
-      ->update_restriction($request->GET('profile'),
-      $request->GET('restriction'), $request->GET('item'));
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('user_id'));
+    $profile = $user->get_profile($request->take_get('profile'));
+    $restrictions = $profile->get_restrictions();
+    $restriction = $request->GET('restriction');
+    $item = $request->GET('item');
+    if(!array_key_exists($restriction, $restrictions))
+      throw new RuntimeException('Нет такого ограничения.');
+    if($restriction === 'departments'){
+      $department = di::get('em')->find('data_department', $item);
+      if(!is_null($department)){
+        $pos = array_search($department->get_id(), $restrictions[$restriction]);
+        if($pos === false)
+          $restrictions[$restriction][] = $department->get_id();
+        else
+          unset($restrictions[$restriction][$pos]);
+        $restrictions[$restriction] = array_values($restrictions[$restriction]);
+      }
+    }
+    if($restriction === 'worktypes'){
+      $type = $em->find('data_query_work_type', $item);
+      if(!is_null($type)){
+        $pos = array_search($type->get_id(), $restrictions[$restriction]);
+        if($pos === false)
+          $restrictions[$restriction][] = $type->get_id();
+        else
+          unset($restrictions[$restriction][$pos]);
+        $restrictions[$restriction] = array_values($restrictions[$restriction]);
+      }
+    }
+    $profile->set_restrictions($restrictions);
+    $em->flush();
     exit();
   }
 

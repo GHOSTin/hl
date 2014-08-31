@@ -1,12 +1,11 @@
 {% extends "ajax.tpl" %}
 {% set user = response.user %}
-{% set company = response.company %}
 {% set profile = response.profile %}
 {% set restriction_name = response.restriction_name %}
 {% set rest = profile.get_restrictions()[restriction_name] %}
 {% set items = response.items %}
 {% block js %}
-    $('.user[user = {{ user.get_id() }}] .company[company = {{ company.get_id() }}] .profile[profile = "{{ profile }}"] .restriction[restriction = "{{ restriction_name }}"]').append(get_hidden_content());
+    $('.user[user = {{ user.get_id() }}] .profile[profile = "{{ profile }}"] .restriction[restriction = "{{ restriction_name }}"]').append(get_hidden_content());
 {% endblock js %}
 {% block html %}
     <ul class="restriction-content list-unstyled">
