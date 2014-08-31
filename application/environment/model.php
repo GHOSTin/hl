@@ -79,64 +79,8 @@ class model_environment{
 		date_default_timezone_set(application_configuration::php_timezone);
 		$pimple = new \Pimple\Container();
 
-		$pimple['factory_metrics'] = function($p){
-			return new factory_metrics();
-		};
-
-		$pimple['factory_query2comment'] = function($p){
-			return new factory_query2comment();
-		};
-
-		$pimple['factory_client_query'] = function($p){
-			return new factory_client_query();
-		};
-
-		$pimple['factory_query'] = function($p){
-			return new factory_query();
-		};
-
-    $pimple['factory_task2comment'] = function($p){
-			return new factory_task2comment();
-		};
-
-		$pimple['mapper_query2work'] = function($p){
-			return new mapper_query2work($p['pdo']);
-		};
-
-		$pimple['mapper_metrics'] = function($p){
-			return new mapper_metrics($p['pdo']);
-		};
-
-		$pimple['mapper_street'] = function($p){
-			return new mapper_street($p['pdo']);
-		};
-
-		$pimple['mapper_house'] = function($p){
-			return new mapper_house($p['pdo']);
-		};
-
-		$pimple['mapper_query2comment'] = function($p){
-			return new mapper_query2comment($p['pdo']);
-		};
-
-    $pimple['mapper_task'] = function($p){
-			return new mapper_task($p['pdo']);
-		};
-
-    $pimple['mapper_user2task'] = function($p){
-			return new mapper_user2task($p['pdo']);
-		};
-
-    $pimple['mapper_task2comment'] = function($p){
-			return new mapper_task2comment($p['pdo']);
-		};
-
 		$pimple['model_import'] = function($p){
 			return new model_import();
-		};
-
-    $pimple['model_task'] = function($p){
-			return new model_task();
 		};
 
 		$pimple['pdo'] = function($pimple){
