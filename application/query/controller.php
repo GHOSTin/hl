@@ -124,8 +124,8 @@ class controller_query{
 
 	public static function private_get_day(model_request $request){
 		$time = getdate($request->GET('time'));
-		$params['time_open_begin'] = mktime(0, 0, 0, 5, $time['mday'], $time['year']);
-		$params['time_open_end'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 		return ['queries' => di::get('em')->getRepository('data_query')
 			->findByParams($params)];
 	}
@@ -355,22 +355,17 @@ class controller_query{
 		$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
 		$now = getdate();
 		$now = mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']);
-		$model = di::get('model_query');
-		switch ($request->GET('act')) {
-			case 'next':
+		if($request->GET('act') === 'next'){
 				$begin = strtotime("+1 month", $time);
 				$timeline = strtotime("+1 month +12 hours", $time);
-			break;
-			case 'previous':
+		}else{
 				$begin = strtotime("-1 day", $time);
 				$timeline = strtotime("-12 hours", $time);
-			break;
-			default:
-				return false;
 		}
-		$model->set_time_open_begin($begin);
-		$model->set_time_open_end($begin + 86399);
-		return ['queries' => $collection,
+		$params['time_open_begin'] = $begin;
+		$params['time_open_end'] = $begin + 86399;
+		return ['queries' => di::get('em')->getRepository('data_query')
+			->findByParams($params),
 			'now' =>  $now,
 			'timeline' => $timeline];
 	}
