@@ -28,7 +28,7 @@ class data_task2user {
   /**
    * @\Doctrine\ORM\Mapping\Column(name="user_type", type="string")
    */
-  private $user_type;
+  public $user_type;
 
   /**
    * @return mixed

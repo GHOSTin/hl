@@ -1,12 +1,12 @@
 {% extends "ajax.tpl" %}
 {% set task = response.task %}
-{% set creator = task.get_creator() %}
+{% set creator = task.get_creator().get_user() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set target_date = task.get_time_target()|date('d.m.Y') %}
 {% set close_date = task.get_time_close()|date('d.m.Y') %}
 {% set performers = [] %}
 {% for performer in task.get_performers() %}
-  {% set performers = performers|merge([performer.get_id()]) %}
+  {% set performers = performers|merge([performer.get_user()]) %}
 {% endfor %}
 {% block html %}
   <div class="row" id="task" data-id="{{ task.get_id() }}">
@@ -56,7 +56,7 @@
           <div id="reviewStars-input" tabindex="2">
           {% for i in 0..4 %}
             <input id="star-{{ loop.revindex0 }}" type="radio" name="task-rating"
-              {% if loop.revindex0 == task.get_rating() %}checked {% endif %}>
+              {% if loop.revindex0 == (task.get_rating()-1) %}checked {% endif %}>
             <label for="star-{{ loop.revindex0 }}"></label>
           {% endfor %}
           </div>
@@ -76,7 +76,7 @@
               <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" multiple tabindex="-1" id="task-performers" name="performers">
                 {% for user in response.users %}
                   <option value="{{ user.get_id() }}"
-                          {% if user.get_id() in performers %}selected="selected" {% endif %}>{{ user.get_lastname() }} {{ user.get_firstname() }}
+                          {% if user in performers %}selected="selected" {% endif %}>{{ user.get_lastname() }} {{ user.get_firstname() }}
                   </option>
                 {% endfor %}
               </select>

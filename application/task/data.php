@@ -1,73 +1,84 @@
 <?php
 use Doctrine\Common\Collections\Criteria;
-use \Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="tasks")
- * @ORM\Entity
+ * @Table(name="tasks")
+ * @Entity(repositoryClass="repository_task")
  */
 class data_task {
 
 
   /**
-   * @ORM\Id()
-   * @ORM\Column(name="id", type="string")
+   * @Id()
+   * @Column(name="id", type="decimal")
    * @var string
    */
   private $id;
   /**
-   * @ORM\Column(name="title", type="string")
+   * @Column(name="title", type="string")
    * @var string
    */
   private $title;
   /**
-   * @ORM\Column(name="description", type="string")
+   * @Column(name="description", type="string")
    * @var string
    */
   private $description;
   /**
-   * @ORM\Column(name="time_open", type="integer")
+   * @Column(name="time_open", type="integer")
    * @var int
    */
   private $time_open;
   /**
-   * @ORM\Column(name="time_close", type="integer")
+   * @Column(name="time_close", type="integer")
    * @var int
    */
   private $time_close; //время выполнеия
   /**
-   * @ORM\Column(name="time_target", type="integer")
+   * @Column(name="time_target", type="integer")
    * @var int
    */
   private $time_target; //дата до которой нужно выполнить задачу
   /**
-   * @ORM\Column(name="rating", type="integer")
+   * @Column(name="rating", type="integer")
    * @var int
    */
   private $rating = 0;
   /**
-   * @ORM\OneToMany(targetEntity="data_task2user", mappedBy="task", cascade={"persist", "remove"})
+   * @OneToMany(targetEntity="data_task2user", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
    * @var \Doctrine\Common\Collections\ArrayCollection
    */
-  private $users;
+  private $users = [];
   /**
-   * @var array
+   * @OneToMany(targetEntity="data_task2comment", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
+   * @var \Doctrine\Common\Collections\ArrayCollection
    */
   private $comments = [];
   /**
-   * @ORM\Column(name="reason", type="string")
+   * @Column(name="reason", type="string")
    * @var string
    */
   private $reason;
   /**
-   * @ORM\Column(name="status", type="string")
+   * @Column(name="status", type="string")
    * @var string
    */
   private $status;
 
-  function __construct()
+  /**
+   * @param \Doctrine\Common\Collections\ArrayCollection $users
+   */
+  public function set_users($users)
   {
-    $this->users = di::get('em')->getRepository('data_task2user')->findBy(array('task_id'=>$this->get_id()));
+    $this->users = $users;
+  }
+
+  /**
+   * @return \Doctrine\Common\Collections\ArrayCollection
+   */
+  public function get_users()
+  {
+    return $this->users;
   }
 
   /**
@@ -135,7 +146,7 @@ class data_task {
   {
     $criteria = Criteria::create()
         ->where(Criteria::expr()->eq("user_type", "creator"));
-    return $this->users->matching($criteria)->first();
+    return clone $this->users->matching($criteria)->first();
   }
 
   /**
@@ -159,9 +170,7 @@ class data_task {
    */
   public function set_performers(array $performers)
   {
-    $criteria = Criteria::create()
-        ->where(Criteria::expr()->eq("user_type", "performer"));
-    return $this->users->matching($criteria);
+
   }
 
   /**
@@ -171,7 +180,7 @@ class data_task {
   {
     $criteria = Criteria::create()
         ->where(Criteria::expr()->eq("user_type", "performer"));
-    return $this->users->matching($criteria);
+    return clone $this->users->matching($criteria);
   }
 
   /**
@@ -271,5 +280,12 @@ class data_task {
   }
 
 
+  public function isPerson(){
+    $users = [];
+    foreach (clone $this->users as $t2u) {
+      $users[] = $t2u->get_user();
+    }
+    return in_array(di::get('user'), $users);
+  }
 
 }

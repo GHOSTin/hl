@@ -95,10 +95,6 @@ class model_environment{
 			return new factory_query();
 		};
 
-    $pimple['factory_task'] = function($p){
-			return new factory_task();
-		};
-
     $pimple['factory_task2comment'] = function($p){
 			return new factory_task2comment();
 		};
@@ -141,10 +137,6 @@ class model_environment{
 
     $pimple['model_task'] = function($p){
 			return new model_task();
-		};
-
-    $pimple['model_user2task'] = function($p){
-			return new model_user2task();
 		};
 
 		$pimple['pdo'] = function($pimple){

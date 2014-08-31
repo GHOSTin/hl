@@ -1,9 +1,38 @@
 <?php
 
+/**
+ * Class data_task2comment
+ * @Entity
+ * @Table(name="task2comment")
+ */
 class data_task2comment {
 
+  /**
+   * @\Doctrine\ORM\Mapping\Id()
+   * @\Doctrine\ORM\Mapping\GeneratedValue(strategy="AUTO")
+   * @\Doctrine\ORM\Mapping\Column(name="id")
+   * @var
+   */
+  private $id;
+  /**
+   * @\Doctrine\ORM\Mapping\ManyToOne(targetEntity="data_task", inversedBy="comments")
+   * @\Doctrine\ORM\Mapping\JoinColumn(name="task_id", referencedColumnName="id")
+   */
+  private $task;
+  /**
+   * @\Doctrine\ORM\Mapping\Column(name="message", type="string")
+   * @var string
+   */
   private $message;
+  /**
+   * @\Doctrine\ORM\Mapping\Column(name="time", type="integer")
+   * @var int
+   */
   private $time;
+  /**
+   * @\Doctrine\ORM\Mapping\OneToOne(targetEntity="data_user")
+   * @\Doctrine\ORM\Mapping\JoinColumn(name="user_id", referencedColumnName="id")
+   */
   private $user;
 
   /**
@@ -52,6 +81,22 @@ class data_task2comment {
   public function get_user()
   {
     return $this->user;
+  }
+
+  /**
+   * @param mixed $task
+   */
+  public function set_task($task)
+  {
+    $this->task = $task;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function get_task()
+  {
+    return $this->task;
   }
 
 } 

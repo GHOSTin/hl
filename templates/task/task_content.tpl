@@ -18,7 +18,7 @@
           <span class="hidden-xs hidden-sm">с {{ open_date }} по {{ close_date }}</span>
         </p>
       </div>
-      {% if task.get_creator().get_id() == user.get_id() %}
+      {% if task.get_creator().get_user() == user %}
         <form class="navbar-form text-center">
           <button type="button" class="btn btn-default" id="task_edit">
             <i class="glyphicon glyphicon-edit"></i> Редактировать
@@ -45,7 +45,7 @@
       <p class="task_rating">
         <strong>Оценка:</strong>
         {% for i in 0..4 %}
-          <label {% if loop.index0 <= task.get_rating() %}class="color-star"{% endif %}></label>
+          <label {% if loop.index0 <= (task.get_rating()-1) %}class="color-star"{% endif %}></label>
         {% endfor %}
       </p>
     {% endif %}
