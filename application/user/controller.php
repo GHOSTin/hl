@@ -6,14 +6,13 @@ class controller_user{
   public static function private_add_profile(model_request $request){
     $em = di::get('em');
     $user = $em->find('data_user', $request->take_get('user_id'));
-    $profile = $user->get_profile($request->take_get('profile'));
     $p = new data_profile($user, $request->take_get('profile'));
-    if(!empty(model_user2profile::$rules[$profile]))
-      $p->set_rules(model_user2profile::$rules[$profile]);
+    if(!empty(model_user2profile::$rules[$request->take_get('profile')]))
+      $p->set_rules(model_user2profile::$rules[$request->take_get('profile')]);
     else
       $p->set_rules([]);
-    if(!empty(model_user2profile::$restrictions[$profile]))
-      $p->set_restrictions(model_user2profile::$restrictions[$profile]);
+    if(!empty(model_user2profile::$restrictions[$request->take_get('profile')]))
+      $p->set_restrictions(model_user2profile::$restrictions[$request->take_get('profile')]);
     else
       $p->set_restrictions([]);
     $user->add_profile($p);
