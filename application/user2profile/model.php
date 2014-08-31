@@ -3,7 +3,7 @@ class model_user2profile{
 
   private $user;
 
-  private static $rules = [
+  public static $rules = [
     'import' => ['generalAccess' => false],
     'number' => ['generalAccess' => false,
                 'createDepartment' => false,
@@ -46,7 +46,7 @@ class model_user2profile{
               'setRule' => false]
   ];
 
-  private static $restrictions = [
+  public static $restrictions = [
     'query' =>['departments' => [],
                 'worktypes' => []
               ]
@@ -56,29 +56,6 @@ class model_user2profile{
     SET `restrictions` = :restrictions
     WHERE `company_id` = :company_id
     AND `user_id` = :user_id AND `profile` = :profile';
-
-  public function add_profile($profile){
-    $mapper = new mapper_user2profile($this->user);
-    if(!is_null($mapper->find($profile)))
-      throw new RuntimeException('Профиль уже существует.');
-    $p = new data_profile($profile);
-    if(!empty(self::$rules[$profile]))
-      $p->set_rules(self::$rules[$profile]);
-    else
-      $p->set_rules([]);
-    if(!empty(self::$restrictions[$profile]))
-      $p->set_restrictions(self::$restrictions[$profile]);
-    else
-      $p->set_restrictions([]);
-    $mapper->insert($p);
-    return $p;
-  }
-
-  public function delete($profile){
-    $profile = new data_profile($profile);
-    $mapper = new mapper_user2profile($this->user);
-    $mapper->delete($profile);
-  }
 
   public function update_restriction($profile, $restriction, $item){
     $profile = $this->get_profile($profile);

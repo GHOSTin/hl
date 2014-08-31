@@ -32,6 +32,12 @@ class data_profile extends data_object{
   */
   private $restrictions;
 
+  public function __construct(data_user $user, $profile){
+    $this->user = $user;
+    $this->user_id = $user->get_id();
+    $this->profile = $profile;
+  }
+
   public function __tostring(){
     return $this->profile;
   }

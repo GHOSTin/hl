@@ -73,6 +73,10 @@ class data_user extends data_object{
 
   public static $statuses = ['true', 'false'];
 
+  public function add_profile(data_profile $profile){
+    $this->profiles[$profile] = $profile;
+  }
+
   public function get_cellphone(){
     return $this->cellphone;
   }

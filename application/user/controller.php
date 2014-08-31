@@ -4,11 +4,22 @@ class controller_user{
 	public static $name = 'Пользователи';
 
   public static function private_add_profile(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->take_get('user_id'));
-    (new model_user2profile($user))
-      ->add_profile($request->take_get('profile'));
-    return ['companies' => null];
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('user_id'));
+    $profile = $user->get_profile($request->take_get('profile'));
+    $p = new data_profile($user, $request->take_get('profile'));
+    if(!empty(model_user2profile::$rules[$profile]))
+      $p->set_rules(model_user2profile::$rules[$profile]);
+    else
+      $p->set_rules([]);
+    if(!empty(model_user2profile::$restrictions[$profile]))
+      $p->set_restrictions(model_user2profile::$restrictions[$profile]);
+    else
+      $p->set_restrictions([]);
+    $user->add_profile($p);
+    $em->persist($p);
+    $em->flush();
+    return ['user' => $user];
   }
 
   public static function private_add_user(model_request $request){
@@ -71,10 +82,11 @@ class controller_user{
   }
 
   public static function private_delete_profile(model_request $request){
-    $user = new data_user();
-    $user->set_id($request->take_get('user_id'));
-    (new model_user2profile($user))
-      ->delete($request->take_get('profile'));
+    $em = di::get('em');
+    $user = $em->find('data_user', $request->take_get('user_id'));
+    $profile = $user->get_profile($request->take_get('profile'));
+    $em->remove($profile);
+    $em->flush();
     return true;
   }
 
@@ -129,7 +141,7 @@ class controller_user{
   }
 
   public static function private_get_dialog_add_profile(model_request $request){
-    return ['companies' => null];
+    return null;
   }
 
   public static function private_get_dialog_add_user(model_request $request){

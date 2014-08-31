@@ -11,7 +11,6 @@
 	$('.delete_profile').click(function(){
 		$.get('delete_profile',{
 			user_id: {{ request.take_get('user_id') }},
-			company_id: {{ request.take_get('company_id') }},
 			profile: '{{ request.take_get('profile') }}'
 			},function(r){
 				$('.dialog').modal('hide');
