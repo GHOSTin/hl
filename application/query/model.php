@@ -135,26 +135,6 @@ class model_query{
 		return $query;
 	}
 
-	/**
-	* Добавляет ассоциацию заявка-работа.
-	*/
-	public function add_work($query_id, $work_id, $begin_time, $end_time){
-		if(!is_int($begin_time) OR !is_int($end_time))
-			throw new RuntimeException('Время задано не верно.');
-		if($begin_time > $end_time)
-			throw new RuntimeException('Время начала работы не может быть меньше времени закрытия.');
-		$query = $this->get_query($query_id);
-		$mapper = di::get('mapper_query2work');
-		$mapper->init_works($query);
-		$work = new data_query2work((new model_work)
-			->get_work($work_id));
-		$work->set_time_open($begin_time);
-		$work->set_time_close($end_time);
-		$query->add_work($work);
-		$mapper->update_works($query);
-		return $query;
-	}
-
 	public function change_initiator($id, $house_id = null, $number_id = null){
 		try{
 			$pdo = di::get('pdo');

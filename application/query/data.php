@@ -170,9 +170,9 @@ class data_query extends data_object{
 	}
 
 	public function add_work(data_query2work $work){
-		if(array_key_exists($work->get_id(), $this->works))
+		if($this->works->contains($work))
 			throw new DomainException("Работа уже добавлен в заявку.");
-		$this->works[$work->get_id()] = $work;
+		$this->works->add($work);
 	}
 
 	public function remove_work(data_query2work $work){

@@ -34,8 +34,17 @@ class controller_query{
 		$end_date = (string) $request->GET('end_date');
 		$begin = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
 		$end = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
-		return ['query' => di::get('model_query')
-			->add_work($request->GET('id'), $request->GET('work_id'), $begin, $end)];
+		if($begin > $end)
+			throw new RuntimeException('Время начала работы не может быть меньше времени закрытия.');
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		$w = $em->find('data_work', $request->GET('work_id'));
+		$work = new data_query2work($query, $w);
+		$work->set_time_open($begin_time);
+		$work->set_time_close($end_time);
+		$em->persist($work);
+		$em->flush();
+		return ['query' => $query];
 	}
 
 	public static function private_clear_filters(model_request $request){

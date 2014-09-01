@@ -43,8 +43,11 @@ class data_query2work{
     return $this->work->$method($args);
   }
 
-  public function __construct(data_work $work){
+  public function __construct(data_query $query, data_work $work){
+    $this->query = $query;
+    $this->query_id = $query->get_id();
     $this->work = $work;
+    $this->work_id = $work->get_id();
   }
 
   public function set_time_open($time){
