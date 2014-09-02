@@ -247,8 +247,8 @@ class controller_query{
 
 
 	public static function private_get_dialog_remove_work(model_request $request){
-		return ['work' => di::get('model_work')
-			->get_work($request->GET('work_id'))];
+		return ['work' => di::get('em')
+			->find('data_work', $request->GET('work_id'))];
 	}
 
 	public static function private_get_initiator(model_request $request){
@@ -406,16 +406,19 @@ class controller_query{
 			'houses' => $houses];
 	}
 
-
 	public static function private_remove_user(model_request $request){
 		return ['query' => di::get('model_query')->remove_user($request->GET('id'),
 			$request->GET('user_id'), $request->GET('type'))];
 	}
 
-
 	public static function private_remove_work(model_request $request){
-		return ['query' => di::get('model_query')
-			->remove_work($request->GET('id'), $request->GET('work_id'))];
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('id'));
+		$work = $em->find('data_work', $request->GET('work_id'));
+		$w = $query->remove_work($work);
+		$em->remove($w);
+		$em->flush();
+		return ['query' => $query];
 	}
 
 	public static function private_update_description(model_request $request){

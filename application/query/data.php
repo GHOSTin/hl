@@ -175,10 +175,14 @@ class data_query extends data_object{
 		$this->works->add($work);
 	}
 
-	public function remove_work(data_query2work $work){
-		if(!array_key_exists($work->get_id(), $this->works))
-			throw new DomainException("Работа не была в заявке.");
-		unset($this->works[$work->get_id()]);
+	public function remove_work(data_work $w){
+		if(!empty($this->works))
+			foreach($this->works as $work)
+				if($work->get_id() === $w->get_id()){
+					$this->works->removeElement($work);
+					return $work;
+				}
+
 	}
 
 	public function add_work_type(data_query_work_type $wt){

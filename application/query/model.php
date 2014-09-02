@@ -222,15 +222,4 @@ class model_query{
 				throw new RuntimeException('Ошибка при создании заявки.');
 		}
 	}
-
-	public function remove_work($query_id, $work_id){
-		$query = $this->get_query($query_id);
-		$mapper = di::get('mapper_query2work');
-		$mapper->init_works($query);
-		$work = new data_query2work((new model_work)
-			->get_work($work_id));
-		$query->remove_work($work);
-		$mapper->update_works($query);
-		return $query;
-	}
 }
