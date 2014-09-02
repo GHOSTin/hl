@@ -6,9 +6,16 @@ class controller_query{
 	static $rules = [];
 
 	public static function private_add_user(model_request $request){
-		return ['query' => di::get('model_query')
-			->add_user($request->GET('id'), $request->GET('user_id'),
-			$request->GET('type'))];
+		$em = di::get('em');
+		$user = $em->find('data_user', $request->GET('user_id'));
+		$query = $em->find('data_query', $request->GET('id'));
+		if(in_array($request->GET('type'),  ['manager', 'performer'], true)){
+			$u = new data_query2user($user);
+			$u->set_class($request->GET('type'));
+			die('123');
+		}else
+			throw new RuntimeException('Несоответствующие параметры: class.');
+		return ['query' => $query];
 	}
 
 	public static function private_add_comment(model_request $request){
@@ -148,9 +155,8 @@ class controller_query{
 		return null;
 	}
 
-
 	public static function private_get_dialog_add_user(model_request $request){
-		return ['query' => di::get('model_query')->get_query($request->GET('id')),
+		return ['query' => di::get('em')->find('data_query', $request->GET('id')),
 			'groups' => di::get('em')->getRepository('data_group')->findAll()];
 	}
 
@@ -380,7 +386,7 @@ class controller_query{
 	}
 
 	public static function private_get_user_options(model_request $request){
-		return ['group' => di::get('em')->find('data_user', $request->GET('id'))];
+		return ['group' => di::get('em')->find('data_group', $request->GET('id'))];
 	}
 
 	public static function private_get_work_options(model_request $request){
