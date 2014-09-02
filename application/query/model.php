@@ -104,37 +104,6 @@ class model_query{
 			$this->set_param('work_type', null);
 	}
 
-	public function add_user($query_id, $user_id, $class){
-		$user = di::get('em')->find('data_user', $user_id);
-		$query = $this->get_query($query_id);
-		(new mapper_query2user($query))->init_users();
-		if($class === 'manager')
-			$query->add_manager($user);
-		elseif($class === 'performer')
-			$query->add_performer($user);
-		else
-			throw new RuntimeException('Несоответствующие параметры: class.');
-		(new mapper_query2user($query))->update_users();
-		return $query;
-	}
-
-	/**
-	* Добавляет ассоциацию заявка-пользователь.
-	*/
-	public function remove_user($query_id, $user_id, $class){
-		$user = di::get('em')->find('data_user', $user_id);
-		$query = $this->get_query($query_id);
-		(new mapper_query2user($query))->init_users();
-		if($class === 'manager')
-			$query->remove_manager($user);
-		elseif($class === 'performer')
-			$query->remove_performer($user);
-		else
-			throw new RuntimeException('Несоответствующие параметры: class.');
-		(new mapper_query2user($query))->update_users();
-		return $query;
-	}
-
 	public function change_initiator($id, $house_id = null, $number_id = null){
 		try{
 			$pdo = di::get('pdo');

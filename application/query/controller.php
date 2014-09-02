@@ -249,7 +249,7 @@ class controller_query{
 
 	public static function private_get_dialog_remove_user(model_request $request){
 		return ['user' => di::get('em')->getRepository('data_user')
-			->findOne($request->GET('user_id'))];
+			->find($request->GET('user_id'))];
 	}
 
 
@@ -414,8 +414,17 @@ class controller_query{
 	}
 
 	public static function private_remove_user(model_request $request){
-		return ['query' => di::get('model_query')->remove_user($request->GET('id'),
-			$request->GET('user_id'), $request->GET('type'))];
+		$em = di::get('em');
+		$u = $em->find('data_user', $request->GET('user_id'));
+		$query = $em->find('data_query', $request->GET('id'));
+		$users = $query->get_users();
+		if(!empty($users))
+			foreach($users as $user)
+				if($user->get_id() === $u->get_id() && $user->get_class() === $request->GET('type')){
+					$em->remove($user);
+					$em->flush();
+				}
+		return ['query' => $query];
 	}
 
 	public static function private_remove_work(model_request $request){
