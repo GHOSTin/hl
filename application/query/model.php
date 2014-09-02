@@ -104,39 +104,6 @@ class model_query{
 			$this->set_param('work_type', null);
 	}
 
-	public function change_initiator($id, $house_id = null, $number_id = null){
-		try{
-			$pdo = di::get('pdo');
-			$pdo->beginTransaction();
-			$query = $this->get_query($id);
-			$mapper_q2n = new mapper_query2number($query);
-			if(!is_null($number_id)){
-				$query->set_initiator('number');
-				$number = di::get('em')->find('data_number', $number_id);
-				$house = di::get('em')->find('data_house', $number->get_flat()->get_house()->get_id());
-				$query->set_house($house);
-				$query->add_number($number);
-				$mapper_q2n->update();
-			}elseif(!is_null($house_id)){
-				$query->set_initiator('house');
-				$house = di::get('em')->find('data_house', $house_id);
-				$query->set_house($house);
-				if(!empty($house->get_numbers()))
-					foreach($house->get_numbers() as $number)
-						$query->add_number($number);
-				$mapper_q2n->update();
-			}else
-				throw new RuntimeException('initiator wrong');
-			$mapper = di::get('mapper_query');
-			$query = $mapper->update($query);
-			$pdo->commit();
-			return $query;
-		}catch(exception $e){
-			$pdo->rollBack();
-			throw new RuntimeException('Проблема');
-		}
-	}
-
 	public function create_query($initiator, $id, $description, $work_type,
 										$contact_fio, $contact_telephone, $contact_cellphone){
 		try{

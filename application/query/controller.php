@@ -81,9 +81,25 @@ class controller_query{
 	}
 
 	public static function private_change_initiator(model_request $request){
-		return ['query' => di::get('model_query')
-			->change_initiator($request->GET('query_id'),
-			$request->GET('house_id'), $request->GET('number_id'))];
+		$em = di::get('em');
+		$query = $em->find('data_query', $request->GET('query_id'));
+		$numbers = $query->get_numbers();
+			if(!empty($numbers))
+				foreach($numbers as $number)
+					$em->remove($number);
+		if(!is_null($request->GET('number_id'))){
+			$query->set_initiator('number');
+			$number = $em->find('data_number', $request->GET('number_id'));
+			$query->set_house($number->get_flat()->get_house());
+			$query->add_number($number);
+		}elseif(!is_null($request->GET('house_id'))){
+			$query->set_initiator('house');
+			$house = $em->find('data_house', $request->GET('house_id'));
+			$query->set_house($house);
+		}else
+			throw new RuntimeException('initiator wrong');
+		$em->flush();
+		return ['query' => $query];
 	}
 
 	public static function private_reclose_query(model_request $request){
