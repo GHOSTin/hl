@@ -110,8 +110,14 @@ class data_query extends data_object{
    * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
    */
 	private $works;
-	private $users = ['creator' => null, 'manager' => [],
-										'observer' => [], 'performer' => []];
+
+	/**
+   * @ManyToMany(targetEntity="data_query2user")
+   * @JoinTable(name="query2user",
+   * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
+   * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
+   */
+	private $users;
 
 	/**
   * @OneToMany(targetEntity="data_query2comment", mappedBy="query")
@@ -206,19 +212,43 @@ class data_query extends data_object{
 	}
 
 	public function get_creator(){
-		return $this->users['creator'];
+		$creators = [];
+		if(!empty($this->users))
+			foreach($this->users as $user)
+				if($user->get_class() === 'creator')
+					$creators[] = $user;
+		return $creators[0];
 	}
 
 	public function get_managers(){
-		return $this->users['manager'];
+		$managers = [];
+		if(!empty($this->users))
+			foreach($this->users as $user)
+				if($user->get_class() === 'manager')
+					$managers[] = $user;
+		return $managers;
 	}
 
 	public function get_observers(){
-		return $this->users['observer'];
+		$performers = [];
+		if(!empty($this->users))
+			foreach($this->users as $user)
+				if($user->get_class() === 'performer')
+					$performers[] = $user;
+		return $performers;
 	}
 
 	public function get_performers(){
-		return $this->users['performer'];
+		$observers = [];
+		if(!empty($this->users))
+			foreach($this->users as $user)
+				if($user->get_class() === 'observer')
+					$observers[] = $user;
+		return $observers;
+	}
+
+	public function get_users(){
+		return $this->users;
 	}
 
 	public function get_works(){

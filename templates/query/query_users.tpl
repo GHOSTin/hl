@@ -1,4 +1,4 @@
-<li>Ответственные 
+<li>Ответственные
 	{% if query.get_status() in ['open', 'working', 'reopen'] %}
 	<span class="get_dialog_add_user cm" type="manager">добавить</span>
 	{% endif %}
@@ -11,7 +11,7 @@
 	{% endfor %}
 	</ul>
 </li>
-<li>Исполнители 
+<li>Исполнители
 	{% if query.get_status() in ['open', 'working', 'reopen'] %}
 	<span class="get_dialog_add_user cm" type="performer">добавить</span>
 	{% endif %}

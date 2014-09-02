@@ -110,7 +110,7 @@
 			<h5>Лицевые счета{% if query.get_numbers() is not empty %} <span class="label label-success">{{ query.get_numbers()|length }}</span>{% endif %}</h5>
 		</li>
 		<li class="query-users">
-			<h5>Участники</h5>
+			<h5>Участники{% if query.get_users() is not empty %} <span class="label label-success">{{ query.get_users()|length }}</span>{% endif %}</h5>
 		</li>
 		<li class="query-works">
 			<h5>Работы{% if query.get_works() is not empty %} <span class="label label-success">{{ query.get_works()|length }}</span>{% endif %}</h5>
