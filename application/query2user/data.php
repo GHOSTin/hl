@@ -28,9 +28,11 @@ class data_query2user{
   */
   private $user;
 
-  public function __construct(data_user $user){
+  public function __construct(data_query $query, data_user $user){
     $this->user = $user;
     $this->user_id = $user->get_id();
+    $this->query = $query;
+    $this->query_id = $query->get_id();
   }
 
   public function get_class(){

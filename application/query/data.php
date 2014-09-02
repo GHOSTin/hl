@@ -141,8 +141,8 @@ class data_query extends data_object{
 		$this->comments->add($comment);
 	}
 
-	public function add_creator(data_user $user){
-		$this->users['creator'] = $user;
+	public function add_user(data_query2user $user){
+		$this->users->add($user);
 	}
 
 	public function add_manager(data_user $user){
@@ -233,7 +233,7 @@ class data_query extends data_object{
 		$performers = [];
 		if(!empty($this->users))
 			foreach($this->users as $user)
-				if($user->get_class() === 'performer')
+				if($user->get_class() === 'observer')
 					$performers[] = $user;
 		return $performers;
 	}
@@ -242,7 +242,7 @@ class data_query extends data_object{
 		$observers = [];
 		if(!empty($this->users))
 			foreach($this->users as $user)
-				if($user->get_class() === 'observer')
+				if($user->get_class() === 'performer')
 					$observers[] = $user;
 		return $observers;
 	}

@@ -10,9 +10,10 @@ class controller_query{
 		$user = $em->find('data_user', $request->GET('user_id'));
 		$query = $em->find('data_query', $request->GET('id'));
 		if(in_array($request->GET('type'),  ['manager', 'performer'], true)){
-			$u = new data_query2user($user);
+			$u = new data_query2user($query, $user);
 			$u->set_class($request->GET('type'));
-			die('123');
+			$em->persist($u);
+			$em->flush();
 		}else
 			throw new RuntimeException('Несоответствующие параметры: class.');
 		return ['query' => $query];
