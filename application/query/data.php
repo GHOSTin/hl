@@ -8,6 +8,7 @@ class data_query extends data_object{
 	/**
   * @Id
   * @Column(name="id", type="integer")
+  * @GeneratedValue
   */
 	private $id;
 

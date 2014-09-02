@@ -140,14 +140,49 @@ class controller_query{
 	}
 
 	public static function private_create_query(model_request $request){
+		$em = di::get('em');
 		preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
 			$request->GET('description'), $matches);
-		$model = di::get('model_query');
-		$query = $model->create_query($request->GET('initiator'),
-			$request->GET('id'), implode('', $matches[0]),
-			$request->GET('work_type'), $request->GET('fio'),
-			$request->GET('telephone'), $request->GET('cellphone'));
-		return ['queries' => $collection];
+		$time = getdate();
+		$query = new data_query();
+		$query->set_contact_fio($request->GET('fio'));
+		$query->set_contact_telephone($request->GET('telephone'));
+		$query->set_contact_cellphone($request->GET('cellphone'));
+		$query->set_description(implode('', $matches[0]));
+		$query->set_initiator($request->GET('initiator'));
+		$query->set_status('open');
+		$query->set_payment_status('unpaid');
+		$query->set_warning_status('normal');
+		$query->set_time_open($time[0]);
+		$query->set_time_work($time[0]);
+		if($request->GET('initiator') === 'house'){
+			$house = $em->find('data_house', $request->GET('id'));
+		}elseif($request->GET('initiator') === 'number'){
+			$number = $em->find('data_number', $request->GET('id'));
+			$query->add_number($number);
+			$house = $number->get_flat()->get_house();
+		}
+		$query->set_house($house);
+		$query->set_department($house->get_department());
+		$query->add_work_type($em->find('data_query_work_type', $request->GET('work_type')));
+		$conn = $em->getConnection();
+		$q = $conn->query('SELECT MAX(querynumber) as number FROM `queries`
+			WHERE `opentime` > '.mktime(0, 0, 0, 1, 1, $time['year']).'
+			AND `opentime` <= '.mktime(23, 59, 59, 23, 59, $time['year']));
+		$query->set_number($q->fetch()['number'] + 1);
+		$em->persist($query);
+		$em->flush();
+		$creator = new data_query2user($query, di::get('user'));
+		$creator->set_class('creator');
+		$manager = new data_query2user($query, di::get('user'));
+		$manager->set_class('manager');
+		$em->persist($creator);
+		$em->persist($manager);
+		$em->flush();
+		$params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
+		return ['queries' => di::get('em')->getRepository('data_query')
+			->findByParams($params)];
 	}
 
 

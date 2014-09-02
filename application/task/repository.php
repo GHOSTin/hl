@@ -34,4 +34,4 @@ class repository_task extends Doctrine\ORM\EntityRepository {
     else
       return $id + 1;
   }
-} 
+}
