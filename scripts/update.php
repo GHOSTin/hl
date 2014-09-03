@@ -69,6 +69,12 @@ function drop_company_id(PDO $pdo){
   $pdo->exec("ALTER TABLE users DROP company_id");
   $pdo->exec("ALTER TABLE workgroups DROP company_id");
   $pdo->exec("ALTER TABLE works DROP company_id");
+  $pdo->exec("ALTER TABLE houses DROP city_id");
+  $pdo->exec("ALTER TABLE numbers DROP type");
+  $pdo->exec("ALTER TABLE queries DROP query_close_reason_id");
+  $pdo->exec("ALTER TABLE queries DROP query_inspection");
+  $pdo->exec("ALTER TABLE query2number DROP `default`");
+  $pdo->exec("ALTER TABLE query2user DROP protect");
 }
 
 function alter(PDO $pdo){
@@ -80,9 +86,8 @@ function alter(PDO $pdo){
   $pdo->exec("ALTER TABLE queries CHANGE `addinfo-name` contact_fio varchar(255) DEFAULT NULL");
   $pdo->exec("ALTER TABLE queries CHANGE  `addinfo-telephone` contact_telephone varchar(11) DEFAULT NULL");
   $pdo->exec("ALTER TABLE queries CHANGE `addinfo-cellphone` contact_cellphone varchar(11) DEFAULT NULL");
-
-  $pdo->exec("ALTER TABLE `task2user` ADD `id` INT NOT NULL AUTO_INCREMENT  FIRST,  ADD   PRIMARY KEY  (`id`)");
-  $pdo->exec("ALTER TABLE `task2comment` ADD `id` INT NOT NULL AUTO_INCREMENT  FIRST,  ADD   PRIMARY KEY  (`id`)");
+  // $pdo->exec("ALTER TABLE `task2user` ADD `id` INT NOT NULL AUTO_INCREMENT  FIRST,  ADD   PRIMARY KEY  (`id`)");
+  // $pdo->exec("ALTER TABLE `task2comment` ADD `id` INT NOT NULL AUTO_INCREMENT  FIRST,  ADD   PRIMARY KEY  (`id`)");
 }
 
 function update_users(PDO $pdo){

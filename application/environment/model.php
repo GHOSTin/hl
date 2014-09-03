@@ -38,9 +38,9 @@ class model_environment{
 			$data['user'] = $user;
 			$profiles = ['number', 'query', 'metrics', 'task'];
 			foreach($profiles as $profile){
-				$controller = 'controller_'.$profile;
-				if(property_exists($controller, 'name'))
-					$data['menu'][] = ['href' => $profile, 'title' => $controller::$name];
+				$c = 'controller_'.$profile;
+				if(property_exists($c, 'name'))
+					$data['menu'][] = ['href' => $profile, 'title' => $c::$name];
 			}
 		}
 		$data['response'] = $controller::$method($request);
@@ -89,6 +89,8 @@ class model_environment{
 		if(isset($_SESSION['user'])){
 			$em = di::get('em');
 			$pimple['user'] = $em->find('data_user', $_SESSION['user']);
+		}else{
+			$pimple['user'] = null;
 		}
 		di::set_instance($pimple);
 	}
