@@ -420,6 +420,12 @@ class controller_query{
 		$model = di::get('model_query');
 		$types = $em->getRepository('data_query_work_type')
 			->findBy([], ['name' => 'ASC']);
+		$params = $model->get_params();
+		if(!empty($params['houses']))
+			$houses = $em->getRepository('data_house')
+				->findByid($params['houses'], ['number' => 'ASC']);
+		else
+			$houses = [];
 		return ['queries' => $model->get_queries(),
 			'params' => $model->get_filter_values(),
 			'timeline' =>  $model->get_timeline(),

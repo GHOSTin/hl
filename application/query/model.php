@@ -24,6 +24,10 @@ class model_query{
 		}
 	}
 
+	public function get_params(){
+		return $_SESSION['query'];
+	}
+
 	public function get_queries(){
 		return di::get('em')->getRepository('data_query')
 			->findByParams($_SESSION['query']);
