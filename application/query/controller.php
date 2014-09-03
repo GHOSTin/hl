@@ -56,11 +56,9 @@ class controller_query{
 
 	public static function private_clear_filters(model_request $request){
 		$model = di::get('model_query');
-		$model->init_params();
-		$time = getdate($model->get_params()['time_open_begin']);
-		$timeline = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		return ['queries' => $collection,
-			'timeline' =>  $timeline, 'now' =>  $timeline];
+		$model->init_default_params();
+		return ['queries' => $model->get_queries(),
+			'timeline' =>  $model->get_timeline(), 'now' => $model->get_timeline()];
 	}
 
 	public static function private_close_query(model_request $request){
