@@ -1,6 +1,39 @@
 <?php
 define('ROOT' , substr(__DIR__, 0, (strlen(__DIR__) - strlen('/scripts'))));
-require_once(ROOT."/framework/framework.php");
+class di{
+
+  private static $instance;
+
+
+  public static function get_instance(){
+    return self::$instance;
+  }
+
+  public static function set_instance($instance){
+    return self::$instance = $instance;
+  }
+
+  public static function get($key){
+    $pimple = self::get_instance();
+    return $pimple[$key];
+  }
+}
+
+function framework_autoload($class_name){
+  if(
+    (0 === strpos($class_name, 'model_'))
+    OR (0 === strpos($class_name, 'controller_'))
+    OR (0 === strpos($class_name, 'data_'))
+    OR (0 === strpos($class_name, 'repository_'))
+  ){
+    list($folder, $component) = explode('_', $class_name, 2);
+    $file_path = ROOT.'/application/'.$component.'/'.$folder.'.php';
+    if(file_exists($file_path))
+      require_once $file_path;
+  }else
+    return;
+}
+spl_autoload_register('framework_autoload');
 require_once(ROOT."/vendor/autoload.php");
 model_environment::before();
 $pdo = di::get('pdo');
@@ -13,7 +46,7 @@ metrics($pdo);
 $pdo->commit();
 
 function drop_table(PDO $pdo){
-  // $pdo->exec("DROP table companies, sessions, phrases, sms, sms2number, sms2query, sms2user, smsgroup2number, smsgroups, processing_centers, processing_center2number, house2processing_center, materials, materialgroups, meters, meter2data, number2meter, query_close_reasons, query2material");
+  $pdo->exec("DROP table companies, sessions, phrases, sms, sms2number, sms2query, sms2user, smsgroup2number, smsgroups, processing_centers, processing_center2number, house2processing_center, materials, materialgroups, meters, meter2data, number2meter, query_close_reasons, query2material");
 }
 
 function drop_company_id(PDO $pdo){
