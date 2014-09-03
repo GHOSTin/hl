@@ -23,6 +23,7 @@ class model_query{
 			$this->init_default_params();
 		}
 		$this->params['departments'] = $_SESSION['query']['departments'];
+		$this->params['work_types'] = $_SESSION['query']['work_types'];
 		$this->params['status'] = $_SESSION['query']['status'];
 		$time = getdate($_SESSION['query']['time']);
 		$this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
@@ -39,6 +40,7 @@ class model_query{
 			->get_restrictions()['departments'];
 		$_SESSION['query']['time'] = time();
 		$_SESSION['query']['status'] = ['open', 'close', 'reopen', 'working'];
+		$_SESSION['query']['wt'] = [];
 	}
 
 	public function get_timeline(){
@@ -104,11 +106,13 @@ class model_query{
 	}
 
 	public function set_work_type($id){
-		if($id > 0){
-			$work_type = di::get('model_query_work_type')
-				->get_query_work_type($id);
-			$this->set_param('work_type', $work_type->get_id());
-		}else
-			$this->set_param('work_type', null);
+		$wt = di::get('em')->find('data_query_work_type', $id);
+		if(is_null($wt)){
+			$_SESSION['query']['work_types'] = [];
+			$this->params['work_types'] = [];
+		}else{
+			$_SESSION['query']['work_types'] = [$wt->get_id()];
+			$this->params['work_types'] = [$wt->get_id()];
+		}
 	}
 }

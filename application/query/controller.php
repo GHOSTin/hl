@@ -393,7 +393,7 @@ class controller_query{
 	public static function private_set_work_type(model_request $request){
 		$model = di::get('model_query');
 		$model->set_work_type($request->GET('value'));
-		return ['queries' => $collection];
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_get_timeline(model_request $request){

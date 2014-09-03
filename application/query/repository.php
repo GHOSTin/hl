@@ -7,6 +7,8 @@ class repository_query extends Doctrine\ORM\EntityRepository {
       AND q.status IN(:status)';
     if(!empty($params['departments']))
       $sql[] = 'AND q.department IN(:departments)';
+    if(!empty($params['work_types']))
+      $sql[] = 'AND q.work_type IN(:work_types)';
     $sql[] = 'ORDER BY q.time_open';
     $query =  $this->_em->createQuery(implode(' ', $sql));
     $query->setParameter('time_open_begin', $params['time_open_begin']);
@@ -14,6 +16,8 @@ class repository_query extends Doctrine\ORM\EntityRepository {
     $query->setParameter('status', $params['status']);
     if(!empty($params['departments']))
       $query->setParameter('departments', $params['departments']);
+     if(!empty($params['work_types']))
+      $query->setParameter('work_types', $params['work_types']);
     return $query->getResult();
   }
 }
