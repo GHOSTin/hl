@@ -30,8 +30,12 @@ class model_query{
 	}
 
 	public function get_departments(){
-		return di::get('em')->getRepository('data_department')
-			->findByid($_SESSION['query']['r_departments']);
+		if(!empty($_SESSION['query']['r_departments']))
+			return di::get('em')->getRepository('data_department')
+				->findByid($_SESSION['query']['r_departments'], ['name' => 'ASC']);
+		else
+			return di::get('em')->getRepository('data_department')
+				->findBy([], ['name' => 'ASC']);
 	}
 
 	public function init_default_params(){
