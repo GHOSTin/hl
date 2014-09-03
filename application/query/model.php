@@ -22,17 +22,11 @@ class model_query{
 		if(empty($_SESSION['query']['departments'])){
 			$this->init_default_params();
 		}
-		$this->params['departments'] = $_SESSION['query']['departments'];
-		$this->params['work_types'] = $_SESSION['query']['work_types'];
-		$this->params['status'] = $_SESSION['query']['status'];
-		$time = getdate($_SESSION['query']['time']);
-		$this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 	}
 
 	public function get_queries(){
 		return di::get('em')->getRepository('data_query')
-			->findByParams($this->params);
+			->findByParams($_SESSION['query']);
 	}
 
 	public function init_default_params(){
@@ -44,7 +38,7 @@ class model_query{
 	}
 
 	public function get_timeline(){
-		$time = getdate($this->params['time_open_begin']);
+		$time = getdate($_SESSION['query']['time']);
 		return mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
 	}
 
@@ -54,10 +48,8 @@ class model_query{
 
 	public function set_status($status){
 		if(in_array($status, ['open', 'close', 'reopen', 'working'], true)){
-			$this->params['status'] = [$status];
 			$_SESSION['query']['status'] = [$status];
 		}else{
-			$this->params['status'] = ['open', 'close', 'reopen', 'working'];
 			$_SESSION['query']['status'] = ['open', 'close', 'reopen', 'working'];
 		}
 	}
@@ -78,7 +70,6 @@ class model_query{
 				$dep = [$id];
 			}
 		}
-		$this->params['departments'] = $dep;
 		$_SESSION['query']['departments'] = $dep;
 	}
 
@@ -91,10 +82,7 @@ class model_query{
 	}
 
 	public function set_time($time){
-		$time = getdate($time);
-		$this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
-		$_SESSION['query']['time'] = $this->params['time_open_begin'];
+		$_SESSION['query']['time'] = $time;
 	}
 
 	public function set_house($id){
@@ -109,10 +97,8 @@ class model_query{
 		$wt = di::get('em')->find('data_query_work_type', $id);
 		if(is_null($wt)){
 			$_SESSION['query']['work_types'] = [];
-			$this->params['work_types'] = [];
 		}else{
 			$_SESSION['query']['work_types'] = [$wt->get_id()];
-			$this->params['work_types'] = [$wt->get_id()];
 		}
 	}
 }

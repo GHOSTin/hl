@@ -11,8 +11,11 @@ class repository_query extends Doctrine\ORM\EntityRepository {
       $sql[] = 'AND q.work_type IN(:work_types)';
     $sql[] = 'ORDER BY q.time_open';
     $query =  $this->_em->createQuery(implode(' ', $sql));
-    $query->setParameter('time_open_begin', $params['time_open_begin']);
-    $query->setParameter('time_open_end', $params['time_open_end']);
+    $time = getdate($params['time']);
+    $query->setParameter('time_open_begin',
+      mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']));
+    $query->setParameter('time_open_end',
+      mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']));
     $query->setParameter('status', $params['status']);
     if(!empty($params['departments']))
       $query->setParameter('departments', $params['departments']);
