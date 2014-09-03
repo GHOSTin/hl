@@ -365,7 +365,7 @@ class controller_query{
 	public static function private_set_status(model_request $request){
 		$model = di::get('model_query');
 		$model->set_status($request->GET('value'));
-		return ['queries' => $collection];
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_set_street(model_request $request){

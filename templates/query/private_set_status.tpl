@@ -6,10 +6,10 @@
     <div class="_queries">
         <div class="muted">
             <small>
-    	        Количество: {{ response.queries.count() }} заявок
+    	        Количество: {{ response.queries|length }} заявок
             </small>
         </div>
-    	{% for query in response.queries.get_queries() %}
+    	{% for query in response.queries %}
     		<div class="query get_query_content" query_id="{{ query.get_id() }}">
     			{% include '@query/build_query_title.tpl' %}
     		</div>

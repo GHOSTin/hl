@@ -23,6 +23,10 @@ class model_query{
 			$time = getdate($_SESSION['query']['time']);
 		else
 	  	$time = getdate();
+	  if(!empty($_SESSION['query']['status']))
+	  	$this->params['status'] = $_SESSION['query']['status'];
+	  else
+	  	$this->params['status'] = ['open', 'close', 'reopen', 'working'];
 		$this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 	}
@@ -58,18 +62,14 @@ class model_query{
 		return $this->params;
 	}
 
-	public function set_param($param, $value){
-		if(!array_key_exists($param, $this->params))
-			throw new RuntimeException('Не существует такого параметра.');
-		$this->params[$param] = $value;
-		$_SESSION['model']['params'] = $this->params;
-	}
-
 	public function set_status($status){
-		if(!in_array($status, ['open', 'close', 'reopen', 'working'], true))
-			$this->set_param('status', null);
-		else
-			$this->set_param('status', $status);
+		if(in_array($status, ['open', 'close', 'reopen', 'working'], true)){
+			$this->params['status'] = [$status];
+			$_SESSION['query']['status'] = [$status];
+		}else{
+			$this->params['status'] = ['open', 'close', 'reopen', 'working'];
+			$_SESSION['query']['status'] = ['open', 'close', 'reopen', 'working'];
+		}
 	}
 
 	public function set_department($id){
