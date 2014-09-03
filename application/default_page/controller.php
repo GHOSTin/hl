@@ -9,11 +9,13 @@ class controller_default_page{
     if(!is_null($request->take_post('login'))
       AND !is_null($request->take_post('password'))){
       $em = di::get('em');
-      $user = $em->getRepository('data_user')->findOneBy(['login' => $request->take_post('login')]);
+      $user = $em->getRepository('data_user')
+        ->findOneBy(['login' => $request->take_post('login')]);
       if(!is_null($user)){
         if($user->get_status() !== 'true')
           die('Вы заблокированы и не можете войти в систему.');
-        if(data_user::generate_hash($request->take_post('password')) === $user->get_hash()){
+        if(data_user::generate_hash(
+            $request->take_post('password'))=== $user->get_hash()){
           $session = new data_session();
           $session->set_user($user);
           $session->set_ip($_SERVER['REMOTE_ADDR']);

@@ -49,7 +49,8 @@ class controller_number{
   }
 
   public static function private_get_number_information(model_request $request){
-      return ['number' => di::get('em')->find('data_number', $request->GET('id'))];
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number(model_request $request){
@@ -58,13 +59,13 @@ class controller_number{
 
   private static function data_for_dialog_number(model_request $request){
     return ['number' => di::get('em')
-            ->find('data_number', $request->GET('id'))];
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_accruals(
     model_request $request){
-    $number = di::get('em')->find('data_number', $request->GET('id'));
-    return ['number' => $number];
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_fio(
@@ -98,7 +99,7 @@ class controller_number{
                       ->findByNumber($request->GET('number'));
     if(!is_null($old_number))
       if($number->get_id() != $old_number->get_id())
-        throw new RuntimeException('В базе уже есть лицевой счет с таким номером.');
+        throw new RuntimeException('Number exists.');
     $number->set_number($request->GET('number'));
     $em->flush();
     return ['number' => $number];
@@ -109,7 +110,7 @@ class controller_number{
       throw new RuntimeException('Подтверждение и пароль не совпадают.');
     $em = di::get('em');
     $number = $em->find('data_number', $request->GET('id'));
-    $hash = md5(md5(htmlspecialchars($request->GET('password'))).application_configuration::authSalt);
+    $hash = data_number::generate_hash($request->GET('password'));
     $number->set_hash($hash);
     $em->flush();
     return ['number' => $number];

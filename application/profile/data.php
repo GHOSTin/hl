@@ -30,7 +30,6 @@ class data_profile{
                 'editWarningType' => false,
                 'editWorks' => false,
                 'editWorkType' => false,
-                'editInspection' => false,
                 'reopenQuery' => false,
                 'sendSms' => false,
                 'showHistory' => false,

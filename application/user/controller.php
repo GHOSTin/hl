@@ -103,8 +103,9 @@ class controller_user{
   }
 
   public static function private_get_profile_content(model_request $request){
-    return ['user' => di::get('em')->find('data_user', $request->take_get('user_id')),
-            'profile' => $request->take_get('profile')];
+    return ['user' => di::get('em')
+      ->find('data_user', $request->take_get('user_id')),
+      'profile' => $request->take_get('profile')];
   }
 
   public static function private_get_restriction_content(model_request $request){
@@ -170,13 +171,13 @@ class controller_user{
     return ['user' => di::get('em')->find('data_user', $request->take_get('id'))];
   }
 
-    public static function private_get_dialog_exclude_user(
-      model_request $request){
-      $em = di::get('em');
-      return [
-        'user' => $em->find('data_user', $request->take_get('user_id')),
-        'group' => $em->find('data_group', $request->take_get('group_id'))];
-    }
+  public static function private_get_dialog_exclude_user(
+    model_request $request){
+    $em = di::get('em');
+    return [
+      'user' => $em->find('data_user', $request->take_get('user_id')),
+      'group' => $em->find('data_group', $request->take_get('group_id'))];
+  }
 
   public static function private_get_group_letters(model_request $request){
     $letters = [];

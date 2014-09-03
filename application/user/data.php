@@ -1,6 +1,7 @@
 <?php
-/** @Entity
-*    @Table(name="users")
+/**
+* @Entity
+* @Table(name="users")
 */
 class data_user{
 

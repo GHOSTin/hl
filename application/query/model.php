@@ -1,7 +1,6 @@
 <?php
 class model_query{
 
-	private $pdo;
 	private $params = [];
 	private $restrictions = [];
 
@@ -66,7 +65,6 @@ class model_query{
 			$this->set_param('department', []);
 	}
 
-	// test
 	public function set_street($id){
 		if($id > 0){
 			$street = di::get('em')->find('data_street', $id);
@@ -75,17 +73,14 @@ class model_query{
 			$this->set_param('street', null);
 	}
 
-	// test
 	public function set_time_open_begin($time){
 		$this->set_param('time_open_begin', (int) $time);
 	}
 
-	// test
 	public function set_time_open_end($time){
 		$this->set_param('time_open_end', (int) $time);
 	}
 
-	// test
 	public function set_house($id){
 		if($id > 0){
 			$house = di::get('em')->find('data_house', $id);
@@ -94,7 +89,6 @@ class model_query{
 			$this->set_param('house', null);
 	}
 
-	// test
 	public function set_work_type($id){
 		if($id > 0){
 			$work_type = di::get('model_query_work_type')

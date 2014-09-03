@@ -21,7 +21,6 @@ class data_work{
   */
   private $workgroup;
 
-
   /**
   * @OneToMany(targetEntity="data_query2work", mappedBy="work")
   */

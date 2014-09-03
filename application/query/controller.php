@@ -1,5 +1,4 @@
 <?php
-
 class controller_query{
 
 	static $name = 'Заявки';
@@ -43,7 +42,7 @@ class controller_query{
 		$begin = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
 		$end = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
 		if($begin > $end)
-			throw new RuntimeException('Время начала работы не может быть меньше времени закрытия.');
+			throw new RuntimeException('wrong time.');
 		$em = di::get('em');
 		$query = $em->find('data_query', $request->GET('id'));
 		$w = $em->find('data_work', $request->GET('work_id'));
@@ -164,7 +163,8 @@ class controller_query{
 		}
 		$query->set_house($house);
 		$query->set_department($house->get_department());
-		$query->add_work_type($em->find('data_query_work_type', $request->GET('work_type')));
+		$query->add_work_type($em->find('data_query_work_type',
+			$request->GET('work_type')));
 		$conn = $em->getConnection();
 		$q = $conn->query('SELECT MAX(querynumber) as number FROM `queries`
 			WHERE `opentime` > '.mktime(0, 0, 0, 1, 1, $time['year']).'
@@ -185,7 +185,6 @@ class controller_query{
 			->findByParams($params)];
 	}
 
-
 	public static function private_get_documents(model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
@@ -198,12 +197,12 @@ class controller_query{
 			->findByParams($params)];
 	}
 
-
 	public static function private_get_dialog_add_comment(model_request $request){
 		return null;
 	}
 
-	public static function private_get_dialog_cancel_client_query(model_request $request){
+	public static function private_get_dialog_cancel_client_query(
+		model_request $request){
 		return null;
 	}
 
@@ -212,18 +211,15 @@ class controller_query{
 			'groups' => di::get('em')->getRepository('data_group')->findAll()];
 	}
 
-
 	public static function private_get_dialog_add_work(model_request $request){
 		return ['workgroups' => di::get('em')
 			->getRepository('data_workgroup')->findAll()];
 	}
 
-
 	public static function private_get_dialog_create_query(
 		model_request $request){
 		return null;
 	}
-
 
 	public static function private_get_dialog_close_query(
 		model_request $request){
@@ -236,18 +232,15 @@ class controller_query{
 		return null;
 	}
 
-
 	public static function private_get_dialog_reopen_query(
 		model_request $request){
 		return null;
 	}
 
-
 	public static function private_get_dialog_to_working_query(
 		model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
-
 
 	public static function private_get_dialog_change_initiator(
 		model_request $request){
@@ -255,35 +248,29 @@ class controller_query{
 			'streets' => di::get('em')->getRepository('data_street')->findAll()];
 	}
 
-
 	public static function private_get_dialog_edit_description(
 		model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
-
 	public static function private_get_dialog_edit_reason(model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
-
 
 	public static function private_get_dialog_edit_contact_information(
 		model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
-
 	public static function private_get_dialog_edit_payment_status(
 		model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
 
-
 	public static function private_get_dialog_edit_warning_status(
 		model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id'))];
 	}
-
 
 	public static function private_get_dialog_edit_work_type(
 		model_request $request){
@@ -292,9 +279,9 @@ class controller_query{
 			->getRepository('data_query_work_type')->findBy([], ['name' => 'ASC'])];
 	}
 
-
 	public static function private_get_dialog_initiator(model_request $request){
-		return ['streets' => di::get('em')->getRepository('data_street')->findAll()];
+		return ['streets' => di::get('em')
+			->getRepository('data_street')->findAll()];
 	}
 
 
@@ -333,7 +320,7 @@ class controller_query{
 
 	public static function private_get_houses(model_request $request){
 		return ['street' => di::get('em')
-							->find('data_street', $request->GET('id'))];
+			->find('data_street', $request->GET('id'))];
 	}
 
 	public static function private_get_numbers(model_request $request){
@@ -442,7 +429,8 @@ class controller_query{
 	}
 
 	public static function private_get_work_options(model_request $request){
-		return ['work_group' => di::get('em')->find('data_workgroup', $request->GET('id'))];
+		return ['work_group' => di::get('em')
+			->find('data_workgroup', $request->GET('id'))];
 	}
 
 	public static function private_show_default_page(model_request $request){
@@ -454,7 +442,8 @@ class controller_query{
 			$houses = $street->get_houses();
 		}else
 			$houses = [];
-		return ['queries' => $em->getRepository('data_query')->findBy(['status' => 'reopen']), /*'client_queries' => $client_queries,*/
+		return ['queries' => $em->getRepository('data_query')
+			->findBy(['status' => 'reopen']),
 			'params' => $params,
 			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
@@ -471,7 +460,8 @@ class controller_query{
 		$users = $query->get_users();
 		if(!empty($users))
 			foreach($users as $user)
-				if($user->get_id() === $u->get_id() && $user->get_class() === $request->GET('type')){
+				if($user->get_id() === $u->get_id()
+					&& $user->get_class() === $request->GET('type')){
 					$em->remove($user);
 					$em->flush();
 				}

@@ -1,5 +1,4 @@
 <?php
-
 class repository_query extends Doctrine\ORM\EntityRepository {
 
   public function findByParams(array $params){

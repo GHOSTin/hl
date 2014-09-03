@@ -28,6 +28,12 @@ class data_query2user{
   */
   private $user;
 
+  public function __call($method, $args){
+    if(!in_array($method, get_class_methods($this->user)))
+      throw new BadMethodCallException();
+    return $this->user->$method($args);
+  }
+
   public function __construct(data_query $query, data_user $user){
     $this->user = $user;
     $this->user_id = $user->get_id();
@@ -41,11 +47,5 @@ class data_query2user{
 
   public function set_class($class){
     $this->class = $class;
-  }
-
-  public function __call($method, $args){
-    if(!in_array($method, get_class_methods($this->user)))
-      throw new BadMethodCallException();
-    return $this->user->$method($args);
   }
 }

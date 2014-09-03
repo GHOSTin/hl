@@ -6,12 +6,8 @@ use \Doctrine\ORM\EntityManager;
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
-		'import', 'error', 'report',
-		'about', 'export', 'task', 'metrics'];
+		'error', 'about', 'export', 'task', 'metrics'];
 
-	/*
-	* Возвращает содержимое страницы.
-	*/
 	public static function get_page_content(){
 		try{
 			session_start();
@@ -31,17 +27,22 @@ class model_environment{
 	}
 
 	public static function prepare_answer($controller, $component, $method, $request){
-		if(isset($_SESSION['user'])){
-			self::init_profile($component);
-			$data['user'] = di::get('user');
-			$data['menu'] = model_menu::build_menu($component);
-		}else{
-			$pimple = di::get_instance();
-			$pimple['profile'] = null;
+		$user = di::get('user');
+		if(!is_null($user)){
+			$profile = $user->get_profile($component);
+			if(!in_array($component, self::$profiles, true)){
+				if($profile->get_rules()['generalAccess'] !== true)
+					throw new RuntimeException('Доступа нет.');
+				$data['rules'] = $profile->get_rules();
+			}
+			$data['user'] = $user;
+			$profiles = ['number', 'query', 'metrics', 'task'];
+			foreach($profiles as $profile){
+				$controller = 'controller_'.$profile;
+				if(property_exists($controller, 'name'))
+					$data['menu'][] = ['href' => $profile, 'title' => $controller::$name];
+			}
 		}
-		$profile = di::get('profile');
-		if($profile instanceof data_profile)
-			$data['rules'] = $profile->get_rules();
 		$data['response'] = $controller::$method($request);
 		$data['request'] = $request;
 		return $data;
@@ -55,29 +56,10 @@ class model_environment{
 	  return $twig->render('@'.$component.'/'.$method.'.tpl', $data);
 	}
 
-	public static function init_profile($component){
-		$profile = di::get('user')->get_profile($component);
-		if(in_array($component, self::$profiles, true)){
-			$pimple = di::get_instance();
-			$pimple['profile'] = null;
-			return;
-		}elseif($profile instanceof data_profile){
-			if($profile->get_rules()['generalAccess'] !== true)
-				throw new RuntimeException('Доступа нет.');
-			$pimple = di::get_instance();
-			$pimple['profile'] = $profile;
-		}else
-			throw new RuntimeException('Доступа нет.');
-	}
-
 	public static function before(){
 		require_once ROOT.'/application/application_configuration.php';
 		date_default_timezone_set(application_configuration::php_timezone);
 		$pimple = new \Pimple\Container();
-
-		$pimple['model_import'] = function($p){
-			return new model_import();
-		};
 
 		$pimple['pdo'] = function($pimple){
 			$pdo = new PDO('mysql:host='.application_configuration::database_host.';dbname='.application_configuration::database_name, application_configuration::database_user, application_configuration::database_password);
@@ -87,7 +69,6 @@ class model_environment{
 		  return $pdo;
 		};
 
-    /** @return \Doctrine\ORM\EntityManager */
     $pimple['em'] = function($pimple){
 		  $paths = array(__DIR__);
 		  $isDevMode = (application_configuration::status == 'development')? true: false;

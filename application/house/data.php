@@ -121,8 +121,4 @@ class data_house{
   public function set_street(data_street $street){
     $this->street = $street;
   }
-
-  private function send_error($message){
-    throw new DomainException($message);
-  }
 }

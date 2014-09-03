@@ -11,16 +11,16 @@ class controller_error{
 
   public static function private_delete_error(model_request $request){
     $em = di::get('em');
-    $error = di::get('em')->find('data_error', $request->GET('time'));
+    $error = $em->find('data_error', $request->GET('time'));
     if(is_null($error))
-      throw new RuntimeException();
+      throw new RuntimeException('Not entity');
     $em->remove($error);
     $em->flush();
   }
 
   public static function private_send_error(model_request $request){
-    $time = time();
     $em = di::get('em');
+    $time = time();
     if(!is_null($em->find('data_error', $time)))
       throw new RuntimeException();
     $error = new data_error();

@@ -29,6 +29,7 @@ class data_number{
   * @ManyToOne(targetEntity="data_flat")
   */
   private $flat;
+
   private $hash;
 
   /**
@@ -61,6 +62,10 @@ class data_number{
   * @Column(name="email", type="string")
   */
   private $email;
+
+  public static function generate_hash($password){
+    return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
+  }
 
   public function get_accruals(){
     return $this->accruals;
@@ -122,7 +127,7 @@ class data_number{
   }
 
   public function set_flat(data_flat $flat){
-      $this->flat = $flat;
+    $this->flat = $flat;
   }
 
   public function set_hash($hash){

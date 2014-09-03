@@ -41,7 +41,6 @@ class data_query{
   * @ManyToOne(targetEntity="data_house")
   */
 	private $house;
-	private $close_reason_id;
 
 	/**
   * @ManyToOne(targetEntity="data_query_work_type")
@@ -93,8 +92,6 @@ class data_query{
   * @Column(name="querynumber", type="string")
   */
 	private $number;
-	private $inspection;
-	private $street;
 
 	/**
    * @ManyToMany(targetEntity="data_number")
@@ -146,36 +143,6 @@ class data_query{
 		$this->users->add($user);
 	}
 
-	public function add_manager(data_user $user){
-		if(array_key_exists($user->get_id(), $this->users['manager']))
-			throw new DomainException("Менеджер уже добавлен в заявку.");
-		$this->users['manager'][$user->get_id()] = $user;
-	}
-
-	public function add_observer(data_user $user){
-		if(array_key_exists($user->get_id(), $this->users['observer']))
-			throw new DomainException("Исполнитель уже добавлен в заявку.");
-		$this->users['observer'][$user->get_id()] = $user;
-	}
-
-	public function add_performer(data_user $user){
-		if(array_key_exists($user->get_id(), $this->users['performer']))
-			throw new DomainException("Исполнитель уже добавлен в заявку.");
-		$this->users['performer'][$user->get_id()] = $user;
-	}
-
-	public function remove_performer(data_user $user){
-		if(!array_key_exists($user->get_id(), $this->users['performer']))
-			throw new DomainException("Исполнителя нет в заявке.");
-		unset($this->users['performer'][$user->get_id()]);
-	}
-
-	public function remove_manager(data_user $user){
-		if(!array_key_exists($user->get_id(), $this->users['manager']))
-			throw new DomainException("Исполнителя нет в заявке.");
-		unset($this->users['manager'][$user->get_id()]);
-	}
-
 	public function add_work(data_query2work $work){
 		if($this->works->contains($work))
 			throw new DomainException("Работа уже добавлен в заявку.");
@@ -189,7 +156,6 @@ class data_query{
 					$this->works->removeElement($work);
 					return $work;
 				}
-
 	}
 
 	public function add_work_type(data_query_work_type $wt){
@@ -296,10 +262,6 @@ class data_query{
 		return $this->house;
 	}
 
-	public function get_street(){
-		return $this->street;
-	}
-
 	public function get_number(){
 		return $this->number;
 	}
@@ -356,10 +318,6 @@ class data_query{
 
 	public function set_house(data_house $house){
 		$this->house = $house;
-	}
-
-	public function set_street(data_street $street){
-		$this->street = $street;
 	}
 
 	public function set_contact_cellphone($cellphone){
