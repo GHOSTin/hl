@@ -1,7 +1,5 @@
 {% extends "default.tpl" %}
-{% set client_queries = response.client_queries %}
 {% block component %}
-    <div class="alert alert-success">Внимание. Теперь комментарии если они есть в заявке показываются в зеленом квардрате. Теперь нет смысла писать "смотри коментарии".</div>
     <!-- begin left block -->
     <div class="col-sm-3 col-lg-3">
         <div class="row">
@@ -20,18 +18,18 @@
     </div>
     <!-- end left block, begin right block -->
     <div class="col-sm-9 col-lg-9">
-            <!-- begin timeline -->
-            <nav class="timeline row">
-                {% include '@query/timeline.tpl' %}
-            </nav>
-            <div class="client_queries row">
-                {% include '@query/build_client_query_titles.tpl' %}
-            </div>
-            <!-- end timeline, begin queries -->
-            <div class="queries row">
-                {% include '@query/query_titles.tpl' %}
-            </div>
-            <!-- end queries -->
+        <!-- begin timeline -->
+        <nav class="timeline row">
+            {% include '@query/timeline.tpl' %}
+        </nav>
+        <div class="client_queries row">
+            {% include '@query/build_client_query_titles.tpl' %}
+        </div>
+        <!-- end timeline, begin queries -->
+        <div class="queries row">
+            {% include '@query/query_titles.tpl' %}
+        </div>
+        <!-- end queries -->
     </div>
     <!-- end right block -->
 {% endblock component %}
