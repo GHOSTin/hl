@@ -69,6 +69,10 @@ class model_environment{
 		  return $pdo;
 		};
 
+		$pimple['model_query'] = function($pimple){
+		  return new model_query();
+		};
+
     $pimple['em'] = function($pimple){
 		  $paths = array(__DIR__);
 		  $isDevMode = (application_configuration::status == 'development')? true: false;

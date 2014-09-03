@@ -190,11 +190,9 @@ class controller_query{
 	}
 
 	public static function private_get_day(model_request $request){
-		$time = getdate($request->GET('time'));
-		$params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
-		return ['queries' => di::get('em')->getRepository('data_query')
-			->findByParams($params)];
+		$model = di::get('model_query');
+		$model->set_time($request->GET('time'));
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_get_dialog_add_comment(model_request $request){
@@ -401,27 +399,17 @@ class controller_query{
 	}
 
 	public static function private_get_timeline(model_request $request){
-		$time = (int) $request->GET('time');
-		if($time < 0)
-			$time = getdate();
-		else
-			$time = getdate($time);
-		$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
 		$now = getdate();
 		$now = mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']);
-		if($request->GET('act') === 'next'){
-				$begin = strtotime("+1 month", $time);
-				$timeline = strtotime("+1 month +12 hours", $time);
-		}else{
-				$begin = strtotime("-1 day", $time);
-				$timeline = strtotime("-12 hours", $time);
-		}
-		$params['time_open_begin'] = $begin;
-		$params['time_open_end'] = $begin + 86399;
-		return ['queries' => di::get('em')->getRepository('data_query')
-			->findByParams($params),
-			'now' =>  $now,
-			'timeline' => $timeline];
+		$time = getdate($request->GET('time'));
+		$time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
+		$model = di::get('model_query');
+		if($request->GET('act') === 'next')
+				$model->set_time(strtotime("+1 month", $time));
+		else
+				$model->set_time(strtotime("-1 day", $time));
+		return ['queries' => $model->get_queries(),
+			'now' =>  $now, 'timeline' => $model->get_timeline()];
 	}
 
 	public static function private_get_user_options(model_request $request){
@@ -436,20 +424,18 @@ class controller_query{
 	public static function private_show_default_page(model_request $request){
 		$em = di::get('em');
 		$now = getdate();
-		$time = getdate();
-		if($params['street'] > 0){
-			$street = di::get('em')->find('data_street', $params['street']);
-			$houses = $street->get_houses();
-		}else
-			$houses = [];
-		return ['queries' => $em->getRepository('data_query')
-			->findBy(['status' => 'reopen']),
-			'params' => $params,
-			'timeline' =>  mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']),
+		$model = di::get('model_query');
+		$streets = $em->getRepository('data_street')
+			->findBy([], ['name' => 'ASC']);
+		$types = $em->getRepository('data_query_work_type')
+			->findBy([], ['name' => 'ASC']);
+		return ['queries' => $model->get_queries(),
+			'params' => $model->get_params(),
+			'timeline' =>  $model->get_timeline(),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
-			'streets' => $em->getRepository('data_street')->findAll(),
+			'streets' => $streets,
 			'departments' => $em->getRepository('data_department')->findAll(),
-			'query_work_types' => [],
+			'query_work_types' => $types,
 			'houses' => $houses];
 	}
 

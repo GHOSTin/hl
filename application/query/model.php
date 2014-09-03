@@ -5,15 +5,26 @@ class model_query{
 	private $restrictions = [];
 
 	public function __construct(){
-	  $profile = di::get('profile');
-	  if((string) $profile === 'query')
-	  	$this->restrictions = $profile->get_restrictions();
-    if(!empty($_SESSION['model']) AND $_SESSION['model']['model'] === 'query'){
-    	$this->params = $_SESSION['model']['params'];
-    }else{
-    	$_SESSION['model']['model'] = 'query';
-    	$this->init_params();
-	  }
+	  // $profile = di::get('profile');
+	  // if((string) $profile === 'query')
+	  // 	$this->restrictions = $profile->get_restrictions();
+   //  if(!empty($_SESSION['model']) AND $_SESSION['model']['model'] === 'query'){
+   //  	$this->params = $_SESSION['model']['params'];
+   //  }else{
+   //  	$_SESSION['model']['model'] = 'query';
+   //  	$this->init_params();
+	  // }
+	  		// if($params['street'] > 0){
+		// 	$street = di::get('em')->find('data_street', $params['street']);
+		// 	$houses = $street->get_houses();
+		// }else
+		// 	$houses = [];
+		if(!empty($_SESSION['query']['time']))
+			$time = getdate($_SESSION['query']['time']);
+		else
+	  	$time = getdate();
+		$this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 	}
 
 	public function init_params(){
@@ -31,6 +42,16 @@ class model_query{
 		else
 			$this->params['department'] = [];
     $_SESSION['model']['params'] = $this->params;
+	}
+
+	public function get_queries(){
+		return di::get('em')->getRepository('data_query')
+			->findByParams($this->params);
+	}
+
+	public function get_timeline(){
+		$time = getdate($this->params['time_open_begin']);
+		return mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
 	}
 
 	public function get_params(){
@@ -73,12 +94,11 @@ class model_query{
 			$this->set_param('street', null);
 	}
 
-	public function set_time_open_begin($time){
-		$this->set_param('time_open_begin', (int) $time);
-	}
-
-	public function set_time_open_end($time){
-		$this->set_param('time_open_end', (int) $time);
+	public function set_time($time){
+		$time = getdate($time);
+		$this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
+		$_SESSION['query']['time'] = $this->params['time_open_begin'];
 	}
 
 	public function set_house($id){
