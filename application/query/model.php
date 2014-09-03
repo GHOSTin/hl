@@ -38,6 +38,22 @@ class model_query{
 				->findBy([], ['name' => 'ASC']);
 	}
 
+	public function get_streets(){
+		$em = di::get('em');
+		if(!empty($_SESSION['query']['r_departments'])){
+			$houses = $em->getRepository('data_house')
+				->findBy(['department' => $_SESSION['query']['r_departments']]);
+			$streets = [];
+			if(!empty($houses))
+				foreach($houses as $house)
+					$streets[] = $house->get_street()->get_id();
+			return $em->getRepository('data_street')
+				->findByid($streets, ['name' => 'ASC']);
+		}else
+			return $em->getRepository('data_street')
+				->findBy([], ['name' => 'ASC']);
+	}
+
 	public function init_default_params(){
 		$_SESSION['query']['departments'] = di::get('user')->get_profile('query')
 			->get_restrictions()['departments'];
