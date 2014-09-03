@@ -387,9 +387,7 @@ class controller_query{
 	public static function private_set_department(model_request $request){
 		$model = di::get('model_query');
 		$model->set_department($request->GET('value'));
-		$model->set_street('all');
-		$model->set_house('all');
-		return ['queries' => $collection];
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_set_work_type(model_request $request){

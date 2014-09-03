@@ -19,38 +19,26 @@ class model_query{
 		// 	$houses = $street->get_houses();
 		// }else
 		// 	$houses = [];
-		if(!empty($_SESSION['query']['time']))
-			$time = getdate($_SESSION['query']['time']);
-		else
-	  	$time = getdate();
-	  if(!empty($_SESSION['query']['status']))
-	  	$this->params['status'] = $_SESSION['query']['status'];
-	  else
-	  	$this->params['status'] = ['open', 'close', 'reopen', 'working'];
+		if(empty($_SESSION['query']['departments'])){
+			$this->init_default_params();
+		}
+		$this->params['departments'] = $_SESSION['query']['departments'];
+		$this->params['status'] = $_SESSION['query']['status'];
+		$time = getdate($_SESSION['query']['time']);
 		$this->params['time_open_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$this->params['time_open_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
-	}
-
-	public function init_params(){
-  	$time = getdate();
-  	$time = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-    $this->params['time_open_begin'] = $time;
-    $this->params['time_open_end'] = $time  + 86359;
-    $this->params['status'] = null;
-    $this->params['street'] = null;
-    $this->params['house'] = null;
-    $this->params['work_type'] = null;
-    $this->params['department'] = null;
-		if(!empty($this->restrictions['departments']))
-			$this->params['department'] = $this->restrictions['departments'];
-		else
-			$this->params['department'] = [];
-    $_SESSION['model']['params'] = $this->params;
 	}
 
 	public function get_queries(){
 		return di::get('em')->getRepository('data_query')
 			->findByParams($this->params);
+	}
+
+	public function init_default_params(){
+		$_SESSION['query']['departments'] = di::get('user')->get_profile('query')
+			->get_restrictions()['departments'];
+		$_SESSION['query']['time'] = time();
+		$_SESSION['query']['status'] = ['open', 'close', 'reopen', 'working'];
 	}
 
 	public function get_timeline(){
@@ -73,17 +61,23 @@ class model_query{
 	}
 
 	public function set_department($id){
-		if($id > 0){
-			if(!empty($this->restrictions['departments']))
-				if(!in_array($id, $this->restrictions['departments']))
+		$department = di::get('em')->find('data_department', $id);
+		$departments = di::get('user')->get_profile('query')
+			->get_restrictions()['departments'];
+		if(is_null($department)){
+			if(!empty($departments))
+				$dep = $departments;
+		}else{
+			if(!empty($departments)){
+				if(!in_array($id, $departments))
 					throw new RuntimeException('Участок не может быть добавлен.');
-			$department = di::get('em')->find('data_department', $id);
-			$this->set_param('department', [$department->get_id()]);
-		}else
-		if(!empty($this->restrictions['departments']))
-			$this->set_param('department', $this->restrictions['departments']);
-		else
-			$this->set_param('department', []);
+				$dep = [$id];
+			}else{
+				$dep = [$id];
+			}
+		}
+		$this->params['departments'] = $dep;
+		$_SESSION['query']['departments'] = $dep;
 	}
 
 	public function set_street($id){

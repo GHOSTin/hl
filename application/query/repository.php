@@ -2,10 +2,18 @@
 class repository_query extends Doctrine\ORM\EntityRepository {
 
   public function findByParams(array $params){
-    $query =  $this->_em->createQuery('SELECT q FROM data_query q
+    $sql[] = 'SELECT q FROM data_query q
       WHERE q.time_open > :time_open_begin AND q.time_open < :time_open_end
-      AND q.status IN(:status) ORDER BY q.time_open');
-    $query->setParameters($params);
+      AND q.status IN(:status)';
+    if(!empty($params['departments']))
+      $sql[] = 'AND q.department IN(:departments)';
+    $sql[] = 'ORDER BY q.time_open';
+    $query =  $this->_em->createQuery(implode(' ', $sql));
+    $query->setParameter('time_open_begin', $params['time_open_begin']);
+    $query->setParameter('time_open_end', $params['time_open_end']);
+    $query->setParameter('status', $params['status']);
+    if(!empty($params['departments']))
+      $query->setParameter('departments', $params['departments']);
     return $query->getResult();
   }
 }
