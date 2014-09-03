@@ -376,7 +376,7 @@ class controller_query{
 	public static function private_set_house(model_request $request){
 		$model = di::get('model_query');
 		$model->set_house($request->GET('value'));
-		return ['queries' => $collection];
+		return ['queries' => $model->get_queries()];
 	}
 
 	public static function private_set_department(model_request $request){

@@ -77,6 +77,8 @@ class model_query{
 		$_SESSION['query']['wt'] = [];
 		$_SESSION['query']['r_departments'] = di::get('user')->get_profile('query')
 			->get_restrictions()['departments'];
+		$_SESSION['query']['streets'] = [];
+		$_SESSION['query']['houses'] = [];
 	}
 
 	public function get_timeline(){
@@ -98,6 +100,7 @@ class model_query{
 		else
 			$params['work_type'] = null;
 		$params['street'] = $_SESSION['query']['streets'][0];
+		$params['house'] = $_SESSION['query']['houses'][0];
 		return $params;
 	}
 
@@ -158,9 +161,12 @@ class model_query{
 	public function set_house($id){
 		if($id > 0){
 			$house = di::get('em')->find('data_house', $id);
-			$this->set_param('house', $house->get_id());
+			if(is_null($house))
+				$_SESSION['query']['houses'] = [];
+			else
+				$_SESSION['query']['houses'] = [$house->get_id()];
 		}else
-			$this->set_param('house', null);
+			$_SESSION['query']['houses'] = [];
 	}
 
 	public function set_work_type($id){
