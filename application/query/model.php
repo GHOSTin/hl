@@ -29,12 +29,19 @@ class model_query{
 			->findByParams($_SESSION['query']);
 	}
 
+	public function get_departments(){
+		return di::get('em')->getRepository('data_department')
+			->findByid($_SESSION['query']['r_departments']);
+	}
+
 	public function init_default_params(){
 		$_SESSION['query']['departments'] = di::get('user')->get_profile('query')
 			->get_restrictions()['departments'];
 		$_SESSION['query']['time'] = time();
 		$_SESSION['query']['status'] = ['open', 'close', 'reopen', 'working'];
 		$_SESSION['query']['wt'] = [];
+		$_SESSION['query']['r_departments'] = di::get('user')->get_profile('query')
+			->get_restrictions()['departments'];
 	}
 
 	public function get_timeline(){
@@ -68,14 +75,12 @@ class model_query{
 
 	public function set_department($id){
 		$department = di::get('em')->find('data_department', $id);
-		$departments = di::get('user')->get_profile('query')
-			->get_restrictions()['departments'];
 		if(is_null($department)){
-			if(!empty($departments))
-				$dep = $departments;
+			if(!empty($_SESSION['query']['r_departments']))
+				$dep = $_SESSION['query']['r_departments'];
 		}else{
-			if(!empty($departments)){
-				if(!in_array($id, $departments))
+			if(!empty($_SESSION['query']['r_departments'])){
+				if(!in_array($id, $_SESSION['query']['r_departments']))
 					throw new RuntimeException('Участок не может быть добавлен.');
 				$dep = [$id];
 			}else{
@@ -83,6 +88,8 @@ class model_query{
 			}
 		}
 		$_SESSION['query']['departments'] = $dep;
+		$_SESSION['query']['streets'] = [];
+		$_SESSION['query']['houses'] = [];
 	}
 
 	public function set_street($id){

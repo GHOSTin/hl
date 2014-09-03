@@ -432,7 +432,7 @@ class controller_query{
 			'timeline' =>  $model->get_timeline(),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => $streets,
-			'departments' => $em->getRepository('data_department')->findAll(),
+			'departments' => $model->get_departments(),
 			'query_work_types' => $types,
 			'houses' => $houses];
 	}
