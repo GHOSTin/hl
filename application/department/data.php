@@ -3,7 +3,7 @@
 * @Entity
 * @Table(name="departments")
 */
-class data_department extends data_object{
+class data_department{
 
   /**
   * @Id

@@ -2,7 +2,7 @@
 /** @Entity
 *    @Table(name="users")
 */
-class data_user extends data_object{
+class data_user{
 
   /**
   * @Column(name="cellphone", type="string")

@@ -3,7 +3,7 @@
 * @Entity
 * @Table(name="profiles")
 */
-class data_profile extends data_object{
+class data_profile{
 
   public static $arrayRules = [
     'import' => ['generalAccess' => false],

@@ -3,7 +3,7 @@
 * @Entity
 * @Table(name="flats")
 */
-class data_flat extends data_object{
+class data_flat{
 
   /**
   * @ManyToOne(targetEntity="data_house")

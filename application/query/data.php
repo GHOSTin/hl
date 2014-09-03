@@ -3,7 +3,7 @@
 * @Entity(repositoryClass="repository_query")
 * @Table(name="queries")
 */
-class data_query extends data_object{
+class data_query{
 
 	/**
   * @Id

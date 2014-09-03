@@ -3,7 +3,7 @@
 * @Entity
 * @Table(name="numbers")
 */
-class data_number extends data_object{
+class data_number{
 
   /**
   * @OneToMany(targetEntity="data_accrual", mappedBy="number")

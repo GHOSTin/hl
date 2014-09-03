@@ -3,7 +3,7 @@
 * @Entity
 * @Table(name="streets")
 */
-class data_street extends data_object{
+class data_street{
 
   /**
   * @ManyToOne(targetEntity="data_city")

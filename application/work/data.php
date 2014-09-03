@@ -3,7 +3,7 @@
 * @Entity
 * @Table(name="works")
 */
-class data_work extends data_object{
+class data_work{
 
   /**
    * @Id
