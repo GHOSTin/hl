@@ -23,21 +23,7 @@
             <option value="all">Все участки</option>
             {% if response.departments != false %}
                 {% for department in response.departments %}
-                    {% if params['department'] is empty %}
-                        <option value="{{ department.get_id() }}"
-                        {% if department.get_id() == params['department'] %}
-                        selected
-                        {% endif %}
-                        >{{ department.get_name() }}</option>
-                    {% else %}
-                        {% if department.get_id() in params['department'] %}
-                            <option value="{{ department.get_id() }}"
-                            {% if department.get_id() == params['department'] %}
-                            selected
-                            {% endif %}
-                            >{{ department.get_name() }}</option>
-                        {% endif %}
-                    {% endif %}
+                    <option value="{{ department.get_id() }}"{% if department.get_id() == params['department'] %} selected{% endif %}>{{ department.get_name() }}</option>
                 {% endfor %}
             {% endif %}
         </select>
@@ -92,20 +78,5 @@
             {% endif %}
         </select>
 	</div>
-     {#
-	<!-- end filter worktype, begin filter users -->
-	<div class="filter">
-	    <label>по пользователю</label>
-        <select class="filter-content-select-user form-control">
-            <option value="all">Все пользователи</option>
-            {% if response.users != false %}
-                {% for user in response.users %}
-                    <option value="{{user.id}}">{{user.lastname}} {{user.firstname}}</option>
-                {% endfor %}
-            {% endif %}
-        </select>
-	</div>
-	<!-- end filter users -->
-    #}
 </div>
 <!-- end filters -->

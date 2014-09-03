@@ -42,8 +42,20 @@ class model_query{
 		return mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
 	}
 
-	public function get_params(){
-		return $this->params;
+	public function get_filter_values(){
+		if(count($_SESSION['query']['status']) === 1)
+			$params['status'] = $_SESSION['query']['status'][0];
+		else
+			$params['status'] = null;
+		if(count($_SESSION['query']['departments']) === 1)
+			$params['department'] = $_SESSION['query']['departments'][0];
+		else
+			$params['department'] = null;
+		if(count($_SESSION['query']['work_types']) === 1)
+			$params['work_type'] = $_SESSION['query']['work_types'][0];
+		else
+			$params['work_type'] = null;
+		return $params;
 	}
 
 	public function set_status($status){

@@ -428,7 +428,7 @@ class controller_query{
 		$types = $em->getRepository('data_query_work_type')
 			->findBy([], ['name' => 'ASC']);
 		return ['queries' => $model->get_queries(),
-			'params' => $model->get_params(),
+			'params' => $model->get_filter_values(),
 			'timeline' =>  $model->get_timeline(),
 			'now' =>  mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']),
 			'streets' => $streets,
