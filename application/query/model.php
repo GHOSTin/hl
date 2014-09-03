@@ -19,7 +19,7 @@ class model_query{
 		// 	$houses = $street->get_houses();
 		// }else
 		// 	$houses = [];
-		if(empty($_SESSION['query']['departments'])){
+		if(empty($_SESSION['query'])){
 			$this->init_default_params();
 		}
 	}
@@ -54,6 +54,17 @@ class model_query{
 				->findBy([], ['name' => 'ASC']);
 	}
 
+		public function get_houses_by_street($street_id){
+		$em = di::get('em');
+		if(!empty($_SESSION['query']['r_departments'])){
+			return $em->getRepository('data_house')
+				->findBy(['department' => $_SESSION['query']['r_departments']],
+				['number' => 'ASC']);
+		}else
+			return $em->getRepository('data_house')
+				->findBy(['street' => $street_id], ['number' => 'ASC']);
+	}
+
 	public function init_default_params(){
 		$_SESSION['query']['departments'] = di::get('user')->get_profile('query')
 			->get_restrictions()['departments'];
@@ -82,6 +93,7 @@ class model_query{
 			$params['work_type'] = $_SESSION['query']['work_types'][0];
 		else
 			$params['work_type'] = null;
+		$params['street'] = $_SESSION['query']['streets'][0];
 		return $params;
 	}
 
@@ -113,11 +125,26 @@ class model_query{
 	}
 
 	public function set_street($id){
-		if($id > 0){
-			$street = di::get('em')->find('data_street', $id);
-			$this->set_param('street', $street->get_id());
-		}else
-			$this->set_param('street', null);
+		$streets = $this->get_streets();
+		$s = [];
+		if(!empty($streets))
+			foreach($streets as $street){
+					$s[] = $street->get_id();
+			}
+		if(!in_array((int) $id, $s, true)){
+			$_SESSION['query']['departments'] = [];
+			$_SESSION['query']['streets'] = [];
+			$_SESSION['query']['houses'] = [];
+		}else{
+			$houses = $this->get_houses_by_street($id);
+			$h = [];
+			if(!empty($houses))
+				foreach($houses as $house)
+					$h[] = $house->get_id();
+			$_SESSION['query']['departments'] = [];
+			$_SESSION['query']['streets'] = [$id];
+			$_SESSION['query']['houses'] = $h;
+		}
 	}
 
 	public function set_time($time){

@@ -368,12 +368,9 @@ class controller_query{
 
 	public static function private_set_street(model_request $request){
 		$model = di::get('model_query');
-		$model->set_department('all');
 		$model->set_street($request->GET('value'));
-		$model->set_house('all');
-		if($request->GET('value') > 0)
-			$street = di::get('em')->find('data_street', $request->GET('value'));
-		return ['queries' => $collection, 'street' => $street];
+		return ['queries' => $model->get_queries(),
+			'houses' => $model->get_houses_by_street($request->GET('value'))];
 	}
 
 	public static function private_set_house(model_request $request){

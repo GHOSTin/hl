@@ -25,6 +25,10 @@ class repository_query extends Doctrine\ORM\EntityRepository {
       $qb->andWhere($qb->expr()->in('q.work_type', ':work_types'))
           ->setParameter('work_types', $params['work_types']);
     }
+    if(!empty($params['houses'])){
+      $qb->andWhere($qb->expr()->in('q.house', ':house'))
+          ->setParameter('house', $params['houses']);
+    }
     $query = $qb->getQuery();
     return $query->getResult();
   }
