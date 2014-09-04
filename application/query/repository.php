@@ -11,7 +11,7 @@ class repository_query extends Doctrine\ORM\EntityRepository {
           $qb->expr()->lt('q.time_open', ':time_open_end'),
           $qb->expr()->in('q.status', ':status')
         ))
-       ->orderBy('q.time_open')
+       ->orderBy('q.time_open', 'DESC')
        ->setParameters(array(
           'time_open_begin'=> mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']),
           'time_open_end' => mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']),
