@@ -1,24 +1,7 @@
 <?php
 class model_query{
 
-	private $params = [];
-	private $restrictions = [];
-
 	public function __construct(){
-	  // $profile = di::get('profile');
-	  // if((string) $profile === 'query')
-	  // 	$this->restrictions = $profile->get_restrictions();
-   //  if(!empty($_SESSION['model']) AND $_SESSION['model']['model'] === 'query'){
-   //  	$this->params = $_SESSION['model']['params'];
-   //  }else{
-   //  	$_SESSION['model']['model'] = 'query';
-   //  	$this->init_params();
-	  // }
-	  		// if($params['street'] > 0){
-		// 	$street = di::get('em')->find('data_street', $params['street']);
-		// 	$houses = $street->get_houses();
-		// }else
-		// 	$houses = [];
 		if(empty($_SESSION['query'])){
 			$this->init_default_params();
 		}
@@ -58,7 +41,7 @@ class model_query{
 				->findBy([], ['name' => 'ASC']);
 	}
 
-		public function get_houses_by_street($street_id){
+	public function get_houses_by_street($street_id){
 		$em = di::get('em');
 		if(!empty($_SESSION['query']['r_departments'])){
 			return $em->getRepository('data_house')
