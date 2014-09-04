@@ -21,10 +21,10 @@ class di{
 
 function framework_autoload($class_name){
   if(
-    (0 === strpos($class_name, 'model_'))
-    OR (0 === strpos($class_name, 'controller_'))
-    OR (0 === strpos($class_name, 'data_'))
-    OR (0 === strpos($class_name, 'repository_'))
+      (0 === strpos($class_name, 'model_'))
+      OR (0 === strpos($class_name, 'controller_'))
+      OR (0 === strpos($class_name, 'data_'))
+      OR (0 === strpos($class_name, 'repository_'))
   ){
     list($folder, $component) = explode('_', $class_name, 2);
     $file_path = ROOT.'/application/'.$component.'/'.$folder.'.php';
@@ -86,6 +86,7 @@ function alter(PDO $pdo){
   $pdo->exec("ALTER TABLE queries CHANGE `addinfo-name` contact_fio varchar(255) DEFAULT NULL");
   $pdo->exec("ALTER TABLE queries CHANGE  `addinfo-telephone` contact_telephone varchar(11) DEFAULT NULL");
   $pdo->exec("ALTER TABLE queries CHANGE `addinfo-cellphone` contact_cellphone varchar(11) DEFAULT NULL");
+  // $pdo->exec("ALTER TABLE `user2task` RENAME TO `task2user`");
   // $pdo->exec("ALTER TABLE `task2user` ADD `id` INT NOT NULL AUTO_INCREMENT  FIRST,  ADD   PRIMARY KEY  (`id`)");
   // $pdo->exec("ALTER TABLE `task2comment` ADD `id` INT NOT NULL AUTO_INCREMENT  FIRST,  ADD   PRIMARY KEY  (`id`)");
 }
