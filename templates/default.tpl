@@ -33,7 +33,6 @@
         </div>
     </footer>
     <div id="modal" class="modal fade"></div>
-</body>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/underscore.js"></script>
     <script src="/js/backbone.js"></script>
@@ -50,5 +49,6 @@
 	<script src="/js/default.js"></script>
 
     {% block javascript %}{% endblock javascript %}
+</body>
 </html>
 {% endspaceless %}
