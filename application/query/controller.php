@@ -299,13 +299,15 @@ class controller_query{
 		switch($request->GET('initiator')){
 			case 'number':
 				$number = $em->find('data_number', $request->GET('id'));
-				// $queries = di::get('mapper_query')->get_queries_by_house($house);
+				$queries = di::get('em')->getRepository('data_query')
+					->findByHouse($number->get_flat()->get_house()->get_id(), [], 5);
 				return ['number' => $number, 'query_work_types' => $types,
 					'queries' => $queries];
 			break;
 			case 'house':
 				$house = di::get('em')->find('data_house', $request->GET('id'));
-				// $queries = di::get('mapper_query')->get_queries_by_house($house);
+				$queries = di::get('em')->getRepository('data_query')
+					->findByHouse($house->get_id(), [], 5);
 				return ['house' => $house, 'query_work_types' => $types,
 					'queries' => $queries];
 			break;
@@ -315,8 +317,8 @@ class controller_query{
 	}
 
 	public static function private_get_houses(model_request $request){
-		return ['street' => di::get('em')
-			->find('data_street', $request->GET('id'))];
+		return ['houses' => di::get('model_query')
+			->get_houses_by_street($request->GET('id'))];
 	}
 
 	public static function private_get_numbers(model_request $request){
