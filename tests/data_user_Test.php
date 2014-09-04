@@ -31,21 +31,6 @@ class data_user_Test extends PHPUnit_Framework_TestCase{
     $this->user->set_id(65536);
   }
 
-  public function test_set_company_id_1(){
-    $this->user->set_company_id(125);
-    $this->assertEquals(125, $this->user->get_company_id());
-  }
-
-  public function test_set_company_id_2(){
-    $this->setExpectedException('DomainException');
-    $this->user->set_company_id(0);
-  }
-
-  public function test_set_company_id_3(){
-    $this->setExpectedException('DomainException');
-    $this->user->set_company_id(256);
-  }
-
   public function test_set_firstname_1(){
     $this->user->set_firstname('Константин');
     $this->assertEquals('Константин', $this->user->get_firstname());

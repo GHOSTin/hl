@@ -1,9 +1,9 @@
 <?php
-
 /**
  * @property data_metrics metric
  */
 class data_metrics_Test extends PHPUnit_Framework_TestCase {
+
   public function setUp(){
     $this->metric = new data_metrics();
   }
@@ -22,6 +22,4 @@ class data_metrics_Test extends PHPUnit_Framework_TestCase {
     $this->metric->set_metrics("ХВС: 12");
     $this->assertEquals("ХВС: 12", $this->metric->get_metrics());
   }
-
 }
- 
