@@ -100,7 +100,10 @@ class model_query{
 		else
 			$params['work_type'] = null;
 		$params['street'] = $_SESSION['query']['streets'][0];
-		$params['house'] = $_SESSION['query']['houses'][0];
+		if(count($params['houses']) === 1)
+			$params['house'] = $_SESSION['query']['houses'][0];
+		else
+			$params['house'] = null;
 		return $params;
 	}
 
