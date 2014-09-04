@@ -132,21 +132,13 @@ class data_task {
   }
 
   /**
-   * @param mixed $creator
-   */
-  public function set_creator(data_user $creator)
-  {
-    $this->creator = $creator;
-  }
-
-  /**
    * @return mixed
    */
   public function get_creator()
   {
     $criteria = Criteria::create()
         ->where(Criteria::expr()->eq("user_type", "creator"));
-    return clone $this->users->matching($criteria)->first();
+    return $this->users->matching($criteria)->first();
   }
 
   /**
@@ -166,21 +158,13 @@ class data_task {
   }
 
   /**
-   * @param mixed $performers
-   */
-  public function set_performers(array $performers)
-  {
-
-  }
-
-  /**
    * @return mixed
    */
   public function get_performers()
   {
     $criteria = Criteria::create()
         ->where(Criteria::expr()->eq("user_type", "performer"));
-    return clone $this->users->matching($criteria);
+    return $this->users->matching($criteria);
   }
 
   /**
