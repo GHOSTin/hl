@@ -62,8 +62,8 @@ class model_query{
 		$em = di::get('em');
 		if(!empty($_SESSION['query']['r_departments'])){
 			return $em->getRepository('data_house')
-				->findBy(['department' => $_SESSION['query']['r_departments']],
-				['number' => 'ASC']);
+				->findBy(['department' => $_SESSION['query']['r_departments'],
+					'street' => $street_id], ['number' => 'ASC']);
 		}else
 			return $em->getRepository('data_house')
 				->findBy(['street' => $street_id], ['number' => 'ASC']);
