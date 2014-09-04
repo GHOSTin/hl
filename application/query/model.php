@@ -57,7 +57,7 @@ class model_query{
 			->get_restrictions()['departments'];
 		$_SESSION['query']['time'] = time();
 		$_SESSION['query']['status'] = ['open', 'close', 'reopen', 'working'];
-		$_SESSION['query']['wt'] = [];
+		$_SESSION['query']['work_types'] = [];
 		$_SESSION['query']['r_departments'] = di::get('user')->get_profile('query')
 			->get_restrictions()['departments'];
 		$_SESSION['query']['streets'] = [];
@@ -82,8 +82,11 @@ class model_query{
 			$params['work_type'] = $_SESSION['query']['work_types'][0];
 		else
 			$params['work_type'] = null;
-		$params['street'] = $_SESSION['query']['streets'][0];
-		if(count($params['houses']) === 1)
+    if(count($_SESSION['query']['streets']) === 1)
+		  $params['street'] = $_SESSION['query']['streets'][0];
+    else
+      $params['streets'] = null;
+		if(count($_SESSION['query']['houses']) === 1)
 			$params['house'] = $_SESSION['query']['houses'][0];
 		else
 			$params['house'] = null;
