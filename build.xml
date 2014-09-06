@@ -17,12 +17,15 @@
   <!-- targets -->
   <target name="build" depends="clean, tar">
   </target>
-  <target name="main"  depends="phplint, phpunit, clean, tar">
+  <target name="main"  depends="composer, phplint, phpunit, clean, tar">
   </target>
   <target name="phplint">
     <phplint haltonfailure="true">
       <fileset refid="php_files" />
     </phplint>
+  </target>
+  <target name="composer">
+    <exec command="composer install" passthru="true" checkreturn="true" />
   </target>
   <target name="phpunit">
     <exec command="phpunit --bootstrap ./tests/autoload.php tests/" passthru="true" checkreturn="true" />
