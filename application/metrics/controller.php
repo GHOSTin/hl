@@ -16,7 +16,7 @@ class controller_metrics {
       foreach($ids as $id){
         $metric = $em->find('data_metrics', $id);
         if(!is_null($metric))
-          $em->remove($metic);
+          $em->remove($metric);
       }
     $em->flush();
     return ['ids' => $ids];

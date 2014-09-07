@@ -25,7 +25,7 @@
     </phplint>
   </target>
   <target name="composer">
-    <exec command="composer install" passthru="true" checkreturn="true" />
+    <exec command="composer update" passthru="true" checkreturn="true" />
   </target>
   <target name="phpunit">
     <exec command="phpunit --bootstrap ./tests/autoload.php tests/" passthru="true" checkreturn="true" />

@@ -7,7 +7,7 @@ class data_metrics {
 
   /**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(name="id", type="string")
   */
   private $id;
 
