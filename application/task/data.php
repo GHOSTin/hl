@@ -137,7 +137,7 @@ class data_task {
   public function get_creator()
   {
     $criteria = Criteria::create()
-        ->where(Criteria::expr()->eq("user_type", "creator"));
+        ->where(Criteria::expr()->eq("userType", "creator"));
     return $this->users->matching($criteria)->first();
   }
 
@@ -163,7 +163,7 @@ class data_task {
   public function get_performers()
   {
     $criteria = Criteria::create()
-        ->where(Criteria::expr()->eq("user_type", "performer"));
+        ->where(Criteria::expr()->eq("userType", "performer"));
     return $this->users->matching($criteria);
   }
 

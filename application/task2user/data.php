@@ -28,7 +28,7 @@ class data_task2user {
   /**
    * @\Doctrine\ORM\Mapping\Column(name="user_type", type="string")
    */
-  public $user_type;
+  public $userType;
 
   /**
    * @return mixed
@@ -81,17 +81,17 @@ class data_task2user {
   /**
    * @return string
    */
-  public function get_user_type()
+  public function get_userType()
   {
-    return $this->user_type;
+    return $this->userType;
   }
 
   /**
-   * @param string $user_type
+   * @param string $userType
    */
-  public function set_user_type($user_type)
+  public function set_userType($userType)
   {
-    $this->user_type = $user_type;
+    $this->userType = $userType;
   }
 
 } 
