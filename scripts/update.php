@@ -38,11 +38,11 @@ require_once(ROOT."/vendor/autoload.php");
 model_environment::before();
 $pdo = di::get('pdo');
 $pdo->beginTransaction();
-drop_table($pdo);
-drop_company_id($pdo);
-alter($pdo);
-update_users($pdo);
-metrics($pdo);
+// drop_table($pdo);
+// drop_company_id($pdo);
+// alter($pdo);
+// update_users($pdo);
+// metrics($pdo);
 $pdo->commit();
 
 function drop_table(PDO $pdo){
@@ -50,31 +50,34 @@ function drop_table(PDO $pdo){
 }
 
 function drop_company_id(PDO $pdo){
-  $pdo->exec("ALTER TABLE accruals DROP company_id");
-  $pdo->exec("ALTER TABLE cities DROP company_id");
-  $pdo->exec("ALTER TABLE client_queries DROP company_id");
-  $pdo->exec("ALTER TABLE departments DROP company_id");
-  $pdo->exec("ALTER TABLE flats DROP company_id");
-  $pdo->exec("ALTER TABLE groups DROP company_id");
-  $pdo->exec("ALTER TABLE houses DROP company_id");
-  $pdo->exec("ALTER TABLE numbers DROP company_id");
-  $pdo->exec("ALTER TABLE profiles DROP company_id");
-  $pdo->exec("ALTER TABLE queries DROP company_id");
-  $pdo->exec("ALTER TABLE query2comment DROP company_id");
-  $pdo->exec("ALTER TABLE query2number DROP company_id");
-  $pdo->exec("ALTER TABLE query2user DROP company_id");
-  $pdo->exec("ALTER TABLE query2work DROP company_id");
-  $pdo->exec("ALTER TABLE query_worktypes DROP company_id");
-  $pdo->exec("ALTER TABLE streets DROP company_id");
-  $pdo->exec("ALTER TABLE users DROP company_id");
-  $pdo->exec("ALTER TABLE workgroups DROP company_id");
-  $pdo->exec("ALTER TABLE works DROP company_id");
-  $pdo->exec("ALTER TABLE houses DROP city_id");
-  $pdo->exec("ALTER TABLE numbers DROP type");
-  $pdo->exec("ALTER TABLE queries DROP query_close_reason_id");
-  $pdo->exec("ALTER TABLE queries DROP query_inspection");
-  $pdo->exec("ALTER TABLE query2number DROP `default`");
-  $pdo->exec("ALTER TABLE query2user DROP protect");
+  // $pdo->exec("ALTER TABLE accruals DROP company_id");
+  // $pdo->exec("ALTER TABLE cities DROP company_id");
+  // $pdo->exec("ALTER TABLE client_queries DROP company_id");
+  // $pdo->exec("ALTER TABLE departments DROP company_id");
+  // $pdo->exec("ALTER TABLE flats DROP company_id");
+  // $pdo->exec("ALTER TABLE groups DROP company_id");
+  // $pdo->exec("ALTER TABLE houses DROP company_id");
+  // $pdo->exec("ALTER TABLE numbers DROP company_id");
+  // $pdo->exec("ALTER TABLE profiles DROP company_id");
+  // $pdo->exec("ALTER TABLE queries DROP company_id");
+  // $pdo->exec("ALTER TABLE query2comment DROP company_id");
+  // $pdo->exec("ALTER TABLE query2number DROP company_id");
+  // $pdo->exec("ALTER TABLE query2user DROP company_id");
+  // $pdo->exec("ALTER TABLE query2work DROP company_id");
+  // $pdo->exec("ALTER TABLE query_worktypes DROP company_id");
+  // $pdo->exec("ALTER TABLE streets DROP company_id");
+  // $pdo->exec("ALTER TABLE users DROP company_id");
+  // $pdo->exec("ALTER TABLE workgroups DROP company_id");
+  // $pdo->exec("ALTER TABLE works DROP company_id");
+  // $pdo->exec("ALTER TABLE houses DROP city_id");
+  // $pdo->exec("ALTER TABLE numbers DROP type");
+  // $pdo->exec("ALTER TABLE queries DROP query_close_reason_id");
+  // $pdo->exec("ALTER TABLE queries DROP query_inspection");
+  // $pdo->exec("ALTER TABLE query2number DROP `default`");
+  // $pdo->exec("ALTER TABLE query2user DROP protect");
+  // $pdo->exec("ALTER TABLE groups CHANGE id id SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT");
+  // $pdo->exec("ALTER TABLE users CHANGE id id SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT");
+  // $pdo->exec("ALTER TABLE queries CHANGE id id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT");
 }
 
 function alter(PDO $pdo){

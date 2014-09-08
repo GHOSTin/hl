@@ -96,9 +96,9 @@ class controller_number{
     $em = di::get('em');
     $number = $em->find('data_number', $request->GET('id'));
     $old_number = $em->getRepository('data_number')
-                      ->findByNumber($request->GET('number'));
+                      ->findOneByNumber($request->GET('number'));
     if(!is_null($old_number))
-      if($number->get_id() != $old_number->get_id())
+      if($number->get_id() !== $old_number->get_id())
         throw new RuntimeException('Number exists.');
     $number->set_number($request->GET('number'));
     $em->flush();
