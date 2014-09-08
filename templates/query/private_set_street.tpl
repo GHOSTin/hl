@@ -7,7 +7,7 @@
     <div class="_queries">
         <div class="muted">
             <small>
-    	        Количество: {{ response.queries|length }} заявок
+    	        Количество заявок: {{ response.queries|length }}
             </small>
         </div>
     	{% for query in response.queries %}
