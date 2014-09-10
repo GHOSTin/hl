@@ -1,4 +1,7 @@
 <?php
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
 * @Entity
 * @Table(name="houses")
@@ -48,16 +51,21 @@ class data_house{
 
   private static $statuses = ['true', 'false'];
 
+  public function __construct(){
+    $this->numbers = new ArrayCollection();
+    $this->flats = new ArrayCollection();
+  }
+
   public function add_number(data_number $number){
-    if(array_key_exists($number->get_id(), $this->numbers))
-      throw new DomainException('Дом уже добавлен в улицу.');
-    $this->numbers[$number->get_id()] = $number;
+    if($this->numbers->contains($number))
+      throw new DomainException('Лицевой уже добавлен.');
+    $this->numbers->add($number);
   }
 
   public function add_flat(data_flat $flat){
-    if(array_key_exists($flat->get_id(), $this->flats))
+    if($this->flats->contains($flat))
       throw new DomainException('В доме уже существует такая квартира.');
-    $this->flats[$flat->get_id()] = $flat;
+    $this->flats->add($flat);
   }
 
   public function get_city(){
