@@ -61,4 +61,9 @@ class data_accrual_Test extends PHPUnit_Framework_TestCase{
     $this->ac->set_total(127.52);
     $this->assertEquals(127.52, $this->ac->get_total());
   }
+
+  public function test_set_sum_total_1(){
+    $this->ac->set_sum_total(127.52);
+    $this->assertEquals(127.52, $this->ac->get_sum_total());
+  }
 }
