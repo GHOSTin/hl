@@ -24,5 +24,5 @@
     </table>
 {% endblock component %}
 {% block javascript %}
-  <script src="/?js=response.js&p=user"></script>
+    <script src="/js/user.js"></script>
 {% endblock javascript %}

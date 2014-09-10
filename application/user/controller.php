@@ -90,6 +90,11 @@ class controller_user{
   }
 
   public static function private_clear_logs(model_request $request){
+    $em = di::get('em');
+    $sessions = di::get('em')->getRepository('data_session')->findAll();
+    foreach($sessions as $session)
+      $em->remove($session);
+    $em->flush();
     return true;
   }
 
