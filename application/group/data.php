@@ -1,4 +1,7 @@
 <?php
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
 * @Entity
 * @Table(name="groups")
@@ -31,6 +34,10 @@ class data_group{
   private $users;
 
   private static $statuses = ['false', 'true'];
+
+  public function __construct(){
+    $this->users = new ArrayCollection();
+  }
 
   public function add_user(data_user $user){
     if($this->users->contains($user))
@@ -67,7 +74,7 @@ class data_group{
   }
 
   public function set_name($name){
-    if(!preg_match('/^[0-9а-яА-Я ]{1,50}$/u', $name))
+    if(!preg_match('/^[0-9а-яА-Я -]{1,50}$/u', $name))
       throw new DomainException('Название группы задано не верно.');
     $this->name = $name;
   }
