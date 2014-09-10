@@ -300,14 +300,15 @@ class controller_query{
 			case 'number':
 				$number = $em->find('data_number', $request->GET('id'));
 				$queries = di::get('em')->getRepository('data_query')
-					->findByHouse($number->get_flat()->get_house()->get_id(), [], 5);
+					->findByHouse($number->get_flat()->get_house()->get_id(),
+					['id' => 'DESC'], 5);
 				return ['number' => $number, 'query_work_types' => $types,
 					'queries' => $queries];
 			break;
 			case 'house':
 				$house = di::get('em')->find('data_house', $request->GET('id'));
 				$queries = di::get('em')->getRepository('data_query')
-					->findByHouse($house->get_id(), [], 5);
+					->findByHouse($house->get_id(), ['id' => 'DESC'], 5);
 				return ['house' => $house, 'query_work_types' => $types,
 					'queries' => $queries];
 			break;
