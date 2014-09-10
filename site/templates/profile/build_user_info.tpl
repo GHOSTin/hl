@@ -1,5 +1,5 @@
 <div>
-    ФИО: {{ user.fio }} ( {{ user.id }} )
+    {{ user.fio }}
 </div>
 <div>
     Телефон: {{ user.telephone }} <span class="cm get_dialog_edit_telephone">изменить</span>
