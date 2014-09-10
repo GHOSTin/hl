@@ -171,7 +171,8 @@ MyApp.ProfileApp = function(){
 
     var ChangeTelephoneView = Backbone.Marionette.ItemView.extend({
         events: {
-            'click .close_dialog': 'close_dialog'
+            'click .close_dialog': 'close_dialog',
+            'click .update_telephone': 'update_telephone'
         },
         template: Twig.twig({
             href: '/templates/profile/build_edit_telephone.tpl',
@@ -183,6 +184,22 @@ MyApp.ProfileApp = function(){
         },
         close_dialog: function(){
             MyApp.modal.hideModal();
+        },
+        update_telephone: function(){
+            var telephone = $('.dialog-telephone').val();
+            this.model.save({
+                telephone: telephone.toString()},
+                {
+                    wait: true,
+                    url: 'update_telephone?telephone='+telephone,
+                    success: function(model, response, options){
+                        MyApp.modal.hideModal();
+                        MyApp.ProfileApp.layout.render({model: model});
+                    },
+                    error: function(model, response, options){
+                        console.log(response);
+                    }
+            });
         }
     });
 

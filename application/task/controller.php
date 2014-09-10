@@ -31,13 +31,13 @@ class controller_task {
     $task->set_status('open');
     $users = new \Doctrine\Common\Collections\ArrayCollection();
     $user = new data_task2user();
-    $user->set_user_type('creator');
+    $user->set_userType('creator');
     $user->set_task($task);
     $user->set_user(di::get('user'));
     $users->add($user);
     foreach($request->GET('performers') as $performer){
       $user = new data_task2user();
-      $user->set_user_type('performer');
+      $user->set_userType('performer');
       $user->set_user($em->find('data_user', $performer));
       $user->set_task($task);
       $users->add($user);
@@ -94,13 +94,13 @@ class controller_task {
     }
     $users = new \Doctrine\Common\Collections\ArrayCollection();
     $user = new data_task2user();
-    $user->set_user_type('creator');
+    $user->set_userType('creator');
     $user->set_task($task);
     $user->set_user(di::get('user'));
     $users->add($user);
     foreach($request->GET('performers') as $performer){
       $user = new data_task2user();
-      $user->set_user_type('performer');
+      $user->set_userType('performer');
       $user->set_user($em->find('data_user', $performer));
       $user->set_task($task);
       $users->add($user);
