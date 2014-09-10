@@ -46,13 +46,13 @@ class data_city{
   }
 
   public function set_id($id){
-    if($id > 65535 OR $id < 1)
+    if($id > 255 OR $id < 1)
       throw new DomainException('Идентификатор города задан не верно.');
     $this->id = $id;
   }
 
   public function set_name($name){
-    if(!preg_match('/^[а-яА-Я ]{0,20}$/u', $name))
+    if(!preg_match('/^[а-яА-Я -]{2,20}$/u', $name))
       throw new DomainException('Название города задано не верно.');
     $this->name = $name;
   }
