@@ -86,6 +86,11 @@ class data_user_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('Некрасов123', $this->user->get_login());
   }
 
+  public function test_set_hash(){
+    $this->user->set_hash('Некрасов123');
+    $this->assertEquals('Некрасов123', $this->user->get_hash());
+  }
+
   public function test_set_login_4(){
     $this->setExpectedException('DomainException');
     $this->user->set_login('Не');
@@ -130,5 +135,9 @@ class data_user_Test extends PHPUnit_Framework_TestCase{
   public function test_set_telephone_2(){
     $this->setExpectedException('DomainException');
     $this->user->set_telephone('8922294474201');
+  }
+
+  public function test_generate_hash(){
+    $this->assertEquals('aa98a96aa33a73df71d3f045cd07b680', data_user::generate_hash('password'));
   }
 }
