@@ -47,8 +47,8 @@ class controller_query{
 		$query = $em->find('data_query', $request->GET('id'));
 		$w = $em->find('data_work', $request->GET('work_id'));
 		$work = new data_query2work($query, $w);
-		$work->set_time_open($begin_time);
-		$work->set_time_close($end_time);
+		$work->set_time_open($begin);
+		$work->set_time_close($end);
 		$em->persist($work);
 		$em->flush();
 		return ['query' => $query];
