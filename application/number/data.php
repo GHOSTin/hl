@@ -95,6 +95,10 @@ class data_number{
     return $this->id;
   }
 
+  public function get_city(){
+    return $this->city;
+  }
+
   public function get_number(){
     return $this->number;
   }
