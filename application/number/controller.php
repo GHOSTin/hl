@@ -54,10 +54,6 @@ class controller_number{
   }
 
   public static function private_get_dialog_edit_number(model_request $request){
-    return self::data_for_dialog_number($request);
-  }
-
-  private static function data_for_dialog_number(model_request $request){
     return ['number' => di::get('em')
       ->find('data_number', $request->GET('id'))];
   }
@@ -70,26 +66,32 @@ class controller_number{
 
   public static function private_get_dialog_edit_number_fio(
     model_request $request){
-    return self::data_for_dialog_number($request);
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_password(
     model_request $request){
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_telephone(
     model_request $request){
-    return self::data_for_dialog_number($request);
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_cellphone(
     model_request $request){
-    return self::data_for_dialog_number($request);
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_email(
     model_request $request){
-    return self::data_for_dialog_number($request);
+    return ['number' => di::get('em')
+      ->find('data_number', $request->GET('id'))];
   }
 
   public static function private_update_number(model_request $request){
