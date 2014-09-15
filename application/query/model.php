@@ -53,9 +53,11 @@ class model_query{
 	}
 
 	public function init_default_params(){
+		$time = getdate();
 		$_SESSION['query']['departments'] = di::get('user')->get_profile('query')
 			->get_restrictions()['departments'];
-		$_SESSION['query']['time'] = time();
+		$_SESSION['query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$_SESSION['query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 		$_SESSION['query']['status'] = ['open', 'close', 'reopen', 'working'];
 		$_SESSION['query']['work_types'] = [];
 		$_SESSION['query']['r_departments'] = di::get('user')->get_profile('query')
@@ -65,8 +67,7 @@ class model_query{
 	}
 
 	public function get_timeline(){
-		$time = getdate($_SESSION['query']['time']);
-		return mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		return strtotime('+12 hours', $_SESSION['query']['time_begin']);
 	}
 
 	public function get_filter_values(){
@@ -144,7 +145,9 @@ class model_query{
 	}
 
 	public function set_time($time){
-		$_SESSION['query']['time'] = $time;
+		$time = getdate($time);
+		$_SESSION['query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+		$_SESSION['query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 	}
 
 	public function set_house($id){

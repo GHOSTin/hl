@@ -2,8 +2,8 @@
 class repository_query extends Doctrine\ORM\EntityRepository {
 
   public function findByParams(array $params){
+
     $qb = $this->_em->createQueryBuilder();
-    $time = getdate($params['time']);
     $qb->select('q')
        ->from('data_query', 'q')
        ->where($qb->expr()->andX(
@@ -13,8 +13,8 @@ class repository_query extends Doctrine\ORM\EntityRepository {
         ))
        ->orderBy('q.time_open', 'DESC')
        ->setParameters(array(
-          'time_open_begin'=> mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']),
-          'time_open_end' => mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']),
+          'time_open_begin'=> $params['time_begin'],
+          'time_open_end' => $params['time_end'],
           'status'=> $params['status']
        ));
     if(!empty($params['departments'])){
