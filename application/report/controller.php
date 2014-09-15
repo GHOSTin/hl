@@ -20,6 +20,13 @@ class controller_report{
     return null;
   }
 
+
+  public static function private_set_filter_query_status(model_request $request){
+    $model = di::get('model_report_query');
+    $model->set_status($request->GET('status'));
+    return null;
+  }
+
   public static function private_report_query_one(model_request $request){
     $model = di::get('model_report_query');
     return ['queries' => $model->get_queries()];

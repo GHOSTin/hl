@@ -30,6 +30,13 @@ class model_report{
     $_SESSION['report_query']['time_end'] = $time;
   }
 
+  public function set_status($status){
+    if(in_array($status, ['open', 'close', 'reopen', 'working'], true))
+      $_SESSION['report_query']['status'] = [$status];
+    else
+      $_SESSION['report_query']['status'] = ['open', 'close', 'reopen', 'working'];
+  }
+
   public function get_queries(){
     return di::get('em')->getRepository('data_query')
       ->findByParams($_SESSION['report_query']);
@@ -38,6 +45,8 @@ class model_report{
   public function get_filters(){
     $filters['time_open_begin'] = $_SESSION['report_query']['time_begin'];
     $filters['time_open_end'] = $_SESSION['report_query']['time_end'];
+    if(count($_SESSION['report_query']['status']) === 1)
+      $filters['status'] = $_SESSION['report_query']['status'][0];
     return $filters;
   }
 }
