@@ -33,7 +33,7 @@
         <td>Сотрудники</td>
         <td>Материалы</td>
     </tr>
-    {% for query in queries.get_queries() %}
+    {% for query in queries %}
         {% set work_time = 0 %}
     <tr>
         <td>{{ query.get_number() }}</td>
