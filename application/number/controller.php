@@ -113,6 +113,8 @@ class controller_number{
     $em = di::get('em');
     $number = $em->find('data_number', $request->GET('id'));
     $hash = data_number::generate_hash($request->GET('password'));
+    var_dump($number->get_hash());
+    exit();
     $number->set_hash($hash);
     $em->flush();
     return ['number' => $number];

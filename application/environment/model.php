@@ -72,6 +72,9 @@ class model_environment{
 		$pimple['model_query'] = function($pimple){
 		  return new model_query();
 		};
+		$pimple['model_report_query'] = function($pimple){
+		  return new model_report('query');
+		};
 
     $pimple['em'] = function($pimple){
 		  $paths = array(__DIR__);
