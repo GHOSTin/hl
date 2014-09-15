@@ -5,7 +5,7 @@ class controller_report{
 
 	public static function private_get_query_reports(model_request $request){
 		$model = di::get('model_report_query');
-		return null;
+		return ['filters' => $model->get_filters()];
 	}
 
   public static function private_set_time_begin(model_request $request){

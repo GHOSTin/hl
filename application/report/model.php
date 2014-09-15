@@ -34,4 +34,10 @@ class model_report{
     return di::get('em')->getRepository('data_query')
       ->findByParams($_SESSION['report_query']);
   }
+
+  public function get_filters(){
+    $filters['time_open_begin'] = $_SESSION['report_query']['time_begin'];
+    $filters['time_open_end'] = $_SESSION['report_query']['time_end'];
+    return $filters;
+  }
 }
