@@ -4,8 +4,11 @@ class controller_report{
 	static $name = 'Отчеты';
 
 	public static function private_get_query_reports(model_request $request){
+    $em = di::get('em');
 		$model = di::get('model_report_query');
-		return ['filters' => $model->get_filters()];
+		return ['filters' => $model->get_filters(),
+      'query_work_types' => $em->getRepository('data_query_work_type')
+      ->findBy([], ['name' => 'ASC'])];
 	}
 
   public static function private_set_time_begin(model_request $request){
@@ -20,6 +23,11 @@ class controller_report{
     return null;
   }
 
+  public static function private_set_filter_query_worktype(model_request $request){
+    $model = di::get('model_report_query');
+    $model->set_worktype($request->GET('id'));
+    return null;
+  }
 
   public static function private_set_filter_query_status(model_request $request){
     $model = di::get('model_report_query');

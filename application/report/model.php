@@ -10,16 +10,12 @@ class model_report{
 
   public function init_default_params(){
     $time = getdate();
-    switch($name){
-      case 'query':
-        $_SESSION['report_query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-        $_SESSION['report_query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
-        $_SESSION['report_query']['status'] = ['open', 'close', 'reopen', 'working'];
-        $_SESSION['report_query']['work_types'] = [];
-        $_SESSION['report_query']['streets'] = [];
-        $_SESSION['report_query']['houses'] = [];
-      break;
-    }
+    $_SESSION['report_query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
+    $_SESSION['report_query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
+    $_SESSION['report_query']['status'] = ['open', 'close', 'reopen', 'working'];
+    $_SESSION['report_query']['work_types'] = [];
+    $_SESSION['report_query']['streets'] = [];
+    $_SESSION['report_query']['houses'] = [];
   }
 
   public function set_time_begin($time){
@@ -37,6 +33,15 @@ class model_report{
       $_SESSION['report_query']['status'] = ['open', 'close', 'reopen', 'working'];
   }
 
+  public function set_worktype($id){
+    $wt = di::get('em')->find('data_query_work_type', $id);
+    if(is_null($wt)){
+      $_SESSION['report_query']['work_types'] = [];
+    }else{
+      $_SESSION['report_query']['work_types'] = [$wt->get_id()];
+    }
+  }
+
   public function get_queries(){
     return di::get('em')->getRepository('data_query')
       ->findByParams($_SESSION['report_query']);
@@ -47,6 +52,8 @@ class model_report{
     $filters['time_open_end'] = $_SESSION['report_query']['time_end'];
     if(count($_SESSION['report_query']['status']) === 1)
       $filters['status'] = $_SESSION['report_query']['status'][0];
+    if(count($_SESSION['report_query']['work_types']) === 1)
+      $filters['work_type'] = $_SESSION['report_query']['work_types'][0];
     return $filters;
   }
 }
