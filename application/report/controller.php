@@ -12,39 +12,38 @@ class controller_report{
     $streets = $em->getRepository('data_street')
       ->findBy([], ['name' => 'ASC']);
 		$model = di::get('model_report_query');
-		return ['filters' => $model->get_filters(),
+    $filters = $model->get_filters();
+    $houses = [];
+    if(!empty($filters['street']))
+      $houses = $em->getRepository('data_house')->findByStreet($filters['street']);
+		return ['filters' => $filters,
       'query_work_types' => $work_types, 'departments' => $departments,
-      'streets' => $streets];
+      'streets' => $streets, 'houses' => $houses];
 	}
 
   public static function private_set_time_begin(model_request $request){
     $model = di::get('model_report_query');
     $model->set_time_begin(strtotime($request->GET('time')));
-    return null;
   }
 
   public static function private_set_time_end(model_request $request){
     $model = di::get('model_report_query');
     $model->set_time_end(strtotime($request->GET('time')));
-    return null;
   }
 
   public static function private_set_filter_query_worktype(model_request $request){
     $model = di::get('model_report_query');
     $model->set_worktype($request->GET('id'));
-    return null;
   }
 
   public static function private_set_filter_query_department(model_request $request){
     $model = di::get('model_report_query');
     $model->set_department($request->GET('id'));
-    return null;
   }
 
   public static function private_set_filter_query_status(model_request $request){
     $model = di::get('model_report_query');
     $model->set_status($request->GET('status'));
-    return null;
   }
 
   public static function private_set_filter_query_street(model_request $request){
@@ -53,12 +52,16 @@ class controller_report{
     return ['street' => di::get('em')->find('data_street', $request->GET('id'))];
   }
 
+  public static function private_set_filter_query_house(model_request $request){
+    $model = di::get('model_report_query');
+    $model->set_house($request->GET('id'));
+  }
+
   public static function private_report_query_one(model_request $request){
     $model = di::get('model_report_query');
     return ['queries' => $model->get_queries()];
   }
 
 	public static function private_show_default_page(model_request $request){
-		return null;
 	}
 }
