@@ -16,6 +16,7 @@ class model_report{
     $_SESSION['report_query']['work_types'] = [];
     $_SESSION['report_query']['streets'] = [];
     $_SESSION['report_query']['houses'] = [];
+    $_SESSION['report_query']['departments'] = [];
   }
 
   public function set_time_begin($time){
@@ -42,6 +43,17 @@ class model_report{
     }
   }
 
+  public function set_department($id){
+    $department = di::get('em')->find('data_department', $id);
+    if(is_null($department)){
+      $_SESSION['report_query']['departments'] = [];
+    }else{
+      $_SESSION['report_query']['departments'] = [$department->get_id()];
+    }
+    $_SESSION['report_query']['streets'] = [];
+    $_SESSION['report_query']['houses'] = [];
+  }
+
   public function get_queries(){
     return di::get('em')->getRepository('data_query')
       ->findByParams($_SESSION['report_query']);
@@ -54,6 +66,7 @@ class model_report{
       $filters['status'] = $_SESSION['report_query']['status'][0];
     if(count($_SESSION['report_query']['work_types']) === 1)
       $filters['work_type'] = $_SESSION['report_query']['work_types'][0];
+      $filters['department'] = $_SESSION['report_query']['departments'];
     return $filters;
   }
 }
