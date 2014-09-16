@@ -21,6 +21,12 @@ class controller_report{
       'streets' => $streets, 'houses' => $houses];
 	}
 
+  public static function private_clear_filter_query(model_request $request){
+    $model = di::get('model_report_query');
+    $model->init_default_params();
+    return ['filters' => $model->get_filters()];
+  }
+
   public static function private_set_time_begin(model_request $request){
     $model = di::get('model_report_query');
     $model->set_time_begin(strtotime($request->GET('time')));
