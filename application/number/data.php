@@ -30,6 +30,9 @@ class data_number{
   */
   private $flat;
 
+  /**
+  * @Column(name="password", type="string")
+  */
   private $hash;
 
   /**
