@@ -54,6 +54,30 @@ class model_report{
     $_SESSION['report_query']['houses'] = [];
   }
 
+  public function set_street($id){
+    $em = di::get('em');
+    $streets = $em->getRepository('data_street')->findAll();
+    $s = [];
+    if(!empty($streets))
+      foreach($streets as $street){
+          $s[] = $street->get_id();
+      }
+    if(!in_array((int) $id, $s, true)){
+      $_SESSION['report_query']['departments'] = [];
+      $_SESSION['report_query']['streets'] = [];
+      $_SESSION['report_query']['houses'] = [];
+    }else{
+      $houses = $em->getRepository('data_house')->findByStreet($id);
+      $h = [];
+      if(!empty($houses))
+        foreach($houses as $house)
+          $h[] = $house->get_id();
+      $_SESSION['report_query']['departments'] = [];
+      $_SESSION['report_query']['streets'] = [$id];
+      $_SESSION['report_query']['houses'] = $h;
+    }
+  }
+
   public function get_queries(){
     return di::get('em')->getRepository('data_query')
       ->findByParams($_SESSION['report_query']);
@@ -66,7 +90,9 @@ class model_report{
       $filters['status'] = $_SESSION['report_query']['status'][0];
     if(count($_SESSION['report_query']['work_types']) === 1)
       $filters['work_type'] = $_SESSION['report_query']['work_types'][0];
-      $filters['department'] = $_SESSION['report_query']['departments'];
+    $filters['department'] = $_SESSION['report_query']['departments'];
+    if(count($_SESSION['report_query']['streets']) === 1)
+      $filters['street'] = $_SESSION['report_query']['streets'][0];
     return $filters;
   }
 }

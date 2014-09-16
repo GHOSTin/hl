@@ -9,9 +9,12 @@ class controller_report{
       ->findBy([], ['name' => 'ASC']);
     $departments = $em->getRepository('data_department')
       ->findBy([], ['name' => 'ASC']);
+    $streets = $em->getRepository('data_street')
+      ->findBy([], ['name' => 'ASC']);
 		$model = di::get('model_report_query');
 		return ['filters' => $model->get_filters(),
-      'query_work_types' => $work_types, 'departments' => $departments];
+      'query_work_types' => $work_types, 'departments' => $departments,
+      'streets' => $streets];
 	}
 
   public static function private_set_time_begin(model_request $request){
@@ -42,6 +45,12 @@ class controller_report{
     $model = di::get('model_report_query');
     $model->set_status($request->GET('status'));
     return null;
+  }
+
+  public static function private_set_filter_query_street(model_request $request){
+    $model = di::get('model_report_query');
+    $model->set_street($request->GET('id'));
+    return ['street' => di::get('em')->find('data_street', $request->GET('id'))];
   }
 
   public static function private_report_query_one(model_request $request){
