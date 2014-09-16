@@ -73,7 +73,7 @@ class model_environment{
 		  return new model_query();
 		};
 		$pimple['model_report_query'] = function($pimple){
-		  return new model_report('query');
+		  return new model_report_query();
 		};
 
     $pimple['em'] = function($pimple){

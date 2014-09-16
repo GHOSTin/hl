@@ -1,6 +1,6 @@
 <?php
 
-class model_report{
+class model_report_query{
 
   public function __construct(){
     if(empty($_SESSION['report_query'])){
