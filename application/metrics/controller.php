@@ -1,4 +1,6 @@
 <?php
+use Doctrine\Common\Collections\Criteria;
+
 class controller_metrics {
 
   static $name = 'Показания';
@@ -6,7 +8,7 @@ class controller_metrics {
 
   public static function private_show_default_page(model_request $request){
     return ['metrics' => di::get('em')
-      ->getRepository('data_metrics')->findAll()];
+      ->getRepository('data_metrics')->findByStatus('actual')];
   }
 
   public static function private_remove_metrics(model_request $request){
@@ -16,9 +18,19 @@ class controller_metrics {
       foreach($ids as $id){
         $metric = $em->find('data_metrics', $id);
         if(!is_null($metric))
-          $em->remove($metric);
+          $metric->set_status('archive');
       }
     $em->flush();
     return ['ids' => $ids];
+  }
+
+  public static function private_archive(model_request $request){
+    return null;
+  }
+
+  public static function private_set_date(model_request $request){
+    $archive = di::get('em')
+        ->getRepository('data_metrics')->findByStatusBetween('archive', $request->GET('time'));
+    return ['metrics' => $archive];
   }
 }

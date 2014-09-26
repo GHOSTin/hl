@@ -1,6 +1,6 @@
 <?php
 /**
-* @Entity
+* @Entity(repositoryClass="repository_metrics")
 * @Table(name="metrics")
 */
 class data_metrics {
@@ -20,7 +20,47 @@ class data_metrics {
   * @Column(name="metrics", type="string")
   */
   private $metrics;
+  /**
+   * @Column(name="date", type="bigint")
+   * @var
+   */
+  private $time;
+  /**
+   * @Column(name="status", type="string")
+   * @var
+   */
+  private $status;
 
+  /**
+   * @return mixed
+   */
+  public function get_status()
+  {
+    return $this->status;
+  }
+
+  /**
+   * @param mixed $status
+   */
+  public function set_status($status)
+  {
+    $this->status = $status;
+  }
+  /**
+   * @return mixed
+   */
+  public function get_time()
+  {
+    return $this->time;
+  }
+
+  /**
+   * @param mixed $time
+   */
+  public function set_time($time)
+  {
+    $this->time = $time;
+  }
   /**
    * @param mixed $address
    */

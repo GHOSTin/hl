@@ -40,7 +40,7 @@ function framework_autoload($class_name){
     if(file_exists($file_path))
       require_once $file_path;
   }else
-    return;
+    return null;
 }
 spl_autoload_register('framework_autoload');
 require_once(ROOT."/vendor/autoload.php");

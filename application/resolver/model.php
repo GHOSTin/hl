@@ -7,8 +7,10 @@ class model_resolver{
       $route = ['default_page', 'show_default_page'];
     elseif(preg_match_all('|^/([a-z_]+)/$|', $path['path'], $args, PREG_PATTERN_ORDER)){
       $route = [$args[1][0], 'show_default_page'];
-    }elseif(preg_match_all('|^/([a-z_]+)/([a-z_]+)$|', $path['path'], $args, PREG_PATTERN_ORDER)){
+    }elseif(preg_match_all('|^/([a-z_]+)/([a-z_]+)/?$|', $path['path'], $args, PREG_PATTERN_ORDER)){
       $route = [$args[1][0], $args[2][0]];
+    }elseif(preg_match_all('|^/metrics/archive/([a-z_]+)/?$|', $path['path'], $args, PREG_PATTERN_ORDER)){
+      $route = ['metrics', $args[1][0]];
     }else
       $route = ['error', 'error404'];
     if(isset($_SESSION['user']))
