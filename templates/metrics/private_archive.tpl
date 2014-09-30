@@ -3,12 +3,16 @@
 {% block component %}
   <div class="row">
     <div class="col-md-2">
-      <p><input class="form-control get_date_metrics" placeholder="Выберите дату" readonly></p>
       <p><a href="/metrics/" class="btn btn-default">Перейти к показаниям</a></p>
     </div>
     <div class="col-md-10">
+      <div class="row">
+        <div class="col-xs-2">
+          <input class="form-control get_date_metrics" placeholder="Выберите дату" readonly>
+        </div>
+      </div>
       <form id="metrics">
-        Для вывода показаний выберите дату.
+        <p>Для вывода показаний выберите дату.</p>
       </form>
     </div>
   </div>
