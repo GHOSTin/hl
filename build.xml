@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="mshc-client" default="main" basedir=".">
+<project name="mshc" default="main" basedir=".">
   <property name="BUILD_DIR" value="${project.basedir}/builds/" override="false"/>
   <fileset id="app" dir="${project.basedir}">
     <exclude name="application/application_configuration.php"/>
@@ -37,7 +37,7 @@
     </delete>
   </target>
   <target name="tar">
-    <tar destfile="${BUILD_DIR}/mshc.tar.gz" compression="gzip">
+    <tar destfile="${BUILD_DIR}/${phing.project.name}.tar.gz" compression="gzip">
       <fileset refid="app" />
     </tar>
   </target>
