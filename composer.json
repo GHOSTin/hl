@@ -9,6 +9,9 @@
             "email": "nekrasov@mlsco.ru"
         }
     ],
+    "autoload": {
+        "psr-4": {"": "application/"}
+    },
     "require": {
         "phpunit/phpunit": "dev-master",
         "phpunit/php-code-coverage": "3.0.*",
