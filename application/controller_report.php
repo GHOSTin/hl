@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_report{
 
 	static $name = 'Отчеты';

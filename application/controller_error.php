@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_error{
 
   public static function error404(model_request $request){

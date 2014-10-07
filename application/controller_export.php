@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_export {
 
   public static function private_show_default_page(model_request $request){

@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class model_query{
 
 	public function __construct(){

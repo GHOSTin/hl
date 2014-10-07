@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_default_page{
 
 	public static function private_show_default_page(){

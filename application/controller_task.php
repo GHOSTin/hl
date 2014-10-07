@@ -1,5 +1,6 @@
 <?php
 
+use \boxxy\classes\di;
 
 /**
  * Class controller_task

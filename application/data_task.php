@@ -1,5 +1,6 @@
 <?php
 use Doctrine\Common\Collections\Criteria;
+use \boxxy\classes\di;
 
 /**
  * @Table(name="tasks")

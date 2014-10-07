@@ -1,5 +1,7 @@
 <?php
 
+use \boxxy\classes\di;
+
 class model_report_query{
 
   public function __construct(){

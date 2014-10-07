@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_profile{
 
 	public static function private_get_dialog_edit_password(

@@ -17,6 +17,7 @@
         "phpunit/php-code-coverage": "3.0.*",
         "twig/twig": "1.*",
         "pimple/pimple": "~3.0",
-        "doctrine/orm": "*"
+        "doctrine/orm": "*",
+        "boxxy/commons":"dev-master"
     }
 }
