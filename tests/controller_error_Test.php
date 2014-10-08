@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_error_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){

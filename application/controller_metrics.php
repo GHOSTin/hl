@@ -1,5 +1,7 @@
 <?php
+
 use Doctrine\Common\Collections\Criteria;
+use \boxxy\classes\di;
 
 class controller_metrics {
 

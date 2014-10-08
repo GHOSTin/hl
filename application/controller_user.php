@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_user{
 
 	public static $name = 'Пользователи';

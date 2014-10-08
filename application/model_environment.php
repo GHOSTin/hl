@@ -2,6 +2,7 @@
 
 use \Doctrine\ORM\Tools\Setup;
 use \Doctrine\ORM\EntityManager;
+use \boxxy\classes\di;
 
 class model_environment{
 

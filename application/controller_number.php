@@ -1,4 +1,7 @@
 <?php
+
+use \boxxy\classes\di;
+
 class controller_number{
 
 	static $name = 'Жилищный фонд';
