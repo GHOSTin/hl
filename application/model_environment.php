@@ -7,7 +7,7 @@ use \boxxy\classes\di;
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
-		'error', 'about', 'export', 'task', 'metrics'];
+		'error', 'about', 'export', 'task', 'metrics', 'works'];
 
 	public static function get_page_content(){
 		try{
