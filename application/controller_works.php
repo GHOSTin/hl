@@ -11,4 +11,10 @@ class controller_works{
     $works = di::get('em')->getRepository('data_work')->findAll();
     return ['groups' => $groups, 'works' => $works];
 	}
+
+  public static function private_get_workgroup_content(model_request $request){
+    $workgroup = di::get('em')->getRepository('data_workgroup')
+                              ->findOneById($request->GET('id'));
+    return ['workgroup' => $workgroup];
+  }
 }
