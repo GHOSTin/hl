@@ -24,6 +24,15 @@ class controller_works{
     return ['works' => $works];
   }
 
+  public static function private_get_dialog_exclude_work(model_request $request){
+    $em = di::get('em');
+    $workgroup = di::get('em')->getRepository('data_workgroup')
+                              ->findOneById($request->GET('workgroup_id'));
+    $work = $em->getRepository('data_work')
+               ->findOneById($request->GET('work_id'));
+    return ['workgroup' => $workgroup, 'work' => $work];
+  }
+
   public static function private_add_work(model_request $request){
     $em = di::get('em');
     $workgroup = $em->getRepository('data_workgroup')
@@ -31,6 +40,17 @@ class controller_works{
     $work = $em->getRepository('data_work')
                ->findOneById($request->GET('work_id'));
     $workgroup->add_work($work);
+    $em->flush();
+    return ['workgroup' => $workgroup];
+  }
+
+  public static function private_exclude_work(model_request $request){
+    $em = di::get('em');
+    $workgroup = $em->getRepository('data_workgroup')
+                    ->findOneById($request->GET('workgroup_id'));
+    $work = $em->getRepository('data_work')
+               ->findOneById($request->GET('work_id'));
+    $workgroup->exclude_work($work);
     $em->flush();
     return ['workgroup' => $workgroup];
   }

@@ -37,6 +37,10 @@ class data_workgroup{
     $this->works->add($work);
   }
 
+  public function exclude_work(data_work $work){
+    $this->works->removeElement($work);
+  }
+
   public function get_works(){
     return $this->works;
   }

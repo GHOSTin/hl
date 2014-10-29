@@ -6,7 +6,7 @@
   </ul>
   <ul class="works">
   {% for work in response.workgroup.get_works() %}
-    <li>{{ work.get_name() }}</li>
+    <li class="work" work_id="{{ work.get_id() }}">{{ work.get_name() }} <a href="#" class="get_dialog_exclude_work">исключить</a></li>
   {% endfor %}
   </ul>
 </div>

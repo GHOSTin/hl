@@ -1,3 +1,6 @@
 .workgroup .works{
   list-style-type: none;
 }
+.workgroup-content{
+  margin-bottom: 20px;
+}
