@@ -8,6 +8,7 @@ class data_workgroup{
   /**
    * @Id
    * @Column(name="id", type="integer")
+   * @GeneratedValue
    */
   private $id;
 

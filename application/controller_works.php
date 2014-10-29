@@ -24,6 +24,9 @@ class controller_works{
     return ['works' => $works];
   }
 
+  public static function private_get_dialog_create_workgroup(model_request $request){
+  }
+
   public static function private_get_dialog_exclude_work(model_request $request){
     $em = di::get('em');
     $workgroup = $em->getRepository('data_workgroup')
@@ -48,6 +51,21 @@ class controller_works{
     $workgroup->add_work($work);
     $em->flush();
     return ['workgroup' => $workgroup];
+  }
+
+  public static function private_create_workgroup(model_request $request){
+    $em = di::get('em');
+    $workgroup = $em->getRepository('data_workgroup')
+                    ->findOneByName($request->GET('name'));
+    if(!is_null($workgroup))
+      throw new RuntimeException('Такая группа существует.');
+    $workgroup = new data_workgroup();
+    $workgroup->set_name($request->GET('name'));
+    $workgroup->set_status('active');
+    $em->persist($workgroup);
+    $em->flush();
+    $workgroups = $em->getRepository('data_workgroup')->findAll();
+    return ['workgroups' => $workgroups];
   }
 
   public static function private_exclude_work(model_request $request){
