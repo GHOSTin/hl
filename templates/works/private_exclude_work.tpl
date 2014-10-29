@@ -1,0 +1,1 @@
+{% include 'works/private_get_workgroup_content.tpl' %}

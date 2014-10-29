@@ -17,11 +17,6 @@ class data_work{
   private $name;
 
   /**
-  * @ManyToOne(targetEntity="data_workgroup")
-  */
-  private $workgroup;
-
-  /**
   * @OneToMany(targetEntity="data_query2work", mappedBy="work")
   */
   private $query2works;
