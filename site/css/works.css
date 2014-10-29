@@ -1,4 +1,4 @@
-.workgroup .works{
+.workgroups, .workgroup .works{
   list-style-type: none;
 }
 .workgroup-content{

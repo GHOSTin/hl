@@ -16,14 +16,25 @@ $(document).ready(function(){
     $.get('get_dialog_add_work',{
       id: get_workgroup_id($(this))
     },function(r){
-        init_content(r);
+      init_content(r);
     });
   }).on('click', '.get_dialog_exclude_work', function(){
     $.get('get_dialog_exclude_work',{
       workgroup_id: get_workgroup_id($(this)),
       work_id: get_work_id($(this))
     },function(r){
-        init_content(r);
+      init_content(r);
+    });
+  }).on('click', '.get_dialog_rename_workgroup', function(){
+    $.get('get_dialog_rename_workgroup',{
+      workgroup_id: get_workgroup_id($(this))
+    },function(r){
+      init_content(r);
+    });
+  }).on('click', '.get_dialog_create_workgroup', function(){
+    $.get('get_dialog_create_workgroup',{
+    },function(r){
+      init_content(r);
     });
   });
 });

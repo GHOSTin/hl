@@ -24,13 +24,22 @@ class controller_works{
     return ['works' => $works];
   }
 
+  public static function private_get_dialog_create_workgroup(model_request $request){
+  }
+
   public static function private_get_dialog_exclude_work(model_request $request){
     $em = di::get('em');
-    $workgroup = di::get('em')->getRepository('data_workgroup')
+    $workgroup = $em->getRepository('data_workgroup')
                               ->findOneById($request->GET('workgroup_id'));
     $work = $em->getRepository('data_work')
                ->findOneById($request->GET('work_id'));
     return ['workgroup' => $workgroup, 'work' => $work];
+  }
+
+  public static function private_get_dialog_rename_workgroup(model_request $request){
+    $workgroup = di::get('em')->getRepository('data_workgroup')
+                              ->findOneById($request->GET('workgroup_id'));
+    return ['workgroup' => $workgroup];
   }
 
   public static function private_add_work(model_request $request){
@@ -44,6 +53,21 @@ class controller_works{
     return ['workgroup' => $workgroup];
   }
 
+  public static function private_create_workgroup(model_request $request){
+    $em = di::get('em');
+    $workgroup = $em->getRepository('data_workgroup')
+                    ->findOneByName($request->GET('name'));
+    if(!is_null($workgroup))
+      throw new RuntimeException('Такая группа существует.');
+    $workgroup = new data_workgroup();
+    $workgroup->set_name($request->GET('name'));
+    $workgroup->set_status('active');
+    $em->persist($workgroup);
+    $em->flush();
+    $workgroups = $em->getRepository('data_workgroup')->findAll();
+    return ['workgroups' => $workgroups];
+  }
+
   public static function private_exclude_work(model_request $request){
     $em = di::get('em');
     $workgroup = $em->getRepository('data_workgroup')
@@ -51,6 +75,15 @@ class controller_works{
     $work = $em->getRepository('data_work')
                ->findOneById($request->GET('work_id'));
     $workgroup->exclude_work($work);
+    $em->flush();
+    return ['workgroup' => $workgroup];
+  }
+
+  public static function private_rename_workgroup(model_request $request){
+    $em = di::get('em');
+    $workgroup = $em->getRepository('data_workgroup')
+                    ->findOneById($request->GET('workgroup_id'));
+    $workgroup->set_name($request->GET('name'));
     $em->flush();
     return ['workgroup' => $workgroup];
   }
