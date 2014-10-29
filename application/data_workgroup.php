@@ -22,16 +22,19 @@ class data_workgroup{
 	private $status;
 
   /**
-  * @OneToMany(targetEntity="data_work", mappedBy="workgroup")
-  */
+   * @ManyToMany(targetEntity="data_work")
+   * @JoinTable(name="workgroup2work",
+   * joinColumns={@JoinColumn(name="workgroup_id", referencedColumnName="id")},
+   * inverseJoinColumns={@JoinColumn(name="work_id", referencedColumnName="id")})
+   */
   private $works;
 
   public static $statuses = ['active', 'deactive'];
 
   public function add_work(data_work $work){
-    if(array_key_exists($work->get_id(), $this->works))
+    if($this->works->contains($work))
       throw new DomainException('Такая работа уже добавлена в группу.');
-    $this->works[$work->get_id()] = $work;
+    $this->works->add($work);
   }
 
   public function get_works(){

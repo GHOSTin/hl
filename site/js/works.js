@@ -12,6 +12,12 @@ $(document).ready(function(){
         self.after(response)
       });
     }
+  }).on('click', '.get_dialog_add_work', function(){
+    $.get('get_dialog_add_work',{
+      id: get_workgroup_id($(this))
+    },function(r){
+        init_content(r);
+    });
   });
 });
 
