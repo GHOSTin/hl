@@ -3,6 +3,9 @@
     <li>
       <a href="#" class="get_dialog_add_work">Добавить работу</a>
     </li>
+    <li>
+      <a href="#" class="get_dialog_rename_workgroup">Переименовать</a>
+    </li>
   </ul>
   <ul class="works">
   {% for work in response.workgroup.get_works() %}

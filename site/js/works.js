@@ -25,6 +25,12 @@ $(document).ready(function(){
     },function(r){
         init_content(r);
     });
+  }).on('click', '.get_dialog_rename_workgroup', function(){
+    $.get('get_dialog_rename_workgroup',{
+      workgroup_id: get_workgroup_id($(this))
+    },function(r){
+        init_content(r);
+    });
   });
 });
 
