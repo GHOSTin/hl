@@ -1,6 +1,7 @@
 {% extends "default.tpl" %}
 
 {% set workgroups = response.groups %}
+{% set works = response.works %}
 
 {% block component %}
     <div class="row">
@@ -15,10 +16,11 @@
         </div>
         <div class="col-md-6">
             <h3>Работы</h3>
-            <ul class="list-unstyled">
-            {% for work in response.works %}
-                <li>{{ work.get_name() }}</li>
-            {% endfor %}
+            <ul class="nav nav-pills">
+                <li><a href="#" class="get_dialog_create_work">Создать</a></li>
+            </ul>
+            <ul class="works">
+            {% include 'works/works.tpl' %}
             </ul>
         </div>
     </div>

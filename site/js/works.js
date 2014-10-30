@@ -36,6 +36,28 @@ $(document).ready(function(){
     },function(r){
       init_content(r);
     });
+  }).on('click', '.work-title', function(){
+    var self = $(this);
+    if(self.siblings().is('.work-content')){
+      self.siblings('.work-content').remove();
+    }else{
+      $.get('get_work_content',{
+        id: get_work_id(self)
+      },function(response){
+        self.after(response)
+      });
+    }
+  }).on('click', '.get_dialog_rename_work', function(){
+    $.get('get_dialog_rename_work',{
+      id: get_work_id($(this))
+    },function(r){
+      init_content(r);
+    });
+  }).on('click', '.get_dialog_create_work', function(){
+    $.get('get_dialog_create_work',{
+    },function(r){
+      init_content(r);
+    });
   });
 });
 
