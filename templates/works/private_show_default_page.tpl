@@ -17,7 +17,9 @@
             <h3>Работы</h3>
             <ul class="list-unstyled">
             {% for work in response.works %}
-                <li>{{ work.get_name() }}</li>
+                <li class="work" work_id="{{ work.get_id() }}">
+                    <div class="work-title">{{ work.get_name() }}</div>
+                </li>
             {% endfor %}
             </ul>
         </div>

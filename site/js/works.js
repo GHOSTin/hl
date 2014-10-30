@@ -36,6 +36,17 @@ $(document).ready(function(){
     },function(r){
       init_content(r);
     });
+  }).on('click', '.work-title', function(){
+    var self = $(this);
+    if(self.siblings().is('.work-content')){
+      self.siblings('.work-content').remove();
+    }else{
+      $.get('get_work_content',{
+        id: get_work_id(self)
+      },function(response){
+        self.after(response)
+      });
+    }
   });
 });
 

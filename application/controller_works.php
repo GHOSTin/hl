@@ -19,6 +19,12 @@ class controller_works{
     return ['workgroup' => $workgroup];
   }
 
+  public static function private_get_work_content(model_request $request){
+    $work = di::get('em')->getRepository('data_work')
+                              ->findOneById($request->GET('id'));
+    return ['work' => $work];
+  }
+
   public static function private_get_dialog_add_work(model_request $request){
     $works = di::get('em')->getRepository('data_work')->findAll();
     return ['works' => $works];
