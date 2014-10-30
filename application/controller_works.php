@@ -33,6 +33,9 @@ class controller_works{
   public static function private_get_dialog_create_workgroup(model_request $request){
   }
 
+  public static function private_get_dialog_create_work(model_request $request){
+  }
+
   public static function private_get_dialog_exclude_work(model_request $request){
     $em = di::get('em');
     $workgroup = $em->getRepository('data_workgroup')
@@ -40,6 +43,12 @@ class controller_works{
     $work = $em->getRepository('data_work')
                ->findOneById($request->GET('work_id'));
     return ['workgroup' => $workgroup, 'work' => $work];
+  }
+
+  public static function private_get_dialog_rename_work(model_request $request){
+    $work = di::get('em')->getRepository('data_work')
+                         ->findOneById($request->GET('id'));
+    return ['work' => $work];
   }
 
   public static function private_get_dialog_rename_workgroup(model_request $request){
@@ -74,6 +83,21 @@ class controller_works{
     return ['workgroups' => $workgroups];
   }
 
+  public static function private_create_work(model_request $request){
+    $em = di::get('em');
+    $work = $em->getRepository('data_work')
+               ->findOneByName($request->GET('name'));
+    if(!is_null($work))
+      throw new RuntimeException('Такая группа существует.');
+    $work = new data_work();
+    $work->set_name($request->GET('name'));
+    $work->set_status('active');
+    $em->persist($work);
+    $em->flush();
+    $works = $em->getRepository('data_work')->findAll();
+    return ['works' => $works];
+  }
+
   public static function private_exclude_work(model_request $request){
     $em = di::get('em');
     $workgroup = $em->getRepository('data_workgroup')
@@ -92,5 +116,14 @@ class controller_works{
     $workgroup->set_name($request->GET('name'));
     $em->flush();
     return ['workgroup' => $workgroup];
+  }
+
+  public static function private_rename_work(model_request $request){
+    $em = di::get('em');
+    $work = $em->getRepository('data_work')
+                    ->findOneById($request->GET('id'));
+    $work->set_name($request->GET('name'));
+    $em->flush();
+    return ['work' => $work];
   }
 }

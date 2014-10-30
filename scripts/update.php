@@ -20,3 +20,7 @@ $dbal->exec("ALTER TABLE works DROP workgroup_id");
 $dbal->exec("DROP INDEX company_id ON workgroups");
 $dbal->exec("ALTER TABLE workgroups ADD PRIMARY KEY id (id)");
 $dbal->exec("ALTER TABLE workgroups CHANGE id id SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT");
+$dbal->exec("DROP INDEX workgroup_id ON works");
+$dbal->exec("DROP INDEX id ON works");
+$dbal->exec("ALTER TABLE works ADD PRIMARY KEY id (id)");
+$dbal->exec("ALTER TABLE `works` CHANGE `id` `id` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT;");

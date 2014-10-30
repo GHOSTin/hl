@@ -47,6 +47,17 @@ $(document).ready(function(){
         self.after(response)
       });
     }
+  }).on('click', '.get_dialog_rename_work', function(){
+    $.get('get_dialog_rename_work',{
+      id: get_work_id($(this))
+    },function(r){
+      init_content(r);
+    });
+  }).on('click', '.get_dialog_create_work', function(){
+    $.get('get_dialog_create_work',{
+    },function(r){
+      init_content(r);
+    });
   });
 });
 
