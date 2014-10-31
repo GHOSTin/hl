@@ -1,4 +1,7 @@
 <?php
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
 * @Entity
 * @Table(name="workgroups")
@@ -31,6 +34,11 @@ class data_workgroup{
   private $works;
 
   public static $statuses = ['active', 'deactive'];
+
+
+  public function __construct(){
+    $this->works = new ArrayCollection();
+  }
 
   public function add_work(data_work $work){
     if($this->works->contains($work))
