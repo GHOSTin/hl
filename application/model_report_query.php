@@ -37,7 +37,7 @@ class model_report_query{
   }
 
   public function set_worktype($id){
-    $wt = di::get('em')->find('data_query_work_type', $id);
+    $wt = di::get('em')->find('data_workgroup', $id);
     if(is_null($wt)){
       $_SESSION['report_query']['work_types'] = [];
     }else{

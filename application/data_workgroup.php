@@ -33,6 +33,12 @@ class data_workgroup{
    */
   private $works;
 
+
+  /**
+  * @OneToMany(targetEntity="data_query", mappedBy="work_type")
+  */
+  private $queries;
+
   public static $statuses = ['active', 'deactive'];
 
 

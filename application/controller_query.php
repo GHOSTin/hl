@@ -164,7 +164,7 @@ class controller_query{
 		}
 		$query->set_house($house);
 		$query->set_department($house->get_department());
-		$query->add_work_type($em->find('data_query_work_type',
+		$query->add_work_type($em->find('data_workgroup',
 			$request->GET('work_type')));
 		$conn = $em->getConnection();
 		$q = $conn->query('SELECT MAX(querynumber) as number FROM `queries`
@@ -275,7 +275,7 @@ class controller_query{
 		model_request $request){
 		return ['query' => di::get('em')->find('data_query', $request->GET('id')),
 			'work_types' => di::get('em')
-			->getRepository('data_query_work_type')->findBy([], ['name' => 'ASC'])];
+			->getRepository('data_workgroup')->findBy([], ['name' => 'ASC'])];
 	}
 
 	public static function private_get_dialog_initiator(model_request $request){
@@ -297,7 +297,7 @@ class controller_query{
 
 	public static function private_get_initiator(model_request $request){
 		$em = di::get('em');
-		$types = $em->getRepository('data_query_work_type')
+		$types = $em->getRepository('data_workgroup')
 			->findBy([], ['name'=> 'ASC']);
 		switch($request->GET('initiator')){
 			case 'number':
@@ -424,7 +424,7 @@ class controller_query{
 		$em = di::get('em');
 		$now = getdate();
 		$model = di::get('model_query');
-		$types = $em->getRepository('data_query_work_type')
+		$types = $em->getRepository('data_workgroup')
 			->findBy([], ['name' => 'ASC']);
 		$params = $model->get_params();
 		if(!empty($params['houses']))
@@ -526,7 +526,7 @@ class controller_query{
 
 	public static function private_update_work_type(model_request $request){
 		$em = di::get('em');
-		$type = $em->find('data_query_work_type', $request->GET('type'));
+		$type = $em->find('data_workgroup', $request->GET('type'));
 		$query = $em->find('data_query', $request->GET('id'));
 		if(is_null($query))
 			throw new RuntimeException();
