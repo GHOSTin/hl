@@ -21,7 +21,7 @@ class controller_works{
 
   public static function private_get_work_content(model_request $request){
     $work = di::get('em')->getRepository('data_work')
-                              ->findOneById($request->GET('id'));
+                         ->findOneById($request->GET('id'));
     return ['work' => $work];
   }
 
@@ -39,7 +39,7 @@ class controller_works{
   public static function private_get_dialog_exclude_work(model_request $request){
     $em = di::get('em');
     $workgroup = $em->getRepository('data_workgroup')
-                              ->findOneById($request->GET('workgroup_id'));
+                    ->findOneById($request->GET('workgroup_id'));
     $work = $em->getRepository('data_work')
                ->findOneById($request->GET('work_id'));
     return ['workgroup' => $workgroup, 'work' => $work];
@@ -121,7 +121,7 @@ class controller_works{
   public static function private_rename_work(model_request $request){
     $em = di::get('em');
     $work = $em->getRepository('data_work')
-                    ->findOneById($request->GET('id'));
+               ->findOneById($request->GET('id'));
     $work->set_name($request->GET('name'));
     $em->flush();
     return ['work' => $work];
