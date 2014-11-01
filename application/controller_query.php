@@ -211,8 +211,9 @@ class controller_query{
 	}
 
 	public static function private_get_dialog_add_work(model_request $request){
-		return ['workgroups' => di::get('em')
-			->getRepository('data_workgroup')->findAll()];
+		$query = di::get('em')->getRepository('data_query')
+													->findOneById($request->GET('id'));
+		return ['query' => $query];
 	}
 
 	public static function private_get_dialog_create_query(
@@ -413,11 +414,6 @@ class controller_query{
 
 	public static function private_get_user_options(model_request $request){
 		return ['group' => di::get('em')->find('data_group', $request->GET('id'))];
-	}
-
-	public static function private_get_work_options(model_request $request){
-		return ['work_group' => di::get('em')
-			->find('data_workgroup', $request->GET('id'))];
 	}
 
 	public static function private_show_default_page(model_request $request){
