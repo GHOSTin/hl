@@ -128,7 +128,7 @@ class controller_user{
     if($restriction === 'departments')
         $items = di::get('em')->getRepository('data_department')->findAll();
     if($restriction === 'worktypes')
-        $items = $em->getRepository('data_query_work_type')->findAll();
+        $items = $em->getRepository('data_workgroup')->findAll();
     return ['user' => $user,
       'restriction_name' => $restriction, 'items' => $items,
       'profile' => $user->get_profile($request->GET('profile'))];
@@ -343,7 +343,7 @@ class controller_user{
       }
     }
     if($restriction === 'worktypes'){
-      $type = $em->find('data_query_work_type', $item);
+      $type = $em->find('data_workgroup', $item);
       if(!is_null($type)){
         $pos = array_search($type->get_id(), $restrictions[$restriction]);
         if($pos === false)

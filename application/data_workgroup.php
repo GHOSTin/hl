@@ -30,6 +30,12 @@ class data_workgroup{
    */
   private $works;
 
+
+  /**
+  * @OneToMany(targetEntity="data_query", mappedBy="work_type")
+  */
+  private $queries;
+
   public static $statuses = ['active', 'deactive'];
 
   public function add_work(data_work $work){

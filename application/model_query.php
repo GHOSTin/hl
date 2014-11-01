@@ -165,7 +165,7 @@ class model_query{
 	}
 
 	public function set_work_type($id){
-		$wt = di::get('em')->find('data_query_work_type', $id);
+		$wt = di::get('em')->find('data_workgroup', $id);
 		if(is_null($wt)){
 			$_SESSION['query']['work_types'] = [];
 		}else{

@@ -43,7 +43,7 @@ class data_query{
 	private $house;
 
 	/**
-  * @ManyToOne(targetEntity="data_query_work_type")
+  * @ManyToOne(targetEntity="data_workgroup")
   * @JoinColumn(name="query_worktype_id", referencedColumnName="id")
   */
 	private $work_type;
@@ -158,7 +158,7 @@ class data_query{
 				}
 	}
 
-	public function add_work_type(data_query_work_type $wt){
+	public function add_work_type(data_workgroup $wt){
 		$this->work_type = $wt;
 	}
 

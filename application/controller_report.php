@@ -8,7 +8,7 @@ class controller_report{
 
 	public static function private_get_query_reports(model_request $request){
     $em = di::get('em');
-    $work_types = $em->getRepository('data_query_work_type')
+    $work_types = $em->getRepository('data_workgroup')
       ->findBy([], ['name' => 'ASC']);
     $departments = $em->getRepository('data_department')
       ->findBy([], ['name' => 'ASC']);
