@@ -15,7 +15,7 @@ $dbal->exec("CREATE TABLE IF NOT EXISTS workgroup2work (
 $stmt = $dbal->query('SELECT id, workgroup_id FROM works');
 while($row = $stmt->fetch()){
   $dbal->exec("INSERT INTO workgroup2work SET workgroup_id = ". $row['workgroup_id'].", work_id = ".$row['id']);
-
+}
 $dbal->exec("ALTER TABLE works DROP workgroup_id");
 $dbal->exec("DROP INDEX company_id ON workgroups");
 $dbal->exec("ALTER TABLE workgroups ADD PRIMARY KEY id (id)");
