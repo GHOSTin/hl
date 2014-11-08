@@ -1,0 +1,1 @@
+{{ response.work.get_name() }}

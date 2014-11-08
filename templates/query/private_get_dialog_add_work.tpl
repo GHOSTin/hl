@@ -1,6 +1,7 @@
 {% extends "ajax.tpl" %}
+
 {% set query = response.query %}
-{% set workgroups = response.workgroups %}
+
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.add_work').click(function(){
@@ -21,16 +22,6 @@
 				});
 		}
 	});
-	$('.dialog-select-workgroup').change(function(){
-		var workgroup_id = $('.dialog-select-workgroup :selected').val();
-		if(workgroup_id > 0){
-			$.get('get_work_options',{
-				id: workgroup_id
-				},function(r){
-					$('.dialog-select-work').html(r).attr('disabled', false);
-				});
-		}
-	});
 	$('.dialog-begin_date').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
 		$('.dialog-begin_date').datepicker('hide');
 	});
@@ -38,36 +29,34 @@
 		$('.dialog-end_date').datepicker('hide');
 	});
 {% endblock js %}
+
 {% block html %}
 <div class="modal-content">
-    <div class="modal-header">
-        <h3>Работы</h3>
-    </div>
+  <div class="modal-header">
+      <h3>Диалог добавления работы</h3>
+  </div>
 	<div class="modal-body">
 		<div class="form-group">
-			<select class="dialog-select-workgroup form-control">
-				<option value="0">Выберите группу работ</option>
-			{% for workgroup in workgroups %}
-				<option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
-			{% endfor %}
-			</select>
-			<select class="dialog-select-work form-control" disabled="disabled">
-				<option value="0">Ожидание...</option>
+			<select class="dialog-select-work form-control">
+				<option value="0">Выберите работу</option>
+				{% for work in query.get_work_type().get_works() %}
+				<option value="{{ work.get_id() }}">{{ work.get_name() }}</option>
+				{% endfor %}
 			</select>
 		</div>
 		<div class="form-group form-inline">
 			<label class="control-label col-2">Дата начала</label>
-            <select class="dialog-begin_hours form-control" style="width: 75px;">
-            {% for i in 1..24 %}
-                <option value="{{i}}">{{i}}</option>
-            {% endfor %}
-            </select>
-            <select class="dialog-begin_minutes form-control" style="width: 75px;">
-            {% for i in range(0, 55, 5) %}
-                <option value="{{i}}">{{i}}</option>
-            {% endfor %}
-            </select>
-            <input type="text" class="dialog-begin_date form-control" value="{{'now'|date('d.m.Y')}}" style="width: 120px;">
+      <select class="dialog-begin_hours form-control" style="width: 75px;">
+      {% for i in 1..24 %}
+          <option value="{{i}}">{{i}}</option>
+      {% endfor %}
+      </select>
+      <select class="dialog-begin_minutes form-control" style="width: 75px;">
+      {% for i in range(0, 55, 5) %}
+          <option value="{{i}}">{{i}}</option>
+      {% endfor %}
+      </select>
+      <input type="text" class="dialog-begin_date form-control" value="{{'now'|date('d.m.Y')}}" style="width: 120px;">
 		</div>
 		<div  class="form-group form-inline">
 			<label class="control-label col-2">Дата конца</label>

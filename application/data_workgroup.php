@@ -1,4 +1,7 @@
 <?php
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
 * @Entity
 * @Table(name="workgroups")
@@ -8,6 +11,7 @@ class data_workgroup{
   /**
    * @Id
    * @Column(name="id", type="integer")
+   * @GeneratedValue
    */
   private $id;
 
@@ -22,16 +26,34 @@ class data_workgroup{
 	private $status;
 
   /**
-  * @OneToMany(targetEntity="data_work", mappedBy="workgroup")
-  */
+   * @ManyToMany(targetEntity="data_work")
+   * @JoinTable(name="workgroup2work",
+   * joinColumns={@JoinColumn(name="workgroup_id", referencedColumnName="id")},
+   * inverseJoinColumns={@JoinColumn(name="work_id", referencedColumnName="id")})
+   */
   private $works;
+
+
+  /**
+  * @OneToMany(targetEntity="data_query", mappedBy="work_type")
+  */
+  private $queries;
 
   public static $statuses = ['active', 'deactive'];
 
+
+  public function __construct(){
+    $this->works = new ArrayCollection();
+  }
+
   public function add_work(data_work $work){
-    if(array_key_exists($work->get_id(), $this->works))
+    if($this->works->contains($work))
       throw new DomainException('Такая работа уже добавлена в группу.');
-    $this->works[$work->get_id()] = $work;
+    $this->works->add($work);
+  }
+
+  public function exclude_work(data_work $work){
+    $this->works->removeElement($work);
   }
 
   public function get_works(){
