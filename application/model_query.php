@@ -47,12 +47,15 @@ class model_query{
 	public function get_houses_by_street($street_id){
 		$em = di::get('em');
 		if(!empty($_SESSION['query']['r_departments'])){
-			return $em->getRepository('data_house')
+			$houses = $em->getRepository('data_house')
 				->findBy(['department' => $_SESSION['query']['r_departments'],
-					'street' => $street_id], ['number' => 'ASC']);
-		}else
-			return $em->getRepository('data_house')
-				->findBy(['street' => $street_id], ['number' => 'ASC']);
+					'street' => $street_id]);
+		}else{
+			$houses =  $em->getRepository('data_house')
+				->findBy(['street' => $street_id]);
+		}
+		natsort($houses);
+		return $houses;
 	}
 
 	public function init_default_params(){

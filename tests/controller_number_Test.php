@@ -8,7 +8,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->request = new model_request();
     $this->pimple = new \Pimple\Container();
     $this->em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-      ->disableOriginalConstructor()->getMock();
+         ->disableOriginalConstructor()->getMock();
+    $this->model_number = $this->getMockBuilder('model_number')
+         ->disableOriginalConstructor()->getMock();
   }
 
   public function test_private_edit_department(){
@@ -50,16 +52,15 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_private_get_street_content(){
-    $street = new data_street();
-    $this->pimple['em'] = function() use ($street){
-      $this->em->expects($this->once())
-        ->method('find')
-        ->will($this->returnValue($street));
-      return $this->em;
+    $this->pimple['model_number'] = function(){
+      $this->model_number->expects($this->once())
+        ->method('get_houses_by_street')
+        ->will($this->returnValue('houses'));
+      return $this->model_number;
     };
     di::set_instance($this->pimple);
     $response = controller_number::private_get_street_content($this->request);
-    $this->assertInstanceOf('data_street', $response['street']);
+    $this->assertEquals('houses', $response['houses']);
   }
 
   public function test_private_get_dialog_edit_department(){
