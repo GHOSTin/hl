@@ -56,10 +56,6 @@
     border: none;
 }
 
-.number-content{
-    padding: 0px 0px 0px 40px;
-}
-
 table caption h3 {
     line-height: 20px;
     display: inline-block;
@@ -85,7 +81,7 @@ table caption h3 {
     }
 }
 .number-content{
-    padding:20px 20px;
+    padding:0px 20px 40px 20px;
 }
 
 /**

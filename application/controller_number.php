@@ -46,60 +46,55 @@ class controller_number{
     return ['house' => di::get('em')->find('data_house', $request->GET('id'))];
   }
 
-  public static function private_get_number_content(model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+  public static function get_number($id){
+    return di::get('em')->find('data_number', $id);
   }
 
-  public static function private_get_number_information(model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+  public static function private_get_number_content(model_request $request){
+    return ['number' => self::get_number($request->GET('id'))];
+  }
+
+  public static function private_contact_info(model_request $request){
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number(model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_accruals(
     model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_fio(
     model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_password(
     model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_telephone(
     model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_cellphone(
     model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_get_dialog_edit_number_email(
     model_request $request){
-    return ['number' => di::get('em')
-      ->find('data_number', $request->GET('id'))];
+    return ['number' => self::get_number($request->GET('id'))];
   }
 
   public static function private_update_number(model_request $request){
+    $number = self::get_number($request->GET('id'));
     $em = di::get('em');
-    $number = $em->find('data_number', $request->GET('id'));
     $old_number = $em->getRepository('data_number')
                       ->findOneByNumber($request->GET('number'));
     if(!is_null($old_number))
@@ -111,21 +106,21 @@ class controller_number{
   }
 
   public static function private_update_number_password(model_request $request){
-    if($request->GET('password') !== $request->GET('confirm'))
+    $password = $request->GET('password');
+    $confirm = $request->GET('confirm');
+    if($password !== $confirm)
       throw new RuntimeException('Подтверждение и пароль не совпадают.');
-    $em = di::get('em');
-    $number = $em->find('data_number', $request->GET('id'));
-    $hash = data_number::generate_hash($request->GET('password'));
+    $number = self::get_number($request->GET('id'));
+    $hash = data_number::generate_hash($password);
     $number->set_hash($hash);
-    $em->flush();
+    di::get('em')->flush();
     return ['number' => $number];
   }
 
   public static function private_update_number_fio(model_request $request){
-    $em = di::get('em');
-    $number = $em->find('data_number', $request->GET('id'));
+    $number = self::get_number($request->GET('id'));
     $number->set_fio($request->GET('fio'));
-    $em->flush();
+    di::get('em')->flush();
     return ['number' => $number];
   }
 
@@ -135,28 +130,25 @@ class controller_number{
     $cellphone = implode('', $matches[0]);
     if(preg_match('|^[78]|', $cellphone))
       $cellphone = substr($cellphone, 1, 10);
-    $em = di::get('em');
-    $number = $em->find('data_number', $request->GET('id'));
+    $number = self::get_number($request->GET('id'));
     $number->set_cellphone($cellphone);
-    $em->flush();
+    di::get('em')->flush();
     return ['number' => $number];
   }
 
   public static function private_update_number_email(
     model_request $request){
     preg_match_all('/[0-9A-Za-z.@-]/', $request->GET('email'), $matches);
-    $em = di::get('em');
-    $number = $em->find('data_number', $request->GET('id'));
+    $number = self::get_number($request->GET('id'));
     $number->set_email(implode('', $matches[0]));
-    $em->flush();
+    di::get('em')->flush();
     return ['number' => $number];
   }
 
   public static function private_update_number_telephone(model_request $request){
-    $em = di::get('em');
-    $number = $em->find('data_number', $request->GET('id'));
+    $number = self::get_number($request->GET('id'));
     $number->set_telephone($request->GET('telephone'));
-    $em->flush();
+    di::get('em')->flush();
     return ['number' => $number];
   }
 }

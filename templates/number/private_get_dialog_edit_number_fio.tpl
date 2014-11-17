@@ -1,21 +1,26 @@
 {% extends "dialog.tpl" %}
+
 {% set number = response.number %}
-{% block title %}Диалог редактирования ФИО владельца{% endblock title %}
+
+{% block title %}Диалог редактирования ФИО владельца{% endblock %}
+
 {% block dialog %}
 	<input type="text" class="dialog-input-fio form-control" value="{{ number.get_fio() }}">
-{% endblock dialog %}
+{% endblock %}
+
 {% block buttons %}
-	<div class="btn btn-primary update_number_fio">Изменить</div>
-{% endblock buttons %}
+	<div class="btn btn-primary update_number_fio">Сохранить</div>
+{% endblock %}
+
 {% block script %}
 	// Изменяет ФИО владельца лицевого счета
 	$('.update_number_fio').click(function(){
 		$.get('update_number_fio',{
 			id: {{ number.get_id() }},
 			fio: $('.dialog-input-fio').val()
-			},function(r){
-				$('.dialog').modal('hide');
-				init_content(r);
-			});
+		},function(r){
+			$('.dialog').modal('hide');
+			init_content(r);
+		});
 	});
-{% endblock script %}
+{% endblock %}

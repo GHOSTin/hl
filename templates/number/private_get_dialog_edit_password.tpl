@@ -1,16 +1,22 @@
 {% extends "dialog.tpl" %}
-{% block title %}Диалог редактирования пароля в личный кабинет{% endblock title %}
+
+{% block title %}Диалог редактирования пароля в личный кабинет{% endblock %}
+
 {% block dialog %}
 	<div class="form-group">
-	Пароль: <input type="password" class="dialog-input-password form-control">
+		<label>Пароль:</label>
+		<input type="password" class="dialog-input-password form-control">
 	</div>
 	<div class="form-group">
-	Подтверждение: <input type="password" class="dialog-input-confirm form-control">
+		<label>Подтверждение:</label>
+		<input type="password" class="dialog-input-confirm form-control">
 	</div>
-{% endblock dialog %}
+{% endblock %}
+
 {% block buttons %}
-	<div class="btn update_number_fio">Изменить</div>
-{% endblock buttons %}
+	<div class="btn btn-primary update_number_fio">Сохранить</div>
+{% endblock %}
+
 {% block script %}
 	// Изменяет пароль в личный кабинет
 	$('.update_number_fio').click(function(){
@@ -18,9 +24,9 @@
 			id: {{ request.GET('id') }},
 			password: $('.dialog-input-password').val(),
 			confirm: $('.dialog-input-confirm').val()
-			},function(r){
-				$('.dialog').modal('hide');
-				init_content(r);
-			});
+		},function(r){
+			$('.dialog').modal('hide');
+			init_content(r);
+		});
 	});
-{% endblock script %}
+{% endblock %}
