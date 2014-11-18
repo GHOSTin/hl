@@ -65,13 +65,13 @@ class model_query{
 
 	public function init_default_params(){
 		$time = getdate();
-		$_SESSION['query']['departments'] = di::get('user')->get_profile('query')
+		$_SESSION['query']['departments'] = $this->pimple['user']->get_profile('query')
 			->get_restrictions()['departments'];
 		$_SESSION['query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$_SESSION['query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 		$_SESSION['query']['status'] = self::$statuses;
 		$_SESSION['query']['work_types'] = [];
-		$_SESSION['query']['r_departments'] = di::get('user')->get_profile('query')
+		$_SESSION['query']['r_departments'] = $this->pimple['user']->get_profile('query')
 			->get_restrictions()['departments'];
 		$_SESSION['query']['streets'] = [];
 		$_SESSION['query']['houses'] = [];

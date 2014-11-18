@@ -6,8 +6,7 @@ class controller_number{
 
 	static $name = 'Жилищный фонд';
 
-  public static function private_edit_department(
-    model_request $request){
+  public static function private_edit_department(model_request $request){
     $em = di::get('em');
     $house = $em->find('data_house', $request->GET('house_id'));
     $department = $em->find('data_department', $request->GET('department_id'));
@@ -30,8 +29,9 @@ class controller_number{
   public static function private_get_dialog_edit_department(
     model_request $request){
     $em = di::get('em');
-    return ['house' => $em->find('data_house', $request->GET('house_id')),
-            'departments' => $em->getRepository('data_department')->findAll()];
+    $house = $em->find('data_house', $request->GET('house_id'));
+    $department = $em->getRepository('data_department')->findAll();
+    return ['house' => $house, 'departments' => $department];
   }
 
   public static function private_get_house_content(model_request $request){
@@ -55,8 +55,7 @@ class controller_number{
     return ['number' => self::get_number($request->GET('id'))];
   }
 
-  public static function private_accruals(
-    model_request $request){
+  public static function private_accruals(model_request $request){
     return ['number' => self::get_number($request->GET('id'))];
   }
 
@@ -129,8 +128,7 @@ class controller_number{
     return ['number' => $number];
   }
 
-  public static function private_update_number_email(
-    model_request $request){
+  public static function private_update_number_email(model_request $request){
     preg_match_all('/[0-9A-Za-z.@-]/', $request->GET('email'), $matches);
     $number = self::get_number($request->GET('id'));
     $number->set_email(implode('', $matches[0]));
@@ -138,7 +136,8 @@ class controller_number{
     return ['number' => $number];
   }
 
-  public static function private_update_number_telephone(model_request $request){
+  public static function private_update_number_telephone(
+    model_request $request){
     $number = self::get_number($request->GET('id'));
     $number->set_telephone($request->GET('telephone'));
     di::get('em')->flush();

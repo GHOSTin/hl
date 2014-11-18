@@ -1,10 +1,11 @@
 <?php
 
-use \boxxy\classes\di;
+use \Pimple\Container;
 
 class model_report_query{
 
-  public function __construct(){
+  public function __construct(Container $pimple){
+    $this->pimple = $pimple;
     if(empty($_SESSION['report_query'])){
       $this->init_default_params();
     }
@@ -36,8 +37,8 @@ class model_report_query{
       $_SESSION['report_query']['status'] = ['open', 'close', 'reopen', 'working'];
   }
 
-  public function set_worktype($id){
-    $wt = di::get('em')->find('data_workgroup', $id);
+  public function set_worktype($workgroup_id){
+    $wt = $this->pimple['em']->find('data_workgroup', $workgroup_id);
     if(is_null($wt)){
       $_SESSION['report_query']['work_types'] = [];
     }else{
@@ -45,8 +46,8 @@ class model_report_query{
     }
   }
 
-  public function set_department($id){
-    $department = di::get('em')->find('data_department', $id);
+  public function set_department($department_id){
+    $department = $this->pimple['em']->find('data_department', $department_id);
     if(is_null($department)){
       $_SESSION['report_query']['departments'] = [];
     }else{
@@ -56,33 +57,33 @@ class model_report_query{
     $_SESSION['report_query']['houses'] = [];
   }
 
-  public function set_street($id){
-    $em = di::get('em');
+  public function set_street($street_id){
+    $em = $this->pimple['em'];
     $streets = $em->getRepository('data_street')->findAll();
     $s = [];
     if(!empty($streets))
       foreach($streets as $street){
           $s[] = $street->get_id();
       }
-    if(!in_array((int) $id, $s, true)){
+    if(!in_array((int) $street_id, $s, true)){
       $_SESSION['report_query']['departments'] = [];
       $_SESSION['report_query']['streets'] = [];
       $_SESSION['report_query']['houses'] = [];
     }else{
-      $houses = $em->getRepository('data_house')->findByStreet($id);
+      $houses = $em->getRepository('data_house')->findByStreet($street_id);
       $h = [];
       if(!empty($houses))
         foreach($houses as $house)
           $h[] = $house->get_id();
       $_SESSION['report_query']['departments'] = [];
-      $_SESSION['report_query']['streets'] = [$id];
+      $_SESSION['report_query']['streets'] = [$street_id];
       $_SESSION['report_query']['houses'] = $h;
     }
   }
 
-  public function set_house($id){
-    if($id > 0){
-      $house = di::get('em')->find('data_house', $id);
+  public function set_house($house_id){
+    if($house_id > 0){
+      $house = $this->pimple['em']->find('data_house', $house_id);
       if(is_null($house))
         $_SESSION['report_query']['houses'] = [];
       else
@@ -92,8 +93,8 @@ class model_report_query{
   }
 
   public function get_queries(){
-    return di::get('em')->getRepository('data_query')
-      ->findByParams($_SESSION['report_query']);
+    return $this->pimple['em']->getRepository('data_query')
+                              ->findByParams($_SESSION['report_query']);
   }
 
   public function get_filters(){
