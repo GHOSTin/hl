@@ -56,7 +56,7 @@ class model_environment{
 		$options = array();
 		if(application_configuration::status == 'production')
 			$options['cache'] = ROOT.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'twig/';
-		$twig=  new Twig_Environment($loader, $options);
+		$twig = new Twig_Environment($loader, $options);
 	  return $twig->render('@'.$component.'/'.$method.'.tpl', $data);
 	}
 
