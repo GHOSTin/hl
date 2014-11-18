@@ -14,5 +14,5 @@ class application_configuration{
 	const chat_port = 3000;
 	// php
 	const php_timezone = 'Asia/Yekaterinburg';
-	const status = 'production';
+	const status = 'development';
 }

@@ -102,32 +102,6 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->assertInstanceOf('data_house', $response['house']);
   }
 
-  public function test_private_get_house_information(){
-    $house = new data_house();
-    $this->pimple['em'] = function() use ($house){
-      $this->em->expects($this->once())
-        ->method('find')
-        ->will($this->returnValue($house));
-      return $this->em;
-    };
-    di::set_instance($this->pimple);
-    $response = controller_number::private_get_house_information($this->request);
-    $this->assertInstanceOf('data_house', $response['house']);
-  }
-
-  public function test_private_get_house_numbers(){
-    $house = new data_house();
-    $this->pimple['em'] = function() use ($house){
-      $this->em->expects($this->once())
-        ->method('find')
-        ->will($this->returnValue($house));
-      return $this->em;
-    };
-    di::set_instance($this->pimple);
-    $response = controller_number::private_get_house_numbers($this->request);
-    $this->assertInstanceOf('data_house', $response['house']);
-  }
-
   public function test_get_number(){
     $number = new data_number();
     $this->pimple['em'] = function() use ($number){

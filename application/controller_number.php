@@ -35,16 +35,8 @@ class controller_number{
   }
 
   public static function private_get_house_content(model_request $request){
-    return ['house' => di::get('em')
-      ->find('data_house', $request->take_get('id'))];
-  }
-
-  public static function private_get_house_information(model_request $request){
-    return ['house' => di::get('em')->find('data_house', $request->GET('id'))];
-  }
-
-  public static function private_get_house_numbers(model_request $request){
-    return ['house' => di::get('em')->find('data_house', $request->GET('id'))];
+    $house = di::get('em')->find('data_house', $request->GET('id'));
+    return ['house' => $house];
   }
 
   public static function get_number($id){
