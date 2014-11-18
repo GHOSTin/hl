@@ -22,8 +22,9 @@ class controller_number{
 	}
 
   public static function private_get_street_content(model_request $request){
-    $street = di::get('em')->find('data_street', $request->GET('id'));
-    return ['street' => $street];
+    $houses = di::get('model_number')
+      ->get_houses_by_street($request->GET('id'));
+    return ['houses' => $houses];
   }
 
   public static function private_get_dialog_edit_department(

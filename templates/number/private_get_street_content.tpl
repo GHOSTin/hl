@@ -1,8 +1,11 @@
 {% extends "ajax.tpl" %}
-{% set street = response.street %}
+
+{% set houses = response.houses %}
+
 {% block js %}
-    $('.street[street = {{ street.get_id() }}]').append(get_hidden_content())
-{% endblock js %}
+  $('.street[street = {{ request.GET('id') }}]').append(get_hidden_content())
+{% endblock %}
+
 {% block html %}
-    {% include '@number/build_houses_titles.tpl' %}
-{% endblock html %}
+  {% include '@number/build_houses_titles.tpl' %}
+{% endblock %}

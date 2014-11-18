@@ -56,6 +56,10 @@ class data_house{
     $this->flats = new ArrayCollection();
   }
 
+  public function __toString(){
+    return (string) $this->number;
+  }
+
   public function add_number(data_number $number){
     if($this->numbers->contains($number))
       throw new DomainException('Лицевой уже добавлен.');

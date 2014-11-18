@@ -1,4 +1,7 @@
 <?php
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
 * @Entity
 * @Table(name="streets")
@@ -27,12 +30,15 @@ class data_street{
   private $status;
 
   /**
-   * @OneToMany(targetEntity="data_house", mappedBy="street")
-   * @OrderBy({"number" = "ASC"})
-   */
+  * @OneToMany(targetEntity="data_house", mappedBy="street")
+  */
   private $houses;
 
   public static $statuses = ['true', 'false'];
+
+  public function __construct(){
+    $this->houses = new ArrayCollection();
+  }
 
   public function add_house(data_house $house){
     if($this->houses->contains($house))
