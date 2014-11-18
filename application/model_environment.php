@@ -53,7 +53,10 @@ class model_environment{
 		Twig_Autoloader::register();
 		$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
 	  $loader->prependPath(ROOT.'/templates/'.$component.'/', $component);
-		$twig=  new Twig_Environment($loader);
+		$options = array();
+		if(application_configuration::status == 'production')
+			$options['cache'] = ROOT.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'twig/';
+		$twig=  new Twig_Environment($loader, $options);
 	  return $twig->render('@'.$component.'/'.$method.'.tpl', $data);
 	}
 
