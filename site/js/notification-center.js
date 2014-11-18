@@ -61,7 +61,12 @@ $.extend($.expr[':'], {
             .indexOf((match[3] || "").toLowerCase()) >= 0;
     }
 });
-var uid = parseInt(get_cookie('uid'));
+var uid, host, port;
+$.getJSON('api/get_chat_options', {async: false}).done(function(data){
+    uid = parseInt(data.user);
+    host = data.host;
+    port = data.port;
+});
 /** тайтл страницы */
 var global_title;
 /** сокет-соединение для центра уведомлений */
