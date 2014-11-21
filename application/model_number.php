@@ -12,7 +12,7 @@ class model_number{
 
 	public function get_houses_by_street($street_id){
 		$houses = $this->pimple['em']->getRepository('data_house')
-									 ->findBy(['street' => $street_id]);
+									 ->findByStreet($street_id);
 		natsort($houses);
 		return $houses;
 	}

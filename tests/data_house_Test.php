@@ -104,4 +104,9 @@ class data_house_Test extends PHPUnit_Framework_TestCase{
     $this->house->add_flat($flat);
     $this->house->add_flat($flat);
   }
+
+  public function test_get_queries(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
+                            $this->house->get_queries());
+  }
 }

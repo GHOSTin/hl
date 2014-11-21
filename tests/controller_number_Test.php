@@ -90,16 +90,48 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_private_get_house_content(){
+    $this->request->set_property('id', 125);
     $house = new data_house();
     $this->pimple['em'] = function() use ($house){
       $this->em->expects($this->once())
         ->method('find')
+        ->with('data_house', 125)
         ->will($this->returnValue($house));
       return $this->em;
     };
     di::set_instance($this->pimple);
     $response = controller_number::private_get_house_content($this->request);
     $this->assertInstanceOf('data_house', $response['house']);
+  }
+
+  public function test_private_query_of_house(){
+    $this->request->set_property('id', 125);
+    $house = new data_house();
+    $this->pimple['em'] = function() use ($house){
+      $this->em->expects($this->once())
+        ->method('find')
+        ->with('data_house', 125)
+        ->will($this->returnValue($house));
+      return $this->em;
+    };
+    di::set_instance($this->pimple);
+    $response = controller_number::private_query_of_house($this->request);
+    $this->assertInstanceOf('data_house', $response['house']);
+  }
+
+  public function test_private_query_of_number(){
+    $this->request->set_property('id', 125);
+    $number = new data_number();
+    $this->pimple['em'] = function() use ($number){
+      $this->em->expects($this->once())
+        ->method('find')
+        ->with('data_number', 125)
+        ->will($this->returnValue($number));
+      return $this->em;
+    };
+    di::set_instance($this->pimple);
+    $response = controller_number::private_query_of_number($this->request);
+    $this->assertInstanceOf('data_number', $response['number']);
   }
 
   public function test_get_number(){
