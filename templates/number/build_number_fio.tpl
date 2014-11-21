@@ -21,7 +21,8 @@
     <div class="col-md-5">
         <h3>Дополнительная информация</h3>
         <ul class="list-unstyled">
-            <li>Начисления: <a href="/number/accruals?id={{ number.get_id() }}" target="_blank">в новом окне</a></li>
+            <li><a href="/number/accruals?id={{ number.get_id() }}" target="_blank">Начисления</a></li>
+            <li><a href="/number/query_of_number?id={{ number.get_id() }}" target="_blank">Заявки</a></li>
         </ul>
     </div>
 </div>

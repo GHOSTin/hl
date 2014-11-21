@@ -39,6 +39,16 @@ class controller_number{
     return ['house' => $house];
   }
 
+  public static function private_query_of_house(model_request $request){
+    $house = di::get('em')->find('data_house', $request->GET('id'));
+    return ['house' => $house];
+  }
+
+  public static function private_query_of_number(model_request $request){
+    $number = di::get('em')->find('data_number', $request->GET('id'));
+    return ['number' => $number];
+  }
+
   public static function get_number($id){
     return di::get('em')->find('data_number', $id);
   }
