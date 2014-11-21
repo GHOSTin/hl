@@ -1,1 +1,2 @@
-{% include '@number/private_get_house_information.tpl' %}
+{% set house = response.house %}
+{% include '@number/build_house_content.tpl'%}
