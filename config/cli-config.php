@@ -15,7 +15,7 @@ $isDevMode = (application_configuration::status == 'development')? true: false;
 if ($isDevMode) {
     $cache = new \Doctrine\Common\Cache\ArrayCache;
 } else {
-    $cache = new \Doctrine\Common\Cache\MemcacheCache;
+    $cache = new \Doctrine\Common\Cache\ArrayCache;
 }
 $dbParams = array(
     'driver'   => 'pdo_mysql',
