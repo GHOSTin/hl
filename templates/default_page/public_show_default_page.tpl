@@ -1,4 +1,5 @@
 {% extends "default.tpl" %}
+
 {% block component %}
 <div class="col-12 col-sm-6 col-lg-6">
     <form action="/" method="post" class="form-horizontal">

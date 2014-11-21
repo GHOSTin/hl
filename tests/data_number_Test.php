@@ -113,6 +113,16 @@ class data_number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('Некрасов Евгений', $this->number->get_fio());
   }
 
+  public function test_get_queries(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
+                            $this->number->get_queries());
+  }
+
+  public function test_get_accruals(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
+                            $this->number->get_accruals());
+  }
+
   public function test_set_email_1(){
     $this->number->set_email('nekrasov@mlsco.ru');
     $this->assertEquals('nekrasov@mlsco.ru', $this->number->get_email());

@@ -113,14 +113,6 @@ $(document).ready(function(){
             scrollTo($(this).parent());
         }
 
-    // выводит диалог для добавления счетчика
-    }).on('click', '.get_dialog_add_meter', function(){
-        $.get('get_dialog_add_meter',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
     // выводит содержимое дома
     }).on('click', '.get_house_content', function(){
         if($(this).siblings().is('.house-content')) {
@@ -186,38 +178,6 @@ $(document).ready(function(){
             $(this).parent().addClass('active');
             scrollTo($(this).parent());
         }
-
-    // выводит счетчики привязанные к лицевому счету
-    }).on('click', '.get_meters', function(){
-        $.get('get_meters',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит информацию лицеого счета
-    }).on('click', '.get_number_information', function(){
-        $.get('get_number_information',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит информацию дома
-    }).on('click', '.get_house_information', function(){
-        $.get('get_house_information',{
-            id: get_house_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит лицевые счета дома
-    }).on('click', '.get_house_numbers', function(){
-        $.get('get_house_numbers',{
-            id: get_house_id($(this))
-            },function(r){
-                init_content(r);
-            });
 
     // выводит диалог изменеия пароля в личный кабинет
     }).on('click', '.get_dialog_edit_password', function(){

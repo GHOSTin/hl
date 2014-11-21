@@ -7,7 +7,7 @@ use \boxxy\classes\di;
 class model_environment{
 
 	private static $profiles = ['default_page', 'profile', 'exit',
-		'error', 'about', 'export', 'task', 'metrics', 'works'];
+		'error', 'about', 'export', 'task', 'metrics', 'works', 'api'];
 
 	public static function get_page_content(){
 		try{
@@ -53,7 +53,10 @@ class model_environment{
 		Twig_Autoloader::register();
 		$loader = new Twig_Loader_Filesystem(ROOT.'/templates/');
 	  $loader->prependPath(ROOT.'/templates/'.$component.'/', $component);
-		$twig=  new Twig_Environment($loader);
+		$options = array();
+		if(application_configuration::status == 'production')
+			$options['cache'] = ROOT.DIRECTORY_SEPARATOR.'cache'.DIRECTORY_SEPARATOR.'twig/';
+		$twig = new Twig_Environment($loader, $options);
 	  return $twig->render('@'.$component.'/'.$method.'.tpl', $data);
 	}
 
@@ -62,19 +65,16 @@ class model_environment{
 		date_default_timezone_set(application_configuration::php_timezone);
 		$pimple = new \Pimple\Container();
 
-		$pimple['pdo'] = function($pimple){
-			$pdo = new PDO('mysql:host='.application_configuration::database_host.';dbname='.application_configuration::database_name, application_configuration::database_user, application_configuration::database_password);
-			$pdo->exec("SET NAMES utf8");
-			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			$pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-		  return $pdo;
+		$pimple['model_query'] = function($pimple){
+		  return new model_query($pimple);
 		};
 
-		$pimple['model_query'] = function($pimple){
-		  return new model_query();
+		$pimple['model_number'] = function($pimple){
+			return new model_number($pimple);
 		};
+
 		$pimple['model_report_query'] = function($pimple){
-		  return new model_report_query();
+		  return new model_report_query($pimple);
 		};
 
     $pimple['em'] = function($pimple){

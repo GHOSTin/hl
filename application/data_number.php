@@ -1,4 +1,7 @@
 <?php
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
 * @Entity
 * @Table(name="numbers")
@@ -66,6 +69,16 @@ class data_number{
   */
   private $email;
 
+  /**
+  * @ManyToMany(targetEntity="data_query", mappedBy="numbers")
+  */
+  private $queries;
+
+  public function __construct(){
+    $this->queries = new ArrayCollection();
+    $this->accruals = new ArrayCollection();
+  }
+
   public static function generate_hash($password){
     return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
   }
@@ -104,6 +117,10 @@ class data_number{
 
   public function get_number(){
     return $this->number;
+  }
+
+  public function get_queries(){
+    return $this->queries;
   }
 
   public function get_telephone(){

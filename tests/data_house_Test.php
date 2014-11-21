@@ -6,6 +6,11 @@ class data_house_Test extends PHPUnit_Framework_TestCase{
     $this->house = new data_house();
   }
 
+  public function test_toSеring(){
+    $this->house->set_number('125А');
+    $this->assertEquals('125А', $this->house);
+  }
+
   public function test_set_id_1(){
     $this->house->set_id(125);
     $this->assertEquals(125, $this->house->get_id());
@@ -98,5 +103,10 @@ class data_house_Test extends PHPUnit_Framework_TestCase{
     $flat = new data_flat();
     $this->house->add_flat($flat);
     $this->house->add_flat($flat);
+  }
+
+  public function test_get_queries(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
+                            $this->house->get_queries());
   }
 }

@@ -54,6 +54,11 @@ class data_house{
   public function __construct(){
     $this->numbers = new ArrayCollection();
     $this->flats = new ArrayCollection();
+    $this->queries = new ArrayCollection();
+  }
+
+  public function __toString(){
+    return (string) $this->number;
   }
 
   public function add_number(data_number $number){
@@ -98,6 +103,10 @@ class data_house{
 
   public function get_street(){
     return $this->street;
+  }
+
+  public function get_queries(){
+    return $this->queries;
   }
 
   public function set_city(data_city $city){

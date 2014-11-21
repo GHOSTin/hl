@@ -5,20 +5,20 @@ use \boxxy\classes\di;
 class controller_default_page{
 
 	public static function private_show_default_page(){
-		return true;
+		return null;
 	}
 
   public static function public_show_default_page(model_request $request){
-    if(!is_null($request->take_post('login'))
-      AND !is_null($request->take_post('password'))){
+    $login = $request->take_post('login');
+    $password = $request->take_post('password');
+    if(!is_null($login) AND !is_null($password)){
       $em = di::get('em');
-      $user = $em->getRepository('data_user')
-        ->findOneBy(['login' => $request->take_post('login')]);
+      $user = $em->getRepository('data_user')->findOneByLogin($login);
       if(!is_null($user)){
         if($user->get_status() !== 'true')
           die('Вы заблокированы и не можете войти в систему.');
-        if(data_user::generate_hash(
-            $request->take_post('password'))=== $user->get_hash()){
+        $hash = data_user::generate_hash($password);
+        if($user->get_hash() === $hash){
           $session = new data_session();
           $session->set_user($user);
           $session->set_ip($_SERVER['REMOTE_ADDR']);
@@ -33,6 +33,6 @@ class controller_default_page{
         }
       }
     }
-    return true;
+    return null;
   }
 }

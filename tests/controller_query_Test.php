@@ -32,4 +32,18 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $response = controller_query::private_get_dialog_add_work($this->request);
     $this->assertEquals('query_object', $response['query']);
   }
+
+  public function test_private_get_query_content(){
+    $this->request->set_property('id', 125);
+    $this->pimple['em'] = function(){
+      $this->em->expects($this->once())
+        ->method('find')
+        ->with('data_query', 125)
+        ->will($this->returnValue('query_object'));
+      return $this->em;
+    };
+    di::set_instance($this->pimple);
+    $response = controller_query::private_get_query_content($this->request);
+    $this->assertEquals('query_object', $response['query']);
+  }
 }
