@@ -10,7 +10,6 @@
         </button>
         <a class="navbar-brand visible-xs" href="#"></a>
     </div>
-    {# {% if comp != 'default_page' %}
     <ul class="nav navbar-nav pull-right hidden-sm hidden-xs" style="position: relative">
         <li id="nt-center">
             <a href="#">
@@ -18,7 +17,6 @@
             </a>
         </li>
     </ul>
-    {% endif %} #}
     <!-- begin user -->
     <nav class="navbar-collapse collapse pull-right" id="usermenu" role="navigation">
         <ul class="nav navbar-nav pull-right">

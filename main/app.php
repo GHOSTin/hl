@@ -46,8 +46,18 @@ $app->get('/', 'main\\controllers\\default_page::default_page');
 $app->post('/login/', 'main\\controllers\\default_page::login');
 $app->get('/logout/', 'main\\controllers\\default_page::logout');
 $app->get('/about/', 'main\\controllers\\default_page::about');
+# profile
+$app->get('/profile/', 'main\\controllers\\profile::default_page');
+$app->get('/profile/get_userinfo', 'main\\controllers\\profile::get_user_info');
+$app->put('/profile/update_telephone', 'main\\controllers\\profile::update_telephone');
+$app->put('/profile/update_cellphone', 'main\\controllers\\profile::update_cellphone');
+$app->get('/profile/update_password', 'main\\controllers\\profile::update_password');
+$app->get('/profile/get_notification_center_content',
+          'main\\controllers\\profile::get_notification_center_content');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
-    return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
+    return $app['twig']->render('error404.tpl',
+                  ['user' => $app['user'], 'menu' => null, 'hot_menu' => null]);
 });
 $app->run();
+
