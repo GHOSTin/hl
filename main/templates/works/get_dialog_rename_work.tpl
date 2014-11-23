@@ -1,7 +1,5 @@
 {% extends "dialog.tpl" %}
 
-{% set work = response.work %}
-
 {% block title %}Диалог переименования работы{% endblock title %}
 
 {% block dialog %}
@@ -20,9 +18,9 @@
 		$.get('rename_work',{
 			id: {{ work.get_id() }},
 			name: $('.dialog-input-name').val()
-			},function(response){
-				$('.dialog').modal('hide');
-				$('.work[work_id = "{{ work.get_id() }}"] .work-title').html(response);
-			});
+		},function(response){
+			$('.dialog').modal('hide');
+			$('.work[work_id = "{{ work.get_id() }}"] .work-title').html(response);
+		});
 	});
 {% endblock script %}

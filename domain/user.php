@@ -1,5 +1,6 @@
 <?php namespace domain;
 
+use \DomainException;
 use \main\conf;
 
 /**

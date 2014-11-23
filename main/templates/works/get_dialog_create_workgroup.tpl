@@ -17,9 +17,9 @@
 	$('.create_workgroup').click(function(){
 		$.get('create_workgroup',{
 			name: $('.dialog-input-name').val()
-			},function(response){
-				$('.dialog').modal('hide');
-				$('.workgroups').html(response);
-			});
+		},function(response){
+			$('.dialog').modal('hide');
+			$('.workgroups').html(response);
+		});
 	});
 {% endblock script %}

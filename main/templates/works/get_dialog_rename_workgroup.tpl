@@ -1,7 +1,5 @@
 {% extends "dialog.tpl" %}
 
-{% set workgroup = response.workgroup %}
-
 {% block title %}Диалог переименования группы работ{% endblock title %}
 
 {% block dialog %}
@@ -20,9 +18,9 @@
 		$.get('rename_workgroup',{
 			workgroup_id: {{ workgroup.get_id() }},
 			name: $('.dialog-input-name').val()
-			},function(response){
-				$('.dialog').modal('hide');
-				$('.workgroup[workgroup_id = "{{ workgroup.get_id() }}"] .workgroup-title').html(response);
-			});
+		},function(response){
+			$('.dialog').modal('hide');
+			$('.workgroup[workgroup_id = "{{ workgroup.get_id() }}"] .workgroup-title').html(response);
+		});
 	});
 {% endblock script %}

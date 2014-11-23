@@ -1,9 +1,12 @@
-<?php
+<?php namespace domain;
+
+use \DomainException;
+
 /**
 * @Entity
 * @Table(name="works")
 */
-class data_work{
+class work{
 
   /**
    * @Id
@@ -22,7 +25,7 @@ class data_work{
   */
   private $status;
 
-  /**
+  /*
   * @OneToMany(targetEntity="data_query2work", mappedBy="work")
   */
   private $query2works;

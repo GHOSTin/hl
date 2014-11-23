@@ -1,7 +1,5 @@
 {% extends "dialog.tpl" %}
 
-{% set works = response.works %}
-
 {% block title %}Диалог добавления работы{% endblock title %}
 
 {% block dialog %}
@@ -23,12 +21,12 @@
 		var work_id = $('.dialog-select-work_id').val();
 		if(work_id > 0){
 			$.get('add_work',{
-				workgroup_id: {{ request.GET('id') }},
+				workgroup_id: {{ workgroup.get_id() }},
 				work_id: work_id
-				},function(response){
-					$('.dialog').modal('hide');
-					$(response).replaceAll('.workgroup[workgroup_id = "{{ request.GET('id') }}"] .workgroup-content');
-				});
+			},function(response){
+				$('.dialog').modal('hide');
+				$(response).replaceAll('.workgroup[workgroup_id = "{{ workgroup.get_id() }}"] .workgroup-content');
+			});
 		}
 	});
 {% endblock script %}

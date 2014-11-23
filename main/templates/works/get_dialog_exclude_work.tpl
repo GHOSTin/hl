@@ -1,8 +1,5 @@
 {% extends "dialog.tpl" %}
 
-{% set work = response.work %}
-{% set workgroup = response.workgroup %}
-
 {% block title %}Диалог исключения работы{% endblock title %}
 
 {% block dialog %}
@@ -19,9 +16,9 @@
 		$.get('exclude_work',{
 			workgroup_id: {{ workgroup.get_id() }},
 			work_id: {{ work.get_id() }}
-			},function(response){
-				$('.dialog').modal('hide');
-				$(response).replaceAll('.workgroup[workgroup_id = "{{ workgroup.get_id() }}"] .workgroup-content');
-			});
+		},function(response){
+			$('.dialog').modal('hide');
+			$(response).replaceAll('.workgroup[workgroup_id = "{{ workgroup.get_id() }}"] .workgroup-content');
+		});
 	});
 {% endblock script %}

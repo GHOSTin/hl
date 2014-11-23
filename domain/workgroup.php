@@ -1,12 +1,14 @@
-<?php
+<?php namespace domain;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use \DomainException;
+use \Doctrine\Common\Collections\ArrayCollection;
+use \domain\work;
 
 /**
 * @Entity
 * @Table(name="workgroups")
 */
-class data_workgroup{
+class workgroup{
 
   /**
    * @Id
@@ -26,7 +28,7 @@ class data_workgroup{
 	private $status;
 
   /**
-   * @ManyToMany(targetEntity="data_work")
+   * @ManyToMany(targetEntity="\domain\work")
    * @JoinTable(name="workgroup2work",
    * joinColumns={@JoinColumn(name="workgroup_id", referencedColumnName="id")},
    * inverseJoinColumns={@JoinColumn(name="work_id", referencedColumnName="id")})
@@ -34,7 +36,7 @@ class data_workgroup{
   private $works;
 
 
-  /**
+  /*
   * @OneToMany(targetEntity="data_query", mappedBy="work_type")
   */
   private $queries;
@@ -46,13 +48,13 @@ class data_workgroup{
     $this->works = new ArrayCollection();
   }
 
-  public function add_work(data_work $work){
+  public function add_work(work $work){
     if($this->works->contains($work))
       throw new DomainException('Такая работа уже добавлена в группу.');
     $this->works->add($work);
   }
 
-  public function exclude_work(data_work $work){
+  public function exclude_work(work $work){
     $this->works->removeElement($work);
   }
 

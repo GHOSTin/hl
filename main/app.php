@@ -64,10 +64,36 @@ $app->get('/error/show_dialog', 'main\\controllers\\error::show_dialog');
 $app->get('/error/send_error', 'main\\controllers\\error::send_error');
 $app->get('/error/delete_error', 'main\\controllers\\error::delete_error');
 $app->get('/error/', 'main\\controllers\\error::default_page');
-
+# works
+$app->get('/works/', 'main\\controllers\\works::default_page');
+$app->get('/works/get_workgroup_content',
+          'main\\controllers\\works::get_workgroup_content');
+$app->get('/works/get_dialog_rename_workgroup',
+          'main\\controllers\\works::get_dialog_rename_workgroup');
+$app->get('/works/rename_workgroup',
+          'main\\controllers\\works::rename_workgroup');
+$app->get('/works/get_dialog_add_work',
+          'main\\controllers\\works::get_dialog_add_work');
+$app->get('/works/add_work', 'main\\controllers\\works::add_work');
+$app->get('/works/get_dialog_exclude_work',
+          'main\\controllers\\works::get_dialog_exclude_work');
+$app->get('/works/exclude_work', 'main\\controllers\\works::exclude_work');
+$app->get('/works/get_dialog_create_workgroup',
+          'main\\controllers\\works::get_dialog_create_workgroup');
+$app->get('/works/create_workgroup',
+          'main\\controllers\\works::create_workgroup');
+$app->get('/works/get_work_content',
+          'main\\controllers\\works::get_work_content');
+$app->get('/works/get_dialog_rename_work',
+          'main\\controllers\\works::get_dialog_rename_work');
+$app->get('/works/rename_work',
+          'main\\controllers\\works::rename_work');
+$app->get('/works/get_dialog_create_work',
+          'main\\controllers\\works::get_dialog_create_work');
+$app->get('/works/create_work',
+          'main\\controllers\\works::create_work');
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
-    return $app['twig']->render('error404.tpl',
-                  ['user' => $app['user'], 'menu' => null, 'hot_menu' => null]);
+    return $app['twig']->render('error404.tpl', ['user' => $app['user'],
+                                'menu' => null, 'hot_menu' => null]);
 });
 $app->run();
-

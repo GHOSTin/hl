@@ -17,9 +17,9 @@
 	$('.create_work').click(function(){
 		$.get('create_work',{
 			name: $('.dialog-input-name').val()
-			},function(response){
-				$('.dialog').modal('hide');
-				$('.works').html(response);
-			});
+		},function(response){
+			$('.dialog').modal('hide');
+			$('.works').html(response);
+		});
 	});
 {% endblock script %}
