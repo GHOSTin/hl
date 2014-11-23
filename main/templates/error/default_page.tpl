@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set errors = response.errors %}
+
 {% block component %}
   <ul>
   {% for error in errors %}
@@ -10,6 +10,7 @@
   {% endfor %}
   </ul>
 {% endblock component %}
+
 {% block javascript %}
     <script src="/js/error.js"></script>
 {% endblock javascript %}

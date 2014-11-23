@@ -49,11 +49,21 @@ $app->get('/about/', 'main\\controllers\\default_page::about');
 # profile
 $app->get('/profile/', 'main\\controllers\\profile::default_page');
 $app->get('/profile/get_userinfo', 'main\\controllers\\profile::get_user_info');
-$app->put('/profile/update_telephone', 'main\\controllers\\profile::update_telephone');
-$app->put('/profile/update_cellphone', 'main\\controllers\\profile::update_cellphone');
-$app->get('/profile/update_password', 'main\\controllers\\profile::update_password');
+$app->put('/profile/update_telephone',
+          'main\\controllers\\profile::update_telephone');
+$app->put('/profile/update_cellphone',
+          'main\\controllers\\profile::update_cellphone');
+$app->get('/profile/update_password',
+          'main\\controllers\\profile::update_password');
 $app->get('/profile/get_notification_center_content',
           'main\\controllers\\profile::get_notification_center_content');
+# api
+$app->get('/api/get_chat_options', 'main\\controllers\\api::get_chat_options');
+# error
+$app->get('/error/show_dialog', 'main\\controllers\\error::show_dialog');
+$app->get('/error/send_error', 'main\\controllers\\error::send_error');
+$app->get('/error/delete_error', 'main\\controllers\\error::delete_error');
+$app->get('/error/', 'main\\controllers\\error::default_page');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
     return $app['twig']->render('error404.tpl',

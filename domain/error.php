@@ -1,9 +1,9 @@
-<?php
+<?php namespace domain;
 /**
 * @Entity
 * @Table(name="errors")
 */
-class data_error{
+class error{
 
   /**
   * @Column(name="text", type="string")
@@ -11,7 +11,7 @@ class data_error{
   private $text;
 
   /**
-  * @ManyToOne(targetEntity="data_user")
+  * @ManyToOne(targetEntity="\domain\user")
   */
   private $user;
 
@@ -33,7 +33,7 @@ class data_error{
     return $this->time;
   }
 
-  public function set_user(data_user $user){
+  public function set_user(user $user){
     $this->user = $user;
   }
 
