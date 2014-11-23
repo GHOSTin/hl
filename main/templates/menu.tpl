@@ -10,7 +10,7 @@
         </button>
         <a class="navbar-brand visible-xs" href="#"></a>
     </div>
-    {% if comp != 'default_page' %}
+    {# {% if comp != 'default_page' %}
     <ul class="nav navbar-nav pull-right hidden-sm hidden-xs" style="position: relative">
         <li id="nt-center">
             <a href="#">
@@ -18,12 +18,12 @@
             </a>
         </li>
     </ul>
-    {% endif %}
+    {% endif %} #}
     <!-- begin user -->
     <nav class="navbar-collapse collapse pull-right" id="usermenu" role="navigation">
         <ul class="nav navbar-nav pull-right">
             <li>
-                <a href="/profile/" class="current_user" user_id="{{user_id}}">
+                <a href="/profile/" class="current_user" user_id="{{ user.get_id() }}">
                    {{ user.get_firstname() }} {{ user.get_lastname() }}
                 </a>
             </li>
@@ -45,7 +45,7 @@
                     <li><a tabindex="-1" href="/report/">Отчеты</a></li>
                     <li class="divider"></li>
                     <li><a tabindex="-1" href="/about/">О программе</a></li>
-                    <li><a tabindex="-1" href="/exit/">Выход</a></li>
+                    <li><a tabindex="-1" href="/logout/">Выход</a></li>
                 </ul>
             </li>
             {% if hot_menu|length >0 %}

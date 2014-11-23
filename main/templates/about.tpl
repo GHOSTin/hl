@@ -1,4 +1,5 @@
 {% extends "default.tpl" %}
+
 {% block component %}
 <div class="row">
   <div class="col-md-12">

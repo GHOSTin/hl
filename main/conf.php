@@ -1,11 +1,11 @@
-<?php
+<?php namespace main;
 
-class application_configuration{
-	// database option
-	const database_name = 'mshc2_test';
-	const database_host = 'localhost';
-	const database_user = 'mshc2_test';
-	const database_password = 'mshc2_test';
+class conf{
+	// db option
+	const db_name = 'mshc2_test';
+	const db_host = 'localhost';
+	const db_user = 'mshc2_test';
+	const db_password = 'mshc2_test';
 	// auth option
 	const authSalt = 'GbpltwGjkysqFYtGfhjkm';
 	//chat

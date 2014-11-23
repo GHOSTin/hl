@@ -1,9 +1,9 @@
-<?php
+<?php namespace domain;
 /**
 * @Entity
 * @Table(name="sessions_logs")
 */
-class data_session{
+class session{
 
   /**
   * @Id
@@ -18,7 +18,7 @@ class data_session{
   public $time;
 
   /**
-  * @ManyToOne(targetEntity="data_user")
+  * @ManyToOne(targetEntity="\domain\user")
   */
   public $user;
 
@@ -42,7 +42,7 @@ class data_session{
     $this->time = $time;
   }
 
-  public function set_user(data_user $user){
+  public function set_user(user $user){
     $this->user = $user;
   }
 }

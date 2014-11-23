@@ -2,7 +2,7 @@
 
 {% block component %}
 <div class="col-12 col-sm-6 col-lg-6">
-    <form action="/" method="post" class="form-horizontal">
+    <form action="/login/" method="post" class="form-horizontal">
         <legend>Вход в систему</legend>
         <fieldset>
             <div class="form-group">

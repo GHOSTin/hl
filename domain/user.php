@@ -1,16 +1,19 @@
-<?php
+<?php namespace domain;
+
+use \main\conf;
+
 /**
 * @Entity
 * @Table(name="users")
 */
-class data_user{
+class user{
 
   /**
   * @Column(name="cellphone", type="string")
   */
 	private $cellphone;
 
-  /**
+  /*
   * @OneToMany(targetEntity="data_error", mappedBy="user")
   */
   private $errors;
@@ -43,7 +46,7 @@ class data_user{
 	private $middlename;
 
   /**
-  * @OneToMany(targetEntity="data_user", mappedBy="user")
+  * @OneToMany(targetEntity="\domain\session", mappedBy="user")
   */
 	private $sessions;
 
@@ -57,12 +60,12 @@ class data_user{
   */
 	private $telephone;
 
-  /**
+  /*
   * @OneToMany(targetEntity="data_query2comment", mappedBy="user")
   */
   private $query2comments;
 
-  /**
+  /*
   * @OneToMany(targetEntity="data_profile", mappedBy="user")
   */
   private $profiles;
@@ -87,7 +90,7 @@ class data_user{
   }
 
   public static function generate_hash($password){
-    return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
+    return md5(md5(htmlspecialchars($password)).conf::authSalt);
   }
 
   public function get_hash(){
