@@ -66,8 +66,8 @@ class user{
   */
   private $query2comments;
 
-  /*
-  * @OneToMany(targetEntity="data_profile", mappedBy="user")
+  /**
+  * @OneToMany(targetEntity="\domain\profile", mappedBy="user")
   */
   private $profiles;
 
@@ -78,8 +78,10 @@ class user{
 
   public static $statuses = ['true', 'false'];
 
-  public function add_profile(data_profile $profile){
-    $this->profiles[$profile] = $profile;
+  public function add_profile(\domain\profile $profile){
+    if($this->profiles->contains($profile))
+      throw new DomainException('Пользователь уже добавлен в группу.');
+    $this->profiles->add($profile);
   }
 
   public function get_cellphone(){
