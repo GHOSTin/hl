@@ -1,9 +1,10 @@
-<?php
+<?php namespace domain;
+
 /**
-* @Entity(repositoryClass="repository_metrics")
+* @Entity(repositoryClass="\domain\repositories\metrics")
 * @Table(name="metrics")
 */
-class data_metrics {
+class metrics {
 
   /**
   * @Id
@@ -108,5 +109,4 @@ class data_metrics {
   {
     return $this->metrics;
   }
-
 }

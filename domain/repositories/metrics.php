@@ -1,11 +1,11 @@
-<?php
+<?php namespace domain\repositories;
 
-class repository_metrics extends \Doctrine\ORM\EntityRepository {
+class metrics extends \Doctrine\ORM\EntityRepository {
 
   public function findByStatusBetween($status, $time){
     $qb = $this->_em->createQueryBuilder();
     $qb->select('m')
-      ->from('data_metrics', 'm')
+      ->from('\domain\metrics', 'm')
       ->where($qb->expr()->andX(
           $qb->expr()->eq('m.status', ':status'),
           $qb->expr()->gte("m.time", ':start_date'),
@@ -15,8 +15,6 @@ class repository_metrics extends \Doctrine\ORM\EntityRepository {
       ->setParameter('status', $status)
       ->setParameter('start_date', strtotime($time.' midnight'))
       ->setParameter('end_date', strtotime($time.' +1 day midnight'));
-
     return $qb->getQuery()->getResult();
   }
-
-} 
+}

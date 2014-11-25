@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set metrics = response.metrics %}
+
 {% block component %}
   <div class="row">
     <div class="col-md-2">
@@ -17,10 +17,12 @@
     </div>
   </div>
 {% endblock%}
+
 {% block javascript %}
   <script src="/js/metrics.js"></script>
   <script src="/js/bootstrap-datepicker.js"></script>
 {% endblock%}
+
 {% block css %}
   <link rel="stylesheet" href="/css/datepicker.css" >
 {% endblock css %}

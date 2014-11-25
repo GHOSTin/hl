@@ -48,12 +48,14 @@ class users{
     $group->set_status('true');
     $app['em']->persist($group);
     $app['em']->flush();
-    $letter_group = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
+    $letter = mb_substr($group->get_name(), 0 ,1, 'utf-8')
+    $letter_group = mb_strtolower(, 'utf-8');
     $letters = [];
     $groups = $app['em']->getRepository('\domain\group')->findAll();
     if(!empty($groups))
       foreach($groups as $group){
-        $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
+        $letter = mb_substr($group->get_name(), 0 ,1, 'utf-8');
+        $letter = mb_strtolower($letter, 'utf-8');
         if($letter === $letter_group)
           $letters[] = $group;
       }
@@ -66,7 +68,8 @@ class users{
     $users = $app['em']->getRepository('\domain\user')->findAll();
     if(!empty($users))
       foreach($users as $user){
-        $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
+        $letter = mb_substr($user->get_lastname(), 0 ,1, 'utf-8');
+        $letter = mb_strtolower($letter, 'utf-8');
         if(isset($letters[$letter]))
           $letters[$letter]++;
         else

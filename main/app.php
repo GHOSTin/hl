@@ -162,6 +162,12 @@ $app->get('/user/get_restriction_content',
           'main\\controllers\\users::get_restriction_content');
 $app->get('/user/update_restriction',
           'main\\controllers\\users::update_restriction');
+# metrics
+$app->get('/metrics/', 'main\\controllers\\metrics::default_page');
+$app->get('/metrics/archive/', 'main\\controllers\\metrics::archive');
+$app->get('/metrics/archive/set_date', 'main\\controllers\\metrics::set_date');
+$app->post('/metrics/remove_metrics',
+          'main\\controllers\\metrics::remove_metrics');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
     return $app['twig']->render('error404.tpl', ['user' => $app['user'],

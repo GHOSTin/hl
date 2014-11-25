@@ -16,7 +16,8 @@ class profile{
                                 ['user' => $app['user']]);
   }
 
-  public function get_notification_center_content(Request $request, Application $app){
+  public function get_notification_center_content(Request $request,
+                                                  Application $app){
     $users = $app['em']->getRepository('\domain\user')->findAll();
     return $app['twig']->render('profile\get_notification_center_content.tpl',
                                 ['users' => $users]);

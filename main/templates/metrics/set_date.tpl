@@ -1,4 +1,3 @@
-{% set metrics = response.metrics %}
 {% if metrics %}
   <table class="table table-hover">
     <thead>
