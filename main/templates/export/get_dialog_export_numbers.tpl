@@ -1,8 +1,9 @@
 {% extends "ajax.tpl" %}
-{% set query = response.queries[0] %}
+
 {% block js %}
   $('.export-form').html(get_hidden_content());
 {% endblock js %}
+
 {% block html %}
   <h3>Экспорт жилфонда</h3>
   <div>

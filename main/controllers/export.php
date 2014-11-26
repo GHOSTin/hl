@@ -1,30 +1,28 @@
-<?php
+<?php namespace main\controllers;
 
-use \boxxy\classes\di;
+use Silex\Application;
 
-class controller_export {
+class export{
 
-  public static function private_show_default_page(model_request $request){
-    return true;
+  public function default_page(Application $app){
+
+    return $app['twig']->render('export\default_page.tpl',
+                                ['user' => $app['user'], 'menu' => null,
+                                 'hot_menu' => null]);
   }
 
-  public static function private_get_dialog_export_numbers(
-    model_request $request){
-    return true;
-  }
-
-  public static function private_export_numbers(model_request $request){
+  public function export_numbers(Application $app){
     set_time_limit(0);
     header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream; charset=utf-8');
-    header( 'Content-Disposition: attachment;filename='.$filename);
+    header( 'Content-Disposition: attachment;filename=export.csv');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
     $fp = tmpfile();
     $uri = stream_get_meta_data($fp)['uri'];
     fputcsv($fp, ['Улица', 'Дом', 'Квартира', 'Лицевой счет', 'ФИО'], ';');
-    $numbers = di::get('em')->getRepository('data_number')->findAll();
+    $numbers = $app['em']->getRepository('\domain\number')->findAll();
     foreach($numbers as $number){
       $value = [$number->get_flat()->get_house()->get_street()->get_name(),
                 $number->get_flat()->get_house()->get_number(),
@@ -36,5 +34,9 @@ class controller_export {
     readfile($uri);
     fclose($fp);
     exit();
+  }
+
+  public function get_dialog_export_numbers(Application $app){
+    return $app['twig']->render('export\get_dialog_export_numbers.tpl');
   }
 }

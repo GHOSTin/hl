@@ -1,4 +1,5 @@
 {% extends "default.tpl" %}
+
 {% block component %}
     <div class="row">
       <div class="col-md-3">
@@ -10,6 +11,7 @@
       <div class="col-md-9 export-form"></div>
     </div>
 {% endblock component %}
+
 {% block javascript %}
   <script src="/js/export.js"></script>
 {% endblock javascript %}

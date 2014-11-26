@@ -211,6 +211,12 @@ $app->get('/number/query_of_number',
           'main\\controllers\\numbers::query_of_number');
 $app->get('/number/accruals', 'main\\controllers\\numbers::accruals');
 $app->get('/number/contact_info', 'main\\controllers\\numbers::contact_info');
+# export
+$app->get('/export/', 'main\\controllers\\export::default_page');
+$app->get('/export/get_dialog_export_numbers',
+          'main\\controllers\\export::get_dialog_export_numbers');
+$app->get('/export/export_numbers',
+          'main\\controllers\\export::export_numbers');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
     return $app['twig']->render('error404.tpl', ['user' => $app['user'],
