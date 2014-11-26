@@ -1,7 +1,5 @@
 {% extends "dialog.tpl" %}
 
-{% set number = response.number %}
-
 {% block title %}Диалог редактирования ФИО владельца{% endblock %}
 
 {% block dialog %}

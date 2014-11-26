@@ -1,7 +1,5 @@
 {% extends "ajax.tpl" %}
 
-{% set house = response.house %}
-
 {% block js %}
   $('.house[house = {{ house.get_id() }}]').append(get_hidden_content())
 {% endblock %}

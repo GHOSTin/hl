@@ -1,15 +1,16 @@
-<?php
+<?php namespace domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use \main\conf;
 
 /**
 * @Entity
 * @Table(name="numbers")
 */
-class data_number{
+class number{
 
   /**
-  * @OneToMany(targetEntity="data_accrual", mappedBy="number")
+  * @OneToMany(targetEntity="\domain\accrual", mappedBy="number")
   */
   private $accruals;
 
@@ -18,7 +19,7 @@ class data_number{
   */
   private $cellphone;
 
-  /**
+  /*
   * @OneToMany(targetEntity="data_city", mappedBy="city")
   */
   private $city;
@@ -29,7 +30,7 @@ class data_number{
   private $fio;
 
   /**
-  * @ManyToOne(targetEntity="data_flat")
+  * @ManyToOne(targetEntity="\domain\flat")
   */
   private $flat;
 
@@ -39,7 +40,7 @@ class data_number{
   private $hash;
 
   /**
-  * @ManyToOne(targetEntity="data_house")
+  * @ManyToOne(targetEntity="\domain\house")
   */
   private $house;
 
@@ -70,7 +71,7 @@ class data_number{
   private $email;
 
   /**
-  * @ManyToMany(targetEntity="data_query", mappedBy="numbers")
+  * @ManyToMany(targetEntity="\domain\query", mappedBy="numbers")
   */
   private $queries;
 
@@ -80,7 +81,7 @@ class data_number{
   }
 
   public static function generate_hash($password){
-    return md5(md5(htmlspecialchars($password)).application_configuration::authSalt);
+    return md5(md5(htmlspecialchars($password)).conf::authSalt);
   }
 
   public function get_accruals(){
@@ -150,7 +151,7 @@ class data_number{
   	$this->fio = $fio;
   }
 
-  public function set_flat(data_flat $flat){
+  public function set_flat(\domain\flat $flat){
     $this->flat = $flat;
   }
 

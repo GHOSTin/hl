@@ -1,9 +1,10 @@
-<?php
+<?php namespace domain;
+
 /**
-* @Entity(repositoryClass="repository_query")
+* @Entity(repositoryClass="\domain\repositories\query")
 * @Table(name="queries")
 */
-class data_query{
+class query{
 
 	/**
   * @Id
@@ -33,17 +34,17 @@ class data_query{
 	private $warning_status;
 
 	/**
-  * @ManyToOne(targetEntity="data_department")
+  * @ManyToOne(targetEntity="\domain\department")
   */
 	private $department;
 
 	/**
-  * @ManyToOne(targetEntity="data_house")
+  * @ManyToOne(targetEntity="\domain\house")
   */
 	private $house;
 
 	/**
-  * @ManyToOne(targetEntity="data_workgroup")
+  * @ManyToOne(targetEntity="\domain\workgroup")
   * @JoinColumn(name="query_worktype_id", referencedColumnName="id")
   */
 	private $work_type;
@@ -94,14 +95,14 @@ class data_query{
 	private $number;
 
 	/**
-   * @ManyToMany(targetEntity="data_number")
+   * @ManyToMany(targetEntity="\domain\number")
    * @JoinTable(name="query2number",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
    * inverseJoinColumns={@JoinColumn(name="number_id", referencedColumnName="id")})
    */
 	private $numbers;
 
-	/**
+	/*
    * @ManyToMany(targetEntity="data_query2work")
    * @JoinTable(name="query2work",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
@@ -109,7 +110,7 @@ class data_query{
    */
 	private $works;
 
-	/**
+	/*
    * @ManyToMany(targetEntity="data_query2user")
    * @JoinTable(name="query2user",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
@@ -117,7 +118,7 @@ class data_query{
    */
 	private $users;
 
-	/**
+	/*
   * @OneToMany(targetEntity="data_query2comment", mappedBy="query")
   */
 	private $comments;
@@ -127,7 +128,7 @@ class data_query{
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
 	public static $warning_status_list = ['hight', 'normal', 'planned'];
 
-	public function add_number(data_number $number){
+	public function add_number(\domain\number $number){
 		if(array_key_exists($number->get_id(), $this->numbers))
 			throw new DomainException('Лицевой счет уже добавлен в заявку.');
 		$this->numbers[$number->get_id()] = $number;
@@ -158,7 +159,7 @@ class data_query{
 				}
 	}
 
-	public function add_work_type(data_workgroup $wt){
+	public function add_work_type(\domain\workgroup $wt){
 		$this->work_type = $wt;
 	}
 
@@ -306,7 +307,7 @@ class data_query{
 		$this->close_reason = (string) $reason;
 	}
 
-	public function set_department(data_department $department){
+	public function set_department(\domain\department $department){
 		$this->department = $department;
 	}
 
@@ -316,7 +317,7 @@ class data_query{
 		$this->initiator = $initiator;
 	}
 
-	public function set_house(data_house $house){
+	public function set_house(\domain\house $house){
 		$this->house = $house;
 	}
 

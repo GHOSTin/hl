@@ -1,12 +1,12 @@
-<?php
+<?php namespace domain;
 /**
 * @Entity
 * @Table(name="flats")
 */
-class data_flat{
+class flat{
 
   /**
-  * @ManyToOne(targetEntity="data_house")
+  * @ManyToOne(targetEntity="\domain\house")
   */
   private $house;
 
@@ -17,7 +17,7 @@ class data_flat{
   private $id;
 
   /**
-  * @OneToMany(targetEntity="data_number", mappedBy="flat")
+  * @OneToMany(targetEntity="\domain\number", mappedBy="flat")
   */
   private $num;
 
@@ -49,7 +49,7 @@ class data_flat{
     return $this->status;
   }
 
-  public function set_house(data_house $house){
+  public function set_house(\domain\house $house){
     $this->house = $house;
   }
 

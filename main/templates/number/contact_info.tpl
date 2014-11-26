@@ -1,7 +1,5 @@
 {% extends "default.tpl" %}
 
-{% set number = response.number %}
-
 {% block component %}
   <div class="row">
     <div class="col-md-6">

@@ -1,7 +1,5 @@
 {% extends "default.tpl" %}
 
-{% set house = response.house %}
-
 {% block component %}
 <h2>Заявки на дом {{ house.get_street.get_name() }}, №{{ house.get_number() }}</h2>
 <ul>

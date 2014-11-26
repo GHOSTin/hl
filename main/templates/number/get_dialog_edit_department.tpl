@@ -1,8 +1,5 @@
 {% extends "dialog.tpl" %}
 
-{% set house = response.house %}
-{% set departments = response.departments %}
-
 {% block title %}Диалог привязки участка{% endblock %}
 
 {% block dialog %}

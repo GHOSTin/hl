@@ -1,12 +1,12 @@
-<?php
+<?php namespace domain;
 /**
 * @Entity
 * @Table(name="accruals")
 */
-class data_accrual{
+class accrual{
 
   /**
-  * @ManyToOne(targetEntity="data_number")
+  * @ManyToOne(targetEntity="\domain\number")
   */
   private $number;
 
@@ -123,7 +123,7 @@ class data_accrual{
     return $this->unit;
   }
 
-  public function set_number(data_number $number){
+  public function set_number(\domain\number $number){
     $this->number = $number;
   }
 

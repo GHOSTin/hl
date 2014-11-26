@@ -1,4 +1,4 @@
-<?php
+<?php namespace domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -6,10 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 * @Entity
 * @Table(name="houses")
 */
-class data_house{
+class house{
 
   /**
-  * @ManyToOne(targetEntity="data_department")
+  * @ManyToOne(targetEntity="\domain\department")
   */
   private $department;
 
@@ -30,22 +30,22 @@ class data_house{
 	private $status;
 
   /**
-  * @ManyToOne(targetEntity="data_street")
+  * @ManyToOne(targetEntity="\domain\street")
   */
 	private $street;
 
   /**
-  * @OneToMany(targetEntity="data_flat", mappedBy="house")
+  * @OneToMany(targetEntity="\domain\flat", mappedBy="house")
   */
   private $flats;
 
   /**
-  * @OneToMany(targetEntity="data_number", mappedBy="house")
+  * @OneToMany(targetEntity="\domain\number", mappedBy="house")
   */
   private $numbers;
 
   /**
-  * @OneToMany(targetEntity="data_query", mappedBy="house")
+  * @OneToMany(targetEntity="\domain\query", mappedBy="house")
   */
   private $queries;
 
@@ -61,20 +61,16 @@ class data_house{
     return (string) $this->number;
   }
 
-  public function add_number(data_number $number){
+  public function add_number(\domain\number $number){
     if($this->numbers->contains($number))
       throw new DomainException('Лицевой уже добавлен.');
     $this->numbers->add($number);
   }
 
-  public function add_flat(data_flat $flat){
+  public function add_flat(\domain\flat $flat){
     if($this->flats->contains($flat))
       throw new DomainException('В доме уже существует такая квартира.');
     $this->flats->add($flat);
-  }
-
-  public function get_city(){
-    return $this->city;
   }
 
   public function get_department(){
@@ -109,11 +105,7 @@ class data_house{
     return $this->queries;
   }
 
-  public function set_city(data_city $city){
-    $this->city = $city;
-  }
-
-  public function set_department(data_department $department){
+  public function set_department(\domain\department $department){
     $this->department = $department;
   }
 
@@ -135,7 +127,7 @@ class data_house{
     $this->status = $status;
   }
 
-  public function set_street(data_street $street){
+  public function set_street(\domain\street $street){
     $this->street = $street;
   }
 }

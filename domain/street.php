@@ -1,4 +1,4 @@
-<?php
+<?php namespace domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -6,9 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 * @Entity
 * @Table(name="streets")
 */
-class data_street{
+class street{
 
-  /**
+  /*
   * @ManyToOne(targetEntity="data_city")
   */
   private $city;
@@ -30,7 +30,7 @@ class data_street{
   private $status;
 
   /**
-  * @OneToMany(targetEntity="data_house", mappedBy="street")
+  * @OneToMany(targetEntity="\domain\house", mappedBy="street")
   */
   private $houses;
 
@@ -40,7 +40,7 @@ class data_street{
     $this->houses = new ArrayCollection();
   }
 
-  public function add_house(data_house $house){
+  public function add_house(\domain\house $house){
     if($this->houses->contains($house))
       throw new DomainException('House exists.');
     $this->houses->add($house);

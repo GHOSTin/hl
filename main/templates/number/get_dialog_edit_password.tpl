@@ -21,7 +21,7 @@
 	// Изменяет пароль в личный кабинет
 	$('.update_number_fio').click(function(){
 		$.get('update_number_password',{
-			id: {{ request.GET('id') }},
+			id: {{ number.get_id() }},
 			password: $('.dialog-input-password').val(),
 			confirm: $('.dialog-input-confirm').val()
 		},function(r){

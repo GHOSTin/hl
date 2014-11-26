@@ -1,6 +1,5 @@
 {% extends "default.tpl" %}
-{% set number = response.number %}
-{% set accruals = number.get_accruals() %}
+
 {% block component %}
   <div class="row">
     <div class="col-md-6">
@@ -24,7 +23,7 @@
           <td>Льготы</td>
           <td>Итого</td>
         </thead>
-        {% for accrual in accruals %}
+        {% for accrual in number.get_accruals() %}
           <tr>
             <td>{{ accrual.get_time()|date('m.Y') }}</td>
             <td>{{ accrual.get_service() }}</td>

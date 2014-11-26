@@ -1,11 +1,12 @@
-<?php
-class repository_query extends Doctrine\ORM\EntityRepository {
+<?php namespace domain\repositories;
+
+class query extends Doctrine\ORM\EntityRepository {
 
   public function findByParams(array $params){
 
     $qb = $this->_em->createQueryBuilder();
     $qb->select('q')
-       ->from('data_query', 'q')
+       ->from('\domain\query', 'q')
        ->where($qb->expr()->andX(
           $qb->expr()->gt('q.time_open', ':time_open_begin'),
           $qb->expr()->lt('q.time_open', ':time_open_end'),

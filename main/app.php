@@ -30,7 +30,9 @@ $dbParams = array(
 
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
 $app['em'] = EntityManager::create($dbParams, $config);
-
+$app['\main\models\number'] = function($app){
+  return new \main\models\number($app);
+};
 $app->register(new TwigServiceProvider(), array(
   'twig.path' => __DIR__.'/templates',
 ));
@@ -168,6 +170,47 @@ $app->get('/metrics/archive/', 'main\\controllers\\metrics::archive');
 $app->get('/metrics/archive/set_date', 'main\\controllers\\metrics::set_date');
 $app->post('/metrics/remove_metrics',
           'main\\controllers\\metrics::remove_metrics');
+# number
+$app->get('/number/', 'main\\controllers\\numbers::default_page');
+$app->get('/number/get_street_content',
+          'main\\controllers\\numbers::get_street_content');
+$app->get('/number/get_house_content',
+          'main\\controllers\\numbers::get_house_content');
+$app->get('/number/get_number_content',
+          'main\\controllers\\numbers::get_number_content');
+$app->get('/number/get_dialog_edit_number_fio',
+          'main\\controllers\\numbers::get_dialog_edit_number_fio');
+$app->get('/number/update_number_fio',
+          'main\\controllers\\numbers::update_number_fio');
+$app->get('/number/get_dialog_edit_number',
+          'main\\controllers\\numbers::get_dialog_edit_number');
+$app->get('/number/update_number', 'main\\controllers\\numbers::update_number');
+$app->get('/number/get_dialog_edit_password',
+          'main\\controllers\\numbers::get_dialog_edit_password');
+$app->get('/number/update_number_password',
+          'main\\controllers\\numbers::update_number_password');
+$app->get('/number/get_dialog_edit_number_telephone',
+          'main\\controllers\\numbers::get_dialog_edit_number_telephone');
+$app->get('/number/update_number_telephone',
+          'main\\controllers\\numbers::update_number_telephone');
+$app->get('/number/get_dialog_edit_number_cellphone',
+          'main\\controllers\\numbers::get_dialog_edit_number_cellphone');
+$app->get('/number/update_number_cellphone',
+          'main\\controllers\\numbers::update_number_cellphone');
+$app->get('/number/get_dialog_edit_number_email',
+          'main\\controllers\\numbers::get_dialog_edit_number_email');
+$app->get('/number/update_number_email',
+          'main\\controllers\\numbers::update_number_email');
+$app->get('/number/get_dialog_edit_department',
+          'main\\controllers\\numbers::get_dialog_edit_department');
+$app->get('/number/edit_department',
+          'main\\controllers\\numbers::edit_department');
+$app->get('/number/query_of_house',
+          'main\\controllers\\numbers::query_of_house');
+$app->get('/number/query_of_number',
+          'main\\controllers\\numbers::query_of_number');
+$app->get('/number/accruals', 'main\\controllers\\numbers::accruals');
+$app->get('/number/contact_info', 'main\\controllers\\numbers::contact_info');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
     return $app['twig']->render('error404.tpl', ['user' => $app['user'],

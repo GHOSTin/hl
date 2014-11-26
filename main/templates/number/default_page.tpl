@@ -1,5 +1,5 @@
 {% extends "default.tpl" %}
-{% set streets = response.streets %}
+
 {% block component %}
     <div class="navbar navbar-default col-xs-12">
         <form class="navbar-form pull-left col-xs-12" id="filter-numbers">
@@ -8,13 +8,15 @@
             </span>
         </form>
     </div>
-    {% include '@number/build_street_titles.tpl' %}
+    {% include 'number/build_street_titles.tpl' %}
 {% endblock component %}
+
 {% block javascript %}
     <script src="/js/number.js"></script>
     <script src="/js/bootstrap-datepicker.js"></script>
     <script src="/js/typeahead.min.js"></script>
 {% endblock javascript %}
+
 {% block css %}
     <link rel="stylesheet" href="/css/number.css" >
     <link rel="stylesheet" href="/css/datepicker.css" >
