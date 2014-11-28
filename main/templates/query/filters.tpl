@@ -1,4 +1,3 @@
-{% set params = response.params %}
 <!-- begin filters -->
 <div class="filters col-xs-12">
 	<!-- begin filter status -->
@@ -21,8 +20,8 @@
         <label>по участку</label>
         <select class="filter-content-select-department form-control">
             <option value="all">Все участки</option>
-            {% if response.departments != false %}
-                {% for department in response.departments %}
+            {% if departments != false %}
+                {% for department in departments %}
                     <option value="{{ department.get_id() }}"{% if department.get_id() == params['department'] %} selected{% endif %}>{{ department.get_name() }}</option>
                 {% endfor %}
             {% endif %}
@@ -33,10 +32,10 @@
 	    <label>по улице и дому</label>
         <select class="filter-content-select-street form-control">
             <option value="all">Все улицы</option>
-            {% if response.streets != false %}
-                {% for street in response.streets %}
+            {% if streets %}
+                {% for street in streets %}
                     <option value="{{ street.get_id() }}"
-                    {% if street.get_id() == params['street'] %}
+                    {% if street.get_id() == params['streets'] %}
                         selected
                     {% endif %}
                     >{{ street.get_name() }}</option>
@@ -44,16 +43,16 @@
             {% endif %}
         </select>
         <select class="filter-content-select-house form-control"
-            {% if response.houses|length < 1 %}
+            {% if houses|length < 1 %}
                 disabled="disabled"
             {% endif %}
             >
-            {% if response.houses|length >0 %}
+            {% if houses|length >0 %}
                 <option value="all">Все дома</option>
             {% else %}
                 <option value="all">Ожидание...</option>
             {% endif %}
-            {% for house in response.houses %}
+            {% for house in houses %}
                     <option value="{{ house.get_id() }}"
                     {% if house.get_id() == params['house'] %}
                         selected
@@ -67,8 +66,8 @@
 	    <label>по типу работ</label>
         <select class="filter-content-select-work_type form-control">
             <option value="all">Все типы</option>
-            {% if response.query_work_types != false %}
-                {% for query_work_type in response.query_work_types %}
+            {% if query_work_types != false %}
+                {% for query_work_type in query_work_types %}
                     <option value="{{ query_work_type.get_id() }}"
                     {% if query_work_type.get_id() == params['work_type'] %}
                     selected

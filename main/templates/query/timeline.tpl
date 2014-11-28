@@ -1,4 +1,4 @@
-{% set current_day_time = response.timeline %}
+{% set current_day_time = timeline %}
 {% set m = current_day_time|date("n") %}
 {% set f = current_day_time|date("F") %}
 {% set y = current_day_time|date("Y") %}
@@ -7,7 +7,7 @@
 		'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] %}
 {% set wdays = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'] %}
 <div class="timeline-month" time="{{day|date('U')}}">
-    {% if month in months|keys %}
+    {% if m in months|keys %}
         {{ months[m-1] }}
     {% endif %}
     {{ y }}
@@ -21,7 +21,7 @@
             {% if day|date('U') == current_day_time %}
                 active
             {% endif %}
-            {% if day|date('U') == response.now %}
+            {% if day|date('U') == now %}
                 btn-info
             {% endif %}
             " time="{{day|date('U')}}" title="{{day|date('d.m.Y')}}">

@@ -33,6 +33,9 @@ $app['em'] = EntityManager::create($dbParams, $config);
 $app['\main\models\number'] = function($app){
   return new \main\models\number($app);
 };
+$app['\main\models\query'] = function($app){
+  return new \main\models\query($app);
+};
 $app->register(new TwigServiceProvider(), array(
   'twig.path' => __DIR__.'/templates',
 ));
@@ -217,6 +220,100 @@ $app->get('/export/get_dialog_export_numbers',
           'main\\controllers\\export::get_dialog_export_numbers');
 $app->get('/export/export_numbers',
           'main\\controllers\\export::export_numbers');
+# query
+$app->get('/query/', 'main\\controllers\\queries::default_page');
+$app->get('/query/get_day', 'main\\controllers\\queries::get_day');
+$app->get('/query/get_timeline', 'main\\controllers\\queries::get_timeline');
+$app->get('/query/get_search', 'main\\controllers\\queries::get_search');
+$app->get('/query/get_search_result',
+          'main\\controllers\\queries::get_search_result');
+$app->get('/query/get_query_content',
+          'main\\controllers\\queries::get_query_content');
+$app->get('/query/get_query_title',
+          'main\\controllers\\queries::get_query_title');
+$app->get('/query/get_documents', 'main\\controllers\\queries::get_documents');
+$app->get('/query/print_query', 'main\\controllers\\queries::print_query');
+$app->get('/query/get_query_numbers',
+          'main\\controllers\\queries::get_query_numbers');
+$app->get('/query/get_query_users',
+          'main\\controllers\\queries::get_query_users');
+$app->get('/query/get_query_works',
+          'main\\controllers\\queries::get_query_works');
+$app->get('/query/get_query_comments',
+          'main\\controllers\\queries::get_query_comments');
+$app->get('/query/get_dialog_edit_payment_status',
+          'main\\controllers\\queries::get_dialog_edit_payment_status');
+$app->get('/query/update_payment_status',
+          'main\\controllers\\queries::update_payment_status');
+$app->get('/query/get_dialog_edit_work_type',
+          'main\\controllers\\queries::get_dialog_edit_work_type');
+$app->get('/query/update_work_type',
+          'main\\controllers\\queries::update_work_type');
+$app->get('/query/get_dialog_edit_warning_status',
+          'main\\controllers\\queries::get_dialog_edit_warning_status');
+$app->get('/query/update_warning_status',
+          'main\\controllers\\queries::update_warning_status');
+$app->get('/query/get_dialog_edit_description',
+          'main\\controllers\\queries::get_dialog_edit_description');
+$app->get('/query/update_description',
+          'main\\controllers\\queries::update_description');
+$app->get('/query/get_dialog_edit_reason',
+          'main\\controllers\\queries::get_dialog_edit_reason');
+$app->get('/query/update_reason', 'main\\controllers\\queries::update_reason');
+$app->get('/query/get_dialog_edit_contact_information',
+          'main\\controllers\\queries::get_dialog_edit_contact_information');
+$app->get('/query/update_contact_information',
+          'main\\controllers\\queries::update_contact_information');
+$app->get('/query/get_dialog_reopen_query',
+          'main\\controllers\\queries::get_dialog_reopen_query');
+$app->get('/query/reopen_query', 'main\\controllers\\queries::reopen_query');
+$app->get('/query/get_dialog_reclose_query',
+          'main\\controllers\\queries::get_dialog_reclose_query');
+$app->get('/query/reclose_query', 'main\\controllers\\queries::reclose_query');
+$app->get('/query/get_dialog_close_query',
+          'main\\controllers\\queries::get_dialog_close_query');
+$app->get('/query/close_query', 'main\\controllers\\queries::close_query');
+$app->get('/query/get_dialog_to_working_query',
+          'main\\controllers\\queries::get_dialog_to_working_query');
+$app->get('/query/to_working_query',
+          'main\\controllers\\queries::to_working_query');
+$app->get('/query/get_dialog_add_user',
+          'main\\controllers\\queries::get_dialog_add_user');
+$app->get('/query/get_user_options',
+          'main\\controllers\\queries::get_user_options');
+$app->get('/query/add_user',
+          'main\\controllers\\queries::add_user');
+$app->get('/query/get_dialog_remove_user',
+          'main\\controllers\\queries::get_dialog_remove_user');
+$app->get('/query/remove_user', 'main\\controllers\\queries::remove_user');
+$app->get('/query/get_dialog_add_comment',
+          'main\\controllers\\queries::get_dialog_add_comment');
+$app->get('/query/add_comment', 'main\\controllers\\queries::add_comment');
+$app->get('/query/get_dialog_add_work',
+          'main\\controllers\\queries::get_dialog_add_work');
+$app->get('/query/add_work', 'main\\controllers\\queries::add_work');
+$app->get('/query/get_dialog_remove_work',
+          'main\\controllers\\queries::get_dialog_remove_work');
+$app->get('/query/remove_work', 'main\\controllers\\queries::remove_work');
+$app->get('/query/clear_filters', 'main\\controllers\\queries::clear_filters');
+$app->get('/query/set_status', 'main\\controllers\\queries::set_status');
+$app->get('/query/set_department',
+          'main\\controllers\\queries::set_department');
+$app->get('/query/set_street', 'main\\controllers\\queries::set_street');
+$app->get('/query/set_house', 'main\\controllers\\queries::set_house');
+$app->get('/query/set_work_type', 'main\\controllers\\queries::set_work_type');
+$app->get('/query/get_dialog_change_initiator',
+          'main\\controllers\\queries::get_dialog_change_initiator');
+$app->get('/query/get_houses', 'main\\controllers\\queries::get_houses');
+$app->get('/query/get_numbers', 'main\\controllers\\queries::get_numbers');
+$app->get('/query/change_initiator',
+          'main\\controllers\\queries::change_initiator');
+$app->get('/query/get_dialog_create_query',
+          'main\\controllers\\queries::get_dialog_create_query');
+$app->get('/query/get_dialog_initiator',
+          'main\\controllers\\queries::get_dialog_initiator');
+$app->get('/query/get_initiator', 'main\\controllers\\queries::get_initiator');
+$app->get('/query/create_query', 'main\\controllers\\queries::create_query');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
     return $app['twig']->render('error404.tpl', ['user' => $app['user'],

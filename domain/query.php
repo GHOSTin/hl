@@ -1,5 +1,7 @@
 <?php namespace domain;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
 * @Entity(repositoryClass="\domain\repositories\query")
 * @Table(name="queries")
@@ -102,24 +104,24 @@ class query{
    */
 	private $numbers;
 
-	/*
-   * @ManyToMany(targetEntity="data_query2work")
+	/**
+   * @ManyToMany(targetEntity="\domain\query2work")
    * @JoinTable(name="query2work",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
    * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
    */
 	private $works;
 
-	/*
-   * @ManyToMany(targetEntity="data_query2user")
+	/**
+   * @ManyToMany(targetEntity="\domain\query2user")
    * @JoinTable(name="query2user",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
    * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
    */
 	private $users;
 
-	/*
-  * @OneToMany(targetEntity="data_query2comment", mappedBy="query")
+	/**
+  * @OneToMany(targetEntity="\domain\query2comment", mappedBy="query")
   */
 	private $comments;
 
@@ -128,29 +130,33 @@ class query{
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
 	public static $warning_status_list = ['hight', 'normal', 'planned'];
 
+  public function __construct(){
+    $this->numbers = new ArrayCollection();
+  }
+
 	public function add_number(\domain\number $number){
-		if(array_key_exists($number->get_id(), $this->numbers))
-			throw new DomainException('Лицевой счет уже добавлен в заявку.');
-		$this->numbers[$number->get_id()] = $number;
+    if($this->numbers->contains($number))
+      throw new DomainException('Лицевой счет уже добавлен в заявку.');
+		$this->numbers->add($number);
 	}
 
-	public function add_comment(data_query2comment $comment){
+	public function add_comment(\domain\query2comment $comment){
 		if($this->comments->contains($comment))
 			throw new DomainException('Комментарий уже существует.');
 		$this->comments->add($comment);
 	}
 
-	public function add_user(data_query2user $user){
+	public function add_user(\domain\query2user $user){
 		$this->users->add($user);
 	}
 
-	public function add_work(data_query2work $work){
+	public function add_work(\domain\query2work $work){
 		if($this->works->contains($work))
 			throw new DomainException("Работа уже добавлен в заявку.");
 		$this->works->add($work);
 	}
 
-	public function remove_work(data_work $w){
+	public function remove_work(\domain\work $w){
 		if(!empty($this->works))
 			foreach($this->works as $work)
 				if($work->get_id() === $w->get_id()){

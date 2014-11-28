@@ -1,6 +1,8 @@
 <?php namespace domain\repositories;
 
-class query extends Doctrine\ORM\EntityRepository {
+use \Doctrine\ORM\EntityRepository;
+
+class query extends EntityRepository{
 
   public function findByParams(array $params){
 
@@ -16,7 +18,7 @@ class query extends Doctrine\ORM\EntityRepository {
        ->setParameters(array(
           'time_open_begin'=> $params['time_begin'],
           'time_open_end' => $params['time_end'],
-          'status'=> $params['status']
+          'status' => $params['status']
        ));
     if(!empty($params['departments'])){
       $qb->andWhere($qb->expr()->in('q.department', ':departments'))
