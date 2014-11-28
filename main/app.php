@@ -36,6 +36,9 @@ $app['\main\models\number'] = function($app){
 $app['\main\models\query'] = function($app){
   return new \main\models\query($app);
 };
+$app['\main\models\report_query'] = function($app){
+  return new \main\models\report_query($app);
+};
 $app->register(new TwigServiceProvider(), array(
   'twig.path' => __DIR__.'/templates',
 ));
@@ -314,6 +317,29 @@ $app->get('/query/get_dialog_initiator',
           'main\\controllers\\queries::get_dialog_initiator');
 $app->get('/query/get_initiator', 'main\\controllers\\queries::get_initiator');
 $app->get('/query/create_query', 'main\\controllers\\queries::create_query');
+# report
+$app->get('/report/', 'main\\controllers\\reports::default_page');
+$app->get('/report/get_query_reports',
+          'main\\controllers\\reports::get_query_reports');
+$app->get('/report/clear_filter_query',
+          'main\\controllers\\reports::clear_filter_query');
+$app->get('/report/set_time_begin',
+          'main\\controllers\\reports::set_time_begin');
+$app->get('/report/set_time_end', 'main\\controllers\\reports::set_time_end');
+$app->get('/report/set_filter_query_status',
+          'main\\controllers\\reports::set_filter_query_status');
+$app->get('/report/set_filter_query_department',
+          'main\\controllers\\reports::set_filter_query_department');
+$app->get('/report/set_filter_query_worktype',
+          'main\\controllers\\reports::set_filter_query_worktype');
+$app->get('/report/set_filter_query_street',
+          'main\\controllers\\reports::set_filter_query_street');
+$app->get('/report/set_filter_query_house',
+          'main\\controllers\\reports::set_filter_query_house');
+$app->get('/report/report_query_one',
+          'main\\controllers\\reports::report_query_one');
+$app->get('/report/report_query_one_xls',
+          'main\\controllers\\reports::report_query_one_xls');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
     return $app['twig']->render('error404.tpl', ['user' => $app['user'],

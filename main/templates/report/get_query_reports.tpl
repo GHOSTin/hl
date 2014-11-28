@@ -1,6 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set filters = response.filters %}
-{% set houses = response.houses %}
+
 {% block js %}
     $('.report-content').html(get_hidden_content());
 
@@ -103,8 +102,8 @@
                     <label>по дому и улице</label>
                     <select class="filter-select-street form-control">
                         <option value="all">Все улицы</option>
-                        {% if response.streets != false %}
-                            {% for street in response.streets %}
+                        {% if streets != false %}
+                            {% for street in streets %}
                                 <option value="{{ street.get_id() }}"{% if street.get_id() == filters.street %} selected{% endif %}>{{ street.get_name() }}</option>
                             {% endfor %}
                         {% endif %}
@@ -127,8 +126,8 @@
                     <label>по участку</label>
                     <select class="filter-select-department form-control">
                         <option value="all">Все участки</option>
-                    {% for department in response.departments %}
-                        <option value="{{ department.get_id() }}"{% if department.get_id() == filters.department[0] %} selected{% endif %}>{{ department.get_name() }}</option>
+                    {% for department in departments %}
+                        <option value="{{ department.get_id() }}"{% if department.get_id() in filters.department %} selected{% endif %}>{{ department.get_name() }}</option>
                     {% endfor %}
                     </select>
                 </li>
@@ -136,7 +135,7 @@
                     <label>по типу работ</label>
                     <select class="filter-select-worktype form-control">
                         <option value="all">Все работы</option>
-                    {% for query_work_type in response.query_work_types %}
+                    {% for query_work_type in query_work_types %}
                         <option value="{{ query_work_type.get_id() }}"{% if query_work_type.get_id() == filters.work_type %} selected{% endif %}>{{ query_work_type.get_name() }}</option>
                     {% endfor %}
                     </select>

@@ -1,11 +1,11 @@
-<?php
+<?php namespace main\models;
 
-use \Pimple\Container;
+use Silex\Application;
 
-class model_report_query{
+class report_query{
 
-  public function __construct(Container $pimple){
-    $this->pimple = $pimple;
+  public function __construct(Application $application){
+    $this->application = $application;
     if(empty($_SESSION['report_query'])){
       $this->init_default_params();
     }
@@ -38,7 +38,7 @@ class model_report_query{
   }
 
   public function set_worktype($workgroup_id){
-    $wt = $this->pimple['em']->find('data_workgroup', $workgroup_id);
+    $wt = $this->application['em']->find('\domain\workgroup', $workgroup_id);
     if(is_null($wt)){
       $_SESSION['report_query']['work_types'] = [];
     }else{
@@ -47,7 +47,7 @@ class model_report_query{
   }
 
   public function set_department($department_id){
-    $department = $this->pimple['em']->find('data_department', $department_id);
+    $department = $this->application['em']->find('\domain\department', $department_id);
     if(is_null($department)){
       $_SESSION['report_query']['departments'] = [];
     }else{
@@ -58,8 +58,8 @@ class model_report_query{
   }
 
   public function set_street($street_id){
-    $em = $this->pimple['em'];
-    $streets = $em->getRepository('data_street')->findAll();
+    $em = $this->application['em'];
+    $streets = $em->getRepository('\domain\street')->findAll();
     $s = [];
     if(!empty($streets))
       foreach($streets as $street){
@@ -70,7 +70,7 @@ class model_report_query{
       $_SESSION['report_query']['streets'] = [];
       $_SESSION['report_query']['houses'] = [];
     }else{
-      $houses = $em->getRepository('data_house')->findByStreet($street_id);
+      $houses = $em->getRepository('\domain\house')->findByStreet($street_id);
       $h = [];
       if(!empty($houses))
         foreach($houses as $house)
@@ -83,7 +83,7 @@ class model_report_query{
 
   public function set_house($house_id){
     if($house_id > 0){
-      $house = $this->pimple['em']->find('data_house', $house_id);
+      $house = $this->application['em']->find('\domain\house', $house_id);
       if(is_null($house))
         $_SESSION['report_query']['houses'] = [];
       else
@@ -93,7 +93,7 @@ class model_report_query{
   }
 
   public function get_queries(){
-    return $this->pimple['em']->getRepository('data_query')
+    return $this->application['em']->getRepository('\domain\query')
                               ->findByParams($_SESSION['report_query']);
   }
 
@@ -103,12 +103,20 @@ class model_report_query{
     $filters['department'] = $_SESSION['report_query']['departments'];
     if(count($_SESSION['report_query']['status']) === 1)
       $filters['status'] = $_SESSION['report_query']['status'][0];
+    else
+      $filters['status'] = null;
     if(count($_SESSION['report_query']['work_types']) === 1)
       $filters['work_type'] = $_SESSION['report_query']['work_types'][0];
+    else
+      $filters['work_type'] = null;
     if(count($_SESSION['report_query']['streets']) === 1)
       $filters['street'] = $_SESSION['report_query']['streets'][0];
+    else
+      $filters['street'] = null;
     if(count($_SESSION['report_query']['houses']) === 1)
       $filters['house'] = $_SESSION['report_query']['houses'][0];
+    else
+      $filters['house'] = null;
     return $filters;
   }
 }

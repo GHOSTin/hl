@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set street = response.street %}
+
 {% block js %}
     {% if street.get_houses() is not empty %}
         $('.filter-select-house').html(get_hidden_content()).attr('disabled', false);
@@ -7,6 +7,7 @@
         $('.filter-select-house').html('<option>Ожидание...</option>').attr('disabled', true);
     {% endif%}
 {% endblock js %}
+
 {% block html %}
     <option value="all">Выберите дом...</option>
     {% for house in street.get_houses() %}
