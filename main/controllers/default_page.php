@@ -9,16 +9,14 @@ use \domain\session;
 class default_page{
 
   public function about(Request $request, Application $app){
-    return $app['twig']->render('about.tpl',
-                  ['user' => $app['user'], 'menu' => null, 'hot_menu' => null]);
+    return $app['twig']->render('about.tpl', ['user' => $app['user']]);
   }
 
   public function default_page(Request $request, Application $app){
     if(is_null($app['user']))
       return $app['twig']->render('enter.tpl', ['user' => $app['user']]);
     else
-      return $app['twig']->render('default_page.tpl',
-                  ['user' => $app['user'], 'menu' => null, 'hot_menu' => null]);
+      return $app['twig']->render('default_page.tpl', ['user' => $app['user']]);
   }
 
   public function login(Request $request, Application $app){
@@ -29,7 +27,7 @@ class default_page{
       if(!is_null($user)){
         if($user->get_status() !== 'true')
           die('Вы заблокированы и не можете войти в систему.');
-        $hash = user::generate_hash($password);
+        $hash = user::generate_hash($password, $app['salt']);
         if($user->get_hash() === $hash){
           $session = new session();
           $session->set_user($user);

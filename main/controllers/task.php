@@ -59,8 +59,7 @@ class task{
 
   public function default_page(Application $app){
     return $app['twig']->render('task\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                 'hot_menu' => null]);
+                                ['user' => $app['user']]);
   }
 
   public function get_dialog_create_task(Request $request, Application $app){

@@ -166,8 +166,7 @@ class queries{
       $houses = [];
     $profile = $app['user']->get_profile('query');
     return $app['twig']->render('query\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                 'hot_menu' => null, 'now' => $now,
+                                ['user' => $app['user'], 'now' => $now,
                                  'queries' => $model->get_queries(),
                                  'params' => $model->get_filter_values(),
                                  'timeline' =>  $model->get_timeline(),

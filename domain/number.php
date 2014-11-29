@@ -1,7 +1,6 @@
 <?php namespace domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use \main\conf;
 
 /**
 * @Entity
@@ -80,8 +79,8 @@ class number{
     $this->accruals = new ArrayCollection();
   }
 
-  public static function generate_hash($password){
-    return md5(md5(htmlspecialchars($password)).conf::authSalt);
+  public static function generate_hash($password, $salt){
+    return md5(md5(htmlspecialchars($password)).$salt);
   }
 
   public function get_accruals(){

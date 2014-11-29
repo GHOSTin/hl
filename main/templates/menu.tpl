@@ -37,20 +37,16 @@
                 <ul class="dropdown-menu">
                     <li><a tabindex="-1" href="/">Главная</a></li>
                     <li class="divider"></li>
-                    {% for link in menu %}
-                        <li><a tabindex="-1" href="/{{link.href}}/">{{link.title}}</a></li>
-                    {% endfor %}
+                    <li><a tabindex="-1" href="/query/">Заявки</a></li>
+                    <li><a tabindex="-1" href="/number/">Жилой фонд</a></li>
+                    <li><a tabindex="-1" href="/task/">Задачи</a></li>
+                    <li><a tabindex="-1" href="/metrics/">Показания</a></li>
                     <li><a tabindex="-1" href="/report/">Отчеты</a></li>
                     <li class="divider"></li>
                     <li><a tabindex="-1" href="/about/">О программе</a></li>
                     <li><a tabindex="-1" href="/logout/">Выход</a></li>
                 </ul>
             </li>
-            {% if hot_menu|length >0 %}
-                {% for href, title in hot_menu %}
-                    <li><a href="/{{href}}/">{{title}}</a></li>
-                {% endfor %}
-            {% endif %}
         </ul>
     </nav>
     <!-- end menu -->

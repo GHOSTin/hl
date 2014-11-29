@@ -7,16 +7,14 @@ class metrics{
 
   public function archive(Application $app){
     return $app['twig']->render('\metrics\archive.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null]);
+                                ['user' => $app['user']]);
   }
 
   public function default_page(Application $app){
     $metrics = $app['em']->getRepository('\domain\metrics')
                          ->findByStatus('actual');
     return $app['twig']->render('\metrics\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'metrics' => $metrics]);
+                                ['user' => $app['user'], 'metrics' => $metrics]);
   }
 
   public function remove_metrics(Request $request, Application $app){

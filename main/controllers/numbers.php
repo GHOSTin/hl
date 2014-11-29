@@ -10,15 +10,13 @@ class numbers{
   public function accruals(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
     return $app['twig']->render('\number\accruals.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'number' => $number]);
+                                ['user' => $app['user'], 'number' => $number]);
   }
 
   public function contact_info(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
     return $app['twig']->render('\number\contact_info.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'number' => $number]);
+                                ['user' => $app['user'], 'number' => $number]);
   }
   public function edit_department(Request $request, Application $app){
     $house = $app['em']->find('\domain\house', $request->get('house_id'));
@@ -34,8 +32,7 @@ class numbers{
     $streets = $app['em']->getRepository('\domain\street')
                          ->findBy([], ['name' => 'ASC']);
     return $app['twig']->render('\number\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'streets' => $streets]);
+                                ['user' => $app['user'], 'streets' => $streets]);
   }
 
   public function get_dialog_edit_number(Request $request, Application $app){
@@ -110,15 +107,13 @@ class numbers{
   public function query_of_house(Request $request, Application $app){
     $house = $app['em']->find('\domain\house', $request->get('id'));
     return $app['twig']->render('\number\query_of_house.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'house' => $house]);
+                                ['user' => $app['user'], 'house' => $house]);
   }
 
   public function query_of_number(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
     return $app['twig']->render('\number\query_of_number.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'number' => $number]);
+                                ['user' => $app['user'], 'number' => $number]);
   }
 
   public function update_number(Request $request, Application $app){
@@ -169,7 +164,7 @@ class numbers{
     if($password !== $confirm)
       throw new RuntimeException('Подтверждение и пароль не совпадают.');
     $number = $app['em']->find('\domain\number', $request->get('id'));
-    $hash = number::generate_hash($password);
+    $hash = number::generate_hash($password, $app['salt']);
     $number->set_hash($hash);
     $app['em']->flush();
     return $app['twig']->render('number\update_number_fio.tpl',

@@ -48,8 +48,8 @@ class users{
     $group->set_status('true');
     $app['em']->persist($group);
     $app['em']->flush();
-    $letter = mb_substr($group->get_name(), 0 ,1, 'utf-8')
-    $letter_group = mb_strtolower(, 'utf-8');
+    $letter = mb_substr($group->get_name(), 0 ,1, 'utf-8');
+    $letter_group = mb_strtolower($letter, 'utf-8');
     $letters = [];
     $groups = $app['em']->getRepository('\domain\group')->findAll();
     if(!empty($groups))
@@ -76,8 +76,8 @@ class users{
           $letters[$letter] = 1;
       }
     return $app['twig']->render('user\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'letters' => $letters]);
+                                ['user' => $app['user'],
+                                 'letters' => $letters]);
   }
 
   public function delete_profile(Request $request, Application $app){
@@ -220,8 +220,8 @@ class users{
     $sessions = $app['em']->getRepository('\domain\session')
                           ->findby([], ['time' => 'ASC']);
     return $app['twig']->render('user\logs.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'sessions' => $sessions]);
+                                ['user' => $app['user'],
+                                 'sessions' => $sessions]);
   }
 
   public function create_user(Request $request, Application $app){
@@ -239,7 +239,7 @@ class users{
     $user->set_firstname($request->get('firstname'));
     $user->set_middlename($request->get('middlename'));
     $user->set_login($login);
-    $user->set_hash(user::generate_hash($password));
+    $user->set_hash(user::generate_hash($password, $app['salt']));
     $user->set_status('true');
     $app['em']->persist($user);
     $app['em']->flush();
@@ -374,7 +374,7 @@ class users{
     if($password !== $confirm)
       throw new RuntimeException('Пароль и подтверждение не идентичны.');
     $user = $app['em']->find('\domain\user', $request->get('id'));
-    $user->set_hash(user::generate_hash($password));
+    $user->set_hash(user::generate_hash($password, $app['salt']));
     $app['em']->flush();
     return $app['twig']->render('user\update_fio.tpl', ['user' => $user]);
   }

@@ -1,7 +1,6 @@
 <?php namespace domain;
 
 use \DomainException;
-use \main\conf;
 
 /**
 * @Entity
@@ -92,8 +91,8 @@ class user{
     return $this->firstname;
   }
 
-  public static function generate_hash($password){
-    return md5(md5(htmlspecialchars($password)).conf::authSalt);
+  public static function generate_hash($password, $salt){
+    return md5(md5(htmlspecialchars($password)).$salt);
   }
 
   public function get_hash(){

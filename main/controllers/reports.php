@@ -17,8 +17,7 @@ class reports{
 
   public function default_page(Application $app){
     return $app['twig']->render('report\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                 'hot_menu' => null]);
+                                ['user' => $app['user']]);
   }
 
   public function get_query_reports(Application $app){

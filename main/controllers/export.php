@@ -7,8 +7,7 @@ class export{
   public function default_page(Application $app){
 
     return $app['twig']->render('export\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                 'hot_menu' => null]);
+                                ['user' => $app['user']]);
   }
 
   public function export_numbers(Application $app){

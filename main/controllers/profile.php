@@ -8,7 +8,7 @@ class profile{
 
   public function default_page(Request $request, Application $app){
     return $app['twig']->render('profile\default_page.tpl',
-                  ['user' => $app['user'], 'menu' => null, 'hot_menu' => null]);
+                                ['user' => $app['user']]);
   }
 
   public function get_user_info(Request $request, Application $app){
@@ -45,7 +45,7 @@ class profile{
     if($password !== $confirm)
       throw new RuntimeException('Password problem.');
     $user = $app['user'];
-    $user->set_hash(user::generate_hash($password));
+    $user->set_hash(user::generate_hash($password, $app['salt']));
     $app['em']->flush();
     return $app['twig']->render('profile\get_userinfo.tpl',
                                 ['user' => $app['user']]);

@@ -36,7 +36,6 @@ class error{
   public function default_page(Request $request, Application $app){
     $errors = $app['em']->getRepository('\domain\error')->findAll();
     return $app['twig']->render('\error\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'errors' => $errors]);
+                                ['user' => $app['user'], 'errors' => $errors]);
   }
 }

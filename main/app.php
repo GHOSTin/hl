@@ -28,6 +28,10 @@ $dbParams = array(
   'charset'  => 'utf8'
 );
 
+$app['salt'] = conf::authSalt;
+$app['chat_host'] = conf::chat_host;
+$app['chat_port'] = conf::chat_port;
+
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
 $app['em'] = EntityManager::create($dbParams, $config);
 $app['\main\models\number'] = function($app){
@@ -39,6 +43,7 @@ $app['\main\models\query'] = function($app){
 $app['\main\models\report_query'] = function($app){
   return new \main\models\report_query($app);
 };
+date_default_timezone_set(conf::php_timezone);
 $app->register(new TwigServiceProvider(), array(
   'twig.path' => __DIR__.'/templates',
 ));
@@ -362,7 +367,6 @@ $app->get('/task/get_dialog_close_task',
 $app->get('/task/close_task', 'main\\controllers\\task::close_task');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
-    return $app['twig']->render('error404.tpl', ['user' => $app['user'],
-                                'menu' => null, 'hot_menu' => null]);
+    return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
 });
 $app->run();

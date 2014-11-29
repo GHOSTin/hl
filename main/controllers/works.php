@@ -136,8 +136,8 @@ class works{
     $groups = $app['em']->getRepository('\domain\workgroup')->findAll();
     $works = $app['em']->getRepository('\domain\work')->findAll();
     return $app['twig']->render('works\default_page.tpl',
-                                ['user' => $app['user'], 'menu' => null,
-                                'hot_menu' => null, 'workgroups' => $groups,
-                                'works' => $works]);
+                                ['user' => $app['user'],
+                                 'workgroups' => $groups,
+                                 'works' => $works]);
   }
 }
