@@ -1,6 +1,7 @@
 {% extends "dialog.tpl" %}
-{% set task = response.task %}
+
 {% block title %}Задача "{{ task.get_description()[:15] }}..." от {{ task.get_time_open()|date('d.m.Y') }}{% endblock title %}
+
 {% block dialog %}
 <form role="form">
   <div class="form-group">
@@ -39,9 +40,11 @@
   </div>
 </form>
 {% endblock dialog %}
+
 {% block buttons %}
   <div class="btn btn-default close_task">Закрыть задачу</div>
 {% endblock buttons %}
+
 {% block script %}
   $('.input-group.date').datepicker({
     format: "dd.mm.yyyy",

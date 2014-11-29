@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set task = response.task %}
+
 {% set creator = task.get_creator().get_user() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set target_date = task.get_time_target()|date('d.m.Y') %}
@@ -8,6 +8,7 @@
 {% for performer in task.get_performers() %}
   {% set performers = performers|merge([performer.get_user()]) %}
 {% endfor %}
+
 {% block html %}
   <div class="row" id="task" data-id="{{ task.get_id() }}">
     <nav class="navbar navbar-default navbar-static-top" role="navigation">
@@ -74,7 +75,7 @@
             Исполнители:
             <strong>
               <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" multiple tabindex="-1" id="task-performers" name="performers">
-                {% for user in response.users %}
+                {% for user in users %}
                   <option value="{{ user.get_id() }}"
                           {% if user in performers %}selected="selected" {% endif %}>{{ user.get_lastname() }} {{ user.get_firstname() }}
                   </option>
@@ -87,6 +88,7 @@
     </div>
   </div>
 {% endblock %}
+
 {% block js %}
   $('#task_content').find('section').html(get_hidden_content());
 

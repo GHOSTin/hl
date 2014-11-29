@@ -1,6 +1,6 @@
-<?php
+<?php namespace domain\repositories;
 
-class repository_task extends Doctrine\ORM\EntityRepository {
+class task extends \Doctrine\ORM\EntityRepository {
 
   public function findActiveTask(){
     $tasks = $this->findBy(array('status'=>array('open', 'reopen')));
@@ -26,7 +26,7 @@ class repository_task extends Doctrine\ORM\EntityRepository {
 
   public function getInsertId(){
     $prefix = date('Ymd');
-    $query = $this->_em->createQuery('SELECT MAX(t.id) FROM data_task t WHERE t.id > :id');
+    $query = $this->_em->createQuery('SELECT MAX(t.id) FROM \domain\task t WHERE t.id > :id');
     $query->setParameter(':id', $prefix.'000000');
     $id = $query->getSingleScalarResult();
     if(is_null($id))

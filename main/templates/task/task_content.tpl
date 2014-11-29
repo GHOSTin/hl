@@ -74,7 +74,7 @@
     <p class="bg-info"><strong>{{ _self.declension(task.get_comments()|length, ['комментарий','комментария','комментариев']) }}</strong></p>
     <div id="comments_messages">
       {% for comment in task.get_comments() %}
-        {% include '@task/task_comment.tpl' with {'comment': comment} %}
+        {% include 'task/task_comment.tpl' with {'comment': comment} %}
       {% endfor %}
     </div>
     {% if task.get_status() != 'close' %}

@@ -1,8 +1,9 @@
 {% extends "ajax.tpl" %}
-{% set task = response.task %}
+
 {% block html %}
-  {% include '@task/task_content.tpl' with {'task': task} %}
+  {% include 'task/task_content.tpl' with {'task': task} %}
 {% endblock %}
+
 {% block js %}
   $('#task_content').find('section').html(get_hidden_content());
 

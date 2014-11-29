@@ -1,4 +1,5 @@
 {% extends "default.tpl" %}
+
 {% block component %}
   <div>
     <p>
@@ -15,11 +16,13 @@
     </div>
   </div>
 {% endblock%}
+
 {% block javascript %}
   <script src="/js/task.js"></script>
   <script src="/js/chosen.jquery.js"></script>
   <script src="/js/bootstrap-datepicker.js"></script>
 {% endblock%}
+
 {% block css %}
   <link rel="stylesheet" href="/css/task.css">
   <link rel="stylesheet" href="/css/datepicker.css" >

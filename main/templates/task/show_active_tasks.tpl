@@ -1,5 +1,5 @@
 {% extends "ajax.tpl" %}
-{% set tasks = response.tasks %}
+
 {% block html %}
   <p>
     <a class="btn btn-success get_dialog_create_task">
@@ -9,7 +9,7 @@
   </p>
   <div class="list-group">
     {% for task in tasks %}
-      {% include '@task/short_task_content.tpl' with {'task': task} %}
+      {% include 'task/short_task_content.tpl' with {'task': task} %}
     {% endfor %}
   </div>
 {% endblock %}

@@ -1,12 +1,11 @@
-<?php
-
+<?php namespace domain;
 
 /**
  * @Entity
  * @\Doctrine\ORM\Mapping\Table(name="task2user")
- * Class data_task2user
+ * Class \domain\task2user
  */
-class data_task2user {
+class task2user {
 
   /**
    * @\Doctrine\ORM\Mapping\Id()
@@ -16,12 +15,12 @@ class data_task2user {
   private $id;
 
   /**
-   * @\Doctrine\ORM\Mapping\ManyToOne(targetEntity="data_task", inversedBy="users")
+   * @\Doctrine\ORM\Mapping\ManyToOne(targetEntity="\domain\task", inversedBy="users")
    * @\Doctrine\ORM\Mapping\JoinColumn(name="task_id", referencedColumnName="id")
    */
   private $task;
   /**
-   * @\Doctrine\ORM\Mapping\OneToOne(targetEntity="data_user")
+   * @\Doctrine\ORM\Mapping\OneToOne(targetEntity="\domain\user")
    * @\Doctrine\ORM\Mapping\JoinColumn(name="user_id", referencedColumnName="id")
    */
   private $user;
@@ -47,7 +46,7 @@ class data_task2user {
   }
 
   /**
-   * @return data_task
+   * @return \domain\task
    */
   public function get_task()
   {
@@ -55,7 +54,7 @@ class data_task2user {
   }
 
   /**
-   * @param data_task $task
+   * @param \domain\task $task
    */
   public function set_task($task)
   {
@@ -63,7 +62,7 @@ class data_task2user {
   }
 
   /**
-   * @return data_user
+   * @return \domain\user
    */
   public function get_user()
   {
@@ -71,7 +70,7 @@ class data_task2user {
   }
 
   /**
-   * @param data_user $user
+   * @param \domain\user $user
    */
   public function set_user($user)
   {
@@ -94,4 +93,4 @@ class data_task2user {
     $this->userType = $userType;
   }
 
-} 
+}

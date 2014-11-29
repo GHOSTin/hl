@@ -340,6 +340,26 @@ $app->get('/report/report_query_one',
           'main\\controllers\\reports::report_query_one');
 $app->get('/report/report_query_one_xls',
           'main\\controllers\\reports::report_query_one_xls');
+# tasks
+$app->get('/task/', 'main\\controllers\\task::default_page');
+$app->get('/task/show_active_tasks',
+          'main\\controllers\\task::show_active_tasks');
+$app->get('/task/show_finished_tasks',
+          'main\\controllers\\task::show_finished_tasks');
+$app->get('/task/get_task_content',
+          'main\\controllers\\task::get_task_content');
+$app->get('/task/send_task_comment',
+          'main\\controllers\\task::send_task_comment');
+$app->get('/task/edit_task_content',
+          'main\\controllers\\task::edit_task_content');
+$app->get('/task/save_task_content',
+          'main\\controllers\\task::save_task_content');
+$app->get('/task/get_dialog_create_task',
+          'main\\controllers\\task::get_dialog_create_task');
+$app->get('/task/add_task', 'main\\controllers\\task::add_task');
+$app->get('/task/get_dialog_close_task',
+          'main\\controllers\\task::get_dialog_close_task');
+$app->get('/task/close_task', 'main\\controllers\\task::close_task');
 
 $app->error(function (NotFoundHttpException $e, $code) use ($app){
     return $app['twig']->render('error404.tpl', ['user' => $app['user'],

@@ -1,5 +1,7 @@
 {% extends "dialog.tpl" %}
+
 {% block title %}Новая задача{% endblock title %}
+
 {% block dialog %}
 <form role="form">
   <div class="form-group">
@@ -17,7 +19,7 @@
     <label for="task-performers">Исполнители</label>
     <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" aria-required="true"
             multiple tabindex="3" id="task-performers" name="performers" required>
-      {% for user in response.users %}
+      {% for user in users %}
         <option value="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }}</option>
       {% endfor %}
     </select>
@@ -31,9 +33,11 @@
   </div>
 </form>
 {% endblock dialog %}
+
 {% block buttons %}
   <div class="btn btn-default add_task">Поставить задачу</div>
 {% endblock buttons %}
+
 {% block script %}
   $(".chosen-select").chosen({width: '100%'});
   $('.input-group.date').datepicker({

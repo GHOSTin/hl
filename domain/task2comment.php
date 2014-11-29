@@ -1,11 +1,10 @@
-<?php
-
+<?php namespace domain;
 /**
- * Class data_task2comment
+ * Class \domain\task2comment
  * @Entity
  * @Table(name="task2comment")
  */
-class data_task2comment {
+class task2comment {
 
   /**
    * @\Doctrine\ORM\Mapping\Id()
@@ -15,7 +14,7 @@ class data_task2comment {
    */
   private $id;
   /**
-   * @\Doctrine\ORM\Mapping\ManyToOne(targetEntity="data_task", inversedBy="comments")
+   * @\Doctrine\ORM\Mapping\ManyToOne(targetEntity="\domain\task", inversedBy="comments")
    * @\Doctrine\ORM\Mapping\JoinColumn(name="task_id", referencedColumnName="id")
    */
   private $task;
@@ -30,7 +29,7 @@ class data_task2comment {
    */
   private $time;
   /**
-   * @\Doctrine\ORM\Mapping\OneToOne(targetEntity="data_user")
+   * @\Doctrine\ORM\Mapping\OneToOne(targetEntity="\domain\user")
    * @\Doctrine\ORM\Mapping\JoinColumn(name="user_id", referencedColumnName="id")
    */
   private $user;
@@ -70,7 +69,7 @@ class data_task2comment {
   /**
    * @param mixed $user
    */
-  public function set_user(data_user $user)
+  public function set_user(\domain\user $user)
   {
     $this->user = $user;
   }
@@ -99,4 +98,4 @@ class data_task2comment {
     return $this->task;
   }
 
-} 
+}

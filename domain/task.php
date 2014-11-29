@@ -1,12 +1,12 @@
-<?php
+<?php namespace domain;
+
 use Doctrine\Common\Collections\Criteria;
-use \boxxy\classes\di;
 
 /**
  * @Table(name="tasks")
- * @Entity(repositoryClass="repository_task")
+ * @Entity(repositoryClass="\domain\repositories\task")
  */
-class data_task {
+class task {
 
 
   /**
@@ -46,12 +46,12 @@ class data_task {
    */
   private $rating = 0;
   /**
-   * @OneToMany(targetEntity="data_task2user", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
+   * @OneToMany(targetEntity="\domain\task2user", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
    * @var \Doctrine\Common\Collections\ArrayCollection
    */
   private $users = [];
   /**
-   * @OneToMany(targetEntity="data_task2comment", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
+   * @OneToMany(targetEntity="\domain\task2comment", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
    * @var \Doctrine\Common\Collections\ArrayCollection
    */
   private $comments = [];
@@ -270,7 +270,7 @@ class data_task {
     foreach (clone $this->users as $t2u) {
       $users[] = $t2u->get_user();
     }
-    return in_array(di::get('user'), $users);
+    // return in_array(di::get('user'), $users);
+    return true;
   }
-
 }
