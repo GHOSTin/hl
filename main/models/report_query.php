@@ -1,11 +1,11 @@
 <?php namespace main\models;
 
-use Silex\Application;
+use Silex\app;
 
 class report_query{
 
-  public function __construct(Application $application){
-    $this->application = $application;
+  public function __construct(app $app){
+    $this->app = $app;
     if(empty($_SESSION['report_query'])){
       $this->init_default_params();
     }
@@ -38,7 +38,7 @@ class report_query{
   }
 
   public function set_worktype($workgroup_id){
-    $wt = $this->application['em']->find('\domain\workgroup', $workgroup_id);
+    $wt = $this->app['em']->find('\domain\workgroup', $workgroup_id);
     if(is_null($wt)){
       $_SESSION['report_query']['work_types'] = [];
     }else{
@@ -47,7 +47,7 @@ class report_query{
   }
 
   public function set_department($department_id){
-    $department = $this->application['em']->find('\domain\department', $department_id);
+    $department = $this->app['em']->find('\domain\department', $department_id);
     if(is_null($department)){
       $_SESSION['report_query']['departments'] = [];
     }else{
@@ -58,7 +58,7 @@ class report_query{
   }
 
   public function set_street($street_id){
-    $em = $this->application['em'];
+    $em = $this->app['em'];
     $streets = $em->getRepository('\domain\street')->findAll();
     $s = [];
     if(!empty($streets))
@@ -83,7 +83,7 @@ class report_query{
 
   public function set_house($house_id){
     if($house_id > 0){
-      $house = $this->application['em']->find('\domain\house', $house_id);
+      $house = $this->app['em']->find('\domain\house', $house_id);
       if(is_null($house))
         $_SESSION['report_query']['houses'] = [];
       else
@@ -93,7 +93,7 @@ class report_query{
   }
 
   public function get_queries(){
-    return $this->application['em']->getRepository('\domain\query')
+    return $this->app['em']->getRepository('\domain\query')
                               ->findByParams($_SESSION['report_query']);
   }
 

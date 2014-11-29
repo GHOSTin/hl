@@ -11,6 +11,7 @@
   </fileset>
   <fileset id="php_files" dir="${project.basedir}">
     <exclude name="cache/**"/>
+    <exclude name="vendor/**"/>
     <include name="**/*.php"/>
   </fileset>
   <!-- targets -->

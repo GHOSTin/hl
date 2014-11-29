@@ -4,12 +4,12 @@ use Silex\Application;
 
 class query{
 
-	private $Application;
+	private $app;
 
 	private static $statuses = ['open', 'close', 'reopen', 'working'];
 
-	public function __construct(Application $Application){
-		$this->Application = $Application;
+	public function __construct(Application $app){
+		$this->app = $app;
 		if(empty($_SESSION['query'])){
 			$this->init_default_params();
 		}
@@ -20,21 +20,21 @@ class query{
 	}
 
 	public function get_queries(){
-		return $this->Application['em']->getRepository('\domain\query')
+		return $this->app['em']->getRepository('\domain\query')
 			->findByParams($_SESSION['query']);
 	}
 
 	public function get_departments(){
 		if(!empty($_SESSION['query']['r_departments']))
-			return $this->Application['em']->getRepository('\domain\department')
+			return $this->app['em']->getRepository('\domain\department')
 				->findByid($_SESSION['query']['r_departments'], ['name' => 'ASC']);
 		else
-			return $this->Application['em']->getRepository('\domain\department')
+			return $this->app['em']->getRepository('\domain\department')
 				->findBy([], ['name' => 'ASC']);
 	}
 
 	public function get_streets(){
-		$em = $this->Application['em'];
+		$em = $this->app['em'];
 		if(!empty($_SESSION['query']['r_departments'])){
 			$houses = $em->getRepository('\domain\house')
 				->findBy(['department' => $_SESSION['query']['r_departments']]);
@@ -50,7 +50,7 @@ class query{
 	}
 
 	public function get_houses_by_street($street_id){
-		$em = $this->Application['em'];
+		$em = $this->app['em'];
 		if(!empty($_SESSION['query']['r_departments'])){
 			$houses = $em->getRepository('\domain\house')
 				->findBy(['department' => $_SESSION['query']['r_departments'],
@@ -65,13 +65,13 @@ class query{
 
 	public function init_default_params(){
 		$time = getdate();
-		$_SESSION['query']['departments'] = $this->Application['user']->get_profile('query')
+		$_SESSION['query']['departments'] = $this->app['user']->get_profile('query')
 			->get_restrictions()['departments'];
 		$_SESSION['query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
 		$_SESSION['query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
 		$_SESSION['query']['status'] = self::$statuses;
 		$_SESSION['query']['work_types'] = [];
-		$_SESSION['query']['r_departments'] = $this->Application['user']->get_profile('query')
+		$_SESSION['query']['r_departments'] = $this->app['user']->get_profile('query')
 			->get_restrictions()['departments'];
 		$_SESSION['query']['streets'] = [];
 		$_SESSION['query']['houses'] = [];
@@ -115,7 +115,7 @@ class query{
 
 	public function set_department($department_id){
 		$departments = [];
-		$department = $this->Application['em']
+		$department = $this->app['em']
 											 ->find('\domain\department', $department_id);
 		if(is_null($department)){
 			if(!empty($_SESSION['query']['r_departments']))
@@ -165,7 +165,7 @@ class query{
 
 	public function set_house($house_id){
 		if($house_id > 0){
-			$house = $this->Application['em']->find('\domain\house', $house_id);
+			$house = $this->app['em']->find('\domain\house', $house_id);
 			if(is_null($house))
 				$_SESSION['query']['houses'] = [];
 			else
@@ -175,7 +175,7 @@ class query{
 	}
 
 	public function set_work_type($workgroup_id){
-		$workgroup = $this->Application['em']->find('\domain\workgroup', $workgroup_id);
+		$workgroup = $this->app['em']->find('\domain\workgroup', $workgroup_id);
 		if(is_null($workgroup)){
 			$_SESSION['query']['work_types'] = [];
 		}else{
