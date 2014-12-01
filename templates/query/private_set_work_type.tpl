@@ -1,1 +1,0 @@
-{% include '@query/query_titles.tpl' %}
