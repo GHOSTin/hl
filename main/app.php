@@ -1,24 +1,24 @@
 <?php namespace main;
 
-
 use \Doctrine\ORM\Tools\Setup;
 use \Doctrine\ORM\EntityManager;
-use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
-use Silex\Provider\TwigServiceProvider;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use \Silex\Application;
+use \Silex\Provider\TwigServiceProvider;
 use \Silex\Provider\SwiftmailerServiceProvider;
+use \Symfony\Component\HttpFoundation\Request;
+use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen(DIRECTORY_SEPARATOR.'main'))).DIRECTORY_SEPARATOR;
 require_once($root."vendor/autoload.php");
 
 $app = new Application();
-if(conf::status === 'development')
-  $app['debug'] = true;
+$app['debug'] = (conf::status === 'development')? true: false;
 $app['user'] = null;
+$app['salt'] = conf::authSalt;
+$app['chat_host'] = conf::chat_host;
+$app['chat_port'] = conf::chat_port;
+date_default_timezone_set(conf::php_timezone);
 
-$paths = array(__DIR__);
-$isDevMode = (conf::status == 'development')? true: false;
 $dbParams = array(
   'driver'   => 'pdo_mysql',
   'host'     => conf::db_host,
@@ -28,11 +28,7 @@ $dbParams = array(
   'charset'  => 'utf8'
 );
 
-$app['salt'] = conf::authSalt;
-$app['chat_host'] = conf::chat_host;
-$app['chat_port'] = conf::chat_port;
-
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
 $app['em'] = EntityManager::create($dbParams, $config);
 $app['\main\models\number'] = function($app){
   return new \main\models\number($app);
@@ -43,7 +39,7 @@ $app['\main\models\query'] = function($app){
 $app['\main\models\report_query'] = function($app){
   return new \main\models\report_query($app);
 };
-date_default_timezone_set(conf::php_timezone);
+
 $app->register(new TwigServiceProvider(), array(
   'twig.path' => __DIR__.'/templates',
 ));
@@ -366,7 +362,7 @@ $app->get('/task/get_dialog_close_task',
           'main\\controllers\\task::get_dialog_close_task');
 $app->get('/task/close_task', 'main\\controllers\\task::close_task');
 
-$app->error(function (NotFoundHttpException $e, $code) use ($app){
-    return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
+$app->error(function (NotFoundHttpException $e) use ($app){
+  return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
 });
 $app->run();

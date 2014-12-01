@@ -3,15 +3,15 @@ use \Doctrine\ORM\Tools\Console\ConsoleRunner;
 use \Doctrine\ORM\Tools\Setup;
 use \Doctrine\ORM\EntityManager;
 use \Symfony\Component\Console\Application;
-use \app\conf;
+use \main\conf;
 
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen(DIRECTORY_SEPARATOR.'config'))).DIRECTORY_SEPARATOR;
 require_once($root."vendor/autoload.php");
 
 $paths = array(
-    $root.'application/'
+    $root.'domain/'
 );
-$isDevMode = (application_configuration::status == 'development')? true: false;
+$isDevMode = (conf::status == 'development')? true: false;
 if ($isDevMode) {
     $cache = new \Doctrine\Common\Cache\ArrayCache;
 } else {
@@ -19,10 +19,10 @@ if ($isDevMode) {
 }
 $dbParams = array(
     'driver'   => 'pdo_mysql',
-    'host'     => application_configuration::database_host,
-    'user'     => application_configuration::database_user,
-    'password' => application_configuration::database_password,
-    'dbname'   => application_configuration::database_name,
+    'host'     => conf::db_host,
+    'user'     => conf::db_user,
+    'password' => conf::db_password,
+    'dbname'   => conf::db_name,
     'charset'  => 'utf8'
 );
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, 'cache/proxy/');

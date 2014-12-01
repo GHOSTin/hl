@@ -1,4 +1,4 @@
-app/application_configuration.php
+main/conf.php
 composer.lock
 /cache/
 /vendor/
