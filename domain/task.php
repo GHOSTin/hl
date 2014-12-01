@@ -1,6 +1,7 @@
 <?php namespace domain;
 
 use Doctrine\Common\Collections\Criteria;
+use \domain\user;
 
 /**
  * @Table(name="tasks")
@@ -265,12 +266,11 @@ class task {
   }
 
 
-  public function isPerson(){
+  public function isPerson(user $user){
     $users = [];
     foreach (clone $this->users as $t2u) {
       $users[] = $t2u->get_user();
     }
-    // return in_array(di::get('user'), $users);
-    return true;
+    return in_array($user, $users);
   }
 }

@@ -1,23 +1,25 @@
 <?php namespace domain\repositories;
 
+use \domain\user;
+
 class task extends \Doctrine\ORM\EntityRepository {
 
-  public function findActiveTask(){
+  public function findActiveTask(user $user){
     $tasks = $this->findBy(array('status'=>array('open', 'reopen')));
     $result = [];
     foreach ($tasks as $task) {
-      if($task->isPerson()){
+      if($task->isPerson($user)){
         $result[] = $task;
       }
     }
     return $result;
   }
 
-  public function findCloseTask(){
+  public function findCloseTask(user $user){
     $tasks = $this->findBy(array('status'=>array('close')));
     $result = [];
     foreach ($tasks as $task) {
-      if($task->isPerson()){
+      if($task->isPerson($user)){
         $result[] = $task;
       }
     }

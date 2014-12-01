@@ -33,7 +33,8 @@ class task{
     $task->set_users($users);
     $app['em']->persist($task);
     $app['em']->flush();
-    $tasks = $app['em']->getRepository('\domain\task')->findActiveTask();
+    $tasks = $app['em']->getRepository('\domain\task')
+                       ->findActiveTask($app['user']);
     return $app['twig']->render('task\show_active_tasks.tpl',
                                 ['tasks' => $tasks]);
   }
@@ -45,7 +46,8 @@ class task{
     $task->set_time_close((int) $request->get('time_close'));
     $task->set_status('close');
     $app['em']->flush($task);
-    $tasks = $app['em']->getRepository('\domain\task')->findActiveTask();
+    $tasks = $app['em']->getRepository('\domain\task')
+                       ->findActiveTask($app['user']);
     return $app['twig']->render('task\close_task.tpl',
                                 ['tasks' => $tasks]);
   }
@@ -127,13 +129,14 @@ class task{
   }
 
   public function show_active_tasks(Application $app){
-    $tasks = $app['em']->getRepository('\domain\task')->findActiveTask();
+    $tasks = $app['em']->getRepository('\domain\task')
+                       ->findActiveTask($app['user']);
     return $app['twig']->render('task\show_active_tasks.tpl',
                                 ['tasks' => $tasks]);
   }
 
   public function show_finished_tasks(Application $app){
-    $tasks = $app['em']->getRepository('\domain\task')->findCloseTask();
+    $tasks = $app['em']->getRepository('\domain\task')->findCloseTask($app['user']);
     return $app['twig']->render('task\show_finished_tasks.tpl',
                                 ['tasks' => $tasks]);
   }
