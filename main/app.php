@@ -7,8 +7,8 @@ use \Silex\Provider\TwigServiceProvider;
 use \Silex\Provider\SwiftmailerServiceProvider;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
-$root = substr(__DIR__, 0, (strlen(__DIR__) - strlen(DIRECTORY_SEPARATOR.'main'))).DIRECTORY_SEPARATOR;
+$DS = DIRECTORY_SEPARATOR;
+$root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'main'))).$DS;
 require_once($root."vendor/autoload.php");
 
 $app = new Application();
@@ -40,9 +40,14 @@ $app['\main\models\report_query'] = function($app){
   return new \main\models\report_query($app);
 };
 
-$app->register(new TwigServiceProvider(), array(
-  'twig.path' => __DIR__.'/templates',
-));
+if($app['debug']){
+  $twig_conf = ['twig.path' => __DIR__.'/templates'];
+}else{
+  $cache = $root.$DS.'cache'.$DS.'twig'.$DS.'main'.$DS;
+  $twig_conf = ['twig.path' => __DIR__.'/templates',
+                'twig.options' => ['cache' => $cache]];
+}
+$app->register(new TwigServiceProvider(), $twig_conf);
 
 $app->before(function (Request $request, Application $app) {
   session_start();
