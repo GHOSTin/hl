@@ -1,9 +1,12 @@
 <?php
 
-class data_session_Test extends PHPUnit_Framework_TestCase{
+use \domain\session;
+use \domain\user;
+
+class session_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->session = new data_session();
+    $this->session = new session();
   }
 
   public function test_time_1(){
@@ -12,7 +15,7 @@ class data_session_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_user_1(){
-    $user = new data_user();
+    $user = new user();
     $this->session->set_user($user);
     $this->assertSame($user, $this->session->get_user());
   }

@@ -1,15 +1,13 @@
 <?php
 
-/**
- * @property data_task task
-  * @property data_task2user t2u
- * @property \Doctrine\Common\Collections\ArrayCollection users
- */
- class data_task_Test extends PHPUnit_Framework_TestCase {
+use \domain\task;
+use \domain\task2user;
+
+ class task_Test extends PHPUnit_Framework_TestCase {
 
    public function setUp(){
-     $this->task = new data_task();
-     $this->t2u = new data_task2user();
+     $this->task = new task();
+     $this->t2u = new task2user();
      $this->users = new \Doctrine\Common\Collections\ArrayCollection();
      $this->users->add($this->t2u);
      $this->users->add($this->t2u);
@@ -63,7 +61,7 @@
    public function test_set_users_1(){
      $this->task->set_users($this->users);
      $this->assertCount(2, $this->task->get_users());
-     $this->assertContainsOnlyInstancesOf('data_task2user', $this->task->get_users());
+     $this->assertContainsOnlyInstancesOf('\domain\task2user', $this->task->get_users());
    }
 
  }

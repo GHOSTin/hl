@@ -1,4 +1,7 @@
 <?php namespace domain;
+
+use \DomainException;
+
 /**
 * @Entity
 * @Table(name="flats")

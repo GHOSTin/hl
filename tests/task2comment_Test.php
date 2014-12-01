@@ -1,12 +1,12 @@
 <?php
-/**
- * @property data_task2comment t2c
- * @property data_user user
- */
-class data_task2comment_Test extends PHPUnit_Framework_TestCase {
+
+use \domain\task2comment;
+use \domain\user;
+
+class task2comment_Test extends PHPUnit_Framework_TestCase {
   protected function setUp() {
-    $this->t2c = new data_task2comment();
-    $this->user = new data_user();
+    $this->t2c = new task2comment();
+    $this->user = new user();
   }
 
   public function test_set_message_1(){
@@ -21,7 +21,7 @@ class data_task2comment_Test extends PHPUnit_Framework_TestCase {
 
   public function test_set_user_1(){
     $this->t2c->set_user($this->user);
-    $this->assertInstanceOf('data_user', $this->t2c->get_user());
+    $this->assertInstanceOf('\domain\user', $this->t2c->get_user());
     $this->assertEquals($this->user, $this->t2c->get_user());
   }
 }

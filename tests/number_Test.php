@@ -1,9 +1,12 @@
 <?php
 
-class data_number_Test extends PHPUnit_Framework_TestCase{
+use \domain\number;
+use \domain\flat;
+
+class number_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->number = new data_number();
+    $this->number = new number();
   }
 
   public function test_set_id_1(){
@@ -60,18 +63,12 @@ class data_number_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_generate_hash(){
-    $this->assertEquals('aa98a96aa33a73df71d3f045cd07b680',
-      data_number::generate_hash('password'));
-  }
-
-  public function test_set_city(){
-    $city = new data_city();
-    $this->number->set_city($city);
-    $this->assertSame($city, $this->number->get_city());
+    $this->assertEquals('d514dee5e76bbb718084294c835f312c',
+                        number::generate_hash('password', 'salt'));
   }
 
   public function test_set_flat(){
-    $flat = new data_flat();
+    $flat = new flat();
     $this->number->set_flat($flat);
     $this->assertSame($flat, $this->number->get_flat());
   }

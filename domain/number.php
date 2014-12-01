@@ -1,5 +1,6 @@
 <?php namespace domain;
 
+use \DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -17,11 +18,6 @@ class number{
   * @Column(name="cellphone", type="string")
   */
   private $cellphone;
-
-  /*
-  * @OneToMany(targetEntity="data_city", mappedBy="city")
-  */
-  private $city;
 
   /**
   * @Column(name="fio", type="string")
@@ -111,10 +107,6 @@ class number{
     return $this->id;
   }
 
-  public function get_city(){
-    return $this->city;
-  }
-
   public function get_number(){
     return $this->number;
   }
@@ -162,10 +154,6 @@ class number{
     if($id > 16777215 OR $id < 1)
       throw new DomainException('Идентификатор лицевого счета задан не верно.');
     $this->id = $id;
-  }
-
-  public function set_city(data_city $city){
-    $this->city = $city;
   }
 
   public function set_number($number){

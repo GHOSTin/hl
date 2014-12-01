@@ -1,9 +1,11 @@
 <?php
 
-class data_department_Test extends PHPUnit_Framework_TestCase{
+use \domain\department;
+
+class department_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->departmnent = new data_department();
+    $this->departmnent = new department();
   }
 
   public function test_set_id_1(){

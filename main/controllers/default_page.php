@@ -8,11 +8,11 @@ use \domain\session;
 
 class default_page{
 
-  public function about(Request $request, Application $app){
+  public function about(Application $app){
     return $app['twig']->render('about.tpl', ['user' => $app['user']]);
   }
 
-  public function default_page(Request $request, Application $app){
+  public function default_page(Application $app){
     if(is_null($app['user']))
       return $app['twig']->render('enter.tpl', ['user' => $app['user']]);
     else

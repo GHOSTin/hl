@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class error{
 
-  public function show_dialog(Request $request, Application $app){
+  public function show_dialog(Application $app){
     return $app['twig']->render('\error\show_dialog.tpl');
   }
 
@@ -33,7 +33,7 @@ class error{
     return new Response('');
   }
 
-  public function default_page(Request $request, Application $app){
+  public function default_page(Application $app){
     $errors = $app['em']->getRepository('\domain\error')->findAll();
     return $app['twig']->render('\error\default_page.tpl',
                                 ['user' => $app['user'], 'errors' => $errors]);

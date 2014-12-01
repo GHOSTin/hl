@@ -1,9 +1,15 @@
 <?php
 
-class data_house_Test extends PHPUnit_Framework_TestCase{
+use \domain\house;
+use \domain\department;
+use \domain\street;
+use \domain\number;
+use \domain\flat;
+
+class house_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->house = new data_house();
+    $this->house = new house();
   }
 
   public function test_toSеring(){
@@ -57,26 +63,20 @@ class data_house_Test extends PHPUnit_Framework_TestCase{
     $this->house->set_status('truefalse');
   }
 
-  public function test_set_city(){
-    $city = new data_city();
-    $this->house->set_city($city);
-    $this->assertSame($city, $this->house->get_city());
-  }
-
   public function test_set_department(){
-    $department = new data_department();
+    $department = new department();
     $this->house->set_department($department);
     $this->assertSame($department, $this->house->get_department());
   }
 
   public function test_set_street(){
-    $street = new data_street();
+    $street = new street();
     $this->house->set_street($street);
     $this->assertSame($street, $this->house->get_street());
   }
 
   public function test_add_number_1(){
-    $number = new data_number();
+    $number = new number();
     $this->house->add_number($number);
     $numbers = $this->house->get_numbers();
     $this->assertCount(1, $numbers);
@@ -85,13 +85,13 @@ class data_house_Test extends PHPUnit_Framework_TestCase{
 
   public function test_add_number_2(){
     $this->setExpectedException('DomainException');
-    $number = new data_number();
+    $number = new number();
     $this->house->add_number($number);
     $this->house->add_number($number);
   }
 
   public function test_add_flat_1(){
-    $flat = new data_flat();
+    $flat = new flat();
     $this->house->add_flat($flat);
     $flats = $this->house->get_flats();
     $this->assertCount(1, $flats);
@@ -100,7 +100,7 @@ class data_house_Test extends PHPUnit_Framework_TestCase{
 
   public function test_add_flat_2(){
     $this->setExpectedException('DomainException');
-    $flat = new data_flat();
+    $flat = new flat();
     $this->house->add_flat($flat);
     $this->house->add_flat($flat);
   }

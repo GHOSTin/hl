@@ -1,9 +1,12 @@
 <?php
 
-class data_flat_Test extends PHPUnit_Framework_TestCase{
+use \domain\flat;
+use \domain\house;
+
+class flat_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->flat = new data_flat();
+    $this->flat = new flat();
   }
 
   public function test_set_id_1(){
@@ -54,7 +57,7 @@ class data_flat_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_set_house(){
-    $house = new data_house();
+    $house = new house();
     $this->flat->set_house($house);
     $this->assertSame($house, $this->flat->get_house());
   }

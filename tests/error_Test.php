@@ -1,9 +1,12 @@
 <?php
 
-class data_error_Test extends PHPUnit_Framework_TestCase{
+use \domain\error;
+use \domain\user;
+
+class error_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->error = new data_error();
+    $this->error = new error();
   }
 
   public function test_time_1(){
@@ -12,7 +15,7 @@ class data_error_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_user_1(){
-    $user = new data_user();
+    $user = new user();
     $this->error->set_user($user);
     $this->assertSame($user, $this->error->get_user());
   }

@@ -1,11 +1,11 @@
 <?php
-/**
- * @property data_metrics metric
- */
-class data_metrics_Test extends PHPUnit_Framework_TestCase {
+
+use \domain\metrics;
+
+class metrics_Test extends PHPUnit_Framework_TestCase {
 
   public function setUp(){
-    $this->metric = new data_metrics();
+    $this->metric = new metrics();
   }
 
   public function test_set_id_1(){

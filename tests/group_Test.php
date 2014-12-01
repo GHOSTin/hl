@@ -1,9 +1,12 @@
 <?php
 
-class data_group_Test extends PHPUnit_Framework_TestCase{
+use \domain\group;
+use \domain\user;
+
+class group_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->group = new data_group();
+    $this->group = new group();
   }
 
   public function test_set_id_1(){
@@ -55,7 +58,7 @@ class data_group_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_add_user_1(){
-    $user = new data_user();
+    $user = new user();
     $this->group->add_user($user);
     $users = $this->group->get_users();
     $this->assertCount(1, $users);
@@ -64,14 +67,14 @@ class data_group_Test extends PHPUnit_Framework_TestCase{
 
   public function test_add_user_2(){
     $this->setExpectedException('DomainException');
-    $user = new data_user();
+    $user = new user();
     $this->group->add_user($user);
     $this->group->add_user($user);
   }
 
   public function test_exclude_user(){
-    $user1 = new data_user();
-    $user2 = new data_user();
+    $user1 = new user();
+    $user2 = new user();
     $this->group->add_user($user1);
     $this->group->add_user($user2);
     $users = $this->group->get_users();

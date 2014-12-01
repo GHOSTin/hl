@@ -1,9 +1,11 @@
 <?php
 
-class data_user_Test extends PHPUnit_Framework_TestCase{
+use \domain\user;
+
+class user_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->user = new data_user();
+    $this->user = new user();
   }
 
   public function test_set_cellphone_1(){
@@ -138,6 +140,7 @@ class data_user_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_generate_hash(){
-    $this->assertEquals('aa98a96aa33a73df71d3f045cd07b680', data_user::generate_hash('password'));
+    $this->assertEquals('d514dee5e76bbb718084294c835f312c',
+                        user::generate_hash('password', 'salt'));
   }
 }

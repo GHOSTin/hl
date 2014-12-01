@@ -1,13 +1,16 @@
 <?php
 
-class data_accrual_Test extends PHPUnit_Framework_TestCase{
+use \domain\accrual;
+use \domain\number;
+
+class accrual_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $this->ac = new data_accrual();
+    $this->ac = new accrual();
   }
 
   public function test_set_number_1(){
-    $number = new data_number();
+    $number = new number();
     $this->ac->set_number($number);
     $this->assertSame($number, $this->ac->get_number());
   }
