@@ -68,6 +68,9 @@ $app->get('/profile/get_notification_center_content',
           'main\\controllers\\profile::get_notification_center_content');
 # api
 $app->get('/api/get_chat_options', 'main\\controllers\\api::get_chat_options');
+$app->get('/api/get_users', 'main\\controllers\\api::get_users');
+$app->get('/api/get_user_by_login_and_password',
+          'main\\controllers\\api::get_user_by_login_and_password');
 # error
 $app->get('/error/show_dialog', 'main\\controllers\\error::show_dialog');
 $app->get('/error/send_error', 'main\\controllers\\error::send_error');

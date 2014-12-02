@@ -143,4 +143,14 @@ class user_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('d514dee5e76bbb718084294c835f312c',
                         user::generate_hash('password', 'salt'));
   }
+
+  public function test_JsonSerialize(){
+    $array = ['id' => 123, 'firstname' => 'Евгений', 'lastname' => 'Некрасов',
+              'middlename' => 'Валерьевич'];
+    $this->user->set_id($array['id']);
+    $this->user->set_firstname($array['firstname']);
+    $this->user->set_lastname($array['lastname']);
+    $this->user->set_middlename($array['middlename']);
+    $this->assertEquals($array, $this->user->JsonSerialize());
+  }
 }

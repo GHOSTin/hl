@@ -1,12 +1,13 @@
 <?php namespace domain;
 
 use \DomainException;
+use \JsonSerializable;
 
 /**
 * @Entity
 * @Table(name="users")
 */
-class user{
+class user implements JsonSerializable{
 
   /**
   * @Column(name="cellphone", type="string")
@@ -184,5 +185,12 @@ class user{
     if(!preg_match('/^[0-9]{0,11}$/', $telephone))
       throw new DomainException('Wrong user telephone '.$telephone);
     $this->telephone = $telephone;
+  }
+
+  public function JsonSerialize(){
+    return [ 'id' => $this->id,
+             'firstname' => $this->firstname,
+             'lastname' => $this->lastname,
+             'middlename' => $this->middlename];
   }
 }
