@@ -1,1 +1,0 @@
-{{ response.workgroup.get_name() }}

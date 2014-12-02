@@ -1,1 +1,0 @@
-{% include '@user/private_add_user.tpl' %}

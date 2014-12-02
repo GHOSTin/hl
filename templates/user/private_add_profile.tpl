@@ -1,1 +1,0 @@
-{% include '@user/private_get_user_profiles.tpl' %}
