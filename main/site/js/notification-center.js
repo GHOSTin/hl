@@ -29,30 +29,6 @@ function converted(s) {
     } catch(er) {}
 }
 /**
- * Возвращает значение запрашиваемой куки
- * @param {string} key имя куки
- * @returns {string|null} значение, если отсутствует то возвращает нуль
- */
-var get_cookie = function(key) {
-    var cookies = document.cookie.split('; ');
-    var result = key ? undefined : {};
-    for (var i= 0, l = cookies.length; i < l; i++) {
-        var parts = cookies[i].split('=');
-        var name = decode(parts.shift());
-        var cookie = decode(parts.join('='));
-
-        if(key && key === name) {
-            result = converted(cookie);
-            break;
-        }
-
-        if(!key) {
-            result[name] = converted(cookie);
-        }
-    }
-    return result;
-}
-/**
  * функция аналог jQuery:contains без учета регистра
  */
 $.extend($.expr[':'], {
@@ -62,7 +38,7 @@ $.extend($.expr[':'], {
     }
 });
 var uid, host, port;
-$.getJSON('/api/get_chat_options', {async: false}).done(function(data){
+$.ajax('/api/get_chat_options', {async: false}).done(function(data){
     uid = parseInt(data.user);
     host = data.host;
     port = data.port;
@@ -70,9 +46,9 @@ $.getJSON('/api/get_chat_options', {async: false}).done(function(data){
 /** тайтл страницы */
 var global_title;
 /** сокет-соединение для центра уведомлений */
-var notify_center = io.connect('http://'+ get_cookie('chat_host') + ':' + get_cookie('chat_port') + '/notify');
+var notify_center = io.connect('http://'+ host + ':' + port + '/notify');
 /** сокет-соединение для чата */
-var chat = io.connect('http://'+ get_cookie('chat_host') + ':' + get_cookie('chat_port') + '/chat');
+var chat = io.connect('http://'+ host + ':' + port + '/chat');
 /**
  * если сокет создан, но не произошло соединение, то совершать пересоединение
  * @function
@@ -83,7 +59,7 @@ var tryReconnect = function(){
          notify_center.socket.connect();
          chat.socket.connect();
     }
-}
+};
 /**
  * с интервалом раз в минуту вызывать функцию tryReconnect
  * @function
