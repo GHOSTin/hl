@@ -50,6 +50,22 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_documents(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\query', 125)
+                    ->will($this->returnValue('query_object'));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_documents.tpl',
+                             ['query' => 'query_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_documents($this->request,
+                                                     $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_dialog_initiator(){
     $this->request->query->set('value', 125);
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
