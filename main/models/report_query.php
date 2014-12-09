@@ -1,10 +1,10 @@
 <?php namespace main\models;
 
-use Silex\app;
+use Silex\Application;
 
 class report_query{
 
-  public function __construct(app $app){
+  public function __construct(Application $app){
     $this->app = $app;
     if(empty($_SESSION['report_query'])){
       $this->init_default_params();
