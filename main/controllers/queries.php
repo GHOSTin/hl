@@ -346,6 +346,12 @@ class queries{
                                 ['query' => $query]);
   }
 
+  public function get_documents(Request $request, Application $app){
+    $query = $app['em']->find('\domain\query', $request->get('id'));
+    return $app['twig']->render('query\get_documents.tpl',
+                                ['query' => $query]);
+  }
+
   public function get_query_numbers(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\get_query_numbers.tpl',
