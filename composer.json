@@ -17,7 +17,11 @@
     },
     "require": {
         "phpunit/phpunit": "dev-master",
-        "phpunit/php-code-coverage": "3.0.*",
+        "halleck45/php-metrics": "dev-master",
+        "phpmd/phpmd" : "@stable",
+        "phploc/phploc": "*",
+        "sebastian/phpcpd": "*",
+        "sebastian/phpdcd": "*",
         "twig/twig": "1.*",
         "doctrine/orm": "*",
         "silex/silex": "2.0.*@dev"
