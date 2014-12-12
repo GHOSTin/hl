@@ -1,5 +1,6 @@
 <?php namespace domain;
 
+use DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -132,6 +133,7 @@ class query{
 
   public function __construct(){
     $this->numbers = new ArrayCollection();
+    $this->comments = new ArrayCollection();
   }
 
 	public function add_number(\domain\number $number){
