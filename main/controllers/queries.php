@@ -12,7 +12,7 @@ class queries{
 
   public function add_comment(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('query_id'));
-    $comment = new query2comment();
+    $comment = $app['\domain\query2comment'];
     $comment->set_user($app['user']);
     $comment->set_query($query);
     $comment->set_time(time());

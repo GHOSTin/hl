@@ -54,6 +54,10 @@ class query2comment{
     return $this->time;
   }
 
+  public function get_query(){
+    return $this->query;
+  }
+
   public function set_query(query $query){
     $this->query = $query;
     $this->query_id = $query->get_id();
