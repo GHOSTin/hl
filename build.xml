@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="mshc" default="main" basedir=".">
-  <property name="BUILD_DIR" value="${project.basedir}/builds/" override="false"/>
-  <fileset id="app" dir="${project.basedir}">
+  <property name="BUILD_DIR" value="${basedir}/builds/"/>
+  <fileset id="app" dir="${basedir}">
     <exclude name="application/application_configuration.php"/>
     <exclude name="build.xml"/>
     <exclude name="tests/**"/>
@@ -9,26 +9,53 @@
     <exclude name="composer.lock"/>
     <exclude name="composer.json"/>
   </fileset>
-  <fileset id="php_files" dir="${project.basedir}">
-    <exclude name="cache/**"/>
-    <exclude name="vendor/**"/>
-    <include name="**/*.php"/>
-  </fileset>
-  <!-- targets -->
   <target name="build" depends="clean, tar">
   </target>
-  <target name="main"  depends="composer, phplint, tests, clean, tar">
+  <target name="main"  depends="composer, phplint, phpunit, clean, tar">
+
   </target>
   <target name="phplint">
-    <phplint haltonfailure="true">
-      <fileset refid="php_files" />
-    </phplint>
-  </target>
+    <apply executable="php" failonerror="true">
+     <arg value="-l" />
+     <fileset dir="${basedir}/config">
+      <include name="**/*.php" />
+      <modified />
+     </fileset>
+     <fileset dir="${basedir}/domain">
+      <include name="**/*.php" />
+      <modified />
+     </fileset>
+     <fileset dir="${basedir}/main">
+      <include name="**/*.php" />
+      <modified />
+     </fileset>
+     <fileset dir="${basedir}/config">
+      <include name="**/*.php" />
+      <modified />
+     </fileset>
+     <fileset dir="${basedir}/scripts">
+      <include name="**/*.php" />
+      <modified />
+     </fileset>
+     <fileset dir="${basedir}/tests">
+      <include name="**/*.php" />
+      <modified />
+     </fileset>
+    </apply>
+   </target>
   <target name="composer">
-    <exec command="composer update" passthru="true" checkreturn="true" />
+      <exec executable="composer">
+          <arg value="update"/>
+      </exec>
   </target>
-  <target name="tests">
-    <exec command="phpunit --bootstrap ./tests/autoload.php --coverage-html builds/cover/ tests/" passthru="true" checkreturn="true" />
+  <target name="phpunit">
+      <exec executable="vendor/bin/phpunit" failonerror="true">
+          <arg value="--bootstrap"/>
+          <arg value="./tests/autoload.php"/>
+          <arg value="--coverage-html"/>
+          <arg value="builds/cover/"/>
+          <arg value="tests/"/>
+      </exec>
   </target>
   <target name="clean">
     <mkdir dir="${BUILD_DIR}" />
@@ -39,7 +66,7 @@
     </delete>
   </target>
   <target name="tar">
-    <tar destfile="${BUILD_DIR}/${phing.project.name}.tar.gz" compression="gzip">
+    <tar destfile="${BUILD_DIR}/${ant.project.name}.tar.gz" compression="gzip">
       <fileset refid="app" />
     </tar>
   </target>

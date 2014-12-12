@@ -207,7 +207,8 @@ class queries{
   public function get_dialog_change_initiator(Request $request,
                                               Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
-    $streets = $app['em']->getRepository('\domain\street')->findAll();
+    $streets = $app['em']->getRepository('\domain\street')
+                         ->findBy([], ['name' => 'ASC']);
     return $app['twig']->render('query\get_dialog_change_initiator.tpl',
                                 ['query' => $query, 'streets' => $streets]);
   }
@@ -244,7 +245,8 @@ class queries{
   }
 
   public function get_dialog_initiator(Request $request, Application $app){
-    $streets = $app['em']->getRepository('\domain\street')->findAll();
+    $streets = $app['em']->getRepository('\domain\street')
+                         ->findBy([], ['name' => 'ASC']);
     return $app['twig']->render('query\get_dialog_initiator.tpl',
                                 ['streets' => $streets,
                                  'value' => $request->get('value')]);
@@ -343,6 +345,12 @@ class queries{
   public function get_query_content(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\get_query_content.tpl',
+                                ['query' => $query]);
+  }
+
+  public function get_documents(Request $request, Application $app){
+    $query = $app['em']->find('\domain\query', $request->get('id'));
+    return $app['twig']->render('query\get_documents.tpl',
                                 ['query' => $query]);
   }
 
