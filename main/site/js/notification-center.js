@@ -37,18 +37,25 @@ $.extend($.expr[':'], {
             .indexOf((match[3] || "").toLowerCase()) >= 0;
     }
 });
-var uid, host, port;
-$.ajax('/api/get_chat_options', {async: false}).done(function(data){
-    uid = parseInt(data.user);
-    host = data.host;
-    port = data.port;
-});
+var params = [];
+var get_param = function(option){
+    if(!_.isUndefined(params[option])){
+        return params[option];
+    } else {
+        $.ajax('/api/get_chat_options', {async: false}).done(function (data) {
+            params['uid'] = parseInt(data.user);
+            params['host'] = data.host;
+            params['port'] = data.port;
+        });
+        return params[option];
+    }
+};
 /** тайтл страницы */
 var global_title;
 /** сокет-соединение для центра уведомлений */
-var notify_center = io.connect('http://'+ host + ':' + port + '/notify');
+var notify_center = io.connect('http://'+ get_param('host') + ':' + get_param('port') + '/notify');
 /** сокет-соединение для чата */
-var chat = io.connect('http://'+ host + ':' + port + '/chat');
+var chat = io.connect('http://'+ get_param('host') + ':' + get_param('port') + '/chat');
 /**
  * если сокет создан, но не произошло соединение, то совершать пересоединение
  * @function
@@ -71,9 +78,9 @@ var intervalID = setInterval(tryReconnect, 60000);
  */
 notify_center.on('connect', function(){
     if($('.current_user').length){
-        global_title = $(document).attr('title') || ''
-        notify_center.json.send({"type":"user_ready", "data":{'uid': uid}});
-        chat.json.send({"type":"user_ready", "data":{'uid': uid}});
+        global_title = $(document).attr('title') || '';
+        notify_center.json.send({"type":"user_ready", "data":{'uid': get_param('uid')}});
+        chat.json.send({"type":"user_ready", "data":{'uid': get_param('uid')}});
     }
     clearInterval(intervalID);
 });
