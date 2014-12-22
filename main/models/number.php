@@ -12,7 +12,7 @@ class number{
 
 	public function get_houses_by_street($street_id){
 		$houses = $this->app['em']->getRepository('\domain\house')
-									 						->findByStreet($street_id);
+															->findByStreet($street_id);
 		natsort($houses);
 		return $houses;
 	}
