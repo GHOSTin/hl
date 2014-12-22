@@ -118,6 +118,8 @@ class numbers{
 
   public function update_number(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
+    if(is_null($number))
+      throw new RuntimeException();
     $old_number = $app['em']->getRepository('\domain\number')
                             ->findOneByNumber($request->get('number'));
     if(!is_null($old_number))

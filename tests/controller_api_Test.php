@@ -52,6 +52,9 @@ class controller_api_Test extends PHPUnit_Framework_TestCase{
     $repository->expects($this->once())
                ->method('findAll')
                ->will($this->returnValue('user_array'));
+    $this->em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+                ->setMethods(['getRepository'])
+               ->disableOriginalConstructor()->getMock();
     $this->em->expects($this->once())
              ->method('getRepository')
              ->will($this->returnValue($repository));

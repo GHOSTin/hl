@@ -307,6 +307,82 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_update_number_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 123);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\number', 123)
+                    ->will($this->returnValue(null));
+    $response = $this->controller->update_number($this->request,
+                                                 $this->app);
+  }
+
+  public function test_update_number_2(){
+    $this->request->query->set('id', 123);
+    $this->request->query->set('number', 77755544);
+    $number = $this->getMock('\domain\number');
+    $number->expects($this->once())
+           ->method('set_number')
+           ->with(77755544);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\number', 123)
+                    ->will($this->returnValue($number));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByNumber'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneByNumber')
+               ->with(77755544)
+               ->will($this->returnValue(null));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('\domain\number')
+                    ->will($this->returnValue($repository));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('number\update_number_fio.tpl',
+                             ['number' => $number])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->update_number($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_update_number_3(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 123);
+    $this->request->query->set('number', 77755544);
+    $number = $this->getMock('\domain\number');
+    $number->expects($this->once())
+           ->method('get_id')
+           ->will($this->returnValue(123));
+    $old_number = $this->getMock('\domain\number');
+    $old_number->expects($this->once())
+           ->method('get_id')
+           ->will($this->returnValue(789));
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\number', 123)
+                    ->will($this->returnValue($number));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByNumber'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneByNumber')
+               ->with(77755544)
+               ->will($this->returnValue($old_number));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('\domain\number')
+                    ->will($this->returnValue($repository));
+    $response = $this->controller->update_number($this->request, $this->app);
+  }
+
   public function test_update_number_email(){
     $this->request->query->set('email', 'nekrasov@mlsco.ru');
     $number = $this->getMock('\domain\number');
