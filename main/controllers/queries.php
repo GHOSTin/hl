@@ -58,12 +58,13 @@ class queries{
   }
 
   public function clear_filters(Application $app){
+    $time = getdate();
+    $day = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
     $model = $app['\main\models\query'];
     $model->init_default_params();
     return $app['twig']->render('query\clear_filters.tpl',
-                                ['queries' => $model->get_queries(),
-                                 'timeline' =>  $model->get_timeline(),
-                                 'now' => $model->get_timeline()]);
+                                ['queries' => $model->get_queries(), 'timeline' => $model->get_timeline(),
+                                 'now' => $model->get_timeline(), 'day' => $day]);
   }
 
   public function close_query(Request $request, Application $app){
@@ -153,28 +154,23 @@ class queries{
   }
 
   public function default_page(Application $app){
-    $now = getdate();
-    $now = mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']);
+    $time = getdate();
+    $now = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
+    $day = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
     $model = $app['\main\models\query'];
-    $types = $app['em']->getRepository('\domain\workgroup')
-                ->findBy([], ['name' => 'ASC']);
+    $types = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name' => 'ASC']);
     $params = $model->get_params();
     if(!empty($params['houses']))
-      $houses = $app['em']->getRepository('\domain\house')
-                   ->findByid($params['houses'], ['number' => 'ASC']);
+      $houses = $app['em']->getRepository('\domain\house')->findByid($params['houses'], ['number' => 'ASC']);
     else
       $houses = [];
     $profile = $app['user']->get_profile('query');
     return $app['twig']->render('query\default_page.tpl',
-                                ['user' => $app['user'], 'now' => $now,
-                                 'queries' => $model->get_queries(),
-                                 'params' => $model->get_filter_values(),
-                                 'timeline' =>  $model->get_timeline(),
-                                 'streets' => $model->get_streets(),
-                                 'departments' => $model->get_departments(),
-                                 'query_work_types' => $types,
-                                 'houses' => $houses,
-                                 'rules' => $profile->get_rules()]);
+                                ['user' => $app['user'], 'now' => $now, 'day' => $day,
+                                 'queries' => $model->get_queries(), 'params' => $model->get_filter_values(),
+                                 'timeline' => $model->get_timeline(), 'streets' => $model->get_streets(),
+                                 'departments' => $model->get_departments(), 'query_work_types' => $types,
+                                 'houses' => $houses, 'rules' => $profile->get_rules()]);
   }
 
   public function get_day(Request $request, Application $app){
@@ -401,18 +397,18 @@ class queries{
   }
 
   public function get_timeline(Request $request, Application $app){
-    $now = getdate();
-    $now = mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']);
+    $time = getdate();
+    $now = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
+    $day = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
     $time = getdate($request->get('time'));
     $time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
     $model = $app['\main\models\query'];
     if($request->get('act') === 'next')
-        $model->set_time(strtotime("+1 month", $time));
+      $model->set_time(strtotime("+1 month", $time));
     else
-        $model->set_time(strtotime("-1 day", $time));
+      $model->set_time(strtotime("-1 day", $time));
     return $app['twig']->render('query\get_timeline.tpl',
-                                ['queries' => $model->get_queries(),
-                                 'now' =>  $now,
+                                ['queries' => $model->get_queries(), 'now' => $now, 'day' => $day,
                                  'timeline' => $model->get_timeline()]);
   }
 
