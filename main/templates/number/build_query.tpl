@@ -7,5 +7,6 @@
   <div class="col-md-10">
    <div>Описание: {{ query.get_description() }}</div>
    <div>Причина закрытия: {{ query.get_close_reason() }}</div>
+   <div><a href="\query\?id={{ query.get_id() }}" target="_blank">Смотреть в АДС</a></div>
   </div>
 </div>

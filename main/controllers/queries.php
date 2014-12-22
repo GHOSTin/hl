@@ -152,7 +152,7 @@ class queries{
                                 ['query' => $query]);
   }
 
-  public function default_page(Application $app){
+  public function default_page(Request $request, Application $app){
     $now = getdate();
     $now = mktime(12, 0, 0, $now['mon'], $now['mday'], $now['year']);
     $model = $app['\main\models\query'];
@@ -165,9 +165,13 @@ class queries{
     else
       $houses = [];
     $profile = $app['user']->get_profile('query');
+    if($request->get('id')){
+      $queries = [$app['em']->find('\domain\query', $request->get('id'))];
+    }else
+      $queries = $model->get_queries();
     return $app['twig']->render('query\default_page.tpl',
                                 ['user' => $app['user'], 'now' => $now,
-                                 'queries' => $model->get_queries(),
+                                 'queries' => $queries,
                                  'params' => $model->get_filter_values(),
                                  'timeline' =>  $model->get_timeline(),
                                  'streets' => $model->get_streets(),
