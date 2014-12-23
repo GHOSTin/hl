@@ -1,5 +1,6 @@
 <?php namespace domain;
 
+use DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
@@ -132,6 +133,7 @@ class query{
 
   public function __construct(){
     $this->numbers = new ArrayCollection();
+    $this->comments = new ArrayCollection();
   }
 
 	public function add_number(\domain\number $number){
@@ -304,7 +306,7 @@ class query{
 	public function set_time_open($time){
 		if($time < 1)
       throw new DomainException('Время открытия заявки задано не верно.');
-		$this->time_open = (int) $time;
+		$this->time_open = $time;
 	}
 
 	public function set_close_reason($reason){
@@ -313,7 +315,7 @@ class query{
 		$this->close_reason = (string) $reason;
 	}
 
-	public function set_department(\domain\department $department){
+	public function set_department(department $department){
 		$this->department = $department;
 	}
 

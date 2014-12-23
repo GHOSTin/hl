@@ -69,6 +69,12 @@ footer, #push{
     cursor: pointer;
 }
 
+#nt-center a,
+#nt-center a:hover,
+#nt-center a:active {
+    color: #999;
+}
+
 .icon-white{
     color: white;
 }

@@ -7,7 +7,7 @@
 {% block html %}
 	<ul class="query-sub">
     <li>
-      <a class="get_dialog_add_comment cm">Оставить комментарий</a>
+      <a class="get_dialog_add_comment">Оставить комментарий</a>
     </li>
     <li>
       <ul class="comments">
