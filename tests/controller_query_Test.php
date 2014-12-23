@@ -190,4 +190,44 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                                                                $this->app);
     $this->assertEquals('render_template', $response);
   }
+
+  public function test_clear_filters(){
+    $model = $this->getMockBuilder('main\models\query')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('init_default_params');
+    $model->expects($this->once())
+          ->method('get_queries');
+    $model->expects($this->exactly(2))
+          ->method('get_timeline');
+    $this->app['\main\models\query'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\clear_filters.tpl', $this->anything())
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->clear_filters($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_timeline(){
+    $this->request->query->set('time', 1397562800);
+    $this->request->query->set('act', 'next');
+    $model = $this->getMockBuilder('main\models\query')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_time');
+    $model->expects($this->once())
+          ->method('get_queries');
+    $model->expects($this->once())
+          ->method('get_timeline');
+    $this->app['\main\models\query'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_timeline.tpl', $this->anything())
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_timeline($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
 }
