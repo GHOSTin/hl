@@ -4,6 +4,7 @@
   <fileset id="app" dir="${basedir}">
     <exclude name="application/application_configuration.php"/>
     <exclude name="build.xml"/>
+    <exclude name="builds/**"/>
     <exclude name="tests/**"/>
     <exclude name="cache/**"/>
     <exclude name="composer.lock"/>
@@ -59,15 +60,13 @@
   </target>
   <target name="clean">
     <mkdir dir="${BUILD_DIR}" />
-    <delete includeemptydirs="true" verbose="true" failonerror="true">
-      <fileset dir="${BUILD_DIR}">
-          <include name="*.*" />
-      </fileset>
+    <delete failonerror="true">
+      <fileset dir="${BUILD_DIR}" includes="**/**"/>
     </delete>
   </target>
   <target name="tar">
     <tar destfile="${BUILD_DIR}/${ant.project.name}.tar.gz" compression="gzip">
-      <fileset refid="app" />
+      <fileset refid="app"/>
     </tar>
   </target>
 </project>

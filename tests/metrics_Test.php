@@ -22,4 +22,14 @@ class metrics_Test extends PHPUnit_Framework_TestCase {
     $this->metric->set_metrics("ХВС: 12");
     $this->assertEquals("ХВС: 12", $this->metric->get_metrics());
   }
+
+  public function test_set_status(){
+    $this->metric->set_status('archive');
+    $this->assertEquals('archive', $this->metric->get_status());
+  }
+
+  public function test_set_time(){
+    $this->metric->set_time(1397562800);
+    $this->assertEquals(1397562800, $this->metric->get_time());
+  }
 }

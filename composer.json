@@ -16,7 +16,7 @@
         }
     },
     "require": {
-        "phpunit/phpunit": "dev-master",
+        "phpunit/phpunit": "4.4.*",
         "halleck45/php-metrics": "dev-master",
         "phpmd/phpmd" : "@stable",
         "phploc/phploc": "*",
