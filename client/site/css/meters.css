@@ -1,0 +1,21 @@
+.meter{
+    position: relative;
+    padding-right: 30px;
+}
+
+.meter:after {
+    content: '\e114';
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-family: 'Glyphicons Halflings';
+    -webkit-font-smoothing: antialiased;
+    font-style: normal;
+    font-weight: normal;
+}
+
+.meter.active:after{
+    content: '\e113';
+}
+
+.meter-content {margin: 20px 0px 20px 20px}

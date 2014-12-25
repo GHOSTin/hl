@@ -1,4 +1,5 @@
 main/conf.php
+client/conf.php
 composer.lock
 /cache/
 /vendor/
