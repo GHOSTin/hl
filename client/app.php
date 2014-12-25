@@ -46,9 +46,9 @@ $app->before(function (Request $request, Application $app) {
   }
 }, Application::EARLY_EVENT);
 #default_page
-$app->get('/', 'client\\controllers\\default_page::default_page');
-$app->post('/login/', 'client\\controllers\\default_page::login');
-$app->get('/logout/', 'client\\controllers\\default_page::logout');
+$app->get('/', 'client\controllers\default_page::default_page');
+$app->post('/login/', 'client\controllers\default_page::login');
+$app->get('/logout/', 'client\controllers\default_page::logout');
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
