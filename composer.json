@@ -12,7 +12,8 @@
     "autoload": {
         "psr-4": {
             "main\\": "main/",
-            "domain\\": "domain/"
+            "domain\\": "domain/",
+            "client\\": "client/"
         }
     },
     "require": {

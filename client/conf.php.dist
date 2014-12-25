@@ -1,0 +1,14 @@
+<?php namespace client;
+
+class conf{
+	// database option
+	const database_name = '';
+	const database_host = 'localhost';
+	const database_user = '';
+	const database_password = '';
+	// auth option
+	const authSalt = '1234567890';
+	// php
+	const php_timezone = 'Asia/Yekaterinburg';
+	const status = 'production';
+}
