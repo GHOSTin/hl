@@ -59,6 +59,9 @@ $app->get('/logout/', 'client\controllers\default_page::logout')->before($securi
 $app->get('/settings/', 'client\controllers\settings::default_page')->before($security);
 $app->post('/settings/change_password/', 'client\controllers\settings::change_password')->before($security);
 
+# queries
+$app->get('/queries/', 'client\controllers\queries::default_page')->before($security);
+
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
 });
