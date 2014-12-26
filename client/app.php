@@ -62,6 +62,9 @@ $app->post('/settings/change_password/', 'client\controllers\settings::change_pa
 # queries
 $app->get('/queries/', 'client\controllers\queries::default_page')->before($security);
 
+# accruals
+$app->get('/accruals/', 'client\controllers\accruals::default_page')->before($security);
+
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
 });
