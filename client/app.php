@@ -11,11 +11,10 @@ $DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
 require_once($root."vendor/autoload.php");
 
-
-$app = new Application();
-$app['debug'] = (conf::status === 'development')? true: false;
+$app           = new Application();
+$app['debug']  = (conf::status === 'development')? true: false;
 $app['number'] = null;
-$app['salt'] = conf::authSalt;
+$app['salt']   = conf::authSalt;
 date_default_timezone_set(conf::php_timezone);
 
 $dbParams = array(
@@ -27,18 +26,22 @@ $dbParams = array(
   'charset'  => 'utf8'
 );
 
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
+$config    = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
 $app['em'] = EntityManager::create($dbParams, $config);
 
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.'/templates'];
 }else{
   $cache = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
-  $twig_conf = ['twig.path' => __DIR__.'/templates',
+  $twig_conf = ['twig.path'    => __DIR__.'/templates',
                 'twig.options' => ['cache' => $cache]];
 }
 $app->register(new TwigServiceProvider(), $twig_conf);
+$app->register(new SwiftmailerServiceProvider());
 
+$app['Swift_Message'] = $app->factory(function($app){
+  return Swift_Message::newInstance();
+});
 $app->before(function (Request $request, Application $app) {
   session_start();
   if(isset($_SESSION['number'])){
@@ -54,6 +57,8 @@ $security = function(Request $request, Application $app){
 $app->get('/', 'client\controllers\default_page::default_page');
 $app->post('/login/', 'client\controllers\default_page::login');
 $app->get('/logout/', 'client\controllers\default_page::logout')->before($security);
+$app->get('/recovery/', 'client\controllers\default_page::recovery');
+$app->post('/recovery/', 'client\controllers\default_page::recovery_password');
 
 # settings
 $app->get('/settings/', 'client\controllers\settings::default_page')->before($security);

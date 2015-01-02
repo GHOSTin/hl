@@ -50,13 +50,20 @@
       </exec>
   </target>
   <target name="phpunit">
-      <exec executable="vendor/bin/phpunit" failonerror="true">
-          <arg value="--bootstrap"/>
-          <arg value="./tests/autoload.php"/>
-          <arg value="--coverage-html"/>
-          <arg value="builds/cover/"/>
-          <arg value="tests/"/>
-      </exec>
+    <exec executable="vendor/bin/phpunit" failonerror="true">
+        <arg value="--bootstrap"/>
+        <arg value="./tests/autoload.php"/>
+        <arg value="tests/"/>
+    </exec>
+  </target>
+  <target name="cover">
+    <exec executable="vendor/bin/phpunit" failonerror="true">
+        <arg value="--bootstrap"/>
+        <arg value="./tests/autoload.php"/>
+        <arg value="--coverage-html"/>
+        <arg value="builds/cover/"/>
+        <arg value="tests/"/>
+    </exec>
   </target>
   <target name="clean">
     <mkdir dir="${BUILD_DIR}" />

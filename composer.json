@@ -25,6 +25,7 @@
         "sebastian/phpdcd": "*",
         "twig/twig": "1.*",
         "doctrine/orm": "*",
-        "silex/silex": "2.0.*@dev"
+        "silex/silex": "2.0.*@dev",
+        "swiftmailer/swiftmailer": "@stable"
     }
 }

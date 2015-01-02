@@ -20,9 +20,6 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-xs-6">
-              <a href="#" class="btn btn-link btn-sm pull-right" id="recall">Забыли пароль?</a>
-            </div>
             <button class="btn btn-primary col-xs-6" type="submit">Войти</button>
           </div>
         </fieldset>
@@ -37,18 +34,13 @@
       <a href="/registration/" class="btn btn-link">Заявка на доступ</a>
     </div>
     <div class="input-group col-sm-12">
+      <a href="/recovery/" class="btn btn-link">Востановление пароля</a>
+    </div>
+    <div class="input-group col-sm-12">
       <a href="/metrics/" class="btn btn-link">Передать показания</a>
     </div>
   </div>
 </div>
-{% endblock %}
-
-{% block js %}
-<script>
-  $('#recall').tooltip({
-    title: 'Если вы забыли свой пароль. Обратитесь в свою УК для получения нового.'
-  })
-</script>
 {% endblock %}
 
 {% block css %}
