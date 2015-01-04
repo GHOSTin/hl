@@ -7,3 +7,7 @@
     Попробуйте <a href="/">вернутся на главную</a>
 </p>
 {% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" href="/css/default.css">
+{% endblock %}
