@@ -9,24 +9,24 @@
   <a class="timeline-control btn btn-primary get_timeline" act="previous">
     <i class="glyphicon glyphicon-chevron-left"></i>
   </a>
-  {% for i in range(1, timeline|date('t')) %}
-    <a class="timeline-day btn btn-primary
-      {% if day|date('d.m.Y') == timeline|date('d.m.Y') %} active{% endif %}
-      {% if day|date('d.m.Y') == now|date('d.m.Y') %} btn-info{% endif %}
-      " time="{{day|date('U')}}" title="{{ day|date('d.m.Y') }}">
-      <input type="radio">
-      <div>{{ i }}</div>
-      <div class="timeline-day-wday">
-        {% set w = day|date('w') %}
-        {% if w in wdays|keys %}
-          {% if w in [0, 6] %}<b>{% endif %}
-          {{ wdays[w] }}
-          {% if w in [0, 6] %}</b>{% endif %}
-        {% endif %}
-      </div>
-    </a>
-    {% set day = day|date_modify('noon next day') %}
-  {% endfor %}
+{% for i in range(1, timeline|date('t')) %}
+  <a class="timeline-day btn btn-primary
+    {% if day|date('d.m.Y') == timeline|date('d.m.Y') %} active{% endif %}
+    {% if day|date('d.m.Y') == now|date('d.m.Y') %} btn-info{% endif %}
+    " time="{{ day|date('U') }}" title="{{ day|date('d.m.Y') }}">
+    <input type="radio">
+    <div>{{ i }}</div>
+    <div class="timeline-day-wday">
+      {% set w = day|date('w') %}
+      {% if w in wdays|keys %}
+        {% if w in [0, 6] %}<b>{% endif %}
+        {{ wdays[w] }}
+        {% if w in [0, 6] %}</b>{% endif %}
+      {% endif %}
+    </div>
+  </a>
+  {% set day = day|date_modify('noon next day') %}
+{% endfor %}
   <a class="timeline-control btn btn-primary get_timeline" act="next">
     <i class="glyphicon glyphicon-chevron-right"></i>
   </a>

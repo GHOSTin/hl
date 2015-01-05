@@ -20,55 +20,44 @@ class query{
 	}
 
 	public function get_queries(){
-		return $this->app['em']->getRepository('\domain\query')
-													 ->findByParams($_SESSION['query']);
+		return $this->app['em']->getRepository('\domain\query')->findByParams($_SESSION['query']);
 	}
 
 	public function get_departments(){
 		if(!empty($_SESSION['query']['r_departments']))
 			return $this->app['em']->getRepository('\domain\department')
-														 ->findByid($_SESSION['query']['r_departments'],
-														 						['name' => 'ASC']);
+                             ->findByid($_SESSION['query']['r_departments'], ['name' => 'ASC']);
 		else
-			return $this->app['em']->getRepository('\domain\department')
-														 ->findBy([], ['name' => 'ASC']);
+			return $this->app['em']->getRepository('\domain\department')->findBy([], ['name' => 'ASC']);
 	}
 
 	public function get_streets(){
 		$em = $this->app['em'];
 		if(!empty($_SESSION['query']['r_departments'])){
-			$houses = $em->getRepository('\domain\house')
-									 ->findBy(['department' =>
-									 					 $_SESSION['query']['r_departments']]);
+			$houses = $em->getRepository('\domain\house')->findBy(['department' => $_SESSION['query']['r_departments']]);
 			$streets = [];
 			if(!empty($houses))
 				foreach($houses as $house)
 					$streets[] = $house->get_street()->get_id();
-			return $em->getRepository('\domain\street')
-								->findByid($streets, ['name' => 'ASC']);
+			return $em->getRepository('\domain\street')->findByid($streets, ['name' => 'ASC']);
 		}else
-			return $em->getRepository('\domain\street')
-								->findBy([], ['name' => 'ASC']);
+			return $em->getRepository('\domain\street')->findBy([], ['name' => 'ASC']);
 	}
 
 	public function get_houses_by_street($street_id){
 		$em = $this->app['em'];
 		if(!empty($_SESSION['query']['r_departments'])){
 			$houses = $em->getRepository('\domain\house')
-									 ->findBy(['department' =>
-									 					 $_SESSION['query']['r_departments'],
-														 'street' => $street_id]);
+									 ->findBy(['department' => $_SESSION['query']['r_departments'], 'street' => $street_id]);
 		}else{
-			$houses = $em->getRepository('\domain\house')
-									 ->findBy(['street' => $street_id]);
+			$houses = $em->getRepository('\domain\house')->findBy(['street' => $street_id]);
 		}
 		natsort($houses);
 		return $houses;
 	}
 
 	public function init_default_params(){
-		$departments = $this->app['user']->get_profile('query')
-																		 ->get_restrictions()['departments'];
+		$departments = $this->app['user']->get_profile('query')->get_restrictions()['departments'];
 		$_SESSION['query']['departments'] = $departments;
 		$_SESSION['query']['time_begin'] = strtotime('midnight');
 		$_SESSION['query']['time_end'] = strtotime('tomorrow');
@@ -117,8 +106,7 @@ class query{
 
 	public function set_department($department_id){
 		$departments = [];
-		$department = $this->app['em']
-											 ->find('\domain\department', $department_id);
+		$department = $this->app['em']->find('\domain\department', $department_id);
 		if(is_null($department)){
 			if(!empty($_SESSION['query']['r_departments']))
 				$departments = $_SESSION['query']['r_departments'];
