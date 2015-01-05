@@ -199,7 +199,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('init_default_params');
     $model->expects($this->once())
           ->method('get_queries');
-    $model->expects($this->exactly(2))
+    $model->expects($this->once())
           ->method('get_timeline');
     $this->app['\main\models\query'] = $model;
     $this->app['twig']->expects($this->once())
