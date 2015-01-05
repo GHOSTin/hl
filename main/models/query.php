@@ -67,12 +67,11 @@ class query{
 	}
 
 	public function init_default_params(){
-		$time = getdate();
 		$departments = $this->app['user']->get_profile('query')
 																		 ->get_restrictions()['departments'];
 		$_SESSION['query']['departments'] = $departments;
-		$_SESSION['query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$_SESSION['query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
+		$_SESSION['query']['time_begin'] = strtotime('midnight');
+		$_SESSION['query']['time_end'] = strtotime('tomorrow');
 		$_SESSION['query']['status'] = self::$statuses;
 		$_SESSION['query']['work_types'] = [];
 		$_SESSION['query']['r_departments'] = $departments;
@@ -81,7 +80,7 @@ class query{
 	}
 
 	public function get_timeline(){
-		return strtotime('+12 hours', $_SESSION['query']['time_begin']);
+		return strtotime('noon', $_SESSION['query']['time_begin']);
 	}
 
 	public function get_filter_values(){
@@ -161,9 +160,8 @@ class query{
 	}
 
 	public function set_time($time){
-		$time = getdate($time);
-		$_SESSION['query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-		$_SESSION['query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
+		$_SESSION['query']['time_begin'] = strtotime('midnight', $time);
+		$_SESSION['query']['time_end'] = strtotime('tomorrow', $time);
 	}
 
 	public function set_house($house_id){

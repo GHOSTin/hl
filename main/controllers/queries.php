@@ -58,13 +58,10 @@ class queries{
   }
 
   public function clear_filters(Application $app){
-    $time = getdate();
-    $day = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
     $model = $app['\main\models\query'];
     $model->init_default_params();
     return $app['twig']->render('query\clear_filters.tpl',
-                                ['queries' => $model->get_queries(), 'timeline' => $model->get_timeline(),
-                                 'now' => $model->get_timeline(), 'day' => $day]);
+                                ['queries' => $model->get_queries(), 'timeline' => $model->get_timeline()]);
   }
 
   public function close_query(Request $request, Application $app){
@@ -154,9 +151,6 @@ class queries{
   }
 
   public function default_page(Request $request, Application $app){
-    $time = getdate();
-    $now = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
-    $day = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
     $model = $app['\main\models\query'];
     $types = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name' => 'ASC']);
     $params = $model->get_params();
@@ -170,8 +164,10 @@ class queries{
 
     }else
       $queries = $model->get_queries();
+    $time = getdate($model->get_timeline());
+    $day = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
     return $app['twig']->render('query\default_page.tpl',
-                                ['user' => $app['user'], 'now' => $now, 'day' => $day,
+                                ['user' => $app['user'], 'day' => $day,
                                  'queries' => $queries, 'params' => $model->get_filter_values(),
                                  'timeline' => $model->get_timeline(), 'streets' => $model->get_streets(),
                                  'departments' => $model->get_departments(), 'query_work_types' => $types,
@@ -402,19 +398,13 @@ class queries{
   }
 
   public function get_timeline(Request $request, Application $app){
-    $time = getdate();
-    $now = mktime(12, 0, 0, $time['mon'], $time['mday'], $time['year']);
-    $day = mktime(12, 0, 0, $time['mon'], 1, $time['year']);
-    $time = getdate($request->get('time'));
-    $time = mktime(0, 0, 0, $time['mon'], 1, $time['year']);
     $model = $app['\main\models\query'];
     if($request->get('act') === 'next')
-      $model->set_time(strtotime("+1 month", $time));
+      $model->set_time(strtotime('noon first day of next month', $request->get('time')));
     else
-      $model->set_time(strtotime("-1 day", $time));
+      $model->set_time(strtotime('noon last day of previous month', $request->get('time')));
     return $app['twig']->render('query\get_timeline.tpl',
-                                ['queries' => $model->get_queries(), 'now' => $now, 'day' => $day,
-                                 'timeline' => $model->get_timeline()]);
+                                ['queries' => $model->get_queries(), 'timeline' => $model->get_timeline()]);
   }
 
   public function get_user_options(Request $request, Application $app){
