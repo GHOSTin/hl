@@ -8,6 +8,7 @@ use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use domain\metrics;
+use Swift_Message;
 
 $DS   = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
@@ -17,6 +18,8 @@ $app           = new Application();
 $app['debug']  = (conf::status === 'development')? true: false;
 $app['number'] = null;
 $app['salt']   = conf::authSalt;
+$app['email_for_registration'] = conf::email_for_registration;
+
 date_default_timezone_set(conf::php_timezone);
 
 $dbParams = array(
@@ -78,6 +81,10 @@ $app->get('/accruals/', 'client\controllers\accruals::default_page')->before($se
 # metrics
 $app->get('/metrics/', 'client\controllers\metrics::default_page');
 $app->post('/metrics/', 'client\controllers\metrics::send');
+
+# registration
+$app->get('/registration/', 'client\controllers\registration::default_page');
+$app->post('/registration/', 'client\controllers\registration::send');
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
