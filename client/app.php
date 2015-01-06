@@ -1,13 +1,15 @@
 <?php namespace client;
 
-use \Doctrine\ORM\Tools\Setup;
-use \Doctrine\ORM\EntityManager;
-use \Silex\Application;
-use \Silex\Provider\TwigServiceProvider;
-use \Silex\Provider\SwiftmailerServiceProvider;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-$DS = DIRECTORY_SEPARATOR;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\EntityManager;
+use Silex\Application;
+use Silex\Provider\TwigServiceProvider;
+use Silex\Provider\SwiftmailerServiceProvider;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use domain\metrics;
+
+$DS   = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
 require_once($root."vendor/autoload.php");
 
@@ -32,7 +34,7 @@ $app['em'] = EntityManager::create($dbParams, $config);
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.'/templates'];
 }else{
-  $cache = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
+  $cache     = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
   $twig_conf = ['twig.path'    => __DIR__.'/templates',
                 'twig.options' => ['cache' => $cache]];
 }
@@ -41,6 +43,9 @@ $app->register(new SwiftmailerServiceProvider());
 
 $app['Swift_Message'] = $app->factory(function($app){
   return Swift_Message::newInstance();
+});
+$app['domain\metrics'] = $app->factory(function($app){
+  return new metrics();
 });
 $app->before(function (Request $request, Application $app) {
   session_start();
@@ -69,6 +74,10 @@ $app->get('/queries/', 'client\controllers\queries::default_page')->before($secu
 
 # accruals
 $app->get('/accruals/', 'client\controllers\accruals::default_page')->before($security);
+
+# metrics
+$app->get('/metrics/', 'client\controllers\metrics::default_page');
+$app->post('/metrics/', 'client\controllers\metrics::send');
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
