@@ -131,7 +131,7 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
             ->will($this->returnValue($message));
     $message->expects($this->once())
             ->method('setFrom')
-            ->with(['rcmp@mlsco.ru'])
+            ->with(['noreply@example.com'])
             ->will($this->returnValue($message));
     $message->expects($this->once())
             ->method('setTo')
@@ -142,10 +142,11 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
     $mailer->expects($this->once())
            ->method('send')
            ->with($this->identicalTo($message));
-    $this->app['mailer']        = $mailer;
-    $this->app['Swift_Message'] = $message;
-    $this->app['salt']          = 'salt';
-    $this->app['number']        = 'number_object';
+    $this->app['mailer']          = $mailer;
+    $this->app['Swift_Message']   = $message;
+    $this->app['salt']            = 'salt';
+    $this->app['number']          = 'number_object';
+    $this->app['email_for_reply'] = 'noreply@example.com';
     $response = $this->controller->recovery_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }

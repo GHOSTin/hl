@@ -11,8 +11,14 @@ class conf{
 	// php
 	const php_timezone = 'Asia/Yekaterinburg';
 	const status = 'production';
+
   /**
   * Email, на который приходят заявки на доступ
   */
-  const email_for_registration = 'mail@example.com'
+  const email_for_registration = 'mail@example.com';
+
+  /**
+  * Email, используемый для ответа
+  */
+  const email_for_reply = 'mail@example.com';
 }
