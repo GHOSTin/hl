@@ -15,11 +15,11 @@ $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
 require_once($root."vendor/autoload.php");
 
 $app = new Application();
+$app['salt'] = conf::authSalt;
 $app['debug'] = (conf::status === 'development')? true: false;
 $app['number'] = null;
-$app['salt'] = conf::authSalt;
-$app['email_for_registration'] = conf::email_for_registration;
 $app['email_for_reply'] = conf::email_for_reply;
+$app['email_for_registration'] = conf::email_for_registration;
 
 date_default_timezone_set(conf::php_timezone);
 
