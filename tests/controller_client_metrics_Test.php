@@ -7,13 +7,17 @@ use Symfony\Component\HttpFoundation\Request;
 class controller_client_metrics_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $em                = $this->getMockBuilder('\Doctrine\ORM\EntityManager')->disableOriginalConstructor()->getMock();
-    $twig              = $this->getMockBuilder('\Twig_Environment')->disableOriginalConstructor()->getMock();
-    $this->app         = new Application();
-    $this->controller  = new controller();
-    $this->request     = new Request();
+    $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
+               ->disableOriginalConstructor()
+               ->getMock();
+    $twig = $this->getMockBuilder('\Twig_Environment')
+                 ->disableOriginalConstructor()
+                 ->getMock();
+    $this->app = new Application();
+    $this->controller = new controller();
+    $this->request = new Request();
     $this->app['twig'] = $twig;
-    $this->app['em']   = $em;
+    $this->app['em'] = $em;
   }
 
   public function test_default_page(){
@@ -47,7 +51,7 @@ class controller_client_metrics_Test extends PHPUnit_Framework_TestCase{
     $this->app['em']->expects($this->once())
                     ->method('flush');
     $this->app['domain\metrics'] = $metrics;
-    $this->app['number']         = 'number_object';
+    $this->app['number'] = 'number_object';
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('metrics/send.tpl', ['number' => 'number_object'])

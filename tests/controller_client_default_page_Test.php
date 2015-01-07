@@ -8,9 +8,11 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $twig = $this->getMockBuilder('\Twig_Environment')
-                 ->disableOriginalConstructor()->getMock();
+                 ->disableOriginalConstructor()
+                 ->getMock();
     $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-               ->disableOriginalConstructor()->getMock();
+               ->disableOriginalConstructor()
+               ->getMock();
     $this->app = new Application();
     $this->controller = new controller();
     $this->request = new Request();
@@ -121,7 +123,6 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
     $mailer = $this->getMockBuilder('Swift_Mailer')
                    ->disableOriginalConstructor()
                    ->getMock();
-
     $message = $this->getMockBuilder('Swift_Message')
                     ->disableOriginalConstructor()
                     ->getMock();
@@ -142,10 +143,10 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
     $mailer->expects($this->once())
            ->method('send')
            ->with($this->identicalTo($message));
-    $this->app['mailer']          = $mailer;
-    $this->app['Swift_Message']   = $message;
-    $this->app['salt']            = 'salt';
-    $this->app['number']          = 'number_object';
+    $this->app['mailer'] = $mailer;
+    $this->app['Swift_Message'] = $message;
+    $this->app['salt'] = 'salt';
+    $this->app['number'] = 'number_object';
     $this->app['email_for_reply'] = 'noreply@example.com';
     $response = $this->controller->recovery_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);

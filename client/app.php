@@ -14,22 +14,22 @@ $DS   = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
 require_once($root."vendor/autoload.php");
 
-$app                           = new Application();
-$app['debug']                  = (conf::status === 'development')? true: false;
-$app['number']                 = null;
-$app['salt']                   = conf::authSalt;
+$app = new Application();
+$app['debug'] = (conf::status === 'development')? true: false;
+$app['number'] = null;
+$app['salt'] = conf::authSalt;
 $app['email_for_registration'] = conf::email_for_registration;
-$app['email_for_reply']        = conf::email_for_reply;
+$app['email_for_reply'] = conf::email_for_reply;
 
 date_default_timezone_set(conf::php_timezone);
 
 $dbParams = array(
-  'driver'   => 'pdo_mysql',
-  'host'     => conf::db_host,
-  'user'     => conf::db_user,
+  'driver' => 'pdo_mysql',
+  'host' => conf::db_host,
+  'user' => conf::db_user,
   'password' => conf::db_password,
-  'dbname'   => conf::db_name,
-  'charset'  => 'utf8'
+  'dbname' => conf::db_name,
+  'charset' => 'utf8'
 );
 
 $config    = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
@@ -38,8 +38,8 @@ $app['em'] = EntityManager::create($dbParams, $config);
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.'/templates'];
 }else{
-  $cache     = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
-  $twig_conf = ['twig.path'    => __DIR__.'/templates',
+  $cache = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
+  $twig_conf = ['twig.path' => __DIR__.'/templates',
                 'twig.options' => ['cache' => $cache]];
 }
 $app->register(new TwigServiceProvider(), $twig_conf);
