@@ -8,24 +8,28 @@ use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use domain\metrics;
+use Swift_Message;
 
 $DS   = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
 require_once($root."vendor/autoload.php");
 
-$app           = new Application();
-$app['debug']  = (conf::status === 'development')? true: false;
+$app = new Application();
+$app['salt'] = conf::authSalt;
+$app['debug'] = (conf::status === 'development')? true: false;
 $app['number'] = null;
-$app['salt']   = conf::authSalt;
+$app['email_for_reply'] = conf::email_for_reply;
+$app['email_for_registration'] = conf::email_for_registration;
+
 date_default_timezone_set(conf::php_timezone);
 
 $dbParams = array(
-  'driver'   => 'pdo_mysql',
-  'host'     => conf::db_host,
-  'user'     => conf::db_user,
+  'driver' => 'pdo_mysql',
+  'host' => conf::db_host,
+  'user' => conf::db_user,
   'password' => conf::db_password,
-  'dbname'   => conf::db_name,
-  'charset'  => 'utf8'
+  'dbname' => conf::db_name,
+  'charset' => 'utf8'
 );
 
 $config    = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
@@ -34,8 +38,8 @@ $app['em'] = EntityManager::create($dbParams, $config);
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.'/templates'];
 }else{
-  $cache     = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
-  $twig_conf = ['twig.path'    => __DIR__.'/templates',
+  $cache = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
+  $twig_conf = ['twig.path' => __DIR__.'/templates',
                 'twig.options' => ['cache' => $cache]];
 }
 $app->register(new TwigServiceProvider(), $twig_conf);
@@ -78,6 +82,10 @@ $app->get('/accruals/', 'client\controllers\accruals::default_page')->before($se
 # metrics
 $app->get('/metrics/', 'client\controllers\metrics::default_page');
 $app->post('/metrics/', 'client\controllers\metrics::send');
+
+# registration
+$app->get('/registration/', 'client\controllers\registration::default_page');
+$app->post('/registration/', 'client\controllers\registration::send');
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);

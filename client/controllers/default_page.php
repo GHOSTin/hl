@@ -52,7 +52,7 @@ class default_page{
     $app['em']->flush();
     $message = $app['Swift_Message'];
     $message->setSubject('Востановление пароля')
-            ->setFrom(['rcmp@mlsco.ru'])
+            ->setFrom([$app['email_for_reply']])
             ->setTo([$email])
             ->setBody('Ваш новый пароль: '.$password);
     $app['mailer']->send($message);
