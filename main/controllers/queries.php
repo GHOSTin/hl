@@ -68,8 +68,7 @@ class queries{
   }
 
   public function close_query(Request $request, Application $app){
-    preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u',
-      $request->get('reason'), $matches);
+    preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->get('reason'), $matches);
     $query = $app['em']->find('\domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
@@ -79,8 +78,7 @@ class queries{
     $query->set_close_reason(implode('', $matches[0]));
     $query->set_time_close(time());
     $app['em']->flush();
-    return $app['twig']->render('query\get_query_content.tpl',
-                                ['query' => $query]);
+    return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
 
   public function create_query(Request $request, Application $app){

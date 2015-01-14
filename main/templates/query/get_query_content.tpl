@@ -51,6 +51,9 @@
 	</ul>
 	<ul class="query-general">
 		<li>Время открытия: {{ query.get_time_open()|date('H:i d.m.Y') }}</li>
+    {% if query.get_status() in ['close', 'reopen'] %}
+    <li>Время закрытия: {{ query.get_time_close()|date('H:i d.m.Y') }}</li>
+    {% endif %}
 		<li>Адрес: {{ query.get_house().get_street().get_name() }}, дом №{{ query.get_house().get_number() }}{% if query.get_initiator() == 'number' %}, кв. {{ number.get_flat().get_number() }}{% endif %}
 	{% if query.get_initiator() == 'number' %}
 		<li>Владелец: {{ number.get_fio() }}</li>
