@@ -1,0 +1,33 @@
+<?php namespace config;
+
+class general{
+
+  /**
+  * Таймзона
+  */
+  const php_timezone = 'Asia/Yekaterinburg';
+
+  // db option
+  const db_name = 'test';
+  const db_host = 'localhost';
+  const db_user = 'test';
+  const db_password = 'test';
+  // auth option
+  const authSalt = 'salt';
+
+  const status = 'production';
+
+  /**
+  * Email, на который приходят заявки на доступ
+  */
+  const email_for_registration = 'mail@example.com';
+
+  /**
+  * Email, используемый для ответа
+  */
+  const email_for_reply = 'mail@example.com';
+
+  const chat_enable = false;
+  const chat_host = 'example.com';
+  const chat_port = 3000;
+}
