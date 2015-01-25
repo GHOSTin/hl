@@ -13,7 +13,8 @@
         "psr-4": {
             "main\\": "main/",
             "domain\\": "domain/",
-            "client\\": "client/"
+            "client\\": "client/",
+            "config\\": "config/"
         }
     },
     "require": {

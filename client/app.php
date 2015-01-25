@@ -9,17 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use domain\metrics;
 use Swift_Message;
+use config\general as conf;
 
-$DS   = DIRECTORY_SEPARATOR;
+$DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
 require_once($root."vendor/autoload.php");
-
-$app = new Application();
-$app['salt'] = conf::authSalt;
-$app['debug'] = (conf::status === 'development')? true: false;
-$app['number'] = null;
-$app['email_for_reply'] = conf::email_for_reply;
-$app['email_for_registration'] = conf::email_for_registration;
 
 date_default_timezone_set(conf::php_timezone);
 
@@ -32,14 +26,21 @@ $dbParams = array(
   'charset' => 'utf8'
 );
 
-$config    = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
+$app = new Application();
+$app['salt'] = conf::authSalt;
+$app['debug'] = (conf::status === 'development')? true: false;
+$app['number'] = null;
+$app['email_for_reply'] = conf::email_for_reply;
+$app['email_for_registration'] = conf::email_for_registration;
+
+$config = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
 $app['em'] = EntityManager::create($dbParams, $config);
 
 if($app['debug']){
-  $twig_conf = ['twig.path' => __DIR__.'/templates'];
+  $twig_conf = ['twig.path' => __DIR__.$DS.'templates'];
 }else{
   $cache = $root.$DS.'cache'.$DS.'twig'.$DS.'client'.$DS;
-  $twig_conf = ['twig.path' => __DIR__.'/templates',
+  $twig_conf = ['twig.path' => __DIR__.$DS.'templates',
                 'twig.options' => ['cache' => $cache]];
 }
 $app->register(new TwigServiceProvider(), $twig_conf);
@@ -51,6 +52,7 @@ $app['Swift_Message'] = $app->factory(function($app){
 $app['domain\metrics'] = $app->factory(function($app){
   return new metrics();
 });
+
 $app->before(function (Request $request, Application $app) {
   session_start();
   if(isset($_SESSION['number'])){
@@ -90,4 +92,5 @@ $app->post('/registration/', 'client\controllers\registration::send');
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
 });
+
 $app->run();
