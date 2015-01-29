@@ -12,7 +12,9 @@
     "autoload": {
         "psr-4": {
             "main\\": "main/",
-            "domain\\": "domain/"
+            "domain\\": "domain/",
+            "client\\": "client/",
+            "config\\": "config/"
         }
     },
     "require": {
@@ -24,6 +26,7 @@
         "sebastian/phpdcd": "*",
         "twig/twig": "1.*",
         "doctrine/orm": "*",
-        "silex/silex": "2.0.*@dev"
+        "silex/silex": "2.0.*@dev",
+        "swiftmailer/swiftmailer": "@stable"
     }
 }

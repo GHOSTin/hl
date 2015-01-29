@@ -3,7 +3,7 @@ use \Doctrine\ORM\Tools\Console\ConsoleRunner;
 use \Doctrine\ORM\Tools\Setup;
 use \Doctrine\ORM\EntityManager;
 use \Symfony\Component\Console\Application;
-use \main\conf;
+use config\general as conf;
 
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen(DIRECTORY_SEPARATOR.'config'))).DIRECTORY_SEPARATOR;
 require_once($root."vendor/autoload.php");

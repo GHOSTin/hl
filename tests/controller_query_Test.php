@@ -59,6 +59,73 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
   }
 
 
+  public function test_close_query_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\query', 125)
+                    ->will($this->returnValue(null));
+    $this->controller->close_query($this->request, $this->app);
+  }
+
+  public function test_close_query_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 125);
+    $query = $this->getMock('\domain\query');
+    $query->expects($this->once())
+          ->method('get_status')
+          ->will($this->returnValue('close'));
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\query', 125)
+                    ->will($this->returnValue($query));
+    $this->controller->close_query($this->request, $this->app);
+  }
+
+  public function test_close_query_3(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 125);
+    $query = $this->getMock('\domain\query');
+    $query->expects($this->once())
+          ->method('get_status')
+          ->will($this->returnValue('reopen'));
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\query', 125)
+                    ->will($this->returnValue($query));
+    $this->controller->close_query($this->request, $this->app);
+  }
+
+  public function test_close_query_4(){
+    $this->request->query->set('id', 125);
+    $this->request->query->set('reason', 'Привет');
+    $query = $this->getMock('\domain\query');
+    $query->expects($this->once())
+          ->method('get_status')
+          ->will($this->returnValue('open'));
+    $query->expects($this->once())
+          ->method('set_status')
+          ->with('close');
+    $query->expects($this->once())
+          ->method('set_close_reason')
+          ->with('Привет');
+    $query->expects($this->once())
+          ->method('set_time_close');
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\query', 125)
+                    ->will($this->returnValue($query));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_query_content.tpl', ['query' => $query])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->close_query($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_dialog_add_comment(){
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())

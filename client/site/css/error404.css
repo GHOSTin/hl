@@ -1,0 +1,24 @@
+.error-box {
+    max-width: 400px;
+    padding: 20px;
+    margin: 100px auto;
+    color: rgba(0, 0, 0, 0.2);
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.6), 0 0 1px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.error-box .btn {
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-shadow: none;
+    font-size: 14px;
+}
+
+.error-box .message-small {
+    font-size: 25px;
+}
+
+.error-box .message-big {
+    font-size: 160px;
+}

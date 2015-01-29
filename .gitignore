@@ -1,6 +1,6 @@
-main/conf.php
-composer.lock
 /cache/
 /vendor/
 /builds/
+config/general.php
+composer.lock
 cache.properties
