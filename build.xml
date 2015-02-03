@@ -7,7 +7,6 @@
     <exclude name="builds/**"/>
     <exclude name="tests/**"/>
     <exclude name="cache/**"/>
-    <exclude name="composer.lock"/>
     <exclude name="composer.json"/>
   </fileset>
   <target name="build" depends="clean, tar">
