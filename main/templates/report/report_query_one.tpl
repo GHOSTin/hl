@@ -25,6 +25,7 @@
         <td>Участок</td>
         <td>Улица</td>
         <td>Дом</td>
+        <td>Кв.</td>
         <td>Лицевые счета</td>
         <td>Время открытия</td>
         <td>Время закрытия</td>
@@ -47,9 +48,16 @@
         <td>{{ query.get_house().get_street().get_name() }}</td>
         <td>{{ query.get_house().get_number() }}</td>
         <td>
+          {% if query.get_initiator() == 'number' %}
+              {% for number in query.get_numbers() %}
+                {{ number.get_flat().get_number() }}
+              {% endfor %}
+          {% endif %}
+        </td>
+        <td>
             {% if query.get_initiator() == 'number' %}
                 {% for number in query.get_numbers() %}
-                    <div>{{ number.get_fio() }} (№{{ number.get_number() }}), кв. {{ number.get_flat().get_number() }}</div>
+                  №{{ number.get_number() }} ({{ number.get_fio() }})
                 {% endfor %}
             {% endif %}
         </td>

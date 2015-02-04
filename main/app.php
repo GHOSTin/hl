@@ -40,7 +40,7 @@ $app['\main\models\number'] = function($app){
 $app['\main\models\query'] = function($app){
   return new \main\models\query($app);
 };
-$app['\main\models\report_query'] = function($app){
+$app['main\models\report_query'] = function($app){
   return new \main\models\report_query($app);
 };
 $app['\domain\query2comment'] = $app->factory(function($app){
