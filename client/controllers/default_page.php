@@ -47,8 +47,8 @@ class default_page{
     $email = $number->get_email();
     if(empty($email))
       return $app['twig']->render('recovery/email_not_exists.tpl', ['number' => $request->get('number')]);
-    $password = substr(number::generate_hash(time(), $app['salt']), 0, 8);
-    $number->set_hash($password);
+    $password = substr(sha1(time().$app['salt']), 0, 8);
+    $number->set_hash(number::generate_hash($password, $app['salt']));
     $app['em']->flush();
     $message = $app['Swift_Message'];
     $message->setSubject('Востановление пароля')
