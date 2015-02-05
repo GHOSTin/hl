@@ -90,7 +90,7 @@ class reports{
 
   public function set_time_end(Request $request, Application $app){
     $model = $app['main\models\report_query'];
-    $model->set_time_end(strtotime($request->get('time')));
+    $model->set_time_end(strtotime($request->get('time')) + 86359);
     return new Response();
   }
 }

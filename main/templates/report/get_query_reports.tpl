@@ -1,5 +1,7 @@
 {% extends "ajax.tpl" %}
 
+{% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
+
 {% block js %}
     $('.report-content').html(get_hidden_content());
 
@@ -75,6 +77,7 @@
         });
     });
 {% endblock js %}
+
 {% block html %}
     <h4>Отчеты по заявкам</h4>
     <div class="row">
@@ -92,7 +95,6 @@
                     <label>по статусу заявки</label>
                     <select class="filter-status form-control">
                         <option value="all">Все заявки</option>
-                        {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
                         {% for key, status in statuses %}
                             <option value="{{ key }}"{% if key == filters.status %} selected{% endif %}>{{status}}</option>
                         {% endfor %}
@@ -109,18 +111,17 @@
                         {% endif %}
                     </select>
                     {% if houses is not empty %}
-                        <select class="filter-select-house form-control">
+                        <select class="filter-select-house form-control" style="margin-top:10px">
                             <option value="all">Выберите дом...</option>
                             {% for house in houses %}
                             <option value="{{ house.get_id() }}"{% if house.get_id() == filters.house %} selected{% endif %}>дом №{{ house.get_number() }}</option>
                             {% endfor %}
                         </select>
                     {% else %}
-                        <select class="filter-select-house form-control" disabled="disabled">
+                        <select class="filter-select-house form-control" style="margin-top:10px" disabled="disabled">
                             <option>Ожидание...</option>
                         </select>
                     {% endif %}
-
                 </li>
                 <li class="form-group">
                     <label>по участку</label>
