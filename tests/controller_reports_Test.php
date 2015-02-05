@@ -141,7 +141,7 @@ class controller_reports_Test extends PHPUnit_Framework_TestCase{
                   ->getMock();
     $model->expects($this->once())
           ->method('set_time_end')
-          ->with('472417200');
+          ->with('472503559');
     $this->app['main\models\report_query'] = $model;
     $response = $this->controller->set_time_end($this->request, $this->app);
     $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
