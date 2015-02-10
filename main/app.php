@@ -273,6 +273,7 @@ $app->get('/task/close_task', 'main\controllers\task::close_task');
 
 # import
 $app->get('/import/', 'main\controllers\import::default_page');
+$app->post('/import/load_accruals/', 'main\controllers\import::load_accruals');
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

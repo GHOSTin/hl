@@ -14,6 +14,9 @@ $(function(){
 
     import_accruals: function(){
       $('.import').html(this.import_accruals_form);
+      $('.date').datepicker({format: 'mm.yyyy', language: 'ru'}).on('changeDate', function(){
+        $('.date').datepicker('hide');
+      });
     }
   });
 
