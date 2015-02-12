@@ -61,4 +61,9 @@ class flat_Test extends PHPUnit_Framework_TestCase{
     $this->flat->set_house($house);
     $this->assertSame($house, $this->flat->get_house());
   }
+
+  public function test_toString(){
+    $this->flat->set_number(13);
+    $this->assertEquals('13', $this->flat);
+  }
 }

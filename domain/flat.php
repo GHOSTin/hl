@@ -30,11 +30,19 @@ class flat{
   private $number;
 
   /**
+  * @OneToMany(targetEntity="\domain\number", mappedBy="flat")
+  */
+  private $numbers;
+  /**
   * @Column(name="status", type="string")
   */
   private $status;
 
   private static $statuses = ['true', 'false'];
+
+  public function __toString(){
+    return (string) $this->number;
+  }
 
   public function get_house(){
     return $this->house;
@@ -46,6 +54,9 @@ class flat{
 
   public function get_number(){
     return $this->number;
+  }
+  public function get_numbers(){
+    return $this->numbers;
   }
 
   public function get_status(){
