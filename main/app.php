@@ -8,6 +8,7 @@ use \Silex\Provider\SwiftmailerServiceProvider;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use config\general as conf;
+use Twig_SimpleFilter;
 
 $DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'main'))).$DS;
@@ -55,6 +56,11 @@ if($app['debug']){
                 'twig.options' => ['cache' => $cache]];
 }
 $app->register(new TwigServiceProvider(), $twig_conf);
+$filter = new Twig_SimpleFilter('natsort', function (array $array) {
+  natsort($array);
+  return $array;
+});
+$app['twig']->addFilter($filter);
 
 $app->before(function (Request $request, Application $app) {
   session_start();
