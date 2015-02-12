@@ -30,6 +30,7 @@
             <Cell><Data ss:Type="String">Участок</Data></Cell>
             <Cell><Data ss:Type="String">Улица</Data></Cell>
             <Cell><Data ss:Type="String">Дом</Data></Cell>
+            <Cell><Data ss:Type="String">Кв.</Data></Cell>
             <Cell><Data ss:Type="String">Лицевые счета</Data></Cell>
             <Cell><Data ss:Type="String">Время открытия задачи</Data></Cell>
             <Cell><Data ss:Type="String">Время закрытия задачи</Data></Cell>
@@ -53,6 +54,18 @@
                 <Cell><Data ss:Type="String">{{ query.get_house().get_street().get_name() }}</Data></Cell>
                 <Cell><Data ss:Type="String">{{ query.get_house().get_number() }}</Data></Cell>
                 <Cell><Data ss:Type="String">
+                {%- if query.get_initiator() == 'number' -%}
+                  {%- for number in query.get_numbers() -%}
+                   {{ number.get_flat().get_number() }}
+                  {%- endfor -%}
+                {%- endif -%}
+                </Data></Cell>
+                <Cell><Data ss:Type="String">
+                {%- if query.get_initiator() == 'number' -%}
+                  {%- for number in query.get_numbers() -%}
+                    №{{ number.get_number() }} ({{ number.get_fio() }})
+                  {%- endfor -%}
+                {%- endif -%}
                 </Data></Cell>
                 <Cell><Data ss:Type="String">{{ query.get_time_open()|date("h.i d.m.Y") }}</Data></Cell>
                 <Cell><Data ss:Type="String">{% if query.get_status() == 'close' or query.get_status() == 'reclose' %}{{ query.get_time_close()|date("h.i d.m.Y") }}{% endif %}</Data></Cell>

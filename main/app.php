@@ -8,6 +8,7 @@ use \Silex\Provider\SwiftmailerServiceProvider;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use config\general as conf;
+use Twig_SimpleFilter;
 
 $DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'main'))).$DS;
@@ -40,7 +41,7 @@ $app['\main\models\number'] = function($app){
 $app['\main\models\query'] = function($app){
   return new \main\models\query($app);
 };
-$app['\main\models\report_query'] = function($app){
+$app['main\models\report_query'] = function($app){
   return new \main\models\report_query($app);
 };
 $app['\domain\query2comment'] = $app->factory(function($app){
@@ -55,6 +56,11 @@ if($app['debug']){
                 'twig.options' => ['cache' => $cache]];
 }
 $app->register(new TwigServiceProvider(), $twig_conf);
+$filter = new Twig_SimpleFilter('natsort', function (array $array) {
+  natsort($array);
+  return $array;
+});
+$app['twig']->addFilter($filter);
 
 $app->before(function (Request $request, Application $app) {
   session_start();
@@ -270,6 +276,10 @@ $app->get('/task/get_dialog_create_task', 'main\controllers\task::get_dialog_cre
 $app->get('/task/add_task', 'main\controllers\task::add_task');
 $app->get('/task/get_dialog_close_task', 'main\controllers\task::get_dialog_close_task');
 $app->get('/task/close_task', 'main\controllers\task::close_task');
+
+# import
+$app->get('/import/', 'main\controllers\import::default_page');
+$app->post('/import/load_accruals/', 'main\controllers\import::load_accruals');
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

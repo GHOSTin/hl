@@ -31,7 +31,7 @@ class default_page{
         if($user->get_hash() === $hash){
           $session = new session();
           $session->set_user($user);
-          $session->set_ip($_SERVER['REMOTE_ADDR']);
+          $session->set_ip($request->server->get('REMOTE_ADDR'));
           $session->set_time(time());
           $app['em']->persist($session);
           $app['em']->flush();

@@ -86,8 +86,7 @@ class numbers{
 
   public function get_house_content(Request $request, Application $app){
     $house = $app['em']->find('\domain\house', $request->get('id'));
-    return $app['twig']->render('number\get_house_content.tpl',
-                                ['house' => $house]);
+    return $app['twig']->render('number\get_house_content.tpl', ['house' => $house]);
   }
 
   public function get_number_content(Request $request, Application $app){
