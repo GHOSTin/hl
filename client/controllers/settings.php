@@ -10,18 +10,22 @@ class settings{
     $password = $request->get('new_password');
     $confirm = $request->get('confirm_password');
     if($password !== $confirm){
-      $response = ['number' => $app['number'], 'description' => 'Пароли не совпадают.', 'type' => 'error'];
+      $template = 'not_identical.tpl';
     }else{
       if($app['number']->get_hash() === number::generate_hash($request->get('old_password'), $app['salt'])){
         $new_hash = number::generate_hash($password, $app['salt']);
         $app['number']->set_hash($new_hash);
         $app['em']->flush();
-        $response = ['number' => $app['number'], 'description' => 'Пароль изменен.', 'type' => 'success'];
+        $template = 'success.tpl';
       }else{
-        $response = ['number' => $app['number'], 'description' => 'Старый пароль указан не верно.', 'type' => 'error'];
+        $template = 'wrong_old_password.tpl';
       }
     }
-    return $app['twig']->render('settings/change_password.tpl', $response);
+    return $app['twig']->render('settings/password/'.$template, ['number' => $app['number']]);
+  }
+
+  public function password_form(Application $app){
+    return $app['twig']->render('settings/password/form.tpl', ['number' => $app['number']]);
   }
 
   public function default_page(Application $app){

@@ -9,9 +9,11 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $twig = $this->getMockBuilder('\Twig_Environment')
-                 ->disableOriginalConstructor()->getMock();
+                 ->disableOriginalConstructor()
+                 ->getMock();
     $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-               ->disableOriginalConstructor()->getMock();
+               ->disableOriginalConstructor()
+               ->getMock();
     $this->request = new Request();
     $this->app = new Application();
     $this->controller = new controller();
@@ -23,8 +25,7 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
     $this->app['number'] = 'number_object';
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('settings/default_page.tpl',
-                             ['number' => 'number_object'])
+                      ->with('settings/default_page.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->default_page($this->app);
     $this->assertEquals('render_template', $response);
@@ -36,8 +37,7 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
     $this->app['number'] = 'number_object';
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('settings/change_password.tpl',
-                             ['number' => 'number_object', 'description' => 'Пароли не совпадают.', 'type' => 'error'])
+                      ->with('settings/password/not_identical.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->change_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
@@ -55,10 +55,8 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
     $this->app['salt'] = 'salt';
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with(
-                        'settings/change_password.tpl',
-                        ['number' => $number, 'description' => 'Старый пароль указан не верно.', 'type' => 'error']
-                      )->will($this->returnValue('render_template'));
+                      ->with('settings/password/wrong_old_password.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
     $response = $this->controller->change_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
@@ -82,10 +80,8 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with(
-                        'settings/change_password.tpl',
-                        ['number' => $number, 'description' => 'Пароль изменен.', 'type' => 'success']
-                      )->will($this->returnValue('render_template'));
+                      ->with( 'settings/password/success.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
     $response = $this->controller->change_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }

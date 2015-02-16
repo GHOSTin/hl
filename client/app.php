@@ -73,7 +73,8 @@ $app->post('/recovery/', 'client\controllers\default_page::recovery_password');
 
 # settings
 $app->get('/settings/', 'client\controllers\settings::default_page')->before($security);
-$app->post('/settings/change_password/', 'client\controllers\settings::change_password')->before($security);
+$app->get('/settings/password/', 'client\controllers\settings::password_form')->before($security);
+$app->post('/settings/password/', 'client\controllers\settings::change_password')->before($security);
 
 # queries
 $app->get('/queries/', 'client\controllers\queries::default_page')->before($security);
