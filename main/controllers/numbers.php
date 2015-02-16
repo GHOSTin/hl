@@ -78,12 +78,6 @@ class numbers{
                                 ['number' => $number]);
   }
 
-  public function get_dialog_edit_password(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    return $app['twig']->render('number\get_dialog_edit_password.tpl',
-                                ['number' => $number]);
-  }
-
   public function get_house_content(Request $request, Application $app){
     $house = $app['em']->find('\domain\house', $request->get('id'));
     return $app['twig']->render('number\get_house_content.tpl', ['house' => $house]);
@@ -154,19 +148,6 @@ class numbers{
   public function update_number_fio(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
     $number->set_fio($request->get('fio'));
-    $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl',
-                                ['number' => $number]);
-  }
-
-  public function update_number_password(Request $request, Application $app){
-    $password = $request->get('password');
-    $confirm = $request->get('confirm');
-    if($password !== $confirm)
-      throw new RuntimeException('Подтверждение и пароль не совпадают.');
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    $hash = number::generate_hash($password, $app['salt']);
-    $number->set_hash($hash);
     $app['em']->flush();
     return $app['twig']->render('number\update_number_fio.tpl',
                                 ['number' => $number]);

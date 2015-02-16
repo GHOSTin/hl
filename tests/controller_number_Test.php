@@ -243,22 +243,6 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_get_dialog_edit_password(){
-    $this->request->query->set('id', 125);
-    $this->app['em']->expects($this->once())
-                    ->method('find')
-                    ->with('\domain\number', 125)
-                    ->will($this->returnValue('number_object'));
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('number\get_dialog_edit_password.tpl',
-                             ['number' => 'number_object'])
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_edit_password($this->request,
-                                                            $this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
   public function test_get_dialog_edit_number_cellphone(){
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
@@ -465,35 +449,5 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $response = $this->controller->update_number_fio($this->request,
                                                      $this->app);
     $this->assertEquals('render_template', $response);
-  }
-
-  public function test_update_number_password_1(){
-    $this->request->query->set('password', 'Aa12345678');
-    $this->request->query->set('confirm', 'Aa12345678');
-    $number = $this->getMock('\domain\number');
-    $number->expects($this->once())
-           ->method('set_hash');
-    $this->app['salt'] = 'salt';
-    $this->app['em']->expects($this->once())
-                    ->method('find')
-                    ->will($this->returnValue($number));
-    $this->app['em']->expects($this->once())
-                    ->method('flush');
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('number\update_number_fio.tpl',
-                             ['number' => $number])
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->update_number_password($this->request,
-                                                          $this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
-  public function test_update_number_password_2(){
-    $this->setExpectedException('RuntimeException');
-    $this->request->query->set('password', 'Aa12345678');
-    $this->request->query->set('confirm', 'Aa123456');
-    $response = $this->controller->update_number_password($this->request,
-                                                          $this->app);
   }
 }
