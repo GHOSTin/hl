@@ -6,6 +6,12 @@ use domain\number;
 
 class settings{
 
+  public function change_email(Request $request, Application $app){
+    $app['number']->set_email($request->get('email'));
+    $app['em']->flush();
+    return $app['twig']->render('settings/email/success.tpl', ['number' => $app['number']]);
+  }
+
   public function change_password(Request $request, Application $app){
     $password = $request->get('new_password');
     $confirm = $request->get('confirm_password');
@@ -24,11 +30,15 @@ class settings{
     return $app['twig']->render('settings/password/'.$template, ['number' => $app['number']]);
   }
 
-  public function password_form(Application $app){
-    return $app['twig']->render('settings/password/form.tpl', ['number' => $app['number']]);
-  }
-
   public function default_page(Application $app){
     return $app['twig']->render('settings/default_page.tpl', ['number' => $app['number']]);
+  }
+
+  public function email_form(Application $app){
+    return $app['twig']->render('settings/email/form.tpl', ['number' => $app['number']]);
+  }
+
+  public function password_form(Application $app){
+    return $app['twig']->render('settings/password/form.tpl', ['number' => $app['number']]);
   }
 }

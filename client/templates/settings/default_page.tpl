@@ -9,7 +9,7 @@
         <a href="/settings/password/">Изменение пароля</a>
       </li>
       <li>
-        <a href="#">Изменение email</a>
+        <a href="/settings/email/">Изменение email</a>
       </li>
     </ul>
   </div>
