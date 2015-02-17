@@ -11,6 +11,9 @@
       <li>
         <a href="/settings/email/">Изменение email</a>
       </li>
+      <li>
+        <a href="/settings/cellphone/">Изменение номера сотового телефона</a>
+      </li>
     </ul>
   </div>
 </div>

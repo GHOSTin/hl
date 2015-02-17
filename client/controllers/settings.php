@@ -6,6 +6,20 @@ use domain\number;
 
 class settings{
 
+  public function cellphone_form(Application $app){
+    return $app['twig']->render('settings/cellphone/form.tpl', ['number' => $app['number']]);
+  }
+
+  public function change_cellphone(Request $request, Application $app){
+    preg_match_all('/[0-9]/', $request->get('cellphone'), $matches);
+    $cellphone = implode('', $matches[0]);
+    if(preg_match('|^[78]|', $cellphone))
+      $cellphone = substr($cellphone, 1, 10);
+    $app['number']->set_cellphone($cellphone);
+    $app['em']->flush();
+    return $app['twig']->render('settings/cellphone/success.tpl', ['number' => $app['number']]);
+  }
+
   public function change_email(Request $request, Application $app){
     $app['number']->set_email($request->get('email'));
     $app['em']->flush();

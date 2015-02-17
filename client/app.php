@@ -77,6 +77,8 @@ $app->get('/settings/password/', 'client\controllers\settings::password_form')->
 $app->post('/settings/password/', 'client\controllers\settings::change_password')->before($security);
 $app->get('/settings/email/', 'client\controllers\settings::email_form')->before($security);
 $app->post('/settings/email/', 'client\controllers\settings::change_email')->before($security);
+$app->get('/settings/cellphone/', 'client\controllers\settings::cellphone_form')->before($security);
+$app->post('/settings/cellphone/', 'client\controllers\settings::change_cellphone')->before($security);
 
 # queries
 $app->get('/queries/', 'client\controllers\queries::default_page')->before($security);
