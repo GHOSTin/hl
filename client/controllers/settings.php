@@ -26,6 +26,13 @@ class settings{
     return $app['twig']->render('settings/email/success.tpl', ['number' => $app['number']]);
   }
 
+  public function change_notification(Request $request, Application $app){
+    $app['number']->set_email_notification_rule($request->request->get('email'));
+    $app['number']->set_cellphone_notification_rule($request->request->get('cellphone'));
+    $app['em']->flush();
+    return $app['twig']->render('settings/notification/success.tpl', ['number' => $app['number']]);
+  }
+
   public function change_password(Request $request, Application $app){
     $password = $request->get('new_password');
     $confirm = $request->get('confirm_password');
@@ -50,6 +57,10 @@ class settings{
 
   public function email_form(Application $app){
     return $app['twig']->render('settings/email/form.tpl', ['number' => $app['number']]);
+  }
+
+  public function notification_form(Application $app){
+    return $app['twig']->render('settings/notification/form.tpl', ['number' => $app['number']]);
   }
 
   public function password_form(Application $app){

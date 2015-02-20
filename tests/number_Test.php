@@ -63,8 +63,31 @@ class number_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_generate_hash(){
-    $this->assertEquals('d514dee5e76bbb718084294c835f312c',
-                        number::generate_hash('password', 'salt'));
+    $this->assertEquals('d514dee5e76bbb718084294c835f312c', number::generate_hash('password', 'salt'));
+  }
+
+  public function test_set_cellphone_notification_rule_1(){
+    $this->number->set_cellphone_notification_rule('on');
+    $rules = $this->number->get_notification_rules();
+    $this->assertEquals(true, $rules['cellphone']);
+  }
+
+  public function test_set_cellphone_notification_rule_2(){
+    $this->number->set_cellphone_notification_rule(null);
+    $rules = $this->number->get_notification_rules();
+    $this->assertEquals(false, $rules['cellphone']);
+  }
+
+  public function test_set_email_notification_rule_1(){
+    $this->number->set_email_notification_rule('on');
+    $rules = $this->number->get_notification_rules();
+    $this->assertEquals(true, $rules['email']);
+  }
+
+  public function test_set_email_notification_rule_2(){
+    $this->number->set_email_notification_rule(null);
+    $rules = $this->number->get_notification_rules();
+    $this->assertEquals(false, $rules['email']);
   }
 
   public function test_set_flat(){
@@ -111,13 +134,11 @@ class number_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_queries(){
-    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
-                            $this->number->get_queries());
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->number->get_queries());
   }
 
   public function test_get_accruals(){
-    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
-                            $this->number->get_accruals());
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->number->get_accruals());
   }
 
   public function test_set_email_1(){
