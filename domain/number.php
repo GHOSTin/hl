@@ -70,6 +70,11 @@ class number{
   */
   private $queries;
 
+  /**
+  * @Column(name="notification_rules", type="json_array")
+  */
+  private $notification_rules = [];
+
   public function __construct(){
     $this->queries = new ArrayCollection();
     $this->accruals = new ArrayCollection();
@@ -107,6 +112,10 @@ class number{
     return $this->id;
   }
 
+  public function get_notification_rules(){
+    return $this->notification_rules;
+  }
+
   public function get_number(){
     return $this->number;
   }
@@ -134,6 +143,14 @@ class number{
     if(!preg_match('|[0-9A-Za-z.@-]{0,128}|', $email))
       throw new DomainException('Не валидный email.');
     $this->email = $email;
+  }
+
+  public function set_cellphone_notification_rule($status){
+    $this->notification_rules['cellphone'] = ($status === 'on')? true: false;
+  }
+
+  public function set_email_notification_rule($status){
+    $this->notification_rules['email'] = ($status === 'on')? true: false;
   }
 
   public function set_fio($fio){

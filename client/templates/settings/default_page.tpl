@@ -14,6 +14,9 @@
       <li>
         <a href="/settings/cellphone/">Изменение номера сотового телефона</a>
       </li>
+      <li>
+        <a href="/settings/notification/">Изменение правил оповещения</a>
+      </li>
     </ul>
   </div>
 </div>

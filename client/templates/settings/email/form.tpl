@@ -10,7 +10,7 @@
         <input type="email" class="form-control" id="email" name="email" value="{{ number.get_email() }}" autofocus>
       </div>
       <div class="form-group">
-        <button type="submit" class="btn btn-primary pull-right">Изменить</button>
+        <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
       </div>
     </div>
   </form>

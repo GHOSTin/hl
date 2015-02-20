@@ -10,7 +10,7 @@
         <input type="text" class="form-control" id="cellphone" name="cellphone" value="{% if number.get_cellphone() %}8{% endif %}{{ number.get_cellphone() }}" autofocus>
       </div>
       <div class="form-group">
-        <button type="submit" class="btn btn-primary pull-right">Изменить</button>
+        <button type="submit" class="btn btn-primary pull-right">Сохранить</button>
       </div>
     </div>
   </form>
