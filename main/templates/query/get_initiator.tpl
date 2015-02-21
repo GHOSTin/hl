@@ -20,12 +20,12 @@
 				$('.dialog').modal('hide');
 			});
 	});
-{% endblock js %}
+{% endblock %}
 
 {% block html %}
 <div class="modal-content">
     <div class="modal-header">
-        <h3>Форма создания заявки</h3>
+      <h3>Создание заявки</h3>
     </div>
     <div class="modal-body">
       {% if queries is not empty %}
@@ -48,9 +48,6 @@
   					<li>Владелец: {{ number.get_fio() }}</li>
   					<li>Телефон: {{ number.get_telephone() }}</li>
   					<li>Сотовый: {{ number.get_cellphone() }}</li>
-  					{#<li>Контактное лицо: {#{ number.get_contact_fio() }}</li>
-  					<li>Телефон контактного лица: {{ number.get_contact_telephone()}}</li>
-  					<li>Сотовые телефон контактного лица: {{ number.get_contact_cellphone() }}</li>#}
   				</ul>
         </div>
 		{% else %}
@@ -61,32 +58,38 @@
         <p><strong>Данные контактного лица по заявке</strong></p>
         <div class="dialog-addinfo">
             <div class="row form-group">
-                <label class="col-lg-3 control-label">ФИО:</label>
-                <div class="col-lg-5"><input type="text" class="form-control dialog-fio"></div>
+              <label class="col-lg-3 control-label">ФИО:</label>
+              <div class="col-lg-5">
+                <input type="text" class="form-control dialog-fio">
+              </div>
             </div>
             <div class="row form-group">
-                <label class="col-lg-3 control-label">Телефон:</label>
-                <div class="col-lg-5"><input type="text" class="form-control dialog-telephone" /></div>
+              <label class="col-lg-3 control-label">Телефон:</label>
+              <div class="col-lg-5">
+                <input type="text" class="form-control dialog-telephone">
+              </div>
             </div>
             <div class="row form-group">
-                <label class="col-lg-3 control-label">Сот. телефон:</label>
-                <div class="col-lg-5"><input type="text" class="form-control dialog-cellphone" /></div>
+              <label class="col-lg-3 control-label">Сот. телефон:</label>
+              <div class="col-lg-5">
+                <input type="text" class="form-control dialog-cellphone">
+              </div>
             </div>
         </div>
         <div class="form-group">
-            <p><strong>Выберите тип работ по заявке</strong></p>
+            <label>Выберите тип работ по заявке</label>
             <select class="form-control dialog-worktype">
-                {% if query_work_types != false %}
-                    {% for query_work_type in query_work_types %}
-                        <option value="{{query_work_type.get_id()}}">{{query_work_type.get_name()}}</option>
-                    {% endfor %}
-                {% endif %}
+            {% if query_work_types != false %}
+              {% for workgroup in query_work_types %}
+                <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
+              {% endfor %}
+            {% endif %}
             </select>
-            <p><strong>Выберите тип заявки</strong></p>
+            <label>Выберите тип заявки</label>
             <select class="form-control dialog-warningtype">
-                <option value="hight">Аварийная заявка</option>
-                <option value="normal" selected>Заявка на участок</option>
-                <option value="planned">Плановая заявка</option>
+              <option value="hight">Аварийная заявка</option>
+              <option value="normal" selected>Заявка на участок</option>
+              <option value="planned">Плановая заявка</option>
             </select>
         </div>
 		<div class="form-group dialog-trouble">

@@ -1,12 +1,12 @@
 <?php namespace main\controllers;
 
-use \RuntimeException;
+use RuntimeException;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use \domain\query2user;
-use \domain\query2comment;
-use \domain\query2work;
-use \domain\query;
+use domain\query2user;
+use domain\query2comment;
+use domain\query2work;
+use domain\query;
 
 class queries{
 
