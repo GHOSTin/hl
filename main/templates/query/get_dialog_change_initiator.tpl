@@ -1,42 +1,42 @@
 {% extends "dialog.tpl" %}
 
-{% block title %}Диалог смены инициатор{% endblock title %}
+{% block title %}Диалог смены инициатора{% endblock %}
 
 {% block dialog %}
-	<div>
-		<select class="dialog-select-initiator">
+	<div class="form-group">
+		<select class="dialog-select-initiator form-control">
 			<option value="number"{% if query.get_initiator() == 'number' %} selected{% endif %}>Заявка на лицевой счет</option>
 			<option value="house"{% if query.get_initiator() == 'house' %} selected{% endif %}>Заявка на дом</option>
 		</select>
 	</div>
 	<div>
-		<select class="dialog-select-street">
+		<select class="dialog-select-street form-control">
 			<option value="">Выберите улицу...</option>
 			{% for street in streets %}
 			<option value="{{ street.get_id() }}">{{ street.get_name() }}</option>
 			{% endfor %}
 		</select>
 	</div>
-	<div>
-		<select class="dialog-select-house" disabled>
+	<div class="form-group">
+		<select class="dialog-select-house form-control" disabled>
 			<option>Ожидание...</option>
 		</select>
 	</div>
-	<div class="dialog-options">
+	<div class="dialog-options form-group">
 		{% if query.get_initiator() == 'number' %}
-		<select class="dialog-select-number" disabled>
+		<select class="dialog-select-number form-control" disabled>
 			<option>Ожидание...</option>
 		</select>
 		{% endif %}
 	</div>
-{% endblock dialog %}
+{% endblock %}
 
 {% block buttons %}
 	<div class="btn btn-default change_initiator">Изменить</div>
-{% endblock buttons %}
+{% endblock %}
 
 {% block script %}
-	// Добавляет нового пользователя
+	// изменяет инициатора
 	$('.change_initiator').click(function(){
 		if($('.dialog-select-initiator').val() == 'number'){
 			var number_id = $('.dialog-select-number').val();
@@ -65,7 +65,7 @@
 
 	$('.dialog-select-initiator').change(function(){
 		if($(this).val() == 'number'){
-			$('.dialog-options').html('<select class="dialog-select-number" disabled><option>Ожидание...</option></select>');
+			$('.dialog-options').html('<select class="dialog-select-number form-control" disabled><option>Ожидание...</option></select>');
 		}else{
 			$('.dialog-options').empty();
 		}
@@ -98,4 +98,4 @@
 			}
 		}
 	});
-{% endblock script %}
+{% endblock %}
