@@ -253,8 +253,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                              ['streets' => 'street_array',
                               'query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_change_initiator($this->request,
-                                                               $this->app);
+    $response = $this->controller->get_dialog_change_initiator($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -274,6 +273,38 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->with('query\clear_filters.tpl', $this->anything())
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->clear_filters($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_houses(){
+    $this->request->query->set('id', 125);
+    $model = $this->getMockBuilder('main\models\query')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_houses_by_street')
+          ->with(125)
+          ->will($this->returnValue('house_array'));
+    $this->app['\main\models\query'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_houses.tpl', ['houses' => 'house_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_houses($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_numbers(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\house', 125)
+                    ->will($this->returnValue('house_object'));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_numbers.tpl', ['house' => 'house_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_numbers($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 

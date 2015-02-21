@@ -142,8 +142,7 @@ class queries{
     }else
       throw new RuntimeException('initiator wrong');
     $app['em']->flush();
-    return $app['twig']->render('query\get_query_content.tpl',
-                                ['query' => $query]);
+    return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
 
   public function default_page(Request $request, Application $app){
@@ -350,7 +349,7 @@ class queries{
   }
 
   public function get_numbers(Request $request, Application $app){
-    $house = $app['em']->find('\domain\house', $request->get('id'));
+    $house = $app['em']->find('domain\house', $request->get('id'));
     return $app['twig']->render('query\get_numbers.tpl', ['house' => $house]);
   }
 
