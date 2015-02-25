@@ -119,6 +119,9 @@ $app->get('/works/get_dialog_create_work', 'main\controllers\works::get_dialog_c
 $app->get('/works/create_work', 'main\controllers\works::create_work')->before($security);
 $app->get('/works/get_dialog_create_event', 'main\controllers\works::get_dialog_create_event')->before($security);
 $app->get('/works/create_event', 'main\controllers\works::create_event')->before($security);
+$app->get('/works/get_event_content', 'main\controllers\works::get_event_content')->before($security);
+$app->get('/works/get_dialog_rename_event', 'main\controllers\works::get_dialog_rename_event')->before($security);
+$app->get('/works/rename_event', 'main\controllers\works::rename_event')->before($security);
 
 # user
 $app->get('/user/', 'main\controllers\users::default_page');

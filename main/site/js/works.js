@@ -31,6 +31,12 @@ $(document).ready(function(){
     },function(r){
       init_content(r);
     });
+  }).on('click', '.get_dialog_rename_event', function(){
+    $.get('get_dialog_rename_event',{
+      id: get_event_id($(this))
+    },function(r){
+      init_content(r);
+    });
   }).on('click', '.get_dialog_create_workgroup', function(){
     $.get('get_dialog_create_workgroup',{
     },function(r){
@@ -43,6 +49,17 @@ $(document).ready(function(){
     }else{
       $.get('get_work_content',{
         id: get_work_id(self)
+      },function(response){
+        self.after(response)
+      });
+    }
+  }).on('click', '.event-title', function(){
+    var self = $(this);
+    if(self.siblings().is('.event-content')){
+      self.siblings('.event-content').remove();
+    }else{
+      $.get('get_event_content',{
+        id: get_event_id(self)
       },function(response){
         self.after(response)
       });
@@ -74,4 +91,9 @@ function get_workgroup_id(obj){
 // возвращает идентификатор работы
 function get_work_id(obj){
     return obj.closest('.work').attr('work_id');
+}
+
+// возвращает идентификатор работы
+function get_event_id(obj){
+    return obj.closest('.event').attr('event_id');
 }
