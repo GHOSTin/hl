@@ -58,6 +58,11 @@ $(document).ready(function(){
     },function(r){
       init_content(r);
     });
+  }).on('click', '.get_dialog_create_event', function(){
+    $.get('get_dialog_create_event',{
+    },function(r){
+      init_content(r);
+    });
   });
 });
 

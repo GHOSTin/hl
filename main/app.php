@@ -69,6 +69,11 @@ $app->before(function (Request $request, Application $app) {
   }
 }, Application::EARLY_EVENT);
 
+$security = function(Request $request, Application $app){
+  if(is_null($app['user']))
+    throw new NotFoundHttpException();
+};
+
 #default_pages
 $app->get('/', 'main\controllers\default_page::default_page');
 $app->post('/login/', 'main\controllers\default_page::login');
@@ -97,21 +102,23 @@ $app->get('/error/delete_error', 'main\controllers\error::delete_error');
 $app->get('/error/', 'main\controllers\error::default_page');
 
 # works
-$app->get('/works/', 'main\controllers\works::default_page');
-$app->get('/works/get_workgroup_content', 'main\controllers\works::get_workgroup_content');
-$app->get('/works/get_dialog_rename_workgroup', 'main\controllers\works::get_dialog_rename_workgroup');
-$app->get('/works/rename_workgroup', 'main\controllers\works::rename_workgroup');
-$app->get('/works/get_dialog_add_work', 'main\controllers\works::get_dialog_add_work');
-$app->get('/works/add_work', 'main\controllers\works::add_work');
-$app->get('/works/get_dialog_exclude_work', 'main\controllers\works::get_dialog_exclude_work');
-$app->get('/works/exclude_work', 'main\controllers\works::exclude_work');
-$app->get('/works/get_dialog_create_workgroup', 'main\controllers\works::get_dialog_create_workgroup');
-$app->get('/works/create_workgroup', 'main\controllers\works::create_workgroup');
-$app->get('/works/get_work_content', 'main\controllers\works::get_work_content');
-$app->get('/works/get_dialog_rename_work', 'main\controllers\works::get_dialog_rename_work');
-$app->get('/works/rename_work', 'main\controllers\works::rename_work');
-$app->get('/works/get_dialog_create_work', 'main\controllers\works::get_dialog_create_work');
-$app->get('/works/create_work', 'main\controllers\works::create_work');
+$app->get('/works/', 'main\controllers\works::default_page')->before($security);
+$app->get('/works/get_workgroup_content', 'main\controllers\works::get_workgroup_content')->before($security);
+$app->get('/works/get_dialog_rename_workgroup', 'main\controllers\works::get_dialog_rename_workgroup')->before($security);
+$app->get('/works/rename_workgroup', 'main\controllers\works::rename_workgroup')->before($security);
+$app->get('/works/get_dialog_add_work', 'main\controllers\works::get_dialog_add_work')->before($security);
+$app->get('/works/add_work', 'main\controllers\works::add_work')->before($security);
+$app->get('/works/get_dialog_exclude_work', 'main\controllers\works::get_dialog_exclude_work')->before($security);
+$app->get('/works/exclude_work', 'main\controllers\works::exclude_work')->before($security);
+$app->get('/works/get_dialog_create_workgroup', 'main\controllers\works::get_dialog_create_workgroup')->before($security);
+$app->get('/works/create_workgroup', 'main\controllers\works::create_workgroup')->before($security);
+$app->get('/works/get_work_content', 'main\controllers\works::get_work_content')->before($security);
+$app->get('/works/get_dialog_rename_work', 'main\controllers\works::get_dialog_rename_work')->before($security);
+$app->get('/works/rename_work', 'main\controllers\works::rename_work')->before($security);
+$app->get('/works/get_dialog_create_work', 'main\controllers\works::get_dialog_create_work')->before($security);
+$app->get('/works/create_work', 'main\controllers\works::create_work')->before($security);
+$app->get('/works/get_dialog_create_event', 'main\controllers\works::get_dialog_create_event')->before($security);
+$app->get('/works/create_event', 'main\controllers\works::create_event')->before($security);
 
 # user
 $app->get('/user/', 'main\controllers\users::default_page');
