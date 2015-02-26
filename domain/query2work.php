@@ -1,8 +1,6 @@
 <?php namespace domain;
 
-use \BadMethodCallException;
-use \domain\query;
-use \domain\work;
+use BadMethodCallException;
 
 /**
 * @Entity

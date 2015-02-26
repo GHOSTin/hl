@@ -1,6 +1,6 @@
 <?php namespace domain;
 
-use \DomainException;
+use DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**

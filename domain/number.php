@@ -75,9 +75,15 @@ class number{
   */
   private $notification_rules = [];
 
+  /**
+  * @OneToMany(targetEntity="domain\number2event", mappedBy="number")
+  */
+  private $events;
+
   public function __construct(){
     $this->queries = new ArrayCollection();
     $this->accruals = new ArrayCollection();
+    $this->events = new ArrayCollection();
   }
 
   public static function generate_hash($password, $salt){
@@ -94,6 +100,10 @@ class number{
 
   public function get_email(){
     return $this->email;
+  }
+
+  public function get_events(){
+    return $this->events;
   }
 
   public function get_fio(){

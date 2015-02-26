@@ -1,7 +1,7 @@
 <?php namespace domain;
 
-use \DomainException;
-use \JsonSerializable;
+use DomainException;
+use JsonSerializable;
 
 /**
 * @Entity
