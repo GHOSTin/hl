@@ -11,9 +11,11 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $twig = $this->getMockBuilder('\Twig_Environment')
-                 ->disableOriginalConstructor()->getMock();
+                 ->disableOriginalConstructor()
+                 ->getMock();
     $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-               ->disableOriginalConstructor()->getMock();
+               ->disableOriginalConstructor()
+               ->getMock();
     $this->request = new Request();
     $this->app = new Application();
     $this->controller = new controller();
@@ -21,11 +23,41 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $this->app['em'] = $em;
   }
 
+  public function test_add_event(){
+    $this->request->query->set('workgroup_id', 125);
+    $this->request->query->set('event_id', 253);
+    $event = new event();
+    $workgroup = $this->getMock('domain\workgroup');
+    $workgroup->expects($this->once())
+              ->method('add_event')
+              ->with($event);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneById'])
+                       ->getMock();
+    $repository->expects($this->exactly(2))
+               ->method('findOneById')
+               ->withConsecutive([125], [253])
+               ->will($this->onConsecutiveCalls($workgroup, $event));
+    $this->app['em']->expects($this->exactly(2))
+                    ->method('getRepository')
+                    ->withConsecutive(['domain\workgroup'], ['domain\event'])
+                    ->will($this->returnValue($repository));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('works\get_workgroup_content.tpl', ['workgroup' => $workgroup])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->add_event($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_add_work(){
     $this->request->query->set('workgroup_id', 125);
     $this->request->query->set('work_id', 253);
+    $work = new work();
     $workgroup = $this->getMock('\domain\workgroup');
-    $work = new \domain\work();
     $workgroup->expects($this->once())
               ->method('add_work')
               ->with($work);
@@ -207,11 +239,41 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_exclude_event(){
+    $this->request->query->set('workgroup_id', 125);
+    $this->request->query->set('event_id', 253);
+    $workgroup = $this->getMock('domain\workgroup');
+    $event = new event();
+    $workgroup->expects($this->once())
+              ->method('exclude_event')
+              ->with($event);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneById'])
+                       ->getMock();
+    $repository->expects($this->exactly(2))
+               ->method('findOneById')
+               ->withConsecutive([125], [253])
+               ->will($this->onConsecutiveCalls($workgroup, $event));
+    $this->app['em']->expects($this->exactly(2))
+                    ->method('getRepository')
+                    ->withConsecutive(['domain\workgroup'], ['domain\event'])
+                    ->will($this->returnValue($repository));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('works\get_workgroup_content.tpl', ['workgroup' => $workgroup])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->exclude_event($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_exclude_work(){
     $this->request->query->set('workgroup_id', 125);
     $this->request->query->set('work_id', 253);
     $workgroup = $this->getMock('\domain\workgroup');
-    $work = new \domain\work();
+    $work = new work();
     $workgroup->expects($this->once())
               ->method('exclude_work')
               ->with($work);
@@ -231,8 +293,7 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('works\get_workgroup_content.tpl',
-                             ['workgroup' => $workgroup])
+                      ->with('works\get_workgroup_content.tpl', ['workgroup' => $workgroup])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->exclude_work($this->request, $this->app);
     $this->assertEquals('render_template', $response);
@@ -304,6 +365,33 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_dialog_add_event(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneById', 'findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+              ->method('findOneById')
+              ->will($this->returnValue('workgroup_object'));
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->will($this->returnValue('event_array'));
+    $this->app['em']->expects($this->exactly(2))
+                   ->method('getRepository')
+                   ->withConsecutive(['domain\workgroup'], ['domain\event'])
+                   ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('works\get_dialog_add_event.tpl',
+                             [
+                              'workgroup' => 'workgroup_object',
+                              'events' => 'event_array'
+                             ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_add_event($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_dialog_add_work(){
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
@@ -327,8 +415,7 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                               'works' => 'work_array'
                              ])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_add_work($this->request,
-                                                       $this->app);
+    $response = $this->controller->get_dialog_add_work($this->request,  $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -359,6 +446,30 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_dialog_exclude_event(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneById'])
+                       ->getMock();
+    $repository->expects($this->exactly(2))
+               ->method('findOneById')
+               ->will($this->onConsecutiveCalls('workgroup_object', 'event_object'));
+    $this->app['em']->expects($this->exactly(2))
+                    ->method('getRepository')
+                    ->withConsecutive(['domain\workgroup'], ['domain\event'])
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('works\get_dialog_exclude_event.tpl',
+                             [
+                              'workgroup' => 'workgroup_object',
+                              'event' => 'event_object'
+                             ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_exclude_event($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_dialog_exclude_work(){
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
@@ -374,11 +485,12 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('works\get_dialog_exclude_work.tpl',
-                             ['workgroup' => 'workgroup_object',
-                              'work' => 'work_object'])
+                             [
+                              'workgroup' => 'workgroup_object',
+                              'work' => 'work_object'
+                             ])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_exclude_work($this->request,
-                                                           $this->app);
+    $response = $this->controller->get_dialog_exclude_work($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 

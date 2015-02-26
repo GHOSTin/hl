@@ -12,9 +12,22 @@ $(document).ready(function(){
         self.after(response)
       });
     }
+  }).on('click', '.get_dialog_add_event', function(){
+    $.get('get_dialog_add_event',{
+      id: get_workgroup_id($(this))
+    },function(r){
+      init_content(r);
+    });
   }).on('click', '.get_dialog_add_work', function(){
     $.get('get_dialog_add_work',{
       id: get_workgroup_id($(this))
+    },function(r){
+      init_content(r);
+    });
+  }).on('click', '.get_dialog_exclude_event', function(){
+    $.get('get_dialog_exclude_event',{
+      workgroup_id: get_workgroup_id($(this)),
+      event_id: get_event_id($(this))
     },function(r){
       init_content(r);
     });

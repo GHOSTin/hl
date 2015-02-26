@@ -20,6 +20,16 @@ class works{
     return $app['twig']->render('works\get_workgroup_content.tpl', ['workgroup' => $workgroup]);
   }
 
+  public function add_event(Request $request, Application $app){
+    $workgroup = $app['em']->getRepository('domain\workgroup')
+                           ->findOneById($request->get('workgroup_id'));
+    $event = $app['em']->getRepository('domain\event')
+                       ->findOneById($request->get('event_id'));
+    $workgroup->add_event($event);
+    $app['em']->flush();
+    return $app['twig']->render('works\get_workgroup_content.tpl', ['workgroup' => $workgroup]);
+  }
+
   public function create_event(Request $request, Application $app){
     $name = $request->get('name');
     $event = $app['em']->getRepository('domain\event')->findOneByName($name);
@@ -75,6 +85,16 @@ class works{
                                 ]);
   }
 
+  public function exclude_event(Request $request, Application $app){
+    $workgroup = $app['em']->getRepository('domain\workgroup')
+                           ->findOneById($request->get('workgroup_id'));
+    $event = $app['em']->getRepository('domain\event')
+                      ->findOneById($request->get('event_id'));
+    $workgroup->exclude_event($event);
+    $app['em']->flush();
+    return $app['twig']->render('works\get_workgroup_content.tpl', ['workgroup' => $workgroup]);
+  }
+
   public function exclude_work(Request $request, Application $app){
     $workgroup = $app['em']->getRepository('\domain\workgroup')
                            ->findOneById($request->get('workgroup_id'));
@@ -83,6 +103,17 @@ class works{
     $workgroup->exclude_work($work);
     $app['em']->flush();
     return $app['twig']->render('works\get_workgroup_content.tpl', ['workgroup' => $workgroup]);
+  }
+
+  public function get_dialog_add_event(Request $request, Application $app){
+    $workgroup = $app['em']->getRepository('domain\workgroup')
+                           ->findOneById($request->get('id'));
+    $events = $app['em']->getRepository('domain\event')->findAll();
+    return $app['twig']->render('works\get_dialog_add_event.tpl',
+                                [
+                                 'workgroup' => $workgroup,
+                                 'events' => $events
+                                ]);
   }
 
   public function get_dialog_add_work(Request $request, Application $app){
@@ -106,6 +137,18 @@ class works{
 
   public function get_dialog_create_workgroup(Application $app){
     return $app['twig']->render('works\get_dialog_create_workgroup.tpl');
+  }
+
+  public function get_dialog_exclude_event(Request $request, Application $app){
+    $workgroup = $app['em']->getRepository('domain\workgroup')
+                           ->findOneById($request->get('workgroup_id'));
+    $event = $app['em']->getRepository('domain\event')
+                       ->findOneById($request->get('event_id'));
+    return $app['twig']->render('works\get_dialog_exclude_event.tpl',
+                                [
+                                 'workgroup' => $workgroup,
+                                 'event' => $event
+                                ]);
   }
 
   public function get_dialog_exclude_work(Request $request, Application $app){
