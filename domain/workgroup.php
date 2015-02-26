@@ -35,6 +35,13 @@ class workgroup{
    */
   private $works;
 
+  /**
+   * @ManyToMany(targetEntity="domain\event")
+   * @JoinTable(name="workgroup2event",
+   * joinColumns={@JoinColumn(name="workgroup_id", referencedColumnName="id")},
+   * inverseJoinColumns={@JoinColumn(name="event_id", referencedColumnName="id")})
+   */
+  private $events;
 
   /*
   * @OneToMany(targetEntity="data_query", mappedBy="work_type")
@@ -46,6 +53,7 @@ class workgroup{
 
   public function __construct(){
     $this->works = new ArrayCollection();
+    $this->events = new ArrayCollection();
   }
 
   public function add_work(work $work){
@@ -54,8 +62,22 @@ class workgroup{
     $this->works->add($work);
   }
 
+  public function add_event(event $event){
+    if($this->events->contains($event))
+      throw new DomainException('Событие уже добавлено.');
+    $this->events->add($event);
+  }
+
+  public function exclude_event(event $event){
+    $this->events->removeElement($event);
+  }
+
   public function exclude_work(work $work){
     $this->works->removeElement($work);
+  }
+
+  public function get_events(){
+    return $this->events;
   }
 
   public function get_works(){
