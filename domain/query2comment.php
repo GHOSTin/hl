@@ -1,8 +1,5 @@
 <?php namespace domain;
 
-use \domain\query;
-use \domain\user;
-
 /**
 * @Entity
 * @Table(name="query2comment")

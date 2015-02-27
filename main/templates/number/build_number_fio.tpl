@@ -20,8 +20,27 @@
     <div class="col-md-5">
         <h3>Дополнительная информация</h3>
         <ul class="list-unstyled">
-            <li><a href="/number/accruals?id={{ number.get_id() }}" target="_blank">Начисления</a></li>
-            <li><a href="/number/query_of_number?id={{ number.get_id() }}" target="_blank">Заявки</a></li>
+          <li>
+            <a href="/number/accruals?id={{ number.get_id() }}" target="_blank">Начисления</a>
+          </li>
+          <li>
+            <a href="/number/query_of_number?id={{ number.get_id() }}" target="_blank">Заявки</a>
+          </li>
         </ul>
+    </div>
+    <div class="col-md-5">
+      <h3>События</h3>
+      <ul class="list-unstyled">
+        <li>
+          <a class="get_dialog_add_event">Добавить</a>
+        </li>
+      </ul>
+      <ul class="events">
+      {% for event in number.get_events() %}
+        <li>{{ event.get_time()|date("H:i d.m.Y") }} {{ event.get_name() }}</li>
+      {% else %}
+        <li>Нет ни одного события</li>
+      {% endfor %}
+      </ul>
     </div>
 </div>

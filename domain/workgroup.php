@@ -1,8 +1,7 @@
 <?php namespace domain;
 
-use \DomainException;
-use \Doctrine\Common\Collections\ArrayCollection;
-use \domain\work;
+use DomainException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * @Entity

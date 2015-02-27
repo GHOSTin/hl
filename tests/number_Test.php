@@ -141,6 +141,10 @@ class number_Test extends PHPUnit_Framework_TestCase{
     $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->number->get_accruals());
   }
 
+  public function test_get_events(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->number->get_events());
+  }
+
   public function test_set_email_1(){
     $this->number->set_email('nekrasov@mlsco.ru');
     $this->assertEquals('nekrasov@mlsco.ru', $this->number->get_email());

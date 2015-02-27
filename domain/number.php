@@ -10,22 +10,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 class number{
 
   /**
-  * @OneToMany(targetEntity="\domain\accrual", mappedBy="number")
+  * @OneToMany(targetEntity="domain\accrual", mappedBy="number")
   */
   private $accruals;
 
   /**
-  * @Column(name="cellphone", type="string")
+  * @Column(type="string")
   */
   private $cellphone;
 
   /**
-  * @Column(name="fio", type="string")
+  * @Column(type="string")
   */
   private $fio;
 
   /**
-  * @ManyToOne(targetEntity="\domain\flat")
+  * @ManyToOne(targetEntity="domain\flat")
   */
   private $flat;
 
@@ -35,38 +35,38 @@ class number{
   private $hash;
 
   /**
-  * @ManyToOne(targetEntity="\domain\house")
+  * @ManyToOne(targetEntity="domain\house")
   */
   private $house;
 
   /**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(type="integer")
   */
   private $id;
 
   /**
-  * @Column(name="number", type="string")
+  * @Column(type="string")
   */
   private $number;
 
   /**
-  * @Column(name="status", type="string")
+  * @Column(type="string")
   */
   private $status;
 
   /**
-  * @Column(name="telephone", type="string")
+  * @Column(type="string")
   */
   private $telephone;
 
   /**
-  * @Column(name="email", type="string")
+  * @Column(type="string")
   */
   private $email;
 
   /**
-  * @ManyToMany(targetEntity="\domain\query", mappedBy="numbers")
+  * @ManyToMany(targetEntity="domain\query", mappedBy="numbers")
   */
   private $queries;
 
@@ -75,9 +75,22 @@ class number{
   */
   private $notification_rules = [];
 
+  /**
+  * @OneToMany(targetEntity="domain\number2event", mappedBy="number", cascade="all")
+  * @OrderBy({"time" = "DESC"})
+  */
+  private $events;
+
   public function __construct(){
     $this->queries = new ArrayCollection();
     $this->accruals = new ArrayCollection();
+    $this->events = new ArrayCollection();
+  }
+
+  public function add_event(number2event $event){
+    if($this->events->contains($event))
+      throw new DomainException('Событие уже добавлено');
+    $this->events->add($event);
   }
 
   public static function generate_hash($password, $salt){
@@ -94,6 +107,10 @@ class number{
 
   public function get_email(){
     return $this->email;
+  }
+
+  public function get_events(){
+    return $this->events;
   }
 
   public function get_fio(){
