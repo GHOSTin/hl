@@ -50,4 +50,8 @@ class number2event{
   public function get_name(){
     return $this->event->get_name();
   }
+
+  public function get_id(){
+    return $this->event->get_id();
+  }
 }

@@ -1,13 +1,14 @@
 <?php
 
-use \Silex\Application;
-use \Symfony\Component\HttpFoundation\Request;
-use \main\controllers\numbers as controller;
-use \domain\house;
-use \domain\department;
-use \domain\street;
-use \domain\user;
-use \main\models\number;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use main\controllers\numbers as controller;
+use domain\house;
+use domain\department;
+use domain\street;
+use domain\user;
+use domain\event;
+use domain\number;
 
 class controller_number_Test extends PHPUnit_Framework_TestCase{
 
@@ -23,20 +24,58 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->app['em'] = $em;
   }
 
+  public function test_accruals(){
+    $this->request->query->set('id', 125);
+    $this->app['user'] = 'user_object';
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\number', 125)
+                    ->will($this->returnValue('number_object'));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('number\accruals.tpl',
+                             [
+                              'number' => 'number_object',
+                              'user' => 'user_object'
+                             ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->accruals($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+
+  public function test_add_event(){
+    $number = new number();
+    $event = new event();
+    $this->request->query->set('id', 125);
+    $this->request->query->set('event', 253);
+    $this->request->query->set('date', '21.12.1984');
+    $this->app['em']->expects($this->exactly(2))
+                    ->method('find')
+                    ->withConsecutive(['domain\number', 125], ['domain\event', 253])
+                    ->will($this->onConsecutiveCalls($number, $event));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('number\get_number_content.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->add_event($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_edit_department(){
     $house = new house();
     $department = new department();
     $this->app['em']->expects($this->exactly(2))
                     ->method('find')
-                    ->withConsecutive([$this->equalTo('\domain\house')],
-                                      [$this->equalTo('\domain\department')])
+                    ->withConsecutive([$this->equalTo('\domain\house')], [$this->equalTo('\domain\department')])
                     ->will($this->onConsecutiveCalls($house, $department));
     $this->app['em']->expects($this->once())
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\build_house_content.tpl',
-                             ['house' => $house])
+                      ->with('number\build_house_content.tpl', ['house' => $house])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->edit_department($this->request, $this->app);
     $this->assertEquals('render_template', $response);
@@ -56,8 +95,10 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('number\default_page.tpl',
-                             ['user' => $this->app['user'],
-                              'streets' => 'street_array'])
+                             [
+                              'user' => $this->app['user'],
+                              'streets' => 'street_array'
+                             ])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->default_page($this->app);
     $this->assertEquals('render_template', $response);
@@ -76,11 +117,12 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('number\get_street_content.tpl',
-                             ['houses' => 'house_array',
-                              'street_id' => 125])
+                             [
+                              'houses' => 'house_array',
+                              'street_id' => 125
+                             ])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_street_content($this->request,
-                                                      $this->app);
+    $response = $this->controller->get_street_content($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -106,8 +148,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                              ['house' => 'house_object',
                               'departments' => 'departments_array'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_edit_department($this->request,
-                                                              $this->app);
+    $response = $this->controller->get_dialog_edit_department($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -122,8 +163,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                       ->with('number\get_house_content.tpl',
                              ['house' => 'house_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_house_content($this->request,
-                                                     $this->app);
+    $response = $this->controller->get_house_content($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -172,8 +212,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                       ->with('number\get_number_content.tpl',
                              ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_number_content($this->request,
-                                                      $this->app);
+    $response = $this->controller->get_number_content($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -194,6 +233,35 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_dialog_add_event(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\number', 125)
+                    ->will($this->returnValue('number_object'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->will($this->returnValue('workgroup_array'));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\workgroup')
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('number\get_dialog_add_event.tpl',
+                             [
+                              'number' => 'number_object',
+                              'workgroups' => 'workgroup_array'
+                              ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_add_event($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_dialog_edit_number(){
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
@@ -202,28 +270,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('number_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\get_dialog_edit_number.tpl',
-                             ['number' => 'number_object'])
+                      ->with('number\get_dialog_edit_number.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_edit_number($this->request,
-                                                          $this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
-  public function test_accruals(){
-    $this->request->query->set('id', 125);
-    $this->app['user'] = 'user_object';
-    $this->app['em']->expects($this->once())
-                    ->method('find')
-                    ->with('\domain\number', 125)
-                    ->will($this->returnValue('number_object'));
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('number\accruals.tpl',
-                             ['number' => 'number_object',
-                              'user' => 'user_object'])
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->accruals($this->request, $this->app);
+    $response = $this->controller->get_dialog_edit_number($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -235,11 +284,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('number_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\get_dialog_edit_number_fio.tpl',
-                             ['number' => 'number_object'])
+                      ->with('number\get_dialog_edit_number_fio.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_edit_number_fio($this->request,
-                                                              $this->app);
+    $response = $this->controller->get_dialog_edit_number_fio($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -251,8 +298,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('number_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\get_dialog_edit_number_cellphone.tpl',
-                             ['number' => 'number_object'])
+                      ->with('number\get_dialog_edit_number_cellphone.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->get_dialog_edit_number_cellphone(
                                                     $this->request, $this->app);
@@ -267,11 +313,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('number_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\get_dialog_edit_number_telephone.tpl',
-                             ['number' => 'number_object'])
+                      ->with('number\get_dialog_edit_number_telephone.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_edit_number_telephone(
-                                                    $this->request, $this->app);
+    $response = $this->controller->get_dialog_edit_number_telephone($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -283,11 +327,23 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('number_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\get_dialog_edit_number_email.tpl',
-                             ['number' => 'number_object'])
+                      ->with('number\get_dialog_edit_number_email.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_edit_number_email(
-                                                    $this->request, $this->app);
+    $response = $this->controller->get_dialog_edit_number_email($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_events(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\workgroup', 125)
+                    ->will($this->returnValue('workgroup_object'));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('number\get_events.tpl', ['workgroup' => 'workgroup_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_events( $this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -298,8 +354,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->method('find')
                     ->with('\domain\number', 123)
                     ->will($this->returnValue(null));
-    $response = $this->controller->update_number($this->request,
-                                                 $this->app);
+    $response = $this->controller->update_number($this->request, $this->app);
   }
 
   public function test_update_number_2(){
@@ -329,8 +384,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\update_number_fio.tpl',
-                             ['number' => $number])
+                      ->with('number\update_number_fio.tpl', ['number' => $number])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->update_number($this->request, $this->app);
     $this->assertEquals('render_template', $response);
@@ -380,11 +434,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\update_number_fio.tpl',
-                             ['number' => $number])
+                      ->with('number\update_number_fio.tpl', ['number' => $number])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->update_number_email($this->request,
-                                                       $this->app);
+    $response = $this->controller->update_number_email($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -401,11 +453,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\update_number_fio.tpl',
-                             ['number' => $number])
+                      ->with('number\update_number_fio.tpl', ['number' => $number])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->update_number_telephone($this->request,
-                                                           $this->app);
+    $response = $this->controller->update_number_telephone($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -422,11 +472,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\update_number_fio.tpl',
-                             ['number' => $number])
+                      ->with('number\update_number_fio.tpl', ['number' => $number])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->update_number_cellphone($this->request,
-                                                           $this->app);
+    $response = $this->controller->update_number_cellphone($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -443,11 +491,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('number\update_number_fio.tpl',
-                             ['number' => $number])
+                      ->with('number\update_number_fio.tpl', ['number' => $number])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->update_number_fio($this->request,
-                                                     $this->app);
+    $response = $this->controller->update_number_fio($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 }

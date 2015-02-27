@@ -33,4 +33,11 @@ class number2event_Test extends PHPUnit_Framework_TestCase{
     $this->n2e->set_event($event);
     $this->assertEquals('Привет', $this->n2e->get_name());
   }
+
+  public function test_get_id(){
+    $event = new event();
+    $event->set_id(125);
+    $this->n2e->set_event($event);
+    $this->assertEquals(125, $this->n2e->get_id());
+  }
 }
