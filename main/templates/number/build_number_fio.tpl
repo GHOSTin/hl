@@ -37,7 +37,7 @@
       </ul>
       <ul class="events">
       {% for event in number.get_events() %}
-        <li>{{ event.get_time()|date("H:i d.m.Y") }} {{ event.get_name() }}</li>
+        <li event_id="{{ event.get_id() }}" time="{{ event.get_time() }}">{{ event.get_time()|date("H:i d.m.Y") }} {{ event.get_name() }} <a class="get_dialog_exclude_event">исключить</a></li>
       {% else %}
         <li>Нет ни одного события</li>
       {% endfor %}

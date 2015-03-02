@@ -198,6 +198,8 @@ $app->get('/number/contact_info', 'main\controllers\numbers::contact_info')->bef
 $app->get('/number/get_dialog_add_event', 'main\controllers\numbers::get_dialog_add_event')->before($security);
 $app->get('/number/get_events', 'main\controllers\numbers::get_events')->before($security);
 $app->get('/number/add_event', 'main\controllers\numbers::add_event')->before($security);
+$app->get('/number/get_dialog_exclude_event', 'main\controllers\numbers::get_dialog_exclude_event')->before($security);
+$app->get('/number/exclude_event', 'main\controllers\numbers::exclude_event')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);

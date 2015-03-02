@@ -48,6 +48,16 @@ class numbers{
     return $app['twig']->render('number\build_house_content.tpl', ['house' => $house]);
   }
 
+  public function exclude_event(Request $request, Application $app){
+    $n2e = $app['em']->getRepository('domain\number2event')
+                     ->findByIndex($request->get('date'),$request->get('id'), $request->get('event'))[0];
+    $number = $n2e->get_number();
+    $number->exclude_event($n2e);
+    $app['em']->remove($n2e);
+    $app['em']->flush();
+    return $app['twig']->render('number\get_number_content.tpl', ['number' => $number]);
+  }
+
   public function default_page(Application $app){
     $streets = $app['em']->getRepository('\domain\street')
                          ->findBy([], ['name' => 'ASC']);
@@ -101,6 +111,12 @@ class numbers{
   public function get_dialog_edit_number_telephone(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
     return $app['twig']->render('number\get_dialog_edit_number_telephone.tpl', ['number' => $number]);
+  }
+
+  public function get_dialog_exclude_event(Request $request, Application $app){
+    $n2e = $app['em']->getRepository('domain\number2event')
+                     ->findByIndex($request->get('time'), $request->get('id'), $request->get('event_id'))[0];
+    return $app['twig']->render('number\get_dialog_exclude_event.tpl', ['n2e' => $n2e]);
   }
 
   public function get_events(Request $request, Application $app){
