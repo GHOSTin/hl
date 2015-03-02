@@ -36,7 +36,7 @@
   </div>
   <div class="modal-body">
     <div class="form-group">
-      <select class="form-control dialog-select-category">
+      <select class="form-control dialog-select-category" autofocus>
         <option value="0">Выберите категорию</option>
       {% for workgroup in workgroups %}
         <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
