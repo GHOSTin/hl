@@ -9,9 +9,11 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $twig = $this->getMockBuilder('\Twig_Environment')
-                 ->disableOriginalConstructor()->getMock();
+                 ->disableOriginalConstructor()
+                 ->getMock();
     $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-               ->disableOriginalConstructor()->getMock();
+               ->disableOriginalConstructor()
+               ->getMock();
     $this->request = new Request();
     $this->app = new Application();
     $this->controller = new controller();
@@ -51,8 +53,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->app['user'] = new user();
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('query\add_comment.tpl',
-                             ['query' => $query])
+                      ->with('query\add_comment.tpl', ['query' => $query])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->add_comment($this->request, $this->app);
     $this->assertEquals('render_template', $response);
@@ -134,11 +135,9 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('query_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('query\get_dialog_add_comment.tpl',
-                             ['query' => 'query_object'])
+                      ->with('query\get_dialog_add_comment.tpl', ['query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_add_comment($this->request,
-                                                          $this->app);
+    $response = $this->controller->get_dialog_add_comment($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -150,11 +149,9 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('query_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('query\get_dialog_add_work.tpl',
-                             ['query' => 'query_object'])
+                      ->with('query\get_dialog_add_work.tpl', ['query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_add_work($this->request,
-                                                       $this->app);
+    $response = $this->controller->get_dialog_add_work($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -166,11 +163,9 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('query_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('query\get_query_comments.tpl',
-                             ['query' => 'query_object'])
+                      ->with('query\get_query_comments.tpl', ['query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_query_comments($this->request,
-                                                     $this->app);
+    $response = $this->controller->get_query_comments($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -182,11 +177,9 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('query_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('query\get_query_content.tpl',
-                             ['query' => 'query_object'])
+                      ->with('query\get_query_content.tpl', ['query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_query_content($this->request,
-                                                     $this->app);
+    $response = $this->controller->get_query_content($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -198,11 +191,18 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue('query_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('query\get_documents.tpl',
-                             ['query' => 'query_object'])
+                      ->with('query\get_documents.tpl', ['query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_documents($this->request,
-                                                     $this->app);
+    $response = $this->controller->get_documents($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_dialog_create_query(){
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_dialog_create_query.tpl')
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_create_query($this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -225,8 +225,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                              ['streets' => 'street_array',
                               'value' => 125])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_initiator($this->request,
-                                                        $this->app);
+    $response = $this->controller->get_dialog_initiator($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -253,8 +252,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                              ['streets' => 'street_array',
                               'query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_change_initiator($this->request,
-                                                               $this->app);
+    $response = $this->controller->get_dialog_change_initiator($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -274,6 +272,38 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->with('query\clear_filters.tpl', $this->anything())
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->clear_filters($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_houses(){
+    $this->request->query->set('id', 125);
+    $model = $this->getMockBuilder('main\models\query')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_houses_by_street')
+          ->with(125)
+          ->will($this->returnValue('house_array'));
+    $this->app['\main\models\query'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_houses.tpl', ['houses' => 'house_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_houses($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_numbers(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\house', 125)
+                    ->will($this->returnValue('house_object'));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_numbers.tpl', ['house' => 'house_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_numbers($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 

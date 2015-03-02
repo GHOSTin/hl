@@ -1,7 +1,6 @@
 <?php namespace domain;
 
 use Doctrine\Common\Collections\Criteria;
-use \domain\user;
 
 /**
  * @Table(name="tasks")

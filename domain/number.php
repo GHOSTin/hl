@@ -10,22 +10,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 class number{
 
   /**
-  * @OneToMany(targetEntity="\domain\accrual", mappedBy="number")
+  * @OneToMany(targetEntity="domain\accrual", mappedBy="number")
   */
   private $accruals;
 
   /**
-  * @Column(name="cellphone", type="string")
+  * @Column(type="string")
   */
   private $cellphone;
 
   /**
-  * @Column(name="fio", type="string")
+  * @Column(type="string")
   */
   private $fio;
 
   /**
-  * @ManyToOne(targetEntity="\domain\flat")
+  * @ManyToOne(targetEntity="domain\flat")
   */
   private $flat;
 
@@ -35,44 +35,66 @@ class number{
   private $hash;
 
   /**
-  * @ManyToOne(targetEntity="\domain\house")
+  * @ManyToOne(targetEntity="domain\house")
   */
   private $house;
 
   /**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(type="integer")
   */
   private $id;
 
   /**
-  * @Column(name="number", type="string")
+  * @Column(type="string")
   */
   private $number;
 
   /**
-  * @Column(name="status", type="string")
+  * @Column(type="string")
   */
   private $status;
 
   /**
-  * @Column(name="telephone", type="string")
+  * @Column(type="string")
   */
   private $telephone;
 
   /**
-  * @Column(name="email", type="string")
+  * @Column(type="string")
   */
   private $email;
 
   /**
-  * @ManyToMany(targetEntity="\domain\query", mappedBy="numbers")
+  * @ManyToMany(targetEntity="domain\query", mappedBy="numbers")
   */
   private $queries;
+
+  /**
+  * @Column(name="notification_rules", type="json_array")
+  */
+  private $notification_rules = [];
+
+  /**
+  * @OneToMany(targetEntity="domain\number2event", mappedBy="number", cascade="all")
+  * @OrderBy({"time" = "DESC"})
+  */
+  private $events;
 
   public function __construct(){
     $this->queries = new ArrayCollection();
     $this->accruals = new ArrayCollection();
+    $this->events = new ArrayCollection();
+  }
+
+  public function add_event(number2event $event){
+    if($this->events->contains($event))
+      throw new DomainException('Событие уже добавлено');
+    $this->events->add($event);
+  }
+
+  public function exclude_event(number2event $event){
+    $this->events->removeElement($event);
   }
 
   public static function generate_hash($password, $salt){
@@ -91,6 +113,10 @@ class number{
     return $this->email;
   }
 
+  public function get_events(){
+    return $this->events;
+  }
+
   public function get_fio(){
     return $this->fio;
   }
@@ -105,6 +131,10 @@ class number{
 
   public function get_id(){
     return $this->id;
+  }
+
+  public function get_notification_rules(){
+    return $this->notification_rules;
   }
 
   public function get_number(){
@@ -134,6 +164,14 @@ class number{
     if(!preg_match('|[0-9A-Za-z.@-]{0,128}|', $email))
       throw new DomainException('Не валидный email.');
     $this->email = $email;
+  }
+
+  public function set_cellphone_notification_rule($status){
+    $this->notification_rules['cellphone'] = ($status === 'on')? true: false;
+  }
+
+  public function set_email_notification_rule($status){
+    $this->notification_rules['email'] = ($status === 'on')? true: false;
   }
 
   public function set_fio($fio){

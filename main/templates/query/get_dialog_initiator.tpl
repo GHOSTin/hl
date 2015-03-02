@@ -35,27 +35,27 @@
 			});
 		});
 	{% endif %}
-{% endblock js %}
+{% endblock %}
 
 {% block html %}
 	{% if streets != false %}
-        <div class="row">
-            <div class="col-lg-5">
-                <select style="display:block" class="form-control dialog-select-street">
-                    <option value="0">Выберите улицу</option>
-                    {% for street in streets %}
-                        <option value="{{street.get_id()}}">{{street.get_name()}}</option>
-                    {% endfor %}
-                </select>
-                <select class="form-control dialog-select-house" style="display:block" disabled="disabled">
-                    <option value="0">Ожидание...</option>
-                </select>
-                {% if value == 'number' %}
-                    <select class="form-control dialog-select-number" style="display:block" disabled="disabled">
-                        <option value="0">Ожидание...</option>
-                    </select>
-                {% endif %}
-            </div>
-        </div>
+    <div class="row">
+      <div class="col-lg-5">
+        <select style="display:block" class="form-control dialog-select-street">
+            <option value="0">Выберите улицу</option>
+          {% for street in streets %}
+            <option value="{{ street.get_id() }}">{{ street.get_name() }}</option>
+          {% endfor %}
+        </select>
+        <select class="form-control dialog-select-house" style="display:block" disabled="disabled">
+          <option value="0">Ожидание...</option>
+        </select>
+        {% if value == 'number' %}
+          <select class="form-control dialog-select-number" style="display:block" disabled="disabled">
+            <option value="0">Ожидание...</option>
+          </select>
+        {% endif %}
+      </div>
+    </div>
 	{% endif %}
-{% endblock html %}
+{% endblock %}

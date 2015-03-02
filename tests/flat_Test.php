@@ -66,4 +66,8 @@ class flat_Test extends PHPUnit_Framework_TestCase{
     $this->flat->set_number(13);
     $this->assertEquals('13', $this->flat);
   }
+
+  public function test_numbers(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->flat->get_numbers());
+  }
 }

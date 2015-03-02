@@ -1,7 +1,6 @@
 <?php namespace domain;
-use \domain\query;
-use \domain\user;
-use \BadMethodCallException;
+
+use BadMethodCallException;
 /**
 * @Entity
 * @Table(name="query2user")

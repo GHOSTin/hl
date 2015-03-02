@@ -9,9 +9,11 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $twig = $this->getMockBuilder('\Twig_Environment')
-                 ->disableOriginalConstructor()->getMock();
+                 ->disableOriginalConstructor()
+                 ->getMock();
     $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-               ->disableOriginalConstructor()->getMock();
+               ->disableOriginalConstructor()
+               ->getMock();
     $this->request = new Request();
     $this->app = new Application();
     $this->controller = new controller();
@@ -19,14 +21,108 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
     $this->app['em'] = $em;
   }
 
+  public function test_cellphone_form(){
+    $this->app['number'] = 'number_object';
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('settings/cellphone/form.tpl', ['number' => 'number_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->cellphone_form($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_default_page(){
     $this->app['number'] = 'number_object';
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('settings/default_page.tpl',
-                             ['number' => 'number_object'])
+                      ->with('settings/default_page.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->default_page($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_email_form(){
+    $this->app['number'] = 'number_object';
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('settings/email/form.tpl', ['number' => 'number_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->email_form($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_change_cellphone(){
+    $this->request->request->set('cellphone', '+7(922)294-47-42');
+    $number = $this->getMock('domain\number');
+    $number->expects($this->once())
+           ->method('set_cellphone')
+           ->with('9222944742');
+    $this->app['number'] = $number;
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('settings/cellphone/success.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->change_cellphone($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_change_email(){
+    $this->request->request->set('email', 'nekrasov@mlsco.ru');
+    $number = $this->getMock('domain\number');
+    $number->expects($this->once())
+           ->method('set_email')
+           ->with('nekrasov@mlsco.ru');
+    $this->app['number'] = $number;
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('settings/email/success.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->change_email($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_notification_form(){
+    $this->app['number'] = 'number_object';
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('settings/notification/form.tpl', ['number' => 'number_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->notification_form($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_password_form(){
+    $this->app['number'] = 'number_object';
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('settings/password/form.tpl', ['number' => 'number_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->password_form($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_change_notification(){
+    $this->request->request->set('email', 'on');
+    $this->request->request->set('cellphone', 'on');
+    $number = $this->getMock('domain\number');
+    $number->expects($this->once())
+           ->method('set_email_notification_rule')
+           ->with('on');
+    $number->expects($this->once())
+           ->method('set_cellphone_notification_rule')
+           ->with('on');
+    $this->app['number'] = $number;
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('settings/notification/success.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->change_notification($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -36,8 +132,7 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
     $this->app['number'] = 'number_object';
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('settings/change_password.tpl',
-                             ['number' => 'number_object', 'description' => 'Пароли не совпадают.', 'type' => 'error'])
+                      ->with('settings/password/not_identical.tpl', ['number' => 'number_object'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->change_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
@@ -55,10 +150,8 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
     $this->app['salt'] = 'salt';
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with(
-                        'settings/change_password.tpl',
-                        ['number' => $number, 'description' => 'Старый пароль указан не верно.', 'type' => 'error']
-                      )->will($this->returnValue('render_template'));
+                      ->with('settings/password/wrong_old_password.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
     $response = $this->controller->change_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
@@ -82,10 +175,8 @@ class controller_client_settings_Test extends PHPUnit_Framework_TestCase{
                     ->method('flush');
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with(
-                        'settings/change_password.tpl',
-                        ['number' => $number, 'description' => 'Пароль изменен.', 'type' => 'success']
-                      )->will($this->returnValue('render_template'));
+                      ->with('settings/password/success.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
     $response = $this->controller->change_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }

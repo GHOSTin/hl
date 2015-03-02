@@ -1,6 +1,7 @@
 <?php namespace domain;
 
-use \DomainException;
+use DomainException;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * @Entity
@@ -39,6 +40,10 @@ class flat{
   private $status;
 
   private static $statuses = ['true', 'false'];
+
+  public function __construct(){
+    $this->numbers = new ArrayCollection();
+  }
 
   public function __toString(){
     return (string) $this->number;
