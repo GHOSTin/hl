@@ -1,7 +1,7 @@
 <?php namespace domain;
 
 /**
-* @Entity
+* @Entity(repositoryClass="domain\repositories\number2event")
 * @Table(name="number2event")
 */
 class number2event{
@@ -19,6 +19,7 @@ class number2event{
   private $number;
 
   /**
+  * @Id
   * @ManyToOne(targetEntity="domain\event")
   */
   private $event;

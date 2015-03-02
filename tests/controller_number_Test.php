@@ -9,6 +9,7 @@ use domain\street;
 use domain\user;
 use domain\event;
 use domain\number;
+use domain\number2event;
 
 class controller_number_Test extends PHPUnit_Framework_TestCase{
 
@@ -42,7 +43,6 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $response = $this->controller->accruals($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
-
 
   public function test_add_event(){
     $number = new number();
@@ -101,6 +101,37 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                              ])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->default_page($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_exclude_event(){
+    $number = new number();
+    $n2e = new number2event();
+    $n2e->set_number($number);
+    $this->request->query->set('id', 125);
+    $this->request->query->set('event', 253);
+    $this->request->query->set('date', 1397562800);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByIndex'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex')
+               ->with(1397562800, 125, 253)
+               ->will($this->returnValue([$n2e]));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\number2event')
+                    ->will($this->returnValue($repository));
+    $this->app['em']->expects($this->once())
+                    ->method('remove');
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('number\get_number_content.tpl', ['number' => $number])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->exclude_event($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -344,6 +375,30 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                       ->with('number\get_events.tpl', ['workgroup' => 'workgroup_object'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->get_events( $this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_dialog_exclude_event(){
+    $this->request->query->set('id', 125);
+    $this->request->query->set('event_id', 253);
+    $this->request->query->set('time', 1397562800);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByIndex'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex')
+               ->with(1397562800, 125, 253)
+               ->will($this->returnValue(['event']));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\number2event')
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('number\get_dialog_exclude_event.tpl', ['n2e' => 'event'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_exclude_event($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
