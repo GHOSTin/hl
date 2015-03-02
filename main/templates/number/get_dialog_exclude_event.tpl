@@ -21,7 +21,7 @@
     <h3>Исключение события</h3>
   </div>
   <div class="modal-body">
-  Исключить событие {{ n2e.get_name() }}?
+  Исключить событие <strong>"{{ n2e.get_name() }}"</strong>?
   </div>
   <div class="modal-footer">
     <div class="btn btn-primary exclude_event ">Исключить</div>
