@@ -93,7 +93,6 @@ class number{
     $this->events->add($event);
   }
 
-
   public function exclude_event(number2event $event){
     $this->events->removeElement($event);
   }
