@@ -65,7 +65,6 @@ window.userList = {
                 pane += '</div>';
                 pane += '<form class="panel-footer message" data-user-id="' + user.id + '"><div class="form-group">';
                 pane += '<textarea name="message" placeholder="Сообщение" class="form-control"></textarea></div>';
-//                pane += '<a class="attach pull-right" href="#">Прикрепить</a>';
                 pane += '<button class="btn btn-primary" type="submit">Отправить</button>';
                 pane += '<ul class="attachments nav nav-tabs nav-stacked"></ul>';
                 pane += '<input type="file" id="lefile" style="display:none;">';

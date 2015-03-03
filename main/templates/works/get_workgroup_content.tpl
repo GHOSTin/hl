@@ -13,7 +13,7 @@
   <h3>Работы</h3>
   <ul class="works">
   {% for work in workgroup.get_works() %}
-    <li class="work" work_id="{{ work.get_id() }}">{{ work.get_name() }} <a href="#" class="get_dialog_exclude_work">исключить</a></li>
+    <li class="work" work_id="{{ work.get_id() }}">{{ work.get_name() }} <a class="get_dialog_exclude_work">исключить</a></li>
   {% endfor %}
   </ul>
   <h3>События</h3>

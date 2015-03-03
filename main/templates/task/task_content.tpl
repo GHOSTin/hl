@@ -9,7 +9,7 @@
   <nav class="navbar navbar-default navbar-static-top" role="navigation">
     <div class="container-fluid">
       <div class="navbar-header col-sm-12 col-lg-7">
-        <a href="#" class="btn btn-default navbar-btn pull-left visible-xs"
+        <a class="btn btn-default navbar-btn pull-left visible-xs"
            style="margin: 10px 0 0 10px!important;">
           <i class="glyphicon glyphicon-chevron-left"></i>
         </a>
