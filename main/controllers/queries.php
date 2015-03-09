@@ -85,7 +85,6 @@ class queries{
     $query->set_contact_cellphone($request->get('cellphone'));
     $query->set_description(implode('', $matches[0]));
     $query->set_initiator($request->get('initiator'));
-    $query->set_open_status();
     $query->set_payment_status('unpaid');
     $query->set_warning_status('normal');
     $query->set_time_open($time[0]);
