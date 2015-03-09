@@ -71,11 +71,7 @@ class queries{
     $query = $app['em']->find('\domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    if(!in_array($query->get_status(), ['working', 'open'], true))
-      throw new RuntimeException('Заявка не может быть закрыта.');
-    $query->set_status('close');
-    $query->set_close_reason(implode('', $matches[0]));
-    $query->set_time_close(time());
+    $query->close(time(), implode('', $matches[0]));
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
@@ -89,7 +85,7 @@ class queries{
     $query->set_contact_cellphone($request->get('cellphone'));
     $query->set_description(implode('', $matches[0]));
     $query->set_initiator($request->get('initiator'));
-    $query->set_status('open');
+    $query->set_open_status();
     $query->set_payment_status('unpaid');
     $query->set_warning_status('normal');
     $query->set_time_open($time[0]);
@@ -388,9 +384,7 @@ class queries{
     $query = $app['em']->find('\domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    if($query->get_status() !== 'reopen')
-      throw new RuntimeException();
-    $query->set_status('close');
+    $query->reclose();
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
@@ -399,9 +393,7 @@ class queries{
     $query = $app['em']->find('\domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    if($query->get_status() !== 'close')
-      throw new RuntimeException();
-    $query->set_status('reopen');
+    $query->reopen();
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
@@ -469,10 +461,7 @@ class queries{
     $query = $app['em']->find('\domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    if($query->get_status() !== 'open')
-      throw new RuntimeException();
-    $query->set_status('working');
-    $query->set_time_work(time());
+    $query->to_work(time());
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }

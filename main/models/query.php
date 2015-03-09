@@ -1,6 +1,7 @@
 <?php namespace main\models;
 
 use Silex\Application;
+use domain\query as query_object;
 
 class query{
 
@@ -97,10 +98,10 @@ class query{
 	}
 
 	public function set_status($status){
-		if(in_array($status, self::$statuses, true)){
+		if(in_array($status, query_object::$status_list, true)){
 			$_SESSION['query']['status'] = [$status];
 		}else{
-			$_SESSION['query']['status'] = self::$statuses;
+			$_SESSION['query']['status'] = query_object::$status_list;
 		}
 	}
 

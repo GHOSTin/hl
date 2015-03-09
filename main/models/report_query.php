@@ -1,6 +1,7 @@
 <?php namespace main\models;
 
 use Silex\Application;
+use domain\query_object;
 
 class report_query{
 
@@ -31,10 +32,10 @@ class report_query{
   }
 
   public function set_status($status){
-    if(in_array($status, ['open', 'close', 'reopen', 'working'], true))
+    if(in_array($status, query_object::$status_list, true))
       $_SESSION['report_query']['status'] = [$status];
     else
-      $_SESSION['report_query']['status'] = ['open', 'close', 'reopen', 'working'];
+      $_SESSION['report_query']['status'] = query_object::$status_list;
   }
 
   public function set_worktype($workgroup_id){

@@ -158,6 +158,14 @@ class query{
 		$this->works->add($work);
 	}
 
+  public function close($time, $reason){
+    if(!in_array($this->status, ['working', 'open'], true))
+      throw new DomainException('Заявка не может быть закрыта.');
+    $this->status = 'close';
+    $this->set_time_close($time);
+    $this->set_close_reason($reason);
+  }
+
 	public function remove_work(\domain\work $w){
 		if(!empty($this->works))
 			foreach($this->works as $work)
@@ -166,6 +174,25 @@ class query{
 					return $work;
 				}
 	}
+
+  public function reclose(){
+    if($this->status !== 'reopen')
+      throw new DomainException();
+    $this->status = 'close';
+  }
+
+  public function reopen(){
+    if($this->status !== 'close')
+      throw new DomainException();
+    $this->status = 'reopen';
+  }
+
+  public function to_work($time){
+    if($this->status !== 'open')
+      throw new DomainException();
+    $this->status = 'working';
+    $this->set_time_work($time);
+  }
 
 	public function add_work_type(\domain\workgroup $wt){
 		$this->work_type = $wt;
@@ -329,6 +356,10 @@ class query{
 		$this->house = $house;
 	}
 
+  public function set_close_status(){
+    $this->status = 'close';
+  }
+
 	public function set_contact_cellphone($cellphone){
 		$this->contact_cellphone = $cellphone;
 	}
@@ -347,25 +378,25 @@ class query{
 		$this->description = $description;
 	}
 
+  public function set_open_status(){
+    $this->status = 'open';
+  }
+
 	public function set_payment_status($status){
 		if(!in_array($status, self::$payment_status_list, true))
       throw new DomainException('Статус оплаты заявки задан не верно.');
 		$this->payment_status = (string) $status;
 	}
 
-	public function set_status($status){
-		if(!in_array($status, self::$status_list, true))
-      throw new DomainException('Статус заявки задан не верно.');
-		$this->status = $status;
-	}
+  public function set_reopen_status(){
+    $this->status = 'reopen';
+  }
 
-	public function set_time_close($time){
-		if(!in_array($this->status, ['open', 'working'], true)){
-			if( $time < $this->time_open)
-				throw new DomainException('Время закрытия заявки не может быть меньше времени открытия.');
-			if($time < $this->time_work)
-				throw new DomainException('Время закрытия заявки не может быть меньше времени передачи в работу.');
-		}
+	private function set_time_close($time){
+		if($time < $this->time_open)
+			throw new DomainException('Время закрытия заявки не может быть меньше времени открытия.');
+		if($time < $this->time_work)
+			throw new DomainException('Время закрытия заявки не может быть меньше времени передачи в работу.');
 		$this->time_close = $time;
 	}
 
@@ -380,4 +411,8 @@ class query{
       throw new DomainException('Статус ворнинга заявки задан не верно.');
 		$this->warning_status = (string) $status;
 	}
+
+  public function set_work_status(){
+    $this->status = 'working';
+  }
 }
