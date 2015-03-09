@@ -134,6 +134,7 @@ class query{
   public function __construct(){
     $this->numbers = new ArrayCollection();
     $this->comments = new ArrayCollection();
+    $this->status = 'open';
   }
 
 	public function add_number(\domain\number $number){
@@ -356,10 +357,6 @@ class query{
 		$this->house = $house;
 	}
 
-  public function set_close_status(){
-    $this->status = 'close';
-  }
-
 	public function set_contact_cellphone($cellphone){
 		$this->contact_cellphone = $cellphone;
 	}
@@ -378,19 +375,11 @@ class query{
 		$this->description = $description;
 	}
 
-  public function set_open_status(){
-    $this->status = 'open';
-  }
-
 	public function set_payment_status($status){
 		if(!in_array($status, self::$payment_status_list, true))
       throw new DomainException('Статус оплаты заявки задан не верно.');
 		$this->payment_status = (string) $status;
 	}
-
-  public function set_reopen_status(){
-    $this->status = 'reopen';
-  }
 
 	private function set_time_close($time){
 		if($time < $this->time_open)
@@ -411,8 +400,4 @@ class query{
       throw new DomainException('Статус ворнинга заявки задан не верно.');
 		$this->warning_status = (string) $status;
 	}
-
-  public function set_work_status(){
-    $this->status = 'working';
-  }
 }
