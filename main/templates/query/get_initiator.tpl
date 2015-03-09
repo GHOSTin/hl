@@ -40,14 +40,22 @@
           {% endfor %}
         </ul>
       {% endif %}
+      {% if initiator == 'number' and number.get_events() is not empty %}
+        <h5>Последние события</h5>
+        <ul class="list-unstyled">
+        {% for event in number.get_events()|slice(0,5) %}
+          <li><strong>{{ event.get_time()|date("d.m.Y") }}</strong> {{ event.get_name() }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
     <h5>Информация об инициаторе заявке</h5>
 		{% if initiator == 'number' %}
         <div>
   				<ul>
   					<li>л/с №{{ number.get_number() }}</li>
   					<li>Владелец: {{ number.get_fio() }}</li>
-  					<li>Телефон: {{ number.get_telephone() }}</li>
-  					<li>Сотовый: {{ number.get_cellphone() }}</li>
+  					{% if number.get_telephone() %}<li>Телефон: {{ number.get_telephone() }}</li>{% endif %}
+  					{% if number.get_cellphone() %}<li>Сотовый: {{ number.get_cellphone() }}</li>{% endif %}
   				</ul>
         </div>
 		{% else %}
