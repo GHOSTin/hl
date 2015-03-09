@@ -1,18 +1,17 @@
 <?php namespace main;
 
-use \Doctrine\ORM\Tools\Setup;
-use \Doctrine\ORM\EntityManager;
-use \Silex\Application;
-use \Silex\Provider\TwigServiceProvider;
-use \Silex\Provider\SwiftmailerServiceProvider;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use config\general as conf;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
+use Silex\Application;
+use Silex\Provider\TwigServiceProvider;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Twig_SimpleFilter;
+use config\general as conf;
 
 $DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'main'))).$DS;
-require_once($root."vendor/autoload.php");
+require_once($root."vendor".$DS."autoload.php");
 
 date_default_timezone_set(conf::php_timezone);
 
@@ -32,7 +31,12 @@ $app['salt'] = conf::authSalt;
 $app['chat_host'] = conf::chat_host;
 $app['chat_port'] = conf::chat_port;
 
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
+$config = new Configuration();
+$driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
+$config->setMetadataDriverImpl($driver);
+$config->setProxyDir($root.$DS.'cache'.$DS.'proxy');
+$config->setProxyNamespace('proxies');
+
 $app['em'] = EntityManager::create($dbParams, $config);
 
 $app['\main\models\number'] = function($app){

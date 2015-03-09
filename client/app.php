@@ -1,6 +1,6 @@
 <?php namespace client;
 
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
@@ -33,7 +33,12 @@ $app['number'] = null;
 $app['email_for_reply'] = conf::email_for_reply;
 $app['email_for_registration'] = conf::email_for_registration;
 
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
+$config = new Configuration();
+$driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
+$config->setMetadataDriverImpl($driver);
+$config->setProxyDir($root.$DS.'cache'.$DS.'proxy');
+$config->setProxyNamespace('proxies');
+
 $app['em'] = EntityManager::create($dbParams, $config);
 
 if($app['debug']){
