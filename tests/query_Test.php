@@ -1,9 +1,9 @@
 <?php
 
-use \domain\query2comment;
-use \domain\query;
-use \domain\department;
-use \domain\house;
+use domain\query2comment;
+use domain\query;
+use domain\department;
+use domain\house;
 
 class query_Test extends PHPUnit_Framework_TestCase{
 
@@ -54,22 +54,6 @@ class query_Test extends PHPUnit_Framework_TestCase{
   public function test_set_time_open_3(){
     $this->setExpectedException('DomainException');
     $this->query->set_time_open(-123);
-  }
-
-  public function test_set_status_1(){
-    $this->setExpectedException('DomainException');
-    $this->query->set_status('wrong');
-  }
-
-  public function test_set_status_2(){
-    $this->query->set_status('open');
-    $this->assertEquals('open', $this->query->get_status());
-    $this->query->set_status('close');
-    $this->assertEquals('close', $this->query->get_status());
-    $this->query->set_status('working');
-    $this->assertEquals('working', $this->query->get_status());
-    $this->query->set_status('reopen');
-    $this->assertEquals('reopen', $this->query->get_status());
   }
 
   public function test_set_warning_status_1(){
@@ -140,5 +124,76 @@ class query_Test extends PHPUnit_Framework_TestCase{
   public function test_set_initiator_3(){
     $this->setExpectedException('DomainException');
     $this->query->set_initiator('wrong');
+  }
+
+  public function test_close_query_1(){
+    $this->setExpectedException('DomainException');
+    $this->query->set_reopen_status();
+    $this->query->close(1397562800, 'Причина закрытия');
+  }
+
+  public function test_close_query_2(){
+    $this->query->set_open_status();
+    $this->query->close(1397562800, 'Причина закрытия');
+    $this->assertEquals(1397562800, $this->query->get_time_close());
+    $this->assertEquals('Причина закрытия', $this->query->get_close_reason());
+    $this->assertEquals('close', $this->query->get_status());
+  }
+
+  public function test_reclose_1(){
+    $this->setExpectedException('DomainException');
+    $this->query->set_open_status();
+    $this->query->reclose();
+  }
+
+  public function test_reclose_2(){
+    $this->query->set_reopen_status();
+    $this->query->reclose();
+    $this->assertEquals('close', $this->query->get_status());
+  }
+
+  public function test_reopen_1(){
+    $this->setExpectedException('DomainException');
+    $this->query->set_open_status();
+    $this->query->reopen();
+  }
+
+  public function test_reopen_2(){
+    $this->query->set_close_status();
+    $this->query->reopen();
+    $this->assertEquals('reopen', $this->query->get_status());
+  }
+
+  public function test_set_close_status(){
+    $this->query->set_close_status();
+    $this->assertEquals('close', $this->query->get_status());
+  }
+
+  public function test_set_open_status(){
+    $this->query->set_open_status();
+    $this->assertEquals('open', $this->query->get_status());
+  }
+
+  public function test_set_reopen_status(){
+    $this->query->set_reopen_status();
+    $this->assertEquals('reopen', $this->query->get_status());
+  }
+
+  public function test_set_work_status(){
+    $this->query->set_work_status();
+    $this->assertEquals('working', $this->query->get_status());
+  }
+
+  public function test_to_work_query_1(){
+    $this->setExpectedException('DomainException');
+    $this->query->set_close_status();
+    $this->query->to_work(1397562800);
+  }
+
+  public function test_to_work_query_2(){
+    $this->query->set_open_status();
+    $this->query->to_work(1397562800);
+    $this->assertEquals(1397562800, $this->query->get_time_work());
+    $this->assertEquals('working', $this->query->get_status());
   }
 }

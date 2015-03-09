@@ -1,9 +1,9 @@
 <?php
 
-use \Silex\Application;
-use \Symfony\Component\HttpFoundation\Request;
-use \main\controllers\queries as controller;
-use \domain\user;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use main\controllers\queries as controller;
+use domain\user;
 
 class controller_query_Test extends PHPUnit_Framework_TestCase{
 
@@ -59,63 +59,45 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_clear_filters(){
+    $model = $this->getMockBuilder('main\models\query')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('init_default_params');
+    $model->expects($this->once())
+          ->method('get_queries');
+    $model->expects($this->once())
+          ->method('get_timeline');
+    $this->app['\main\models\query'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\clear_filters.tpl', $this->anything())
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->clear_filters($this->app);
+    $this->assertEquals('render_template', $response);
+  }
 
   public function test_close_query_1(){
     $this->setExpectedException('RuntimeException');
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue(null));
     $this->controller->close_query($this->request, $this->app);
   }
 
   public function test_close_query_2(){
-    $this->setExpectedException('RuntimeException');
-    $this->request->query->set('id', 125);
-    $query = $this->getMock('\domain\query');
-    $query->expects($this->once())
-          ->method('get_status')
-          ->will($this->returnValue('close'));
-    $this->app['em']->expects($this->once())
-                    ->method('find')
-                    ->with('\domain\query', 125)
-                    ->will($this->returnValue($query));
-    $this->controller->close_query($this->request, $this->app);
-  }
-
-  public function test_close_query_3(){
-    $this->setExpectedException('RuntimeException');
-    $this->request->query->set('id', 125);
-    $query = $this->getMock('\domain\query');
-    $query->expects($this->once())
-          ->method('get_status')
-          ->will($this->returnValue('reopen'));
-    $this->app['em']->expects($this->once())
-                    ->method('find')
-                    ->with('\domain\query', 125)
-                    ->will($this->returnValue($query));
-    $this->controller->close_query($this->request, $this->app);
-  }
-
-  public function test_close_query_4(){
     $this->request->query->set('id', 125);
     $this->request->query->set('reason', 'Привет');
     $query = $this->getMock('\domain\query');
     $query->expects($this->once())
-          ->method('get_status')
-          ->will($this->returnValue('open'));
-    $query->expects($this->once())
-          ->method('set_status')
-          ->with('close');
-    $query->expects($this->once())
-          ->method('set_close_reason')
-          ->with('Привет');
-    $query->expects($this->once())
-          ->method('set_time_close');
+          ->method('close')
+          ->with($this->anything(), 'Привет');
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue($query));
     $this->app['em']->expects($this->once())
                     ->method('flush');
@@ -256,25 +238,6 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_clear_filters(){
-    $model = $this->getMockBuilder('main\models\query')
-                  ->disableOriginalConstructor()
-                  ->getMock();
-    $model->expects($this->once())
-          ->method('init_default_params');
-    $model->expects($this->once())
-          ->method('get_queries');
-    $model->expects($this->once())
-          ->method('get_timeline');
-    $this->app['\main\models\query'] = $model;
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('query\clear_filters.tpl', $this->anything())
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->clear_filters($this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
   public function test_get_houses(){
     $this->request->query->set('id', 125);
     $model = $this->getMockBuilder('main\models\query')
@@ -325,6 +288,93 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->with('query\get_timeline.tpl', $this->anything())
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->get_timeline($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_reclose_query_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue(null));
+    $this->controller->reclose_query($this->request, $this->app);
+  }
+
+  public function test_reclose_query_2(){
+    $this->request->query->set('id', 125);
+    $query = $this->getMock('\domain\query');
+    $query->expects($this->once())
+          ->method('reclose');
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue($query));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_query_content.tpl', ['query' => $query])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->reclose_query($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_reopen_query_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue(null));
+    $this->controller->reopen_query($this->request, $this->app);
+  }
+
+  public function test_reopen_query_2(){
+    $this->request->query->set('id', 125);
+    $query = $this->getMock('\domain\query');
+    $query->expects($this->once())
+          ->method('reopen');
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue($query));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_query_content.tpl', ['query' => $query])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->reopen_query($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_to_working_query_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue(null));
+    $this->controller->to_working_query($this->request, $this->app);
+  }
+
+  public function test_to_working_query_2(){
+    $this->request->query->set('id', 125);
+    $query = $this->getMock('\domain\query');
+    $query->expects($this->once())
+          ->method('to_work');
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue($query));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_query_content.tpl', ['query' => $query])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->to_working_query($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 }
