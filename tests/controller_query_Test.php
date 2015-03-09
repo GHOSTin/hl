@@ -1,9 +1,9 @@
 <?php
 
-use \Silex\Application;
-use \Symfony\Component\HttpFoundation\Request;
-use \main\controllers\queries as controller;
-use \domain\user;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
+use main\controllers\queries as controller;
+use domain\user;
 
 class controller_query_Test extends PHPUnit_Framework_TestCase{
 
@@ -83,7 +83,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue(null));
     $this->controller->close_query($this->request, $this->app);
   }
@@ -97,7 +97,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->with($this->anything(), 'Привет');
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue($query));
     $this->app['em']->expects($this->once())
                     ->method('flush');
@@ -296,7 +296,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue(null));
     $this->controller->reclose_query($this->request, $this->app);
   }
@@ -308,7 +308,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('reclose');
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue($query));
     $this->app['em']->expects($this->once())
                     ->method('flush');
@@ -325,7 +325,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue(null));
     $this->controller->reopen_query($this->request, $this->app);
   }
@@ -337,7 +337,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('reopen');
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue($query));
     $this->app['em']->expects($this->once())
                     ->method('flush');
@@ -354,7 +354,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue(null));
     $this->controller->to_working_query($this->request, $this->app);
   }
@@ -366,7 +366,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('to_work');
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\query', 125)
+                    ->with('domain\query', 125)
                     ->will($this->returnValue($query));
     $this->app['em']->expects($this->once())
                     ->method('flush');

@@ -68,7 +68,7 @@ class queries{
 
   public function close_query(Request $request, Application $app){
     preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->get('reason'), $matches);
-    $query = $app['em']->find('\domain\query', $request->get('id'));
+    $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
     $query->close(time(), implode('', $matches[0]));
@@ -381,7 +381,7 @@ class queries{
   }
 
   public function reclose_query(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
+    $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
     $query->reclose();
@@ -390,7 +390,7 @@ class queries{
   }
 
   public function reopen_query(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
+    $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
     $query->reopen();
@@ -458,7 +458,7 @@ class queries{
   }
 
   public function to_working_query(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
+    $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
     $query->to_work(time());

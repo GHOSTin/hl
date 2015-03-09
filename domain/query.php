@@ -11,23 +11,23 @@ class query{
 
 	/**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(type="integer")
   * @GeneratedValue
   */
 	private $id;
 
 	/**
-  * @Column(name="status", type="string")
+  * @Column(type="string")
   */
 	private $status;
 
 	/**
-  * @Column(name="initiator", type="string")
+  * @Column(type="string")
   */
 	private $initiator;
 
 	/**
-  * @Column(name="payment_status", type="string")
+  * @Column(type="string")
   */
 	private $payment_status;
 
@@ -83,7 +83,7 @@ class query{
 	private $contact_cellphone;
 
 	/**
-  * @Column(name="description", type="string")
+  * @Column(type="string")
   */
 	private $description;
 

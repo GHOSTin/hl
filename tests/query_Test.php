@@ -1,9 +1,9 @@
 <?php
 
-use \domain\query2comment;
-use \domain\query;
-use \domain\department;
-use \domain\house;
+use domain\query2comment;
+use domain\query;
+use domain\department;
+use domain\house;
 
 class query_Test extends PHPUnit_Framework_TestCase{
 
