@@ -7,6 +7,7 @@ use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use domain\metrics;
 use Swift_Message;
 use config\general as conf;
@@ -59,9 +60,10 @@ $app['domain\metrics'] = $app->factory(function($app){
 });
 
 $app->before(function (Request $request, Application $app) {
-  session_start();
-  if(isset($_SESSION['number'])){
-    $app['number'] = $app['em']->find('\domain\number', $_SESSION['number']);
+  $app['session'] = new Session();
+  $app['session']->start();
+  if($app['session']->get('number')){
+    $app['number'] = $app['em']->find('\domain\number', $app['session']->get('number'));
   }
 }, Application::EARLY_EVENT);
 

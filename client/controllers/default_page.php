@@ -3,7 +3,7 @@
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \domain\number;
+use domain\number;
 use Swift_Message;
 
 class default_page{
@@ -18,21 +18,19 @@ class default_page{
   public function login(Request $request, Application $app){
     $login = $request->get('login');
     $password = $request->get('password');
-    if(!is_null($login) AND !is_null($password)){
-      $number = $app['em']->getRepository('\domain\number')->findOneByNumber($login);
-      if(!is_null($number)){
-        $hash = number::generate_hash($password, $app['salt']);
-        if($number->get_hash() === $hash){
-          $_SESSION['number'] = $number->get_id();
-          return new RedirectResponse('/');
-        }
+    $number = $app['em']->getRepository('domain\number')->findOneByNumber($login);
+    if(!is_null($number)){
+      $hash = number::generate_hash($password, $app['salt']);
+      if($number->get_hash() === $hash){
+        $app['session']->set('number', $number->get_id());
+        return new RedirectResponse('/');
       }
     }
     return $app['twig']->render('enter.tpl', ['number' => $app['number']]);
   }
 
   public function logout(Application $app){
-    session_destroy();
+    $app['session']->invalidate();
     return new RedirectResponse('/');
   }
 
