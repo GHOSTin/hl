@@ -48,10 +48,7 @@ class works{
     $work = $app['em']->getRepository('\domain\work')->findOneByName($name);
     if(!is_null($work))
       throw new RuntimeException('Такая группа существует.');
-    $work = new work();
-    $work->set_name($name);
-    $work->set_status('active');
-    $app['em']->persist($work);
+    $app['em']->persist(work::new_instance($name));
     $app['em']->flush();
     $works = $app['em']->getRepository('\domain\work')->findAll();
     return $app['twig']->render('works\works.tpl', ['works' => $works]);
@@ -62,11 +59,8 @@ class works{
     $workgroup = $app['em']->getRepository('\domain\workgroup')
                            ->findOneByName($name);
     if(!is_null($workgroup))
-      throw new \RuntimeException('Такая группа существует.');
-    $workgroup = new workgroup();
-    $workgroup->set_name($name);
-    $workgroup->set_status('active');
-    $app['em']->persist($workgroup);
+      throw new RuntimeException('Такая группа существует.');
+    $app['em']->persist(workgroup::new_instance($name));
     $app['em']->flush();
     $workgroups = $app['em']->getRepository('\domain\workgroup')->findAll();
     return $app['twig']->render('works\workgroups.tpl', ['workgroups' => $workgroups]);
