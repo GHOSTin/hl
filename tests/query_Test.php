@@ -24,6 +24,10 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $this->query->add_comment($comment);
   }
 
+  public function test_get_status(){
+    $this->assertEquals('open', $this->query->get_status());
+  }
+
   public function test_set_department(){
     $department = new department();
     $this->query->set_department($department);

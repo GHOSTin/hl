@@ -11,7 +11,7 @@ class workgroup{
 
   /**
    * @Id
-   * @Column(name="id", type="integer")
+   * @Column(type="integer")
    * @GeneratedValue
    */
   private $id;
@@ -22,7 +22,7 @@ class workgroup{
   private $name;
 
   /**
-  * @Column(name="status", type="string")
+  * @Column(type="string")
   */
 	private $status;
 
@@ -47,12 +47,10 @@ class workgroup{
   */
   private $queries;
 
-  public static $statuses = ['active', 'deactive'];
-
-
   public function __construct(){
     $this->works = new ArrayCollection();
     $this->events = new ArrayCollection();
+    $this->status = 'active';
   }
 
   public function add_work(work $work){
@@ -91,23 +89,15 @@ class workgroup{
     return $this->name;
   }
 
-  public function get_status(){
-    return $this->status;
-  }
-
-  public function set_id($id){
-    if($id > 65535 OR $id < 1)
-      throw new DomainException('Идентификатор группы работ задан не верно.');
-    $this->id = (int) $id;
+  public static function new_instance($name){
+    $workgroup = new workgroup();
+    $workgroup->set_name($name);
+    return $workgroup;
   }
 
   public function set_name($name){
-    $this->name = (string) $name;
-  }
-
-  public function set_status($status){
-    if(!in_array($status, self::$statuses, true))
-      throw new DomainException('Статус группы работ задан не верно.');
-    $this->status = (string) $status;
+    if(!preg_match('/^[а-яА-Я -]{1,255}$/u', $name))
+      throw new DomainException('Wrong work name'.$name);
+    $this->name = $name;
   }
 }
