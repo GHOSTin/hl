@@ -54,6 +54,7 @@
   				<ul>
   					<li>л/с №{{ number.get_number() }}</li>
   					<li>Владелец: {{ number.get_fio() }}</li>
+            <li>Задолженость: {{ number.get_debt() }} руб.</li>
   					{% if number.get_telephone() %}<li>Телефон: {{ number.get_telephone() }}</li>{% endif %}
   					{% if number.get_cellphone() %}<li>Сотовый: {{ number.get_cellphone() }}</li>{% endif %}
   				</ul>
