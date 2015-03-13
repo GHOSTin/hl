@@ -20,5 +20,22 @@ $(function(){
     }
   });
 
+  var debt_view = Backbone.View.extend({
+    el: $('ul.menu'),
+
+    events: {
+      'click a#import_debt': 'import_debt'
+    },
+
+    initialize: function () {
+      this.import_debt_form = $('#import_debt_form').html();
+    },
+
+    import_debt: function(){
+      $('.import').html(this.import_debt_form);
+    }
+  });
+
   var view = new view();
+  var debt = new debt_view();
 });

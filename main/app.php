@@ -300,6 +300,7 @@ $app->get('/task/close_task', 'main\controllers\task::close_task')->before($secu
 # import
 $app->get('/import/', 'main\controllers\import::default_page')->before($security);
 $app->post('/import/load_accruals/', 'main\controllers\import::load_accruals')->before($security);
+$app->post('/import/load_debt/', 'main\controllers\import::load_debt')->before($security);
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
