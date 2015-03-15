@@ -1,11 +1,10 @@
 <?php namespace domain\repositories;
 
-use \Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\EntityRepository;
 
 class query extends EntityRepository{
 
   public function findByParams(array $params){
-
     $qb = $this->_em->createQueryBuilder();
     $qb->select('q')
        ->from('\domain\query', 'q')
@@ -16,7 +15,7 @@ class query extends EntityRepository{
         ))
        ->orderBy('q.time_open', 'DESC')
        ->setParameters(array(
-          'time_open_begin'=> $params['time_begin'],
+          'time_open_begin' => $params['time_begin'],
           'time_open_end' => $params['time_end'],
           'status' => $params['status']
        ));

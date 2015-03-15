@@ -48,6 +48,9 @@ $app['\main\models\query'] = function($app){
 $app['main\models\report_query'] = function($app){
   return new \main\models\report_query($app);
 };
+$app['main\models\report_event'] = function($app){
+  return new \main\models\report_event($app);
+};
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
@@ -283,6 +286,11 @@ $app->get('/report/set_filter_query_street', 'main\controllers\reports::set_filt
 $app->get('/report/set_filter_query_house', 'main\controllers\reports::set_filter_query_house')->before($security);
 $app->get('/report/report_query_one', 'main\controllers\reports::report_query_one')->before($security);
 $app->get('/report/report_query_one_xls', 'main\controllers\reports::report_query_one_xls')->before($security);
+$app->get('/report/get_event_reports', 'main\controllers\report_event::get_event_reports')->before($security);
+$app->get('/report/event/set_time_begin', 'main\controllers\report_event::set_time_begin')->before($security);
+$app->get('/report/event/set_time_end', 'main\controllers\report_event::set_time_end')->before($security);
+$app->get('/report/event/html/', 'main\controllers\report_event::html')->before($security);
+$app->get('/report/event/clear/', 'main\controllers\report_event::clear')->before($security);
 
 # tasks
 $app->get('/task/', 'main\controllers\task::default_page')->before($security);

@@ -5,5 +5,10 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+    }).on('click', '.get_event_reports', function(){
+        $.get('get_event_reports',{
+            },function(r){
+                init_content(r);
+            });
     });
 });
