@@ -9,6 +9,16 @@ class number_Test extends PHPUnit_Framework_TestCase{
     $this->number = new number();
   }
 
+  public function test_set_debt_1(){
+    $this->number->set_debt('125,12');
+    $this->assertEquals('125.12', $this->number->get_debt());
+  }
+
+  public function test_set_debt_2(){
+    $this->number->set_debt('125.12');
+    $this->assertEquals('125.12', $this->number->get_debt());
+  }
+
   public function test_set_id_1(){
     $this->number->set_id(125);
     $this->assertEquals(125, $this->number->get_id());

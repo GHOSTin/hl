@@ -180,7 +180,7 @@ class number{
   }
 
   public function set_debt($value){
-    $this->debt = $value;
+    $this->debt = (float) str_replace(',', '.', $value);
   }
 
   public function set_email_notification_rule($status){
