@@ -19,27 +19,5 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$query = "ALTER TABLE numbers ADD notification_rules VARCHAR(255) NOT NULL DEFAULT '{}'";
-$pdo->exec($query);
-
-$query = "CREATE TABLE IF NOT EXISTS events(
-            id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-            name varchar(255) NOT NULL,
-            PRIMARY KEY (id)
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-$pdo->exec($query);
-
-$query = "CREATE TABLE IF NOT EXISTS workgroup2event(
-            workgroup_id INT UNSIGNED NOT NULL,
-            event_id INT UNSIGNED NOT NULL,
-            UNIQUE KEY (workgroup_id, event_id)
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
-$pdo->exec($query);
-
-$query = "CREATE TABLE IF NOT EXISTS number2event(
-            time INT UNSIGNED NOT NULL,
-            number_id INT UNSIGNED NOT NULL,
-            event_id INT UNSIGNED NOT NULL,
-            UNIQUE KEY (time, number_id, event_id)
-          ) ENGINE=InnoDB DEFAULT CHARSET=utf8";
+$query = "ALTER TABLE numbers ADD debt DECIMAL(12,2) UNSIGNED NOT NULL DEFAULT 0";
 $pdo->exec($query);

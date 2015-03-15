@@ -7,6 +7,9 @@
       <li>
         <a id="import_accruals">Импорт начислений</a>
       </li>
+      <li>
+        <a id="import_debt">Импорт задолжености</a>
+      </li>
     </ul>
 	</div>
   <div class="col-md-10 import">
@@ -29,6 +32,15 @@
     <div class="form-group">
       <label>Файл</label>
       <input type="file" class="form-control" name="accruals" required>
+    </div>
+    <button type="submit" class="btn btn-default">Залить</button>
+  </form>
+</script>
+<script id="import_debt_form" type="text/template">
+  <form action="/import/load_debt/" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Файл</label>
+      <input type="file" class="form-control" name="debt" required>
     </div>
     <button type="submit" class="btn btn-default">Залить</button>
   </form>

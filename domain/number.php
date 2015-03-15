@@ -20,6 +20,11 @@ class number{
   private $cellphone;
 
   /**
+  * @Column(type="decimal", precision=12, scale=2)
+  */
+  private $debt;
+
+  /**
   * @Column(type="string")
   */
   private $fio;
@@ -109,6 +114,10 @@ class number{
     return $this->cellphone;
   }
 
+  public function get_debt(){
+    return $this->debt;
+  }
+
   public function get_email(){
     return $this->email;
   }
@@ -168,6 +177,10 @@ class number{
 
   public function set_cellphone_notification_rule($status){
     $this->notification_rules['cellphone'] = ($status === 'on')? true: false;
+  }
+
+  public function set_debt($value){
+    $this->debt = (float) str_replace(',', '.', $value);
   }
 
   public function set_email_notification_rule($status){
