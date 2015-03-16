@@ -1,6 +1,8 @@
 <?php namespace domain\repositories;
 
-class number2event extends \Doctrine\ORM\EntityRepository {
+use Doctrine\ORM\EntityRepository;
+
+class number2event extends EntityRepository{
 
   public function findByIndex($time, $number_id, $event_id){
     $qb = $this->_em->createQueryBuilder();
@@ -16,5 +18,22 @@ class number2event extends \Doctrine\ORM\EntityRepository {
       ->setParameter('number_id', $number_id)
       ->setParameter('event_id', $event_id);
     return $qb->getQuery()->getResult();
+  }
+
+  public function findByParams(array $params){
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('n2e')
+       ->from('domain\number2event', 'n2e')
+       ->where($qb->expr()->andX(
+          $qb->expr()->gt('n2e.time', ':time_begin'),
+          $qb->expr()->lt('n2e.time', ':time_end')
+       ))
+       ->orderBy('n2e.time', 'DESC')
+       ->setParameters(array(
+          'time_begin' => $params['time_begin'],
+          'time_end' => $params['time_end']
+       ));
+    $query = $qb->getQuery();
+    return $query->getResult();
   }
 }

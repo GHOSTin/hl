@@ -1,9 +1,9 @@
 <?php
 
-use \domain\query2comment;
-use \domain\query;
-use \domain\department;
-use \domain\house;
+use domain\query2comment;
+use domain\query;
+use domain\department;
+use domain\house;
 
 class query_Test extends PHPUnit_Framework_TestCase{
 
@@ -22,6 +22,10 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $comment = new query2comment();
     $this->query->add_comment($comment);
     $this->query->add_comment($comment);
+  }
+
+  public function test_get_status(){
+    $this->assertEquals('open', $this->query->get_status());
   }
 
   public function test_set_department(){
@@ -54,22 +58,6 @@ class query_Test extends PHPUnit_Framework_TestCase{
   public function test_set_time_open_3(){
     $this->setExpectedException('DomainException');
     $this->query->set_time_open(-123);
-  }
-
-  public function test_set_status_1(){
-    $this->setExpectedException('DomainException');
-    $this->query->set_status('wrong');
-  }
-
-  public function test_set_status_2(){
-    $this->query->set_status('open');
-    $this->assertEquals('open', $this->query->get_status());
-    $this->query->set_status('close');
-    $this->assertEquals('close', $this->query->get_status());
-    $this->query->set_status('working');
-    $this->assertEquals('working', $this->query->get_status());
-    $this->query->set_status('reopen');
-    $this->assertEquals('reopen', $this->query->get_status());
   }
 
   public function test_set_warning_status_1(){
@@ -140,5 +128,143 @@ class query_Test extends PHPUnit_Framework_TestCase{
   public function test_set_initiator_3(){
     $this->setExpectedException('DomainException');
     $this->query->set_initiator('wrong');
+  }
+
+  public function test_close_query_1(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'reopen');
+    $this->query->close(1397562800, 'Причина закрытия');
+  }
+
+  public function test_close_query_2(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'close');
+    $this->query->close(1397562800, 'Причина закрытия');
+  }
+
+  public function test_close_query_3(){
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'open');
+    $this->query->close(1397562800, 'Причина закрытия');
+    $this->assertEquals(1397562800, $this->query->get_time_close());
+    $this->assertEquals('Причина закрытия', $this->query->get_close_reason());
+    $this->assertEquals('close', $this->query->get_status());
+  }
+
+  public function test_reclose_1(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'open');
+    $this->query->reclose();
+  }
+
+  public function test_reclose_2(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'close');
+    $this->query->reclose();
+  }
+
+  public function test_reclose_3(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'working');
+    $this->query->reclose();
+  }
+
+  public function test_reclose_4(){
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'reopen');
+    $this->query->reclose();
+    $this->assertEquals('close', $this->query->get_status());
+  }
+
+  public function test_reopen_1(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'open');
+    $this->query->reopen();
+  }
+
+  public function test_reopen_2(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'working');
+    $this->query->reopen();
+  }
+
+  public function test_reopen_3(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'reopen');
+    $this->query->reopen();
+  }
+
+  public function test_reopen_4(){
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'close');
+    $this->query->reopen();
+    $this->assertEquals('reopen', $this->query->get_status());
+  }
+
+  public function test_to_work_query_1(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'working');
+    $this->query->to_work(1397562800);
+  }
+
+  public function test_to_work_query_2(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'close');
+    $this->query->to_work(1397562800);
+  }
+
+  public function test_to_work_query_3(){
+    $this->setExpectedException('DomainException');
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'reopen');
+    $this->query->to_work(1397562800);
+  }
+
+  public function test_to_work_query_4(){
+    $reflection = new ReflectionClass('domain\query');
+    $status = $reflection->getProperty('status');
+    $status->setAccessible(true);
+    $status->setValue($this->query, 'open');
+    $this->query->to_work(1397562800);
+    $this->assertEquals(1397562800, $this->query->get_time_work());
+    $this->assertEquals('working', $this->query->get_status());
   }
 }

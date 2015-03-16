@@ -51,4 +51,16 @@ class import{
     fclose($hndl);
     return $app['twig']->render('import\load_accruals.tpl', ['numbers' => $no_numbers, 'user' => null]);
   }
+
+  public function load_debt(Request $request, Application $app){
+    set_time_limit(0);
+    $hndl = fopen($request->files->get('debt'), 'r');
+    while($row = fgetcsv($hndl, 0, ';')){
+      $number = $app['em']->getRepository('domain\number')->findOneByNumber($row[0]);
+      $number->set_debt($row[1]);
+    }
+    $app['em']->flush();
+    fclose($hndl);
+    return $app['twig']->render('import\load_debt.tpl', ['user' => $app['user']]);
+  }
 }

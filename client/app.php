@@ -1,12 +1,13 @@
 <?php namespace client;
 
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use domain\metrics;
 use Swift_Message;
 use config\general as conf;
@@ -33,7 +34,12 @@ $app['number'] = null;
 $app['email_for_reply'] = conf::email_for_reply;
 $app['email_for_registration'] = conf::email_for_registration;
 
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
+$config = new Configuration();
+$driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
+$config->setMetadataDriverImpl($driver);
+$config->setProxyDir($root.$DS.'cache'.$DS.'proxy');
+$config->setProxyNamespace('proxies');
+
 $app['em'] = EntityManager::create($dbParams, $config);
 
 if($app['debug']){
@@ -54,9 +60,10 @@ $app['domain\metrics'] = $app->factory(function($app){
 });
 
 $app->before(function (Request $request, Application $app) {
-  session_start();
-  if(isset($_SESSION['number'])){
-    $app['number'] = $app['em']->find('\domain\number', $_SESSION['number']);
+  $app['session'] = new Session();
+  $app['session']->start();
+  if($app['session']->get('number')){
+    $app['number'] = $app['em']->find('\domain\number', $app['session']->get('number'));
   }
 }, Application::EARLY_EVENT);
 

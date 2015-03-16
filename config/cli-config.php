@@ -1,22 +1,15 @@
 <?php
-use \Doctrine\ORM\Tools\Console\ConsoleRunner;
-use \Doctrine\ORM\Tools\Setup;
-use \Doctrine\ORM\EntityManager;
-use \Symfony\Component\Console\Application;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Configuration;
+use Symfony\Component\Console\Application;
 use config\general as conf;
 
-$root = substr(__DIR__, 0, (strlen(__DIR__) - strlen(DIRECTORY_SEPARATOR.'config'))).DIRECTORY_SEPARATOR;
-require_once($root."vendor/autoload.php");
+$DS = DIRECTORY_SEPARATOR;
 
-$paths = array(
-    $root.'domain/'
-);
-$isDevMode = (conf::status == 'development')? true: false;
-if ($isDevMode) {
-    $cache = new \Doctrine\Common\Cache\ArrayCache;
-} else {
-    $cache = new \Doctrine\Common\Cache\ArrayCache;
-}
+$root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'config'))).$DS;
+require_once($root."vendor".$DS."autoload.php");
+
 $dbParams = array(
     'driver'   => 'pdo_mysql',
     'host'     => conf::db_host,
@@ -25,12 +18,18 @@ $dbParams = array(
     'dbname'   => conf::db_name,
     'charset'  => 'utf8'
 );
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, 'cache/proxy/');
-$config->setMetadataCacheImpl($cache);
-$config->setQueryCacheImpl($cache);
+
+$config = new Configuration();
+$driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
+$config->setMetadataDriverImpl($driver);
+$config->setProxyDir($root.$DS.'cache'.$DS.'proxy');
+$config->setProxyNamespace('proxies');
+
 $em = EntityManager::create($dbParams, $config);
-$em->getConnection()->getDatabasePlatform()
-    ->registerDoctrineTypeMapping('enum', 'string');
+
+$em->getConnection()
+   ->getDatabasePlatform()
+   ->registerDoctrineTypeMapping('enum', 'string');
 
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(array(
     'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($em->getConnection()),

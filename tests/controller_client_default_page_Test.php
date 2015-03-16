@@ -3,6 +3,7 @@
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use client\controllers\default_page as controller;
+use domain\number;
 
 class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
 
@@ -38,6 +39,100 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->default_page($this->app);
     $this->assertEquals('render_template', $response);
+  }
+
+  public function test_login_1(){
+    $this->request->request->set('login', 'Nekrasov');
+    $this->app['number'] = null;
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByNumber'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneByNumber')
+               ->with('Nekrasov')
+               ->will($this->returnValue(null));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\number')
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('enter.tpl', ['number' => null])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->login($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_login_2(){
+    $this->request->request->set('login', 'Nekrasov');
+    $this->request->request->set('password', 'Aa12345678');
+    $this->app['number'] = null;
+    $this->app['salt'] = 'salt';
+    $number = $this->getMock('domain\number');
+    $number->expects($this->once())
+           ->method('get_hash')
+           ->will($this->returnValue('wrong_hash'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByNumber'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneByNumber')
+               ->with('Nekrasov')
+               ->will($this->returnValue($number));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\number')
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('enter.tpl', ['number' => null])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->login($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_login_3(){
+    $this->request->request->set('login', 'Nekrasov');
+    $this->request->request->set('password', 'Aa12345678');
+    $this->app['number'] = null;
+    $this->app['salt'] = 'salt';
+    $session = $this->getMock('Symfony\Component\HttpFoundation\Session\Session');
+    $session->expects($this->once())
+           ->method('set')
+           ->with('number', 125);
+    $this->app['session'] = $session;
+    $number = $this->getMock('domain\number');
+    $number->expects($this->once())
+           ->method('get_id')
+           ->will($this->returnValue(125));
+    $number->expects($this->once())
+           ->method('get_hash')
+           ->will($this->returnValue('98dd4ec57902af2c8c38918bad0ed0d7'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByNumber'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneByNumber')
+               ->with('Nekrasov')
+               ->will($this->returnValue($number));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\number')
+                    ->will($this->returnValue($repository));
+    $response = $this->controller->login($this->request, $this->app);
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
+  }
+
+  public function test_logout(){
+    $session = $this->getMock('Symfony\Component\HttpFoundation\Session\Session');
+    $session->expects($this->once())
+            ->method('invalidate');
+    $this->app['session'] = $session;
+    $response = $this->controller->logout($this->app);
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
   }
 
   public function test_recovery(){

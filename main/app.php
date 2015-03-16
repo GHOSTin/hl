@@ -1,18 +1,17 @@
 <?php namespace main;
 
-use \Doctrine\ORM\Tools\Setup;
-use \Doctrine\ORM\EntityManager;
-use \Silex\Application;
-use \Silex\Provider\TwigServiceProvider;
-use \Silex\Provider\SwiftmailerServiceProvider;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use config\general as conf;
+use Doctrine\ORM\Configuration;
+use Doctrine\ORM\EntityManager;
+use Silex\Application;
+use Silex\Provider\TwigServiceProvider;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Twig_SimpleFilter;
+use config\general as conf;
 
 $DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'main'))).$DS;
-require_once($root."vendor/autoload.php");
+require_once($root."vendor".$DS."autoload.php");
 
 date_default_timezone_set(conf::php_timezone);
 
@@ -32,7 +31,12 @@ $app['salt'] = conf::authSalt;
 $app['chat_host'] = conf::chat_host;
 $app['chat_port'] = conf::chat_port;
 
-$config = Setup::createAnnotationMetadataConfiguration([__DIR__], $app['debug']);
+$config = new Configuration();
+$driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
+$config->setMetadataDriverImpl($driver);
+$config->setProxyDir($root.$DS.'cache'.$DS.'proxy');
+$config->setProxyNamespace('proxies');
+
 $app['em'] = EntityManager::create($dbParams, $config);
 
 $app['\main\models\number'] = function($app){
@@ -43,6 +47,9 @@ $app['\main\models\query'] = function($app){
 };
 $app['main\models\report_query'] = function($app){
   return new \main\models\report_query($app);
+};
+$app['main\models\report_event'] = function($app){
+  return new \main\models\report_event($app);
 };
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
@@ -279,6 +286,11 @@ $app->get('/report/set_filter_query_street', 'main\controllers\reports::set_filt
 $app->get('/report/set_filter_query_house', 'main\controllers\reports::set_filter_query_house')->before($security);
 $app->get('/report/report_query_one', 'main\controllers\reports::report_query_one')->before($security);
 $app->get('/report/report_query_one_xls', 'main\controllers\reports::report_query_one_xls')->before($security);
+$app->get('/report/get_event_reports', 'main\controllers\report_event::get_event_reports')->before($security);
+$app->get('/report/event/set_time_begin', 'main\controllers\report_event::set_time_begin')->before($security);
+$app->get('/report/event/set_time_end', 'main\controllers\report_event::set_time_end')->before($security);
+$app->get('/report/event/html/', 'main\controllers\report_event::html')->before($security);
+$app->get('/report/event/clear/', 'main\controllers\report_event::clear')->before($security);
 
 # tasks
 $app->get('/task/', 'main\controllers\task::default_page')->before($security);
@@ -296,6 +308,7 @@ $app->get('/task/close_task', 'main\controllers\task::close_task')->before($secu
 # import
 $app->get('/import/', 'main\controllers\import::default_page')->before($security);
 $app->post('/import/load_accruals/', 'main\controllers\import::load_accruals')->before($security);
+$app->post('/import/load_debt/', 'main\controllers\import::load_debt')->before($security);
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

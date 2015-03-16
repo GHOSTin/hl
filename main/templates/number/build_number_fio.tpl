@@ -4,6 +4,7 @@
         <ul class="list-unstyled">
             <li>Владелец: {{ number.get_fio() }} <a class="get_dialog_edit_number_fio">изменить</a></li>
             <li>Лицевой счет: {{ number.get_number() }} <a class="get_dialog_edit_number">изменить</a></li>
+            <li>Задолженость: {{ number.get_debt() }} руб.</li>
         </ul>
     </div>
     <div class="col-md-5">

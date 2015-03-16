@@ -26,26 +26,26 @@
 	</h4>
 	<ul class="nav nav-pills">
 		<li>
-			<a href="#" class="get_documents">Документы</a>
+			<a class="get_documents">Документы</a>
 		</li>
 	{% if query.get_status() in ['open', 'working'] %}
 		<li>
-			<a href="#" class="get_dialog_close_query">Закрыть заявку</a>
+			<a class="get_dialog_close_query">Закрыть заявку</a>
 		</li>
 	{% endif %}
 	{% if query.get_status() == 'reopen' %}
 		<li>
-			<a href="#" class="get_dialog_reclose_query">Перезакрыть заявку</a>
+			<a class="get_dialog_reclose_query">Перезакрыть заявку</a>
 		</li>
 	{% endif %}
 	{% if query.get_status() == 'open' %}
 		<li>
-			<a href="#" class="get_dialog_to_working_query">Передать в работу</a>
+			<a class="get_dialog_to_working_query">Передать в работу</a>
 		</li>
 	{% endif %}
 	{% if query.get_status() == 'close' %}
 		<li>
-			<a href="#" class="get_dialog_reopen_query">Переоткрыть</a>
+			<a class="get_dialog_reopen_query">Переоткрыть</a>
 		</li>
 	{% endif %}
 	</ul>
@@ -61,17 +61,17 @@
 	{% endif %}
 		<li>Тип оплаты: <span class="query-general-payment_status">{{ payment_statuses[query.get_payment_status()] }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a href="#" class="get_dialog_edit_payment_status"> изменить</a>
+			<a class="get_dialog_edit_payment_status"> изменить</a>
 			{% endif %}
 		</li>
 		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a href="#" class="get_dialog_edit_work_type"> изменить</a></li>
+			<a class="get_dialog_edit_work_type"> изменить</a></li>
 			{% endif %}
 		<li>Тип заявки:
 			<span class="query-general-warning_status">{{ warning_statuses[query.get_warning_status()] }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a href="#" class="get_dialog_edit_warning_status"> изменить</a>
+			<a class="get_dialog_edit_warning_status"> изменить</a>
 			{% endif %}
 		</li>
 		<li>
@@ -79,20 +79,20 @@
 		</li>
 		<li>Описание: <span class="query-general-description">{{ query.get_description() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a href="#" class="get_dialog_edit_description"> изменить</a>
+			<a class="get_dialog_edit_description"> изменить</a>
 			{% endif %}
 		</li>
 	{% if query.get_status() in ['close', 'reopen'] %}
 		<li>Причина закрытия: <span class="query-general-reason">{{ query.get_close_reason() }}</span>
 		{% if query.get_status() == 'reopen' %}
-			<a href="#" class="get_dialog_edit_reason"> изменить</a>
+			<a class="get_dialog_edit_reason"> изменить</a>
 		{% endif %}
 		</li>
 	{% endif %}
 		<li>
 			<div>Контактная информация
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-				<a href="#" class="get_dialog_edit_contact_information">изменить</a>
+				<a class="get_dialog_edit_contact_information">изменить</a>
 			{% endif %}
 			</div>
 			<ul class="query-general-contacts">
