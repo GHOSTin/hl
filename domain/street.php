@@ -73,6 +73,7 @@ class street{
   }
 
   public function set_name($name){
+    $name = trim($name);
     if(!preg_match('/^[0-9а-яА-Я-_ ]{3,20}$/u', $name))
       throw new DomainException('Название улицы задано не верно.');
     $this->name = $name;
