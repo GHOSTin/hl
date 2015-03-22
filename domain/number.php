@@ -22,7 +22,7 @@ class number{
   /**
   * @Column(type="decimal", precision=12, scale=2)
   */
-  private $debt;
+  private $debt = 0;
 
   /**
   * @Column(type="string")
@@ -37,7 +37,7 @@ class number{
   /**
   * @Column(name="password", type="string")
   */
-  private $hash;
+  private $hash = '';
 
   /**
   * @ManyToOne(targetEntity="domain\house")
@@ -47,6 +47,7 @@ class number{
   /**
   * @Id
   * @Column(type="integer")
+  * @GeneratedValue
   */
   private $id;
 
@@ -90,6 +91,7 @@ class number{
     $this->queries = new ArrayCollection();
     $this->accruals = new ArrayCollection();
     $this->events = new ArrayCollection();
+    $this->status = 'true';
   }
 
   public function add_event(number2event $event){
@@ -162,6 +164,15 @@ class number{
     return $this->status;
   }
 
+  public static function new_instance(house $house, flat $flat,  $num, $fio){
+    $number = new number();
+    $number->set_house($house);
+    $number->set_flat($flat);
+    $number->set_number($num);
+    $number->set_fio($fio);
+    return $number;
+  }
+
   public function set_cellphone($cellphone){
     if(!empty($cellphone))
       if(!preg_match('/^[0-9]{10}$/', $cellphone))
@@ -207,7 +218,12 @@ class number{
     $this->id = $id;
   }
 
+  public function set_house(house $house){
+    $this->house = $house;
+  }
+
   public function set_number($number){
+    $number = trim($number);
     if(!preg_match('/^[0-9А-ЯA-Zа-яa-z]{0,20}$/u', $number))
       throw new DomainException('Wrong number number '.$number);
     $this->number = $number;

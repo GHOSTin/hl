@@ -10,12 +10,15 @@
       <li>
         <a id="import_debt">Импорт задолжености</a>
       </li>
+      <li>
+        <a id="import_numbers">Импорт лицевых</a>
+      </li>
     </ul>
 	</div>
   <div class="col-md-10 import">
   </div>
 </div>
-{% endblock component %}
+{% endblock %}
 
 {% block javascript %}
 <script src="/js/query.js"></script>
@@ -45,8 +48,17 @@
     <button type="submit" class="btn btn-default">Залить</button>
   </form>
 </script>
-{% endblock javascript %}
+<script id="import_numbers_form" type="text/template">
+  <form action="/import/fond/" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Файл</label>
+      <input type="file" class="form-control" name="numbers" required>
+    </div>
+    <button type="submit" class="btn btn-default">Залить</button>
+  </form>
+</script>
+{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="/css/datepicker.css" >
-{% endblock css %}
+{% endblock %}

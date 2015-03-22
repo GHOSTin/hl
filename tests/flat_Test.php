@@ -1,12 +1,20 @@
 <?php
-
-use \domain\flat;
-use \domain\house;
+use domain\flat;
+use domain\house;
 
 class flat_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $this->flat = new flat();
+  }
+
+  public function test_new_instance(){
+    $house = new house();
+    $flat = flat::new_instance($house, '56');
+    $this->assertInstanceOf('domain\flat', $flat);
+    $this->assertEquals('56', $flat->get_number());
+    $this->assertSame($house, $flat->get_house());
+    $this->assertEquals('true', $flat->get_status());
   }
 
   public function test_set_id_1(){

@@ -17,6 +17,7 @@ class house{
   /**
   * @Id
   * @Column(name="id", type="integer")
+  * @GeneratedValue
   */
 	private $id;
 
@@ -56,6 +57,7 @@ class house{
     $this->numbers = new ArrayCollection();
     $this->flats = new ArrayCollection();
     $this->queries = new ArrayCollection();
+    $this->status = 'true';
   }
 
   public function __toString(){
@@ -106,7 +108,15 @@ class house{
     return $this->queries;
   }
 
-  public function set_department(\domain\department $department){
+  public static function new_instance(department $department, street $street,  $house_number){
+    $house = new house();
+    $house->set_number($house_number);
+    $house->set_street($street);
+    $house->set_department($department);
+    return $house;
+  }
+
+  public function set_department(department $department){
     $this->department = $department;
   }
 
@@ -117,8 +127,9 @@ class house{
   }
 
   public function set_number($number){
+    $number = trim($number);
     if(!preg_match('|^[0-9]{1,3}[/]{0,1}[А-Яа-я0-9]{0,2}$|u', $number))
-      throw new DomainException('Номер дома задан не верно.');
+      throw new DomainException('Номер дома "'.$number.'" задан не верно.');
     $this->number = $number;
   }
 

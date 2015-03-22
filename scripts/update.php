@@ -19,5 +19,12 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$query = "ALTER TABLE numbers ADD debt DECIMAL(12,2) UNSIGNED NOT NULL DEFAULT 0";
-$pdo->exec($query);
+$queries = [
+  'ALTER TABLE `streets` CHANGE `id` `id` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT',
+  'ALTER TABLE `houses` CHANGE `id` `id` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT',
+  'ALTER TABLE `flats` CHANGE `id` `id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT',
+  'ALTER TABLE `numbers` CHANGE `id` `id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT'
+];
+
+foreach($queries as $query)
+  $pdo->exec($query);

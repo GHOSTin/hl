@@ -36,6 +36,23 @@ $(function(){
     }
   });
 
+  var numbers_view = Backbone.View.extend({
+    el: $('ul.menu'),
+
+    events: {
+      'click a#import_numbers': 'import_numbers'
+    },
+
+    initialize: function () {
+      this.import_numbers_form = $('#import_numbers_form').html();
+    },
+
+    import_numbers: function(){
+      $('.import').html(this.import_numbers_form);
+    }
+  });
+
   var view = new view();
   var debt = new debt_view();
+  var numbers = new numbers_view();
 });

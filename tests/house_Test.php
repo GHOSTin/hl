@@ -1,10 +1,10 @@
 <?php
 
-use \domain\house;
-use \domain\department;
-use \domain\street;
-use \domain\number;
-use \domain\flat;
+use domain\house;
+use domain\department;
+use domain\street;
+use domain\number;
+use domain\flat;
 
 class house_Test extends PHPUnit_Framework_TestCase{
 
@@ -12,7 +12,18 @@ class house_Test extends PHPUnit_Framework_TestCase{
     $this->house = new house();
   }
 
-  public function test_toSеring(){
+  public function test_new_instance(){
+    $street = new street();
+    $department = new department();
+    $house = house::new_instance($department, $street, '52А');
+    $this->assertInstanceOf('domain\house', $house);
+    $this->assertEquals('52А', $house->get_number());
+    $this->assertSame($street, $house->get_street());
+    $this->assertSame($department, $house->get_department());
+    $this->assertEquals('true', $house->get_status());
+  }
+
+  public function test_toString(){
     $this->house->set_number('125А');
     $this->assertEquals('125А', $this->house);
   }
