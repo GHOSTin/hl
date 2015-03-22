@@ -1,12 +1,24 @@
 <?php
 
-use \domain\number;
-use \domain\flat;
+use domain\house;
+use domain\number;
+use domain\flat;
 
 class number_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $this->number = new number();
+  }
+
+  public function test_new_instance(){
+    $house = new house();
+    $flat = new flat();
+    $number = number::new_instance($house, $flat, '0385744', 'Некрасов Евгений');
+    $this->assertInstanceOf('domain\number', $number);
+    $this->assertEquals('0385744', $number->get_number());
+    $this->assertEquals('Некрасов Евгений', $number->get_fio());
+    $this->assertSame($flat, $number->get_flat());
+    $this->assertEquals('true', $number->get_status());
   }
 
   public function test_set_debt_1(){

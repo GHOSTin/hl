@@ -51,6 +51,9 @@ $app['main\models\report_query'] = function($app){
 $app['main\models\report_event'] = function($app){
   return new \main\models\report_event($app);
 };
+$app['main\models\import_numbers'] = function($app){
+  return new \main\models\import_numbers($app);
+};
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
@@ -309,6 +312,11 @@ $app->get('/task/close_task', 'main\controllers\task::close_task')->before($secu
 $app->get('/import/', 'main\controllers\import::default_page')->before($security);
 $app->post('/import/load_accruals/', 'main\controllers\import::load_accruals')->before($security);
 $app->post('/import/load_debt/', 'main\controllers\import::load_debt')->before($security);
+$app->post('/import/fond/', 'main\controllers\import::load_fond_file')->before($security);
+$app->post('/import/streets/', 'main\controllers\import::load_streets')->before($security);
+$app->post('/import/houses/', 'main\controllers\import::load_houses')->before($security);
+$app->post('/import/flats/', 'main\controllers\import::load_flats')->before($security);
+$app->post('/import/numbers/', 'main\controllers\import::load_numbers')->before($security);
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

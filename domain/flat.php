@@ -17,6 +17,7 @@ class flat{
   /**
   * @Id
   * @Column(name="id", type="integer")
+  * @GeneratedValue
   */
   private $id;
 
@@ -43,6 +44,7 @@ class flat{
 
   public function __construct(){
     $this->numbers = new ArrayCollection();
+    $this->status = 'true';
   }
 
   public function __toString(){
@@ -68,7 +70,14 @@ class flat{
     return $this->status;
   }
 
-  public function set_house(\domain\house $house){
+  public static function new_instance(house $house, $number){
+    $flat = new flat();
+    $flat->set_house($house);
+    $flat->set_number($number);
+    return $flat;
+  }
+
+  public function set_house(house $house){
     $this->house = $house;
   }
 
@@ -79,6 +88,7 @@ class flat{
   }
 
   public function set_number($number){
+    $number = trim($number);
     if(!preg_match('|^[0-9]{1,3}.{0,1}[0-9]{0,1}$|', $number))
       throw new DomainException('Номер квартиры задан не верно.');
     $this->number = $number;

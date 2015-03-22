@@ -1,6 +1,7 @@
 <?php namespace domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use DomainException;
 
 /**
 * @Entity
@@ -8,14 +9,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 */
 class street{
 
-  /*
-  * @ManyToOne(targetEntity="data_city")
-  */
-  private $city;
-
   /**
   * @Id
   * @Column(name="id", type="integer")
+  * @GeneratedValue
   */
   private $id;
 
@@ -38,9 +35,10 @@ class street{
 
   public function __construct(){
     $this->houses = new ArrayCollection();
+    $this->status = 'true';
   }
 
-  public function add_house(\domain\house $house){
+  public function add_house(house $house){
     if($this->houses->contains($house))
       throw new DomainException('House exists.');
     $this->houses->add($house);
@@ -62,6 +60,12 @@ class street{
     return $this->status;
   }
 
+  public static function new_instance($name){
+    $street = new street();
+    $street->set_name($name);
+    return $street;
+  }
+
   public function set_id($id){
     if($id > 65535 OR $id < 1)
       throw new DomainException('Идентификатор улицы задан не верно.');
@@ -72,11 +76,5 @@ class street{
     if(!preg_match('/^[0-9а-яА-Я-_ ]{3,20}$/u', $name))
       throw new DomainException('Название улицы задано не верно.');
     $this->name = $name;
-  }
-
-  public function set_status($status){
-    if(!in_array($status, self::$statuses))
-      throw new DomainException('Статус улицы задан не верно.');
-    $this->status = $status;
   }
 }
