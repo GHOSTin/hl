@@ -1,27 +1,20 @@
 <?php
 
-use \domain\session;
-use \domain\user;
+use domain\session;
+use domain\user;
 
 class session_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
+    $this->time = time();
     $this->session = new session();
   }
 
-  public function test_time_1(){
-    $this->session->set_time(156);
-    $this->assertEquals(156, $this->session->get_time());
-  }
-
-  public function test_user_1(){
+  public function test_new_instance(){
     $user = new user();
-    $this->session->set_user($user);
-    $this->assertSame($user, $this->session->get_user());
-  }
-
-  public function test_ip_1(){
-    $this->session->set_ip('192.168.0.101');
-    $this->assertEquals('192.168.0.101', $this->session->get_ip());
+    $session = session::new_instance($user, '192.168.0.1');
+    $this->assertGreaterThanOrEqual($this->time, $session->get_time());
+    $this->assertSame($user, $session->get_user());
+    $this->assertEquals('192.168.0.1', $session->get_ip());
   }
 }
