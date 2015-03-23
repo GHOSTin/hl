@@ -6,6 +6,7 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
 use config\general as conf;
 
@@ -73,9 +74,10 @@ $filter = new Twig_SimpleFilter('natsort', function (array $array) {
 $app['twig']->addFilter($filter);
 
 $app->before(function (Request $request, Application $app) {
-  session_start();
-  if(isset($_SESSION['user'])){
-    $app['user'] = $app['em']->find('\domain\user', $_SESSION['user']);
+  $app['session'] = new Session();
+  $app['session']->start();
+  if($app['session']->get('user')){
+    $app['user'] = $app['em']->find('domain\user', $app['session']->get('user'));
   }
 }, Application::EARLY_EVENT);
 
@@ -84,11 +86,14 @@ $security = function(Request $request, Application $app){
     throw new NotFoundHttpException();
 };
 
-#default_pages
+# default_pages
 $app->get('/', 'main\controllers\default_page::default_page');
-$app->post('/login/', 'main\controllers\default_page::login');
-$app->get('/logout/', 'main\controllers\default_page::logout')->before($security);
 $app->get('/about/', 'main\controllers\default_page::about')->before($security);
+
+# auth
+$app->get('/enter/', 'main\controllers\auth::login_form');
+$app->post('/enter/', 'main\controllers\auth::login');
+$app->get('/logout/', 'main\controllers\auth::logout')->before($security);
 
 # profile
 $app->get('/profile/', 'main\controllers\profile::default_page')->before($security);
@@ -102,6 +107,7 @@ $app->get('/profile/get_notification_center_content', 'main\controllers\profile:
 $app->get('/api/get_chat_options', 'main\controllers\api::get_chat_options');
 $app->get('/api/get_users', 'main\controllers\api::get_users');
 $app->get('/api/get_user_by_login_and_password', 'main\controllers\api::get_user_by_login_and_password');
+
 # error
 $app->get('/error/show_dialog', 'main\controllers\error::show_dialog')->before($security);
 $app->get('/error/send_error', 'main\controllers\error::send_error')->before($security);
