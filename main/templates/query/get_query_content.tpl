@@ -58,6 +58,7 @@
 	{% if query.get_initiator() == 'number' %}
 		<li>Владелец: {{ number.get_fio() }}</li>
 		<li>Лицевой счет: №{{ number.get_number() }}</li>
+    <li>Задолженость: <strong>{{ number.get_debt()}} руб.</strong></li>
 	{% endif %}
 		<li>Тип оплаты: <span class="query-general-payment_status">{{ payment_statuses[query.get_payment_status()] }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
@@ -90,16 +91,30 @@
 		</li>
 	{% endif %}
 		<li>
-			<div>Контактная информация
-			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-				<a class="get_dialog_edit_contact_information">изменить</a>
-			{% endif %}
-			</div>
-			<ul class="query-general-contacts">
-				<li>ФИО: {{ query.get_contact_fio() }}</li>
-				<li>Телефон: {{ query.get_contact_telephone() }}</li>
-				<li>Сотовый: {{ query.get_contact_cellphone() }}</li>
-			</ul>
+      <div class="row">
+        <div class="col-md-6">
+    			<div>Контактная информация
+    			{% if query.get_status() in ['open', 'working', 'reopen'] %}
+    				<a class="get_dialog_edit_contact_information">изменить</a>
+    			{% endif %}
+    			</div>
+    			<ul class="query-general-contacts">
+    				<li>ФИО: {{ query.get_contact_fio() }}</li>
+    				<li>Телефон: {{ query.get_contact_telephone() }}</li>
+    				<li>Сотовый: {{ query.get_contact_cellphone() }}</li>
+    			</ul>
+        </div>
+        {% if query.get_initiator() == 'number' and number.get_events() is not empty %}
+        <div class="col-md-6">
+          <h5>Последние события</h5>
+          <ul class="list-unstyled">
+          {% for event in number.get_events()|slice(0,5) %}
+            <li><strong>{{ event.get_time()|date("d.m.Y") }}</strong> {{ event.get_name() }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
 		</li>
 	</ul>
 	<ul>
