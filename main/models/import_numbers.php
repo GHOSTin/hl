@@ -10,23 +10,23 @@ use domain\number;
 
 class import_numbers{
 
-	private $em;
+  private $em;
   private $session;
   private $fond = [];
 
-	public function __construct(EntityManager $em, Session $session){
-		$this->em = $em;
+  public function __construct(EntityManager $em, Session $session){
+    $this->em = $em;
     $this->session = $session;
     if(!is_null($this->session->get('import')))
       $this->fond = $this->session->get('import');
-	}
+  }
 
-	public function load_file($hndl){
+  public function load_file($hndl){
     $this->fond = [];
     while($row = fgetcsv($hndl, 0, ';'))
       $this->analize_row($row);
     $this->session->set('import', $this->fond);
-	}
+  }
 
   public function analize_row(array $row){
     list($city, $street, $house, $flat, $number, $fio) = $row;

@@ -42,10 +42,7 @@ class report_event{
   }
 
   public function get_filters(){
-    return [
-            'time_begin' => $this->params['time_begin'],
-            'time_end' => $this->params['time_end']
-           ];
+    return $this->params;
   }
 
   public function save_params(array $params){
