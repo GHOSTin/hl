@@ -38,4 +38,9 @@ class street_Test extends PHPUnit_Framework_TestCase{
     $this->street->set_name('Ватутина ул');
     $this->assertEquals('Ватутина ул', $this->street->get_name());
   }
+
+  public function test_toString(){
+    $this->street->set_name('Ватутина ул');
+    $this->assertEquals('Ватутина ул', (string) $this->street);
+  }
 }

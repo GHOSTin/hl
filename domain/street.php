@@ -38,6 +38,10 @@ class street{
     $this->status = 'true';
   }
 
+  public function __toString(){
+    return (string) $this->name;
+  }
+
   public function add_house(house $house){
     if($this->houses->contains($house))
       throw new DomainException('House exists.');

@@ -41,19 +41,19 @@ $config->setProxyNamespace('proxies');
 $app['em'] = EntityManager::create($dbParams, $config);
 
 $app['\main\models\number'] = function($app){
-  return new \main\models\number($app);
+  return new \main\models\number($app['em']);
 };
-$app['\main\models\query'] = function($app){
-  return new \main\models\query($app);
+$app['main\models\queries'] = function($app){
+  return new \main\models\queries($app['em'], $app['session'], $app['user']);
 };
 $app['main\models\report_query'] = function($app){
-  return new \main\models\report_query($app);
+  return new \main\models\report_query($app['em'], $app['session']);
 };
 $app['main\models\report_event'] = function($app){
-  return new \main\models\report_event($app);
+  return new \main\models\report_event($app['em'], $app['session']);
 };
 $app['main\models\import_numbers'] = function($app){
-  return new \main\models\import_numbers($app);
+  return new \main\models\import_numbers($app['em'], $app['session']);
 };
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;

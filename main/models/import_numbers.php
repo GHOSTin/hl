@@ -1,7 +1,8 @@
 <?php namespace main\models;
 
 use RuntimeException;
-use Silex\Application;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Session\Session;
 use domain\street;
 use domain\house;
 use domain\flat;
@@ -9,21 +10,22 @@ use domain\number;
 
 class import_numbers{
 
-	private $app;
-  private $fond;
+	private $em;
+  private $session;
+  private $fond = [];
 
-	public function __construct(Application $app){
-		$this->app = $app;
-    if(isset($_SESSION['import']))
-      $this->fond = $_SESSION['import'];
+	public function __construct(EntityManager $em, Session $session){
+		$this->em = $em;
+    $this->session = $session;
+    if(!is_null($this->session->get('import')))
+      $this->fond = $this->session->get('import');
 	}
 
 	public function load_file($hndl){
     $this->fond = [];
-    while($row = fgetcsv($hndl, 0, ';')){
+    while($row = fgetcsv($hndl, 0, ';'))
       $this->analize_row($row);
-    }
-    $_SESSION['import'] = $this->fond;
+    $this->session->set('import', $this->fond);
 	}
 
   public function analize_row(array $row){
@@ -45,25 +47,25 @@ class import_numbers{
     $new = [];
     $streets = array_keys($this->fond);
     foreach($streets as $street_name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($street_name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($street_name);
       if(is_null($street))
         throw new RuntimeException();
       $houses = array_keys($this->fond[$street_name]);
       foreach($houses as $house_number){
-        $house = $this->app['em']->getRepository('domain\house')
-                                 ->findOneBy([
-                                              'street' => $street,
-                                              'number' => $house_number
-                                             ]);
+        $house = $this->em->getRepository('domain\house')
+                          ->findOneBy([
+                                       'street' => $street,
+                                       'number' => $house_number
+                                      ]);
         if(is_null($house))
           throw new RuntimeException();
         foreach(array_keys($this->fond[$street_name][$house_number]) as $flat_number){
-          $flat = $this->app['em']->getRepository('domain\flat')
-                                  ->findOneBy([
-                                               'house' => $house,
-                                               'number' => $flat_number
-                                              ]);
+          $flat = $this->em->getRepository('domain\flat')
+                           ->findOneBy([
+                                        'house' => $house,
+                                        'number' => $flat_number
+                                       ]);
           if(is_null($flat))
             $new[] = $street_name.' '.$house_number.' '.$flat_number;
         }
@@ -76,17 +78,17 @@ class import_numbers{
     $new = [];
     $streets = array_keys($this->fond);
     foreach($streets as $street_name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($street_name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($street_name);
       if(is_null($street))
         throw new RuntimeException();
       $houses = array_keys($this->fond[$street_name]);
       foreach($houses as $house_number){
-        $house = $this->app['em']->getRepository('domain\house')
-                                 ->findOneBy([
-                                              'street' => $street,
-                                              'number' => $house_number
-                                             ]);
+        $house = $this->em->getRepository('domain\house')
+                          ->findOneBy([
+                                       'street' => $street,
+                                       'number' => $house_number
+                                      ]);
         if(is_null($house)){
           $new[] = $street_name.' '.$house_number;
         }
@@ -99,33 +101,33 @@ class import_numbers{
     $new = [];
     $streets = array_keys($this->fond);
     foreach($streets as $street_name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($street_name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($street_name);
       if(is_null($street))
         throw new RuntimeException();
       $houses = array_keys($this->fond[$street_name]);
       foreach($houses as $house_number){
-        $house = $this->app['em']->getRepository('domain\house')
-                                 ->findOneBy([
-                                              'street' => $street,
-                                              'number' => $house_number
-                                             ]);
+        $house = $this->em->getRepository('domain\house')
+                          ->findOneBy([
+                                       'street' => $street,
+                                       'number' => $house_number
+                                      ]);
         if(is_null($house))
           throw new RuntimeException();
         foreach(array_keys($this->fond[$street_name][$house_number]) as $flat_number){
-          $flat = $this->app['em']->getRepository('domain\flat')
-                                   ->findOneBy([
-                                                'house' => $house,
-                                                'number' => $flat_number
-                                               ]);
+          $flat = $this->em->getRepository('domain\flat')
+                           ->findOneBy([
+                                        'house' => $house,
+                                        'number' => $flat_number
+                                       ]);
           if(is_null($flat))
             throw new RuntimeException();
           foreach(array_keys($this->fond[$street_name][$house_number][$flat_number]) as $number_number){
-            $number = $this->app['em']->getRepository('domain\number')
-                                     ->findOneBy([
-                                                  'flat' => $flat,
-                                                  'number' => $number_number
-                                                 ]);
+            $number = $this->em->getRepository('domain\number')
+                               ->findOneBy([
+                                            'flat' => $flat,
+                                            'number' => $number_number
+                                           ]);
             if(is_null($number))
               $new[] = $street_name.' '.$house_number.' кв.'.$flat_number.' №'.$number_number;
           }
@@ -139,8 +141,8 @@ class import_numbers{
     $new = [];
     $streets = array_keys($this->fond);
     foreach($streets as $name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($name);
       if(is_null($street))
         $new[] = $name;
     }
@@ -150,113 +152,113 @@ class import_numbers{
   public function load_flats(){
     $streets = array_keys($this->fond);
     foreach($streets as $street_name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($street_name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($street_name);
       if(is_null($street))
         throw new RuntimeException();
       $houses = array_keys($this->fond[$street_name]);
       foreach($houses as $house_number){
-        $house = $this->app['em']->getRepository('domain\house')
-                                 ->findOneBy([
-                                              'street' => $street,
-                                              'number' => $house_number
-                                             ]);
+        $house = $this->em->getRepository('domain\house')
+                          ->findOneBy([
+                                       'street' => $street,
+                                       'number' => $house_number
+                                      ]);
         if(is_null($house))
           throw new RuntimeException();
         foreach(array_keys($this->fond[$street_name][$house_number]) as $flat_number){
-          $flat = $this->app['em']->getRepository('domain\flat')
-                                   ->findOneBy([
-                                                'house' => $house,
-                                                'number' => $flat_number
-                                               ]);
+          $flat = $this->em->getRepository('domain\flat')
+                           ->findOneBy([
+                                        'house' => $house,
+                                        'number' => $flat_number
+                                       ]);
           if(is_null($flat)){
             $flat = flat::new_instance($house, $flat_number);
-            $this->app['em']->persist($flat);
+            $this->em->persist($flat);
           }
         }
       }
     }
-    $this->app['em']->flush();
+    $this->em->flush();
   }
 
   public function load_houses(){
-    $department = $this->app['em']->getRepository('domain\department')
-                                  ->findOneById(1);
+    $department = $this->em->getRepository('domain\department')
+                           ->findOneById(1);
     $streets = array_keys($this->fond);
     foreach($streets as $street_name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($street_name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($street_name);
       if(is_null($street))
         throw new RuntimeException();
       $houses = array_keys($this->fond[$street_name]);
       foreach($houses as $house_number){
-        $house = $this->app['em']->getRepository('domain\house')
-                                 ->findOneBy([
-                                              'street' => $street,
-                                              'number' => $house_number
-                                             ]);
+        $house = $this->em->getRepository('domain\house')
+                          ->findOneBy([
+                                       'street' => $street,
+                                       'number' => $house_number
+                                      ]);
         if(is_null($house)){
           $house = house::new_instance($department, $street, $house_number);
-          $this->app['em']->persist($house);
+          $this->em->persist($house);
         }
       }
     }
-    $this->app['em']->flush();
+    $this->em->flush();
   }
 
   public function load_numbers(){
     $streets = array_keys($this->fond);
     foreach($streets as $street_name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($street_name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($street_name);
       if(is_null($street))
         throw new RuntimeException();
       $houses = array_keys($this->fond[$street_name]);
       foreach($houses as $house_number){
-        $house = $this->app['em']->getRepository('domain\house')
-                                 ->findOneBy([
-                                              'street' => $street,
-                                              'number' => $house_number
-                                             ]);
+        $house = $this->em->getRepository('domain\house')
+                          ->findOneBy([
+                                       'street' => $street,
+                                       'number' => $house_number
+                                      ]);
         if(is_null($house))
           throw new RuntimeException();
         foreach(array_keys($this->fond[$street_name][$house_number]) as $flat_number){
-          $flat = $this->app['em']->getRepository('domain\flat')
-                                   ->findOneBy([
-                                                'house' => $house,
-                                                'number' => $flat_number
-                                               ]);
+          $flat = $this->em->getRepository('domain\flat')
+                           ->findOneBy([
+                                        'house' => $house,
+                                        'number' => $flat_number
+                                       ]);
           if(is_null($flat))
             throw new RuntimeException();
           foreach(array_keys($this->fond[$street_name][$house_number][$flat_number]) as $number_number){
-            $number = $this->app['em']->getRepository('domain\number')
-                                      ->findOneBy([
-                                                   'flat' => $flat,
-                                                   'number' => $number_number
-                                                  ]);
+            $number = $this->em->getRepository('domain\number')
+                               ->findOneBy([
+                                            'flat' => $flat,
+                                            'number' => $number_number
+                                           ]);
             if(is_null($number)){
               list($fio) = $this->fond[$street_name][$house_number][$flat_number][$number_number];
               $number = number::new_instance($house, $flat, $number_number, $fio);
-              $this->app['em']->persist($number);
+              $this->em->persist($number);
             }
           }
         }
       }
     }
-    $this->app['em']->flush();
+    $this->em->flush();
     $this->fond = [];
   }
 
   public function load_streets(){
     $streets = array_keys($this->fond);
     foreach($streets as $street_name){
-      $street = $this->app['em']->getRepository('domain\street')
-                                ->findOneByName($street_name);
+      $street = $this->em->getRepository('domain\street')
+                         ->findOneByName($street_name);
       if(is_null($street)){
         $street = street::new_instance($street_name);
-        $this->app['em']->persist($street);
+        $this->em->persist($street);
       }
     }
-    $this->app['em']->flush();
+    $this->em->flush();
   }
 }
