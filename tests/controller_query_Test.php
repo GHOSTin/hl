@@ -60,7 +60,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_clear_filters(){
-    $model = $this->getMockBuilder('main\models\query')
+    $model = $this->getMockBuilder('main\models\queries')
                   ->disableOriginalConstructor()
                   ->getMock();
     $model->expects($this->once())
@@ -69,7 +69,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('get_queries');
     $model->expects($this->once())
           ->method('get_timeline');
-    $this->app['\main\models\query'] = $model;
+    $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\clear_filters.tpl', $this->anything())
@@ -240,14 +240,14 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
 
   public function test_get_houses(){
     $this->request->query->set('id', 125);
-    $model = $this->getMockBuilder('main\models\query')
+    $model = $this->getMockBuilder('main\models\queries')
                   ->disableOriginalConstructor()
                   ->getMock();
     $model->expects($this->once())
           ->method('get_houses_by_street')
           ->with(125)
           ->will($this->returnValue('house_array'));
-    $this->app['\main\models\query'] = $model;
+    $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\get_houses.tpl', ['houses' => 'house_array'])
@@ -273,7 +273,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
   public function test_get_timeline(){
     $this->request->query->set('time', 1397562800);
     $this->request->query->set('act', 'next');
-    $model = $this->getMockBuilder('main\models\query')
+    $model = $this->getMockBuilder('main\models\queries')
                   ->disableOriginalConstructor()
                   ->getMock();
     $model->expects($this->once())
@@ -282,7 +282,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('get_queries');
     $model->expects($this->once())
           ->method('get_timeline');
-    $this->app['\main\models\query'] = $model;
+    $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\get_timeline.tpl', $this->anything())

@@ -1,19 +1,19 @@
 <?php namespace main\models;
 
-use Silex\Application;
+use Doctrine\ORM\EntityManager;
 
 class number{
 
-	private $app;
+  private $em;
 
-	public function __construct(Application $app){
-		$this->app = $app;
-	}
+  public function __construct(EntityManager $em){
+    $this->em = $em;
+  }
 
-	public function get_houses_by_street($street_id){
-		$houses = $this->app['em']->getRepository('\domain\house')
-															->findByStreet($street_id);
-		natsort($houses);
-		return $houses;
-	}
+  public function get_houses_by_street($street_id){
+    $houses = $this->em->getRepository('domain\house')
+                       ->findByStreet($street_id);
+    natsort($houses);
+    return $houses;
+  }
 }
