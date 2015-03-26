@@ -33,10 +33,4 @@ $(document).ready(function(){
             return elem.value.replace(/\r?\n/g, "\r\n");
         }
     };
-    $(document).on('click', '.get_dialog_error_message', function(){
-        $.get('/error/show_dialog',{
-            },function(r){
-                init_content(r);
-            });
-    });
 });
