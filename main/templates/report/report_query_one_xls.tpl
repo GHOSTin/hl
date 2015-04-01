@@ -1,6 +1,5 @@
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
-{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'} %}
 {% set user_roles = {'creator':'Диспетчер', 'manager':'Ответственный', 'performer': 'Исполнитель', 'observer': 'Наблюдатель'} %}
 <?xml version="1.0"?>
 <?mso-application progid="Excel.Sheet"?>
@@ -47,7 +46,7 @@
             <Row>
                 <Cell><Data ss:Type="String">{{ query.get_number() }}</Data></Cell>
                 <Cell><Data ss:Type="String">{{ statuses[query.get_status()] }}</Data></Cell>
-                <Cell><Data ss:Type="String">{{ warning_statuses[query.get_warning_status()] }}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_query_type().get_name() }}</Data></Cell>
                 <Cell><Data ss:Type="String">{{ query.get_work_type().get_name() }}</Data></Cell>
                 <Cell><Data ss:Type="String">{{ payment_statuses[query.get_payment_status()] }}</Data></Cell>
                 <Cell><Data ss:Type="String">{{ query.get_department().get_name() }}</Data></Cell>

@@ -31,23 +31,23 @@ class query{
   */
 	private $payment_status;
 
-	/**
-  * @Column(name="warning_type", type="string")
+  /**
+  * @ManyToOne(targetEntity="domain\query_type")
   */
-	private $warning_status;
+	private $query_type;
 
 	/**
-  * @ManyToOne(targetEntity="\domain\department")
+  * @ManyToOne(targetEntity="domain\department")
   */
 	private $department;
 
 	/**
-  * @ManyToOne(targetEntity="\domain\house")
+  * @ManyToOne(targetEntity="domain\house")
   */
 	private $house;
 
 	/**
-  * @ManyToOne(targetEntity="\domain\workgroup")
+  * @ManyToOne(targetEntity="domain\workgroup")
   * @JoinColumn(name="query_worktype_id", referencedColumnName="id")
   */
 	private $work_type;
@@ -98,7 +98,7 @@ class query{
 	private $number;
 
 	/**
-   * @ManyToMany(targetEntity="\domain\number")
+   * @ManyToMany(targetEntity="domain\number")
    * @JoinTable(name="query2number",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
    * inverseJoinColumns={@JoinColumn(name="number_id", referencedColumnName="id")})
@@ -106,7 +106,7 @@ class query{
 	private $numbers;
 
 	/**
-   * @ManyToMany(targetEntity="\domain\query2work")
+   * @ManyToMany(targetEntity="domain\query2work")
    * @JoinTable(name="query2work",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
    * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
@@ -114,7 +114,7 @@ class query{
 	private $works;
 
 	/**
-   * @ManyToMany(targetEntity="\domain\query2user")
+   * @ManyToMany(targetEntity="domain\query2user")
    * @JoinTable(name="query2user",
    * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
    * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
@@ -122,14 +122,13 @@ class query{
 	private $users;
 
 	/**
-  * @OneToMany(targetEntity="\domain\query2comment", mappedBy="query")
+  * @OneToMany(targetEntity="domain\query2comment", mappedBy="query")
   */
 	private $comments;
 
 	public static $initiator_list = ['number', 'house'];
 	public static $payment_status_list = ['paid', 'unpaid', 'recalculation'];
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
-	public static $warning_status_list = ['hight', 'normal', 'planned'];
 
   public function __construct(){
     $this->numbers = new ArrayCollection();
@@ -137,23 +136,23 @@ class query{
     $this->status = 'open';
   }
 
-	public function add_number(\domain\number $number){
+	public function add_number(number $number){
     if($this->numbers->contains($number))
       throw new DomainException('Лицевой счет уже добавлен в заявку.');
 		$this->numbers->add($number);
 	}
 
-	public function add_comment(\domain\query2comment $comment){
+	public function add_comment(query2comment $comment){
 		if($this->comments->contains($comment))
 			throw new DomainException('Комментарий уже существует.');
 		$this->comments->add($comment);
 	}
 
-	public function add_user(\domain\query2user $user){
+	public function add_user(query2user $user){
 		$this->users->add($user);
 	}
 
-	public function add_work(\domain\query2work $work){
+	public function add_work(query2work $work){
 		if($this->works->contains($work))
 			throw new DomainException("Работа уже добавлен в заявку.");
 		$this->works->add($work);
@@ -167,7 +166,7 @@ class query{
     $this->set_close_reason($reason);
   }
 
-	public function remove_work(\domain\work $w){
+	public function remove_work(work $w){
 		if(!empty($this->works))
 			foreach($this->works as $work)
 				if($work->get_id() === $w->get_id()){
@@ -195,7 +194,7 @@ class query{
     $this->set_time_work($time);
   }
 
-	public function add_work_type(\domain\workgroup $wt){
+	public function add_work_type(workgroup $wt){
 		$this->work_type = $wt;
 	}
 
@@ -315,8 +314,8 @@ class query{
 		return $this->time_work;
 	}
 
-	public function get_warning_status(){
-		return $this->warning_status;
+	public function get_query_type(){
+		return $this->query_type;
 	}
 
 	public function set_id($id){
@@ -353,7 +352,7 @@ class query{
 		$this->initiator = $initiator;
 	}
 
-	public function set_house(\domain\house $house){
+	public function set_house(house $house){
 		$this->house = $house;
 	}
 
@@ -395,9 +394,7 @@ class query{
 		$this->time_work = $time;
 	}
 
-	public function set_warning_status($status){
-		if(!in_array($status, self::$warning_status_list, true))
-      throw new DomainException('Статус ворнинга заявки задан не верно.');
-		$this->warning_status = (string) $status;
+	public function set_query_type(query_type $query_type){
+		$this->query_type = $query_type;
 	}
 }

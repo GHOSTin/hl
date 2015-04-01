@@ -14,11 +14,6 @@ class user implements JsonSerializable{
   */
 	private $cellphone;
 
-  /*
-  * @OneToMany(targetEntity="data_error", mappedBy="user")
-  */
-  private $errors;
-
   /**
   * @Column(name="firstname", type="string")
   */

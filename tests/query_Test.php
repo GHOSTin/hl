@@ -4,6 +4,7 @@ use domain\query2comment;
 use domain\query;
 use domain\department;
 use domain\house;
+use domain\query_type;
 
 class query_Test extends PHPUnit_Framework_TestCase{
 
@@ -60,18 +61,10 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $this->query->set_time_open(-123);
   }
 
-  public function test_set_warning_status_1(){
-    $this->setExpectedException('DomainException');
-    $this->query->set_warning_status('wrong');
-  }
-
-  public function test_set_warning_status_2(){
-    $this->query->set_warning_status('hight');
-    $this->assertEquals('hight', $this->query->get_warning_status());
-    $this->query->set_warning_status('normal');
-    $this->assertEquals('normal', $this->query->get_warning_status());
-    $this->query->set_warning_status('planned');
-    $this->assertEquals('planned', $this->query->get_warning_status());
+  public function test_query_type(){
+    $query_type = new query_type();
+    $this->query->set_query_type($query_type);
+    $this->assertSame($query_type, $this->query->get_query_type());
   }
 
   public function test_set_payment_status_1(){
