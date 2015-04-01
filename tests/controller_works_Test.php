@@ -114,7 +114,7 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                ->will($this->returnValue(null));
     $repository->expects($this->once())
                ->method('findAll')
-               ->will($this->returnValue('work_array'));
+               ->will($this->returnValue('events_array'));
     $this->app['em']->expects($this->exactly(2))
                     ->method('getRepository')
                     ->with('domain\event')
@@ -123,7 +123,12 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                     ->method('persist');
     $this->app['em']->expects($this->once())
                     ->method('flush');
-    $this->controller->create_event($this->request, $this->app);
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('works\events.tpl', ['events' => 'events_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->create_event($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_private_create_work_1(){
@@ -131,18 +136,17 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $this->setExpectedException('RuntimeException');
     $work = new workgroup();
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-      ->disableOriginalConstructor()
-      ->setMethods(['findOneByName'])
-      ->getMock();
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByName'])
+                       ->getMock();
     $repository->expects($this->once())
-      ->method('findOneByName')
-      ->with('Привет')
-      ->will($this->returnValue($work));
+               ->method('findOneByName')
+               ->with('Привет')
+               ->will($this->returnValue($work));
     $this->app['em']->expects($this->once())
-      ->method('getRepository')
-      ->with('\domain\work')
-      ->will($this->returnValue($repository));
-
+                    ->method('getRepository')
+                    ->with('\domain\work')
+                    ->will($this->returnValue($repository));
     $this->controller->create_work($this->request, $this->app);
   }
 
@@ -158,7 +162,7 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                ->will($this->returnValue(null));
     $repository->expects($this->once())
                ->method('findAll')
-               ->will($this->returnValue('work_array'));
+               ->will($this->returnValue('works_array'));
     $this->app['em']->expects($this->exactly(2))
                     ->method('getRepository')
                     ->with('\domain\work')
@@ -167,7 +171,12 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                     ->method('persist');
     $this->app['em']->expects($this->once())
                     ->method('flush');
-    $this->controller->create_work($this->request, $this->app);
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('works\works.tpl', ['works' => 'works_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->create_work($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_create_workgroup_1(){
@@ -175,42 +184,47 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $this->setExpectedException('RuntimeException');
     $workgroup = new workgroup();
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-      ->disableOriginalConstructor()
-      ->setMethods(['findOneByName'])
-      ->getMock();
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByName'])
+                       ->getMock();
     $repository->expects($this->once())
-      ->method('findOneByName')
-      ->with('Привет')
-      ->will($this->returnValue($workgroup));
+               ->method('findOneByName')
+               ->with('Привет')
+               ->will($this->returnValue($workgroup));
     $this->app['em']->expects($this->once())
-      ->method('getRepository')
-      ->with('\domain\workgroup')
-      ->will($this->returnValue($repository));
+                    ->method('getRepository')
+                    ->with('\domain\workgroup')
+                    ->will($this->returnValue($repository));
     $this->controller->create_workgroup($this->request, $this->app);
   }
 
   public function test_private_create_workgroup_2(){
     $this->request->query->set('name', 'Привет');
-      $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-        ->disableOriginalConstructor()
-        ->setMethods(['findOneByName', 'findAll'])
-        ->getMock();
-      $repository->expects($this->once())
-        ->method('findOneByName')
-        ->with('Привет')
-        ->will($this->returnValue(null));
-      $repository->expects($this->once())
-        ->method('findAll')
-        ->will($this->returnValue('workgroup_array'));
-      $this->app['em']->expects($this->exactly(2))
-        ->method('getRepository')
-        ->with('\domain\workgroup')
-        ->will($this->returnValue($repository));
-      $this->app['em']->expects($this->once())
-        ->method('persist');
-      $this->app['em']->expects($this->once())
-        ->method('flush');
-    $this->controller->create_workgroup($this->request, $this->app);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneByName', 'findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneByName')
+               ->with('Привет')
+               ->will($this->returnValue(null));
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->will($this->returnValue('workgroup_array'));
+    $this->app['em']->expects($this->exactly(2))
+                    ->method('getRepository')
+                    ->with('\domain\workgroup')
+                    ->will($this->returnValue($repository));
+    $this->app['em']->expects($this->once())
+                    ->method('persist');
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('works\workgroups.tpl', ['workgroups' => 'workgroup_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->create_workgroup($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_default_page(){
@@ -371,15 +385,15 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                        ->setMethods(['findOneById', 'findAll'])
                        ->getMock();
     $repository->expects($this->once())
-              ->method('findOneById')
-              ->will($this->returnValue('workgroup_object'));
+               ->method('findOneById')
+               ->will($this->returnValue('workgroup_object'));
     $repository->expects($this->once())
                ->method('findAll')
                ->will($this->returnValue('event_array'));
     $this->app['em']->expects($this->exactly(2))
-                   ->method('getRepository')
-                   ->withConsecutive(['domain\workgroup'], ['domain\event'])
-                   ->will($this->returnValue($repository));
+                    ->method('getRepository')
+                    ->withConsecutive(['domain\workgroup'], ['domain\event'])
+                    ->will($this->returnValue($repository));
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('works\get_dialog_add_event.tpl',
@@ -530,8 +544,7 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                       ->method('render')
                       ->with('works\get_dialog_rename_work.tpl', ['work' => 'work_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_rename_work($this->request,
-                                                          $this->app);
+    $response = $this->controller->get_dialog_rename_work($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 
@@ -551,8 +564,7 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
                       ->method('render')
                       ->with('works\get_dialog_rename_workgroup.tpl', ['workgroup' => 'workgroup_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_rename_workgroup($this->request,
-                                                               $this->app);
+    $response = $this->controller->get_dialog_rename_workgroup($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 

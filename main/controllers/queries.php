@@ -80,6 +80,7 @@ class queries{
   public function create_query(Request $request, Application $app){
     preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->get('description'), $matches);
     $time = getdate();
+    $query_type = $app['em']->getRepository('domain\query_type')->find($request->get('query_type'));
     $query = new query();
     $query->set_contact_fio($request->get('fio'));
     $query->set_contact_telephone($request->get('telephone'));
@@ -87,19 +88,19 @@ class queries{
     $query->set_description(implode('', $matches[0]));
     $query->set_initiator($request->get('initiator'));
     $query->set_payment_status('unpaid');
-    $query->set_warning_status('normal');
+    $query->set_query_type($query_type);
     $query->set_time_open($time[0]);
     $query->set_time_work($time[0]);
     if($request->get('initiator') === 'house'){
-      $house = $app['em']->find('\domain\house', $request->get('id'));
+      $house = $app['em']->find('domain\house', $request->get('id'));
     }elseif($request->get('initiator') === 'number'){
-      $number = $app['em']->find('\domain\number', $request->get('id'));
+      $number = $app['em']->find('domain\number', $request->get('id'));
       $query->add_number($number);
       $house = $number->get_flat()->get_house();
     }
     $query->set_house($house);
     $query->set_department($house->get_department());
-    $query->add_work_type($app['em']->find('\domain\workgroup', $request->get('work_type')));
+    $query->add_work_type($app['em']->find('domain\workgroup', $request->get('work_type')));
     $conn = $app['em']->getConnection();
     $q = $conn->query('SELECT MAX(querynumber) as number FROM `queries`
                     WHERE `opentime` > '.mktime(0, 0, 0, 1, 1, $time['year']).'
@@ -114,11 +115,12 @@ class queries{
     $app['em']->persist($creator);
     $app['em']->persist($manager);
     $app['em']->flush();
-    $params['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-    $params['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
-    $params['status'] = ['open', 'close', 'reopen', 'working'];
-    $queries = $app['em']->getRepository('\domain\query')
-                         ->findByParams($params);
+    $queries = $app['em']->getRepository('domain\query')
+                         ->findByParams([
+                                         'time_begin' => strtotime('midnight'),
+                                         'time_end' => strtotime('tomorrow'),
+                                         'status' => query::$status_list
+                                        ]);
     return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
   }
 
@@ -231,7 +233,7 @@ class queries{
   }
 
   public function get_dialog_initiator(Request $request, Application $app){
-    $streets = $app['em']->getRepository('\domain\street')->findBy([], ['name' => 'ASC']);
+    $streets = $app['main\models\queries']->get_streets();
     return $app['twig']->render('query\get_dialog_initiator.tpl',
                                 [
                                  'streets' => $streets,
@@ -270,14 +272,19 @@ class queries{
                                 ]);
   }
 
-  public function get_dialog_edit_warning_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    return $app['twig']->render('query\get_dialog_edit_warning_status.tpl', ['query' => $query]);
+  public function get_dialog_change_query_type(Request $request, Application $app){
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    $query_types = $app['em']->getRepository('domain\query_type')->findAll(['name' => 'ASC']);
+    return $app['twig']->render('query\get_dialog_change_query_type.tpl',
+                                [
+                                 'query' => $query,
+                                 'query_types' => $query_types
+                                ]);
   }
 
   public function get_dialog_edit_work_type(Request $request, Application $app){
-    $types = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name' => 'ASC']);
-    $query = $app['em']->find('\domain\query', $request->get('id'));
+    $types = $app['em']->getRepository('domain\workgroup')->findAll(['name' => 'ASC']);
+    $query = $app['em']->find('domain\query', $request->get('id'));
     return $app['twig']->render('query\get_dialog_edit_work_type.tpl',
                                 [
                                  'query' => $query,
@@ -313,13 +320,15 @@ class queries{
       default:
         throw new RuntimeException('Проблема типа инициатора.');
     }
+    $query_types = $app['em']->getRepository('domain\query_type')->findAll();
     return $app['twig']->render('query\get_initiator.tpl',
                                 [
                                  'query_work_types' => $types,
-                                 'queries'          => $queries,
-                                 'number'           => $number,
-                                 'house'            => $house,
-                                 'initiator'        => $request->get('initiator')
+                                 'queries' => $queries,
+                                 'number' => $number,
+                                 'house' => $house,
+                                 'initiator' => $request->get('initiator'),
+                                 'query_types' => $query_types
                                 ]);
   }
 
@@ -526,22 +535,19 @@ class queries{
     return $app['twig']->render('query\update_reason.tpl', ['query' => $query]);
   }
 
+  public function update_query_type(Request $request, Application $app){
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    $query_type = $app['em']->find('domain\query_type', $request->get('type'));
+    $query->set_query_type($query_type);
+    $app['em']->flush();
+    return $app['twig']->render('query\update_query_type.tpl', ['query' => $query]);
+  }
+
   public function update_work_type(Request $request, Application $app){
-    $type = $app['em']->find('\domain\workgroup', $request->get('type'));
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    if(is_null($query))
-      throw new RuntimeException();
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    $type = $app['em']->find('domain\workgroup', $request->get('type'));
     $query->add_work_type($type);
     $app['em']->flush();
     return $app['twig']->render('query\update_work_type.tpl', ['query' => $query]);
-  }
-
-  public function update_warning_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    if(is_null($query))
-      throw new RuntimeException();
-    $query->set_warning_status($request->get('status'));
-    $app['em']->flush();
-    return $app['twig']->render('query\update_warning_status.tpl', ['query' => $query]);
   }
 }

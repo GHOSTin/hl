@@ -108,12 +108,6 @@ $app->get('/api/get_chat_options', 'main\controllers\api::get_chat_options');
 $app->get('/api/get_users', 'main\controllers\api::get_users');
 $app->get('/api/get_user_by_login_and_password', 'main\controllers\api::get_user_by_login_and_password');
 
-# error
-$app->get('/error/show_dialog', 'main\controllers\error::show_dialog')->before($security);
-$app->get('/error/send_error', 'main\controllers\error::send_error')->before($security);
-$app->get('/error/delete_error', 'main\controllers\error::delete_error')->before($security);
-$app->get('/error/', 'main\controllers\error::default_page')->before($security);
-
 # works
 $app->get('/works/', 'main\controllers\works::default_page')->before($security);
 $app->get('/works/get_workgroup_content', 'main\controllers\works::get_workgroup_content')->before($security);
@@ -240,8 +234,8 @@ $app->get('/query/get_dialog_edit_payment_status', 'main\controllers\queries::ge
 $app->get('/query/update_payment_status', 'main\controllers\queries::update_payment_status')->before($security);
 $app->get('/query/get_dialog_edit_work_type', 'main\controllers\queries::get_dialog_edit_work_type')->before($security);
 $app->get('/query/update_work_type', 'main\controllers\queries::update_work_type')->before($security);
-$app->get('/query/get_dialog_edit_warning_status', 'main\controllers\queries::get_dialog_edit_warning_status')->before($security);
-$app->get('/query/update_warning_status', 'main\controllers\queries::update_warning_status')->before($security);
+$app->get('/query/get_dialog_change_query_type', 'main\controllers\queries::get_dialog_change_query_type')->before($security);
+$app->get('/query/update_query_type', 'main\controllers\queries::update_query_type')->before($security);
 $app->get('/query/get_dialog_edit_description', 'main\controllers\queries::get_dialog_edit_description')->before($security);
 $app->get('/query/update_description', 'main\controllers\queries::update_description')->before($security);
 $app->get('/query/get_dialog_edit_reason', 'main\controllers\queries::get_dialog_edit_reason')->before($security);
@@ -323,6 +317,12 @@ $app->post('/import/streets/', 'main\controllers\import::load_streets')->before(
 $app->post('/import/houses/', 'main\controllers\import::load_houses')->before($security);
 $app->post('/import/flats/', 'main\controllers\import::load_flats')->before($security);
 $app->post('/import/numbers/', 'main\controllers\import::load_numbers')->before($security);
+
+# system
+$app->get('/system/', 'main\controllers\system::default_page')->before($security);
+$app->get('/system/query_types/', 'main\controllers\query_types::default_page')->before($security);
+$app->get('/system/query_types/get_dialog_create_query_type/', 'main\controllers\query_types::get_dialog_create_query_type')->before($security);
+$app->get('/system/query_types/create_query_type/', 'main\controllers\query_types::create_query_type')->before($security);
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

@@ -2,7 +2,6 @@
 
 {% set statuses = {'open':'Открытая', 'working':'В работе', 'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
 {% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation':'Перерасчет'} %}
-{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned':'плановая'} %}
 {% set creator = query.get_creator() %}
 
 {% if query.get_initiator() == 'number' %}
@@ -70,9 +69,9 @@
 			<a class="get_dialog_edit_work_type"> изменить</a></li>
 			{% endif %}
 		<li>Тип заявки:
-			<span class="query-general-warning_status">{{ warning_statuses[query.get_warning_status()] }}</span>
+			<span class="query-general-query_type">{{ query.get_query_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a class="get_dialog_edit_warning_status"> изменить</a>
+			<a class="get_dialog_change_query_type"> изменить</a>
 			{% endif %}
 		</li>
 		<li>
