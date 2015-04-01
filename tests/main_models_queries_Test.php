@@ -17,6 +17,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                              'time_begin' => $this->time,
                              'time_end' => $this->time,
                              'work_types' => [1],
+                             'query_types' => [],
                              'houses' => [],
                              'streets' => [253],
                              'r_departments' => [],
@@ -98,6 +99,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $this->default_params['status'] = query::$status_list;
     $this->default_params['streets'] = [];
     $this->default_params['work_types'] = [];
+    $this->default_params['query_types'] = [];
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
@@ -108,6 +110,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals(368, $values['department']);
     $this->assertEquals(288, $values['house']);
     $this->assertNull($values['work_type']);
+    $this->assertNull($values['query_types']);
     $this->assertNull($values['streets']);
   }
 
@@ -250,6 +253,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $params['status'] = query::$status_list;
     $params['streets'] = [];
     $params['work_types'] = [];
+    $params['query_types'] = [];
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
     $profile = $this->getMockBuilder('domain\profile')
@@ -481,5 +485,47 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
           ->method('save_params')
           ->with(['work_types' => [125]]);
     $model->set_work_type(125);
+  }
+
+  public function test_set_query_type_1(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\query_type', 0)
+             ->willReturn(null);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with(['query_types' => []]);
+    $model->set_query_type(0);
+  }
+
+  public function test_set_query_type_2(){
+    $query_type = $this->getMock('domain\query_type');
+    $query_type->expects($this->once())
+               ->method('get_id')
+               ->will($this->returnValue(125));
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\query_type', 125)
+             ->willReturn($query_type);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with(['query_types' => [125]]);
+    $model->set_query_type(125);
   }
 }

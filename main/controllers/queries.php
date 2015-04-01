@@ -143,30 +143,33 @@ class queries{
 
   public function default_page(Request $request, Application $app){
     $model  = $app['main\models\queries'];
-    $types  = $app['em']->getRepository('\domain\workgroup')
-                        ->findBy([], ['name' => 'ASC']);
+    $types  = $app['em']->getRepository('domain\workgroup')
+                        ->findAll(['name' => 'ASC']);
+    $query_types  = $app['em']->getRepository('domain\query_type')
+                              ->findAll(['name' => 'ASC']);
     $params = $model->get_params();
     if(!empty($params['houses']))
-      $houses = $app['em']->getRepository('\domain\house')
+      $houses = $app['em']->getRepository('domain\house')
                           ->findByid($params['houses'], ['number' => 'ASC']);
     else
       $houses = [];
     $profile = $app['user']->get_profile('query');
     if($request->get('id')){
-      $queries = [$app['em']->find('\domain\query', $request->get('id'))];
+      $queries = [$app['em']->find('domain\query', $request->get('id'))];
     }else
       $queries = $model->get_queries();
     return $app['twig']->render('query\default_page.tpl',
                                 [
-                                 'user'             => $app['user'],
-                                 'queries'          => $queries,
-                                 'params'           => $model->get_filter_values(),
-                                 'timeline'         => $model->get_timeline(),
-                                 'streets'          => $model->get_streets(),
-                                 'departments'      => $model->get_departments(),
+                                 'user' => $app['user'],
+                                 'queries' => $queries,
+                                 'params' => $model->get_filter_values(),
+                                 'timeline' => $model->get_timeline(),
+                                 'streets' => $model->get_streets(),
+                                 'departments' => $model->get_departments(),
                                  'query_work_types' => $types,
-                                 'houses'           => $houses,
-                                 'rules'            => $profile->get_rules()
+                                 'query_types' => $query_types,
+                                 'houses' => $houses,
+                                 'rules' => $profile->get_rules()
                                 ]);
   }
 
@@ -471,6 +474,13 @@ class queries{
     $houses = $model->get_houses_by_street($request->get('value'));
     $queries = $model->get_queries();
     return $app['twig']->render('query\set_street.tpl', ['queries' => $queries, 'houses' => $houses]);
+  }
+
+  public function set_query_type(Request $request, Application $app){
+    $model = $app['main\models\queries'];
+    $model->set_query_type($request->get('value'));
+    $queries = $model->get_queries();
+    return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
   }
 
   public function set_work_type(Request $request, Application $app){

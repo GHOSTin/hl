@@ -407,6 +407,140 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_set_department(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_department', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_department')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_department($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_house(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_house', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_house')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_house($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_query_type(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_query_type', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_query_type')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_query_type($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_status(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_status', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_status')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\set_status.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_status($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_street(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_street', 'get_queries', 'get_houses_by_street'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_street')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_houses_by_street')
+          ->with(125)
+          ->willReturn('houses_array');
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\set_street.tpl',
+                             [
+                              'queries' => 'queries_array',
+                              'houses' => 'houses_array'
+                             ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_street($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_work_type(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_work_type', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_work_type')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_work_type($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_to_working_query_1(){
     $this->setExpectedException('RuntimeException');
     $this->request->query->set('id', 125);
