@@ -230,8 +230,6 @@ $app->get('/query/get_query_numbers', 'main\controllers\queries::get_query_numbe
 $app->get('/query/get_query_users', 'main\controllers\queries::get_query_users')->before($security);
 $app->get('/query/get_query_works', 'main\controllers\queries::get_query_works')->before($security);
 $app->get('/query/get_query_comments', 'main\controllers\queries::get_query_comments')->before($security);
-$app->get('/query/get_dialog_edit_payment_status', 'main\controllers\queries::get_dialog_edit_payment_status')->before($security);
-$app->get('/query/update_payment_status', 'main\controllers\queries::update_payment_status')->before($security);
 $app->get('/query/get_dialog_edit_work_type', 'main\controllers\queries::get_dialog_edit_work_type')->before($security);
 $app->get('/query/update_work_type', 'main\controllers\queries::update_work_type')->before($security);
 $app->get('/query/get_dialog_change_query_type', 'main\controllers\queries::get_dialog_change_query_type')->before($security);

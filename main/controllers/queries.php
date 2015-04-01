@@ -87,7 +87,6 @@ class queries{
     $query->set_contact_cellphone($request->get('cellphone'));
     $query->set_description(implode('', $matches[0]));
     $query->set_initiator($request->get('initiator'));
-    $query->set_payment_status('unpaid');
     $query->set_query_type($query_type);
     $query->set_time_open($time[0]);
     $query->set_time_work($time[0]);
@@ -220,11 +219,6 @@ class queries{
   public function get_dialog_edit_description(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\get_dialog_edit_description.tpl', ['query' => $query]);
-  }
-
-  public function get_dialog_edit_payment_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    return $app['twig']->render('query\get_dialog_edit_payment_status.tpl', ['query' => $query]);
   }
 
   public function get_dialog_edit_reason(Request $request, Application $app){
@@ -514,15 +508,6 @@ class queries{
     $query->set_description(implode('', $matches[0]));
     $app['em']->flush();
     return $app['twig']->render('query\update_description.tpl', ['query' => $query]);
-  }
-
-  public function update_payment_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    if(is_null($query))
-      throw new RuntimeException();
-    $query->set_payment_status($request->get('status'));
-    $app['em']->flush();
-    return $app['twig']->render('query\update_payment_status.tpl', ['query' => $query]);
   }
 
   public function update_reason(Request $request, Application $app){

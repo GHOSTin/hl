@@ -1,7 +1,6 @@
 {% extends "print.tpl" %}
 
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
-{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
 
 {% block css %}
 <style>
@@ -42,7 +41,6 @@
         <td>{{ statuses[query.get_status()] }}</td>
         <td>{{ query.get_query_type().get_name() }}</td>
         <td>{{ query.get_work_type().get_name() }}</td>
-        <td>{{ payment_statuses[query.get_payment_status()] }}</td>
         <td>{{ query.get_department().get_name() }}</td>
         <td>{{ query.get_house().get_street().get_name() }}</td>
         <td>{{ query.get_house().get_number() }}</td>
