@@ -16,6 +16,7 @@ class queries{
                      'time_end' => 0,
                      'status' => [],
                      'work_types' => [],
+                     'query_types' => [],
                      'r_departments'=> [],
                      'streets' => [],
                      'houses' => []
@@ -37,7 +38,7 @@ class queries{
 
   public function get_queries(){
     return $this->em->getRepository('domain\query')
-                  ->findByParams($this->params);
+                    ->findByParams($this->params);
   }
 
   public function get_departments(){
@@ -52,7 +53,10 @@ class queries{
   public function get_houses_by_street($street_id){
     if(!empty($this->params['r_departments'])){
       $houses = $this->em->getRepository('domain\house')
-                         ->findBy(['department' => $this->params['r_departments'], 'street' => $street_id]);
+                         ->findBy([
+                                   'department' => $this->params['r_departments'],
+                                   'street' => $street_id
+                                  ]);
     }else{
       $houses = $this->em->getRepository('domain\house')
                          ->findByStreet($street_id);
@@ -87,6 +91,7 @@ class queries{
     $params['time_end'] = strtotime('tomorrow');
     $params['status'] = query::$status_list;
     $params['work_types'] = [];
+    $params['query_types'] = [];
     $params['r_departments'] = $departments;
     $params['streets'] = [];
     $params['houses'] = [];
@@ -106,6 +111,10 @@ class queries{
       $params['work_type'] = $this->params['work_types'][0];
     else
       $params['work_type'] = null;
+    if(count($this->params['query_types']) === 1)
+      $params['query_types'] = $this->params['query_types'][0];
+    else
+      $params['query_types'] = null;
     if(count($this->params['streets']) === 1)
       $params['streets'] = $this->params['streets'][0];
     else
@@ -186,6 +195,12 @@ class queries{
       $this->save_params(['houses' => [$house->get_id()]]);
     else
       $this->set_street($this->params['streets'][0]);
+  }
+
+  public function set_query_type($query_type_id){
+    $query_type = $this->em->find('domain\query_type', $query_type_id);
+    $type =  ($query_type)? [$query_type->get_id()]: [];
+    $this->save_params(['query_types' => $type]);
   }
 
   public function set_work_type($workgroup_id){

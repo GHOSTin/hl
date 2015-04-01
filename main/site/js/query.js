@@ -143,6 +143,13 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});
+  $('.filter-content-select-query_type').change(function(){
+    $.get('set_query_type',{
+      value: $('.filter-content-select-query_type :selected').val()
+      },function(r){
+        $('.queries').html(r);
+      });
+  });
 	$('.filter-content-select-house').change(function(){
 		$.get('set_house',{
 			value: $('.filter-content-select-house :selected').val()

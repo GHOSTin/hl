@@ -265,6 +265,7 @@ $app->get('/query/set_department', 'main\controllers\queries::set_department')->
 $app->get('/query/set_street', 'main\controllers\queries::set_street')->before($security);
 $app->get('/query/set_house', 'main\controllers\queries::set_house')->before($security);
 $app->get('/query/set_work_type', 'main\controllers\queries::set_work_type')->before($security);
+$app->get('/query/set_query_type', 'main\controllers\queries::set_query_type')->before($security);
 $app->get('/query/get_dialog_change_initiator', 'main\controllers\queries::get_dialog_change_initiator')->before($security);
 $app->get('/query/get_houses', 'main\controllers\queries::get_houses')->before($security);
 $app->get('/query/get_numbers', 'main\controllers\queries::get_numbers')->before($security);
