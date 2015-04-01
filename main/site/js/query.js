@@ -177,13 +177,6 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_edit_payment_status', function(){
-		$.get('get_dialog_edit_payment_status',{
-			id: get_query_id($(this))
-			},function(r){
-				init_content(r);
-			});
-	});
 	$('body').on('click', '.get_dialog_change_query_type', function(){
 		$.get('get_dialog_change_query_type',{
 			id: get_query_id($(this))

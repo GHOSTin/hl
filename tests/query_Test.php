@@ -67,20 +67,6 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $this->assertSame($query_type, $this->query->get_query_type());
   }
 
-  public function test_set_payment_status_1(){
-    $this->setExpectedException('DomainException');
-    $this->query->set_payment_status('wrong');
-  }
-
-  public function test_set_payment_status_2(){
-    $this->query->set_payment_status('paid');
-    $this->assertEquals('paid', $this->query->get_payment_status());
-    $this->query->set_payment_status('unpaid');
-    $this->assertEquals('unpaid', $this->query->get_payment_status());
-    $this->query->set_payment_status('recalculation');
-    $this->assertEquals('recalculation', $this->query->get_payment_status());
-  }
-
   public function test_set_time_work_1(){
     $this->query->set_time_open(1397562600);
     $this->query->set_time_work(1397562800);

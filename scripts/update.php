@@ -33,5 +33,7 @@ $queries[] = "INSERT INTO query_types (name) VALUES
               ('На участок'),
               ('Плановая')";
 
+$queries[] = 'ALTER TABLE queries DROP COLUMN payment_status ';
+
 foreach($queries as $query)
   $pdo->exec($query);

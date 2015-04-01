@@ -26,11 +26,6 @@ class query{
   */
 	private $initiator;
 
-	/**
-  * @Column(type="string")
-  */
-	private $payment_status;
-
   /**
   * @ManyToOne(targetEntity="domain\query_type")
   */
@@ -127,7 +122,6 @@ class query{
 	private $comments;
 
 	public static $initiator_list = ['number', 'house'];
-	public static $payment_status_list = ['paid', 'unpaid', 'recalculation'];
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
 
   public function __construct(){
@@ -278,10 +272,6 @@ class query{
 		return $this->id;
 	}
 
-	public function get_payment_status(){
-		return $this->payment_status;
-	}
-
 	public function get_status(){
 		return $this->status;
 	}
@@ -372,12 +362,6 @@ class query{
 		if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u', $description))
       throw new DomainException('Описание заявки заданы не верно.');
 		$this->description = $description;
-	}
-
-	public function set_payment_status($status){
-		if(!in_array($status, self::$payment_status_list, true))
-      throw new DomainException('Статус оплаты заявки задан не верно.');
-		$this->payment_status = (string) $status;
 	}
 
 	private function set_time_close($time){

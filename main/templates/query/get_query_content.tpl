@@ -1,7 +1,6 @@
 {% extends "ajax.tpl" %}
 
 {% set statuses = {'open':'Открытая', 'working':'В работе', 'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
-{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation':'Перерасчет'} %}
 {% set creator = query.get_creator() %}
 
 {% if query.get_initiator() == 'number' %}
@@ -59,11 +58,6 @@
 		<li>Лицевой счет: №{{ number.get_number() }}</li>
     <li>Задолженость: <strong>{{ number.get_debt()}} руб.</strong></li>
 	{% endif %}
-		<li>Тип оплаты: <span class="query-general-payment_status">{{ payment_statuses[query.get_payment_status()] }}</span>
-			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a class="get_dialog_edit_payment_status"> изменить</a>
-			{% endif %}
-		</li>
 		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
 			<a class="get_dialog_edit_work_type"> изменить</a></li>
