@@ -8,4 +8,5 @@ $('.filter-select-street').val('all');
 $('.filter-select-house').html('<option>Ожидание...</option>').attr('disabled', true);
 $('.filter-select-department').val('all');
 $('.filter-select-worktype').val('all');
+$('.filter-select-query_type').val('all');
 {% endblock %}

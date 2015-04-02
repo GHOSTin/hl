@@ -284,6 +284,7 @@ $app->get('/report/set_time_end', 'main\controllers\reports::set_time_end')->bef
 $app->get('/report/set_filter_query_status', 'main\controllers\reports::set_filter_query_status')->before($security);
 $app->get('/report/set_filter_query_department', 'main\controllers\reports::set_filter_query_department')->before($security);
 $app->get('/report/set_filter_query_worktype', 'main\controllers\reports::set_filter_query_worktype')->before($security);
+$app->get('/report/queries/set_query_type', 'main\controllers\reports::set_query_type')->before($security);
 $app->get('/report/set_filter_query_street', 'main\controllers\reports::set_filter_query_street')->before($security);
 $app->get('/report/set_filter_query_house', 'main\controllers\reports::set_filter_query_house')->before($security);
 $app->get('/report/report_query_one', 'main\controllers\reports::report_query_one')->before($security);

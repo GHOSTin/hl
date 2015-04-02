@@ -17,6 +17,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
                              'time_begin' => $this->time,
                              'time_end' => $this->time,
                              'work_types' => [1],
+                             'query_types' => [],
                              'houses' => [],
                              'streets' => [253],
                              'r_departments' => [],
@@ -95,6 +96,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
     $params['status'] = query::$status_list;
     $params['streets'] = [];
     $params['work_types'] = [];
+    $params['query_types'] = [];
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
     $this->session->expects($this->exactly(2))
@@ -216,6 +218,48 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
           ->method('set_street')
           ->with(253);
     $model->set_house(0);
+  }
+
+  public function test_set_query_type_1(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\query_type', 0)
+             ->willReturn(null);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('report_query')
+                  ->willReturn($this->default_params);
+    $model = $this->getMockBuilder('main\models\report_query')
+                  ->setConstructorArgs([$this->em, $this->session])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with(['query_types' => []]);
+    $model->set_query_type(0);
+  }
+
+  public function test_set_query_type_2(){
+    $query_type = $this->getMock('domain\query_type');
+    $query_type->expects($this->once())
+              ->method('get_id')
+              ->will($this->returnValue(125));
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\query_type', 125)
+             ->willReturn($query_type);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('report_query')
+                  ->willReturn($this->default_params);
+    $model = $this->getMockBuilder('main\models\report_query')
+                  ->setConstructorArgs([$this->em, $this->session])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with(['query_types' => [125]]);
+    $model->set_query_type(125);
   }
 
   public function test_set_status_1(){

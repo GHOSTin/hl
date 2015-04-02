@@ -14,6 +14,7 @@ class report_query{
                      'time_end' => 0,
                      'status' => [],
                      'work_types' => [],
+                     'query_types' => [],
                      'streets' => [],
                      'houses' => []
                     ];
@@ -32,6 +33,7 @@ class report_query{
     $params['time_end'] = strtotime('tomorrow');
     $params['status'] = query::$status_list;
     $params['work_types'] = [];
+    $params['query_types'] = [];
     $params['streets'] = [];
     $params['houses'] = [];
     $params['departments'] = [];
@@ -71,6 +73,12 @@ class report_query{
     $params['streets'] = [];
     $params['houses'] = [];
     $this->save_params($params);
+  }
+
+  public function set_query_type($query_type_id){
+    $query_type = $this->em->find('domain\query_type', $query_type_id);
+    $type =  ($query_type)? [$query_type->get_id()]: [];
+    $this->save_params(['query_types' => $type]);
   }
 
   public function set_street($street_id){
@@ -121,6 +129,10 @@ class report_query{
       $filters['work_type'] = $this->params['work_types'][0];
     else
       $filters['work_type'] = null;
+    if(count($this->params['query_types']) === 1)
+      $filters['query_types'] = $this->params['query_types'][0];
+    else
+      $filters['query_types'] = null;
     if(count($this->params['streets']) === 1)
       $filters['street'] = $this->params['streets'][0];
     else
