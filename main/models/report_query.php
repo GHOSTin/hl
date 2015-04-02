@@ -1,121 +1,144 @@
 <?php namespace main\models;
 
-use Silex\Application;
-use domain\query_object;
+use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Session\Session;
+use domain\query;
 
 class report_query{
 
-  public function __construct(Application $app){
-    $this->app = $app;
-    if(empty($_SESSION['report_query'])){
+  private $em;
+  private $session;
+  private $params = [
+                     'departments' => [],
+                     'time_begin' => 0,
+                     'time_end' => 0,
+                     'status' => [],
+                     'work_types' => [],
+                     'query_types' => [],
+                     'streets' => [],
+                     'houses' => []
+                    ];
+
+  public function __construct(EntityManager $em, Session $session){
+    $this->em = $em;
+    $this->session = $session;
+    if(empty($this->session->get('report_query')))
       $this->init_default_params();
-    }
+    else
+      $this->params = $this->session->get('report_query');
   }
 
   public function init_default_params(){
-    $time = getdate();
-    $_SESSION['report_query']['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-    $_SESSION['report_query']['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
-    $_SESSION['report_query']['status'] = ['open', 'close', 'reopen', 'working'];
-    $_SESSION['report_query']['work_types'] = [];
-    $_SESSION['report_query']['streets'] = [];
-    $_SESSION['report_query']['houses'] = [];
-    $_SESSION['report_query']['departments'] = [];
+    $params['time_begin'] = strtotime('midnight');
+    $params['time_end'] = strtotime('tomorrow');
+    $params['status'] = query::$status_list;
+    $params['work_types'] = [];
+    $params['query_types'] = [];
+    $params['streets'] = [];
+    $params['houses'] = [];
+    $params['departments'] = [];
+    $this->save_params($params);
+  }
+
+  public function save_params(array $params){
+    foreach($params as $param => $value)
+      if(array_key_exists($param, $this->params))
+        $this->params[$param] = $value;
+    $this->session->set('report_query', $this->params);
   }
 
   public function set_time_begin($time){
-    $_SESSION['report_query']['time_begin'] = $time;
+    $this->save_params(['time_begin' => $time]);
   }
 
   public function set_time_end($time){
-    $_SESSION['report_query']['time_end'] = $time;
+    $this->save_params(['time_end' => $time]);
   }
 
   public function set_status($status){
-    if(in_array($status, query_object::$status_list, true))
-      $_SESSION['report_query']['status'] = [$status];
-    else
-      $_SESSION['report_query']['status'] = query_object::$status_list;
+    $check = in_array($status, query::$status_list, true);
+    $status = ($check)? [$status]: query::$status_list;
+    $this->save_params(['status' => $status]);
   }
 
   public function set_worktype($workgroup_id){
-    $wt = $this->app['em']->find('\domain\workgroup', $workgroup_id);
-    if(is_null($wt)){
-      $_SESSION['report_query']['work_types'] = [];
-    }else{
-      $_SESSION['report_query']['work_types'] = [$wt->get_id()];
-    }
+    $workgroup = $this->em->find('domain\workgroup', $workgroup_id);
+    $type =  ($workgroup)? [$workgroup->get_id()]: [];
+    $this->save_params(['work_types' => $type]);
   }
 
   public function set_department($department_id){
-    $department = $this->app['em']->find('\domain\department', $department_id);
-    if(is_null($department)){
-      $_SESSION['report_query']['departments'] = [];
-    }else{
-      $_SESSION['report_query']['departments'] = [$department->get_id()];
-    }
-    $_SESSION['report_query']['streets'] = [];
-    $_SESSION['report_query']['houses'] = [];
+    $department = $this->em->find('domain\department', $department_id);
+    $params['departments'] = ($department)? [$department->get_id()]: [];
+    $params['streets'] = [];
+    $params['houses'] = [];
+    $this->save_params($params);
+  }
+
+  public function set_query_type($query_type_id){
+    $query_type = $this->em->find('domain\query_type', $query_type_id);
+    $type =  ($query_type)? [$query_type->get_id()]: [];
+    $this->save_params(['query_types' => $type]);
   }
 
   public function set_street($street_id){
-    $em = $this->app['em'];
-    $streets = $em->getRepository('\domain\street')->findAll();
-    $s = [];
-    if(!empty($streets))
-      foreach($streets as $street){
-          $s[] = $street->get_id();
-      }
-    if(!in_array((int) $street_id, $s, true)){
-      $_SESSION['report_query']['departments'] = [];
-      $_SESSION['report_query']['streets'] = [];
-      $_SESSION['report_query']['houses'] = [];
+    $streets = $this->em->getRepository('domain\street')
+                        ->findAll();
+    $street_id_list = [];
+    foreach($streets as $street)
+      $street_id_list[] = $street->get_id();
+    if(!in_array((int) $street_id, $street_id_list, true)){
+      $params['departments'] = [];
+      $params['streets'] = [];
+      $params['houses'] = [];
     }else{
-      $houses = $em->getRepository('\domain\house')->findByStreet($street_id);
-      $h = [];
-      if(!empty($houses))
-        foreach($houses as $house)
-          $h[] = $house->get_id();
-      $_SESSION['report_query']['departments'] = [];
-      $_SESSION['report_query']['streets'] = [$street_id];
-      $_SESSION['report_query']['houses'] = $h;
+      $houses = $this->em->getRepository('domain\house')
+                         ->findByStreet($street_id);
+      $house_id_list = [];
+      foreach($houses as $house)
+        $house_id_list[] = $house->get_id();
+      $params['departments'] = [];
+      $params['streets'] = [$street_id];
+      $params['houses'] = $house_id_list;
     }
+    $this->save_params($params);
   }
 
   public function set_house($house_id){
-    if($house_id > 0){
-      $house = $this->app['em']->find('\domain\house', $house_id);
-      if(is_null($house))
-        $_SESSION['report_query']['houses'] = [];
-      else
-        $_SESSION['report_query']['houses'] = [$house->get_id()];
-    }else
-      $_SESSION['report_query']['houses'] = [];
+    $house = $this->em->find('domain\house', $house_id);
+    if($house)
+      $this->save_params(['houses' => [$house->get_id()]]);
+    else
+      $this->set_street($this->params['streets'][0]);
   }
 
   public function get_queries(){
-    return $this->app['em']->getRepository('\domain\query')
-                              ->findByParams($_SESSION['report_query']);
+    return $this->em->getRepository('domain\query')
+                    ->findByParams($this->params);
   }
 
   public function get_filters(){
-    $filters['time_open_begin'] = $_SESSION['report_query']['time_begin'];
-    $filters['time_open_end'] = $_SESSION['report_query']['time_end'];
-    $filters['department'] = $_SESSION['report_query']['departments'];
-    if(count($_SESSION['report_query']['status']) === 1)
-      $filters['status'] = $_SESSION['report_query']['status'][0];
+    $filters['time_open_begin'] = $this->params['time_begin'];
+    $filters['time_open_end'] = $this->params['time_end'];
+    $filters['department'] = $this->params['departments'];
+    if(count($this->params['status']) === 1)
+      $filters['status'] = $this->params['status'][0];
     else
       $filters['status'] = null;
-    if(count($_SESSION['report_query']['work_types']) === 1)
-      $filters['work_type'] = $_SESSION['report_query']['work_types'][0];
+    if(count($this->params['work_types']) === 1)
+      $filters['work_type'] = $this->params['work_types'][0];
     else
       $filters['work_type'] = null;
-    if(count($_SESSION['report_query']['streets']) === 1)
-      $filters['street'] = $_SESSION['report_query']['streets'][0];
+    if(count($this->params['query_types']) === 1)
+      $filters['query_types'] = $this->params['query_types'][0];
+    else
+      $filters['query_types'] = null;
+    if(count($this->params['streets']) === 1)
+      $filters['street'] = $this->params['streets'][0];
     else
       $filters['street'] = null;
-    if(count($_SESSION['report_query']['houses']) === 1)
-      $filters['house'] = $_SESSION['report_query']['houses'][0];
+    if(count($this->params['houses']) === 1)
+      $filters['house'] = $this->params['houses'][0];
     else
       $filters['house'] = null;
     return $filters;

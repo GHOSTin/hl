@@ -143,6 +143,13 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});
+  $('.filter-content-select-query_type').change(function(){
+    $.get('set_query_type',{
+      value: $('.filter-content-select-query_type :selected').val()
+      },function(r){
+        $('.queries').html(r);
+      });
+  });
 	$('.filter-content-select-house').change(function(){
 		$.get('set_house',{
 			value: $('.filter-content-select-house :selected').val()
@@ -177,15 +184,8 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_edit_payment_status', function(){
-		$.get('get_dialog_edit_payment_status',{
-			id: get_query_id($(this))
-			},function(r){
-				init_content(r);
-			});
-	});
-	$('body').on('click', '.get_dialog_edit_warning_status', function(){
-		$.get('get_dialog_edit_warning_status',{
+	$('body').on('click', '.get_dialog_change_query_type', function(){
+		$.get('get_dialog_change_query_type',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);

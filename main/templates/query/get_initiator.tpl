@@ -12,6 +12,7 @@
 			{% endif %}
 			fio: $('.dialog-fio').val(),
 			work_type: $('.dialog-worktype').val(),
+      query_type: $('.dialog-query_type').val(),
 			telephone: $('.dialog-telephone').val(),
 			cellphone: $('.dialog-cellphone').val(),
 			description: $('.dialog-description').val()
@@ -85,8 +86,9 @@
               </div>
             </div>
         </div>
-        <div class="form-group">
-            <label>Выберите тип работ по заявке</label>
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label>Тип работ</label>
             <select class="form-control dialog-worktype">
             {% if query_work_types != false %}
               {% for workgroup in query_work_types %}
@@ -94,14 +96,18 @@
               {% endfor %}
             {% endif %}
             </select>
-            <label>Выберите тип заявки</label>
-            <select class="form-control dialog-warningtype">
-              <option value="hight">Аварийная заявка</option>
-              <option value="normal" selected>Заявка на участок</option>
-              <option value="planned">Плановая заявка</option>
+          </div>
+          <div class="col-md-6 form-group">
+            <label>Тип заявки</label>
+            <select class="form-control dialog-query_type">
+            {% for query_type in query_types %}
+              <option value="{{ query_type.get_id() }}">{{ query_type.get_name()}}</option>
+            {% endfor %}
             </select>
+          </div>
         </div>
 		<div class="form-group dialog-trouble">
+      <label>Описание</label>
 			<textarea class="form-control dialog-description" rows="5"></textarea>
 		</div>
 	</div>

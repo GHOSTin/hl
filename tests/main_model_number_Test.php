@@ -1,15 +1,14 @@
 <?php
 
-use \Silex\Application;
-use \main\models\number as model;
+use Silex\Application;
+use main\models\number as model;
 
 class main_model_number_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $em = $this->getMockBuilder('\Doctrine\ORM\EntityManager')
-               ->disableOriginalConstructor()->getMock();
-    $this->app = new Application();
-    $this->app['em'] = $em;
+    $this->em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
+                     ->disableOriginalConstructor()
+                     ->getMock();
   }
 
   public function test_get_houses_by_street(){
@@ -21,11 +20,11 @@ class main_model_number_Test extends PHPUnit_Framework_TestCase{
                ->method('findByStreet')
                ->with(123)
                ->will($this->returnValue([1, 2]));
-    $this->app['em']->expects($this->once())
-                    ->method('getRepository')
-                    ->with('\domain\house')
-                    ->will($this->returnValue($repository));
-    $model = new model($this->app);
-    $model->get_houses_by_street(123);
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\house')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em);
+    $this->assertEquals([1, 2], $model->get_houses_by_street(123));
   }
 }

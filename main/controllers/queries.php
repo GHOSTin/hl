@@ -27,12 +27,12 @@ class queries{
     $user = $app['em']->find('\domain\user', $request->get('user_id'));
     $query = $app['em']->find('\domain\query', $request->get('id'));
     if(in_array($request->get('type'),  ['manager', 'performer'], true)){
-      $u = new query2user($query, $user);
-      $u->set_class($request->get('type'));
-      $app['em']->persist($u);
+      $q2u = new query2user($query, $user);
+      $q2u->set_class($request->get('type'));
+      $app['em']->persist($q2u);
       $app['em']->flush();
     }else
-      throw new RuntimeException('Несоответствующие параметры: class.');
+      throw new RuntimeException('Несоответствующие параметры: class '.$request->get('type'));
     return $app['twig']->render('query\add_user.tpl', ['query' => $query]);
   }
 
@@ -58,12 +58,13 @@ class queries{
   }
 
   public function clear_filters(Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     $model->init_default_params();
     return $app['twig']->render('query\clear_filters.tpl',
-                                ['queries'  => $model->get_queries(),
-                                 'timeline' => $model->get_timeline()]
-    );
+                                [
+                                 'queries'  => $model->get_queries(),
+                                 'timeline' => $model->get_timeline()
+                                ]);
   }
 
   public function close_query(Request $request, Application $app){
@@ -79,26 +80,26 @@ class queries{
   public function create_query(Request $request, Application $app){
     preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->get('description'), $matches);
     $time = getdate();
+    $query_type = $app['em']->getRepository('domain\query_type')->find($request->get('query_type'));
     $query = new query();
     $query->set_contact_fio($request->get('fio'));
     $query->set_contact_telephone($request->get('telephone'));
     $query->set_contact_cellphone($request->get('cellphone'));
     $query->set_description(implode('', $matches[0]));
     $query->set_initiator($request->get('initiator'));
-    $query->set_payment_status('unpaid');
-    $query->set_warning_status('normal');
+    $query->set_query_type($query_type);
     $query->set_time_open($time[0]);
     $query->set_time_work($time[0]);
     if($request->get('initiator') === 'house'){
-      $house = $app['em']->find('\domain\house', $request->get('id'));
+      $house = $app['em']->find('domain\house', $request->get('id'));
     }elseif($request->get('initiator') === 'number'){
-      $number = $app['em']->find('\domain\number', $request->get('id'));
+      $number = $app['em']->find('domain\number', $request->get('id'));
       $query->add_number($number);
       $house = $number->get_flat()->get_house();
     }
     $query->set_house($house);
     $query->set_department($house->get_department());
-    $query->add_work_type($app['em']->find('\domain\workgroup', $request->get('work_type')));
+    $query->add_work_type($app['em']->find('domain\workgroup', $request->get('work_type')));
     $conn = $app['em']->getConnection();
     $q = $conn->query('SELECT MAX(querynumber) as number FROM `queries`
                     WHERE `opentime` > '.mktime(0, 0, 0, 1, 1, $time['year']).'
@@ -113,13 +114,13 @@ class queries{
     $app['em']->persist($creator);
     $app['em']->persist($manager);
     $app['em']->flush();
-    $params['time_begin'] = mktime(0, 0, 0, $time['mon'], $time['mday'], $time['year']);
-    $params['time_end'] = mktime(23, 59, 59, $time['mon'], $time['mday'], $time['year']);
-    $params['status'] = ['open', 'close', 'reopen', 'working'];
-    $queries = $app['em']->getRepository('\domain\query')
-                         ->findByParams($params);
-    return $app['twig']->render('query\query_titles.tpl',
-                                ['queries' => $queries]);
+    $queries = $app['em']->getRepository('domain\query')
+                         ->findByParams([
+                                         'time_begin' => strtotime('midnight'),
+                                         'time_end' => strtotime('tomorrow'),
+                                         'status' => query::$status_list
+                                        ]);
+    return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
   }
 
   public function change_initiator(Request $request, Application $app){
@@ -141,33 +142,39 @@ class queries{
   }
 
   public function default_page(Request $request, Application $app){
-    $model  = $app['\main\models\query'];
-    $types  = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name' => 'ASC']);
+    $model  = $app['main\models\queries'];
+    $types  = $app['em']->getRepository('domain\workgroup')
+                        ->findAll(['name' => 'ASC']);
+    $query_types  = $app['em']->getRepository('domain\query_type')
+                              ->findAll(['name' => 'ASC']);
     $params = $model->get_params();
     if(!empty($params['houses']))
-      $houses = $app['em']->getRepository('\domain\house')->findByid($params['houses'], ['number' => 'ASC']);
+      $houses = $app['em']->getRepository('domain\house')
+                          ->findByid($params['houses'], ['number' => 'ASC']);
     else
       $houses = [];
     $profile = $app['user']->get_profile('query');
     if($request->get('id')){
-      $queries = [$app['em']->find('\domain\query', $request->get('id'))];
+      $queries = [$app['em']->find('domain\query', $request->get('id'))];
     }else
       $queries = $model->get_queries();
     return $app['twig']->render('query\default_page.tpl',
-                                ['user'             => $app['user'],
-                                 'queries'          => $queries,
-                                 'params'           => $model->get_filter_values(),
-                                 'timeline'         => $model->get_timeline(),
-                                 'streets'          => $model->get_streets(),
-                                 'departments'      => $model->get_departments(),
+                                [
+                                 'user' => $app['user'],
+                                 'queries' => $queries,
+                                 'params' => $model->get_filter_values(),
+                                 'timeline' => $model->get_timeline(),
+                                 'streets' => $model->get_streets(),
+                                 'departments' => $model->get_departments(),
                                  'query_work_types' => $types,
-                                 'houses'           => $houses,
-                                 'rules'            => $profile->get_rules()]
-    );
+                                 'query_types' => $query_types,
+                                 'houses' => $houses,
+                                 'rules' => $profile->get_rules()
+                                ]);
   }
 
   public function get_day(Request $request, Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     $model->set_time($request->get('time'));
     return $app['twig']->render('query\query_titles.tpl', ['queries' => $model->get_queries()]);
   }
@@ -181,10 +188,11 @@ class queries{
     $query  = $app['em']->find('\domain\query', $request->get('id'));
     $groups = $app['em']->getRepository('\domain\group')->findAll();
     return $app['twig']->render('query\get_dialog_add_user.tpl',
-                                ['query'  => $query,
+                                [
+                                 'query'  => $query,
                                  'groups' => $groups,
-                                 'type'   => $request->get('type')]
-    );
+                                 'type'   => $request->get('type')
+                                ]);
   }
 
   public function get_dialog_add_work(Request $request, Application $app){
@@ -195,7 +203,11 @@ class queries{
   public function get_dialog_change_initiator(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     $streets = $app['em']->getRepository('\domain\street')->findBy([], ['name' => 'ASC']);
-    return $app['twig']->render('query\get_dialog_change_initiator.tpl', ['query' => $query, 'streets' => $streets]);
+    return $app['twig']->render('query\get_dialog_change_initiator.tpl',
+                                [
+                                 'query' => $query,
+                                 'streets' => $streets
+                                ]);
   }
 
   public function get_dialog_create_query(Application $app){
@@ -212,22 +224,18 @@ class queries{
     return $app['twig']->render('query\get_dialog_edit_description.tpl', ['query' => $query]);
   }
 
-  public function get_dialog_edit_payment_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    return $app['twig']->render('query\get_dialog_edit_payment_status.tpl', ['query' => $query]);
-  }
-
   public function get_dialog_edit_reason(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\get_dialog_edit_reason.tpl', ['query' => $query]);
   }
 
   public function get_dialog_initiator(Request $request, Application $app){
-    $streets = $app['em']->getRepository('\domain\street')->findBy([], ['name' => 'ASC']);
+    $streets = $app['main\models\queries']->get_streets();
     return $app['twig']->render('query\get_dialog_initiator.tpl',
-                                ['streets' => $streets,
-                                 'value'   => $request->get('value')]
-    );
+                                [
+                                 'streets' => $streets,
+                                 'value'   => $request->get('value')
+                                ]);
   }
 
   public function get_dialog_reclose_query(Request $request, Application $app){
@@ -244,27 +252,41 @@ class queries{
     $query = $app['em']->find('\domain\query', $request->get('id'));
     $user = $app['em']->getRepository('\domain\user')->find($request->get('user_id'));
     return $app['twig']->render('query\get_dialog_remove_user.tpl',
-                                ['query' => $query,
+                                [
+                                 'query' => $query,
                                  'user'  => $user,
-                                 'type'  => $request->get('type')]
-    );
+                                 'type'  => $request->get('type')
+                                ]);
   }
 
   public function get_dialog_remove_work(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     $work = $app['em']->find('\domain\work', $request->get('work_id'));
-    return $app['twig']->render('query\get_dialog_remove_work.tpl', ['query' => $query, 'work' => $work]);
+    return $app['twig']->render('query\get_dialog_remove_work.tpl',
+                                [
+                                 'query' => $query,
+                                 'work' => $work
+                                ]);
   }
 
-  public function get_dialog_edit_warning_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    return $app['twig']->render('query\get_dialog_edit_warning_status.tpl', ['query' => $query]);
+  public function get_dialog_change_query_type(Request $request, Application $app){
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    $query_types = $app['em']->getRepository('domain\query_type')->findAll(['name' => 'ASC']);
+    return $app['twig']->render('query\get_dialog_change_query_type.tpl',
+                                [
+                                 'query' => $query,
+                                 'query_types' => $query_types
+                                ]);
   }
 
   public function get_dialog_edit_work_type(Request $request, Application $app){
-    $types = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name' => 'ASC']);
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    return $app['twig']->render('query\get_dialog_edit_work_type.tpl', ['query' => $query, 'work_types' => $types]);
+    $types = $app['em']->getRepository('domain\workgroup')->findAll(['name' => 'ASC']);
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    return $app['twig']->render('query\get_dialog_edit_work_type.tpl',
+                                [
+                                 'query' => $query,
+                                 'work_types' => $types
+                                ]);
   }
 
   public function get_dialog_close_query(Request $request, Application $app){
@@ -295,12 +317,16 @@ class queries{
       default:
         throw new RuntimeException('Проблема типа инициатора.');
     }
+    $query_types = $app['em']->getRepository('domain\query_type')->findAll();
     return $app['twig']->render('query\get_initiator.tpl',
-                                ['query_work_types' => $types,
-                                 'queries'          => $queries,
-                                 'number'           => $number,
-                                 'house'            => $house,
-                                 'initiator'        => $request->get('initiator')]);
+                                [
+                                 'query_work_types' => $types,
+                                 'queries' => $queries,
+                                 'number' => $number,
+                                 'house' => $house,
+                                 'initiator' => $request->get('initiator'),
+                                 'query_types' => $query_types
+                                ]);
   }
 
   public function get_query_comments(Request $request, Application $app){
@@ -339,7 +365,7 @@ class queries{
   }
 
   public function get_houses(Request $request, Application $app){
-    $houses = $app['\main\models\query']->get_houses_by_street($request->get('id'));
+    $houses = $app['main\models\queries']->get_houses_by_street($request->get('id'));
     return $app['twig']->render('query\get_houses.tpl', ['houses' => $houses]);
   }
 
@@ -358,15 +384,16 @@ class queries{
   }
 
   public function get_timeline(Request $request, Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     if($request->get('act') === 'next')
       $model->set_time(strtotime('noon first day of next month', $request->get('time')));
     else
       $model->set_time(strtotime('noon last day of previous month', $request->get('time')));
     return $app['twig']->render('query\get_timeline.tpl',
-                                ['queries'  => $model->get_queries(),
-                                 'timeline' => $model->get_timeline()]
-    );
+                                [
+                                 'queries'  => $model->get_queries(),
+                                 'timeline' => $model->get_timeline()
+                                ]);
   }
 
   public function get_user_options(Request $request, Application $app){
@@ -421,36 +448,43 @@ class queries{
   }
 
   public function set_department(Request $request, Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     $model->set_department($request->get('value'));
     $queries = $model->get_queries();
     return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
   }
 
   public function set_house(Request $request, Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     $model->set_house($request->get('value'));
     $queries = $model->get_queries();
     return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
   }
 
   public function set_status(Request $request, Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     $model->set_status($request->get('value'));
     $queries = $model->get_queries();
     return $app['twig']->render('query\set_status.tpl', ['queries' => $queries]);
   }
 
   public function set_street(Request $request, Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     $model->set_street($request->get('value'));
     $houses = $model->get_houses_by_street($request->get('value'));
     $queries = $model->get_queries();
     return $app['twig']->render('query\set_street.tpl', ['queries' => $queries, 'houses' => $houses]);
   }
 
+  public function set_query_type(Request $request, Application $app){
+    $model = $app['main\models\queries'];
+    $model->set_query_type($request->get('value'));
+    $queries = $model->get_queries();
+    return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
+  }
+
   public function set_work_type(Request $request, Application $app){
-    $model = $app['\main\models\query'];
+    $model = $app['main\models\queries'];
     $model->set_work_type($request->get('value'));
     $queries = $model->get_queries();
     return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
@@ -486,15 +520,6 @@ class queries{
     return $app['twig']->render('query\update_description.tpl', ['query' => $query]);
   }
 
-  public function update_payment_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    if(is_null($query))
-      throw new RuntimeException();
-    $query->set_payment_status($request->get('status'));
-    $app['em']->flush();
-    return $app['twig']->render('query\update_payment_status.tpl', ['query' => $query]);
-  }
-
   public function update_reason(Request $request, Application $app){
     preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->get('reason'), $matches);
     $query = $app['em']->find('\domain\query', $request->get('id'));
@@ -505,22 +530,19 @@ class queries{
     return $app['twig']->render('query\update_reason.tpl', ['query' => $query]);
   }
 
+  public function update_query_type(Request $request, Application $app){
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    $query_type = $app['em']->find('domain\query_type', $request->get('type'));
+    $query->set_query_type($query_type);
+    $app['em']->flush();
+    return $app['twig']->render('query\update_query_type.tpl', ['query' => $query]);
+  }
+
   public function update_work_type(Request $request, Application $app){
-    $type = $app['em']->find('\domain\workgroup', $request->get('type'));
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    if(is_null($query))
-      throw new RuntimeException();
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    $type = $app['em']->find('domain\workgroup', $request->get('type'));
     $query->add_work_type($type);
     $app['em']->flush();
     return $app['twig']->render('query\update_work_type.tpl', ['query' => $query]);
-  }
-
-  public function update_warning_status(Request $request, Application $app){
-    $query = $app['em']->find('\domain\query', $request->get('id'));
-    if(is_null($query))
-      throw new RuntimeException();
-    $query->set_warning_status($request->get('status'));
-    $app['em']->flush();
-    return $app['twig']->render('query\update_warning_status.tpl', ['query' => $query]);
   }
 }

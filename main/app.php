@@ -6,6 +6,7 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
 use config\general as conf;
 
@@ -40,19 +41,19 @@ $config->setProxyNamespace('proxies');
 $app['em'] = EntityManager::create($dbParams, $config);
 
 $app['\main\models\number'] = function($app){
-  return new \main\models\number($app);
+  return new \main\models\number($app['em']);
 };
-$app['\main\models\query'] = function($app){
-  return new \main\models\query($app);
+$app['main\models\queries'] = function($app){
+  return new \main\models\queries($app['em'], $app['session'], $app['user']);
 };
 $app['main\models\report_query'] = function($app){
-  return new \main\models\report_query($app);
+  return new \main\models\report_query($app['em'], $app['session']);
 };
 $app['main\models\report_event'] = function($app){
-  return new \main\models\report_event($app);
+  return new \main\models\report_event($app['em'], $app['session']);
 };
 $app['main\models\import_numbers'] = function($app){
-  return new \main\models\import_numbers($app);
+  return new \main\models\import_numbers($app['em'], $app['session']);
 };
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
@@ -73,9 +74,10 @@ $filter = new Twig_SimpleFilter('natsort', function (array $array) {
 $app['twig']->addFilter($filter);
 
 $app->before(function (Request $request, Application $app) {
-  session_start();
-  if(isset($_SESSION['user'])){
-    $app['user'] = $app['em']->find('\domain\user', $_SESSION['user']);
+  $app['session'] = new Session();
+  $app['session']->start();
+  if($app['session']->get('user')){
+    $app['user'] = $app['em']->find('domain\user', $app['session']->get('user'));
   }
 }, Application::EARLY_EVENT);
 
@@ -84,11 +86,14 @@ $security = function(Request $request, Application $app){
     throw new NotFoundHttpException();
 };
 
-#default_pages
+# default_pages
 $app->get('/', 'main\controllers\default_page::default_page');
-$app->post('/login/', 'main\controllers\default_page::login');
-$app->get('/logout/', 'main\controllers\default_page::logout')->before($security);
 $app->get('/about/', 'main\controllers\default_page::about')->before($security);
+
+# auth
+$app->get('/enter/', 'main\controllers\auth::login_form');
+$app->post('/enter/', 'main\controllers\auth::login');
+$app->get('/logout/', 'main\controllers\auth::logout')->before($security);
 
 # profile
 $app->get('/profile/', 'main\controllers\profile::default_page')->before($security);
@@ -102,11 +107,6 @@ $app->get('/profile/get_notification_center_content', 'main\controllers\profile:
 $app->get('/api/get_chat_options', 'main\controllers\api::get_chat_options');
 $app->get('/api/get_users', 'main\controllers\api::get_users');
 $app->get('/api/get_user_by_login_and_password', 'main\controllers\api::get_user_by_login_and_password');
-# error
-$app->get('/error/show_dialog', 'main\controllers\error::show_dialog')->before($security);
-$app->get('/error/send_error', 'main\controllers\error::send_error')->before($security);
-$app->get('/error/delete_error', 'main\controllers\error::delete_error')->before($security);
-$app->get('/error/', 'main\controllers\error::default_page')->before($security);
 
 # works
 $app->get('/works/', 'main\controllers\works::default_page')->before($security);
@@ -230,12 +230,10 @@ $app->get('/query/get_query_numbers', 'main\controllers\queries::get_query_numbe
 $app->get('/query/get_query_users', 'main\controllers\queries::get_query_users')->before($security);
 $app->get('/query/get_query_works', 'main\controllers\queries::get_query_works')->before($security);
 $app->get('/query/get_query_comments', 'main\controllers\queries::get_query_comments')->before($security);
-$app->get('/query/get_dialog_edit_payment_status', 'main\controllers\queries::get_dialog_edit_payment_status')->before($security);
-$app->get('/query/update_payment_status', 'main\controllers\queries::update_payment_status')->before($security);
 $app->get('/query/get_dialog_edit_work_type', 'main\controllers\queries::get_dialog_edit_work_type')->before($security);
 $app->get('/query/update_work_type', 'main\controllers\queries::update_work_type')->before($security);
-$app->get('/query/get_dialog_edit_warning_status', 'main\controllers\queries::get_dialog_edit_warning_status')->before($security);
-$app->get('/query/update_warning_status', 'main\controllers\queries::update_warning_status')->before($security);
+$app->get('/query/get_dialog_change_query_type', 'main\controllers\queries::get_dialog_change_query_type')->before($security);
+$app->get('/query/update_query_type', 'main\controllers\queries::update_query_type')->before($security);
 $app->get('/query/get_dialog_edit_description', 'main\controllers\queries::get_dialog_edit_description')->before($security);
 $app->get('/query/update_description', 'main\controllers\queries::update_description')->before($security);
 $app->get('/query/get_dialog_edit_reason', 'main\controllers\queries::get_dialog_edit_reason')->before($security);
@@ -267,6 +265,7 @@ $app->get('/query/set_department', 'main\controllers\queries::set_department')->
 $app->get('/query/set_street', 'main\controllers\queries::set_street')->before($security);
 $app->get('/query/set_house', 'main\controllers\queries::set_house')->before($security);
 $app->get('/query/set_work_type', 'main\controllers\queries::set_work_type')->before($security);
+$app->get('/query/set_query_type', 'main\controllers\queries::set_query_type')->before($security);
 $app->get('/query/get_dialog_change_initiator', 'main\controllers\queries::get_dialog_change_initiator')->before($security);
 $app->get('/query/get_houses', 'main\controllers\queries::get_houses')->before($security);
 $app->get('/query/get_numbers', 'main\controllers\queries::get_numbers')->before($security);
@@ -285,6 +284,7 @@ $app->get('/report/set_time_end', 'main\controllers\reports::set_time_end')->bef
 $app->get('/report/set_filter_query_status', 'main\controllers\reports::set_filter_query_status')->before($security);
 $app->get('/report/set_filter_query_department', 'main\controllers\reports::set_filter_query_department')->before($security);
 $app->get('/report/set_filter_query_worktype', 'main\controllers\reports::set_filter_query_worktype')->before($security);
+$app->get('/report/queries/set_query_type', 'main\controllers\reports::set_query_type')->before($security);
 $app->get('/report/set_filter_query_street', 'main\controllers\reports::set_filter_query_street')->before($security);
 $app->get('/report/set_filter_query_house', 'main\controllers\reports::set_filter_query_house')->before($security);
 $app->get('/report/report_query_one', 'main\controllers\reports::report_query_one')->before($security);
@@ -317,6 +317,12 @@ $app->post('/import/streets/', 'main\controllers\import::load_streets')->before(
 $app->post('/import/houses/', 'main\controllers\import::load_houses')->before($security);
 $app->post('/import/flats/', 'main\controllers\import::load_flats')->before($security);
 $app->post('/import/numbers/', 'main\controllers\import::load_numbers')->before($security);
+
+# system
+$app->get('/system/', 'main\controllers\system::default_page')->before($security);
+$app->get('/system/query_types/', 'main\controllers\query_types::default_page')->before($security);
+$app->get('/system/query_types/get_dialog_create_query_type/', 'main\controllers\query_types::get_dialog_create_query_type')->before($security);
+$app->get('/system/query_types/create_query_type/', 'main\controllers\query_types::create_query_type')->before($security);
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

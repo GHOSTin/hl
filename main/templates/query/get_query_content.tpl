@@ -1,8 +1,6 @@
 {% extends "ajax.tpl" %}
 
 {% set statuses = {'open':'Открытая', 'working':'В работе', 'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
-{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation':'Перерасчет'} %}
-{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned':'плановая'} %}
 {% set creator = query.get_creator() %}
 
 {% if query.get_initiator() == 'number' %}
@@ -58,20 +56,16 @@
 	{% if query.get_initiator() == 'number' %}
 		<li>Владелец: {{ number.get_fio() }}</li>
 		<li>Лицевой счет: №{{ number.get_number() }}</li>
+    <li>Задолженость: <strong>{{ number.get_debt()}} руб.</strong></li>
 	{% endif %}
-		<li>Тип оплаты: <span class="query-general-payment_status">{{ payment_statuses[query.get_payment_status()] }}</span>
-			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a class="get_dialog_edit_payment_status"> изменить</a>
-			{% endif %}
-		</li>
 		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
 			<a class="get_dialog_edit_work_type"> изменить</a></li>
 			{% endif %}
 		<li>Тип заявки:
-			<span class="query-general-warning_status">{{ warning_statuses[query.get_warning_status()] }}</span>
+			<span class="query-general-query_type">{{ query.get_query_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a class="get_dialog_edit_warning_status"> изменить</a>
+			<a class="get_dialog_change_query_type"> изменить</a>
 			{% endif %}
 		</li>
 		<li>
@@ -90,16 +84,30 @@
 		</li>
 	{% endif %}
 		<li>
-			<div>Контактная информация
-			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-				<a class="get_dialog_edit_contact_information">изменить</a>
-			{% endif %}
-			</div>
-			<ul class="query-general-contacts">
-				<li>ФИО: {{ query.get_contact_fio() }}</li>
-				<li>Телефон: {{ query.get_contact_telephone() }}</li>
-				<li>Сотовый: {{ query.get_contact_cellphone() }}</li>
-			</ul>
+      <div class="row">
+        <div class="col-md-6">
+    			<div>Контактная информация
+    			{% if query.get_status() in ['open', 'working', 'reopen'] %}
+    				<a class="get_dialog_edit_contact_information">изменить</a>
+    			{% endif %}
+    			</div>
+    			<ul class="query-general-contacts">
+    				<li>ФИО: {{ query.get_contact_fio() }}</li>
+    				<li>Телефон: {{ query.get_contact_telephone() }}</li>
+    				<li>Сотовый: {{ query.get_contact_cellphone() }}</li>
+    			</ul>
+        </div>
+        {% if query.get_initiator() == 'number' and number.get_events() is not empty %}
+        <div class="col-md-6">
+          <h5>Последние события</h5>
+          <ul class="list-unstyled">
+          {% for event in number.get_events()|slice(0,5) %}
+            <li><strong>{{ event.get_time()|date("d.m.Y") }}</strong> {{ event.get_name() }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+      </div>
 		</li>
 	</ul>
 	<ul>

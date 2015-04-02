@@ -19,12 +19,21 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries = [
-  'ALTER TABLE `streets` CHANGE `id` `id` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT',
-  'ALTER TABLE `houses` CHANGE `id` `id` SMALLINT(5) UNSIGNED NOT NULL AUTO_INCREMENT',
-  'ALTER TABLE `flats` CHANGE `id` `id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT',
-  'ALTER TABLE `numbers` CHANGE `id` `id` MEDIUMINT(8) UNSIGNED NOT NULL AUTO_INCREMENT'
-];
+$queries[] = 'ALTER TABLE queries CHANGE warning_type query_type_id INT(10) UNSIGNED NOT NULL';
+
+$queries[] = 'CREATE TABLE IF NOT EXISTS query_types (
+                id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                name VARCHAR(255) NOT NULL,
+                PRIMARY KEY(id),
+                UNIQUE KEY index_name (name)
+              ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+
+$queries[] = "INSERT INTO query_types (name) VALUES
+              ('Аварийная'),
+              ('На участок'),
+              ('Плановая')";
+
+$queries[] = 'ALTER TABLE queries DROP COLUMN payment_status ';
 
 foreach($queries as $query)
   $pdo->exec($query);

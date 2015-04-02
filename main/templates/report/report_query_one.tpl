@@ -1,8 +1,6 @@
 {% extends "print.tpl" %}
 
 {% set statuses = {'open':'Открытая', 'working':'В работе',  'close': 'Закрытая', 'reopen':'Переоткрытая'} %}
-{% set payment_statuses = {'paid':'Оплачиваемая', 'unpaid':'Неоплачиваемая', 'recalculation': 'Перерасчет'} %}
-{% set warning_statuses = {'hight':'аварийная', 'normal':'на участок', 'planned': 'плановая'} %}
 
 {% block css %}
 <style>
@@ -41,9 +39,8 @@
     <tr>
         <td>{{ query.get_number() }}</td>
         <td>{{ statuses[query.get_status()] }}</td>
-        <td>{{ warning_statuses[query.get_warning_status()] }}</td>
+        <td>{{ query.get_query_type().get_name() }}</td>
         <td>{{ query.get_work_type().get_name() }}</td>
-        <td>{{ payment_statuses[query.get_payment_status()] }}</td>
         <td>{{ query.get_department().get_name() }}</td>
         <td>{{ query.get_house().get_street().get_name() }}</td>
         <td>{{ query.get_house().get_number() }}</td>

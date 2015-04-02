@@ -4,6 +4,8 @@ use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use main\controllers\queries as controller;
 use domain\user;
+use domain\query_type;
+use domain\workgroup;
 
 class controller_query_Test extends PHPUnit_Framework_TestCase{
 
@@ -60,7 +62,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_clear_filters(){
-    $model = $this->getMockBuilder('main\models\query')
+    $model = $this->getMockBuilder('main\models\queries')
                   ->disableOriginalConstructor()
                   ->getMock();
     $model->expects($this->once())
@@ -69,7 +71,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('get_queries');
     $model->expects($this->once())
           ->method('get_timeline');
-    $this->app['\main\models\query'] = $model;
+    $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\clear_filters.tpl', $this->anything())
@@ -137,6 +139,64 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_dialog_change_query_type(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue('query_object'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->with(['name' => 'ASC'])
+               ->will($this->returnValue('query_types_array'));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\query_type')
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_dialog_change_query_type.tpl',
+                             [
+                              'query' => 'query_object',
+                              'query_types' => 'query_types_array'
+                             ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_change_query_type($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_dialog_edit_work_type(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue('query_object'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->with(['name' => 'ASC'])
+               ->will($this->returnValue('workgroups'));
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\workgroup')
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_dialog_edit_work_type.tpl',
+                             [
+                              'query' => 'query_object',
+                              'work_types' => 'workgroups'
+                             ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_edit_work_type($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_query_comments(){
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
@@ -190,22 +250,20 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
 
   public function test_get_dialog_initiator(){
     $this->request->query->set('value', 125);
-    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-                       ->disableOriginalConstructor()
-                       ->getMock();
-    $repository->expects($this->once())
-               ->method('findBy')
-               ->with([], ['name' => 'ASC'])
-               ->will($this->returnValue('street_array'));
-    $this->app['em']->expects($this->once())
-                    ->method('getRepository')
-                    ->with('\domain\street')
-                    ->will($this->returnValue($repository));
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_streets')
+          ->willReturn('street_array');
+    $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\get_dialog_initiator.tpl',
-                             ['streets' => 'street_array',
-                              'value' => 125])
+                             [
+                              'streets' => 'street_array',
+                              'value' => 125
+                             ])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->get_dialog_initiator($this->request, $this->app);
     $this->assertEquals('render_template', $response);
@@ -240,14 +298,14 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
 
   public function test_get_houses(){
     $this->request->query->set('id', 125);
-    $model = $this->getMockBuilder('main\models\query')
+    $model = $this->getMockBuilder('main\models\queries')
                   ->disableOriginalConstructor()
                   ->getMock();
     $model->expects($this->once())
           ->method('get_houses_by_street')
           ->with(125)
           ->will($this->returnValue('house_array'));
-    $this->app['\main\models\query'] = $model;
+    $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\get_houses.tpl', ['houses' => 'house_array'])
@@ -273,7 +331,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
   public function test_get_timeline(){
     $this->request->query->set('time', 1397562800);
     $this->request->query->set('act', 'next');
-    $model = $this->getMockBuilder('main\models\query')
+    $model = $this->getMockBuilder('main\models\queries')
                   ->disableOriginalConstructor()
                   ->getMock();
     $model->expects($this->once())
@@ -282,7 +340,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
           ->method('get_queries');
     $model->expects($this->once())
           ->method('get_timeline');
-    $this->app['\main\models\query'] = $model;
+    $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\get_timeline.tpl', $this->anything())
@@ -349,6 +407,140 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_set_department(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_department', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_department')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_department($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_house(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_house', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_house')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_house($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_query_type(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_query_type', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_query_type')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_query_type($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_status(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_status', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_status')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\set_status.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_status($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_street(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_street', 'get_queries', 'get_houses_by_street'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_street')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_houses_by_street')
+          ->with(125)
+          ->willReturn('houses_array');
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\set_street.tpl',
+                             [
+                              'queries' => 'queries_array',
+                              'houses' => 'houses_array'
+                             ])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_street($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_set_work_type(){
+    $this->request->query->set('value', 125);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['set_work_type', 'get_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('set_work_type')
+          ->with(125);
+    $model->expects($this->once())
+          ->method('get_queries')
+          ->willReturn('queries_array');
+    $this->app['main\models\queries'] = $model;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->set_work_type($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_to_working_query_1(){
     $this->setExpectedException('RuntimeException');
     $this->request->query->set('id', 125);
@@ -375,6 +567,50 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->with('query\get_query_content.tpl', ['query' => $query])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->to_working_query($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_update_query_type(){
+    $this->request->query->set('id', 125);
+    $this->request->query->set('type', 253);
+    $query_type = new query_type();
+    $query = $this->getMock('domain\query');
+    $query->expects($this->once())
+          ->method('set_query_type')
+          ->with($query_type);
+    $this->app['em']->expects($this->exactly(2))
+                    ->method('find')
+                    ->withConsecutive(['domain\query', 125], ['domain\query_type', 253])
+                    ->will($this->onConsecutiveCalls($query, $query_type));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\update_query_type.tpl', ['query' => $query])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->update_query_type($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_update_work_type(){
+    $this->request->query->set('id', 125);
+    $this->request->query->set('type', 253);
+    $workgroup = new workgroup();
+    $query = $this->getMock('domain\query');
+    $query->expects($this->once())
+          ->method('add_work_type')
+          ->with($workgroup);
+    $this->app['em']->expects($this->exactly(2))
+                    ->method('find')
+                    ->withConsecutive(['domain\query', 125], ['domain\workgroup', 253])
+                    ->will($this->onConsecutiveCalls($query, $workgroup));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\update_work_type.tpl', ['query' => $query])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->update_work_type($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 }
