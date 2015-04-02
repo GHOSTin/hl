@@ -19,22 +19,29 @@ class reports{
   }
 
   public function get_query_reports(Application $app){
-    $work_types = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name' => 'ASC']);
-    $departments = $app['em']->getRepository('\domain\department')->findBy([], ['name' => 'ASC']);
-    $streets = $app['em']->getRepository('\domain\street')->findBy([], ['name' => 'ASC']);
+    $work_types = $app['em']->getRepository('domain\workgroup')
+                            ->findAll(['name' => 'ASC']);
+    $departments = $app['em']->getRepository('domain\department')
+                             ->findAll(['name' => 'ASC']);
+    $streets = $app['em']->getRepository('domain\street')
+                         ->findAll(['name' => 'ASC']);
+    $query_types = $app['em']->getRepository('domain\query_type')
+                             ->findAll(['name' => 'ASC']);
     $model = $app['main\models\report_query'];
     $filters = $model->get_filters();
     $houses = [];
     if(!empty($filters['street']))
-      $houses = $app['em']->getRepository('data_house')->findByStreet($filters['street']);
-    else
-      $houses = [];
+      $houses = $app['em']->getRepository('domain\house')
+                          ->findByStreet($filters['street']);
     return $app['twig']->render('report\get_query_reports.tpl',
-                                ['filters' => $filters,
+                                [
+                                 'filters' => $filters,
                                  'query_work_types' => $work_types,
+                                 'query_types' => $query_types,
                                  'departments' => $departments,
                                  'streets' => $streets,
-                                 'houses' => $houses]);
+                                 'houses' => $houses
+                                ]);
   }
 
   public function report_query_one(Application $app){
@@ -43,12 +50,14 @@ class reports{
     return $app['twig']->render('report\report_query_one.tpl', ['queries' => $queries]);
   }
 
-  public function report_query_one_xls(Request $request, Application $app){
-    header('Content-Disposition: attachment; filename=export.xml');
-    header('Content-type: application/octet-stream');
+  public function report_query_one_xls(Application $app){
     $model = $app['main\models\report_query'];
     $queries = $model->get_queries();
-    return $app['twig']->render('report\report_query_one_xls.tpl', ['queries' => $queries]);
+    $response = new Response();
+    $response->setContent($app['twig']->render('report\report_query_one_xls.tpl', ['queries' => $queries]));
+    $response->headers->set('Content-Disposition', 'attachment; filename=export.xml');
+    $response->headers->set('Content-type', 'application/octet-stream');
+    return $response;
   }
 
   public function set_filter_query_department(Request $request, Application $app){
@@ -91,6 +100,12 @@ class reports{
   public function set_time_end(Request $request, Application $app){
     $model = $app['main\models\report_query'];
     $model->set_time_end(strtotime($request->get('time')) + 86359);
+    return new Response();
+  }
+
+  public function set_query_type(Request $request, Application $app){
+    $model = $app['main\models\report_query'];
+    $model->set_query_type($request->get('id'));
     return new Response();
   }
 }
