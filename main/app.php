@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local as Adapter;
+
 use config\general as conf;
 
 $DS = DIRECTORY_SEPARATOR;
@@ -31,6 +34,7 @@ $app['user'] = null;
 $app['salt'] = conf::authSalt;
 $app['chat_host'] = conf::chat_host;
 $app['chat_port'] = conf::chat_port;
+$app['files'] = $root.'files/';
 
 $config = new Configuration();
 $driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
@@ -41,7 +45,7 @@ $config->setProxyNamespace('proxies');
 $app['em'] = EntityManager::create($dbParams, $config);
 
 $app['\main\models\number'] = function($app){
-  return new \main\models\number($app['em']);
+  return new \main\models\number($app['em'], $app['user']);
 };
 $app['main\models\queries'] = function($app){
   return new \main\models\queries($app['em'], $app['session'], $app['user']);
@@ -59,6 +63,9 @@ $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
 
+$app['filesystem'] = function($app) use ($root){
+  return new Filesystem(new Adapter($root.'files'));
+};
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates'];
 }else{
@@ -176,6 +183,10 @@ $app->get('/user/add_profile', 'main\controllers\users::add_profile')->before($s
 $app->get('/user/get_restriction_content', 'main\controllers\users::get_restriction_content')->before($security);
 $app->get('/user/update_restriction', 'main\controllers\users::update_restriction')->before($security);
 
+# users
+$app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions')->before($security);
+$app->get('/users/{id}/restrictions/{profile}/{item}/', 'main\controllers\users::update_restriction')->before($security);
+
 # metrics
 $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($security);
 $app->get('/metrics/archive/', 'main\controllers\metrics::archive')->before($security);
@@ -274,6 +285,13 @@ $app->get('/query/get_dialog_create_query', 'main\controllers\queries::get_dialo
 $app->get('/query/get_dialog_initiator', 'main\controllers\queries::get_dialog_initiator')->before($security);
 $app->get('/query/get_initiator', 'main\controllers\queries::get_initiator')->before($security);
 $app->get('/query/create_query', 'main\controllers\queries::create_query')->before($security);
+
+# queries
+$app->get('/queries/{id}/files/', 'main\controllers\queries::get_query_files')->before($security);
+$app->post('/queries/{id}/files/', 'main\controllers\queries::add_file')->before($security);
+$app->get('/queries/{id}/files/{date}/{name}', 'main\controllers\queries::get_file')->before($security);
+$app->get('/queries/{id}/files/{date}/{name}/get_dialog_delete_file/', 'main\controllers\queries::get_dialog_delete_file')->before($security);
+$app->get('/queries/{id}/files/{date}/{name}/delete/', 'main\controllers\queries::delete_file')->before($security);
 
 # report
 $app->get('/report/', 'main\controllers\reports::default_page')->before($security);

@@ -256,16 +256,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $params['query_types'] = [];
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
-    $profile = $this->getMockBuilder('domain\profile')
-                    ->disableOriginalConstructor()
-                    ->setMethods(['get_restrictions'])
-                    ->getMock();
-    $profile->expects($this->once())
-            ->method('get_restrictions')
-            ->willReturn(['departments' => [9, 10, 11]]);
     $this->user->expects($this->once())
-               ->method('get_profile')
-               ->willReturn($profile);
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([9, 10, 11]);
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
