@@ -8,6 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
+use League\Flysystem\Filesystem;
+use League\Flysystem\Adapter\Local as Adapter;
+
 use config\general as conf;
 
 $DS = DIRECTORY_SEPARATOR;
@@ -31,6 +34,7 @@ $app['user'] = null;
 $app['salt'] = conf::authSalt;
 $app['chat_host'] = conf::chat_host;
 $app['chat_port'] = conf::chat_port;
+$app['files'] = $root.'files/';
 
 $config = new Configuration();
 $driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
@@ -58,7 +62,13 @@ $app['main\models\import_numbers'] = function($app){
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
+$app['\domain\query2comment'] = $app->factory(function($app){
+  return new \domain\query2comment;
+});
 
+$app['filesystem'] = function($app) use ($root){
+  return new Filesystem(new Adapter($root.'files'));
+};
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates'];
 }else{
@@ -230,6 +240,7 @@ $app->get('/query/get_query_numbers', 'main\controllers\queries::get_query_numbe
 $app->get('/query/get_query_users', 'main\controllers\queries::get_query_users')->before($security);
 $app->get('/query/get_query_works', 'main\controllers\queries::get_query_works')->before($security);
 $app->get('/query/get_query_comments', 'main\controllers\queries::get_query_comments')->before($security);
+$app->get('/query/get_query_files', 'main\controllers\queries::get_query_files')->before($security);
 $app->get('/query/get_dialog_edit_work_type', 'main\controllers\queries::get_dialog_edit_work_type')->before($security);
 $app->get('/query/update_work_type', 'main\controllers\queries::update_work_type')->before($security);
 $app->get('/query/get_dialog_change_query_type', 'main\controllers\queries::get_dialog_change_query_type')->before($security);
@@ -274,6 +285,12 @@ $app->get('/query/get_dialog_create_query', 'main\controllers\queries::get_dialo
 $app->get('/query/get_dialog_initiator', 'main\controllers\queries::get_dialog_initiator')->before($security);
 $app->get('/query/get_initiator', 'main\controllers\queries::get_initiator')->before($security);
 $app->get('/query/create_query', 'main\controllers\queries::create_query')->before($security);
+
+# queries
+$app->post('/queries/{id}/files/', 'main\controllers\queries::add_file')->before($security);
+$app->get('/queries/{id}/files/{date}/{name}', 'main\controllers\queries::get_file')->before($security);
+$app->get('/queries/{id}/files/{date}/{name}/get_dialog_delete_file/', 'main\controllers\queries::get_dialog_delete_file')->before($security);
+$app->get('/queries/{id}/files/{date}/{name}/delete/', 'main\controllers\queries::delete_file')->before($security);
 
 # report
 $app->get('/report/', 'main\controllers\reports::default_page')->before($security);

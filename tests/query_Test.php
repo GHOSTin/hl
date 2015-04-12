@@ -5,11 +5,17 @@ use domain\query;
 use domain\department;
 use domain\house;
 use domain\query_type;
+use domain\user;
+use domain\file;
 
 class query_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $this->query = new query();
+    $this->user = new user();
+    $this->path = '20150410/249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg';
+    $this->time = time();
+    $this->name = 'image.jpg';
   }
 
   public function test_add_comment_1(){
@@ -23,6 +29,37 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $comment = new query2comment();
     $this->query->add_comment($comment);
     $this->query->add_comment($comment);
+  }
+
+  public function test_add_file_1(){
+    $this->setExpectedException('DomainException');
+    $this->query->close(time(), 'Причина');
+    $file = new file($this->user, $this->path, $this->time, $this->name);
+    $this->query->add_file($file);
+  }
+
+  public function test_add_file_2(){
+    $file = new file($this->user, $this->path, $this->time, $this->name);
+    $this->query->add_file($file);
+    $this->assertInstanceOf('domain\query2file', $this->query->get_files()[0]);
+  }
+
+  public function test_delete_file_1(){
+    $this->setExpectedException('DomainException');
+    $this->query->close(time(), 'Причина');
+    $file = new file($this->user, $this->path, $this->time, $this->name);
+    $this->query->add_file($file);
+    $q2f = $this->query->get_files()[0];
+    $this->query->delete_file($q2f);
+  }
+
+  public function test_delete_file_2(){
+    $file = new file($this->user, $this->path, $this->time, $this->name);
+    $this->query->add_file($file);
+    $q2f = $this->query->get_files()[0];
+    $this->assertCount(1, $this->query->get_files());
+    $this->query->delete_file($q2f);
+    $this->assertCount(0, $this->query->get_files());
   }
 
   public function test_get_status(){

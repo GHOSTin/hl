@@ -33,6 +33,9 @@
 {% block javascript %}
   <script src="/js/query.js"></script>
   <script src="/js/bootstrap-datepicker.js"></script>
+  <script src="/js/jquery.ui.widget.js"></script>
+  <script src="/js/jquery.iframe-transport.js"></script>
+  <script src="/js/jquery.fileupload.js"></script>
 {% endblock javascript %}
 
 {% block css %}

@@ -3,10 +3,15 @@
 use RuntimeException;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use domain\query2user;
 use domain\query2comment;
 use domain\query2work;
 use domain\query;
+use domain\file;
+use domain\query2file;
 
 class queries{
 
@@ -21,6 +26,24 @@ class queries{
     $app['em']->persist($comment);
     $app['em']->flush();
     return $app['twig']->render('query\add_comment.tpl', ['query' => $query]);
+  }
+
+  public function add_file(Request $request, Application $app, $id){
+    $query = $app['em']->find('domain\query', $id);
+    $file = $request->files->get('file');
+    if($file->isValid()) {
+      $ext = pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION);
+      $time = time();
+      $name = sha1(implode('_', [$time, $app['session']->getId(), rand(0, 100000)]));
+      $path = date('Ymd').'/'.$name.'.'.$ext;
+      $stream = fopen($file->getRealPath(), 'r+');
+      $app['filesystem']->writeStream($path, $stream);
+      fclose($stream);
+      $file = new file($app['user'], $path, $time, $file->getClientOriginalName());
+      $query->add_file($file);
+      $app['em']->flush();
+    }
+    return $app['twig']->render('query\query_files.tpl', ['query' => $query]);
   }
 
   public function add_user(Request $request, Application $app){
@@ -173,6 +196,20 @@ class queries{
                                 ]);
   }
 
+  public function delete_file(Application $app, $id, $date, $name){
+    $query = $app['em']->find('domain\query', $id);
+    $file = $app['em']->getRepository('domain\query2file')
+                      ->findOneBy([
+                                   'query' => $id,
+                                   'file' => $date.'/'.$name
+                                  ]);
+    $query->delete_file($file);
+    $path = $file->get_path();
+    $app['em']->flush();
+    $app['filesystem']->delete($path);
+    return $app['twig']->render('query\query_files.tpl', ['query' => $query]);
+  }
+
   public function get_day(Request $request, Application $app){
     $model = $app['main\models\queries'];
     $model->set_time($request->get('time'));
@@ -212,6 +249,15 @@ class queries{
 
   public function get_dialog_create_query(Application $app){
     return $app['twig']->render('query\get_dialog_create_query.tpl');
+  }
+
+  public function get_dialog_delete_file(Application $app, $id, $date, $name){
+    $file = $app['em']->getRepository('domain\query2file')
+                      ->findOneBy([
+                                   'query' => $id,
+                                   'file' => $date.'/'.$name
+                                  ]);
+    return $app['twig']->render('query\get_dialog_delete_file.tpl', ['file' => $file]);
   }
 
   public function get_dialog_edit_contact_information(Request $request, Application $app){
@@ -299,6 +345,24 @@ class queries{
     return $app['twig']->render('query\get_dialog_to_working_query.tpl', ['query' => $query]);
   }
 
+  public function get_file(Application $app, $id, $date, $name){
+    $file = $app['em']->getRepository('domain\query2file')
+                      ->findOneBy([
+                                   'query' => $id,
+                                   'file' => $date.'/'.$name
+                                  ]);
+    if($file && $app['filesystem']->has($file->get_path())){
+      $response = new BinaryFileResponse($app['files'].$file->get_path());
+      $disposition = $response->headers->makeDisposition(
+                                          ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+                                          $file->get_name()
+                                         );
+      $response->headers->set('Content-Disposition', $disposition);
+      return $response;
+    }else
+      throw new NotFoundHttpException();
+  }
+
   public function get_initiator(Request $request, Application $app){
     $types = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name'=> 'ASC']);
     switch($request->get('initiator')){
@@ -337,6 +401,11 @@ class queries{
   public function get_query_content(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
+  }
+
+  public function get_query_files(Request $request, Application $app){
+    $query = $app['em']->find('domain\query', $request->get('id'));
+    return $app['twig']->render('query\get_query_files.tpl', ['query' => $query]);
   }
 
   public function get_documents(Request $request, Application $app){

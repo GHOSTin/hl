@@ -116,6 +116,11 @@ class query{
    */
 	private $users;
 
+  /**
+  * @OneToMany(targetEntity="domain\query2file", mappedBy="query", cascade="all", orphanRemoval=true)
+  */
+  private $files;
+
 	/**
   * @OneToMany(targetEntity="domain\query2comment", mappedBy="query")
   */
@@ -127,6 +132,7 @@ class query{
   public function __construct(){
     $this->numbers = new ArrayCollection();
     $this->comments = new ArrayCollection();
+    $this->files = new ArrayCollection();
     $this->status = 'open';
   }
 
@@ -141,6 +147,13 @@ class query{
 			throw new DomainException('Комментарий уже существует.');
 		$this->comments->add($comment);
 	}
+
+  public function add_file(file $file){
+    if(!in_array($this->status, ['open', 'reopen', 'working']))
+      throw new DomainException();
+    $q2f = new query2file($this, $file);
+    $this->files->add($q2f);
+  }
 
 	public function add_user(query2user $user){
 		$this->users->add($user);
@@ -158,6 +171,12 @@ class query{
     $this->status = 'close';
     $this->set_time_close($time);
     $this->set_close_reason($reason);
+  }
+
+  public function delete_file(query2file $file){
+    if(!in_array($this->status, ['open', 'reopen', 'working']))
+      throw new DomainException();
+    $this->files->removeElement($file);
   }
 
 	public function remove_work(work $w){
@@ -207,6 +226,10 @@ class query{
 	public function get_comments(){
 		return $this->comments;
 	}
+
+  public function get_files(){
+    return $this->files;
+  }
 
 	public function get_creator(){
 		$creators = [];

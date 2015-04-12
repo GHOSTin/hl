@@ -79,6 +79,16 @@ $(document).ready(function(){
 					init_content(r);
 				});
 	});
+  $('body').on('click', '.query-files > h5', function(){
+    if($(this).siblings().is('.query-sub'))
+      $(this).siblings('.query-sub').remove();
+    else
+      $.get('get_query_files',{
+         id: get_query_id($(this))
+        },function(r){
+          init_content(r);
+        });
+  });
 	$('body').on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
 			 id: get_query_id($(this))
@@ -205,6 +215,12 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	})
+  $('body').on('click', '.get_dialog_add_file', function(){
+    $.get('/queries/' + get_query_id($(this)) + '/get_dialog_add_file',
+      function(r){
+        init_content(r);
+      });
+  })
 	$('body').on('click', '.get_dialog_add_user', function(){
 		$.get('get_dialog_add_user',{
 			id: get_query_id($(this)),
@@ -213,6 +229,14 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	})
+  $('body').on('click', '.get_dialog_delete_file', function(){
+    id = get_query_id($(this));
+    path = $(this).parent().attr('path');
+    $.get('/queries/' + id +'/files/' + path + '/get_dialog_delete_file',
+      function(r){
+        init_content(r);
+      });
+  })
 	$('body').on('click', '.get_dialog_remove_user', function(){
 		$.get('get_dialog_remove_user',{
 			id: get_query_id($(this)),

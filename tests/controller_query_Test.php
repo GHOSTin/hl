@@ -23,6 +23,72 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->app['em'] = $em;
   }
 
+  public function test_add_file(){
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->willReturn('query_object');
+    $file = $this->getMockBuilder('Symfony\Component\HttpFoundation\File\UploadedFile')
+                 ->disableOriginalConstructor()
+                 ->getMock();
+    $file->expects($this->once())
+         ->method('isValid')
+         ->willReturn(false);
+    $this->request->files->set('file', $file);
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_files.tpl', ['query' => 'query_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->add_file($this->request, $this->app, 125);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_delete_file(){
+    $q2f = $this->getMockBuilder('domain\query2file')
+                ->disableOriginalConstructor()
+                ->getMock();
+    $q2f->expects($this->once())
+        ->method('get_path')
+        ->willReturn('20150410/249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg');
+    $query = $this->getMock('domain\query');
+    $query->expects($this->once())
+          ->method('delete_file')
+          ->with($q2f);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneBy')
+               ->with([
+                       'query' => 125,
+                       'file' => '20150410/249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg'
+                      ])
+               ->willReturn($q2f);
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\query2file')
+                    ->will($this->returnValue($repository));
+    $this->app['em']->expects($this->once())
+                    ->method('flush');
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue($query));
+    $filesystem = $this->getMockBuilder('League\Flysystem\Filesystem')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $filesystem->expects($this->once())
+               ->method('delete')
+               ->with('20150410/249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg');
+    $this->app['filesystem'] = $filesystem;
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\query_files.tpl', ['query' => $query])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->delete_file($this->app, 125, 20150410, '249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg');
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_add_comment(){
     $this->request->query->set('query_id', 125);
     $this->request->query->set('message', 'Привет');
@@ -60,6 +126,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $response = $this->controller->add_comment($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
+
 
   public function test_clear_filters(){
     $model = $this->getMockBuilder('main\models\queries')
@@ -168,6 +235,29 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_dialog_delete_file(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneBy')
+               ->with([
+                       'query' => 125,
+                       'file' => '20150410/249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg'
+                      ])
+               ->willReturn('query2file_object');
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\query2file')
+                    ->will($this->returnValue($repository));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_dialog_delete_file.tpl', ['file' => 'query2file_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_dialog_delete_file($this->app, 125, 20150410, '249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg');
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_dialog_edit_work_type(){
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
@@ -197,6 +287,61 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_file_1(){
+    $this->setExpectedException('Symfony\Component\HttpKernel\Exception\NotFoundHttpException');
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneBy')
+               ->with([
+                       'query' => 125,
+                       'file' => '20150410/249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg'
+                      ])
+               ->willReturn(null);
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\query2file')
+                    ->will($this->returnValue($repository));
+    $this->controller->get_file($this->app, 125, 20150410, '249d2c7dbd66604b90938aa1d7093f711ec4b77e.jpg');
+  }
+
+  public function test_get_file_2(){
+    $q2f = $this->getMockBuilder('domain\query2file')
+                ->disableOriginalConstructor()
+                ->getMock();
+    $q2f->expects($this->exactly(2))
+        ->method('get_path')
+        ->willReturn('autoload.php');
+    $q2f->expects($this->once())
+        ->method('get_name');
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneBy')
+               ->with([
+                       'query' => 125,
+                       'file' => '20150410/autoload.php'
+                      ])
+               ->willReturn($q2f);
+    $this->app['em']->expects($this->once())
+                    ->method('getRepository')
+                    ->with('domain\query2file')
+                    ->will($this->returnValue($repository));
+    $this->app['files'] = __DIR__.'/';
+    $filesystem = $this->getMockBuilder('League\Flysystem\Filesystem')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $filesystem->expects($this->once())
+               ->method('has')
+               ->with('autoload.php')
+               ->willReturn(true);
+    $this->app['filesystem'] = $filesystem;
+    $response = $this->controller->get_file($this->app, 125, 20150410, 'autoload.php');
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\BinaryFileResponse', $response);
+  }
+
   public function test_get_query_comments(){
     $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
@@ -222,6 +367,20 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->with('query\get_query_content.tpl', ['query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->get_query_content($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_query_files(){
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('domain\query', 125)
+                    ->will($this->returnValue('query_object'));
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\get_query_files.tpl', ['query' => 'query_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->get_query_files($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 

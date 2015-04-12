@@ -112,16 +112,19 @@
 	</ul>
 	<ul>
 		<li class="query-numbers">
-			<h5>Лицевые счета <span class="label label-success">{{ query.get_numbers()|length }}</span></h5>
+			<h5>Лицевые счета <span class="label label-success">{{ query.get_numbers().count() }}</span></h5>
 		</li>
 		<li class="query-users">
-			<h5>Участники <span class="label label-success">{{ query.get_users()|length }}</span></h5>
+			<h5>Участники <span class="label label-success">{{ query.get_users().count() }}</span></h5>
 		</li>
 		<li class="query-works">
-			<h5>Работы <span class="label label-success">{{ query.get_works()|length }}</span></h5>
+			<h5>Работы <span class="label label-success">{{ query.get_works().count() }}</span></h5>
 		</li>
+    <li class="query-files">
+      <h5>Файлы <span class="label label-success">{{ query.get_files().count() }}</span></h5>
+    </li>
 		<li class="query-comments">
-			<h5>Служебные комментарии <span class="label label-success">{{ query.get_comments()|length }}</span></h5>
+			<h5>Служебные комментарии <span class="label label-success">{{ query.get_comments().count() }}</span></h5>
 		</li>
 	</ul>
 </div>
