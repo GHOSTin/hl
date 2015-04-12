@@ -32,6 +32,8 @@ $queries[] = 'CREATE TABLE IF NOT EXISTS query2file (
                 path VARCHAR(255) NOT NULL,
                 UNIQUE KEY index_path (query_id, path)
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
+$queries[] = 'ALTER TABLE users ADD COLUMN restrictions TEXT NOT NULL';
+$queries[] = 'UPDATE users set restrictions = "{}"';
 
 foreach($queries as $query)
   $pdo->exec($query);

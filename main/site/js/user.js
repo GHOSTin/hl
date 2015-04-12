@@ -42,32 +42,15 @@ $(document).ready(function(){
                     init_content(r);
                 });
 
-    // раскрывает ограничения
-    }).on('click', '.get_restriction_content', function(){
-        if($(this).siblings().is('.restriction-content')){
-            $(this).siblings('.restriction-content').remove();
-        }else{
-            $.get('get_restriction_content',{
-                    company_id: get_company_id($(this)),
-                    user_id: get_user_id($(this)),
-                    profile: get_profile_name($(this)),
-                    restriction: $(this).parent().attr('restriction')
-                    },function(r){
-                        init_content(r);
-                    });
-        }
-
     // обновляет ограничения
-    }).on('click', '.restriction .item', function(){
-        $.get('update_restriction',{
-                company_id: get_company_id($(this)),
-                user_id: get_user_id($(this)),
-                profile: get_profile_name($(this)),
-                restriction: get_restriction_name($(this)),
-                item: $(this).attr('item')
-                },function(r){
-                    init_content(r);
-                });
+    }).on('click', '.restriction', function(){
+        id = get_user_id($(this));
+        profile = $(this).parent().attr('type');
+        item = $(this).attr('item');
+        $.get('/users/' + id + '/restrictions/' + profile + '/' + item + '/',
+          function(r){
+            init_content(r);
+          });
 
     // выводит соедржимое буквы группы
     }).on('click', '.get_group_letter', function(){
@@ -132,6 +115,13 @@ $(document).ready(function(){
             },function(r){
                 init_content(r);
             });
+
+    }).on('click', '.get_restrictions', function(){
+        id = get_user_id($(this));
+        $.get('/users/' + id + '/restrictions/',
+          function(r){
+            init_content(r);
+          });
 
     // выводит диалог создания группы
     }).on('click', '.get_dialog_create_group', function(){
@@ -252,9 +242,4 @@ function get_company_id(obj){
 // возвращает название профиля
 function get_profile_name(obj){
     return obj.closest('.profile').attr('profile');
-}
-
-// возвращает название ограничения
-function get_restriction_name(obj){
-    return obj.closest('.restriction').attr('restriction');
 }

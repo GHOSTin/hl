@@ -85,7 +85,7 @@ class queries{
   }
 
   public function init_default_params(){
-    $departments = $this->user->get_profile('query')->get_restrictions()['departments'];
+    $departments = $this->user->get_restriction('departments');
     $params['departments'] = $departments;
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
