@@ -42,6 +42,11 @@ class user implements JsonSerializable{
 	private $middlename;
 
   /**
+  * @Column(type="json_array")
+  */
+  private $restrictions;
+
+  /**
   * @OneToMany(targetEntity="\domain\session", mappedBy="user")
   */
 	private $sessions;
@@ -72,6 +77,7 @@ class user implements JsonSerializable{
   private $hash;
 
   public static $statuses = ['true', 'false'];
+  private static $restrictions_list = ['departments', 'categories'];
 
   public function add_profile(\domain\profile $profile){
     if($this->profiles->contains($profile))
@@ -120,6 +126,15 @@ class user implements JsonSerializable{
 
   public function get_profiles(){
     return $this->profiles;
+  }
+
+  public function get_restriction($type){
+    if(!in_array($type, self::$restrictions_list))
+      throw new DomainException('wrong profile');
+    if(isset($this->restrictions[$type]))
+      return $this->restrictions[$type];
+    else
+      return [];
   }
 
   public function get_status(){
@@ -187,5 +202,15 @@ class user implements JsonSerializable{
              'firstname' => $this->firstname,
              'lastname' => $this->lastname,
              'middlename' => $this->middlename];
+  }
+
+  public function update_restriction($type, $item){
+    $restriction = $this->get_restriction($type);
+    $pos = array_search($item, $restriction);
+    if($pos === false)
+      $restriction[] = $item;
+    else
+      unset($restriction[$pos]);
+    $this->restrictions[$type] = array_values($restriction);
   }
 }

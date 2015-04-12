@@ -82,15 +82,13 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_default_page(){
-    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-                       ->disableOriginalConstructor()
-                       ->getMock();
-    $repository->expects($this->once())
-               ->method('findBy')
-               ->will($this->returnValue('street_array'));
-    $this->app['em']->expects($this->once())
-                    ->method('getRepository')
-                    ->will($this->returnValue($repository));
+    $model = $this->getMockBuilder('\main\models\number')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_streets')
+          ->will($this->returnValue('street_array'));
+    $this->app['\main\models\number'] = $model;
     $this->app['user'] = new user();
     $this->app['twig']->expects($this->once())
                       ->method('render')

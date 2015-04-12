@@ -45,7 +45,7 @@ $config->setProxyNamespace('proxies');
 $app['em'] = EntityManager::create($dbParams, $config);
 
 $app['\main\models\number'] = function($app){
-  return new \main\models\number($app['em']);
+  return new \main\models\number($app['em'], $app['user']);
 };
 $app['main\models\queries'] = function($app){
   return new \main\models\queries($app['em'], $app['session'], $app['user']);
@@ -182,6 +182,10 @@ $app->get('/user/get_dialog_add_profile', 'main\controllers\users::get_dialog_ad
 $app->get('/user/add_profile', 'main\controllers\users::add_profile')->before($security);
 $app->get('/user/get_restriction_content', 'main\controllers\users::get_restriction_content')->before($security);
 $app->get('/user/update_restriction', 'main\controllers\users::update_restriction')->before($security);
+
+# users
+$app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions')->before($security);
+$app->get('/users/{id}/restrictions/{profile}/{item}/', 'main\controllers\users::update_restriction')->before($security);
 
 # metrics
 $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($security);
