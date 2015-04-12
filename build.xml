@@ -6,13 +6,13 @@
     <exclude name="build.xml"/>
     <exclude name="builds/**"/>
     <exclude name="tests/**"/>
+    <exclude name="files/**"/>
     <exclude name="cache/**"/>
     <exclude name="composer.json"/>
   </fileset>
   <target name="build" depends="clean, tar">
   </target>
   <target name="main"  depends="composer, phplint, phpunit, clean, tar">
-
   </target>
   <target name="phplint">
     <apply executable="php" failonerror="true">
