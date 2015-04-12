@@ -82,12 +82,13 @@ $(document).ready(function(){
   $('body').on('click', '.query-files > h5', function(){
     if($(this).siblings().is('.query-sub'))
       $(this).siblings('.query-sub').remove();
-    else
-      $.get('get_query_files',{
-         id: get_query_id($(this))
-        },function(r){
+    else{
+      id = get_query_id($(this));
+      $.get('/queries/' + id +'/files/',
+        function(r){
           init_content(r);
         });
+    }
   });
 	$('body').on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
@@ -214,13 +215,7 @@ $(document).ready(function(){
 			},function(r){
 				init_content(r);
 			});
-	})
-  $('body').on('click', '.get_dialog_add_file', function(){
-    $.get('/queries/' + get_query_id($(this)) + '/get_dialog_add_file',
-      function(r){
-        init_content(r);
-      });
-  })
+	});
 	$('body').on('click', '.get_dialog_add_user', function(){
 		$.get('get_dialog_add_user',{
 			id: get_query_id($(this)),

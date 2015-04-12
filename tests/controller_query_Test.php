@@ -371,7 +371,6 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_query_files(){
-    $this->request->query->set('id', 125);
     $this->app['em']->expects($this->once())
                     ->method('find')
                     ->with('domain\query', 125)
@@ -380,7 +379,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->method('render')
                       ->with('query\get_query_files.tpl', ['query' => 'query_object'])
                       ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_query_files($this->request, $this->app);
+    $response = $this->controller->get_query_files($this->app, 125);
     $this->assertEquals('render_template', $response);
   }
 

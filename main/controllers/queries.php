@@ -403,8 +403,8 @@ class queries{
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
 
-  public function get_query_files(Request $request, Application $app){
-    $query = $app['em']->find('domain\query', $request->get('id'));
+  public function get_query_files(Application $app, $id){
+    $query = $app['em']->find('domain\query', $id);
     return $app['twig']->render('query\get_query_files.tpl', ['query' => $query]);
   }
 

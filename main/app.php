@@ -62,9 +62,6 @@ $app['main\models\import_numbers'] = function($app){
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
-$app['\domain\query2comment'] = $app->factory(function($app){
-  return new \domain\query2comment;
-});
 
 $app['filesystem'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'files'));
@@ -240,7 +237,6 @@ $app->get('/query/get_query_numbers', 'main\controllers\queries::get_query_numbe
 $app->get('/query/get_query_users', 'main\controllers\queries::get_query_users')->before($security);
 $app->get('/query/get_query_works', 'main\controllers\queries::get_query_works')->before($security);
 $app->get('/query/get_query_comments', 'main\controllers\queries::get_query_comments')->before($security);
-$app->get('/query/get_query_files', 'main\controllers\queries::get_query_files')->before($security);
 $app->get('/query/get_dialog_edit_work_type', 'main\controllers\queries::get_dialog_edit_work_type')->before($security);
 $app->get('/query/update_work_type', 'main\controllers\queries::update_work_type')->before($security);
 $app->get('/query/get_dialog_change_query_type', 'main\controllers\queries::get_dialog_change_query_type')->before($security);
@@ -287,6 +283,7 @@ $app->get('/query/get_initiator', 'main\controllers\queries::get_initiator')->be
 $app->get('/query/create_query', 'main\controllers\queries::create_query')->before($security);
 
 # queries
+$app->get('/queries/{id}/files/', 'main\controllers\queries::get_query_files')->before($security);
 $app->post('/queries/{id}/files/', 'main\controllers\queries::add_file')->before($security);
 $app->get('/queries/{id}/files/{date}/{name}', 'main\controllers\queries::get_file')->before($security);
 $app->get('/queries/{id}/files/{date}/{name}/get_dialog_delete_file/', 'main\controllers\queries::get_dialog_delete_file')->before($security);
