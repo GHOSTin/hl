@@ -19,21 +19,19 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'ALTER TABLE queries CHANGE warning_type query_type_id INT(10) UNSIGNED NOT NULL';
-
-$queries[] = 'CREATE TABLE IF NOT EXISTS query_types (
-                id INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+$queries[] = 'CREATE TABLE IF NOT EXISTS files (
+                path VARCHAR(255) NOT NULL,
                 name VARCHAR(255) NOT NULL,
-                PRIMARY KEY(id),
-                UNIQUE KEY index_name (name)
+                time INT(10) UNSIGNED NOT NULL,
+                user_id INT(10) UNSIGNED NOT NULL,
+                UNIQUE KEY index_path (path)
               ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
 
-$queries[] = "INSERT INTO query_types (name) VALUES
-              ('Аварийная'),
-              ('На участок'),
-              ('Плановая')";
-
-$queries[] = 'ALTER TABLE queries DROP COLUMN payment_status ';
+$queries[] = 'CREATE TABLE IF NOT EXISTS query2file (
+                query_id BIGINT UNSIGNED NOT NULL,
+                path VARCHAR(255) NOT NULL,
+                UNIQUE KEY index_path (query_id, path)
+              ) ENGINE=InnoDB DEFAULT CHARSET=utf8;';
 
 foreach($queries as $query)
   $pdo->exec($query);

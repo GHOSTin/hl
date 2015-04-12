@@ -27,6 +27,7 @@
         "twig/twig": "1.*",
         "doctrine/orm": "*",
         "silex/silex": "2.0.*@dev",
-        "swiftmailer/swiftmailer": "@stable"
+        "swiftmailer/swiftmailer": "@stable",
+        "league/flysystem": "~1.1@dev"
     }
 }

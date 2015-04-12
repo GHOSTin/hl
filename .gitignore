@@ -1,6 +1,8 @@
 /cache/
 /vendor/
 /builds/
+/files/
 config/general.php
 composer.lock
 cache.properties
+main/site/router.php
