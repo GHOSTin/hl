@@ -176,7 +176,6 @@ class queries{
                           ->findByid($params['houses'], ['number' => 'ASC']);
     else
       $houses = [];
-    $profile = $app['user']->get_profile('query');
     if($request->get('id')){
       $queries = [$app['em']->find('domain\query', $request->get('id'))];
     }else
@@ -191,8 +190,7 @@ class queries{
                                  'departments' => $model->get_departments(),
                                  'query_work_types' => $types,
                                  'query_types' => $query_types,
-                                 'houses' => $houses,
-                                 'rules' => $profile->get_rules()
+                                 'houses' => $houses
                                 ]);
   }
 

@@ -7,40 +7,14 @@ $(document).ready(function(){
                 init_content(r);
             });
 
-    // выводит информацию о профиле
-    }).on('click', '.get_profile_content', function(){
-        if($(this).siblings().is('.profile-content')){
-            $(this).siblings('.profile-content').remove();
-        }else{
-            $.get('get_profile_content',{
-                company_id: get_company_id($(this)),
-                user_id: get_user_id($(this)),
-                profile: get_profile_name($(this))
-                },function(r){
-                    init_content(r);
-                });
-        }
-
-    // выводит диалог удаления профиля
-    }).on('click', '.get_dialog_delete_profile', function(){
-        $.get('get_dialog_delete_profile',{
-            company_id: get_company_id($(this)),
-            user_id: get_user_id($(this)),
-            profile: get_profile_name($(this))
-            },function(r){
-                init_content(r);
-            });
-
     // изменяет статус правила
-    }).on('click', '.rule', function(){
-        $.get('update_rule',{
-                company_id: get_company_id($(this)),
-                user_id: get_user_id($(this)),
-                profile: get_profile_name($(this)),
-                rule: $(this).attr('rule')
-                },function(r){
-                    init_content(r);
-                });
+    }).on('click', '.access', function(){
+        id = get_user_id($(this));
+        access = $(this).attr('value')
+        $.get('/users/' + id + '/access/' + access + '/',
+        function(r){
+            init_content(r);
+        });
 
     // обновляет ограничения
     }).on('click', '.restriction', function(){
@@ -100,13 +74,12 @@ $(document).ready(function(){
                 });
         }
 
-    // выводит информацию о правилах
-    }).on('click', '.get_user_profiles', function(){
-        $.get('get_user_profiles',{
-            id: get_user_id($(this))
-            },function(r){
-                init_content(r);
-            });
+    }).on('click', '.get_access', function(){
+      id = get_user_id($(this));
+      $.get('/users/' + id +'/access/',
+      function(r){
+          init_content(r);
+      });
 
     // выводит информацию о пользователе
     }).on('click', '.get_user_information', function(){
@@ -134,14 +107,6 @@ $(document).ready(function(){
     }).on('click', '.get_dialog_create_user', function(){
         $.get('get_dialog_create_user', {
             }, function(r){
-                init_content(r);
-            });
-
-    // выводит диалог добавления профиля
-    }).on('click', '.get_dialog_add_profile', function(){
-        $.get('get_dialog_add_profile',{
-            id: get_user_id($(this))
-            },function(r){
                 init_content(r);
             });
 
@@ -232,14 +197,4 @@ function get_user_id(obj){
 // возвращает идентификатор группы
 function get_group_id(obj){
     return obj.closest('.group').attr('group');
-}
-
-// возвращает идентификатор компании
-function get_company_id(obj){
-    return obj.closest('.company').attr('company');
-}
-
-// возвращает название профиля
-function get_profile_name(obj){
-    return obj.closest('.profile').attr('profile');
 }

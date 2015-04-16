@@ -173,19 +173,12 @@ $app->get('/user/get_dialog_exclude_user', 'main\controllers\users::get_dialog_e
 $app->get('/user/exclude_user', 'main\controllers\users::exclude_user')->before($security);
 $app->get('/user/get_dialog_create_group', 'main\controllers\users::get_dialog_create_group')->before($security);
 $app->get('/user/create_group', 'main\controllers\users::create_group')->before($security);
-$app->get('/user/get_user_profiles', 'main\controllers\users::get_user_profiles')->before($security);
-$app->get('/user/get_profile_content', 'main\controllers\users::get_profile_content')->before($security);
-$app->get('/user/update_rule', 'main\controllers\users::update_rule')->before($security);
-$app->get('/user/get_dialog_delete_profile', 'main\controllers\users::get_dialog_delete_profile')->before($security);
-$app->get('/user/delete_profile', 'main\controllers\users::delete_profile')->before($security);
-$app->get('/user/get_dialog_add_profile', 'main\controllers\users::get_dialog_add_profile')->before($security);
-$app->get('/user/add_profile', 'main\controllers\users::add_profile')->before($security);
-$app->get('/user/get_restriction_content', 'main\controllers\users::get_restriction_content')->before($security);
-$app->get('/user/update_restriction', 'main\controllers\users::update_restriction')->before($security);
 
 # users
 $app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions')->before($security);
 $app->get('/users/{id}/restrictions/{profile}/{item}/', 'main\controllers\users::update_restriction')->before($security);
+$app->get('/users/{id}/access/', 'main\controllers\users::access')->before($security);
+$app->get('/users/{id}/access/{profile}/{rule}/', 'main\controllers\users::update_access')->before($security);
 
 # metrics
 $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($security);

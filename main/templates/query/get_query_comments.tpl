@@ -6,9 +6,11 @@
 
 {% block html %}
 	<ul class="query-sub">
+{% if query.get_status() in ['open', 'working', 'reopen'] %}
     <li>
       <a class="get_dialog_add_comment">Оставить комментарий</a>
     </li>
+{% endif %}
     <li>
       <ul class="comments">
       {% include 'query/query_comments.tpl'%}

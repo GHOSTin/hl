@@ -5,7 +5,7 @@
 <div class="col-sm-3 col-lg-3">
   <div class="row">
     <div class="btn-group col-xs-12 query_controls">
-      {% if rules['createQuery'] == true %}
+      {% if user.check_access('queries/create_query') %}
       <div class="get_dialog_create_query btn btn-default col-xs-8">Создать заявку</div>
       {% endif %}
       <div class="get_search btn btn-default col-xs-4">Поиск</div>
