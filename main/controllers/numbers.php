@@ -60,7 +60,6 @@ class numbers{
 
   public function default_page(Application $app){
     $streets = $app['\main\models\number']->get_streets();
-    // $streets = $app['em']->getRepository('domain\street')->findAll();
     return $app['twig']->render('number\default_page.tpl',
                                 [
                                  'user' => $app['user'],

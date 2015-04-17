@@ -10,6 +10,11 @@ use JsonSerializable;
 class user implements JsonSerializable{
 
   /**
+  * @Column(type="json_array")
+  */
+  private $access = [];
+
+  /**
   * @Column(name="cellphone", type="string")
   */
 	private $cellphone;
@@ -44,7 +49,7 @@ class user implements JsonSerializable{
   /**
   * @Column(type="json_array")
   */
-  private $restrictions;
+  private $restrictions = [];
 
   /**
   * @OneToMany(targetEntity="\domain\session", mappedBy="user")
@@ -67,11 +72,6 @@ class user implements JsonSerializable{
   private $query2comments;
 
   /**
-  * @OneToMany(targetEntity="\domain\profile", mappedBy="user")
-  */
-  private $profiles;
-
-  /**
   * @Column(name="password", type="string")
   */
   private $hash;
@@ -79,10 +79,22 @@ class user implements JsonSerializable{
   public static $statuses = ['true', 'false'];
   private static $restrictions_list = ['departments', 'categories'];
 
-  public function add_profile(\domain\profile $profile){
-    if($this->profiles->contains($profile))
-      throw new DomainException('Пользователь уже добавлен в группу.');
-    $this->profiles->add($profile);
+  const WRONG_ACCESS_EXCEPTION = 'wrong access exception';
+
+  private static $rules_list = [
+    'metrics/general_access',
+    'numbers/general_access',
+    'reports/general_access',
+    'queries/general_access',
+    'queries/create_query',
+    'system/general_access',
+    'tasks/general_access'
+  ];
+
+  public function check_access($name){
+    if(!in_array($name, self::$rules_list, true))
+      throw new DomainException(self::WRONG_ACCESS_EXCEPTION);
+    return in_array($name, $this->access, true);
   }
 
   public function get_cellphone(){
@@ -115,17 +127,6 @@ class user implements JsonSerializable{
 
   public function get_middlename(){
     return $this->middlename;
-  }
-
-  public function get_profile($name){
-    foreach($this->profiles as $profile)
-      if($profile == $name)
-        return $profile;
-    return null;
-  }
-
-  public function get_profiles(){
-    return $this->profiles;
   }
 
   public function get_restriction($type){
@@ -198,10 +199,22 @@ class user implements JsonSerializable{
   }
 
   public function JsonSerialize(){
-    return [ 'id' => $this->id,
+    return [
+             'id' => $this->id,
              'firstname' => $this->firstname,
              'lastname' => $this->lastname,
-             'middlename' => $this->middlename];
+             'middlename' => $this->middlename
+           ];
+  }
+
+  public function update_access($rule){
+    if(!in_array($rule, self::$rules_list, true))
+      throw new DomainException(self::WRONG_ACCESS_EXCEPTION);
+    $pos = array_search($rule, $this->access);
+    if($pos === false)
+      $this->access[] = $rule;
+    else
+      unset($this->access[$pos]);
   }
 
   public function update_restriction($type, $item){
