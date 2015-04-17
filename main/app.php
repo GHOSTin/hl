@@ -6,6 +6,7 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
 use League\Flysystem\Filesystem;
@@ -85,6 +86,14 @@ $app->before(function (Request $request, Application $app) {
   $app['session']->start();
   if($app['session']->get('user')){
     $app['user'] = $app['em']->find('domain\user', $app['session']->get('user'));
+  }
+}, Application::EARLY_EVENT);
+
+$app->before(function (Request $request, Application $app) {
+  if(!is_null($app['user']) && $app['user']->get_status() !== 'true'){
+    $app['session']->invalidate();
+    $app['user'] = null;
+    throw new AccessDeniedHttpException();
   }
 }, Application::EARLY_EVENT);
 
@@ -335,8 +344,12 @@ $app->get('/system/query_types/', 'main\controllers\query_types::default_page')-
 $app->get('/system/query_types/get_dialog_create_query_type/', 'main\controllers\query_types::get_dialog_create_query_type')->before($security);
 $app->get('/system/query_types/create_query_type/', 'main\controllers\query_types::create_query_type')->before($security);
 
-$app->error(function (NotFoundHttpException $e) use ($app){
+$app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
+});
+
+$app->error(function(AccessDeniedHttpException $e) use ($app){
+  return $app['twig']->render('auth/block.tpl', ['user' => $app['user']]);
 });
 
 $app->run();
