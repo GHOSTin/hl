@@ -23,8 +23,6 @@ class auth{
     $password = $request->get('password');
     $user = $app['em']->getRepository('domain\user')->findOneByLogin($login);
     if(!is_null($user)){
-      if($user->get_status() !== 'true')
-        return $app['twig']->render('auth/block.tpl', ['user' => null]);
       if($user->get_hash() === user::generate_hash($password, $app['salt'])){
         $session = session::new_instance($user, $request->server->get('REMOTE_ADDR'));
         $app['em']->persist($session);

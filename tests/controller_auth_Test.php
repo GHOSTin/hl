@@ -48,39 +48,10 @@ class controller_auth_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_login_2(){
-    $this->request->query->set('login', 'NekrasovEV');
-    $user = $this->getMock('domain\user');
-    $user->expects($this->once())
-         ->method('get_status')
-         ->willReturn('false');
-    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-                       ->disableOriginalConstructor()
-                       ->setMethods(['findOneByLogin'])
-                       ->getMock();
-    $repository->expects($this->once())
-               ->method('findOneByLogin')
-               ->with('NekrasovEV')
-               ->will($this->returnValue($user));
-    $this->app['em']->expects($this->once())
-                    ->method('getRepository')
-                    ->with('domain\user')
-                    ->will($this->returnValue($repository));
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('auth/block.tpl', ['user' => null])
-                      ->willReturn('render_template');
-    $response = $this->controller->login($this->request, $this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
   public function test_login_3(){
     $this->request->query->set('login', 'NekrasovEV');
     $this->request->query->set('password', 'wrong_password');
     $user = $this->getMock('domain\user');
-    $user->expects($this->once())
-         ->method('get_status')
-         ->willReturn('true');
     $user->expects($this->once())
          ->method('get_hash')
          ->willReturn('wrong_hash');
@@ -115,9 +86,6 @@ class controller_auth_Test extends PHPUnit_Framework_TestCase{
     $this->request->query->set('login', 'NekrasovEV');
     $this->request->query->set('password', 'password');
     $user = $this->getMock('domain\user');
-    $user->expects($this->once())
-         ->method('get_status')
-         ->willReturn('true');
     $user->expects($this->once())
          ->method('get_hash')
          ->willReturn('d514dee5e76bbb718084294c835f312c');
