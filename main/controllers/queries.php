@@ -166,8 +166,6 @@ class queries{
 
   public function default_page(Request $request, Application $app){
     $model  = $app['main\models\queries'];
-    $types  = $app['em']->getRepository('domain\workgroup')
-                        ->findAll(['name' => 'ASC']);
     $query_types  = $app['em']->getRepository('domain\query_type')
                               ->findAll(['name' => 'ASC']);
     $params = $model->get_params();
@@ -188,7 +186,7 @@ class queries{
                                  'timeline' => $model->get_timeline(),
                                  'streets' => $model->get_streets(),
                                  'departments' => $model->get_departments(),
-                                 'query_work_types' => $types,
+                                 'query_work_types' => $model->get_categories(),
                                  'query_types' => $query_types,
                                  'houses' => $houses
                                 ]);
