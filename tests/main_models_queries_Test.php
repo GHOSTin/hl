@@ -26,6 +26,56 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                             ];
   }
 
+  public function test_get_categories_1(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('categories')
+               ->willReturn([]);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->with(['name' => 'ASC'])
+               ->willReturn('categories_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\workgroup')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em, $this->session, $this->user);
+    $this->assertEquals('categories_array', $model->get_categories());
+  }
+
+  public function test_get_categories_2(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('categories')
+               ->willReturn([1, 3, 5]);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByid'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByid')
+               ->with([1, 3, 5], ['name' => 'ASC'])
+               ->willReturn('categories_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\workgroup')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em, $this->session, $this->user);
+    $this->assertEquals('categories_array', $model->get_categories());
+  }
+
   public function test_constructor(){
     $this->session->expects($this->once())
                   ->method('get')
@@ -37,6 +87,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_departments_1(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([]);
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
@@ -58,7 +112,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_departments_2(){
-    $this->default_params['r_departments'] = [1, 3, 5];
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([1, 3, 5]);
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
@@ -136,7 +193,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_houses_by_street_2(){
-    $this->default_params['r_departments'] = [2, 5];
+    $this->user->expects($this->exactly(2))
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([2, 5]);
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
@@ -179,7 +239,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_streets_2(){
-    $this->default_params['r_departments'] = [2, 5];
+    $this->user->expects($this->exactly(2))
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([2, 5]);
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
@@ -196,7 +259,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                        ->getMock();
     $repository->expects($this->once())
                ->method('findBy')
-               ->with(['department' => $this->default_params['r_departments']])
+               ->with(['department' => [2, 5]])
                ->willReturn([$house]);
     $this->em->expects($this->once())
              ->method('getRepository')
@@ -248,18 +311,17 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_init_default_params(){
     $params['departments'] = [9, 10, 11];
-    $params['r_departments'] = [9, 10, 11];
     $params['houses'] = [];
     $params['status'] = query::$status_list;
     $params['streets'] = [];
-    $params['work_types'] = [];
+    $params['work_types'] = [7, 10, 12];
     $params['query_types'] = [];
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
-    $this->user->expects($this->once())
+    $this->user->expects($this->exactly(2))
                ->method('get_restriction')
-               ->with('departments')
-               ->willReturn([9, 10, 11]);
+               ->withConsecutive(['departments'], ['categories'])
+               ->will($this->onConsecutiveCalls([9, 10, 11], [7, 10, 12]));
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
@@ -287,6 +349,114 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query', $params);
     $model = new model($this->em, $this->session, $this->user);
     $model->save_params($params);
+  }
+
+  public function test_set_department_1(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\department', 0)
+             ->willReturn(null);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('departments')
+                  ->willReturn([]);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with([
+                  'departments' => [],
+                  'streets' => [],
+                  'houses' => []
+                 ]);
+    $model->set_department(0);
+  }
+
+  public function test_set_department_2(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\department', 0)
+             ->willReturn(null);
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('departments')
+                  ->willReturn([1, 2]);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with([
+                  'departments' => [1, 2],
+                  'streets' => [],
+                  'houses' => []
+                 ]);
+    $model->set_department(0);
+  }
+
+  public function test_set_department_3(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\department', 125)
+             ->willReturn('department_object');
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('departments')
+                  ->willReturn([]);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with([
+                  'departments' => [125],
+                  'streets' => [],
+                  'houses' => []
+                 ]);
+    $model->set_department(125);
+  }
+
+  public function test_set_department_4(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\department', 125)
+             ->willReturn('department_object');
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('departments')
+                  ->willReturn([1, 2]);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with([
+                  'departments' => [1, 2],
+                  'streets' => [],
+                  'houses' => []
+                 ]);
+    $model->set_department(125);
   }
 
   public function test_set_house_1(){
@@ -448,6 +618,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->method('get')
                   ->with('query')
                   ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('categories')
+                  ->willReturn([]);
     $model = $this->getMockBuilder('main\models\queries')
                   ->setConstructorArgs([$this->em, $this->session, $this->user])
                   ->setMethods(['save_params'])
@@ -459,18 +633,41 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_set_worktype_2(){
-    $workgroup = $this->getMock('domain\workgroup');
-    $workgroup->expects($this->once())
-              ->method('get_id')
-              ->will($this->returnValue(125));
     $this->em->expects($this->once())
              ->method('find')
-             ->with('domain\workgroup', 125)
-             ->willReturn($workgroup);
+             ->with('domain\workgroup', 0)
+             ->willReturn(null);
     $this->session->expects($this->exactly(2))
                   ->method('get')
                   ->with('query')
                   ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('categories')
+                  ->willReturn([1, 2]);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with(['work_types' => [1, 2]]);
+    $model->set_work_type(0);
+  }
+
+  public function test_set_worktype_3(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\workgroup', 125)
+             ->willReturn('workgroup_object');
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('categories')
+                  ->willReturn([]);
     $model = $this->getMockBuilder('main\models\queries')
                   ->setConstructorArgs([$this->em, $this->session, $this->user])
                   ->setMethods(['save_params'])
@@ -478,6 +675,29 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $model->expects($this->once())
           ->method('save_params')
           ->with(['work_types' => [125]]);
+    $model->set_work_type(125);
+  }
+
+  public function test_set_worktype_4(){
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\workgroup', 125)
+             ->willReturn('workgroup_object');
+    $this->session->expects($this->exactly(2))
+                  ->method('get')
+                  ->with('query')
+                  ->willReturn($this->default_params);
+    $this->user->expects($this->once())
+                  ->method('get_restriction')
+                  ->with('categories')
+                  ->willReturn([1, 2]);
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setMethods(['save_params'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('save_params')
+          ->with(['work_types' => [1, 2]]);
     $model->set_work_type(125);
   }
 

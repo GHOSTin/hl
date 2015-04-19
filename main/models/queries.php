@@ -17,7 +17,6 @@ class queries{
                      'status' => [],
                      'work_types' => [],
                      'query_types' => [],
-                     'r_departments'=> [],
                      'streets' => [],
                      'houses' => []
                     ];
@@ -42,19 +41,30 @@ class queries{
   }
 
   public function get_departments(){
-    if(!empty($this->params['r_departments']))
+    $departments = $this->user->get_restriction('departments');
+    if(!empty($departments))
       return $this->em->getRepository('domain\department')
-                      ->findByid($this->params['r_departments'], ['name' => 'ASC']);
+                      ->findByid($departments, ['name' => 'ASC']);
     else
       return $this->em->getRepository('domain\department')
                       ->findAll(['name' => 'ASC']);
   }
 
+  public function get_categories(){
+    $categories = $this->user->get_restriction('categories');
+    if(!empty($categories))
+      return $this->em->getRepository('domain\workgroup')
+                      ->findById($categories, ['name' => 'ASC']);
+    else
+      return $this->em->getRepository('domain\workgroup')
+                      ->findAll(['name' => 'ASC']);
+  }
+
   public function get_houses_by_street($street_id){
-    if(!empty($this->params['r_departments'])){
+    if(!empty($this->user->get_restriction('departments'))){
       $houses = $this->em->getRepository('domain\house')
                          ->findBy([
-                                   'department' => $this->params['r_departments'],
+                                   'department' => $this->user->get_restriction('departments'),
                                    'street' => $street_id
                                   ]);
     }else{
@@ -66,11 +76,10 @@ class queries{
   }
 
   public function get_streets(){
-    $this->em = $this->em;
-    if(!empty($this->params['r_departments'])){
+    if(!empty($this->user->get_restriction('departments'))){
       $streets = [];
       $houses = $this->em->getRepository('domain\house')
-                         ->findBy(['department' => $this->params['r_departments']]);
+                         ->findBy(['department' => $this->user->get_restriction('departments')]);
       if(!empty($houses))
         foreach($houses as $house){
           $street = $house->get_street();
@@ -85,14 +94,12 @@ class queries{
   }
 
   public function init_default_params(){
-    $departments = $this->user->get_restriction('departments');
-    $params['departments'] = $departments;
+    $params['departments'] = $this->user->get_restriction('departments');
+    $params['work_types'] = $this->user->get_restriction('categories');
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
     $params['status'] = query::$status_list;
-    $params['work_types'] = [];
     $params['query_types'] = [];
-    $params['r_departments'] = $departments;
     $params['streets'] = [];
     $params['houses'] = [];
     $this->save_params($params);
@@ -144,19 +151,12 @@ class queries{
   }
 
   public function set_department($department_id){
-    $departments = [];
     $department = $this->em->find('domain\department', $department_id);
-    if(is_null($department)){
-      if(!empty($this->params['r_departments']))
-        $departments = $this->params['r_departments'];
-    }else{
-      if(!empty($this->params['r_departments'])){
-        if(!in_array($department_id, $this->params['r_departments']))
-          throw new RuntimeException('Участок не может быть добавлен.');
-        $departments = [$department_id];
-      }else
-        $departments = [$department_id];
-    }
+    $departments = $this->user->get_restriction('departments');
+    $check1 = empty($departments) && !is_null($department);
+    $check2 = !empty($departments) && in_array($department_id, $departments);
+    if($check1 || $check2)
+      $departments = [$department_id];
     $params['departments'] = $departments;
     $params['streets'] = [];
     $params['houses'] = [];
@@ -199,13 +199,17 @@ class queries{
 
   public function set_query_type($query_type_id){
     $query_type = $this->em->find('domain\query_type', $query_type_id);
-    $type =  ($query_type)? [$query_type->get_id()]: [];
+    $type = ($query_type)? [$query_type->get_id()]: [];
     $this->save_params(['query_types' => $type]);
   }
 
-  public function set_work_type($workgroup_id){
-    $workgroup = $this->em->find('domain\workgroup', $workgroup_id);
-    $type =  ($workgroup)? [$workgroup->get_id()]: [];
-    $this->save_params(['work_types' => $type]);
+  public function set_work_type($category_id){
+    $category = $this->em->find('domain\workgroup', $category_id);
+    $categories = $this->user->get_restriction('categories');
+    $check1 = empty($categories) && !is_null($category);
+    $check2 = !empty($categories) && in_array($category_id, $categories);
+    if($check1 || $check2)
+      $categories = [$category_id];
+    $this->save_params(['work_types' => $categories]);
   }
 }
