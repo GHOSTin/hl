@@ -61,10 +61,11 @@ class queries{
   }
 
   public function get_houses_by_street($street_id){
-    if(!empty($this->user->get_restriction('departments'))){
+    $departments = $this->user->get_restriction('departments');
+    if(!empty($departments)){
       $houses = $this->em->getRepository('domain\house')
                          ->findBy([
-                                   'department' => $this->user->get_restriction('departments'),
+                                   'department' => $departments,
                                    'street' => $street_id
                                   ]);
     }else{
@@ -76,10 +77,11 @@ class queries{
   }
 
   public function get_streets(){
-    if(!empty($this->user->get_restriction('departments'))){
+    $departments = $this->user->get_restriction('departments');
+    if(!empty($departments)){
       $streets = [];
       $houses = $this->em->getRepository('domain\house')
-                         ->findBy(['department' => $this->user->get_restriction('departments')]);
+                         ->findBy(['department' => $departments]);
       if(!empty($houses))
         foreach($houses as $house){
           $street = $house->get_street();

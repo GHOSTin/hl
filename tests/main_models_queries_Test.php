@@ -193,7 +193,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_houses_by_street_2(){
-    $this->user->expects($this->exactly(2))
+    $this->user->expects($this->once())
                ->method('get_restriction')
                ->with('departments')
                ->willReturn([2, 5]);
@@ -239,7 +239,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_streets_2(){
-    $this->user->expects($this->exactly(2))
+    $this->user->expects($this->once())
                ->method('get_restriction')
                ->with('departments')
                ->willReturn([2, 5]);
