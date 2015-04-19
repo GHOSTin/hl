@@ -6,31 +6,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use domain\user;
 use domain\group;
-use domain\profile;
 
 class users{
 
-  public function add_profile(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
-    $profile = $request->get('profile');
-    $p = new profile($user, $profile);
-    if(!empty(profile::$arrayRules[$profile]))
-      $p->set_rules(profile::$arrayRules[$profile]);
-    else
-      $p->set_rules([]);
-    if(!empty(profile::$arrayRestrictions[$profile]))
-      $p->set_restrictions(profile::$arrayRestrictions[$profile]);
-    else
-      $p->set_restrictions([]);
-    $user->add_profile($p);
-    $app['em']->persist($p);
-    $app['em']->flush();
-    return $app['twig']->render('user\get_user_profiles.tpl', ['user' => $user]);
-  }
-
   public function add_user(Request $request, Application $app){
-    $group = $app['em']->find('\domain\group', $request->get('group_id'));
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
+    $group = $app['em']->find('domain\group', $request->get('group_id'));
+    $user = $app['em']->find('domain\user', $request->get('user_id'));
     $group->add_user($user);
     $app['em']->flush();
     return $app['twig']->render('user\add_user.tpl', ['group' => $group]);
@@ -79,29 +60,21 @@ class users{
                                 ]);
   }
 
-  public function delete_profile(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
-    $profile = $user->get_profile($request->get('profile'));
-    $app['em']->remove($profile);
-    $app['em']->flush();
-    return new Response();
-  }
-
   public function exclude_user(Request $request, Application $app){
-    $group = $app['em']->find('\domain\group', $request->get('group_id'));
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
+    $group = $app['em']->find('domain\group', $request->get('group_id'));
+    $user = $app['em']->find('domain\user', $request->get('user_id'));
     $group->exclude_user($user);
     $app['em']->flush();
     return $app['twig']->render('user/add_user.tpl', ['group' => $group]);
   }
 
   public function get_group_content(Request $request, Application $app){
-    $group = $app['em']->find('\domain\group', $request->get('id'));
+    $group = $app['em']->find('domain\group', $request->get('id'));
     return $app['twig']->render('user\get_group_content.tpl', ['group' => $group]);
   }
 
   public function get_group_profile(Request $request, Application $app){
-    $group = $app['em']->find('\domain\group', $request->get('id'));
+    $group = $app['em']->find('domain\group', $request->get('id'));
     return $app['twig']->render('user\get_group_profile.tpl', ['group' => $group]);
   }
 
@@ -132,17 +105,8 @@ class users{
   }
 
   public function get_group_users(Request $request, Application $app){
-    $group = $app['em']->find('\domain\group', $request->get('id'));
+    $group = $app['em']->find('domain\group', $request->get('id'));
     return $app['twig']->render('user\get_group_users.tpl', ['group' => $group]);
-  }
-
-  public function get_profile_content(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
-    return $app['twig']->render('user\get_profile_content.tpl',
-                                [
-                                 'user' => $user,
-                                 'profile' => $request->get('profile')
-                                ]);
   }
 
   public function get_user_letter(Request $request, Application $app){
@@ -171,25 +135,16 @@ class users{
     return $app['twig']->render('user\get_user_letters.tpl', ['letters' => $letters]);
   }
 
-  public function get_user_profiles(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
-    return $app['twig']->render('user\get_user_profiles.tpl', ['user' => $user]);
+  public function access(Application $app, $id){
+    $user = $app['em']->find('domain\user', $id);
+    return $app['twig']->render('user\access.tpl', ['user' => $user]);
   }
 
-  public function get_dialog_delete_profile(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
-    return $app['twig']->render('user\get_dialog_delete_profile.tpl',
-                                [
-                                 'user' => $user,
-                                 'profile' => $request->get('profile')
-                                ]);
-  }
-
-  public function get_dialog_clear_logs(Request $request, Application $app){
+  public function get_dialog_clear_logs(Application $app){
     return $app['twig']->render('user\get_dialog_clear_logs.tpl');
   }
 
-  public function get_dialog_create_group(Request $request, Application $app){
+  public function get_dialog_create_group(Application $app){
     return $app['twig']->render('user\get_dialog_create_group.tpl');
   }
 
@@ -244,9 +199,9 @@ class users{
   }
 
   public function get_dialog_add_user(Request $request, Application $app){
-    $users = $app['em']->getRepository('\domain\user')
+    $users = $app['em']->getRepository('domain\user')
                        ->findAll();
-    $group = $app['em']->find('\domain\group', $request->get('id'));
+    $group = $app['em']->find('domain\group', $request->get('id'));
     return $app['twig']->render('user\get_dialog_add_user.tpl',
                                 [
                                  'users' => $users,
@@ -258,49 +213,44 @@ class users{
     return $app['twig']->render('user\get_dialog_create_user.tpl');
   }
 
-  public function get_dialog_add_profile(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
-    return $app['twig']->render('user\get_dialog_add_profile.tpl', ['user' => $user]);
-  }
-
   public function get_user_content(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     return $app['twig']->render('user\get_user_content.tpl', ['user' => $user]);
   }
 
   public function get_user_information(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     return $app['twig']->render('user\get_user_information.tpl', ['user' => $user]);
   }
 
   public function get_dialog_edit_fio(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     return $app['twig']->render('user\get_dialog_edit_fio.tpl', ['user' => $user]);
   }
 
   public function get_dialog_edit_group_name(Request $request, Application $app){
-    $group = $app['em']->find('\domain\group', $request->get('id'));
+    $group = $app['em']->find('domain\group', $request->get('id'));
     return $app['twig']->render('user\get_dialog_edit_group_name.tpl', ['group' => $group]);
   }
 
   public function get_dialog_edit_login(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     return $app['twig']->render('user\get_dialog_edit_login.tpl', ['user' => $user]);
   }
 
   public function get_dialog_edit_user_status(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     return $app['twig']->render('user\get_dialog_edit_user_status.tpl', ['user' => $user]);
   }
 
   public function get_dialog_edit_password(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     return $app['twig']->render('user\get_dialog_edit_password.tpl', ['user' => $user]);
   }
 
   public function get_dialog_exclude_user(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
-    $group = $app['em']->find('\domain\group', $request->get('group_id'));
+    $user = $app['em']->find('domain\user', $request->get('user_id'));
+    $group = $app['em']->find('domain\group', $request->get('group_id'));
     return $app['twig']->render('user\get_dialog_exclude_user.tpl',
                                 [
                                  'user' => $user,
@@ -323,7 +273,7 @@ class users{
   }
 
   public function update_fio(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     $user->set_lastname($request->get('lastname'));
     $user->set_firstname($request->get('firstname'));
     $user->set_middlename($request->get('middlename'));
@@ -332,7 +282,7 @@ class users{
   }
 
   public function update_group_name(Request $request, Application $app){
-    $group = $app['em']->find('\domain\group', $request->get('id'));
+    $group = $app['em']->find('domain\group', $request->get('id'));
     $group->set_name($request->get('name'));
     $app['em']->flush();
     return $app['twig']->render('user\update_group_name.tpl', ['group' => $group]);
@@ -340,18 +290,18 @@ class users{
 
   public function update_login(Request $request, Application $app){
     $login = $request->get('login');
-    $user = $app['em']->getRepository('\domain\user')
+    $user = $app['em']->getRepository('domain\user')
                       ->findOneByLogin($login);
     if(!is_null($user))
       throw new RuntimeException();
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     $user->set_login($login);
     $app['em']->flush();
     return $app['twig']->render('user\update_fio.tpl', ['user' => $user]);
   }
 
   public function update_user_status(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     if($user->get_status() === 'true')
       $user->set_status('false');
     else
@@ -365,7 +315,7 @@ class users{
     $confirm = $request->get('confirm');
     if($password !== $confirm)
       throw new RuntimeException('Пароль и подтверждение не идентичны.');
-    $user = $app['em']->find('\domain\user', $request->get('id'));
+    $user = $app['em']->find('domain\user', $request->get('id'));
     $user->set_hash(user::generate_hash($password, $app['salt']));
     $app['em']->flush();
     return $app['twig']->render('user\update_fio.tpl', ['user' => $user]);
@@ -378,16 +328,10 @@ class users{
     return new Response();
   }
 
-  public function update_rule(Request $request, Application $app){
-    $user = $app['em']->find('\domain\user', $request->get('user_id'));
-    $profile = $user->get_profile($request->get('profile'));
-    $rules = $profile->get_rules();
-    if(in_array($request->get('rule'), array_keys($rules))){
-      $rules[$request->get('rule')] = !$rules[$request->get('rule')];
-      $profile->set_rules($rules);
-      $app['em']->flush();
-    }else
-      throw new RuntimeException('Правила '.$rule.' нет в профиле '.$profile);
+  public function update_access(Application $app, $id, $profile, $rule){
+    $user = $app['em']->find('domain\user', $id);
+    $user->update_access($profile.'/'.$rule);
+    $app['em']->flush();
     return new Response();
   }
 }

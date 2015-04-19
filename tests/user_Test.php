@@ -1,11 +1,23 @@
 <?php
 
-use \domain\user;
+use domain\user;
 
 class user_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $this->user = new user();
+  }
+
+  public function test_check_access_1(){
+    $this->setExpectedException('DomainException');
+    $this->user->check_access('wrong/access');
+  }
+
+  public function test_check_access_2(){
+    $this->user->update_access('queries/general_access');
+    $this->assertTrue($this->user->check_access('queries/general_access'));
+    $this->user->update_access('queries/general_access');
+    $this->assertFalse($this->user->check_access('queries/general_access'));
   }
 
   public function test_set_cellphone_1(){
@@ -152,5 +164,26 @@ class user_Test extends PHPUnit_Framework_TestCase{
     $this->user->set_lastname($array['lastname']);
     $this->user->set_middlename($array['middlename']);
     $this->assertEquals($array, $this->user->JsonSerialize());
+  }
+
+  public function test_update_restriction_1(){
+    $this->setExpectedException('DomainException');
+    $this->user->update_restriction('wrong', '3');
+  }
+
+  public function test_update_restriction_2(){
+    $this->user->update_restriction('departments', '3');
+    $this->user->update_restriction('departments', '2');
+    $this->assertEquals(['3', '2'], $this->user->get_restriction('departments'));
+    $this->user->update_restriction('departments', '3');
+    $this->assertEquals(['2'], $this->user->get_restriction('departments'));
+  }
+
+  public function test_update_restriction_3(){
+    $this->user->update_restriction('categories', '3');
+    $this->user->update_restriction('categories', '2');
+    $this->assertEquals(['3', '2'], $this->user->get_restriction('categories'));
+    $this->user->update_restriction('categories', '3');
+    $this->assertEquals(['2'], $this->user->get_restriction('categories'));
   }
 }

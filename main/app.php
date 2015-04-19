@@ -6,6 +6,7 @@ use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
 use League\Flysystem\Filesystem;
@@ -85,6 +86,14 @@ $app->before(function (Request $request, Application $app) {
   $app['session']->start();
   if($app['session']->get('user')){
     $app['user'] = $app['em']->find('domain\user', $app['session']->get('user'));
+  }
+}, Application::EARLY_EVENT);
+
+$app->before(function (Request $request, Application $app) {
+  if(!is_null($app['user']) && $app['user']->get_status() !== 'true'){
+    $app['session']->invalidate();
+    $app['user'] = null;
+    throw new AccessDeniedHttpException();
   }
 }, Application::EARLY_EVENT);
 
@@ -173,19 +182,12 @@ $app->get('/user/get_dialog_exclude_user', 'main\controllers\users::get_dialog_e
 $app->get('/user/exclude_user', 'main\controllers\users::exclude_user')->before($security);
 $app->get('/user/get_dialog_create_group', 'main\controllers\users::get_dialog_create_group')->before($security);
 $app->get('/user/create_group', 'main\controllers\users::create_group')->before($security);
-$app->get('/user/get_user_profiles', 'main\controllers\users::get_user_profiles')->before($security);
-$app->get('/user/get_profile_content', 'main\controllers\users::get_profile_content')->before($security);
-$app->get('/user/update_rule', 'main\controllers\users::update_rule')->before($security);
-$app->get('/user/get_dialog_delete_profile', 'main\controllers\users::get_dialog_delete_profile')->before($security);
-$app->get('/user/delete_profile', 'main\controllers\users::delete_profile')->before($security);
-$app->get('/user/get_dialog_add_profile', 'main\controllers\users::get_dialog_add_profile')->before($security);
-$app->get('/user/add_profile', 'main\controllers\users::add_profile')->before($security);
-$app->get('/user/get_restriction_content', 'main\controllers\users::get_restriction_content')->before($security);
-$app->get('/user/update_restriction', 'main\controllers\users::update_restriction')->before($security);
 
 # users
 $app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions')->before($security);
 $app->get('/users/{id}/restrictions/{profile}/{item}/', 'main\controllers\users::update_restriction')->before($security);
+$app->get('/users/{id}/access/', 'main\controllers\users::access')->before($security);
+$app->get('/users/{id}/access/{profile}/{rule}/', 'main\controllers\users::update_access')->before($security);
 
 # metrics
 $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($security);
@@ -342,8 +344,12 @@ $app->get('/system/query_types/', 'main\controllers\query_types::default_page')-
 $app->get('/system/query_types/get_dialog_create_query_type/', 'main\controllers\query_types::get_dialog_create_query_type')->before($security);
 $app->get('/system/query_types/create_query_type/', 'main\controllers\query_types::create_query_type')->before($security);
 
-$app->error(function (NotFoundHttpException $e) use ($app){
+$app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
+});
+
+$app->error(function(AccessDeniedHttpException $e) use ($app){
+  return $app['twig']->render('auth/block.tpl', ['user' => $app['user']]);
 });
 
 $app->run();

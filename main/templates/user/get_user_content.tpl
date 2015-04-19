@@ -12,7 +12,7 @@ $('.user[user = {{ user.get_id() }}]').append(get_hidden_content())
         <a class="get_user_information">Информация</a>
       </li>
       <li>
-        <a class="get_user_profiles">Профили</a>
+        <a class="get_access">Доступ</a>
       </li>
       <li>
         <a class="get_restrictions">Ограничения</a>
