@@ -37,7 +37,7 @@
       <a href="/recovery/" class="btn btn-link">Востановление пароля</a>
     </div>
     <div class="input-group col-sm-12">
-      <div class="alert alert-danger" role="alert">Передача показаний теперь возможно только в зарегистрированным состоянии. Пожалуйста <a href="/registration/" class="alert-link">отправьте</a> заявку на доступ чтобы воспользоваться всеми функциями личного кабинета.</div>
+      <div class="alert alert-danger" role="alert">Передача показаний теперь возможна только внутри личного кабинета.</div>
     </div>
   </div>
 </div>

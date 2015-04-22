@@ -1,8 +1,11 @@
 {% extends "private.tpl" %}
 
 {% block content %}
+<div class="content row">
+  <div class="col-md-5">
     <h1>Показания успешно приняты.</h1>
-    <a href="/">Вернуться на главную</a>
+  </div>
+</div>
 {% endblock %}
 
 {% block css %}
