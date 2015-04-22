@@ -12,6 +12,12 @@
     </a>
   </li>
   <li id="accruals">
+    <a href="/metrics/">
+      <i class="glyphicon glyphicon-stats"></i>
+      <span>Передача показаний</span>
+    </a>
+  </li>
+  <li id="accruals">
     <a href="/accruals/">
       <i class="glyphicon glyphicon-stats"></i>
       <span>Начисления</span>
