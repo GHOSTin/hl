@@ -1,4 +1,4 @@
-{% extends "public.tpl" %}
+{% extends "private.tpl" %}
 
 {% block content %}
 <div id="content" class="col-sm-12 full">
@@ -6,10 +6,7 @@
     <div class="col-md-5">
       <form method="post">
         <h2>Показания счетчиков</h2>
-        <div class="form-group">
-          <label>Адрес</label>
-          <textarea class="form-control" name="address" required></textarea>
-        </div>
+          <input type="hidden" class="form-control" name="address" required value="{{ number.get_flat().get_house().get_street().get_name() }}, дом {{ number.get_flat().get_house().get_number() }}, кв.{{ number.get_flat().get_number() }}">
         <div class="row">
           <div class="form-group col-md-6">
             <label>ГВС1</label>
@@ -46,8 +43,8 @@
     </div>
   </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="/css/default.css">
-{% endblock css%}
+{% endblock %}
