@@ -84,6 +84,7 @@ class user implements JsonSerializable{
   private static $rules_list = [
     'metrics/general_access',
     'numbers/general_access',
+    'numbers/generate_password',
     'reports/general_access',
     'queries/general_access',
     'queries/create_query',

@@ -202,6 +202,13 @@ $(document).ready(function(){
                 init_content(r);
             });
 
+    }).on('click', '.get_dialog_generate_password', function(){
+      id = get_number_id($(this));
+      $.get('/numbers/' + id + '/get_dialog_generate_password/',
+        function(r){
+          init_content(r);
+        });
+
     }).on('click', '.get_dialog_add_event', function(){
         $.get('get_dialog_add_event',{
             id: get_number_id($(this))

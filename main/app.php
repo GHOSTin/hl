@@ -4,6 +4,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
+use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as Adapter;
+use Swift_Message;
 
 use config\general as conf;
 
@@ -35,6 +37,7 @@ $app['user'] = null;
 $app['salt'] = conf::authSalt;
 $app['chat_host'] = conf::chat_host;
 $app['chat_port'] = conf::chat_port;
+$app['email_for_reply'] = conf::email_for_reply;
 $app['files'] = $root.'files/';
 
 $config = new Configuration();
@@ -51,6 +54,10 @@ $app['\main\models\number'] = function($app){
 $app['main\models\queries'] = function($app){
   return new \main\models\queries($app['em'], $app['session'], $app['user']);
 };
+$app['main\models\factory'] = function($app){
+  return new \main\models\factory($app, $app['twig'], $app['em'], $app['user']);
+};
+
 $app['main\models\report_query'] = function($app){
   return new \main\models\report_query($app['em'], $app['session']);
 };
@@ -74,12 +81,16 @@ if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates',
                 'twig.options' => ['cache' => $cache]];
 }
+$app['Swift_Message'] = $app->factory(function($app){
+  return Swift_Message::newInstance();
+});
 $app->register(new TwigServiceProvider(), $twig_conf);
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
   return $array;
 });
 $app['twig']->addFilter($filter);
+$app->register(new SwiftmailerServiceProvider());
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
@@ -223,6 +234,10 @@ $app->get('/number/get_events', 'main\controllers\numbers::get_events')->before(
 $app->get('/number/add_event', 'main\controllers\numbers::add_event')->before($security);
 $app->get('/number/get_dialog_exclude_event', 'main\controllers\numbers::get_dialog_exclude_event')->before($security);
 $app->get('/number/exclude_event', 'main\controllers\numbers::exclude_event')->before($security);
+
+# numbers
+$app->get('/numbers/{id}/get_dialog_generate_password/', 'main\controllers\number::get_dialog_generate_password')->before($security);
+$app->get('/numbers/{id}/generate_password/', 'main\controllers\number::generate_password')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);

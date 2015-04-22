@@ -3,7 +3,6 @@
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use RuntimeException;
-use domain\number;
 use domain\number2event;
 use DateTime;
 
@@ -55,7 +54,11 @@ class numbers{
     $number->exclude_event($n2e);
     $app['em']->remove($n2e);
     $app['em']->flush();
-    return $app['twig']->render('number\get_number_content.tpl', ['number' => $number]);
+    return $app['twig']->render('number\get_number_content.tpl',
+                                [
+                                 'number' => $number,
+                                 'user' => $app['user']
+                                ]);
   }
 
   public function default_page(Application $app){
@@ -130,7 +133,11 @@ class numbers{
 
   public function get_number_content(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
-    return $app['twig']->render('number\get_number_content.tpl', ['number' => $number]);
+    return $app['twig']->render('number\get_number_content.tpl',
+                                [
+                                 'number' => $number,
+                                 'user' => $app['user']
+                                ]);
   }
 
   public function get_street_content(Request $request, Application $app){
@@ -172,7 +179,11 @@ class numbers{
         throw new RuntimeException('Number exists.');
     $number->set_number($request->get('number'));
     $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl', ['number' => $number]);
+    return $app['twig']->render('number\update_number_fio.tpl',
+                                [
+                                 'number' => $number,
+                                 'user' => $app['user']
+                                ]);
   }
 
   public function update_number_cellphone(Request $request, Application $app){
@@ -183,7 +194,11 @@ class numbers{
     $number = $app['em']->find('\domain\number', $request->get('id'));
     $number->set_cellphone($cellphone);
     $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl', ['number' => $number]);
+    return $app['twig']->render('number\update_number_fio.tpl',
+                                [
+                                 'number' => $number,
+                                 'user' => $app['user']
+                                ]);
   }
 
   public function update_number_email(Request $request, Application $app){
@@ -191,20 +206,32 @@ class numbers{
     $number = $app['em']->find('\domain\number', $request->get('id'));
     $number->set_email(implode('', $matches[0]));
     $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl', ['number' => $number]);
+    return $app['twig']->render('number\update_number_fio.tpl',
+                                [
+                                 'number' => $number,
+                                 'user' => $app['user']
+                                ]);
   }
 
   public function update_number_fio(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
     $number->set_fio($request->get('fio'));
     $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl', ['number' => $number]);
+    return $app['twig']->render('number\update_number_fio.tpl',
+                                [
+                                 'number' => $number,
+                                 'user' => $app['user']
+                                ]);
   }
 
   public function update_number_telephone(Request $request, Application $app){
     $number = $app['em']->find('\domain\number', $request->get('id'));
     $number->set_telephone($request->get('telephone'));
     $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl', ['number' => $number]);
+    return $app['twig']->render('number\update_number_fio.tpl',
+                                [
+                                 'number' => $number,
+                                 'user' => $app['user']
+                                ]);
   }
 }
