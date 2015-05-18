@@ -96,8 +96,8 @@ $app->get('/queries/', 'client\controllers\queries::default_page')->before($secu
 $app->get('/accruals/', 'client\controllers\accruals::default_page')->before($security);
 
 # metrics
-$app->get('/metrics/', 'client\controllers\metrics::default_page');
-$app->post('/metrics/', 'client\controllers\metrics::send');
+$app->get('/metrics/', 'client\controllers\metrics::default_page')->before($security);
+$app->post('/metrics/', 'client\controllers\metrics::send')->before($security);
 
 # registration
 $app->get('/registration/', 'client\controllers\registration::default_page');

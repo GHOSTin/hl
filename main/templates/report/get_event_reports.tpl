@@ -57,7 +57,7 @@ $('.clear_filter_event').click(function(){
     </ul>
   </div>
   <div class="col-xs-12 col-sm-9 col-lg-9">
-    <a class="btn btn-link" href="/report/event/html/" target="_blank">Просмотреть</a>
+    <a class="btn btn-link" href="/reports/event/html/" target="_blank">Просмотреть</a>
   </div>
 </div>
 {% endblock %}

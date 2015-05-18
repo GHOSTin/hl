@@ -351,7 +351,8 @@ class queries{
       $response = new BinaryFileResponse($app['files'].$file->get_path());
       $disposition = $response->headers->makeDisposition(
                                           ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                          $file->get_name()
+                                          $file->get_name(),
+                                          iconv('UTF-8', 'ASCII//TRANSLIT', $file->get_name())
                                          );
       $response->headers->set('Content-Disposition', $disposition);
       return $response;

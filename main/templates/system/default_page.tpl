@@ -7,6 +7,9 @@
       <li>
         <a href="query_types/">Типы заявок</a>
       </li>
+      <li>
+        <a href="/works/">Работы</a>
+      </li>
     </ul>
   </div>
 </div>

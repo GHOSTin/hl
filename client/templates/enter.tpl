@@ -37,7 +37,7 @@
       <a href="/recovery/" class="btn btn-link">Востановление пароля</a>
     </div>
     <div class="input-group col-sm-12">
-      <a href="/metrics/" class="btn btn-link">Передать показания</a>
+      <div class="alert alert-danger" role="alert">Передача показаний теперь возможна только внутри личного кабинета.</div>
     </div>
   </div>
 </div>

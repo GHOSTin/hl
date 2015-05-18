@@ -313,7 +313,7 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $q2f->expects($this->exactly(2))
         ->method('get_path')
         ->willReturn('autoload.php');
-    $q2f->expects($this->once())
+    $q2f->expects($this->exactly(2))
         ->method('get_name');
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()

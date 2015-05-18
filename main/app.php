@@ -4,6 +4,7 @@ use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Silex\Application;
 use Silex\Provider\TwigServiceProvider;
+use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -11,6 +12,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_SimpleFilter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as Adapter;
+use Swift_Message;
 
 use config\general as conf;
 
@@ -35,6 +37,7 @@ $app['user'] = null;
 $app['salt'] = conf::authSalt;
 $app['chat_host'] = conf::chat_host;
 $app['chat_port'] = conf::chat_port;
+$app['email_for_reply'] = conf::email_for_reply;
 $app['files'] = $root.'files/';
 
 $config = new Configuration();
@@ -51,9 +54,10 @@ $app['\main\models\number'] = function($app){
 $app['main\models\queries'] = function($app){
   return new \main\models\queries($app['em'], $app['session'], $app['user']);
 };
-$app['main\models\report_query'] = function($app){
-  return new \main\models\report_query($app['em'], $app['session']);
+$app['main\models\factory'] = function($app){
+  return new \main\models\factory($app, $app['twig'], $app['em'], $app['user']);
 };
+
 $app['main\models\report_event'] = function($app){
   return new \main\models\report_event($app['em'], $app['session']);
 };
@@ -74,12 +78,16 @@ if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates',
                 'twig.options' => ['cache' => $cache]];
 }
+$app['Swift_Message'] = $app->factory(function($app){
+  return Swift_Message::newInstance();
+});
 $app->register(new TwigServiceProvider(), $twig_conf);
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
   return $array;
 });
 $app['twig']->addFilter($filter);
+$app->register(new SwiftmailerServiceProvider());
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
@@ -224,6 +232,10 @@ $app->get('/number/add_event', 'main\controllers\numbers::add_event')->before($s
 $app->get('/number/get_dialog_exclude_event', 'main\controllers\numbers::get_dialog_exclude_event')->before($security);
 $app->get('/number/exclude_event', 'main\controllers\numbers::exclude_event')->before($security);
 
+# numbers
+$app->get('/numbers/{id}/get_dialog_generate_password/', 'main\controllers\number::get_dialog_generate_password')->before($security);
+$app->get('/numbers/{id}/generate_password/', 'main\controllers\number::generate_password')->before($security);
+
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);
 $app->get('/export/get_dialog_export_numbers', 'main\controllers\export::get_dialog_export_numbers')->before($security);
@@ -295,25 +307,25 @@ $app->get('/queries/{id}/files/{date}/{name}', 'main\controllers\queries::get_fi
 $app->get('/queries/{id}/files/{date}/{name}/get_dialog_delete_file/', 'main\controllers\queries::get_dialog_delete_file')->before($security);
 $app->get('/queries/{id}/files/{date}/{name}/delete/', 'main\controllers\queries::delete_file')->before($security);
 
-# report
-$app->get('/report/', 'main\controllers\reports::default_page')->before($security);
-$app->get('/report/get_query_reports', 'main\controllers\reports::get_query_reports')->before($security);
-$app->get('/report/clear_filter_query', 'main\controllers\reports::clear_filter_query')->before($security);
-$app->get('/report/set_time_begin', 'main\controllers\reports::set_time_begin')->before($security);
-$app->get('/report/set_time_end', 'main\controllers\reports::set_time_end')->before($security);
-$app->get('/report/set_filter_query_status', 'main\controllers\reports::set_filter_query_status')->before($security);
-$app->get('/report/set_filter_query_department', 'main\controllers\reports::set_filter_query_department')->before($security);
-$app->get('/report/set_filter_query_worktype', 'main\controllers\reports::set_filter_query_worktype')->before($security);
-$app->get('/report/queries/set_query_type', 'main\controllers\reports::set_query_type')->before($security);
-$app->get('/report/set_filter_query_street', 'main\controllers\reports::set_filter_query_street')->before($security);
-$app->get('/report/set_filter_query_house', 'main\controllers\reports::set_filter_query_house')->before($security);
-$app->get('/report/report_query_one', 'main\controllers\reports::report_query_one')->before($security);
-$app->get('/report/report_query_one_xls', 'main\controllers\reports::report_query_one_xls')->before($security);
-$app->get('/report/get_event_reports', 'main\controllers\report_event::get_event_reports')->before($security);
-$app->get('/report/event/set_time_begin', 'main\controllers\report_event::set_time_begin')->before($security);
-$app->get('/report/event/set_time_end', 'main\controllers\report_event::set_time_end')->before($security);
-$app->get('/report/event/html/', 'main\controllers\report_event::html')->before($security);
-$app->get('/report/event/clear/', 'main\controllers\report_event::clear')->before($security);
+# reports
+$app->get('/reports/', 'main\controllers\reports::default_page')->before($security);
+$app->get('/reports/queries/', 'main\controllers\report_queries::default_page')->before($security);
+$app->get('/reports/queries/clear_filters/', 'main\controllers\report_queries::clear_filters')->before($security);
+$app->get('/reports/queries/set_time_begin/', 'main\controllers\report_queries::set_time_begin')->before($security);
+$app->get('/reports/queries/set_time_end/', 'main\controllers\report_queries::set_time_end')->before($security);
+$app->get('/reports/queries/set_status/', 'main\controllers\report_queries::set_status')->before($security);
+$app->get('/reports/queries/set_department/', 'main\controllers\report_queries::set_department')->before($security);
+$app->get('/reports/queries/set_worktype/', 'main\controllers\report_queries::set_worktype')->before($security);
+$app->get('/reports/queries/set_query_type/', 'main\controllers\report_queries::set_query_type')->before($security);
+$app->get('/reports/queries/set_street/', 'main\controllers\report_queries::set_street')->before($security);
+$app->get('/reports/queries/set_house/', 'main\controllers\report_queries::set_house')->before($security);
+$app->get('/reports/queries/report1/', 'main\controllers\report_queries::report1')->before($security);
+$app->get('/reports/queries/report1/xls/', 'main\controllers\report_queries::report1_xls')->before($security);
+$app->get('/reports/event/', 'main\controllers\report_event::get_event_reports')->before($security);
+$app->get('/reports/event/set_time_begin', 'main\controllers\report_event::set_time_begin')->before($security);
+$app->get('/reports/event/set_time_end', 'main\controllers\report_event::set_time_end')->before($security);
+$app->get('/reports/event/html/', 'main\controllers\report_event::html')->before($security);
+$app->get('/reports/event/clear/', 'main\controllers\report_event::clear')->before($security);
 
 # tasks
 $app->get('/task/', 'main\controllers\task::default_page')->before($security);

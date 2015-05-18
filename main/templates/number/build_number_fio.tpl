@@ -14,6 +14,9 @@
             <li>Сотовый телефон: {{ number.get_cellphone() }} <a class="get_dialog_edit_number_cellphone">изменить</a></li>
             <li>email: {{ number.get_email() }} <a class="get_dialog_edit_number_email">изменить</a></li>
             <li>Контактные данные из заявок: <a href="/number/contact_info?id={{ number.get_id() }}" target="_blank">просмотреть</a></li>
+            {% if user.check_access('numbers/generate_password') %}
+            <li>Пароль для личного кабинета <a class="get_dialog_generate_password">генерировать</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>
