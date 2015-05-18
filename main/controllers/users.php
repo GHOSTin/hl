@@ -179,7 +179,7 @@ class users{
     $app['em']->flush();
     $letter_user = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
     $letter_users = [];
-    $users = $app['em']->getRepository('\domain\user')->findAll();
+    $users = $app['em']->getRepository('domain\user')->findAll();
     if(!empty($users))
       foreach($users as $user){
         $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
