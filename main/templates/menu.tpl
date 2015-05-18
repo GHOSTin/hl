@@ -52,7 +52,7 @@
           {% endif %}
           {% if user.check_access('reports/general_access') %}
           <li>
-            <a tabindex="-1" href="/report/">Отчеты</a>
+            <a tabindex="-1" href="/reports/">Отчеты</a>
           </li>
           {% endif %}
           {% if user.check_access('metrics/general_access') %}
