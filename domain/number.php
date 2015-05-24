@@ -190,7 +190,7 @@ class number{
   }
 
   public function set_email($email){
-    if(!preg_match('|[0-9A-Za-z.@-]{0,128}|', $email))
+    if(!preg_match('|[0-9A-Za-z.@\-_]{0,128}|', $email))
       throw new DomainException('Не валидный email.');
     $this->email = $email;
   }
