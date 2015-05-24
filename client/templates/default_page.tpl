@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="content row">
-  <div class="col-md-6">Приветствуем вас в программе по обслуживанию вашего лицевого счета.</div>
+  <div class="col-md-6">Сумма долга на сегодняшний день <strong>{{ number.get_debt() }} руб.</strong></div>
 </div>
 {% endblock content %}
 
