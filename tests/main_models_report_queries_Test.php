@@ -55,6 +55,90 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
     $model->clear_filters();
   }
 
+  public function test_get_categories_1(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('categories')
+               ->willReturn([]);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->with(['name' => 'ASC'])
+               ->willReturn('categories_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\workgroup')
+             ->will($this->returnValue($repository));
+    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $this->assertEquals('categories_array', $model->get_categories());
+  }
+
+  public function test_get_categories_2(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('categories')
+               ->willReturn([1, 3, 5]);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByid'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByid')
+               ->with([1, 3, 5], ['name' => 'ASC'])
+               ->willReturn('categories_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\workgroup')
+             ->will($this->returnValue($repository));
+    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $this->assertEquals('categories_array', $model->get_categories());
+  }
+
+  public function test_get_departments_1(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([]);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->with(['name' => 'ASC'])
+               ->willReturn('departments_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\department')
+             ->will($this->returnValue($repository));
+    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $this->assertEquals('departments_array', $model->get_departments());
+  }
+
+  public function test_get_departments_2(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([1, 3, 5]);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByid'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByid')
+               ->with([1, 3, 5], ['name' => 'ASC'])
+               ->willReturn('departments_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\department')
+             ->will($this->returnValue($repository));
+    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $this->assertEquals('departments_array', $model->get_departments());
+  }
+
   public function test_get_filters_1(){
     $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
     $values = $model->get_filters();
@@ -63,6 +147,50 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
     $this->assertNull($values['house']);
     $this->assertEquals(1, $values['work_type']);
     $this->assertEquals(253, $values['street']);
+  }
+
+  public function test_get_streets_1(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->with(['name' => 'ASC'])
+               ->willReturn('streets_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\street')
+             ->will($this->returnValue($repository));
+    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $this->assertEquals('streets_array', $model->get_streets());
+  }
+
+  public function test_get_streets_2(){
+    $this->user->expects($this->once())
+               ->method('get_restriction')
+               ->with('departments')
+               ->willReturn([2, 5]);
+    $street = $this->getMock('domain\street');
+    $street->method('get_id')
+           ->willReturn(789);
+    $house = $this->getMock('domain\house');
+    $house->method('get_street')
+          ->willReturn($street);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findBy'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findBy')
+               ->with(['department' => [2, 5]])
+               ->willReturn([$house]);
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\house')
+             ->will($this->returnValue($repository));
+    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $this->assertContainsOnlyInstancesOf('domain\street', $model->get_streets());
   }
 
   public function test_report1(){
