@@ -11,6 +11,7 @@ class number{
 
   /**
   * @OneToMany(targetEntity="domain\accrual", mappedBy="number")
+  * @OrderBy({"time" = "DESC"})
   */
   private $accruals;
 
@@ -110,6 +111,14 @@ class number{
 
   public function get_accruals(){
     return $this->accruals;
+  }
+
+  public function get_sort_accruals(){
+    $month = [];
+    foreach($this->accruals as $accrual){
+      $month[$accrual->get_time()][] = $accrual;
+    }
+    return $month;
   }
 
   public function get_cellphone(){
