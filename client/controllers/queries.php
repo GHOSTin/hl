@@ -2,17 +2,20 @@
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use domain\number;
+use main\controllers\queries as controller;
 
 class queries{
 
   public function default_page(Application $app){
-    $queries = $app['number']->get_queries();
-    $number_queries = $queries->filter(
-      function($element){
-        return $element->get_initiator() == 'number';
-      }
-    );
-    return $app['twig']->render('queries/default_page.tpl', ['number' => $app['number'], 'queries' => $number_queries]);
+    return $app['client\models\queries']->default_page();
+  }
+
+  public function request(Application $app){
+    return $app['client\models\queries']->request();
+  }
+
+  public function send_request(Application $app, Request $request){
+    preg_match_all(controller::RE_DESCRIPTION, $request->get('description'), $matches);
+    return $app['client\models\queries']->send_request(implode('', $matches[0]));
   }
 }

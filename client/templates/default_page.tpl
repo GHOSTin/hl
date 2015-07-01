@@ -2,7 +2,10 @@
 
 {% block content %}
 <div class="content row">
-  <div class="col-md-6">Сумма долга на сегодняшний день <strong>{{ number.get_debt() }} руб.</strong></div>
+  <div class="col-md-6">
+  <p>{{ number.get_flat().get_house().get_street().get_name() }}, дом {{ number.get_flat().get_house().get_number() }}, кв. {{ number.get_flat().get_number() }}, {{ number.get_fio() }}</p>
+  Задолженость на сегодняшний день <strong>{{ number.get_debt() }} руб.</strong>
+  </div>
 </div>
 {% endblock content %}
 

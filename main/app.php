@@ -52,7 +52,7 @@ $app['\main\models\number'] = function($app){
   return new \main\models\number($app['em'], $app['user']);
 };
 $app['main\models\queries'] = function($app){
-  return new \main\models\queries($app['em'], $app['session'], $app['user']);
+  return new models\queries($app['em'], $app['session'], $app['user'], $app['twig']);
 };
 $app['main\models\factory'] = function($app){
   return new \main\models\factory($app, $app['twig'], $app['em'], $app['user']);
@@ -81,13 +81,23 @@ if($app['debug']){
 $app['Swift_Message'] = $app->factory(function($app){
   return Swift_Message::newInstance();
 });
+// Параметры swift должны идти всегда ниже того места где идет его регистрация
+// Иначе параметры обнуляются во время регистрации если были заданы выше
+$app->register(new SwiftmailerServiceProvider());
+$app['swiftmailer.options'] = array(
+    'host' => 'smtp.yandex.ru',
+    'port' => '465',
+    'username' => conf::email_for_reply,
+    'password' => conf::email_for_reply_password,
+    'encryption' => 'ssl',
+    'auth_mode' => null
+);
 $app->register(new TwigServiceProvider(), $twig_conf);
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
   return $array;
 });
 $app['twig']->addFilter($filter);
-$app->register(new SwiftmailerServiceProvider());
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
@@ -306,6 +316,10 @@ $app->post('/queries/{id}/files/', 'main\controllers\queries::add_file')->before
 $app->get('/queries/{id}/files/{date}/{name}', 'main\controllers\queries::get_file')->before($security);
 $app->get('/queries/{id}/files/{date}/{name}/get_dialog_delete_file/', 'main\controllers\queries::get_dialog_delete_file')->before($security);
 $app->get('/queries/{id}/files/{date}/{name}/delete/', 'main\controllers\queries::delete_file')->before($security);
+$app->get('/queries/dialogs/create_query_from_request/', 'main\controllers\queries::create_query_from_request_dialog')->before($security);
+$app->get('/queries/create_query_from_request/', 'main\controllers\queries::create_query_from_request')->before($security);
+$app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request_dialog')->before($security);
+$app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);

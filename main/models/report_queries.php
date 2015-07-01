@@ -9,7 +9,7 @@ use Silex\Application;
 use domain\user;
 use domain\query;
 
-class report_queries extends model{
+class report_queries{
 
   private $session;
   private $params = [
@@ -22,11 +22,18 @@ class report_queries extends model{
                      'streets' => [],
                      'houses' => []
                     ];
+  private $app;
+  private $em;
+  private $twig;
+  private $user;
 
   public function __construct(Application $app, Twig_Environment $twig, EntityManager $em, user $user, Session $session){
     if(!$user->check_access('reports/general_access'))
       throw new RuntimeException();
-    parent::__construct($app, $twig, $em, $user);
+    $this->twig = $twig;
+    $this->app = $app;
+    $this->em = $em;
+    $this->user = $user;
     $this->session = $session;
     if(empty($this->session->get('report_query')))
       $this->init_default_params();

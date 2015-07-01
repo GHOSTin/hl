@@ -174,6 +174,23 @@ $(document).ready(function(){
 				show_content(r);
 			});
 	});
+  $('body').on('click', '.get_dialog_create_query_from_request', function(){
+    $.get('/queries/dialogs/create_query_from_request/',{
+        time: $(this).parent().attr('time'),
+        number: $(this).parent().attr('number')
+      },function(r){
+        init_content(r);
+      });
+  });
+
+  $('body').on('click', '.get_dialog_abort_query_from_request', function(){
+    $.get('/queries/dialogs/abort_query_from_request/',{
+        time: $(this).parent().attr('time'),
+        number: $(this).parent().attr('number')
+      },function(r){
+        init_content(r);
+      });
+  });
 	$('body').on('click', '.get_dialog_edit_description', function(){
 		$.get('get_dialog_edit_description',{
 			id: get_query_id($(this))

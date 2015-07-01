@@ -15,34 +15,34 @@ class user implements JsonSerializable{
   private $access = [];
 
   /**
-  * @Column(name="cellphone", type="string")
+  * @Column
   */
 	private $cellphone;
 
   /**
-  * @Column(name="firstname", type="string")
+  * @Column
   */
 	private $firstname;
 
   /**
    * @Id
-   * @Column(name="id", type="integer")
+   * @Column(type="integer")
    * @GeneratedValue
    */
 	private $id;
 
   /**
-  * @Column(name="lastname", type="string")
+  * @Column
   */
 	private $lastname;
 
   /**
-   * @Column(name="username", type="string")
+   * @Column(name="username")
    */
 	private $login;
 
   /**
-  * @Column(name="midlename", type="string")
+  * @Column(name="midlename")
   */
 	private $middlename;
 
@@ -52,17 +52,17 @@ class user implements JsonSerializable{
   private $restrictions = [];
 
   /**
-  * @OneToMany(targetEntity="\domain\session", mappedBy="user")
+  * @OneToMany(targetEntity="domain\session", mappedBy="user")
   */
 	private $sessions;
 
   /**
-  * @Column(name="status", type="string")
+  * @Column
   */
 	private $status;
 
   /**
-  * @Column(name="telephone", type="string")
+  * @Column
   */
 	private $telephone;
 
@@ -72,7 +72,7 @@ class user implements JsonSerializable{
   private $query2comments;
 
   /**
-  * @Column(name="password", type="string")
+  * @Column(name="password")
   */
   private $hash;
 
@@ -88,6 +88,7 @@ class user implements JsonSerializable{
     'reports/general_access',
     'queries/general_access',
     'queries/create_query',
+    'queries/analize_request',
     'system/general_access',
     'tasks/general_access'
   ];
@@ -100,6 +101,10 @@ class user implements JsonSerializable{
 
   public function get_cellphone(){
     return $this->cellphone;
+  }
+
+  public function get_fio(){
+    return $this->lastname.' '.$this->firstname.' '.$this->middlename;
   }
 
   public function get_firstname(){

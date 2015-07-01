@@ -6,12 +6,20 @@ use Twig_Environment;
 use domain\user;
 use RuntimeException;
 
-class reports extends model{
+class reports{
+
+  private $app;
+  private $em;
+  private $twig;
+  private $user;
 
   public function __construct(Application $app, Twig_Environment $twig, EntityManager $em, user $user){
     if(!$user->check_access('reports/general_access'))
       throw new RuntimeException();
-    parent::__construct($app, $twig, $em, $user);
+    $this->twig = $twig;
+    $this->app = $app;
+    $this->em = $em;
+    $this->user = $user;
   }
 
   public function default_page(){

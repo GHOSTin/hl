@@ -19,9 +19,14 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'ALTER TABLE users ADD COLUMN access TEXT NOT NULL';
-$queries[] = 'UPDATE users set access = "{}"';
-$queries[] = 'DROP TABLES profiles';
+$queries[] = 'CREATE TABLE number_requests(
+                query_id INT UNSIGNED,
+                number_id INT UNSIGNED NOT NULL,
+                time INT UNSIGNED NOT NULL,
+                message TEXT
+
+              )';
+// написать индексы
 
 foreach($queries as $query)
   $pdo->exec($query);

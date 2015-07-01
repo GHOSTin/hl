@@ -74,13 +74,17 @@ class number{
 
   /**
   * @ManyToMany(targetEntity="domain\query", mappedBy="numbers")
+  * @OrderBy({"time_open" = "DESC"})
   */
   private $queries;
 
   /**
   * @Column(name="notification_rules", type="json_array")
   */
-  private $notification_rules = [];
+  private $notification_rules = [
+                                  'email' => true,
+                                  'cellphone' => true
+                                ];
 
   /**
   * @OneToMany(targetEntity="domain\number2event", mappedBy="number", cascade="all")

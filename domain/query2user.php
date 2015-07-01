@@ -15,18 +15,13 @@ class query2user{
 
   /**
   * @Id
-  * @Column(name="user_id", type="string")
+  * @ManyToOne(targetEntity="domain\query")
   */
-  private $user_id;
+  private $query;
 
   /**
   * @Id
-  * @Column(name="query_id", type="string")
-  */
-  private $query_id;
-
-  /**
-  * @ManyToOne(targetEntity="\domain\user")
+  * @ManyToOne(targetEntity="domain\user")
   */
   private $user;
 
@@ -38,9 +33,7 @@ class query2user{
 
   public function __construct(query $query, user $user){
     $this->user = $user;
-    $this->user_id = $user->get_id();
     $this->query = $query;
-    $this->query_id = $query->get_id();
   }
 
   public function get_class(){

@@ -7,6 +7,8 @@ use domain\house;
 use domain\query_type;
 use domain\user;
 use domain\file;
+use domain\number;
+use domain\number_request;
 
 class query_Test extends PHPUnit_Framework_TestCase{
 
@@ -42,6 +44,21 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $file = new file($this->user, $this->path, $this->time, $this->name);
     $this->query->add_file($file);
     $this->assertInstanceOf('domain\query2file', $this->query->get_files()[0]);
+  }
+
+  public function test_add_manager(){
+    $this->query->add_manager($this->user);
+    $this->assertCount(1, $this->query->get_managers());
+    $q2u = $this->query->get_managers()[0];
+    $this->assertInstanceOf('domain\query2user', $q2u);
+    $this->assertEquals('manager', $q2u->get_class());
+  }
+
+  public function test_set_creator(){
+    $this->query->set_creator($this->user);
+    $this->assertCount(1, $this->query->get_users());
+    $this->assertInstanceOf('domain\query2user', $this->query->get_creator());
+    $this->assertEquals('creator', $this->query->get_creator()->get_class());
   }
 
   public function test_delete_file_1(){
@@ -102,6 +119,15 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $query_type = new query_type();
     $this->query->set_query_type($query_type);
     $this->assertSame($query_type, $this->query->get_query_type());
+  }
+
+  public function test_set_request(){
+    $this->assertNull($this->query->get_request());
+    $number = new number();
+    $request = new number_request($number, 'Описание запроса');
+    $this->query->set_request($request);
+    $this->assertSame($request, $this->query->get_request());
+    $this->assertSame($this->query, $request->get_query());
   }
 
   public function test_set_time_work_1(){
@@ -169,8 +195,9 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'open');
-    $this->query->close(1397562800, 'Причина закрытия');
-    $this->assertEquals(1397562800, $this->query->get_time_close());
+    $time = time();
+    $this->query->close($time, 'Причина закрытия');
+    $this->assertEquals($time, $this->query->get_time_close());
     $this->assertEquals('Причина закрытия', $this->query->get_close_reason());
     $this->assertEquals('close', $this->query->get_status());
   }
@@ -279,8 +306,9 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'open');
-    $this->query->to_work(1397562800);
-    $this->assertEquals(1397562800, $this->query->get_time_work());
+    $time = time();
+    $this->query->to_work($time);
+    $this->assertEquals($time, $this->query->get_time_work());
     $this->assertEquals('working', $this->query->get_status());
   }
 }

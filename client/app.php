@@ -50,7 +50,18 @@ if($app['debug']){
                 'twig.options' => ['cache' => $cache]];
 }
 $app->register(new TwigServiceProvider(), $twig_conf);
+
+// Параметры swift должны идти всегда ниже того места где идет его регистрация
+// Иначе параметры обнуляются во время регистрации если были заданы выше
 $app->register(new SwiftmailerServiceProvider());
+$app['swiftmailer.options'] = array(
+    'host' => 'smtp.yandex.ru',
+    'port' => '465',
+    'username' => conf::email_for_reply,
+    'password' => conf::email_for_reply_password,
+    'encryption' => 'ssl',
+    'auth_mode' => null
+);
 
 $app['Swift_Message'] = $app->factory(function($app){
   return Swift_Message::newInstance();
@@ -58,6 +69,10 @@ $app['Swift_Message'] = $app->factory(function($app){
 $app['domain\metrics'] = $app->factory(function($app){
   return new metrics();
 });
+
+$app['client\models\queries'] = function($app){
+  return new models\queries($app['twig'], $app['em'], $app['number']);
+};
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
@@ -91,6 +106,9 @@ $app->post('/settings/notification/', 'client\controllers\settings::change_notif
 
 # queries
 $app->get('/queries/', 'client\controllers\queries::default_page')->before($security);
+$app->get('/queries/request/', 'client\controllers\queries::request')->before($security);
+$app->post('/queries/request/', 'client\controllers\queries::send_request')->before($security);
+
 
 # accruals
 $app->get('/accruals/', 'client\controllers\accruals::default_page')->before($security);
