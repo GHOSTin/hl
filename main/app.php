@@ -64,6 +64,13 @@ $app['main\models\report_event'] = function($app){
 $app['main\models\import_numbers'] = function($app){
   return new \main\models\import_numbers($app['em'], $app['session']);
 };
+$app['main\models\profile'] = function($app){
+  return new models\profile($app['twig'], $app['em'], $app['user']);
+};
+$app['main\models\notification_center'] = function($app){
+  return new models\notification_center($app['twig'], $app['em']);
+};
+
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
@@ -135,7 +142,9 @@ $app->get('/profile/get_userinfo', 'main\controllers\profile::get_user_info')->b
 $app->put('/profile/update_telephone', 'main\controllers\profile::update_telephone')->before($security);
 $app->put('/profile/update_cellphone', 'main\controllers\profile::update_cellphone')->before($security);
 $app->get('/profile/update_password', 'main\controllers\profile::update_password')->before($security);
-$app->get('/profile/get_notification_center_content', 'main\controllers\profile::get_notification_center_content')->before($security);
+
+#notification_center
+$app->get('/notification_center/get_content/', 'main\controllers\notification_center::get_content')->before($security);
 
 # api
 $app->get('/api/get_chat_options', 'main\controllers\api::get_chat_options');
