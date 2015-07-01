@@ -8,10 +8,18 @@ use domain\user;
 use domain\number;
 use RuntimeException;
 
-class number5 extends model{
+class number5{
+
+  private $app;
+  private $em;
+  private $twig;
+  private $user;
 
   public function __construct(Application $app, Twig_Environment $twig, EntityManager $em, user $user, $id){
-    parent::__construct($app, $twig, $em, $user);
+    $this->twig = $twig;
+    $this->app = $app;
+    $this->em = $em;
+    $this->user = $user;
     if(!$this->user->check_access('numbers/general_access'))
       throw new RuntimeException();
     $this->number = $this->em->find('domain\number', $id);

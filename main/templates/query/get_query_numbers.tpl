@@ -7,7 +7,7 @@
 {% block html %}
 <div class="query-numbers-menu">
   <ul class="nav nav-pills">
-    {% if query.get_status() in ['open', 'working', 'reopen'] %}
+    {% if query.get_status() in ['open', 'working', 'reopen'] and query.get_request() is empty %}
     <li>
       <a class="get_dialog_change_initiator">Изменить инициатора</a>
     </li>

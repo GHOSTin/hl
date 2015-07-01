@@ -19,8 +19,8 @@ class auth{
   }
 
   public function login(Request $request, Application $app){
-    $login = $request->get('login');
-    $password = $request->get('password');
+    $login = trim($request->get('login'));
+    $password = trim($request->get('password'));
     $user = $app['em']->getRepository('domain\user')->findOneByLogin($login);
     if(!is_null($user)){
       if($user->get_hash() === user::generate_hash($password, $app['salt'])){

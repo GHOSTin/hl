@@ -15,6 +15,44 @@ use domain\query2file;
 
 class queries{
 
+  const RE_DESCRIPTION = '|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u';
+
+  public function abort_query_from_request(Request $request, Application $app){
+     preg_match_all(self::RE_DESCRIPTION, $request->get('description'), $matches);
+     return $app['main\models\queries']->abort_query_from_request(
+                                           implode('', $matches[0]),
+                                           $request->get('time'),
+                                           $request->get('work_type'),
+                                           $request->get('query_type'),
+                                           $request->get('number')
+                                         );
+  }
+
+  public function abort_query_from_request_dialog(Request $request, Application $app){
+    return $app['main\models\queries']->abort_query_from_request_dialog(
+                                          $request->get('number'),
+                                          $request->get('time')
+                                        );
+  }
+
+  public function create_query_from_request_dialog(Request $request, Application $app){
+    return $app['main\models\queries']->create_query_from_request_dialog(
+                                          $request->get('number'),
+                                          $request->get('time')
+                                        );
+  }
+
+ public function create_query_from_request(Request $request, Application $app){
+    preg_match_all(self::RE_DESCRIPTION, $request->get('description'), $matches);
+    return $app['main\models\queries']->create_query_from_request(
+                                          implode('', $matches[0]),
+                                          $request->get('time'),
+                                          $request->get('work_type'),
+                                          $request->get('query_type'),
+                                          $request->get('number')
+                                        );
+  }
+
   public function add_comment(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('query_id'));
     $comment = $app['\domain\query2comment'];
@@ -91,7 +129,7 @@ class queries{
   }
 
   public function close_query(Request $request, Application $app){
-    preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->get('reason'), $matches);
+    preg_match_all(self::RE_DESCRIPTION, $request->get('reason'), $matches);
     $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
@@ -101,53 +139,23 @@ class queries{
   }
 
   public function create_query(Request $request, Application $app){
-    preg_match_all('|[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]|u', $request->get('description'), $matches);
-    $time = getdate();
-    $query_type = $app['em']->getRepository('domain\query_type')->find($request->get('query_type'));
-    $query = new query();
-    $query->set_contact_fio($request->get('fio'));
-    $query->set_contact_telephone($request->get('telephone'));
-    $query->set_contact_cellphone($request->get('cellphone'));
-    $query->set_description(implode('', $matches[0]));
-    $query->set_initiator($request->get('initiator'));
-    $query->set_query_type($query_type);
-    $query->set_time_open($time[0]);
-    $query->set_time_work($time[0]);
-    if($request->get('initiator') === 'house'){
-      $house = $app['em']->find('domain\house', $request->get('id'));
-    }elseif($request->get('initiator') === 'number'){
-      $number = $app['em']->find('domain\number', $request->get('id'));
-      $query->add_number($number);
-      $house = $number->get_flat()->get_house();
-    }
-    $query->set_house($house);
-    $query->set_department($house->get_department());
-    $query->add_work_type($app['em']->find('domain\workgroup', $request->get('work_type')));
-    $conn = $app['em']->getConnection();
-    $q = $conn->query('SELECT MAX(querynumber) as number FROM `queries`
-                    WHERE `opentime` > '.mktime(0, 0, 0, 1, 1, $time['year']).'
-                AND `opentime` <= '.mktime(23, 59, 59, 23, 59, $time['year']));
-    $query->set_number($q->fetch()['number'] + 1);
-    $app['em']->persist($query);
-    $app['em']->flush();
-    $creator = new query2user($query, $app['user']);
-    $creator->set_class('creator');
-    $manager = new query2user($query, $app['user']);
-    $manager->set_class('manager');
-    $app['em']->persist($creator);
-    $app['em']->persist($manager);
-    $app['em']->flush();
-    $queries = $app['em']->getRepository('domain\query')
-                         ->findByParams([
-                                         'time_begin' => strtotime('midnight'),
-                                         'time_end' => strtotime('tomorrow'),
-                                         'status' => query::$status_list
-                                        ]);
-    return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
+    preg_match_all(self::RE_DESCRIPTION, $request->get('description'), $matches);
+    return $app['main\models\queries']->create_query(
+                                          implode('', $matches[0]),
+                                          $request->get('initiator'),
+                                          $request->get('work_type'),
+                                          $request->get('query_type'),
+                                          $request->get('fio'),
+                                          $request->get('telephone'),
+                                          $request->get('cellphone'),
+                                          $request->get('id')
+                                        );
   }
 
   public function change_initiator(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('query_id'));
+    if(!is_null($query->get_request()))
+      throw new RuntimeException();
     $numbers = $query->get_numbers()->clear();
     if(!is_null($request->get('number_id'))){
       $query->set_initiator('number');
@@ -165,6 +173,8 @@ class queries{
   }
 
   public function default_page(Request $request, Application $app){
+    $number_requests = $app['em']->getRepository('domain\number_request')
+                                 ->findByQuery(null, ['time' => 'ASC']);
     $model  = $app['main\models\queries'];
     $query_types  = $app['em']->getRepository('domain\query_type')
                               ->findAll(['name' => 'ASC']);
@@ -188,7 +198,8 @@ class queries{
                                  'departments' => $model->get_departments(),
                                  'query_work_types' => $model->get_categories(),
                                  'query_types' => $query_types,
-                                 'houses' => $houses
+                                 'houses' => $houses,
+                                 'number_requests' => $number_requests
                                 ]);
   }
 
@@ -235,6 +246,8 @@ class queries{
 
   public function get_dialog_change_initiator(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
+    if(!is_null($query->get_request()))
+      throw new RuntimeException();
     $streets = $app['em']->getRepository('\domain\street')->findBy([], ['name' => 'ASC']);
     return $app['twig']->render('query\get_dialog_change_initiator.tpl',
                                 [
@@ -361,7 +374,7 @@ class queries{
   }
 
   public function get_initiator(Request $request, Application $app){
-    $types = $app['em']->getRepository('\domain\workgroup')->findBy([], ['name'=> 'ASC']);
+    $model  = $app['main\models\queries'];
     switch($request->get('initiator')){
       case 'number':
         $house = null;
@@ -381,7 +394,7 @@ class queries{
     $query_types = $app['em']->getRepository('domain\query_type')->findAll();
     return $app['twig']->render('query\get_initiator.tpl',
                                 [
-                                 'query_work_types' => $types,
+                                 'query_work_types' => $model->get_categories(),
                                  'queries' => $queries,
                                  'number' => $number,
                                  'house' => $house,

@@ -23,6 +23,7 @@
   <!-- begin timeline -->
   <nav class="timeline row">{% include 'query/timeline.tpl' %}</nav>
   <!-- /timeline -->
+  <div class="row">{% include 'query/number_requests.tpl' %}</div>
   <!-- queries -->
   <div class="queries row">{% include 'query/query_titles.tpl' %}</div>
   <!-- /queries -->

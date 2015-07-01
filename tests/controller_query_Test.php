@@ -6,6 +6,9 @@ use main\controllers\queries as controller;
 use domain\user;
 use domain\query_type;
 use domain\workgroup;
+use domain\query;
+use domain\number;
+use domain\number_request;
 
 class controller_query_Test extends PHPUnit_Framework_TestCase{
 
@@ -21,6 +24,39 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->controller = new controller();
     $this->app['twig'] = $twig;
     $this->app['em'] = $em;
+  }
+
+  public function test_abort_query_from_request(){
+    $this->request->query->set('description', 'Описание');
+    $this->request->query->set('time', '1397562800');
+    $this->request->query->set('number', '125');
+    $this->request->query->set('work_type', '127');
+    $this->request->query->set('query_type', '253');
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('abort_query_from_request')
+          ->with('Описание', '1397562800', '127', '253', '125')
+          ->willReturn('render_template');
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->abort_query_from_request($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_abort_query_from_request_dialog(){
+    $this->request->query->set('time', '1397562800');
+    $this->request->query->set('number', '125');
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('abort_query_from_request_dialog')
+          ->with('125', '1397562800')
+          ->willReturn('render_template');
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->abort_query_from_request_dialog($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_add_file(){
@@ -42,6 +78,61 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $response = $this->controller->add_file($this->request, $this->app, 125);
     $this->assertEquals('render_template', $response);
   }
+
+  public function test_create_query(){
+    $this->request->query->set('description', 'Описание');
+    $this->request->query->set('initiator', 'number');
+    $this->request->query->set('fio', 'ФИО');
+    $this->request->query->set('telephone', '647957');
+    $this->request->query->set('cellphone', '+79222944742');
+    $this->request->query->set('id', '125');
+    $this->request->query->set('work_type', '127');
+    $this->request->query->set('query_type', '253');
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('create_query')
+          ->with('Описание', 'number', '127', '253', 'ФИО', '647957', '+79222944742', '125')
+          ->willReturn('render_template');
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->create_query($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_create_query_from_request(){
+    $this->request->query->set('description', 'Описание');
+    $this->request->query->set('time', '1397562800');
+    $this->request->query->set('number', '125');
+    $this->request->query->set('work_type', '127');
+    $this->request->query->set('query_type', '253');
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('create_query_from_request')
+          ->with('Описание', '1397562800', '127', '253', '125')
+          ->willReturn('render_template');
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->create_query_from_request($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_create_query_from_request_dialog(){
+    $this->request->query->set('time', '1397562800');
+    $this->request->query->set('number', '125');
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('create_query_from_request_dialog')
+          ->with('125', '1397562800')
+          ->willReturn('render_template');
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->create_query_from_request_dialog($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
 
   public function test_delete_file(){
     $q2f = $this->getMockBuilder('domain\query2file')
@@ -427,7 +518,8 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_get_dialog_change_initiator(){
+  public function test_get_dialog_change_initiator_1(){
+    $query = new query();
     $this->request->query->set('id', 125);
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
@@ -443,15 +535,29 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->app['em']->expects($this->once())
                     ->method('find')
                     ->with('\domain\query', 125)
-                    ->will($this->returnValue('query_object'));
+                    ->will($this->returnValue($query));
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('query\get_dialog_change_initiator.tpl',
                              ['streets' => 'street_array',
-                              'query' => 'query_object'])
+                              'query' => $query])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->get_dialog_change_initiator($this->request, $this->app);
     $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_dialog_change_initiator_2(){
+    $this->setExpectedException('RuntimeException');
+    $query = new query();
+    $number = new number();
+    $request = new number_request($number, 'Описание');
+    $query->set_request($request);
+    $this->request->query->set('id', 125);
+    $this->app['em']->expects($this->once())
+                    ->method('find')
+                    ->with('\domain\query', 125)
+                    ->will($this->returnValue($query));
+    $this->controller->get_dialog_change_initiator($this->request, $this->app);
   }
 
   public function test_get_houses(){

@@ -9,7 +9,7 @@ use Silex\Application;
 use domain\user;
 use domain\query;
 
-class report_queries extends model{
+class report_queries{
 
   private $session;
   private $params = [
@@ -22,11 +22,18 @@ class report_queries extends model{
                      'streets' => [],
                      'houses' => []
                     ];
+  private $app;
+  private $em;
+  private $twig;
+  private $user;
 
   public function __construct(Application $app, Twig_Environment $twig, EntityManager $em, user $user, Session $session){
     if(!$user->check_access('reports/general_access'))
       throw new RuntimeException();
-    parent::__construct($app, $twig, $em, $user);
+    $this->twig = $twig;
+    $this->app = $app;
+    $this->em = $em;
+    $this->user = $user;
     $this->session = $session;
     if(empty($this->session->get('report_query')))
       $this->init_default_params();
@@ -40,13 +47,28 @@ class report_queries extends model{
     return $this->twig->render('report\clear_filter_query.tpl', ['filters' => $filters]);
   }
 
+  public function get_departments(){
+    $departments = $this->user->get_restriction('departments');
+    $repository = $this->em->getRepository('domain\department');
+    if(empty($departments))
+      return $repository->findAll(['name' => 'ASC']);
+    else
+      return $repository->findById($departments, ['name' => 'ASC']);
+  }
+
+  public function get_categories(){
+    $categories = $this->user->get_restriction('categories');
+    $repository = $this->em->getRepository('domain\workgroup');
+    if(empty($categories))
+      return $repository->findAll(['name' => 'ASC']);
+    else
+      return $repository->findById($categories, ['name' => 'ASC']);
+  }
+
   public function default_page(){
-    $work_types = $this->em->getRepository('domain\workgroup')
-                           ->findAll(['name' => 'ASC']);
-    $departments = $this->em->getRepository('domain\department')
-                            ->findAll(['name' => 'ASC']);
-    $streets = $this->em->getRepository('domain\street')
-                        ->findAll(['name' => 'ASC']);
+    $categories = $this->get_categories();
+    $departments = $this->get_departments();
+    $streets = $this->get_streets();
     $query_types = $this->em->getRepository('domain\query_type')
                             ->findAll(['name' => 'ASC']);
     $filters = $this->get_filters();
@@ -57,12 +79,23 @@ class report_queries extends model{
     return $this->twig->render('report\get_query_reports.tpl',
                                 [
                                  'filters' => $filters,
-                                 'query_work_types' => $work_types,
+                                 'query_work_types' => $categories,
                                  'query_types' => $query_types,
                                  'departments' => $departments,
                                  'streets' => $streets,
                                  'houses' => $houses
                                 ]);
+  }
+
+  public function prepare_params(){
+    $params = $this->params;
+    $departments = $this->user->get_restriction('departments');
+    $categories = $this->user->get_restriction('categories');
+    if(!empty($departments) && empty($params['departments']))
+      $params['departments'] = $departments;
+    if(!empty($categories) && empty($params['work_types']))
+      $params['work_types'] = $categories;
+    return $params;
   }
 
   public function get_filters(){
@@ -92,6 +125,26 @@ class report_queries extends model{
     return $filters;
   }
 
+  public function get_streets(){
+    $departments = $this->user->get_restriction('departments');
+    if(empty($departments)){
+      return $this->em->getRepository('domain\street')
+                      ->findAll(['name' => 'ASC']);
+    }else{
+      $streets = [];
+      $houses = $this->em->getRepository('domain\house')
+                         ->findBy(['department' => $departments]);
+      if(!empty($houses))
+        foreach($houses as $house){
+          $street = $house->get_street();
+          if(!isset($streets[$street->get_id()]))
+            $streets[$street->get_id()] = $street;
+        }
+      natsort($streets);
+      return array_values($streets);
+    }
+  }
+
   public function init_default_params(){
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
@@ -106,13 +159,13 @@ class report_queries extends model{
 
   public function report1(){
     $queries = $this->em->getRepository('domain\query')
-                        ->findByParams($this->params);
+                        ->findByParams($this->prepare_params());
     return $this->twig->render('report\report_query_one.tpl', ['queries' => $queries]);
   }
 
   public function report1_xls(){
     $queries = $this->em->getRepository('domain\query')
-                        ->findByParams($this->params);
+                        ->findByParams($this->prepare_params());
     $response = new Response();
     $response->setContent($this->twig->render('report\report_query_one_xls.tpl', ['queries' => $queries]));
     $response->headers->set('Content-Disposition', 'attachment; filename=export.xml');

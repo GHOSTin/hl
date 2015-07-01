@@ -11,6 +11,7 @@ class number{
 
   /**
   * @OneToMany(targetEntity="domain\accrual", mappedBy="number")
+  * @OrderBy({"time" = "DESC"})
   */
   private $accruals;
 
@@ -73,13 +74,17 @@ class number{
 
   /**
   * @ManyToMany(targetEntity="domain\query", mappedBy="numbers")
+  * @OrderBy({"time_open" = "DESC"})
   */
   private $queries;
 
   /**
   * @Column(name="notification_rules", type="json_array")
   */
-  private $notification_rules = [];
+  private $notification_rules = [
+                                  'email' => true,
+                                  'cellphone' => true
+                                ];
 
   /**
   * @OneToMany(targetEntity="domain\number2event", mappedBy="number", cascade="all")
@@ -110,6 +115,14 @@ class number{
 
   public function get_accruals(){
     return $this->accruals;
+  }
+
+  public function get_sort_accruals(){
+    $month = [];
+    foreach($this->accruals as $accrual){
+      $month[$accrual->get_time()][] = $accrual;
+    }
+    return $month;
   }
 
   public function get_cellphone(){
@@ -181,7 +194,7 @@ class number{
   }
 
   public function set_email($email){
-    if(!preg_match('|[0-9A-Za-z.@-]{0,128}|', $email))
+    if(!preg_match('|[0-9A-Za-z.@\-_]{0,128}|', $email))
       throw new DomainException('Не валидный email.');
     $this->email = $email;
   }

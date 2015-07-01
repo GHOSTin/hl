@@ -2,6 +2,13 @@
 
 use main\models\queries as model;
 use domain\query;
+use domain\house;
+use domain\number;
+use domain\number_request;
+use domain\flat;
+use domain\workgroup;
+use domain\query_type;
+use domain\department;
 
 class model_queries_Test extends PHPUnit_Framework_TestCase{
 
@@ -10,6 +17,9 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $this->em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
                      ->disableOriginalConstructor()
                      ->getMock();
+    $this->twig = $this->getMockBuilder('Twig_Environment')
+                       ->disableOriginalConstructor()
+                       ->getMock();
     $this->user = $this->getMock('domain\user');
     $this->time = time();
     $this->default_params = [
@@ -24,6 +34,245 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                              'departments' => [],
                              'r_departments' => []
                             ];
+  }
+
+
+  public function test_abort_query_from_request_dialog(){
+    $house = new house();
+    $flat = new flat();
+    $number = new number();
+    $flat->set_house($house);
+    $number->set_flat($flat);
+    $request = new number_request($number, 'Описание');
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\abort_query_from_request_dialog.tpl',
+                      [
+                        'query_work_types' => 'categories_array',
+                        'queries' => 'queries_array',
+                        'number' => $number,
+                        'request' => $request,
+                        'query_types' => 'query_types_array'
+                      ])
+               ->will($this->returnValue('render_template'));
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
+                  ->setMethods(['get_request', 'get_categories', 'get_query_of_house', 'get_query_types'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_request')
+          ->with('125', '1397562800')
+          ->willReturn($request);
+    $model->expects($this->once())
+          ->method('get_query_of_house')
+          ->with($house, 5)
+          ->willReturn('queries_array');
+    $model->expects($this->once())
+          ->method('get_categories')
+          ->willReturn('categories_array');
+    $model->expects($this->once())
+          ->method('get_query_types')
+          ->willReturn('query_types_array');
+    $response = $model->abort_query_from_request_dialog('125', '1397562800');
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_create_query_1(){
+    $house = new house();
+    $flat = new flat();
+    $number = new number();
+    $department = new department();
+    $house->set_department($department);
+    $flat->set_house($house);
+    $number->set_flat($flat);
+    $query_type = new query_type();
+    $category = new workgroup();
+    $this->em->expects($this->exactly(3))
+             ->method('find')
+             ->withConsecutive(['domain\query_type', '129'], ['domain\workgroup', '127'], ['domain\number', '125'])
+             ->will($this->onConsecutiveCalls($query_type, $category, $number));
+    $this->em->expects($this->once())
+             ->method('persist')
+             ->with($this->isInstanceOf('domain\query'));
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+               ->will($this->returnValue('render_template'));
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
+                  ->setMethods(['generate_next_number', 'get_today_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('generate_next_number')
+          ->willReturn('123222');
+    $model->expects($this->once())
+          ->method('get_today_queries')
+          ->willReturn('queries_array');
+    $response = $model->create_query('Описание', 'number', '127', '129', 'ФИО', '647957', '+79222944742', '125');
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_create_query_2(){
+    $house = new house();
+    $flat = new flat();
+    $number = new number();
+    $department = new department();
+    $house->set_department($department);
+    $flat->set_house($house);
+    $number->set_flat($flat);
+    $query_type = new query_type();
+    $category = new workgroup();
+    $this->em->expects($this->exactly(3))
+             ->method('find')
+             ->withConsecutive(['domain\query_type', '129'], ['domain\workgroup', '127'], ['domain\house', '125'])
+             ->will($this->onConsecutiveCalls($query_type, $category, $house));
+    $this->em->expects($this->once())
+             ->method('persist')
+             ->with($this->isInstanceOf('domain\query'));
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+               ->will($this->returnValue('render_template'));
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
+                  ->setMethods(['generate_next_number', 'get_today_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('generate_next_number')
+          ->willReturn('123222');
+    $model->expects($this->once())
+          ->method('get_today_queries')
+          ->willReturn('queries_array');
+    $response = $model->create_query('Описание', 'house', '127', '129', 'ФИО', '647957', '+79222944742', '125');
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_create_query_from_request(){
+    $house = new house();
+    $flat = new flat();
+    $number = new number();
+    $department = new department();
+    $house->set_department($department);
+    $flat->set_house($house);
+    $number->set_flat($flat);
+    $query_type = new query_type();
+    $category = new workgroup();
+    $request = new number_request($number, 'Описание');
+    $this->em->expects($this->exactly(2))
+             ->method('find')
+             ->withConsecutive(['domain\query_type', '129'], ['domain\workgroup', '127'])
+             ->will($this->onConsecutiveCalls($query_type, $category));
+    $this->em->expects($this->once())
+             ->method('persist')
+             ->with($this->isInstanceOf('domain\query'));
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+               ->will($this->returnValue('render_template'));
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
+                  ->setMethods(['get_request', 'generate_next_number', 'get_today_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_request')
+          ->with('125', '1397562800')
+          ->willReturn($request);
+    $model->expects($this->once())
+          ->method('generate_next_number')
+          ->willReturn('123222');
+    $model->expects($this->once())
+          ->method('get_today_queries')
+          ->willReturn('queries_array');
+    $response = $model->create_query_from_request('Описание', '1397562800', '127', '129', '125');
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_abort_query_from_request(){
+    $house = new house();
+    $flat = new flat();
+    $number = new number();
+    $department = new department();
+    $house->set_department($department);
+    $flat->set_house($house);
+    $number->set_flat($flat);
+    $query_type = new query_type();
+    $category = new workgroup();
+    $request = new number_request($number, 'Описание');
+    $this->em->expects($this->exactly(2))
+             ->method('find')
+             ->withConsecutive(['domain\query_type', '129'], ['domain\workgroup', '127'])
+             ->will($this->onConsecutiveCalls($query_type, $category));
+    $this->em->expects($this->once())
+             ->method('persist')
+             ->with($this->isInstanceOf('domain\query'));
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
+               ->will($this->returnValue('render_template'));
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
+                  ->setMethods(['get_request', 'generate_next_number', 'get_today_queries'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_request')
+          ->with('125', '1397562800')
+          ->willReturn($request);
+    $model->expects($this->once())
+          ->method('generate_next_number')
+          ->willReturn('123222');
+    $model->expects($this->once())
+          ->method('get_today_queries')
+          ->willReturn('queries_array');
+    $response = $model->abort_query_from_request('Описание', '1397562800', '127', '129', '125');
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_create_query_from_request_dialog(){
+    $house = new house();
+    $flat = new flat();
+    $number = new number();
+    $flat->set_house($house);
+    $number->set_flat($flat);
+    $request = new number_request($number, 'Описание');
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\create_query_from_request_dialog.tpl',
+                      [
+                        'query_work_types' => 'categories_array',
+                        'queries' => 'queries_array',
+                        'number' => $number,
+                        'request' => $request,
+                        'query_types' => 'query_types_array'
+                      ])
+               ->will($this->returnValue('render_template'));
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
+                  ->setMethods(['get_request', 'get_categories', 'get_query_of_house', 'get_query_types'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_request')
+          ->with('125', '1397562800')
+          ->willReturn($request);
+    $model->expects($this->once())
+          ->method('get_query_of_house')
+          ->with($house, 5)
+          ->willReturn('queries_array');
+    $model->expects($this->once())
+          ->method('get_categories')
+          ->willReturn('categories_array');
+    $model->expects($this->once())
+          ->method('get_query_types')
+          ->willReturn('query_types_array');
+    $response = $model->create_query_from_request_dialog('125', '1397562800');
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_get_categories_1(){
@@ -47,7 +296,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\workgroup')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals('categories_array', $model->get_categories());
   }
 
@@ -72,7 +321,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\workgroup')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals('categories_array', $model->get_categories());
   }
 
@@ -82,7 +331,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn([]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->getMock();
   }
 
@@ -107,7 +356,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\department')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals('departments_array', $model->get_departments());
   }
 
@@ -132,7 +381,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\department')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals('departments_array', $model->get_departments());
   }
 
@@ -141,7 +390,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->method('get')
                   ->with('query')
                   ->willReturn($this->default_params);
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $values = $model->get_filter_values();
     $this->assertEquals('open', $values['status']);
     $this->assertNull($values['department']);
@@ -161,7 +410,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->method('get')
                   ->with('query')
                   ->willReturn($this->default_params);
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $values = $model->get_filter_values();
     $this->assertNull($values['status']);
     $this->assertEquals(368, $values['department']);
@@ -188,7 +437,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\house')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals([10, 1, 7], $model->get_houses_by_street(125));
   }
 
@@ -213,8 +462,63 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\house')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals([10, 1, 7], $model->get_houses_by_street(125));
+  }
+
+  public function test_get_query_types(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findAll'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findAll')
+               ->with(['name' => 'ASC'])
+               ->willReturn('query_types_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\query_type')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
+    $this->assertEquals('query_types_array', $model->get_query_types());
+  }
+
+  public function test_get_query_of_house(){
+    $house = new house();
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByHouse'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByHouse')
+               ->with($house,['id' => 'DESC'], 5)
+               ->willReturn('queries_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\query')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
+    $this->assertEquals('queries_array', $model->get_query_of_house($house, 5));
+  }
+
+  public function test_get_request(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findOneBy'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findOneBy')
+               ->with([
+                      'number' => '125',
+                      'time' => '1397562800'
+                     ])
+               ->willReturn('request');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\number_request')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
+    $this->assertEquals('request', $model->get_request('125', '1397562800'));
   }
 
   public function test_get_streets_1(){
@@ -234,7 +538,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\street')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals('streets_array', $model->get_streets());
   }
 
@@ -265,7 +569,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\house')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertContainsOnlyInstancesOf('domain\street', $model->get_streets());
   }
 
@@ -274,7 +578,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->method('get')
                   ->with('query')
                   ->willReturn($this->default_params);
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals($this->default_params, $model->get_params());
   }
 
@@ -295,7 +599,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\query')
              ->will($this->returnValue($repository));
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals('queries_array', $model->get_queries());
   }
 
@@ -305,8 +609,29 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->method('get')
                   ->with('query')
                   ->willReturn($this->default_params);
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $this->assertEquals(strtotime('noon', $time), $model->get_timeline($time));
+  }
+
+  public function test_get_today_queries(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByParams'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByParams')
+               ->with([
+                       'time_begin' => strtotime('midnight'),
+                       'time_end' => strtotime('tomorrow'),
+                       'status' => query::$status_list
+                      ])
+               ->willReturn('queries_array');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\query')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
+    $this->assertEquals('queries_array', $model->get_today_queries());
   }
 
   public function test_init_default_params(){
@@ -327,7 +652,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -347,7 +672,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $this->session->expects($this->once())
                   ->method('set')
                   ->with('query', $params);
-    $model = new model($this->em, $this->session, $this->user);
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
     $model->save_params($params);
   }
 
@@ -365,7 +690,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('departments')
                   ->willReturn([]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -392,7 +717,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('departments')
                   ->willReturn([1, 2]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -419,7 +744,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('departments')
                   ->willReturn([]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -446,7 +771,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('departments')
                   ->willReturn([1, 2]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -473,7 +798,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -492,7 +817,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['set_street'])
                   ->getMock();
     $model->expects($this->once())
@@ -507,7 +832,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -522,7 +847,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -541,7 +866,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['get_streets', 'save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -571,7 +896,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['get_streets', 'save_params', 'get_houses_by_street'])
                   ->getMock();
     $model->expects($this->once())
@@ -600,7 +925,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -623,7 +948,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('categories')
                   ->willReturn([]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -646,7 +971,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('categories')
                   ->willReturn([1, 2]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -669,7 +994,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('categories')
                   ->willReturn([]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -692,7 +1017,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('categories')
                   ->willReturn([1, 2]);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -711,7 +1036,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -734,7 +1059,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query')
                   ->willReturn($this->default_params);
     $model = $this->getMockBuilder('main\models\queries')
-                  ->setConstructorArgs([$this->em, $this->session, $this->user])
+                  ->setConstructorArgs([$this->em, $this->session, $this->user, $this->twig])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())

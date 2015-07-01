@@ -1,6 +1,23 @@
 <?php namespace main\models;
 
-class factory extends model{
+use Silex\Application;
+use Doctrine\ORM\EntityManager;
+use Twig_Environment;
+use domain\user;
+
+class factory{
+
+  private $app;
+  private $em;
+  private $twig;
+  private $user;
+
+  public function __construct(Application $app, Twig_Environment $twig, EntityManager $em, user $user){
+    $this->twig = $twig;
+    $this->app = $app;
+    $this->em = $em;
+    $this->user = $user;
+  }
 
   public function get_number_model($id){
     return new number5($this->app, $this->twig, $this->em, $this->user, $id);

@@ -15,10 +15,13 @@
 <div class="query-wrap query_status_{{ query.get_status() }}">
 	<h4>
 		{% if query.get_initiator() == 'number' %}
-			<img src="/images/icons/xfn-friend.png" />
+			<i class="glyphicon glyphicon-user notification-center-icon" style="color:#AADDAF; font-size:12px" alt="Заявка на личевой счет"></i>
 		{% else %}
-			<img src="/images/icons/home-medium.png" />
+			<i class="glyphicon glyphicon-home notification-center-icon" style="color:#C8D5C8; font-size:12px" alt="Заявка на дом"></i>
 		{% endif %}
+    {% if query.get_request %}
+     <i class="glyphicon glyphicon-eye-open notification-center-icon" style="font-size:12px" alt="Заявка из личного кабинета"></i>
+    {% endif %}
 		Заявка №{{ query.get_number() }} ({{ statuses[query.get_status()] }})
 		<button class="close get_query_title">&times;</button>
 	</h4>

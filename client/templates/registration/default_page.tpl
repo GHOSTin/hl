@@ -8,7 +8,7 @@
       <p>* - поля обязательные для заполнения.</p>
       <form method="post">
         <div class="form-group">
-          <label>Адресс*</label>
+          <label>Адрес*</label>
           <input type="text"  class="form-control" name="address" autofocus required>
         </div>
         <div class="form-group">
@@ -20,7 +20,7 @@
           <input type="text"  class="form-control" name="fio" required>
         </div>
         <div class="form-group">
-          <label>Сума начисления и месяц*</label>
+          <label>Сумма начисления и месяц*</label>
           <input type="text"  class="form-control" name="accruals" required>
         </div>
         <div class="form-group">

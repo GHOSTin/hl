@@ -202,7 +202,7 @@ class numbers{
   }
 
   public function update_number_email(Request $request, Application $app){
-    preg_match_all('/[0-9A-Za-z.@-]/', $request->get('email'), $matches);
+    preg_match_all('/[0-9A-Za-z.@\-_]/', $request->get('email'), $matches);
     $number = $app['em']->find('\domain\number', $request->get('id'));
     $number->set_email(implode('', $matches[0]));
     $app['em']->flush();

@@ -211,9 +211,12 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
                     ->will($this->returnValue($repository));
     $this->app['em']->expects($this->once())
                     ->method('flush');
-    $this->app['twig']->expects($this->once())
+    $this->app['twig']->expects($this->exactly(2))
                       ->method('render')
-                      ->with('recovery/success.tpl', ['number' => 'number_object'])
+                      ->withConsecutive(
+                        ['recovery\generate_password.tpl', $this->anything()],
+                        ['recovery/success.tpl', ['number' => 'number_object']]
+                      )
                       ->will($this->returnValue('render_template'));
     $mailer = $this->getMockBuilder('Swift_Mailer')
                    ->disableOriginalConstructor()

@@ -11,6 +11,7 @@ $('.user[user = {{ user.get_id() }}] .user-information').html(get_hidden_content
     <ul class="list-unstyled">
       <li class="access" value="queries/general_access"><input type="checkbox"{% if user.check_access('queries/general_access') %}checked=""{% endif %}> Общий доступ</li>
       <li class="access" value="queries/create_query"><input type="checkbox"{% if user.check_access('queries/create_query') %}checked=""{% endif %}> Создание заявки</li>
+      <li class="access" value="queries/analize_request"><input type="checkbox"{% if user.check_access('queries/analize_request') %}checked=""{% endif %}> Анализ запросов из личного кабинета</li>
     </ul>
   </div>
   <div class="col-md-2">

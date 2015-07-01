@@ -4,7 +4,7 @@ use DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
-* @Entity(repositoryClass="\domain\repositories\query")
+* @Entity(repositoryClass="domain\repositories\query")
 * @Table(name="queries")
 */
 class query{
@@ -46,6 +46,11 @@ class query{
   * @JoinColumn(name="query_worktype_id", referencedColumnName="id")
   */
 	private $work_type;
+
+  /**
+  * @OneToOne(targetEntity="domain\number_request", mappedBy="query")
+  */
+  private $request;
 
 	/**
   * @Column(name="opentime", type="string")
@@ -109,11 +114,8 @@ class query{
 	private $works;
 
 	/**
-   * @ManyToMany(targetEntity="domain\query2user")
-   * @JoinTable(name="query2user",
-   * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
-   * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
-   */
+  * @OneToMany(targetEntity="domain\query2user", mappedBy="query", cascade="all")
+  */
 	private $users;
 
   /**
@@ -129,11 +131,23 @@ class query{
 	public static $initiator_list = ['number', 'house'];
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
 
+  const RE_DESCRIPTION = '|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u';
+
   public function __construct(){
+    $time = time();
     $this->numbers = new ArrayCollection();
     $this->comments = new ArrayCollection();
+    $this->users = new ArrayCollection();
     $this->files = new ArrayCollection();
     $this->status = 'open';
+    $this->time_open = $time;
+    $this->time_work = $time;
+  }
+
+  public function add_manager(user $user){
+    $manager = new query2user($this, $user);
+    $manager->set_class('manager');
+    $this->users->add($manager);
   }
 
 	public function add_number(number $number){
@@ -207,8 +221,8 @@ class query{
     $this->set_time_work($time);
   }
 
-	public function add_work_type(workgroup $wt){
-		$this->work_type = $wt;
+	public function add_work_type(workgroup $category){
+		$this->work_type = $category;
 	}
 
 	public function get_work_type(){
@@ -315,6 +329,10 @@ class query{
 		return $this->number;
 	}
 
+  public function get_request(){
+    return $this->request;
+  }
+
 	public function get_time_open(){
 		return $this->time_open;
 	}
@@ -355,6 +373,12 @@ class query{
 		$this->close_reason = (string) $reason;
 	}
 
+  public function set_creator(user $user){
+    $creator = new query2user($this, $user);
+    $creator->set_class('creator');
+    $this->users->add($creator);
+  }
+
 	public function set_department(department $department){
 		$this->department = $department;
 	}
@@ -382,10 +406,15 @@ class query{
 	}
 
 	public function set_description($description){
-		if(!preg_match('|^[А-Яа-яёЁ0-9№"!?()/:;.,\*\-+= ]{0,65535}$|u', $description))
+		if(!preg_match(self::RE_DESCRIPTION, $description))
       throw new DomainException('Описание заявки заданы не верно.');
 		$this->description = $description;
 	}
+
+  public function set_request(number_request $request){
+    $this->request = $request;
+    $this->request->set_query($this);
+  }
 
 	private function set_time_close($time){
 		if($time < $this->time_open)
@@ -404,4 +433,46 @@ class query{
 	public function set_query_type(query_type $query_type){
 		$this->query_type = $query_type;
 	}
+
+  public static function new_instance_from_from_array(array $args){
+    $query = new query();
+    $query->add_work_type($args['category']);
+    $query->set_query_type($args['query_type']);
+    $query->set_description($args['description']);
+    $query->set_contact_fio($args['contact_fio']);
+    $query->set_contact_telephone($args['contact_telephone']);
+    $query->set_contact_cellphone($args['contact_cellphone']);
+    $query->set_number($args['number']);
+    return $query;
+  }
+
+  public static function new_instance_number_initiator(number $number, array $args){
+    $query = self::new_instance_from_from_array($args);
+    $house = $number->get_flat()->get_house();
+    $query->set_house($house);
+    $query->set_department($house->get_department());
+    $query->add_number($number);
+    $query->set_initiator('number');
+    return $query;
+  }
+
+  public static function new_instance_house_initiator(house $house, array $args){
+    $query = self::new_instance_from_from_array($args);
+    $query->set_house($house);
+    $query->set_department($house->get_department());
+    $query->set_initiator('house');
+    return $query;
+  }
+
+  public static function new_instance_from_request(number_request $request, array $args){
+    $query = self::new_instance_from_from_array($args);
+    $number = $request->get_number();
+    $house = $number->get_flat()->get_house();
+    $query->set_house($house);
+    $query->set_department($house->get_department());
+    $query->add_number($number);
+    $query->set_initiator('number');
+    $query->set_request($request);
+    return $query;
+  }
 }
