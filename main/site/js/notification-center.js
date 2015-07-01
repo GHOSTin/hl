@@ -231,7 +231,7 @@ $('#nt-center').on('click', function(e){
         });
     } else {
         /** подгрузить контент */
-        $.get('/profile/get_notification_center_content',{
+        $.get('/notification_center/get_content/',{
         },function(r){
             /** создать блок с полученным контентом */
             create_notification_center($('#nt-center').parent(), r);
