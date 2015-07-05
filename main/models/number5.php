@@ -1,23 +1,22 @@
 <?php namespace main\models;
 
-use Silex\Application;
+use RuntimeException;
+use Twig_Environment;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Response;
-use Twig_Environment;
 use domain\user;
 use domain\number;
-use RuntimeException;
+use Swift_Message;
+use Swift_Mailer;
 
 class number5{
 
-  private $app;
   private $em;
   private $twig;
   private $user;
 
-  public function __construct(Application $app, Twig_Environment $twig, EntityManager $em, user $user, $id){
+  public function __construct(Twig_Environment $twig, EntityManager $em, user $user, $id){
     $this->twig = $twig;
-    $this->app = $app;
     $this->em = $em;
     $this->user = $user;
     if(!$this->user->check_access('numbers/general_access'))
@@ -27,11 +26,11 @@ class number5{
       throw new RuntimeException();
   }
 
-  public function generate_password(){
+  public function generate_password($salt, $email, Swift_Message $message, Swift_Mailer $mailer){
     if(!$this->user->check_access('numbers/generate_password'))
       throw new RuntimeException();
     $password = substr(sha1(time()), 0, 6);
-    $hash = number::generate_hash($password, $this->app['salt']);
+    $hash = number::generate_hash($password, $salt);
     $this->number->set_hash($hash);
     $this->em->flush();
     $body = $this->twig->render('number\generate_password.tpl',
@@ -39,12 +38,11 @@ class number5{
                                  'number' => $this->number,
                                  'password' => $password
                                 ]);
-    $message = $this->app['Swift_Message'];
     $message->setSubject('Пароль в личный кабинет')
-            ->setFrom([$this->app['email_for_reply']])
+            ->setFrom([$email])
             ->setTo([$this->number->get_email()])
             ->setBody($body);
-    $this->app['mailer']->send($message);
+    $mailer->send($message);
     return new Response();
   }
 

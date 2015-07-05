@@ -23,7 +23,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
                ->method('check_access')
                ->with('numbers/general_access')
                ->willReturn(false);
-    new model($this->app, $this->twig, $this->em, $this->user, 125);
+    new model($this->twig, $this->em, $this->user, 125);
   }
 
   public function test_construct_2(){
@@ -36,10 +36,16 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->method('find')
              ->with('domain\number', 125)
              ->willReturn(null);
-    new model($this->app, $this->twig, $this->em, $this->user, 125);
+    new model($this->twig, $this->em, $this->user, 125);
   }
 
   public function test_generate_password_1(){
+    $message = $this->getMockBuilder('Swift_Message')
+                    ->disableOriginalConstructor()
+                    ->getMock();
+    $mailer = $this->getMockBuilder('Swift_Mailer')
+                   ->disableOriginalConstructor()
+                   ->getMock();
     $this->setExpectedException('RuntimeException');
     $this->user->expects($this->exactly(2))
                ->method('check_access')
@@ -52,8 +58,8 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->method('find')
              ->with('domain\number', 125)
              ->willReturn($this->number);
-    $model = new model($this->app, $this->twig, $this->em, $this->user, 125);
-    $model->generate_password();
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $model->generate_password('salt', 'email',  $message, $mailer);
   }
 
   public function test_generate_password_2(){
@@ -75,7 +81,6 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->willReturn($this->number);
     $this->em->expects($this->once())
              ->method('flush');
-    $this->app['salt'] = 'salt';
     $message = $this->getMockBuilder('Swift_Message')
                     ->disableOriginalConstructor()
                     ->getMock();
@@ -100,14 +105,11 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
     $mailer->expects($this->once())
            ->method('send')
            ->with($this->identicalTo($message));
-    $this->app['Swift_Message'] = $message;
-    $this->app['mailer'] = $mailer;
-    $this->app['email_for_reply'] = 'mail@example.com';
     $this->twig->expects($this->once())
                ->method('render')
                ->willReturn('body_text');
-    $model = new model($this->app, $this->twig, $this->em, $this->user, 125);
-    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $model->generate_password());
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $model->generate_password('salt', 'mail@example.com', $message, $mailer));
   }
 
   public function test_get_dialog_generate_password_1(){
@@ -123,7 +125,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->method('find')
              ->with('domain\number', 125)
              ->willReturn($this->number);
-    $model = new model($this->app, $this->twig, $this->em, $this->user, 125);
+    $model = new model($this->twig, $this->em, $this->user, 125);
     $model->get_dialog_generate_password();
   }
 
@@ -143,7 +145,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
                ->method('render')
                ->with('number\get_dialog_generate_password.tpl', ['number' => $this->number])
                ->will($this->returnValue('render_template'));
-    $model = new model($this->app, $this->twig, $this->em, $this->user, 125);
+    $model = new model($this->twig, $this->em, $this->user, 125);
     $this->assertEquals('render_template', $model->get_dialog_generate_password());
   }
 }

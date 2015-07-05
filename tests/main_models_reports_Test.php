@@ -9,9 +9,6 @@ class main_models_reports_Test extends PHPUnit_Framework_TestCase{
     $this->twig = $this->getMockBuilder('Twig_Environment')
                        ->disableOriginalConstructor()
                        ->getMock();
-    $this->em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-                     ->disableOriginalConstructor()
-                     ->getMock();
     $this->user = $this->getMock('domain\user');
     $this->user->expects($this->once())
                ->method('check_access')
@@ -23,8 +20,9 @@ class main_models_reports_Test extends PHPUnit_Framework_TestCase{
   public function test_default_page(){
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('report\default_page.tpl', ['user' => $this->user]);
-    $model = new model($this->app, $this->twig, $this->em, $this->user);
-    $model->default_page();
+               ->with('report\default_page.tpl', ['user' => $this->user])
+               ->willReturn('render_template');
+    $model = new model($this->twig, $this->user);
+    $this->assertEquals('render_template', $model->default_page());
   }
 }

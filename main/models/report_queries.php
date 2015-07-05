@@ -5,7 +5,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Doctrine\ORM\EntityManager;
 use Twig_Environment;
-use Silex\Application;
 use domain\user;
 use domain\query;
 
@@ -22,16 +21,14 @@ class report_queries{
                      'streets' => [],
                      'houses' => []
                     ];
-  private $app;
   private $em;
   private $twig;
   private $user;
 
-  public function __construct(Application $app, Twig_Environment $twig, EntityManager $em, user $user, Session $session){
+  public function __construct(Twig_Environment $twig, EntityManager $em, user $user, Session $session){
     if(!$user->check_access('reports/general_access'))
       throw new RuntimeException();
     $this->twig = $twig;
-    $this->app = $app;
     $this->em = $em;
     $this->user = $user;
     $this->session = $session;

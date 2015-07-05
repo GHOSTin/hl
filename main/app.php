@@ -54,9 +54,6 @@ $app['\main\models\number'] = function($app){
 $app['main\models\queries'] = function($app){
   return new models\queries($app['em'], $app['session'], $app['user'], $app['twig']);
 };
-$app['main\models\factory'] = function($app){
-  return new \main\models\factory($app, $app['twig'], $app['em'], $app['user']);
-};
 
 $app['main\models\report_event'] = function($app){
   return new \main\models\report_event($app['em'], $app['session']);
@@ -69,6 +66,15 @@ $app['main\models\profile'] = function($app){
 };
 $app['main\models\notification_center'] = function($app){
   return new models\notification_center($app['twig'], $app['em']);
+};
+$app['main\models\reports'] = function($app){
+  return new models\reports($app['twig'], $app['user']);
+};
+$app['main\models\report_queries'] = function($app){
+  return new models\report_queries($app['twig'], $app['em'], $app['user'], $app['session']);
+};
+$app['main\models\factory'] = function($app){
+  return new models\factory($app);
 };
 
 $app['\domain\query2comment'] = $app->factory(function($app){
