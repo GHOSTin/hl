@@ -11,15 +11,9 @@ class controller_report_queries_Test extends PHPUnit_Framework_TestCase{
     $this->app = new Application();
     $this->controller = new controller();
     $this->model = $this->getMockBuilder('main\models\report_queries')
-                  ->disableOriginalConstructor()
-                  ->getMock();
-    $factory = $this->getMockBuilder('main\models\factory')
-                    ->disableOriginalConstructor()
-                    ->getMock();
-    $factory->expects($this->once())
-            ->method('get_report_queries_model')
-            ->willReturn($this->model);
-    $this->app['main\models\factory'] = $factory;
+                        ->disableOriginalConstructor()
+                        ->getMock();
+    $this->app['main\models\report_queries'] = $this->model;
   }
 
   public function test_clear_filters(){
