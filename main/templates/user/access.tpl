@@ -47,5 +47,11 @@ $('.user[user = {{ user.get_id() }}] .user-information').html(get_hidden_content
       <li class="access" value="metrics/general_access"><input type="checkbox"{% if user.check_access('metrics/general_access') %}checked=""{% endif %}> Общий доступ</li>
     </ul>
   </div>
+  <div class="col-md-2">
+    <h4>Импорт</h4>
+    <ul class="list-unstyled">
+      <li class="access" value="import/general_access"><input type="checkbox"{% if user.check_access('import/general_access') %}checked=""{% endif %}> Общий доступ</li>
+    </ul>
+  </div>
 </div>
 {% endblock html %}

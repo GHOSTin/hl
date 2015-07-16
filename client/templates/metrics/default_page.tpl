@@ -3,6 +3,25 @@
 {% block content %}
 <div class="content row">
   <div class="col-md-5">
+  {% if number.get_last_month_meterages() is not empty %}
+    <table class="table">
+      <caption>Показания предыдущего месяца</caption>
+      <thead>
+        <th>Услуга</th>
+        <th>Тариф1</th>
+        <th>Тариф2</th>
+      </thead>
+      <tbody>
+      {% for meterage in number.get_last_month_meterages() %}
+        <tr>
+          <td>{{ meterage.get_service() }}</td>
+          <td>{{ meterage.get_first() }}</td>
+          <td>{{ meterage.get_second() }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
     <form method="post">
       <input type="hidden" class="form-control" name="address" required value="{{ number.get_flat().get_house().get_street().get_name() }}, дом {{ number.get_flat().get_house().get_number() }}, кв.{{ number.get_flat().get_number() }}">
       <h2>Показания счетчиков</h2>

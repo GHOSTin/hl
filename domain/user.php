@@ -82,6 +82,7 @@ class user implements JsonSerializable{
   const WRONG_ACCESS_EXCEPTION = 'wrong access exception';
 
   private static $rules_list = [
+    'import/general_access',
     'metrics/general_access',
     'numbers/general_access',
     'numbers/generate_password',

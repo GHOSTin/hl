@@ -52,7 +52,27 @@ $(function(){
     }
   });
 
+  var metrs_view = Backbone.View.extend({
+    el: $('ul.menu'),
+
+    events: {
+      'click a#import_metrs': 'import_metrs'
+    },
+
+    initialize: function () {
+      this.import_numbers_form = $('#import_metrs_form').html();
+    },
+
+    import_metrs: function(){
+      $('.import').html(this.import_numbers_form);
+      $('.date').datepicker({format: 'mm.yyyy', language: 'ru'}).on('changeDate', function(){
+        $('.date').datepicker('hide');
+      });
+    }
+  });
+
   var view = new view();
   var debt = new debt_view();
   var numbers = new numbers_view();
+  var metrs = new metrs_view();
 });
