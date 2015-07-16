@@ -44,7 +44,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
                ->method('render')
                ->with('report\clear_filter_query.tpl', ['filters' => 'filters_array']);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['init_default_params', 'get_filters'])
                   ->getMock();
     $model->expects($this->once())
@@ -72,7 +72,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\workgroup')
              ->will($this->returnValue($repository));
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $this->assertEquals('categories_array', $model->get_categories());
   }
 
@@ -93,7 +93,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\workgroup')
              ->will($this->returnValue($repository));
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $this->assertEquals('categories_array', $model->get_categories());
   }
 
@@ -114,7 +114,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\department')
              ->will($this->returnValue($repository));
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $this->assertEquals('departments_array', $model->get_departments());
   }
 
@@ -135,12 +135,12 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\department')
              ->will($this->returnValue($repository));
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $this->assertEquals('departments_array', $model->get_departments());
   }
 
   public function test_get_filters_1(){
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $values = $model->get_filters();
     $this->assertEquals('open', $values['status']);
     $this->assertEquals([], $values['department']);
@@ -162,7 +162,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\street')
              ->will($this->returnValue($repository));
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $this->assertEquals('streets_array', $model->get_streets());
   }
 
@@ -189,7 +189,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->method('getRepository')
              ->with('domain\house')
              ->will($this->returnValue($repository));
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $this->assertContainsOnlyInstancesOf('domain\street', $model->get_streets());
   }
 
@@ -209,7 +209,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
     $this->twig->expects($this->once())
                ->method('render')
                ->with('report\report_query_one.tpl', ['queries' => 'queries_array']);
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $model->report1();
   }
 
@@ -229,7 +229,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
     $this->twig->expects($this->once())
                ->method('render')
                ->with('report\report_query_one_xls.tpl', ['queries' => 'queries_array']);
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $model->report1_xls();
   }
 
@@ -243,7 +243,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
     $params['time_begin'] = strtotime('midnight');
     $params['time_end'] = strtotime('tomorrow');
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -259,7 +259,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
     $this->session->expects($this->once())
                   ->method('set')
                   ->with('report_query', $params);
-    $model = new model($this->app, $this->twig, $this->em, $this->user, $this->session);
+    $model = new model($this->twig, $this->em, $this->user, $this->session);
     $model->save_params($params);
   }
 
@@ -269,7 +269,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\department', 0)
              ->willReturn(null);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -293,7 +293,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\department', 125)
              ->willReturn($department);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -317,7 +317,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\house', 125)
              ->willReturn($house);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -333,7 +333,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\house', 0)
              ->willReturn(null);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params', 'set_street'])
                   ->getMock();
     $model->expects($this->once())
@@ -349,7 +349,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\query_type', 0)
              ->willReturn(null);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -369,7 +369,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\query_type', 125)
              ->willReturn($query_type);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -381,7 +381,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_set_status_1(){
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -393,7 +393,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_set_status_2(){
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -420,7 +420,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\street')
              ->will($this->returnValue($repository));
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -462,7 +462,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->withConsecutive(['domain\street'], ['domain\house'])
              ->will($this->onConsecutiveCalls($repository1, $repository2));
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['get_streets', 'save_params', 'get_houses_by_street'])
                   ->getMock();
     $model->expects($this->once())
@@ -478,7 +478,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
   public function test_set_time_begin(){
     $time = strtotime('21.12.1984');
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -491,7 +491,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
   public function test_set_time_end(){
     $time = strtotime('21.12.1984');
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -507,7 +507,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\workgroup', 0)
              ->willReturn(null);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())
@@ -527,7 +527,7 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\workgroup', 125)
              ->willReturn($workgroup);
     $model = $this->getMockBuilder('main\models\report_queries')
-                  ->setConstructorArgs([$this->app, $this->twig, $this->em, $this->user, $this->session])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
                   ->setMethods(['save_params'])
                   ->getMock();
     $model->expects($this->once())

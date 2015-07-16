@@ -21,8 +21,19 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_generate_password(){
+    $message = $this->getMockBuilder('Swift_Message')
+                    ->disableOriginalConstructor()
+                    ->getMock();
+    $mailer = $this->getMockBuilder('Swift_Mailer')
+                   ->disableOriginalConstructor()
+                   ->getMock();
+    $this->app['salt'] = 'salt';
+    $this->app['Swift_Message'] = $message;
+    $this->app['mailer'] = $mailer;
+    $this->app['email_for_reply'] = 'email';
     $this->model->expects($this->once())
-                ->method('generate_password');
+                ->method('generate_password')
+                ->with('salt', 'email', $message, $mailer);
     $this->controller->generate_password($this->app, 125);
   }
 

@@ -54,9 +54,6 @@ $app['\main\models\number'] = function($app){
 $app['main\models\queries'] = function($app){
   return new models\queries($app['em'], $app['session'], $app['user'], $app['twig']);
 };
-$app['main\models\factory'] = function($app){
-  return new \main\models\factory($app, $app['twig'], $app['em'], $app['user']);
-};
 
 $app['main\models\report_event'] = function($app){
   return new \main\models\report_event($app['em'], $app['session']);
@@ -64,6 +61,25 @@ $app['main\models\report_event'] = function($app){
 $app['main\models\import_numbers'] = function($app){
   return new \main\models\import_numbers($app['em'], $app['session']);
 };
+$app['main\models\import_meterages'] = function($app){
+  return new \main\models\import_meterages($app['twig'], $app['em'], $app['user']);
+};
+$app['main\models\profile'] = function($app){
+  return new models\profile($app['twig'], $app['em'], $app['user']);
+};
+$app['main\models\notification_center'] = function($app){
+  return new models\notification_center($app['twig'], $app['em']);
+};
+$app['main\models\reports'] = function($app){
+  return new models\reports($app['twig'], $app['user']);
+};
+$app['main\models\report_queries'] = function($app){
+  return new models\report_queries($app['twig'], $app['em'], $app['user'], $app['session']);
+};
+$app['main\models\factory'] = function($app){
+  return new models\factory($app);
+};
+
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
@@ -135,7 +151,9 @@ $app->get('/profile/get_userinfo', 'main\controllers\profile::get_user_info')->b
 $app->put('/profile/update_telephone', 'main\controllers\profile::update_telephone')->before($security);
 $app->put('/profile/update_cellphone', 'main\controllers\profile::update_cellphone')->before($security);
 $app->get('/profile/update_password', 'main\controllers\profile::update_password')->before($security);
-$app->get('/profile/get_notification_center_content', 'main\controllers\profile::get_notification_center_content')->before($security);
+
+#notification_center
+$app->get('/notification_center/get_content/', 'main\controllers\notification_center::get_content')->before($security);
 
 # api
 $app->get('/api/get_chat_options', 'main\controllers\api::get_chat_options');
@@ -363,6 +381,7 @@ $app->post('/import/streets/', 'main\controllers\import::load_streets')->before(
 $app->post('/import/houses/', 'main\controllers\import::load_houses')->before($security);
 $app->post('/import/flats/', 'main\controllers\import::load_flats')->before($security);
 $app->post('/import/numbers/', 'main\controllers\import::load_numbers')->before($security);
+$app->post('/import/meterages/', 'main\controllers\import::load_meterages')->before($security);
 
 # system
 $app->get('/system/', 'main\controllers\system::default_page')->before($security);

@@ -5,8 +5,8 @@
 		<div class="profile-content">
 		</div>
 	</div>
-{% endblock component %}
+{% endblock %}
 
 {% block javascript %}
     <script src="/js/profile.js"></script>
-{% endblock javascript %}
+{% endblock %}

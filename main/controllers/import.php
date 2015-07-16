@@ -87,6 +87,12 @@ class import{
                                 ]);
   }
 
+  public function load_meterages(Request $request, Application $app){
+    set_time_limit(0);
+    $hndl = fopen($request->files->get('metrs'), 'r');
+    return $app['main\models\import_meterages']->load_meterages($hndl, $request->request->get('date'));
+  }
+
   public function load_numbers(Application $app){
     set_time_limit(0);
     $app['main\models\import_numbers']->load_numbers();

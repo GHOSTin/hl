@@ -19,14 +19,17 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'CREATE TABLE number_requests(
-                query_id INT UNSIGNED,
+$queries[] = 'CREATE TABLE meterage(
+                id VARCHAR(255) NOT NULL,
                 number_id INT UNSIGNED NOT NULL,
                 time INT UNSIGNED NOT NULL,
-                message TEXT
-
+                service VARCHAR(255) NOT NULL,
+                tarif INT UNSIGNED NOT NULL,
+                params TEXT,
+                PRIMARY KEY (id),
+                KEY (number_id),
+                KEY (time)
               )';
-// написать индексы
 
 foreach($queries as $query)
   $pdo->exec($query);

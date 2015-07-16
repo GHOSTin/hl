@@ -128,7 +128,7 @@ class accrual{
   }
 
   public function set_time($time){
-    $this->time = strtotime('first day of this month + 12 hours', $time);
+    $this->time = strtotime('12:00 first day of this month', $time);
   }
 
   public function set_service($service){

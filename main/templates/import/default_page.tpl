@@ -13,6 +13,9 @@
       <li>
         <a id="import_numbers">Импорт лицевых</a>
       </li>
+      <li>
+        <a id="import_metrs">Импорт счетчиков</a>
+      </li>
     </ul>
 	</div>
   <div class="col-md-10 import">
@@ -53,6 +56,19 @@
     <div class="form-group">
       <label>Файл</label>
       <input type="file" class="form-control" name="numbers" required>
+    </div>
+    <button type="submit" class="btn btn-default">Залить</button>
+  </form>
+</script>
+<script id="import_metrs_form" type="text/template">
+  <form action="/import/meterages/" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>Месяц</label>
+      <input type="text" class="form-control date" name="date" required>
+    </div>
+    <div class="form-group">
+      <label>Файл</label>
+      <input type="file" class="form-control" name="metrs" required>
     </div>
     <button type="submit" class="btn btn-default">Залить</button>
   </form>
