@@ -92,10 +92,17 @@ class number{
   */
   private $events;
 
+  /**
+  * @OneToMany(targetEntity="domain\meterage", mappedBy="number")
+  * @OrderBy({"time" = "DESC"})
+  */
+  private $meterages;
+
   public function __construct(){
     $this->queries = new ArrayCollection();
     $this->accruals = new ArrayCollection();
     $this->events = new ArrayCollection();
+    $this->meterages = new ArrayCollection();
     $this->status = 'true';
   }
 
@@ -155,6 +162,13 @@ class number{
 
   public function get_id(){
     return $this->id;
+  }
+
+  public function get_last_month_meterages(){
+    $time = strtotime('12:00 first day of last month');
+    return $this->meterages->filter(function($element) use ($time){
+      return $element->get_time() == $time;
+    });
   }
 
   public function get_notification_rules(){

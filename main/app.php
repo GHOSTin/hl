@@ -61,6 +61,9 @@ $app['main\models\report_event'] = function($app){
 $app['main\models\import_numbers'] = function($app){
   return new \main\models\import_numbers($app['em'], $app['session']);
 };
+$app['main\models\import_meterages'] = function($app){
+  return new \main\models\import_meterages($app['twig'], $app['em'], $app['user']);
+};
 $app['main\models\profile'] = function($app){
   return new models\profile($app['twig'], $app['em'], $app['user']);
 };
@@ -378,6 +381,7 @@ $app->post('/import/streets/', 'main\controllers\import::load_streets')->before(
 $app->post('/import/houses/', 'main\controllers\import::load_houses')->before($security);
 $app->post('/import/flats/', 'main\controllers\import::load_flats')->before($security);
 $app->post('/import/numbers/', 'main\controllers\import::load_numbers')->before($security);
+$app->post('/import/meterages/', 'main\controllers\import::load_meterages')->before($security);
 
 # system
 $app->get('/system/', 'main\controllers\system::default_page')->before($security);
