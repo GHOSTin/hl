@@ -4,7 +4,7 @@
   <table class="table table-striped table-condensed">
     <thead>
       <th>Квартира</th>
-      <th>Задолженость</th>
+      <th>Задолженость в рублях</th>
     </thead>
     <tbody>
     {% for numbers in debtors %}

@@ -28,7 +28,7 @@ class arrears{
 
   public function flats($id){
     $house = $this->em->getRepository('domain\house')
-                       ->find($id);
+                      ->find($id);
     return $this->twig->render('arrears/flats.tpl', ['house' => $house]);
   }
 
