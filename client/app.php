@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Session\Session;
 use domain\metrics;
 use Swift_Message;
+use Twig_SimpleFilter;
 use config\general as conf;
 
 $DS = DIRECTORY_SEPARATOR;
@@ -33,6 +34,7 @@ $app['debug'] = (conf::status === 'development')? true: false;
 $app['number'] = null;
 $app['email_for_reply'] = conf::email_for_reply;
 $app['email_for_registration'] = conf::email_for_registration;
+$app['debt_limit'] = conf::debt_limit;
 
 $config = new Configuration();
 $driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
@@ -73,6 +75,16 @@ $app['domain\metrics'] = $app->factory(function($app){
 $app['client\models\queries'] = function($app){
   return new models\queries($app['twig'], $app['em'], $app['number']);
 };
+
+$app['client\models\arrears'] = function($app){
+  return new models\arrears($app['twig'], $app['em']);
+};
+
+$filter = new Twig_SimpleFilter('natsort', function (array $array) {
+  natsort($array);
+  return $array;
+});
+$app['twig']->addFilter($filter);
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
@@ -120,6 +132,13 @@ $app->post('/metrics/', 'client\controllers\metrics::send')->before($security);
 # registration
 $app->get('/registration/', 'client\controllers\registration::default_page');
 $app->post('/registration/', 'client\controllers\registration::send');
+
+# arrears
+$app->get('/arrears/', 'client\controllers\arrears::default_page');
+$app->get('/arrears/streets/{id}/houses/', 'client\controllers\arrears::houses');
+$app->get('/arrears/houses/{id}/flats/', 'client\controllers\arrears::flats');
+$app->get('/arrears/houses/{id}/top/', 'client\controllers\arrears::top');
+$app->get('/arrears/flats/{id}/', 'client\controllers\arrears::flat');
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
