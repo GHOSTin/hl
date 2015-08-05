@@ -1,21 +1,11 @@
 <?php namespace config;
 
-class general{
-
-  /**
-  * Таймзона
-  */
-  const php_timezone = 'Asia/Yekaterinburg';
+class general extends default_config{
 
   // db option
   const db_name = 'test';
-  const db_host = 'localhost';
   const db_user = 'test';
   const db_password = 'test';
-  // auth option
-  const authSalt = 'salt';
-
-  const status = 'production';
 
   /**
   * Email, на который приходят заявки на доступ
@@ -25,9 +15,6 @@ class general{
   /**
   * Email, используемый для ответа
   */
-  const email_for_reply = 'mail@example.com';
-
-  const chat_enable = false;
-  const chat_host = 'example.com';
-  const chat_port = 3000;
+  const email_for_reply = 'noreply@example.com';
+  const email_for_reply_password = 'password';
 }

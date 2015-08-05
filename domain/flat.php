@@ -2,45 +2,45 @@
 
 use DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
+use JsonSerializable;
 
 /**
 * @Entity
 * @Table(name="flats")
 */
-class flat{
+class flat implements JsonSerializable{
 
   /**
-  * @ManyToOne(targetEntity="\domain\house")
+  * @ManyToOne(targetEntity="domain\house")
   */
   private $house;
 
   /**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(type="integer")
   * @GeneratedValue
   */
   private $id;
 
   /**
-  * @OneToMany(targetEntity="\domain\number", mappedBy="flat")
+  * @OneToMany(targetEntity="domain\number", mappedBy="flat")
   */
   private $num;
 
   /**
-  * @Column(name="flatnumber", type="string")
+  * @Column(name="flatnumber")
   */
   private $number;
 
   /**
-  * @OneToMany(targetEntity="\domain\number", mappedBy="flat")
+  * @OneToMany(targetEntity="domain\number", mappedBy="flat")
   */
   private $numbers;
+
   /**
-  * @Column(name="status", type="string")
+  * @Column
   */
   private $status;
-
-  private static $statuses = ['true', 'false'];
 
   public function __construct(){
     $this->numbers = new ArrayCollection();
@@ -70,21 +70,18 @@ class flat{
     return $this->status;
   }
 
+  public function JsonSerialize(){
+    return [
+             'id' => $this->id,
+             'number' => $this->number
+           ];
+  }
+
   public static function new_instance(house $house, $number){
-    $flat = new flat();
-    $flat->set_house($house);
+    $flat = new self();
+    $flat->house = $house;
     $flat->set_number($number);
     return $flat;
-  }
-
-  public function set_house(house $house){
-    $this->house = $house;
-  }
-
-  public function set_id($id){
-    if($id > 16777215 OR $id < 1)
-      throw new DomainException('Идентификатор квартиры задан не верно.');
-    $this->id = $id;
   }
 
   public function set_number($number){
@@ -92,11 +89,5 @@ class flat{
     if(!preg_match('|^[0-9]{1,3}.{0,1}[0-9]{0,1}$|', $number))
       throw new DomainException('Номер квартиры задан не верно.');
     $this->number = $number;
-  }
-
-  public function set_status($status){
-    if(!in_array($status, self::$statuses, true))
-      throw new DomainException('Статус квартиры задан не верно.');
-    $this->status = $status;
   }
 }

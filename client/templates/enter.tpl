@@ -37,7 +37,7 @@
       <a href="/recovery/" class="btn btn-link">Востановление пароля</a>
     </div>
     <div class="input-group col-sm-12">
-      <div class="alert alert-danger" role="alert">Передача показаний теперь возможна только внутри личного кабинета.</div>
+      <a href="/arrears/" class="btn btn-link">Просмотр задолжености</a>
     </div>
   </div>
 </div>

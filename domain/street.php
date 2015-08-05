@@ -2,36 +2,35 @@
 
 use Doctrine\Common\Collections\ArrayCollection;
 use DomainException;
+use JsonSerializable;
 
 /**
 * @Entity
 * @Table(name="streets")
 */
-class street{
+class street implements JsonSerializable{
 
   /**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(type="integer")
   * @GeneratedValue
   */
   private $id;
 
   /**
-  * @Column(name="name", type="string")
+  * @Column
   */
   private $name;
 
   /**
-  * @Column(name="status", type="string")
+  * @Column
   */
   private $status;
 
   /**
-  * @OneToMany(targetEntity="\domain\house", mappedBy="street")
+  * @OneToMany(targetEntity="domain\house", mappedBy="street")
   */
   private $houses;
-
-  public static $statuses = ['true', 'false'];
 
   public function __construct(){
     $this->houses = new ArrayCollection();
@@ -64,16 +63,17 @@ class street{
     return $this->status;
   }
 
+  public function JsonSerialize(){
+    return [
+             'id' => $this->id,
+             'name' => $this->name
+           ];
+  }
+
   public static function new_instance($name){
     $street = new street();
     $street->set_name($name);
     return $street;
-  }
-
-  public function set_id($id){
-    if($id > 65535 OR $id < 1)
-      throw new DomainException('Идентификатор улицы задан не верно.');
-    $this->id = $id;
   }
 
   public function set_name($name){

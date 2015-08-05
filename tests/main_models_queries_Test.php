@@ -41,7 +41,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $house = new house();
     $flat = new flat();
     $number = new number();
-    $flat->set_house($house);
+    $flat = flat::new_instance($house, '15');
     $number->set_flat($flat);
     $request = new number_request($number, 'Описание');
     $this->twig->expects($this->once())
@@ -79,11 +79,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_create_query_1(){
     $house = new house();
-    $flat = new flat();
     $number = new number();
     $department = new department();
     $house->set_department($department);
-    $flat->set_house($house);
+    $flat = flat::new_instance($house, '15');
     $number->set_flat($flat);
     $query_type = new query_type();
     $category = new workgroup();
@@ -116,11 +115,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_create_query_2(){
     $house = new house();
-    $flat = new flat();
     $number = new number();
     $department = new department();
     $house->set_department($department);
-    $flat->set_house($house);
+    $flat = flat::new_instance($house, '15');
     $number->set_flat($flat);
     $query_type = new query_type();
     $category = new workgroup();
@@ -153,11 +151,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_create_query_from_request(){
     $house = new house();
-    $flat = new flat();
     $number = new number();
     $department = new department();
     $house->set_department($department);
-    $flat->set_house($house);
+    $flat = flat::new_instance($house, '15');
     $number->set_flat($flat);
     $query_type = new query_type();
     $category = new workgroup();
@@ -195,11 +192,10 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_abort_query_from_request(){
     $house = new house();
-    $flat = new flat();
     $number = new number();
     $department = new department();
     $house->set_department($department);
-    $flat->set_house($house);
+    $flat = flat::new_instance($house, '15');
     $number->set_flat($flat);
     $query_type = new query_type();
     $category = new workgroup();
@@ -237,9 +233,8 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function test_create_query_from_request_dialog(){
     $house = new house();
-    $flat = new flat();
     $number = new number();
-    $flat->set_house($house);
+    $flat = flat::new_instance($house, '15');
     $number->set_flat($flat);
     $request = new number_request($number, 'Описание');
     $this->twig->expects($this->once())
