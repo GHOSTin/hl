@@ -22,6 +22,9 @@
       </tbody>
     </table>
   {% endif %}
+    <p>
+      <a href="history/">История показаний</a>
+    </p>
     <form method="post">
       <input type="hidden" class="form-control" name="address" required value="{{ number.get_flat().get_house().get_street().get_name() }}, дом {{ number.get_flat().get_house().get_number() }}, кв.{{ number.get_flat().get_number() }}">
       <h2>Показания счетчиков</h2>

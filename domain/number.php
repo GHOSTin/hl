@@ -164,6 +164,14 @@ class number{
     return $this->id;
   }
 
+  public function get_meterages_by_month(){
+    $month = [];
+    foreach($this->meterages as $meterage){
+      $month[$meterage->get_time()][] = $meterage;
+    }
+    return $month;
+  }
+
   public function get_last_month_meterages(){
     $time = strtotime('12:00 first day of last month');
     return $this->meterages->filter(function($element) use ($time){

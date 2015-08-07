@@ -128,6 +128,7 @@ $app->get('/accruals/', 'client\controllers\accruals::default_page')->before($se
 # metrics
 $app->get('/metrics/', 'client\controllers\metrics::default_page')->before($security);
 $app->post('/metrics/', 'client\controllers\metrics::send')->before($security);
+$app->get('/metrics/history/', 'client\controllers\metrics::history')->before($security);
 
 # registration
 $app->get('/registration/', 'client\controllers\registration::default_page');
