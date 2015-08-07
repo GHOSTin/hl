@@ -30,6 +30,16 @@ class controller_client_metrics_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_history(){
+    $this->app['number'] = 'number_object';
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('metrics/history.tpl', ['number' => 'number_object'])
+                      ->will($this->returnValue('render_template'));
+    $response = $this->controller->history($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_send(){
     $this->request->request->set('address', 'Ватутина');
     $metrics = $this->getMock('domain\metrics');

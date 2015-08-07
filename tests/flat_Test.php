@@ -8,6 +8,25 @@ class flat_Test extends PHPUnit_Framework_TestCase{
     $this->flat = new flat();
   }
 
+  public function test_id(){
+    $reflection = new ReflectionClass('domain\flat');
+    $id = $reflection->getProperty('id');
+    $id->setAccessible(true);
+    $id->setValue($this->flat, 400);
+    $id->setAccessible(false);
+    $this->assertEquals(400, $this->flat->get_id());
+  }
+
+  public function test_JsonSerialize(){
+    $reflection = new ReflectionClass('domain\flat');
+    $id = $reflection->getProperty('id');
+    $id->setAccessible(true);
+    $id->setValue($this->flat, 400);
+    $id->setAccessible(false);
+    $this->flat->set_number('12');
+    $this->assertEquals(['id' => 400, 'number' => '12'], $this->flat->JsonSerialize());
+  }
+
   public function test_new_instance(){
     $house = new house();
     $flat = flat::new_instance($house, '56');
@@ -15,26 +34,6 @@ class flat_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('56', $flat->get_number());
     $this->assertSame($house, $flat->get_house());
     $this->assertEquals('true', $flat->get_status());
-  }
-
-  public function test_set_id_1(){
-    $this->flat->set_id(125);
-    $this->assertEquals(125, $this->flat->get_id());
-  }
-
-  public function test_set_id_2(){
-    $this->setExpectedException('DomainException');
-    $this->flat->set_id(0);
-  }
-
-  public function test_set_id_3(){
-    $this->setExpectedException('DomainException');
-    $this->flat->set_id(16777216);
-  }
-
-  public function test_set_id_4(){
-    $this->setExpectedException('DomainException');
-    $this->flat->set_id(-125);
   }
 
   public function test_set_number_1(){
@@ -50,24 +49,6 @@ class flat_Test extends PHPUnit_Framework_TestCase{
   public function test_set_number_3(){
     $this->setExpectedException('DomainException');
     $this->flat->set_number('125.1А');
-  }
-
-  public function test_set_status_1(){
-    $this->flat->set_status('true');
-    $this->assertEquals('true', $this->flat->get_status());
-    $this->flat->set_status('false');
-    $this->assertEquals('false', $this->flat->get_status());
-  }
-
-  public function test_set_status_2(){
-    $this->setExpectedException('DomainException');
-    $this->flat->set_status('truefalse');
-  }
-
-  public function test_set_house(){
-    $house = new house();
-    $this->flat->set_house($house);
-    $this->assertSame($house, $this->flat->get_house());
   }
 
   public function test_toString(){

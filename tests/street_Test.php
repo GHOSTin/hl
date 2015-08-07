@@ -30,8 +30,22 @@ class street_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_id(){
-    $this->street->set_id(125);
-    $this->assertEquals(125, $this->street->get_id());
+    $reflection = new ReflectionClass('domain\street');
+    $id = $reflection->getProperty('id');
+    $id->setAccessible(true);
+    $id->setValue($this->street, 400);
+    $id->setAccessible(false);
+    $this->assertEquals(400, $this->street->get_id());
+  }
+
+  public function test_json(){
+    $reflection = new ReflectionClass('domain\street');
+    $id = $reflection->getProperty('id');
+    $id->setAccessible(true);
+    $id->setValue($this->street, 400);
+    $id->setAccessible(false);
+    $this->street->set_name('Ватутина');
+    $this->assertEquals(['id' => 400, 'name' => 'Ватутина'], $this->street->JsonSerialize());
   }
 
   public function test_name(){

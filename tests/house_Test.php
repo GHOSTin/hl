@@ -12,6 +12,29 @@ class house_Test extends PHPUnit_Framework_TestCase{
     $this->house = new house();
   }
 
+  public function test_id(){
+    $reflection = new ReflectionClass('domain\house');
+    $id = $reflection->getProperty('id');
+    $id->setAccessible(true);
+    $id->setValue($this->house, 400);
+    $id->setAccessible(false);
+    $this->assertEquals(400, $this->house->get_id());
+  }
+
+  public function test_JsonSerialize(){
+    $reflection = new ReflectionClass('domain\house');
+    $id = $reflection->getProperty('id');
+    $id->setAccessible(true);
+    $id->setValue($this->house, 400);
+    $id->setAccessible(false);
+    $this->house->set_number('12А');
+    $this->assertEquals(['id' => 400, 'number' => '12А'], $this->house->JsonSerialize());
+  }
+
+  public function test_get_debtors(){
+    $this->assertEquals([], $this->house->get_debtors(1000));
+  }
+
   public function test_new_instance(){
     $street = new street();
     $department = new department();
@@ -28,26 +51,6 @@ class house_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('125А', $this->house);
   }
 
-  public function test_set_id_1(){
-    $this->house->set_id(125);
-    $this->assertEquals(125, $this->house->get_id());
-  }
-
-  public function test_set_id_2(){
-    $this->setExpectedException('DomainException');
-    $this->house->set_id(0);
-  }
-
-  public function test_set_id_3(){
-    $this->setExpectedException('DomainException');
-    $this->house->set_id(65536);
-  }
-
-  public function test_set_id_4(){
-    $this->setExpectedException('DomainException');
-    $this->house->set_id(-125);
-  }
-
   public function test_set_number_1(){
     $this->house->set_number('1А');
     $this->assertEquals('1А', $this->house->get_number());
@@ -60,30 +63,6 @@ class house_Test extends PHPUnit_Framework_TestCase{
   public function test_set_number_2(){
     $this->setExpectedException('DomainException');
     $this->house->set_number('Первый');
-  }
-
-  public function test_set_status_1(){
-    $this->house->set_status('true');
-    $this->assertEquals('true', $this->house->get_status());
-    $this->house->set_status('false');
-    $this->assertEquals('false', $this->house->get_status());
-  }
-
-  public function test_set_status_2(){
-    $this->setExpectedException('DomainException');
-    $this->house->set_status('truefalse');
-  }
-
-  public function test_set_department(){
-    $department = new department();
-    $this->house->set_department($department);
-    $this->assertSame($department, $this->house->get_department());
-  }
-
-  public function test_set_street(){
-    $street = new street();
-    $this->house->set_street($street);
-    $this->assertSame($street, $this->house->get_street());
   }
 
   public function test_add_number_1(){

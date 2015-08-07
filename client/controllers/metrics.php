@@ -9,6 +9,10 @@ class metrics{
     return $app['twig']->render('metrics/default_page.tpl', ['number' => $app['number']]);
   }
 
+  public function history(Application $app){
+    return $app['twig']->render('metrics/history.tpl', ['number' => $app['number']]);
+  }
+
   public function send(Request $request, Application $app){
     $message[] = 'ГВС-1: '.$request->get('gvs1');
     $message[] = 'ГВС-2: '.$request->get('gvs2');

@@ -37,7 +37,18 @@
       <a href="/recovery/" class="btn btn-link">Востановление пароля</a>
     </div>
     <div class="input-group col-sm-12">
-      <div class="alert alert-danger" role="alert">Передача показаний теперь возможна только внутри личного кабинета.</div>
+      <a href="/arrears/" class="btn btn-link">Просмотр задолжености</a>
+    </div>
+  </div>
+  <div class="control row">
+    <legend>Какие возможности вам доступны в личном кабинете?</legend>
+    <div class="input-group col-sm-12">
+     <ul>
+      <li>возможность передать показания приборов учета</li>
+      <li>запрос на рассмотрение и отслеживание вашей заявки</li>
+      <li>оплата через интернет</li>
+      <li>просмотр истории начислений и показаний приборов учета</li>
+     </ul>
     </div>
   </div>
 </div>

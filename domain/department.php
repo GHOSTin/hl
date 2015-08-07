@@ -10,27 +10,17 @@ class department{
 
   /**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(type="integer")
   */
   private $id;
 
   /**
-  * @Column(name="name", type="string")
+  * @Column
   */
   private $name;
 
-  /*
-  * @OneToMany(targetEntity="data_house", mappedBy="department")
-  */
-  private $houses;
-
-  /*
-  * @OneToMany(targetEntity="data_query", mappedBy="department")
-  */
-  private $queries;
-
   /**
-  * @Column(name="status", type="string")
+  * @Column
   */
   private $status;
 
