@@ -7,12 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 class controller_client_registration_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
-    $twig              = $this->getMockBuilder('\Twig_Environment')
-                              ->disableOriginalConstructor()
-                              ->getMock();
-    $this->app         = new Application();
-    $this->controller  = new controller();
-    $this->request     = new Request();
+    $twig = $this->getMockBuilder('\Twig_Environment')
+                 ->disableOriginalConstructor()
+                 ->getMock();
+    $this->app = new Application();
+    $this->controller = new controller();
+    $this->request = new Request();
     $this->app['twig'] = $twig;
   }
 
@@ -37,7 +37,7 @@ class controller_client_registration_Test extends PHPUnit_Framework_TestCase{
             ->will($this->returnValue($message));
     $message->expects($this->once())
             ->method('setFrom')
-            ->with(['target@example.com'])
+            ->with(['noreply@example.com'])
             ->will($this->returnValue($message));
     $message->expects($this->once())
             ->method('setTo')
@@ -51,10 +51,11 @@ class controller_client_registration_Test extends PHPUnit_Framework_TestCase{
     $mailer->expects($this->once())
            ->method('send')
            ->with($this->identicalTo($message));
-    $this->app['Swift_Message']          = $message;
-    $this->app['mailer']                 = $mailer;
-    $this->app['number']                 = 'number_object';
+    $this->app['Swift_Message'] = $message;
+    $this->app['mailer'] = $mailer;
+    $this->app['number'] = 'number_object';
     $this->app['email_for_registration'] = 'mail@example.com';
+    $this->app['email_for_reply'] = 'noreply@example.com';
     $this->app['twig']->expects($this->once())
                       ->method('render')
                       ->with('registration/send.tpl', ['number' => 'number_object'])

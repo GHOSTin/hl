@@ -19,7 +19,7 @@ class registration{
     $body[] = 'сот:'.substr($request->get('cellphone'), 0, 255);
     $message = $app['Swift_Message'];
     $message->setSubject('Заявка на доступ')
-            ->setFrom([$request->get('email')])
+            ->setFrom([$app['email_for_reply']])
             ->setTo([$app['email_for_registration']])
             ->setBody(implode(PHP_EOL, $body));
     $app['mailer']->send($message);

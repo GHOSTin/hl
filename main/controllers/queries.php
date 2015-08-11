@@ -173,8 +173,6 @@ class queries{
   }
 
   public function default_page(Request $request, Application $app){
-    $number_requests = $app['em']->getRepository('domain\number_request')
-                                 ->findByQuery(null, ['time' => 'ASC']);
     $model  = $app['main\models\queries'];
     $query_types  = $app['em']->getRepository('domain\query_type')
                               ->findAll(['name' => 'ASC']);
@@ -198,8 +196,7 @@ class queries{
                                  'departments' => $model->get_departments(),
                                  'query_work_types' => $model->get_categories(),
                                  'query_types' => $query_types,
-                                 'houses' => $houses,
-                                 'number_requests' => $number_requests
+                                 'houses' => $houses
                                 ]);
   }
 
@@ -501,6 +498,14 @@ class queries{
     $query->reopen();
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
+  }
+
+  public function requests(Application $app){
+    return $app['main\models\number_request']->requests();
+  }
+
+  public function count(Application $app){
+    return $app['main\models\number_request']->count();
   }
 
   public function remove_user(Request $request, Application $app){

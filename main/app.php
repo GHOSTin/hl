@@ -76,6 +76,9 @@ $app['main\models\reports'] = function($app){
 $app['main\models\report_queries'] = function($app){
   return new models\report_queries($app['twig'], $app['em'], $app['user'], $app['session']);
 };
+$app['main\models\number_request'] = function($app){
+  return new models\number_request($app['twig'], $app['em'], $app['user']);
+};
 $app['main\models\factory'] = function($app){
   return new models\factory($app);
 };
@@ -338,6 +341,8 @@ $app->get('/queries/dialogs/create_query_from_request/', 'main\controllers\queri
 $app->get('/queries/create_query_from_request/', 'main\controllers\queries::create_query_from_request')->before($security);
 $app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request_dialog')->before($security);
 $app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
+$app->get('/queries/requests/count/', 'main\controllers\queries::count')->before($security);
+$app->get('/queries/requests/', 'main\controllers\queries::requests')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);
