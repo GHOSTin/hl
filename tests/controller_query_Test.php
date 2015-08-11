@@ -79,6 +79,18 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_count(){
+    $model = $this->getMockBuilder('main\models\number_request')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('count')
+          ->willReturn('render_template');
+    $this->app['main\models\number_request'] = $model;
+    $response = $this->controller->count($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_create_query(){
     $this->request->query->set('description', 'Описание');
     $this->request->query->set('initiator', 'number');
@@ -668,6 +680,18 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->with('query\get_query_content.tpl', ['query' => $query])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->reopen_query($this->request, $this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_requests(){
+    $model = $this->getMockBuilder('main\models\number_request')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('requests')
+          ->willReturn('render_template');
+    $this->app['main\models\number_request'] = $model;
+    $response = $this->controller->requests($this->app);
     $this->assertEquals('render_template', $response);
   }
 
