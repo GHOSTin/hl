@@ -4,9 +4,9 @@ use RuntimeException;
 use Twig_Environment;
 use Doctrine\ORM\EntityManager;
 use domain\user;
-use domain\api_key as key;
+use domain\api_key;
 
-class api_key{
+class api_keys{
 
   private $em;
   private $user;
@@ -25,7 +25,7 @@ class api_key{
                            ->findByName(trim($name));
     if($exists_key)
       throw new RuntimeException('Duplicate name');
-    $key = key::new_instance($name);
+    $key = api_key::new_instance($name);
     $this->em->persist($key);
     $this->em->flush();
     return $this->twig->render('api_keys/keys.tpl', ['keys' => $this->get_keys()]);

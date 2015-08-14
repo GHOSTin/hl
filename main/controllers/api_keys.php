@@ -6,14 +6,14 @@ use Symfony\Component\HttpFoundation\Request;
 class api_keys{
 
   public function create(Request $request, Application $app){
-    return $app['main\models\api_key']->create($request->get('name'));
+    return $app['main\models\api_keys']->create($request->get('name'));
   }
 
   public function create_dialog(Application $app){
-    return $app['main\models\api_key']->create_dialog();
+    return $app['main\models\api_keys']->create_dialog();
   }
 
   public function default_page(Application $app){
-    return $app['main\models\api_key']->default_page();
+    return $app['main\models\api_keys']->default_page();
   }
 }

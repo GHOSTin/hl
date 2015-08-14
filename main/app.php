@@ -79,8 +79,8 @@ $app['main\models\report_queries'] = function($app){
 $app['main\models\number_request'] = function($app){
   return new models\number_request($app['twig'], $app['em'], $app['user']);
 };
-$app['main\models\api_key'] = function($app){
-  return new models\api_key($app['twig'], $app['em'], $app['user']);
+$app['main\models\api_keys'] = function($app){
+  return new models\api_keys($app['twig'], $app['em'], $app['user']);
 };
 $app['main\models\factory'] = function($app){
   return new models\factory($app);
