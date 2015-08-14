@@ -91,6 +91,7 @@ class user implements JsonSerializable{
     'queries/create_query',
     'queries/analize_request',
     'system/general_access',
+    'system/api_key',
     'tasks/general_access'
   ];
 

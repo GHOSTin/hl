@@ -4,6 +4,11 @@
 <div class="row">
   <div class="col-md-2">
     <ul class="nav nav-pills menu">
+      {% if user.check_access('system/api_key') %}
+      <li>
+        <a href="api/keys/">Ключи API</a>
+      </li>
+      {% endif %}
       <li>
         <a href="query_types/">Типы заявок</a>
       </li>

@@ -19,16 +19,11 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'CREATE TABLE meterage(
-                id VARCHAR(255) NOT NULL,
-                number_id INT UNSIGNED NOT NULL,
-                time INT UNSIGNED NOT NULL,
-                service VARCHAR(255) NOT NULL,
-                tarif INT UNSIGNED NOT NULL,
-                params TEXT,
-                PRIMARY KEY (id),
-                KEY (number_id),
-                KEY (time)
+$queries[] = 'CREATE TABLE api_key(
+                id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+                name VARCHAR(255) NOT NULL,
+                hash VARCHAR(255) NOT NULL,
+                PRIMARY KEY (id)
               )';
 
 foreach($queries as $query)
