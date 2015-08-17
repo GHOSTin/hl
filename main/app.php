@@ -82,6 +82,9 @@ $app['main\models\number_request'] = function($app){
 $app['main\models\api_keys'] = function($app){
   return new models\api_keys($app['twig'], $app['em'], $app['user']);
 };
+$app['main\models\system'] = function($app){
+  return new models\system($app['twig'], $app['user']);
+};
 $app['main\models\factory'] = function($app){
   return new models\factory($app);
 };
@@ -401,6 +404,9 @@ $app->get('/system/query_types/create_query_type/', 'main\controllers\query_type
 $app->get('/system/api/keys/', 'main\controllers\api_keys::default_page')->before($security);
 $app->get('/system/api/keys/create/dialog/', 'main\controllers\api_keys::create_dialog')->before($security);
 $app->get('/system/api/keys/create/', 'main\controllers\api_keys::create')->before($security);
+
+# conf
+$app->get('/system/config/', 'main\controllers\system::config')->before($security);
 
 $app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

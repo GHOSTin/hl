@@ -9,6 +9,11 @@
         <a href="api/keys/">Ключи API</a>
       </li>
       {% endif %}
+      {% if user.check_access('system/config') %}
+      <li>
+        <a href="config/">Конфигурация</a>
+      </li>
+      {% endif %}
       <li>
         <a href="query_types/">Типы заявок</a>
       </li>

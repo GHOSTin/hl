@@ -1,6 +1,6 @@
 {% if debtors is not empty %}
 <div class="table-responsive well">
-  <h4>Злостные неплатильщики</h4>
+  <h4>Злостные неплательщики</h4>
   <table class="table table-striped table-condensed">
     <thead>
       <th>Квартира</th>
