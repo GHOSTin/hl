@@ -18,14 +18,14 @@ class system{
   }
 
   public function default_page(){
-    return $this->twig->render('system\default_page.tpl', ['user' => $this->user]);
+    return $this->twig->render('system/default_page.tpl', ['user' => $this->user]);
   }
 
   public function config(){
     if(!$this->user->check_access('system/config'))
       throw new RuntimeException('ACCESS DENIED');
     $reflection = new ReflectionClass('config\general');
-    return $this->twig->render('system\config.tpl',
+    return $this->twig->render('system/config.tpl',
                                 [
                                   'user' => $this->user,
                                   'conf' => $reflection->getConstants()

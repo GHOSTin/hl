@@ -18,20 +18,12 @@ class main_model_api_keys_Test extends PHPUnit_Framework_TestCase{
     $this->app = new Application();
   }
 
-  public function test_construct_1(){
+  public function test_construct(){
     $this->setExpectedException('RuntimeException');
     $this->user->expects($this->once())
                ->method('check_access')
                ->with('system/api_key')
                ->willReturn(false);
-    new model($this->twig, $this->em, $this->user);
-  }
-
-  public function test_construct_2(){
-    $this->user->expects($this->once())
-               ->method('check_access')
-               ->with('system/api_key')
-               ->willReturn(true);
     new model($this->twig, $this->em, $this->user);
   }
 
