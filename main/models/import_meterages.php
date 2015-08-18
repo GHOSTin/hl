@@ -25,7 +25,8 @@ class import_meterages{
       $number = $this->em->getRepository('domain\number')
                          ->findOneByNumber($row[0]);
       if($number){
-        $this->em->persist(meterage::new_instance($number, $time, $row[1], $row[2], $row[3], $row[4]));
+        $meterage = meterage::new_instance($number, $time, $row[1], $row[2], $row[3], $row[4]);
+        $this->em->persist($meterage);
       }else
         $this->rows[] = $row;
       if(memory_get_usage() > self::MEMORY_LIMIT){
@@ -34,7 +35,6 @@ class import_meterages{
       }
     }
     $this->em->flush();
-    $this->em->clear();
     return $this->twig->render('import\load_meterages.tpl', ['user' => $this->user, 'rows' => $this->rows]);
   }
 }

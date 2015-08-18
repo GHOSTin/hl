@@ -8,7 +8,7 @@
     <h4>Следующих лицевых нет в базе</h4>
     <ul>
       {% for row in rows %}
-        <li>{{ row[0] }}</li>
+        <li>{{ row|join(";") }}</li>
       {% endfor %}
     </ul>
   {% endif %}

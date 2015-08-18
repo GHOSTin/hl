@@ -61,8 +61,11 @@ $app['main\models\report_event'] = function($app){
 $app['main\models\import_numbers'] = function($app){
   return new \main\models\import_numbers($app['em'], $app['session']);
 };
+$app['main\models\import_accruals'] = function($app){
+  return new models\import_accruals($app['twig'], $app['em'], $app['user']);
+};
 $app['main\models\import_meterages'] = function($app){
-  return new \main\models\import_meterages($app['twig'], $app['em'], $app['user']);
+  return new models\import_meterages($app['twig'], $app['em'], $app['user']);
 };
 $app['main\models\profile'] = function($app){
   return new models\profile($app['twig'], $app['em'], $app['user']);

@@ -6,68 +6,68 @@
 class accrual{
 
   /**
-  * @ManyToOne(targetEntity="\domain\number")
+  * @ManyToOne(targetEntity="domain\number")
   */
   private $number;
 
   /**
   * @Id
-  * @Column(name="time", type="integer")
+  * @Column(type="integer")
   */
   private $time;
 
   /**
-  * @Id @Column(name="service", type="string")
+  * @Id @Column
   */
   private $service;
 
   /**
-  * @Column(name="tarif", type="string")
+  * @Column
   */
   private $tarif;
 
   /**
-  * @Column(name="ind", type="string")
+  * @Column
   */
   private $ind;
 
   /**
-  * @Column(name="odn", type="string")
+  * @Column
   */
   private $odn;
 
   /**
-  * @Column(name="sum_odn", type="string")
+  * @Column
   */
   private $sum_odn;
 
   /**
-  * @Column(name="sum_ind", type="string")
+  * @Column
   */
   private $sum_ind;
 
   /**
-  * @Column(name="sum_total", type="string")
+  * @Column
   */
   private $sum_total;
 
   /**
-  * @Column(name="recalculation", type="string")
+  * @Column
   */
   private $recalculation;
 
   /**
-  * @Column(name="facilities", type="string")
+  * @Column
   */
   private $facilities;
 
   /**
-  * @Column(name="total", type="string")
+  * @Column
   */
   private $total;
 
   /**
-  * @Column(name="unit", type="string")
+  * @Column
   */
   private $unit;
 
@@ -123,55 +123,24 @@ class accrual{
     return $this->unit;
   }
 
-  public function set_number(\domain\number $number){
-    $this->number = $number;
-  }
-
-  public function set_time($time){
-    $this->time = strtotime('12:00 first day of this month', $time);
-  }
-
-  public function set_service($service){
-    $this->service = $service;
-  }
-
-  public function set_tarif($tarif){
-    $this->tarif = $tarif;
-  }
-
-  public function set_ind($ind){
-    $this->ind = $ind;
-  }
-
-  public function set_odn($odn){
-    $this->odn = $odn;
-  }
-
-  public function set_sum_ind($sum_ind){
-    $this->sum_ind = $sum_ind;
-  }
-
-  public function set_sum_odn($sum_odn){
-    $this->sum_odn = $sum_odn;
-  }
-
-  public function set_sum_total($sum_total){
-    $this->sum_total = $sum_total;
-  }
-
-  public function set_recalculation($recalculation){
-    $this->recalculation = $recalculation;
-  }
-
-  public function set_facilities($facilities){
-    $this->facilities = $facilities;
-  }
-
-  public function set_total($total){
-    $this->total = $total;
-  }
-
-  public function set_unit($unit){
-    $this->unit = $unit;
+  public static function new_instance(number $number, $time, $service,
+                                      $unit, $tarif, $ind, $odn, $sum_ind,
+                                      $sum_odn, $sum_total, $facilities,
+                                      $recalculation, $total){
+    $accrual = new self();
+    $accrual->number = $number;
+    $accrual->time = strtotime('12:00 first day of this month', $time);
+    $accrual->service = $service;
+    $accrual->unit = $unit;
+    $accrual->tarif = $tarif;
+    $accrual->ind = $ind;
+    $accrual->odn = $odn;
+    $accrual->sum_ind = $sum_ind;
+    $accrual->sum_odn = $sum_odn;
+    $accrual->sum_total = $sum_total;
+    $accrual->facilities = $facilities;
+    $accrual->recalculation = $recalculation;
+    $accrual->total = $total;
+    return $accrual;
   }
 }
