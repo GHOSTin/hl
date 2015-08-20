@@ -13,6 +13,8 @@ use Twig_SimpleFilter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as Adapter;
 use Swift_Message;
+use Silex\Provider\MonologServiceProvider;
+use Monolog\Logger;
 
 use config\general as conf;
 
@@ -88,6 +90,9 @@ $app['main\models\api_keys'] = function($app){
 $app['main\models\system'] = function($app){
   return new models\system($app['twig'], $app['user']);
 };
+$app['main\models\logs'] = function($app){
+  return new models\logs($app['twig'], $app['user'], $app['logs']);
+};
 $app['main\models\factory'] = function($app){
   return new models\factory($app);
 };
@@ -98,6 +103,10 @@ $app['\domain\query2comment'] = $app->factory(function($app){
 
 $app['filesystem'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'files'));
+};
+
+$app['logs'] = function($app) use ($root){
+  return new Filesystem(new Adapter($root.'cache'));
 };
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates'];
@@ -126,6 +135,11 @@ $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   return $array;
 });
 $app['twig']->addFilter($filter);
+
+$app->register(new MonologServiceProvider(), array(
+  'monolog.logfile' => $root.'cache'.$DS.'main.log',
+  'monolog.level' => Logger::WARNING
+));
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
@@ -410,6 +424,10 @@ $app->get('/system/api/keys/create/', 'main\controllers\api_keys::create')->befo
 
 # conf
 $app->get('/system/config/', 'main\controllers\system::config')->before($security);
+
+# logs
+$app->get('/system/logs/', 'main\controllers\logs::default_page')->before($security);
+$app->get('/system/logs/client/', 'main\controllers\logs::client')->before($security);
 
 $app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

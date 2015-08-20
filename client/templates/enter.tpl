@@ -9,7 +9,7 @@
         <fieldset class="col-sm-12">
           <div class="form-group">
             <div class="input-group col-sm-12">
-              <input type="text" class="form-control" name="login" placeholder="Лицевой номер" autofocus>
+              <input type="text" class="form-control" name="login" placeholder="Номер лицевого счета" autofocus>
               <span class="input-group-addon"></span>
             </div>
           </div>
