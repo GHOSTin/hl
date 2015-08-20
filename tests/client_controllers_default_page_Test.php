@@ -43,6 +43,9 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
 
   public function test_login_1(){
     $this->request->request->set('login', 'Nekrasov');
+    $this->request->server->set('REMOTE_ADDR', '127.0.0.1');
+    $this->request->headers->set('X-Forwarded-For', '8.8.8.8');
+    $this->request->server->set('HTTP_USER_AGENT', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:40.0) Gecko/20100101 Firefox/40.');
     $this->app['number'] = null;
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
@@ -60,6 +63,19 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
                       ->method('render')
                       ->with('enter.tpl', ['number' => null])
                       ->will($this->returnValue('render_template'));
+    $logger = $this->getMockBuilder('Monolog\Logger')
+                   ->disableOriginalConstructor()
+                   ->getMock();
+    $logger->expects($this->once())
+           ->method('addWarning')
+           ->with('Not found number',
+                  [
+                    'login' => 'Nekrasov',
+                    'ip' => '127.0.0.1',
+                    'xff' => '8.8.8.8',
+                    'agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:40.0) Gecko/20100101 Firefox/40.'
+                  ]);
+    $this->app['auth_log'] = $logger;
     $response = $this->controller->login($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
@@ -67,6 +83,9 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
   public function test_login_2(){
     $this->request->request->set('login', 'Nekrasov');
     $this->request->request->set('password', 'Aa12345678');
+    $this->request->server->set('REMOTE_ADDR', '127.0.0.1');
+    $this->request->headers->set('X-Forwarded-For', '8.8.8.8');
+    $this->request->server->set('HTTP_USER_AGENT', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:40.0) Gecko/20100101 Firefox/40.');
     $this->app['number'] = null;
     $this->app['salt'] = 'salt';
     $number = $this->getMock('domain\number');
@@ -89,6 +108,19 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
                       ->method('render')
                       ->with('enter.tpl', ['number' => null])
                       ->will($this->returnValue('render_template'));
+    $logger = $this->getMockBuilder('Monolog\Logger')
+                   ->disableOriginalConstructor()
+                   ->getMock();
+    $logger->expects($this->once())
+           ->method('addWarning')
+           ->with('Wrong password',
+                  [
+                    'login' => 'Nekrasov',
+                    'ip' => '127.0.0.1',
+                    'xff' => '8.8.8.8',
+                    'agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:40.0) Gecko/20100101 Firefox/40.'
+                  ]);
+    $this->app['auth_log'] = $logger;
     $response = $this->controller->login($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
@@ -96,6 +128,9 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
   public function test_login_3(){
     $this->request->request->set('login', 'Nekrasov');
     $this->request->request->set('password', 'Aa12345678');
+    $this->request->server->set('REMOTE_ADDR', '127.0.0.1');
+    $this->request->headers->set('X-Forwarded-For', '8.8.8.8');
+    $this->request->server->set('HTTP_USER_AGENT', 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:40.0) Gecko/20100101 Firefox/40.');
     $this->app['number'] = null;
     $this->app['salt'] = 'salt';
     $session = $this->getMock('Symfony\Component\HttpFoundation\Session\Session');
@@ -122,6 +157,19 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
                     ->method('getRepository')
                     ->with('domain\number')
                     ->will($this->returnValue($repository));
+    $logger = $this->getMockBuilder('Monolog\Logger')
+                   ->disableOriginalConstructor()
+                   ->getMock();
+    $logger->expects($this->once())
+           ->method('addInfo')
+           ->with('Success login',
+                  [
+                    'login' => 'Nekrasov',
+                    'ip' => '127.0.0.1',
+                    'xff' => '8.8.8.8',
+                    'agent' => 'Mozilla/5.0 (X11; Ubuntu; Linux i686; rv:40.0) Gecko/20100101 Firefox/40.'
+                  ]);
+    $this->app['auth_log'] = $logger;
     $response = $this->controller->login($this->request, $this->app);
     $this->assertInstanceOf('Symfony\Component\HttpFoundation\RedirectResponse', $response);
   }

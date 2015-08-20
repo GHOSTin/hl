@@ -13,6 +13,8 @@ use Twig_SimpleFilter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as Adapter;
 use Swift_Message;
+use Silex\Provider\MonologServiceProvider;
+use Monolog\Logger;
 
 use config\general as conf;
 
@@ -61,8 +63,11 @@ $app['main\models\report_event'] = function($app){
 $app['main\models\import_numbers'] = function($app){
   return new \main\models\import_numbers($app['em'], $app['session']);
 };
+$app['main\models\import_accruals'] = function($app){
+  return new models\import_accruals($app['twig'], $app['em'], $app['user']);
+};
 $app['main\models\import_meterages'] = function($app){
-  return new \main\models\import_meterages($app['twig'], $app['em'], $app['user']);
+  return new models\import_meterages($app['twig'], $app['em'], $app['user']);
 };
 $app['main\models\profile'] = function($app){
   return new models\profile($app['twig'], $app['em'], $app['user']);
@@ -76,6 +81,18 @@ $app['main\models\reports'] = function($app){
 $app['main\models\report_queries'] = function($app){
   return new models\report_queries($app['twig'], $app['em'], $app['user'], $app['session']);
 };
+$app['main\models\number_request'] = function($app){
+  return new models\number_request($app['twig'], $app['em'], $app['user']);
+};
+$app['main\models\api_keys'] = function($app){
+  return new models\api_keys($app['twig'], $app['em'], $app['user']);
+};
+$app['main\models\system'] = function($app){
+  return new models\system($app['twig'], $app['user']);
+};
+$app['main\models\logs'] = function($app){
+  return new models\logs($app['twig'], $app['user'], $app['logs']);
+};
 $app['main\models\factory'] = function($app){
   return new models\factory($app);
 };
@@ -86,6 +103,10 @@ $app['\domain\query2comment'] = $app->factory(function($app){
 
 $app['filesystem'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'files'));
+};
+
+$app['logs'] = function($app) use ($root){
+  return new Filesystem(new Adapter($root.'cache'));
 };
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates'];
@@ -114,6 +135,11 @@ $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   return $array;
 });
 $app['twig']->addFilter($filter);
+
+$app->register(new MonologServiceProvider(), array(
+  'monolog.logfile' => $root.'cache'.$DS.'main.log',
+  'monolog.level' => Logger::WARNING
+));
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
@@ -338,6 +364,8 @@ $app->get('/queries/dialogs/create_query_from_request/', 'main\controllers\queri
 $app->get('/queries/create_query_from_request/', 'main\controllers\queries::create_query_from_request')->before($security);
 $app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request_dialog')->before($security);
 $app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
+$app->get('/queries/requests/count/', 'main\controllers\queries::count')->before($security);
+$app->get('/queries/requests/', 'main\controllers\queries::requests')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);
@@ -388,6 +416,18 @@ $app->get('/system/', 'main\controllers\system::default_page')->before($security
 $app->get('/system/query_types/', 'main\controllers\query_types::default_page')->before($security);
 $app->get('/system/query_types/get_dialog_create_query_type/', 'main\controllers\query_types::get_dialog_create_query_type')->before($security);
 $app->get('/system/query_types/create_query_type/', 'main\controllers\query_types::create_query_type')->before($security);
+
+# api keys
+$app->get('/system/api/keys/', 'main\controllers\api_keys::default_page')->before($security);
+$app->get('/system/api/keys/create/dialog/', 'main\controllers\api_keys::create_dialog')->before($security);
+$app->get('/system/api/keys/create/', 'main\controllers\api_keys::create')->before($security);
+
+# conf
+$app->get('/system/config/', 'main\controllers\system::config')->before($security);
+
+# logs
+$app->get('/system/logs/', 'main\controllers\logs::default_page')->before($security);
+$app->get('/system/logs/client/', 'main\controllers\logs::client')->before($security);
 
 $app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

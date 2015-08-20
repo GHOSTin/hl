@@ -12,6 +12,10 @@ use domain\metrics;
 use Swift_Message;
 use Twig_SimpleFilter;
 use config\general as conf;
+use Silex\Provider\MonologServiceProvider;
+use Monolog\Logger;
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
 
 $DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
@@ -85,6 +89,20 @@ $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   return $array;
 });
 $app['twig']->addFilter($filter);
+
+$app->register(new MonologServiceProvider(), array(
+  'monolog.logfile' => $root.'cache'.$DS.'client.log',
+  'monolog.level' => Logger::WARNING
+));
+
+$app['auth_log'] = function($app) use ($root, $DS){
+  $formatter = new JsonFormatter();
+  $logger = new Logger('auth');
+  $stream = new StreamHandler($root.'cache'.$DS.'auth.log', Logger::INFO);
+  $stream->setFormatter($formatter);
+  $logger->pushHandler($stream);
+  return $logger;
+};
 
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();

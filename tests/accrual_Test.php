@@ -1,77 +1,29 @@
 <?php
 
-use \domain\accrual;
-use \domain\number;
+use domain\accrual;
+use domain\number;
 
 class accrual_Test extends PHPUnit_Framework_TestCase{
 
-  public function setUp(){
-    $this->ac = new accrual();
-  }
-
-  public function test_set_number_1(){
+  public function test_instance(){
     $number = new number();
-    $this->ac->set_number($number);
-    $this->assertSame($number, $this->ac->get_number());
-  }
-
-  public function test_set_service_1(){
-    $this->ac->set_service('Утилизация');
-    $this->assertEquals('Утилизация', $this->ac->get_service());
-  }
-
-  public function test_set_time_1(){
-    $this->ac->set_time(1396893600);
-    $this->assertEquals(1396332000, $this->ac->get_time());
-  }
-
-  public function test_set_tarif_1(){
-    $this->ac->set_tarif(127.52);
-    $this->assertEquals(127.52, $this->ac->get_tarif());
-  }
-
-  public function test_set_ind_1(){
-    $this->ac->set_ind(127.52);
-    $this->assertEquals(127.52, $this->ac->get_ind());
-  }
-
-  public function test_set_odn_1(){
-    $this->ac->set_odn(127.52);
-    $this->assertEquals(127.52, $this->ac->get_odn());
-  }
-
-  public function test_set_sum_ind_1(){
-    $this->ac->set_sum_ind(127.52);
-    $this->assertEquals(127.52, $this->ac->get_sum_ind());
-  }
-
-  public function test_set_sum_odn_1(){
-    $this->ac->set_sum_odn(127.52);
-    $this->assertEquals(127.52, $this->ac->get_sum_odn());
-  }
-
-  public function test_set_recalculation_1(){
-    $this->ac->set_recalculation(127.52);
-    $this->assertEquals(127.52, $this->ac->get_recalculation());
-  }
-
-  public function test_set_facilities_1(){
-    $this->ac->set_facilities(127.52);
-    $this->assertEquals(127.52, $this->ac->get_facilities());
-  }
-
-  public function test_set_total_1(){
-    $this->ac->set_total(127.52);
-    $this->assertEquals(127.52, $this->ac->get_total());
-  }
-
-  public function test_set_sum_total_1(){
-    $this->ac->set_sum_total(127.52);
-    $this->assertEquals(127.52, $this->ac->get_sum_total());
-  }
-
-  public function test_set_unit_1(){
-    $this->ac->set_unit('кг');
-    $this->assertEquals('кг', $this->ac->get_unit());
+    $accrual = accrual::new_instance($number, 1396332000, 'Утилизация', 'кг',
+                                      127.52, 127.53, 127.54, 127.55,
+                                      127.56, 127.57, 127.58, 127.59,
+                                      127.51
+                                    );
+    $this->assertSame($number, $accrual->get_number());
+    $this->assertEquals(1396332000, $accrual->get_time());
+    $this->assertEquals('Утилизация', $accrual->get_service());
+    $this->assertEquals('кг', $accrual->get_unit());
+    $this->assertEquals(127.52, $accrual->get_tarif());
+    $this->assertEquals(127.53, $accrual->get_ind());
+    $this->assertEquals(127.54, $accrual->get_odn());
+    $this->assertEquals(127.55, $accrual->get_sum_ind());
+    $this->assertEquals(127.56, $accrual->get_sum_odn());
+    $this->assertEquals(127.57, $accrual->get_sum_total());
+    $this->assertEquals(127.58, $accrual->get_facilities());
+    $this->assertEquals(127.59, $accrual->get_recalculation());
+    $this->assertEquals(127.51, $accrual->get_total());
   }
 }

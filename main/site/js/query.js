@@ -339,6 +339,22 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	});
+  $.get('/queries/requests/count/',
+  function(r){
+    $('.requests').html(r);
+  });
+  $('body').on('click', '.get_requests', function(){
+    $.get('/queries/requests/',
+      function(r){
+        $('.requests').html(r);
+      });
+  });
+  $('body').on('click', '.close_request_view', function(){
+    $.get('/queries/requests/count/',
+    function(r){
+      $('.requests').html(r);
+    });
+  });
 });
 function get_query_id(obj){
 	return obj.closest('.query').attr('query_id');
