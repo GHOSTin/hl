@@ -90,6 +90,9 @@ $app['main\models\api_keys'] = function($app){
 $app['main\models\system'] = function($app){
   return new models\system($app['twig'], $app['user']);
 };
+$app['main\models\system_search'] = function($app){
+  return new models\system_search($app['twig'], $app['em'], $app['user']);
+};
 $app['main\models\logs'] = function($app){
   return new models\logs($app['twig'], $app['user'], $app['logs']);
 };
@@ -428,6 +431,9 @@ $app->get('/system/config/', 'main\controllers\system::config')->before($securit
 # logs
 $app->get('/system/logs/', 'main\controllers\logs::default_page')->before($security);
 $app->get('/system/logs/client/', 'main\controllers\logs::client')->before($security);
+# search
+$app->get('/system/search/number/', 'main\controllers\system::search_number_form')->before($security);
+$app->post('/system/search/number/', 'main\controllers\system::search_number')->before($security);
 
 $app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

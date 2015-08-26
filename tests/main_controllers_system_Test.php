@@ -1,6 +1,7 @@
 <?php
 
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 use main\controllers\system as controller;
 
 class main_controllers_system_Test extends PHPUnit_Framework_TestCase{
@@ -9,9 +10,14 @@ class main_controllers_system_Test extends PHPUnit_Framework_TestCase{
     $this->model = $this->getMockBuilder('main\models\system')
                         ->disableOriginalConstructor()
                         ->getMock();
+    $this->search = $this->getMockBuilder('main\models\system_search')
+                         ->disableOriginalConstructor()
+                         ->getMock();
     $this->app = new Application();
     $this->controller = new controller();
+    $this->request = new Request();
     $this->app['main\models\system'] = $this->model;
+    $this->app['main\models\system_search'] = $this->search;
   }
 
   public function test_config(){
@@ -27,6 +33,24 @@ class main_controllers_system_Test extends PHPUnit_Framework_TestCase{
                 ->method('default_page')
                 ->willReturn('render_template');
     $response = $this->controller->default_page($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_search_number(){
+    $this->request->request->set('number', 125);
+    $this->search->expects($this->once())
+                 ->method('search_number')
+                 ->with(125)
+                 ->willReturn('render_template');
+    $response = $this->controller->search_number($this->app, $this->request);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_search_number_form(){
+    $this->search->expects($this->once())
+                 ->method('search_number_form')
+                 ->willReturn('render_template');
+    $response = $this->controller->search_number_form($this->app);
     $this->assertEquals('render_template', $response);
   }
 }

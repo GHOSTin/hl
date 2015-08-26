@@ -17,10 +17,6 @@ class system{
     $this->user = $user;
   }
 
-  public function default_page(){
-    return $this->twig->render('system/default_page.tpl', ['user' => $this->user]);
-  }
-
   public function config(){
     if(!$this->user->check_access('system/config'))
       throw new RuntimeException('ACCESS DENIED');
@@ -30,5 +26,9 @@ class system{
                                   'user' => $this->user,
                                   'conf' => $reflection->getConstants()
                                 ]);
+  }
+
+  public function default_page(){
+    return $this->twig->render('system/default_page.tpl', ['user' => $this->user]);
   }
 }

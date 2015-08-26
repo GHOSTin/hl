@@ -45,11 +45,6 @@
             <a tabindex="-1" href="/query/">Заявки</a>
           </li>
           {% endif %}
-          {% if user.check_access('import/general_access') %}
-          <li>
-            <a tabindex="-1" href="/import/">Импорт</a>
-          </li>
-          {% endif %}
           {% if user.check_access('numbers/general_access') %}
           <li>
             <a tabindex="-1" href="/number/">Жилой фонд</a>
@@ -63,11 +58,6 @@
           {% if user.check_access('metrics/general_access') %}
           <li>
             <a tabindex="-1" href="/metrics/">Показания</a>
-          </li>
-          {% endif %}
-          {% if user.check_access('system/general_access') %}
-          <li>
-            <a tabindex="-1" href="/user/">Пользователи</a>
           </li>
           {% endif %}
           {% if user.check_access('system/general_access') %}
