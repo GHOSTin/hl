@@ -5,7 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use client\controllers\default_page as controller;
 use domain\number;
 
-class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
+class client_controllers_default_page_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $twig = $this->getMockBuilder('\Twig_Environment')
@@ -184,116 +184,46 @@ class controller_client_default_page_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_recovery(){
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('recovery/default_page.tpl')
-                      ->will($this->returnValue('render_template'));
+    $model = $this->getMockBuilder('client\models\recovery')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('recovery_form')
+          ->willReturn('render_template');
+    $this->app['client\models\recovery'] = $model;
     $response = $this->controller->recovery($this->app);
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_recovery_password_1(){
-    $this->request->request->set('number', '037546');
-    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-                       ->disableOriginalConstructor()
-                       ->setMethods(['findOneByNumber'])
-                       ->getMock();
-    $repository->expects($this->once())
-               ->method('findOneByNumber')
-               ->will($this->returnValue(null));
-    $this->app['em']->expects($this->once())
-                    ->method('getRepository')
-                    ->with('domain\number')
-                    ->will($this->returnValue($repository));
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('recovery/not_found_number.tpl', ['number' => '037546'])
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->recovery_password($this->request, $this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
-  public function test_recovery_password_2(){
-    $this->request->request->set('number', '037546');
-    $number = $this->getMock('domain\number');
-    $number->expects($this->once())
-           ->method('get_email')
-           ->will($this->returnValue(null));
-    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-                       ->disableOriginalConstructor()
-                       ->setMethods(['findOneByNumber'])
-                       ->getMock();
-    $repository->expects($this->once())
-               ->method('findOneByNumber')
-               ->will($this->returnValue($number));
-    $this->app['em']->expects($this->once())
-                    ->method('getRepository')
-                    ->with('domain\number')
-                    ->will($this->returnValue($repository));
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('recovery/email_not_exists.tpl', ['number' => '037546'])
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->recovery_password($this->request, $this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
-  public function test_recovery_password_3(){
-    $this->request->request->set('number', '037546');
-    $number = $this->getMock('domain\number');
-    $number->expects($this->once())
-           ->method('get_email')
-           ->will($this->returnValue('mail@example.com'));
-     $number->expects($this->once())
-           ->method('set_hash');
-    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-                       ->disableOriginalConstructor()
-                       ->setMethods(['findOneByNumber'])
-                       ->getMock();
-    $repository->expects($this->once())
-               ->method('findOneByNumber')
-               ->will($this->returnValue($number));
-    $this->app['em']->expects($this->once())
-                    ->method('getRepository')
-                    ->with('domain\number')
-                    ->will($this->returnValue($repository));
-    $this->app['em']->expects($this->once())
-                    ->method('flush');
-    $this->app['twig']->expects($this->exactly(2))
-                      ->method('render')
-                      ->withConsecutive(
-                        ['recovery\generate_password.tpl', $this->anything()],
-                        ['recovery/success.tpl', ['number' => 'number_object']]
-                      )
-                      ->will($this->returnValue('render_template'));
-    $mailer = $this->getMockBuilder('Swift_Mailer')
-                   ->disableOriginalConstructor()
-                   ->getMock();
-    $message = $this->getMockBuilder('Swift_Message')
-                    ->disableOriginalConstructor()
-                    ->getMock();
-    $message->expects($this->once())
-            ->method('setSubject')
-            ->with('Востановление пароля')
-            ->will($this->returnValue($message));
-    $message->expects($this->once())
-            ->method('setFrom')
-            ->with(['noreply@example.com'])
-            ->will($this->returnValue($message));
-    $message->expects($this->once())
-            ->method('setTo')
-            ->with(['mail@example.com'])
-            ->will($this->returnValue($message));
-    $message->expects($this->once())
-            ->method('setBody');
-    $mailer->expects($this->once())
-           ->method('send')
-           ->with($this->identicalTo($message));
-    $this->app['mailer'] = $mailer;
-    $this->app['Swift_Message'] = $message;
+  public function test_recovery_password(){
+    $this->request->request->set('number', ' 125 ');
+    $this->request->server->set('REMOTE_ADDR', '127.0.0.1');
+    $this->request->server->set('HTTP_USER_AGENT', 'firefox');
+    $this->request->headers->set('X-Forwarded-For', '8.8.8.8');
+    $model = $this->getMockBuilder('client\models\recovery')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('recovery')
+          ->with(
+                  '125',
+                  'salt',
+                  'Swift_Message',
+                  'mailer',
+                  'email_for_reply',
+                  [
+                    'login' => ' 125 ',
+                    'ip' => '127.0.0.1',
+                    'xff' => '8.8.8.8',
+                    'agent' => 'firefox'
+                  ]
+                )
+          ->willReturn('render_template');
+    $this->app['client\models\recovery'] = $model;
     $this->app['salt'] = 'salt';
-    $this->app['number'] = 'number_object';
-    $this->app['email_for_reply'] = 'noreply@example.com';
+    $this->app['Swift_Message'] = 'Swift_Message';
+    $this->app['mailer'] = 'mailer';
+    $this->app['email_for_reply'] = 'email_for_reply';
     $response = $this->controller->recovery_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }

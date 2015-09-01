@@ -84,6 +84,10 @@ $app['client\models\arrears'] = function($app){
   return new models\arrears($app['twig'], $app['em']);
 };
 
+$app['client\models\recovery'] = function($app){
+  return new models\recovery($app['twig'], $app['em'], $app['auth_log']);
+};
+
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
   return $array;

@@ -45,31 +45,22 @@ class default_page{
   }
 
   public function recovery(Application $app){
-    return $app['twig']->render('recovery/default_page.tpl');
+    return $app['client\models\recovery']->recovery_form();
   }
 
   public function recovery_password(Request $request, Application $app){
-    $num = trim($request->get('number'));
-    $number = $app['em']->getRepository('domain\number')->findOneByNumber($num);
-    if(is_null($number))
-      return $app['twig']->render('recovery/not_found_number.tpl', ['number' => $num]);
-    $email = $number->get_email();
-    if(empty($email))
-      return $app['twig']->render('recovery/email_not_exists.tpl', ['number' => $num]);
-    $password = substr(sha1(time().$app['salt']), 0, 8);
-    $number->set_hash(number::generate_hash($password, $app['salt']));
-    $app['em']->flush();
-    $body = $app['twig']->render('recovery\generate_password.tpl',
-                                [
-                                 'number' => $number,
-                                 'password' => $password
-                                ]);
-    $message = $app['Swift_Message'];
-    $message->setSubject('Востановление пароля')
-            ->setFrom([$app['email_for_reply']])
-            ->setTo([$email])
-            ->setBody($body);
-    $app['mailer']->send($message);
-    return $app['twig']->render('recovery/success.tpl', ['number' => $app['number']]);
+    $context = [
+                'login' => $request->get('number'),
+                'ip' => $request->server->get('REMOTE_ADDR'),
+                'xff' => $request->headers->get('X-Forwarded-For'),
+                'agent' => $request->server->get('HTTP_USER_AGENT')
+               ];
+    return $app['client\models\recovery']->recovery(trim($request->get('number')),
+                                                    $app['salt'],
+                                                    $app['Swift_Message'],
+                                                    $app['mailer'],
+                                                    $app['email_for_reply'],
+                                                    $context
+                                                   );
   }
 }
