@@ -124,8 +124,10 @@ $security = function(Request $request, Application $app){
 $app->get('/', 'client\controllers\default_page::default_page');
 $app->post('/login/', 'client\controllers\default_page::login');
 $app->get('/logout/', 'client\controllers\default_page::logout')->before($security);
-$app->get('/recovery/', 'client\controllers\default_page::recovery');
-$app->post('/recovery/', 'client\controllers\default_page::recovery_password');
+
+# recovery
+$app->get('/recovery/', 'client\controllers\recovery::recovery_form');
+$app->post('/recovery/', 'client\controllers\recovery::recovery_password');
 
 # settings
 $app->get('/settings/', 'client\controllers\settings::default_page')->before($security);
