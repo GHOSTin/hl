@@ -225,8 +225,9 @@ class numbers{
   }
 
   public function update_number_telephone(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    $number->set_telephone($request->get('telephone'));
+    preg_match_all('/[0-9]/', $request->get('telephone'), $matches);
+    $number = $app['em']->find('domain\number', $request->get('id'));
+    $number->set_telephone(implode('', $matches[0]));
     $app['em']->flush();
     return $app['twig']->render('number\update_number_fio.tpl',
                                 [
