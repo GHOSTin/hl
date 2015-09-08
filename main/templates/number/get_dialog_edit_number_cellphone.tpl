@@ -21,4 +21,5 @@
 			init_content(r);
 		});
 	});
+   $('.dialog-input-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
 {% endblock %}

@@ -11,7 +11,7 @@
         <h3>Контактная информаци</h3>
         <ul class="list-unstyled">
             <li>Телефон: {{ number.get_telephone() }} <a class="get_dialog_edit_number_telephone">изменить</a></li>
-            <li>Сотовый телефон: {{ number.get_cellphone() }} <a class="get_dialog_edit_number_cellphone">изменить</a></li>
+            <li>Сотовый телефон: <span class="cellphone">{{ number.get_cellphone() }}</span> <a class="get_dialog_edit_number_cellphone">изменить</a></li>
             <li>email: {{ number.get_email() }} <a class="get_dialog_edit_number_email">изменить</a></li>
             <li>Контактные данные из заявок: <a href="/number/contact_info?id={{ number.get_id() }}" target="_blank">просмотреть</a></li>
             {% if user.check_access('numbers/generate_password') %}

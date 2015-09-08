@@ -513,13 +513,15 @@ class controller_numbers_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_update_number_telephone(){
-    $this->request->query->set('telephone', '647957');
-    $number = $this->getMock('\domain\number');
+    $this->request->query->set('telephone', '64-79-57');
+    $this->request->query->set('id', '125');
+    $number = $this->getMock('domain\number');
     $number->expects($this->once())
            ->method('set_telephone')
            ->with('647957');
     $this->app['em']->expects($this->once())
                     ->method('find')
+                    ->with('domain\number', '125')
                     ->will($this->returnValue($number));
     $this->app['em']->expects($this->once())
                     ->method('flush');

@@ -1,7 +1,8 @@
 {% extends "ajax.tpl" %}
 
 {% block js %}
-    $('.number[number = {{ number.get_id() }}]').append(get_hidden_content())
+    $('.number[number = {{ number.get_id() }}]').append(get_hidden_content());
+    $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
 {% endblock %}
 
 {% block html %}
