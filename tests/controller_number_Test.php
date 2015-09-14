@@ -1,6 +1,7 @@
 <?php
 
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 use main\controllers\number as controller;
 
 class controller_number_Test extends PHPUnit_Framework_TestCase{
@@ -17,6 +18,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
             ->willReturn($this->model);
     $this->app = new Application();
     $this->controller = new controller();
+    $this->request = new Request();
     $this->app['main\models\factory'] = $factory;
   }
 
@@ -37,9 +39,37 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->controller->generate_password($this->app, 125);
   }
 
+  public function test_get_dialog_contacts(){
+    $this->model->expects($this->once())
+                ->method('get_dialog_contacts');
+    $this->controller->get_dialog_contacts($this->app, 125);
+  }
+
   public function test_get_dialog_generate_password(){
     $this->model->expects($this->once())
                 ->method('get_dialog_generate_password');
     $this->controller->get_dialog_generate_password($this->app, 125);
+  }
+
+  public function test_history(){
+    $this->model->expects($this->once())
+                ->method('history');
+    $this->controller->history($this->app, 125);
+  }
+
+  public function test_update_contacts(){
+    $this->request->request->set('fio', 'Некрасов Евгений Валерьевич');
+    $this->request->request->set('telephone', '647957');
+    $this->request->request->set('cellphone', '+79222944742');
+    $this->request->request->set('email', 'nekrasov@mlsco.ru');
+    $this->model->expects($this->once())
+                ->method('update_contacts')
+                ->with(
+                        'Некрасов Евгений Валерьевич',
+                        '647957',
+                        '+79222944742',
+                        'nekrasov@mlsco.ru'
+                      );
+    $this->controller->update_contacts($this->app, $this->request, 125);
   }
 }

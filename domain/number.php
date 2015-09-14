@@ -85,6 +85,11 @@ class number{
                                   'email' => true,
                                   'cellphone' => true
                                 ];
+  /**
+  * @Column(type="json_array")
+  */
+  private $relevance = [];
+
 
   /**
   * @OneToMany(targetEntity="domain\number2event", mappedBy="number", cascade="all")
@@ -275,5 +280,25 @@ class number{
       if(!preg_match('/^[0-9]{2,11}$/', $telephone))
         throw new DomainException('Номер телефона пользователя задан не верно.');
   	$this->telephone = $telephone;
+  }
+
+  public function update_contacts(user $user, $fio, $telephone, $cellphone, $email){
+    $this->set_fio($fio);
+    $this->set_telephone($telephone);
+    $this->set_cellphone($cellphone);
+    $this->set_email($email);
+    $this->relevance[] = [
+                            'time' => time(),
+                            'fio' => $fio,
+                            'telephone' => $telephone,
+                            'cellphone' => $cellphone,
+                            'email' => $email,
+                            'user' => $user->get_fio().' (id = '.$user->get_id().')'
+                          ];
+    $this->relevance = array_slice($this->relevance, -10);
+  }
+
+  public function get_relevance(){
+    return $this->relevance;
   }
 }

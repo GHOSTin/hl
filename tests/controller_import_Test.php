@@ -1,7 +1,6 @@
 <?php
 
 use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
 use main\controllers\import as controller;
 
 class controller_import_Test extends PHPUnit_Framework_TestCase{
