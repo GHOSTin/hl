@@ -11,7 +11,6 @@
       {% for month, accruals in number.get_sort_accruals() %}
         <h3>{{ month|date('m.Y') }}</h3>
         <table class="table">
-          <tdead>
             <thead>
               <tr>
                 <th>Услуга</th>
@@ -27,7 +26,6 @@
                 <th>Итого</th>
               </tr>
             </thead>
-          </tdead>
           <tbody>
           {% for accrual in accruals %}
             <tr>

@@ -15,6 +15,8 @@
     <script src="/js/number.js"></script>
     <script src="/js/bootstrap-datepicker.js"></script>
     <script src="/js/typeahead.min.js"></script>
+    <script src="/js/inputmask.js" type="text/javascript"></script>
+    <script src="/js/jquery.inputmask.js" type="text/javascript"></script>
 {% endblock javascript %}
 
 {% block css %}

@@ -2,21 +2,22 @@
     <div class="col-md-5">
         <h3>Информация о лицевом счете</h3>
         <ul class="list-unstyled">
-            <li>Владелец: {{ number.get_fio() }} <a class="get_dialog_edit_number_fio">изменить</a></li>
             <li>Лицевой счет: {{ number.get_number() }} <a class="get_dialog_edit_number">изменить</a></li>
+            {% if user.check_access('numbers/generate_password') %}
+            <li>Пароль для личного кабинета <a class="get_dialog_generate_password">генерировать</a></li>
+            {% endif %}
             <li>Задолженость: {{ number.get_debt() }} руб.</li>
         </ul>
     </div>
     <div class="col-md-5">
-        <h3>Контактная информаци</h3>
+        <h3>Контактная информаци {% if user.check_access('numbers/contacts') %}<small><a class="get_dialog_contacts">изменить</a></small>{% endif %}</h3>
+        <a href="/numbers/{{ number.get_id() }}/contacts/history/" target="_blank">История изменения контактных данных</a>
         <ul class="list-unstyled">
-            <li>Телефон: {{ number.get_telephone() }} <a class="get_dialog_edit_number_telephone">изменить</a></li>
-            <li>Сотовый телефон: {{ number.get_cellphone() }} <a class="get_dialog_edit_number_cellphone">изменить</a></li>
-            <li>email: {{ number.get_email() }} <a class="get_dialog_edit_number_email">изменить</a></li>
+            <li>Владелец: {{ number.get_fio() }}</li>
+            <li>Стационарный телефон: {{ number.get_telephone() }}</li>
+            <li>Сотовый телефон: <span class="cellphone">{{ number.get_cellphone() }}</span></li>
+            <li>email: {{ number.get_email() }}</li>
             <li>Контактные данные из заявок: <a href="/number/contact_info?id={{ number.get_id() }}" target="_blank">просмотреть</a></li>
-            {% if user.check_access('numbers/generate_password') %}
-            <li>Пароль для личного кабинета <a class="get_dialog_generate_password">генерировать</a></li>
-            {% endif %}
         </ul>
     </div>
 </div>

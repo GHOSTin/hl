@@ -85,16 +85,6 @@ class numbers{
     return $app['twig']->render('number\get_dialog_edit_number.tpl', ['number' => $number]);
   }
 
-  public function get_dialog_edit_number_email(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    return $app['twig']->render('number\get_dialog_edit_number_email.tpl', ['number' => $number]);
-  }
-
-  public function get_dialog_edit_number_cellphone(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    return $app['twig']->render('number\get_dialog_edit_number_cellphone.tpl', ['number' => $number]);
-  }
-
   public function get_dialog_edit_department(Request $request, Application $app){
     $house = $app['em']->find('\domain\house', $request->get('house_id'));
     $departments = $app['em']->getRepository('\domain\department')->findAll();
@@ -103,16 +93,6 @@ class numbers{
                                  'house' => $house,
                                  'departments' => $departments
                                 ]);
-  }
-
-  public function get_dialog_edit_number_fio(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    return $app['twig']->render('number\get_dialog_edit_number_fio.tpl', ['number' => $number]);
-  }
-
-  public function get_dialog_edit_number_telephone(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    return $app['twig']->render('number\get_dialog_edit_number_telephone.tpl', ['number' => $number]);
   }
 
   public function get_dialog_exclude_event(Request $request, Application $app){
@@ -178,55 +158,6 @@ class numbers{
       if($number->get_id() !== $old_number->get_id())
         throw new RuntimeException('Number exists.');
     $number->set_number($request->get('number'));
-    $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl',
-                                [
-                                 'number' => $number,
-                                 'user' => $app['user']
-                                ]);
-  }
-
-  public function update_number_cellphone(Request $request, Application $app){
-    preg_match_all('/[0-9]/', $request->get('cellphone'), $matches);
-    $cellphone = implode('', $matches[0]);
-    if(preg_match('|^[78]|', $cellphone))
-      $cellphone = substr($cellphone, 1, 10);
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    $number->set_cellphone($cellphone);
-    $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl',
-                                [
-                                 'number' => $number,
-                                 'user' => $app['user']
-                                ]);
-  }
-
-  public function update_number_email(Request $request, Application $app){
-    preg_match_all('/[0-9A-Za-z.@\-_]/', $request->get('email'), $matches);
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    $number->set_email(implode('', $matches[0]));
-    $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl',
-                                [
-                                 'number' => $number,
-                                 'user' => $app['user']
-                                ]);
-  }
-
-  public function update_number_fio(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    $number->set_fio($request->get('fio'));
-    $app['em']->flush();
-    return $app['twig']->render('number\update_number_fio.tpl',
-                                [
-                                 'number' => $number,
-                                 'user' => $app['user']
-                                ]);
-  }
-
-  public function update_number_telephone(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    $number->set_telephone($request->get('telephone'));
     $app['em']->flush();
     return $app['twig']->render('number\update_number_fio.tpl',
                                 [

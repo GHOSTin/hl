@@ -84,6 +84,10 @@ $app['client\models\arrears'] = function($app){
   return new models\arrears($app['twig'], $app['em']);
 };
 
+$app['client\models\recovery'] = function($app){
+  return new models\recovery($app['twig'], $app['em'], $app['auth_log']);
+};
+
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
   return $array;
@@ -120,8 +124,10 @@ $security = function(Request $request, Application $app){
 $app->get('/', 'client\controllers\default_page::default_page');
 $app->post('/login/', 'client\controllers\default_page::login');
 $app->get('/logout/', 'client\controllers\default_page::logout')->before($security);
-$app->get('/recovery/', 'client\controllers\default_page::recovery');
-$app->post('/recovery/', 'client\controllers\default_page::recovery_password');
+
+# recovery
+$app->get('/recovery/', 'client\controllers\recovery::recovery_form');
+$app->post('/recovery/', 'client\controllers\recovery::recovery_password');
 
 # settings
 $app->get('/settings/', 'client\controllers\settings::default_page')->before($security);

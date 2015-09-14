@@ -179,14 +179,6 @@ $(document).ready(function(){
             scrollTo($(this).parent());
         }
 
-    // выводит диалог изменеия пароля в личный кабинет
-    }).on('click', '.get_dialog_edit_password', function(){
-        $.get('get_dialog_edit_password',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
     }).on('click', '.get_dialog_edit_department', function(){
         $.get('get_dialog_edit_department',{
             house_id: get_house_id($(this))
@@ -225,38 +217,12 @@ $(document).ready(function(){
                 init_content(r);
             });
 
-    // выводит диалог редактирования ФИО владельца лицевого счета
-    }).on('click', '.get_dialog_edit_number_fio', function(){
-        $.get('get_dialog_edit_number_fio',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования телефона владельца лицевого счета
-    }).on('click', '.get_dialog_edit_number_telephone', function(){
-        $.get('get_dialog_edit_number_telephone',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-
-    // выводит диалог редактирования сотового телефона владельца лицевого счета
-    }).on('click', '.get_dialog_edit_number_cellphone', function(){
-        $.get('get_dialog_edit_number_cellphone',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
-
-    // выводит диалог редактирования сотового телефона владельца лицевого счета
-    }).on('click', '.get_dialog_edit_number_email', function(){
-        $.get('get_dialog_edit_number_email',{
-            id: get_number_id($(this))
-            },function(r){
-                init_content(r);
-            });
+    }).on('click', '.get_dialog_contacts', function(){
+        var id = get_number_id($(this));
+        $.get('/numbers/' + id + '/contacts/'
+          ,function(r){
+              init_content(r);
+          });
     });
 });
 

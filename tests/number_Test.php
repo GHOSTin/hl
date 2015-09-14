@@ -3,6 +3,7 @@
 use domain\house;
 use domain\number;
 use domain\flat;
+use domain\user;
 
 class number_Test extends PHPUnit_Framework_TestCase{
 
@@ -19,6 +20,10 @@ class number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('Некрасов Евгений', $number->get_fio());
     $this->assertSame($flat, $number->get_flat());
     $this->assertEquals('true', $number->get_status());
+  }
+
+  public function test_get_relevance(){
+    $this->assertEquals([], $this->number->get_relevance());
   }
 
   public function test_set_debt_1(){
@@ -172,5 +177,13 @@ class number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('nekrasov@mlsco.ru', $this->number->get_email());
     $this->number->set_email('nekrasov-1@mlsco.ru');
     $this->assertEquals('nekrasov-1@mlsco.ru', $this->number->get_email());
+  }
+
+  public function test_update_contacts(){
+    $this->number->update_contacts(new user(), 'Некрасов Евгений Валерьевич', '647957', '9222944742', 'nekrasov@mlsco.ru');
+    $this->assertEquals('Некрасов Евгений Валерьевич', $this->number->get_fio());
+    $this->assertEquals('647957', $this->number->get_telephone());
+    $this->assertEquals('9222944742', $this->number->get_cellphone());
+    $this->assertEquals('nekrasov@mlsco.ru', $this->number->get_email());
   }
 }
