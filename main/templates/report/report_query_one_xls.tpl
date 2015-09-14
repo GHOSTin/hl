@@ -24,7 +24,6 @@
             <Cell><Data ss:Type="String">Статус</Data></Cell>
             <Cell><Data ss:Type="String">Тип</Data></Cell>
             <Cell><Data ss:Type="String">Работы</Data></Cell>
-            <Cell><Data ss:Type="String">Оплата</Data></Cell>
             <Cell><Data ss:Type="String">Участок</Data></Cell>
             <Cell><Data ss:Type="String">Улица</Data></Cell>
             <Cell><Data ss:Type="String">Дом</Data></Cell>

@@ -112,6 +112,43 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
     $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $model->generate_password('salt', 'mail@example.com', $message, $mailer));
   }
 
+  public function test_get_dialog_contacts_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->user->expects($this->exactly(2))
+               ->method('check_access')
+               ->withConsecutive(
+                                  ['numbers/general_access'],
+                                  ['numbers/contacts']
+                                )
+               ->will($this->onConsecutiveCalls(true, false));
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $model->get_dialog_contacts();
+  }
+
+  public function test_get_dialog_contacts_2(){
+    $this->user->expects($this->exactly(2))
+               ->method('check_access')
+               ->withConsecutive(
+                                  ['numbers/general_access'],
+                                  ['numbers/contacts']
+                                )
+               ->will($this->onConsecutiveCalls(true, true));
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\get_dialog_contacts.tpl', ['number' => $this->number])
+               ->will($this->returnValue('render_template'));
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->get_dialog_contacts());
+  }
+
   public function test_get_dialog_generate_password_1(){
     $this->setExpectedException('RuntimeException');
     $this->user->expects($this->exactly(2))
@@ -147,5 +184,77 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
                ->will($this->returnValue('render_template'));
     $model = new model($this->twig, $this->em, $this->user, 125);
     $this->assertEquals('render_template', $model->get_dialog_generate_password());
+  }
+
+  public function test_history(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\history.tpl', [
+                                              'number' => $this->number,
+                                              'user' => $this->user
+                                            ])
+               ->willReturn('render_template');
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->history());
+  }
+
+  public function test_update_contacts_1(){
+    $this->setExpectedException('RuntimeException');
+    $this->user->expects($this->exactly(2))
+               ->method('check_access')
+               ->withConsecutive(
+                                  ['numbers/general_access'],
+                                  ['numbers/contacts']
+                                )
+               ->will($this->onConsecutiveCalls(true, false));
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $model->update_contacts('Некрасов Евгений Валерьевич', '64-79-57', '+7(922) 294-47-42', 'nekrasov@mlsco.ru');
+  }
+
+
+  public function test_update_contacts_2(){
+    $this->user->expects($this->exactly(2))
+               ->method('check_access')
+               ->withConsecutive(
+                                  ['numbers/general_access'],
+                                  ['numbers/contacts']
+                                )
+               ->will($this->onConsecutiveCalls(true, true));
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->number->expects($this->once())
+                 ->method('update_contacts')
+                 ->with(
+                        $this->user,
+                        'Некрасов Евгений Валерьевич',
+                        '647957',
+                        '9222944742',
+                        'nekrasov@mlsco.ru'
+                  );
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\update_number_fio.tpl', [
+                                                        'number' => $this->number,
+                                                        'user' => $this->user
+                                                      ])
+               ->will($this->returnValue('render_template'));
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $model->update_contacts('Некрасов Евгений Валерьевич', '64-79-57', '+7(922) 294-47-42', 'nekrasov@mlsco.ru');
   }
 }

@@ -269,7 +269,6 @@ $app->get('/number/get_dialog_edit_number_fio', 'main\controllers\numbers::get_d
 $app->get('/number/update_number_fio', 'main\controllers\numbers::update_number_fio')->before($security);
 $app->get('/number/get_dialog_edit_number', 'main\controllers\numbers::get_dialog_edit_number')->before($security);
 $app->get('/number/update_number', 'main\controllers\numbers::update_number')->before($security);
-$app->get('/number/get_dialog_edit_password', 'main\controllers\numbers::get_dialog_edit_password')->before($security);
 $app->get('/number/update_number_password', 'main\controllers\numbers::update_number_password')->before($security);
 $app->get('/number/get_dialog_edit_number_telephone', 'main\controllers\numbers::get_dialog_edit_number_telephone')->before($security);
 $app->get('/number/update_number_telephone', 'main\controllers\numbers::update_number_telephone')->before($security);
@@ -292,6 +291,9 @@ $app->get('/number/exclude_event', 'main\controllers\numbers::exclude_event')->b
 # numbers
 $app->get('/numbers/{id}/get_dialog_generate_password/', 'main\controllers\number::get_dialog_generate_password')->before($security);
 $app->get('/numbers/{id}/generate_password/', 'main\controllers\number::generate_password')->before($security);
+$app->get('/numbers/{id}/contacts/', 'main\controllers\number::get_dialog_contacts')->before($security);
+$app->post('/numbers/{id}/contacts/', 'main\controllers\number::update_contacts')->before($security);
+$app->get('/numbers/{id}/contacts/history/', 'main\controllers\number::history')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);

@@ -19,12 +19,7 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'CREATE TABLE api_key(
-                id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-                name VARCHAR(255) NOT NULL,
-                hash VARCHAR(255) NOT NULL,
-                PRIMARY KEY (id)
-              )';
+$queries[] = 'ALTER TABLE numbers ADD COLUMN relevance TEXT';
 
 foreach($queries as $query)
   $pdo->exec($query);
