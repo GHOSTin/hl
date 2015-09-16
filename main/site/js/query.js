@@ -1,18 +1,4 @@
 $(document).ready(function(){
-    $(document).on('keydown', function(e){
-        if(e.keyCode === 17) {
-            if($('nav.timeline .btn-group').find('input[type=radio]')){
-                $('nav.timeline .btn-group input').attr('type', 'checkbox');
-            }
-        }
-    });
-    $(document).on('keyup', function(e){
-        if(e.keyCode === 17) {
-            if($('nav.timeline .btn-group').find('input[type=checkbox]')){
-                $('nav.timeline .btn-group input').attr('type', 'radio');
-            }
-        }
-    });
 	$('body').on('click', '.get_documents', function(){
 		$.get('get_documents',{
 			 id: get_query_id($(this))
