@@ -29,6 +29,7 @@
         "silex/silex": "2.0.*@dev",
         "swiftmailer/swiftmailer": "@stable",
         "league/flysystem": "~1.1@dev",
-        "monolog/monolog": "~1.16@dev"
+        "monolog/monolog": "~1.16@dev",
+        "symfony/twig-bridge": "^3.0@dev"
     }
 }

@@ -24,4 +24,9 @@
 
 {% block javascript %}
 <script src="/js/query_type.js"></script>
+<script src="/js/spectrum.js"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/css/spectrum.css" >
 {% endblock %}

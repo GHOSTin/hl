@@ -16,9 +16,19 @@ class query_type{
   private $id;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
   private $name;
+
+  /**
+  * @Column
+  */
+  private $color = 'cccccc';
+
+
+  public function get_color(){
+    return $this->color;
+  }
 
   public function get_id(){
     return $this->id;
@@ -32,6 +42,12 @@ class query_type{
     $query_type = new query_type();
     $query_type->set_name($name);
     return $query_type;
+  }
+
+  public function set_color($color){
+    if(!preg_match('/^[0-9a-f]{6}$/u', $color))
+      throw new DomainException('Wrong query_type color '.$color);
+    $this->color = $color;
   }
 
   public function set_name($name){
