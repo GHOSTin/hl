@@ -8,7 +8,6 @@ class query_type_Test extends PHPUnit_Framework_TestCase{
     $this->query_type = new query_type();
   }
 
-
   public function test_get_id(){
     $reflection = new ReflectionClass('domain\query_type');
     $id = $reflection->getProperty('id');
@@ -20,6 +19,16 @@ class query_type_Test extends PHPUnit_Framework_TestCase{
   public function test_new_instance(){
     $query_type = query_type::new_instance('Привет');
     $this->assertEquals('Привет', $query_type->get_name());
+  }
+
+  public function test_set_color_1(){
+    $this->query_type->set_color('cccccc');
+    $this->assertEquals('cccccc', $this->query_type->get_color());
+  }
+
+  public function test_set_color_2(){
+    $this->setExpectedException('DomainException');
+    $this->query_type->set_color('gggggg');
   }
 
   public function test_set_name_1(){

@@ -19,7 +19,8 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'ALTER TABLE numbers ADD COLUMN relevance TEXT';
+$queries[] = 'ALTER TABLE query_types ADD COLUMN color VARCHAR(6) NOT NULL';
+$queries[] = "Update query_types set color = 'cccccc'";
 
 foreach($queries as $query)
   $pdo->exec($query);

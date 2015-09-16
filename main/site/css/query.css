@@ -1,10 +1,7 @@
 .query{
 	background-color: #fff;
 	margin: 3px;
-    box-shadow: 0 1px 2px #c4c4c4;
-}
-.query-wrap{
-    padding:3px 5px;
+  box-shadow: 0 1px 2px #c4c4c4;
 }
 
 .old-queries li{
@@ -16,10 +13,10 @@
    margin-top: 20px;
 }
 
-.query_status_open {border-left:4px solid #ff0000;}
-.query_status_close {border-left:4px solid #cccccc;}
-.query_status_reopen {border-left:4px solid blue;}
-.query_status_working {border-left:4px solid black;}
+.query_status_open {border-left:15px solid #ff0000;}
+.query_status_close {border-left:15px solid #cccccc;}
+.query_status_reopen {border-left:15px solid blue;}
+.query_status_working {border-left:15px solid #AB1D1D;}
 
 .timeline .pagination{
     margin: 0;

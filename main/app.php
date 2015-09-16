@@ -421,6 +421,7 @@ $app->get('/system/', 'main\controllers\system::default_page')->before($security
 $app->get('/system/query_types/', 'main\controllers\query_types::default_page')->before($security);
 $app->get('/system/query_types/get_dialog_create_query_type/', 'main\controllers\query_types::get_dialog_create_query_type')->before($security);
 $app->get('/system/query_types/create_query_type/', 'main\controllers\query_types::create_query_type')->before($security);
+$app->get('/system/query_types/{id}/color/', 'main\controllers\query_type::color')->before($security);
 
 # api keys
 $app->get('/system/api/keys/', 'main\controllers\api_keys::default_page')->before($security);
