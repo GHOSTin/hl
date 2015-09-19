@@ -49,12 +49,10 @@
         {% endfor %}
         </ul>
       {% endif %}
-    <h5>Информация об инициаторе заявке</h5>
 		{% if initiator == 'number' %}
         <div>
+        {{ number.get_flat().get_house().get_street().get_name() }}, дом №{{ number.get_flat().get_house().get_number() }}, кв.{{ number.get_flat().get_number() }}, {{ number.get_fio() }}(л/с №{{ number.get_number() }})
   				<ul>
-  					<li>л/с №{{ number.get_number() }}</li>
-  					<li>Владелец: {{ number.get_fio() }}</li>
             <li>Задолженость: {{ number.get_debt() }} руб.</li>
   					{% if number.get_telephone() %}<li>Телефон: {{ number.get_telephone() }}</li>{% endif %}
   					{% if number.get_cellphone() %}<li>Сотовый: {{ number.get_cellphone() }}</li>{% endif %}
