@@ -371,6 +371,7 @@ $app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\querie
 $app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
 $app->get('/queries/requests/count/', 'main\controllers\queries::count')->before($security);
 $app->get('/queries/requests/', 'main\controllers\queries::requests')->before($security);
+$app->get('/queries/day/stats/', 'main\controllers\queries::stats')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);

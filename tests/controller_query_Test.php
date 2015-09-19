@@ -829,6 +829,22 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_stats(){
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_day_stats')
+          ->willReturn([]);
+    $this->app['twig']->expects($this->once())
+                      ->method('render')
+                      ->with('query\stats.tpl', [])
+                      ->will($this->returnValue('render_template'));
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->stats($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_to_working_query_1(){
     $this->setExpectedException('RuntimeException');
     $this->request->query->set('id', 125);
