@@ -214,6 +214,11 @@ class queries{
     return $app['twig']->render('query\query_files.tpl', ['query' => $query]);
   }
 
+  public function stats(Application $app){
+    $model = $app['main\models\queries'];
+    return $app['twig']->render('query\stats.tpl', $model->get_day_stats());
+  }
+
   public function get_day(Request $request, Application $app){
     $model = $app['main\models\queries'];
     $model->set_time($request->get('time'));

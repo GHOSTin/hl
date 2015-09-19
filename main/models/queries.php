@@ -143,6 +143,19 @@ class queries{
                     ->findByParams($this->params);
   }
 
+  public function get_day_stats(){
+    $queries = $this->em->getRepository('domain\query')
+                        ->findByParams($this->params);
+    $res['sum'] = count($queries);
+    $res['open'] = 0;
+    $res['working'] = 0;
+    $res['close'] = 0;
+    $res['reopen'] = 0;
+    foreach($queries as $query)
+      $res[$query->get_status()] ++;
+    return $res;
+  }
+
   public function get_query_types(){
     return $this->em->getRepository('domain\query_type')
                     ->findAll(['name' => 'ASC']);
