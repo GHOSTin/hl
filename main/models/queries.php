@@ -273,11 +273,27 @@ class queries{
     return strtotime('noon', $this->params['time_begin']);
   }
 
+  public function noclose(){
+    $this->params['time_begin'] = strtotime('-30 day');
+    $this->params['time_end'] = time();
+    $this->params['status'] = ['open', 'working', 'reopen'];
+    $this->params['query_types'] = [];
+    $this->params['streets'] = [];
+    $this->params['houses'] = [];
+    $queries = $this->em->getRepository('domain\query')
+                        ->findByParams($this->params);
+    return $this->twig->render('query\query_titles.tpl', ['queries' => $queries]);
+  }
+
   public function save_params(array $params){
     foreach($params as $param => $value)
       if(array_key_exists($param, $this->params))
         $this->params[$param] = $value;
     $this->session->set('query', $this->params);
+  }
+
+  public function selections(){
+    return $this->twig->render('query\selections.tpl');
   }
 
   public function set_status($status){

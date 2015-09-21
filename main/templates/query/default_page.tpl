@@ -11,7 +11,7 @@
       <div class="get_search btn btn-default col-xs-4">Поиск</div>
     </div>
     <div  class="page-header col-xs-12 col-lg-10 col-lg-push-1">
-      <h4 class="view-toggle-filters">Фильтры
+      <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
       </h4><a class="pull-right cm clear_filters absolute_hide">сбросить</a>
     </div>
     {% include 'query/filters.tpl' %}
@@ -29,8 +29,7 @@
   </div>
   <!-- /requests -->
   <div class="row">
-    <div class="day_stats col-md-5">
-    </div>
+    <div class="day_stats col-md-5"></div>
   </div>
   <!-- queries -->
   <div class="row">

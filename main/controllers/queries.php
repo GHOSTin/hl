@@ -482,6 +482,10 @@ class queries{
     return $app['twig']->render('query\get_user_options.tpl', ['group' => $group]);
   }
 
+  public function noclose(Application $app){
+    return $app['main\models\queries']->noclose();
+  }
+
   public function print_query(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\print_query.tpl', ['query' => $query]);
@@ -534,6 +538,10 @@ class queries{
     $app['em']->remove($w);
     $app['em']->flush();
     return $app['twig']->render('query\add_work.tpl', ['query' => $query]);
+  }
+
+  public function selections(Application $app){
+    return $app['main\models\queries']->selections();
   }
 
   public function set_department(Request $request, Application $app){
