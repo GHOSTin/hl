@@ -100,6 +100,19 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});
+  $('body').on('click', '.selections', function(){
+    $.get('/queries/selections/',{
+      },function(r){
+        $('.queries').html(r);
+        $('.day_stats').empty();
+      });
+  });
+  $('body').on('click', '.selection_noclose', function(){
+    $.get('/queries/selections/noclose/',{
+      },function(r){
+        $('.queries').html(r);
+      });
+  });
 	$('body').on('click', '.get_search_result', function(){
 		$.get('get_search_result',{
 			param: $('.search_parameters').val()

@@ -682,6 +682,26 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $model->init_default_params();
   }
 
+  public function test_noclose(){
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\query_titles.tpl', ['queries' => []])
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByParams'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByParams')
+               ->willReturn([]);
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\query')
+             ->will($this->returnValue($repository));
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
+    $this->assertEquals('render_template', $model->noclose());
+  }
+
   public function test_save_params(){
     $params = $this->default_params;
     $params['time_begin'] = 12;
@@ -695,6 +715,15 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->with('query', $params);
     $model = new model($this->em, $this->session, $this->user, $this->twig);
     $model->save_params($params);
+  }
+
+  public function test_selections(){
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query\selections.tpl')
+               ->will($this->returnValue('render_template'));
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
+    $this->assertEquals('render_template', $model->selections());
   }
 
   public function test_set_department_1(){
