@@ -24,25 +24,37 @@ class main_model_system_Test extends PHPUnit_Framework_TestCase{
 
   public function test_config_1(){
     $this->setExpectedException('RuntimeException');
+    $reflection = $this->getMockBuilder('ReflectionClass')
+                       ->disableOriginalConstructor()
+                       ->getMock();
     $this->user->expects($this->exactly(2))
                ->method('check_access')
                ->withConsecutive(['system/general_access'],['system/config'])
                ->will($this->onConsecutiveCalls(true, false));
     $model = new model($this->twig, $this->user);
-    $this->assertEquals('render_template', $model->config());
+    $this->assertEquals('render_template', $model->config($reflection));
   }
 
   public function test_config_2(){
+    $reflection = $this->getMockBuilder('ReflectionClass')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $reflection->expects($this->once())
+               ->method('getConstants')
+               ->willReturn('constants');
     $this->user->expects($this->exactly(2))
                ->method('check_access')
                ->withConsecutive(['system/general_access'],['system/config'])
                ->will($this->onConsecutiveCalls(true, true));
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('system/config.tpl', $this->anything())
+               ->with('system/config.tpl', [
+                                            'user' => $this->user,
+                                            'conf' => 'constants'
+                                           ])
                ->willReturn('render_template');
     $model = new model($this->twig, $this->user);
-    $this->assertEquals('render_template', $model->config());
+    $this->assertEquals('render_template', $model->config($reflection));
   }
 
   public function test_default_page(){

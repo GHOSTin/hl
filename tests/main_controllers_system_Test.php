@@ -21,9 +21,15 @@ class main_controllers_system_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_config(){
+    $reflection = $this->getMockBuilder('ReflectionClass')
+                       ->disableOriginalConstructor()
+                       ->getMock();
     $this->model->expects($this->once())
                 ->method('config')
+                ->with($reflection)
                 ->willReturn('render_template');
+    $this->app['main\models\system'] = $this->model;
+    $this->app['config_reflection'] = $reflection;
     $response = $this->controller->config($this->app);
     $this->assertEquals('render_template', $response);
   }
