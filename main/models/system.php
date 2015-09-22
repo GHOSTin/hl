@@ -17,10 +17,9 @@ class system{
     $this->user = $user;
   }
 
-  public function config(){
+  public function config(ReflectionClass $reflection){
     if(!$this->user->check_access('system/config'))
       throw new RuntimeException('ACCESS DENIED');
-    $reflection = new ReflectionClass('config\general');
     return $this->twig->render('system/config.tpl',
                                 [
                                   'user' => $this->user,

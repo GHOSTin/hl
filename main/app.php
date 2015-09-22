@@ -1,5 +1,6 @@
 <?php namespace main;
 
+use ReflectionClass;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Silex\Application;
@@ -103,6 +104,11 @@ $app['main\models\factory'] = function($app){
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
+
+$app['config_reflection'] = function($app){
+  return new ReflectionClass('config\general');
+});
+
 
 $app['filesystem'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'files'));
