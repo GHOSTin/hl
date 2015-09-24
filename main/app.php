@@ -82,6 +82,9 @@ $app['main\models\reports'] = function($app){
 $app['main\models\report_queries'] = function($app){
   return new models\report_queries($app['twig'], $app['em'], $app['user'], $app['session']);
 };
+$app['main\models\report_user_access'] = function($app){
+  return new models\report_user_access($app['em'], $app['twig'], $app['user']);
+};
 $app['main\models\number_request'] = function($app){
   return new models\number_request($app['twig'], $app['em'], $app['user']);
 };
@@ -107,8 +110,7 @@ $app['\domain\query2comment'] = $app->factory(function($app){
 
 $app['config_reflection'] = function($app){
   return new ReflectionClass('config\general');
-});
-
+};
 
 $app['filesystem'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'files'));
@@ -259,6 +261,7 @@ $app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions
 $app->get('/users/{id}/restrictions/{profile}/{item}/', 'main\controllers\users::update_restriction')->before($security);
 $app->get('/users/{id}/access/', 'main\controllers\users::access')->before($security);
 $app->get('/users/{id}/access/{profile}/{rule}/', 'main\controllers\users::update_access')->before($security);
+$app->get('/users/access/', 'main\controllers\report_user_access::report')->before($security);
 
 # metrics
 $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($security);

@@ -100,7 +100,7 @@ class user implements JsonSerializable{
 
   public function check_access($name){
     if(!in_array($name, self::$rules_list, true))
-      throw new DomainException(self::WRONG_ACCESS_EXCEPTION);
+      throw new DomainException(self::WRONG_ACCESS_EXCEPTION.' '.$name);
     return in_array($name, $this->access, true);
   }
 
