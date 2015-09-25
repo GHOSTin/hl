@@ -48,6 +48,8 @@
   <script src="/js/jquery.fileupload.js"></script>
   <script src="/js/chart.min.js"></script>
   <script src="/js/underscore.js"></script>
+  <script src="/js/inputmask.js" type="text/javascript"></script>
+  <script src="/js/jquery.inputmask.js" type="text/javascript"></script>
   <script id="stats_template" type="text/template">
     <h4 class="text-center">Дневная статистика</h4>
     <div class="row">

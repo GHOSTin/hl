@@ -2,6 +2,8 @@
 
 {% block js %}
 	show_dialog(get_hidden_content());
+  $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
+  $('.dialog-telephone').inputmask("mask", {"mask": "99-99-99"});
 	$('.create_query').click(function(){
 		$.get('create_query',{
 			initiator: '{{ initiator }}',
@@ -20,6 +22,15 @@
 				$('.queries').html(r);
 				$('.dialog').modal('hide');
 			});
+
+    {% if initiator == 'number' and user.check_access("queries/save_contacts")%}
+      $.get('update_contacts',{
+          id: {{ number.get_id() }},
+          telephone: $('.dialog-telephone').val(),
+          cellphone: $('.dialog-cellphone').val(),
+          checked: $('.dialog-checkbox-contacts').prop("checked")
+          });
+    {% endif %}
 	});
 {% endblock %}
 
@@ -54,8 +65,6 @@
         {{ number.get_flat().get_house().get_street().get_name() }}, дом №{{ number.get_flat().get_house().get_number() }}, кв.{{ number.get_flat().get_number() }}, {{ number.get_fio() }}(л/с №{{ number.get_number() }})
   				<ul>
             <li>Задолженость: {{ number.get_debt() }} руб.</li>
-  					{% if number.get_telephone() %}<li>Телефон: {{ number.get_telephone() }}</li>{% endif %}
-  					{% if number.get_cellphone() %}<li>Сотовый: {{ number.get_cellphone() }}</li>{% endif %}
   				</ul>
         </div>
 		{% else %}
@@ -63,26 +72,27 @@
 					{{ house.get_street().get_name() }}, дом №{{ house.get_number() }}
 				</div>
 		{% endif %}
-        <p><strong>Данные контактного лица по заявке</strong></p>
+        <h4>Данные контактного лица по заявке</h4>
         <div class="dialog-addinfo">
-            <div class="row form-group">
-              <label class="col-lg-3 control-label">ФИО:</label>
-              <div class="col-lg-5">
-                <input type="text" class="form-control dialog-fio">
-              </div>
+            <div class="form-group">
+              <label class=" control-label">ФИО:</label>
+              <input type="text" class="form-control dialog-fio" value="{{ number.get_fio() }}">
             </div>
-            <div class="row form-group">
-              <label class="col-lg-3 control-label">Телефон:</label>
-              <div class="col-lg-5">
-                <input type="text" class="form-control dialog-telephone">
-              </div>
+            <div class="form-group">
+              <label class="control-label">Телефон:</label>
+              <input type="text" class="form-control dialog-telephone" value="{{ number.get_telephone() }}">
             </div>
-            <div class="row form-group">
-              <label class="col-lg-3 control-label">Сот. телефон:</label>
-              <div class="col-lg-5">
-                <input type="text" class="form-control dialog-cellphone">
-              </div>
+            <div class="form-group">
+              <label class="control-label">Сот. телефон:</label>
+              <input type="text" class="form-control dialog-cellphone" value="{{ number.get_cellphone() }}">
             </div>
+            {% if user.check_access("queries/save_contacts") %}
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" class="dialog-checkbox-contacts"> Использовать контакты как основные
+              </label>
+            </div>
+            {% endif %}
         </div>
         <div class="row">
           <div class="col-md-6 form-group">
