@@ -3,6 +3,7 @@
 use RuntimeException;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -214,6 +215,11 @@ class queries{
     return $app['twig']->render('query\query_files.tpl', ['query' => $query]);
   }
 
+  public function stats(Application $app){
+    $model = $app['main\models\queries'];
+    return $app['twig']->render('query\stats.tpl', $model->get_day_stats());
+  }
+
   public function get_day(Request $request, Application $app){
     $model = $app['main\models\queries'];
     $model->set_time($request->get('time'));
@@ -396,7 +402,8 @@ class queries{
                                  'number' => $number,
                                  'house' => $house,
                                  'initiator' => $request->get('initiator'),
-                                 'query_types' => $query_types
+                                 'query_types' => $query_types,
+                                 'user' => $app['user']
                                 ]);
   }
 
@@ -477,6 +484,10 @@ class queries{
     return $app['twig']->render('query\get_user_options.tpl', ['group' => $group]);
   }
 
+  public function noclose(Application $app){
+    return $app['main\models\queries']->noclose();
+  }
+
   public function print_query(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\print_query.tpl', ['query' => $query]);
@@ -529,6 +540,10 @@ class queries{
     $app['em']->remove($w);
     $app['em']->flush();
     return $app['twig']->render('query\add_work.tpl', ['query' => $query]);
+  }
+
+  public function selections(Application $app){
+    return $app['main\models\queries']->selections();
   }
 
   public function set_department(Request $request, Application $app){
@@ -592,6 +607,17 @@ class queries{
     $query->set_contact_cellphone($request->get('cellphone'));
     $app['em']->flush();
     return $app['twig']->render('query\update_contact_information.tpl', ['query' => $query]);
+  }
+
+  public function update_contacts(Request $request, Application $app){
+    if($request->get('checked') === 'true'){
+      $app['main\models\queries']->update_contacts(
+                                            $request->get('id'),
+                                            $request->get('telephone'),
+                                            $request->get('cellphone')
+                                          );
+    }
+    return new Response();
   }
 
   public function update_description(Request $request, Application $app){

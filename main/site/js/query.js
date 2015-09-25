@@ -91,6 +91,7 @@ $(document).ready(function(){
 				$('.timeline-day').removeClass('timeline-day-current');
 				self.addClass('timeline-day-current');
 				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
 	$('body').on('click', '.get_search', function(){
@@ -99,6 +100,19 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});
+  $('body').on('click', '.selections', function(){
+    $.get('/queries/selections/',{
+      },function(r){
+        $('.queries').html(r);
+        $('.day_stats').empty();
+      });
+  });
+  $('body').on('click', '.selection_noclose', function(){
+    $.get('/queries/selections/noclose/',{
+      },function(r){
+        $('.queries').html(r);
+      });
+  });
 	$('body').on('click', '.get_search_result', function(){
 		$.get('get_search_result',{
 			param: $('.search_parameters').val()
@@ -110,6 +124,7 @@ $(document).ready(function(){
 		$.get('clear_filters',{
 			},function(r){
 				init_content(r);
+        get_day_stats();
 			});
 	});
 	$('.filter-content-select-status').change(function(){
@@ -323,6 +338,7 @@ $(document).ready(function(){
 			time: $('.timeline-month').attr('time')
 			},function(r){
 				init_content(r);
+        get_day_stats();
 			});
 	});
   $.get('/queries/requests/count/',
@@ -341,7 +357,22 @@ $(document).ready(function(){
       $('.requests').html(r);
     });
   });
+  get_day_stats();
 });
 function get_query_id(obj){
 	return obj.closest('.query').attr('query_id');
+}
+
+function get_day_stats(){
+  $.getJSON('/queries/day/stats/',
+    function(r){
+      var compiled = _.template($('#stats_template').html());
+      $('.day_stats').html(compiled(r.stat));
+      var ctx = $("#chart").get(0).getContext("2d");
+      var options = {
+        segmentShowStroke : false,
+        animation: false
+      };
+      var myNewChart = new Chart(ctx).Pie(r.chart, options);
+    });
 }

@@ -1,5 +1,6 @@
 <?php namespace main\models;
 
+use RuntimeException;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_Environment;
@@ -143,6 +144,19 @@ class queries{
                     ->findByParams($this->params);
   }
 
+  public function get_day_stats(){
+    $queries = $this->em->getRepository('domain\query')
+                        ->findByParams($this->params);
+    $res['sum'] = count($queries);
+    $res['open'] = 0;
+    $res['working'] = 0;
+    $res['close'] = 0;
+    $res['reopen'] = 0;
+    foreach($queries as $query)
+      $res[$query->get_status()] ++;
+    return $res;
+  }
+
   public function get_query_types(){
     return $this->em->getRepository('domain\query_type')
                     ->findAll(['name' => 'ASC']);
@@ -260,11 +274,27 @@ class queries{
     return strtotime('noon', $this->params['time_begin']);
   }
 
+  public function noclose(){
+    $this->params['time_begin'] = strtotime('-30 day');
+    $this->params['time_end'] = time();
+    $this->params['status'] = ['open', 'working', 'reopen'];
+    $this->params['query_types'] = [];
+    $this->params['streets'] = [];
+    $this->params['houses'] = [];
+    $queries = $this->em->getRepository('domain\query')
+                        ->findByParams($this->params);
+    return $this->twig->render('query\query_titles.tpl', ['queries' => $queries]);
+  }
+
   public function save_params(array $params){
     foreach($params as $param => $value)
       if(array_key_exists($param, $this->params))
         $this->params[$param] = $value;
     $this->session->set('query', $this->params);
+  }
+
+  public function selections(){
+    return $this->twig->render('query\selections.tpl');
   }
 
   public function set_status($status){
@@ -334,5 +364,24 @@ class queries{
     if($check1 || $check2)
       $categories = [$category_id];
     $this->save_params(['work_types' => $categories]);
+  }
+
+  public function update_contacts($id, $tellphone, $cellphone){
+    if(!$this->user->check_access('queries/save_contacts'))
+      throw new RuntimeException();
+    $number = $this->em->find('domain\number', $id);
+    preg_match_all('/[0-9]/', $tellphone, $tellphone_matches);
+    preg_match_all('/[0-9]/', $cellphone, $matches);
+    $cellphone = implode('', $matches[0]);
+    if(preg_match('|^[78]|', $cellphone))
+      $cellphone = substr($cellphone, 1, 10);
+    $number->update_contacts(
+                              $this->user,
+                              $number->get_fio(),
+                              implode('', $tellphone_matches[0]),
+                              $cellphone,
+                              $number->get_email()
+                            );
+    $this->em->flush();
   }
 }

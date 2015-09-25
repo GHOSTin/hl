@@ -1,5 +1,6 @@
 <?php namespace main;
 
+use ReflectionClass;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Silex\Application;
@@ -81,6 +82,9 @@ $app['main\models\reports'] = function($app){
 $app['main\models\report_queries'] = function($app){
   return new models\report_queries($app['twig'], $app['em'], $app['user'], $app['session']);
 };
+$app['main\models\report_user_access'] = function($app){
+  return new models\report_user_access($app['em'], $app['twig'], $app['user']);
+};
 $app['main\models\number_request'] = function($app){
   return new models\number_request($app['twig'], $app['em'], $app['user']);
 };
@@ -103,6 +107,10 @@ $app['main\models\factory'] = function($app){
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
+
+$app['config_reflection'] = function($app){
+  return new ReflectionClass('config\general');
+};
 
 $app['filesystem'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'files'));
@@ -253,6 +261,7 @@ $app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions
 $app->get('/users/{id}/restrictions/{profile}/{item}/', 'main\controllers\users::update_restriction')->before($security);
 $app->get('/users/{id}/access/', 'main\controllers\users::access')->before($security);
 $app->get('/users/{id}/access/{profile}/{rule}/', 'main\controllers\users::update_access')->before($security);
+$app->get('/users/access/', 'main\controllers\report_user_access::report')->before($security);
 
 # metrics
 $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($security);
@@ -358,6 +367,7 @@ $app->get('/query/get_dialog_create_query', 'main\controllers\queries::get_dialo
 $app->get('/query/get_dialog_initiator', 'main\controllers\queries::get_dialog_initiator')->before($security);
 $app->get('/query/get_initiator', 'main\controllers\queries::get_initiator')->before($security);
 $app->get('/query/create_query', 'main\controllers\queries::create_query')->before($security);
+$app->get('/query/update_contacts', 'main\controllers\queries::update_contacts')->before($security);
 
 # queries
 $app->get('/queries/{id}/files/', 'main\controllers\queries::get_query_files')->before($security);
@@ -371,6 +381,9 @@ $app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\querie
 $app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
 $app->get('/queries/requests/count/', 'main\controllers\queries::count')->before($security);
 $app->get('/queries/requests/', 'main\controllers\queries::requests')->before($security);
+$app->get('/queries/day/stats/', 'main\controllers\queries::stats')->before($security);
+$app->get('/queries/selections/', 'main\controllers\queries::selections')->before($security);
+$app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);

@@ -394,6 +394,10 @@ class query{
 	}
 
 	public function set_contact_cellphone($cellphone){
+    preg_match_all('/[0-9]/', $cellphone, $matches);
+    $cellphone = implode('', $matches[0]);
+    if(preg_match('|^[78]|', $cellphone))
+      $cellphone = substr($cellphone, 1, 10);
 		$this->contact_cellphone = $cellphone;
 	}
 
@@ -402,7 +406,8 @@ class query{
 	}
 
 	public function set_contact_telephone($telephone){
-		$this->contact_telephone = $telephone;
+    preg_match_all('/[0-9]/', $telephone, $telephone_matches);
+		$this->contact_telephone = implode('', $telephone_matches[0]);
 	}
 
 	public function set_description($description){

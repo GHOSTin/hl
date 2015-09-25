@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 class system{
 
   public function config(Application $app){
-    return $app['main\models\system']->config();
+    return $app['main\models\system']->config($app['config_reflection']);
   }
 
   public function default_page(Application $app){

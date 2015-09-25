@@ -5,7 +5,10 @@
         <button class="btn btn-default active get_user_letters">Пользователи</button>
         <button class="btn btn-default get_group_letters">Группы</button>
     </div>
-    <a href="/user/logs">Логи</a>
+    <div class="btn-group">
+      <a href="/user/logs" class="btn btn-default" target="_blank">Логи</a>
+      <a href="/users/access/" class="btn btn-default" target="_blank">Отчет по правам доступа</a>
+    </div>
     <div class="letters">
     {% include 'user/build_user_letters.tpl' %}
     </div>

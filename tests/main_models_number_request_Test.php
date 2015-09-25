@@ -28,7 +28,7 @@ class main_model_number_request_Test extends PHPUnit_Framework_TestCase{
                       ])
                ->willReturn('render_template');
     $model = $this->getMockBuilder('main\models\number_request')
-                  ->setConstructorArgs([$this->twig, $this->em, $this->user, ])
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user])
                   ->setMethods(['get_requests'])
                   ->getMock();
     $model->expects($this->once())

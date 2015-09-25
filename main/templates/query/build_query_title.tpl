@@ -1,6 +1,5 @@
 	<div class="row query_status_{{query.get_status()}}">
     <div class="col-md-2" style="background:linear-gradient(to left, white, #{{ query.get_query_type().get_color() }})">
-
   		{% if query.get_initiator() == 'number' %}
   			<i class="glyphicon glyphicon-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
   		{% else %}
