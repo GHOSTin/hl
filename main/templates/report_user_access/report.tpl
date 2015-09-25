@@ -30,6 +30,7 @@
         {% if user.check_access('queries/general_access') %}<li>Общий доступ</li>{% endif %}
         {% if user.check_access('queries/create_query') %}<li>Создание заявки</li>{% endif %}
         {% if user.check_access('queries/analize_request') %}<li>Анализ запросов из личного кабинета</li>{% endif %}
+        {% if user.check_access('queries/save_contacts') %}<li>Сохранение контактные данные в жилфонд</li>{% endif %}
       </ul>
     </td>
     <td>

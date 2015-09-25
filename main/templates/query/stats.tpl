@@ -14,7 +14,7 @@
                },
                {
                    "value": {{ working }},
-                   "color":"#AB1D1D",
+                   "color":"black",
                    "label": "В работе"
                },
                {

@@ -1,5 +1,6 @@
 <?php namespace main\models;
 
+use RuntimeException;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Twig_Environment;
@@ -363,5 +364,24 @@ class queries{
     if($check1 || $check2)
       $categories = [$category_id];
     $this->save_params(['work_types' => $categories]);
+  }
+
+  public function update_contacts($id, $tellphone, $cellphone){
+    if(!$this->user->check_access('queries/save_contacts'))
+      throw new RuntimeException();
+    $number = $this->em->find('domain\number', $id);
+    preg_match_all('/[0-9]/', $tellphone, $tellphone_matches);
+    preg_match_all('/[0-9]/', $cellphone, $matches);
+    $cellphone = implode('', $matches[0]);
+    if(preg_match('|^[78]|', $cellphone))
+      $cellphone = substr($cellphone, 1, 10);
+    $number->update_contacts(
+                              $this->user,
+                              $number->get_fio(),
+                              implode('', $tellphone_matches[0]),
+                              $cellphone,
+                              $number->get_email()
+                            );
+    $this->em->flush();
   }
 }

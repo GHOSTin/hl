@@ -3,6 +3,7 @@
 use RuntimeException;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -401,7 +402,8 @@ class queries{
                                  'number' => $number,
                                  'house' => $house,
                                  'initiator' => $request->get('initiator'),
-                                 'query_types' => $query_types
+                                 'query_types' => $query_types,
+                                 'user' => $app['user']
                                 ]);
   }
 
@@ -605,6 +607,17 @@ class queries{
     $query->set_contact_cellphone($request->get('cellphone'));
     $app['em']->flush();
     return $app['twig']->render('query\update_contact_information.tpl', ['query' => $query]);
+  }
+
+  public function update_contacts(Request $request, Application $app){
+    if($request->get('checked') === 'true'){
+      $app['main\models\queries']->update_contacts(
+                                            $request->get('id'),
+                                            $request->get('telephone'),
+                                            $request->get('cellphone')
+                                          );
+    }
+    return new Response();
   }
 
   public function update_description(Request $request, Application $app){
