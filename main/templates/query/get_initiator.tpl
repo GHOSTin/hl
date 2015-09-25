@@ -17,7 +17,8 @@
       query_type: $('.dialog-query_type').val(),
 			telephone: $('.dialog-telephone').val(),
 			cellphone: $('.dialog-cellphone').val(),
-			description: $('.dialog-description').val()
+			description: $('.dialog-description').val(),
+      checkbox: $('.dialog-checkbox-contacts').prop("checked")
 			},function(r){
 				$('.queries').html(r);
 				$('.dialog').modal('hide');
