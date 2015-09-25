@@ -367,6 +367,7 @@ $app->get('/query/get_dialog_create_query', 'main\controllers\queries::get_dialo
 $app->get('/query/get_dialog_initiator', 'main\controllers\queries::get_dialog_initiator')->before($security);
 $app->get('/query/get_initiator', 'main\controllers\queries::get_initiator')->before($security);
 $app->get('/query/create_query', 'main\controllers\queries::create_query')->before($security);
+$app->get('/query/update_contacts', 'main\controllers\queries::update_contacts')->before($security);
 
 # queries
 $app->get('/queries/{id}/files/', 'main\controllers\queries::get_query_files')->before($security);

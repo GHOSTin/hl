@@ -10,7 +10,7 @@ use domain\query;
 use domain\number;
 use domain\number_request;
 
-class controller_query_Test extends PHPUnit_Framework_TestCase{
+class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
 
   public function setUp(){
     $twig = $this->getMockBuilder('\Twig_Environment')
@@ -896,6 +896,28 @@ class controller_query_Test extends PHPUnit_Framework_TestCase{
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->to_working_query($this->request, $this->app);
     $this->assertEquals('render_template', $response);
+  }
+
+  public function test_update_contacts_1(){
+    $this->request->query->set('checked', 'false');
+    $response = $this->controller->update_contacts($this->request, $this->app);
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
+  }
+
+  public function test_update_contacts_2(){
+    $this->request->query->set('checked', 'true');
+    $this->request->query->set('id', 125);
+    $this->request->query->set('telephone', '647957');
+    $this->request->query->set('cellphone', '+79222944742');
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('update_contacts')
+          ->with(125, '647957', '+79222944742');
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->update_contacts($this->request, $this->app);
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $response);
   }
 
   public function test_update_query_type(){

@@ -16,7 +16,7 @@
 .query_status_open {border-left:15px solid #ff0000;}
 .query_status_close {border-left:15px solid #cccccc;}
 .query_status_reopen {border-left:15px solid blue;}
-.query_status_working {border-left:15px solid #AB1D1D;}
+.query_status_working {border-left:15px solid black;}
 
 .timeline .pagination{
     margin: 0;
