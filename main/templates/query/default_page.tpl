@@ -67,6 +67,13 @@
       </div>
     </div>
   </script>
+  <script id="blank" type="text/template">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <i class="fa fa-spinner fa-pulse"></i> загрузка
+      </div>
+    </div>
+  </script>
 {% endblock javascript %}
 
 {% block css %}

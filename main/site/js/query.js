@@ -108,6 +108,7 @@ $(document).ready(function(){
       });
   });
   $('body').on('click', '.selection_noclose', function(){
+    blank();
     $.get('/queries/selections/noclose/',{
       },function(r){
         $('.queries').html(r);
@@ -375,4 +376,9 @@ function get_day_stats(){
       };
       var myNewChart = new Chart(ctx).Pie(r.chart, options);
     });
+}
+
+function blank(){
+  var compiled = _.template($('#blank').html());
+  $('.queries').html(compiled());
 }
