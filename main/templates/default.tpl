@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/css/default.css" >
   <title>Система управления предприятием ЖКХ</title>
   <link rel="stylesheet" href="/css/libs.css" >
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
   {% block css %}{% endblock %}
 </head>
 <body>
