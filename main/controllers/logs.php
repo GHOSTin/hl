@@ -11,4 +11,8 @@ class logs{
   public function default_page(Application $app){
     return $app['main\models\logs']->default_page();
   }
+
+  public function main(Application $app){
+    return $app['main\models\logs']->main();
+  }
 }

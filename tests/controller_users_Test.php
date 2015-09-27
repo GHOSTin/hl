@@ -113,15 +113,6 @@ class controller_users_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_get_dialog_clear_logs(){
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('user\get_dialog_clear_logs.tpl')
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_clear_logs($this->app);
-    $this->assertEquals('render_template', $response);
-  }
-
   public function test_get_dialog_create_group(){
     $this->app['twig']->expects($this->once())
                       ->method('render')

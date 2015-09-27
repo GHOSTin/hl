@@ -6,7 +6,6 @@
         <button class="btn btn-default get_group_letters">Группы</button>
     </div>
     <div class="btn-group">
-      <a href="/user/logs" class="btn btn-default" target="_blank">Логи</a>
       <a href="/users/access/" class="btn btn-default" target="_blank">Отчет по правам доступа</a>
     </div>
     <div class="letters">
