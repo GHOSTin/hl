@@ -102,7 +102,7 @@ $app->register(new MonologServiceProvider(), array(
 $app['auth_log'] = function($app) use ($root, $DS){
   $formatter = new JsonFormatter();
   $logger = new Logger('auth');
-  $stream = new StreamHandler($root.'cache'.$DS.'auth.log', Logger::INFO);
+  $stream = new StreamHandler($root.'cache'.$DS.'auth_client.log', Logger::INFO);
   $stream->setFormatter($formatter);
   $logger->pushHandler($stream);
   return $logger;

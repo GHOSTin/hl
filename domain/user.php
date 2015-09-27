@@ -52,11 +52,6 @@ class user implements JsonSerializable{
   private $restrictions = [];
 
   /**
-  * @OneToMany(targetEntity="domain\session", mappedBy="user")
-  */
-	private $sessions;
-
-  /**
   * @Column
   */
 	private $status;

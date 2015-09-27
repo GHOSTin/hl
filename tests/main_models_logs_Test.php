@@ -52,8 +52,9 @@ class main_model_logs_Test extends PHPUnit_Framework_TestCase{
                   ->setMethods(['get_rows'])
                   ->getMock();
     $model->expects($this->once())
-         ->method('get_rows')
-         ->willReturn('rows_array');
+          ->method('get_rows')
+          ->with('auth_client.log')
+          ->willReturn('rows_array');
     $this->assertEquals('render_template', $model->client());
   }
 
@@ -68,5 +69,29 @@ class main_model_logs_Test extends PHPUnit_Framework_TestCase{
                ->will($this->onConsecutiveCalls(true, true));
     $model = new model($this->twig, $this->user, $this->filesystem);
     $this->assertEquals('render_template', $model->default_page());
+  }
+
+  public function test_main(){
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('logs/client.tpl',
+                      [
+                        'user' => $this->user,
+                        'rows' => 'rows_array'
+                      ])
+               ->willReturn('render_template');
+    $this->user->expects($this->exactly(2))
+               ->method('check_access')
+               ->withConsecutive(['system/general_access'],['system/logs'])
+               ->will($this->onConsecutiveCalls(true, true));
+    $model = $this->getMockBuilder('main\models\logs')
+                  ->setConstructorArgs([$this->twig, $this->user, $this->filesystem])
+                  ->setMethods(['get_rows'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_rows')
+          ->with('auth_main.log')
+          ->willReturn('rows_array');
+    $this->assertEquals('render_template', $model->main());
   }
 }

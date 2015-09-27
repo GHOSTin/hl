@@ -22,7 +22,7 @@ class logs{
     return $this->twig->render('logs/client.tpl',
                                 [
                                   'user' => $this->user,
-                                  'rows' => $this->get_rows()
+                                  'rows' => $this->get_rows('auth_client.log')
                                 ]
                               );
   }
@@ -31,11 +31,20 @@ class logs{
     return $this->twig->render('logs/default_page.tpl', ['user' => $this->user]);
   }
 
-  public function get_rows(){
-    $stream = $this->filesystem->readStream('auth.log');
+  public function get_rows($file){
+    $stream = $this->filesystem->readStream($file);
     while($row = json_decode(fgets($stream))){
       yield $row;
     }
     fclose($stream);
+  }
+
+  public function main(){
+    return $this->twig->render('logs/client.tpl',
+                                [
+                                  'user' => $this->user,
+                                  'rows' => $this->get_rows('auth_main.log')
+                                ]
+                              );
   }
 }
