@@ -110,6 +110,7 @@ $(document).ready(function(){
   $('body').on('click', '.selection_noclose', function(){
     blank();
     $.get('/queries/selections/noclose/',{
+      time: $(this).attr('time')
       },function(r){
         $('.queries').html(r);
       });

@@ -274,9 +274,9 @@ class queries{
     return strtotime('noon', $this->params['time_begin']);
   }
 
-  public function noclose(){
-    $this->params['time_begin'] = strtotime('-30 day');
-    $this->params['time_end'] = time();
+  public function noclose($time){
+    $this->params['time_begin'] = strtotime('00:00 first day of this month', $time);
+    $this->params['time_end'] = strtotime('23:59 last day of this month', $time);;
     $this->params['status'] = ['open', 'working', 'reopen'];
     $this->params['query_types'] = [];
     $this->params['streets'] = [];
@@ -294,7 +294,20 @@ class queries{
   }
 
   public function selections(){
-    return $this->twig->render('query\selections.tpl');
+    $time = strtotime('12:00 first day of this month');
+    return $this->twig->render('query\selections.tpl', [
+                                                        'current' => $time,
+                                                        'months' => $this->get_last_6_months($time)
+                                                        ]);
+  }
+
+  public function get_last_6_months($time){
+    $m = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+    foreach([1, 2, 3, 4, 5] as $key ){
+      $gd = getdate(strtotime($key.' months ago', $time));
+      $months[$gd[0]] = $m[$gd['mon'] - 1];
+    }
+    return $months;
   }
 
   public function set_status($status){

@@ -699,7 +699,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\query')
              ->will($this->returnValue($repository));
     $model = new model($this->em, $this->session, $this->user, $this->twig);
-    $this->assertEquals('render_template', $model->noclose());
+    $this->assertEquals('render_template', $model->noclose(1122));
   }
 
   public function test_save_params(){

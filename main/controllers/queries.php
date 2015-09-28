@@ -484,8 +484,8 @@ class queries{
     return $app['twig']->render('query\get_user_options.tpl', ['group' => $group]);
   }
 
-  public function noclose(Application $app){
-    return $app['main\models\queries']->noclose();
+  public function noclose(Request $request, Application $app){
+    return $app['main\models\queries']->noclose($request->get('time'));
   }
 
   public function print_query(Request $request, Application $app){
