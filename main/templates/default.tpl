@@ -10,6 +10,7 @@
   <title>Система управления предприятием ЖКХ</title>
   <link rel="stylesheet" href="/css/libs.css" >
   <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic,600,600italic,700,700italic,800,800italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
   {% block css %}{% endblock %}
 </head>
 <body>

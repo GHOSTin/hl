@@ -227,7 +227,7 @@ class queries{
       return array_values($streets);
     }else
       return $this->em->getRepository('domain\street')
-                      ->findAll(['name' => 'ASC']);
+                      ->findBy([], ['name' => 'ASC']);
   }
 
   public function init_default_params(){
@@ -283,7 +283,40 @@ class queries{
     $this->params['houses'] = [];
     $queries = $this->em->getRepository('domain\query')
                         ->findByParams($this->params);
-    return $this->twig->render('query\query_titles.tpl', ['queries' => $queries]);
+    $json['stats'] = $this->get_noclose_stats($queries);
+    $json['data'] = $this->twig->render('query\query_titles.tpl', ['queries' => $queries]);
+    return json_encode($json);
+  }
+
+  public function get_noclose_stats(array $queries){
+    $res['stat']['open'] = 0;
+    $res['stat']['working'] = 0;
+    $res['stat']['reopen'] = 0;
+    foreach($queries as $query)
+      $res['stat'][$query->get_status()] ++;
+    $res['stat']['sum'] = $res['stat']['open'] + $res['stat']['working'] + $res['stat']['reopen'];
+    $res['chart']['data'] = [
+                        [
+                          "value" => $res['stat']['open'],
+                          "color" =>"#ff0000",
+                          "label"=> "Открытые"
+                        ],
+                        [
+                          "value" => $res['stat']['working'],
+                          "color" =>"black",
+                          "label" => "В работе"
+                        ],
+                        [
+                          "value" => $res['stat']['reopen'],
+                          "color" => "blue",
+                          "label" => "Переоткрытые"
+                        ]
+                      ];
+    $res['chart']['options'] = [
+                                  'segmentShowStroke' => false,
+                                  'animation' => false
+                                ];
+    return $res;
   }
 
   public function save_params(array $params){
