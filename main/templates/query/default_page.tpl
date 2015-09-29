@@ -67,6 +67,37 @@
       </div>
     </div>
   </script>
+  <script id="blank" type="text/template">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <i class="fa fa-spinner fa-pulse"></i> загрузка
+      </div>
+    </div>
+  </script>
+
+  <script id="noclose_stats" type="text/template">
+    <h4 class="text-center">Статистика по выборке</h4>
+    <div class="row">
+      <div class="col-md-5">
+        <canvas id="chart" width="120px" height="120px"></canvas>
+      </div>
+      <div class="col-md-7">
+        <ul class="list-unstyled">
+          <li>Открытых заявок: <%= open %></li>
+          <li>Заявок в работе: <%= working %></li>
+          <li>Переоткрытых заявок: <%= reopen %></li>
+          <li>Итого заявок: <%= sum %></li>
+        </ul>
+      </div>
+    </div>
+  </script>
+  <script id="blank" type="text/template">
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <i class="fa fa-spinner fa-pulse"></i> загрузка
+      </div>
+    </div>
+  </script>
 {% endblock javascript %}
 
 {% block css %}

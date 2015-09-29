@@ -700,11 +700,13 @@ class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
                   ->disableOriginalConstructor()
                   ->setMethods(['noclose'])
                   ->getMock();
+    $this->request->query->set('time', 1122);
     $model->expects($this->once())
           ->method('noclose')
+          ->with(1122)
           ->willReturn('render_template');
     $this->app['main\models\queries'] = $model;
-    $this->assertEquals('render_template', $this->controller->noclose($this->app));
+    $this->assertEquals('render_template', $this->controller->noclose($this->request, $this->app));
   }
 
   public function test_selections(){

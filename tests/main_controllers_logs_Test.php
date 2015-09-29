@@ -29,4 +29,12 @@ class main_controllers_logs_Test extends PHPUnit_Framework_TestCase{
     $response = $this->controller->default_page($this->app);
     $this->assertEquals('render_template', $response);
   }
+
+  public function test_main(){
+    $this->model->expects($this->once())
+                ->method('main')
+                ->willReturn('render_template');
+    $response = $this->controller->main($this->app);
+    $this->assertEquals('render_template', $response);
+  }
 }

@@ -216,7 +216,7 @@ class number{
   public function set_cellphone($cellphone){
     if(!empty($cellphone))
       if(!preg_match('/^[0-9]{10}$/', $cellphone))
-        throw new DomainException('Номер сотового телефона задан не верно.');
+        throw new DomainException('Номер сотового телефона задан не верно '. $cellphone);
   	$this->cellphone = $cellphone;
   }
 
@@ -278,7 +278,7 @@ class number{
   public function set_telephone($telephone){
     if(!empty($telephone))
       if(!preg_match('/^[0-9]{2,11}$/', $telephone))
-        throw new DomainException('Номер телефона пользователя задан не верно.');
+        throw new DomainException('Номер телефона пользователя задан не верно '. $telephone);
   	$this->telephone = $telephone;
   }
 

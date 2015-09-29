@@ -108,9 +108,15 @@ $(document).ready(function(){
       });
   });
   $('body').on('click', '.selection_noclose', function(){
-    $.get('/queries/selections/noclose/',{
+    blank();
+    $.getJSON('/queries/selections/noclose/',{
+      time: $(this).attr('time')
       },function(r){
-        $('.queries').html(r);
+        $('.queries').html(r.data);
+        var compiled = _.template($('#noclose_stats').html());
+        $('.day_stats').html(compiled(r.stats.stat));
+        var ctx = $("#chart").get(0).getContext("2d");
+        var myNewChart = new Chart(ctx).Pie(r.stats.chart.data, r.stats.chart.options);
       });
   });
 	$('body').on('click', '.get_search_result', function(){
@@ -375,4 +381,9 @@ function get_day_stats(){
       };
       var myNewChart = new Chart(ctx).Pie(r.chart, options);
     });
+}
+
+function blank(){
+  var compiled = _.template($('#blank').html());
+  $('.queries').html(compiled());
 }

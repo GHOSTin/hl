@@ -140,22 +140,8 @@ class users{
     return $app['twig']->render('user\access.tpl', ['user' => $user]);
   }
 
-  public function get_dialog_clear_logs(Application $app){
-    return $app['twig']->render('user\get_dialog_clear_logs.tpl');
-  }
-
   public function get_dialog_create_group(Application $app){
     return $app['twig']->render('user\get_dialog_create_group.tpl');
-  }
-
-  public function logs(Request $request, Application $app){
-    $sessions = $app['em']->getRepository('\domain\session')
-                          ->findAll(['time' => 'ASC']);
-    return $app['twig']->render('user\logs.tpl',
-                                [
-                                 'user' => $app['user'],
-                                 'sessions' => $sessions
-                                ]);
   }
 
   public function create_user(Request $request, Application $app){
@@ -187,15 +173,6 @@ class users{
           $letter_users[] = $user;
       }
     return $app['twig']->render('user\get_user_letters.tpl', ['letters' => $letter_users]);
-  }
-
-  public function clear_logs(Request $request, Application $app){
-    $sessions = $app['em']->getRepository('\domain\session')
-                          ->findAll();
-    foreach($sessions as $session)
-      $app['em']->remove($session);
-    $app['em']->flush();
-    return $app['twig']->render('user\clear_logs.tpl');
   }
 
   public function get_dialog_add_user(Request $request, Application $app){

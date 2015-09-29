@@ -16,6 +16,8 @@ use League\Flysystem\Adapter\Local as Adapter;
 use Swift_Message;
 use Silex\Provider\MonologServiceProvider;
 use Monolog\Logger;
+use Monolog\Formatter\JsonFormatter;
+use Monolog\Handler\StreamHandler;
 
 use config\general as conf;
 
@@ -152,6 +154,15 @@ $app->register(new MonologServiceProvider(), array(
   'monolog.level' => Logger::WARNING
 ));
 
+$app['auth_log'] = function($app) use ($root, $DS){
+  $formatter = new JsonFormatter();
+  $logger = new Logger('auth');
+  $stream = new StreamHandler($root.'cache'.$DS.'auth_main.log', Logger::INFO);
+  $stream->setFormatter($formatter);
+  $logger->pushHandler($stream);
+  return $logger;
+};
+
 $app->before(function (Request $request, Application $app) {
   $app['session'] = new Session();
   $app['session']->start();
@@ -226,9 +237,6 @@ $app->get('/works/exclude_event', 'main\controllers\works::exclude_event')->befo
 # user
 $app->get('/user/', 'main\controllers\users::default_page')->before($security);
 $app->get('/user/get_user_letter', 'main\controllers\users::get_user_letter')->before($security);
-$app->get('/user/logs', 'main\controllers\users::logs')->before($security);
-$app->get('/user/get_dialog_clear_logs', 'main\controllers\users::get_dialog_clear_logs')->before($security);
-$app->get('/user/clear_logs', 'main\controllers\users::clear_logs')->before($security);
 $app->get('/user/get_user_content', 'main\controllers\users::get_user_content')->before($security);
 $app->get('/user/get_user_information', 'main\controllers\users::get_user_information')->before($security);
 $app->get('/user/get_dialog_edit_fio', 'main\controllers\users::get_dialog_edit_fio')->before($security);
@@ -447,6 +455,7 @@ $app->get('/system/config/', 'main\controllers\system::config')->before($securit
 # logs
 $app->get('/system/logs/', 'main\controllers\logs::default_page')->before($security);
 $app->get('/system/logs/client/', 'main\controllers\logs::client')->before($security);
+$app->get('/system/logs/main/', 'main\controllers\logs::main')->before($security);
 # search
 $app->get('/system/search/number/', 'main\controllers\system::search_number_form')->before($security);
 $app->post('/system/search/number/', 'main\controllers\system::search_number')->before($security);

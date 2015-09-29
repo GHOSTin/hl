@@ -549,11 +549,11 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->willReturn($this->default_params);
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
-                       ->setMethods(['findAll'])
+                       ->setMethods(['findBy'])
                        ->getMock();
     $repository->expects($this->once())
-               ->method('findAll')
-               ->with(['name' => 'ASC'])
+               ->method('findBy')
+               ->with([], ['name' => 'ASC'])
                ->willReturn('streets_array');
     $this->em->expects($this->once())
              ->method('getRepository')
@@ -699,7 +699,7 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\query')
              ->will($this->returnValue($repository));
     $model = new model($this->em, $this->session, $this->user, $this->twig);
-    $this->assertEquals('render_template', $model->noclose());
+    $model->noclose(1122);
   }
 
   public function test_save_params(){
