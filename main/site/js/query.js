@@ -109,10 +109,14 @@ $(document).ready(function(){
   });
   $('body').on('click', '.selection_noclose', function(){
     blank();
-    $.get('/queries/selections/noclose/',{
+    $.getJSON('/queries/selections/noclose/',{
       time: $(this).attr('time')
       },function(r){
-        $('.queries').html(r);
+        $('.queries').html(r.data);
+        var compiled = _.template($('#noclose_stats').html());
+        $('.day_stats').html(compiled(r.stats.stat));
+        var ctx = $("#chart").get(0).getContext("2d");
+        var myNewChart = new Chart(ctx).Pie(r.stats.chart.data, r.stats.chart.options);
       });
   });
 	$('body').on('click', '.get_search_result', function(){
