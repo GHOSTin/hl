@@ -1,9 +1,6 @@
-{% extends "ajax.tpl" %}
-
-{% block js %}
-  $('.street[street = {{ street_id }}]').append(get_hidden_content())
-{% endblock %}
-
-{% block html %}
-  {% include 'number/build_houses_titles.tpl' %}
-{% endblock %}
+<ol class="breadcrumb">
+  <li class="get_streets">
+    <a>Город</a>
+  </li>
+  <li class="active">{{ street.get_name() }}</li>
+</ol>

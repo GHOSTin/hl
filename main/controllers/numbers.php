@@ -19,7 +19,10 @@ class numbers{
     $n2e->set_time($time);
     $number->add_event($n2e);
     $app['em']->flush();
-    return $app['twig']->render('number\get_number_content.tpl', ['number' => $number]);
+    return $app['twig']->render('number\build_number_fio.tpl', [
+                                                                'number' => $number,
+                                                                'user' => $app['user']
+                                                               ]);
   }
 
   public function accruals(Request $request, Application $app){
@@ -54,7 +57,7 @@ class numbers{
     $number->exclude_event($n2e);
     $app['em']->remove($n2e);
     $app['em']->flush();
-    return $app['twig']->render('number\get_number_content.tpl',
+    return $app['twig']->render('number\build_number_fio.tpl',
                                 [
                                  'number' => $number,
                                  'user' => $app['user']
@@ -62,12 +65,12 @@ class numbers{
   }
 
   public function default_page(Application $app){
-    $streets = $app['\main\models\number']->get_streets();
-    return $app['twig']->render('number\default_page.tpl',
-                                [
-                                 'user' => $app['user'],
-                                 'streets' => $streets
-                                ]);
+    return $app['main\models\numbers']->default_page();
+  }
+
+  public function get_streets(Application $app){
+    $response =$app['main\models\numbers']->streets();
+    return $app->json($response);
   }
 
   public function get_dialog_add_event(Request $request, Application $app){
@@ -106,32 +109,24 @@ class numbers{
     return $app['twig']->render('number\get_events.tpl', ['workgroup' => $workgroup]);
   }
 
-  public function get_house_content(Request $request, Application $app){
-    $house = $app['em']->find('\domain\house', $request->get('id'));
-    return $app['twig']->render('number\get_house_content.tpl', ['house' => $house]);
+  public function get_house_content(Application $app, $id){
+    $response = $app['main\models\numbers']->get_house_content($id);
+    return $app->json($response);
   }
 
-  public function get_number_content(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
-    return $app['twig']->render('number\get_number_content.tpl',
-                                [
-                                 'number' => $number,
-                                 'user' => $app['user']
-                                ]);
+  public function get_number_content(Application $app, $id){
+    $response = $app['main\models\numbers']->get_number_content($id);
+    return $app->json($response);
   }
 
-  public function get_street_content(Request $request, Application $app){
-    $street_id = $request->get('id');
-    $houses = $app['\main\models\number']->get_houses_by_street($street_id);
-    return $app['twig']->render('number\get_street_content.tpl',
-                                [
-                                 'houses' => $houses,
-                                 'street_id' => $street_id
-                                ]);
+  public function get_street_content(Application $app, $id){
+    $street_model = $app['main\models\factory']->get_street_model($id);
+    $response = $app['main\models\numbers']->get_street_content($street_model);
+    return $app->json($response);
   }
 
-  public function query_of_house(Request $request, Application $app){
-    $house = $app['em']->find('\domain\house', $request->get('id'));
+  public function query_of_house(Application $app, $id){
+    $house = $app['em']->find('\domain\house', $id);
     return $app['twig']->render('number\query_of_house.tpl',
                                 [
                                  'user' => $app['user'],

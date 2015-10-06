@@ -25,10 +25,6 @@
 #search-number{
     margin: 0;
 }
-.streets, .houses, .numbers{
-    list-style:none;
-    border: none;
-}
 
 .streets.nav>li>a,
 .houses.nav>li>a,

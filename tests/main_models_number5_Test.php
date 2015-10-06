@@ -249,7 +249,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
                   );
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('number\update_number_fio.tpl', [
+               ->with('number/build_number_fio.tpl', [
                                                         'number' => $this->number,
                                                         'user' => $this->user
                                                       ])

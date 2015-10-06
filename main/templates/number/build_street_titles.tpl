@@ -1,5 +1,7 @@
-<ul class="streets span6 nav nav-tabs nav-stacked">
+<ul class="list-unstyled">
 {% for street in streets %}
-    {% include 'number/build_street_title.tpl' %}
+  <li>
+    <a class="get_street_content" street="{{ street.get_id() }}">{{ street.get_name() }}</a>
+  </li>
 {% endfor %}
 </ul>

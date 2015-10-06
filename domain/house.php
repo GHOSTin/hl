@@ -100,6 +100,14 @@ class house implements JsonSerializable{
     return $this->number;
   }
 
+  public function get_debt(){
+    $debt = 0;
+    foreach($this->numbers as $number){
+      $debt = $debt + $number->get_debt();
+    }
+    return $debt;
+  }
+
   public function get_numbers(){
     return $this->numbers;
   }

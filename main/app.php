@@ -106,6 +106,10 @@ $app['main\models\factory'] = function($app){
   return new models\factory($app);
 };
 
+$app['main\models\numbers'] = function($app){
+  return new models\numbers($app['twig'], $app['em'], $app['user']);
+};
+
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
@@ -279,9 +283,10 @@ $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics'
 
 # number
 $app->get('/number/', 'main\controllers\numbers::default_page')->before($security);
-$app->get('/number/get_street_content', 'main\controllers\numbers::get_street_content')->before($security);
-$app->get('/number/get_house_content', 'main\controllers\numbers::get_house_content')->before($security);
-$app->get('/number/get_number_content', 'main\controllers\numbers::get_number_content')->before($security);
+$app->get('/numbers/streets/', 'main\controllers\numbers::get_streets')->before($security);
+$app->get('/numbers/streets/{id}/', 'main\controllers\numbers::get_street_content')->before($security);
+$app->get('/numbers/houses/{id}/', 'main\controllers\numbers::get_house_content')->before($security);
+$app->get('/numbers/{id}/', 'main\controllers\numbers::get_number_content')->before($security);
 $app->get('/number/get_dialog_edit_number_fio', 'main\controllers\numbers::get_dialog_edit_number_fio')->before($security);
 $app->get('/number/update_number_fio', 'main\controllers\numbers::update_number_fio')->before($security);
 $app->get('/number/get_dialog_edit_number', 'main\controllers\numbers::get_dialog_edit_number')->before($security);
@@ -295,7 +300,7 @@ $app->get('/number/get_dialog_edit_number_email', 'main\controllers\numbers::get
 $app->get('/number/update_number_email', 'main\controllers\numbers::update_number_email')->before($security);
 $app->get('/number/get_dialog_edit_department', 'main\controllers\numbers::get_dialog_edit_department')->before($security);
 $app->get('/number/edit_department', 'main\controllers\numbers::edit_department')->before($security);
-$app->get('/number/query_of_house', 'main\controllers\numbers::query_of_house')->before($security);
+$app->get('/number/houses/{id}/queries/', 'main\controllers\numbers::query_of_house')->before($security);
 $app->get('/number/query_of_number', 'main\controllers\numbers::query_of_number')->before($security);
 $app->get('/number/accruals', 'main\controllers\numbers::accruals')->before($security);
 $app->get('/number/contact_info', 'main\controllers\numbers::contact_info')->before($security);
