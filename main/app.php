@@ -406,6 +406,7 @@ $app->get('/reports/queries/set_query_type/', 'main\controllers\report_queries::
 $app->get('/reports/queries/set_street/', 'main\controllers\report_queries::set_street')->before($security);
 $app->get('/reports/queries/set_house/', 'main\controllers\report_queries::set_house')->before($security);
 $app->get('/reports/queries/report1/', 'main\controllers\report_queries::report1')->before($security);
+$app->get('/reports/queries/report1/noclose/', 'main\controllers\report_queries::noclose')->before($security);
 $app->get('/reports/queries/report1/xls/', 'main\controllers\report_queries::report1_xls')->before($security);
 $app->get('/reports/event/', 'main\controllers\report_event::get_event_reports')->before($security);
 $app->get('/reports/event/set_time_begin', 'main\controllers\report_event::set_time_begin')->before($security);

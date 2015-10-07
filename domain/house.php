@@ -84,6 +84,10 @@ class house implements JsonSerializable{
     return $numbers;
   }
 
+  public function get_full_name(){
+    return $this->get_street()->get_name().', дом. №'.$this->number;
+  }
+
   public function get_department(){
     return $this->department;
   }

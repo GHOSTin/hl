@@ -157,7 +157,70 @@ class report_queries{
   public function report1(){
     $queries = $this->em->getRepository('domain\query')
                         ->findByParams($this->prepare_params());
-    return $this->twig->render('report\report_query_one.tpl', ['queries' => $queries]);
+    $worktypes = $this->em->getRepository('domain\workgroup')->findBy([], ['name' => 'ASC']);
+    return $this->twig->render('report\report_query_one.tpl', [
+                                                                'user' => $this->user,
+                                                                'stats' => $this->get_stats($queries, $worktypes),
+                                                                'worktypes' => $worktypes,
+                                                                'params' => $this->prepare_params()
+                                                              ]);
+  }
+
+  public function noclose(){
+    $params = $this->prepare_params();
+    $params['status'] = ['open', 'working', 'reopen'];
+    $queries = $this->em->getRepository('domain\query')
+                        ->findByParams($params);
+    $worktypes = $this->em->getRepository('domain\workgroup')->findBy([], ['name' => 'ASC']);
+    return $this->twig->render('report\noclose.tpl', [
+                                                                'user' => $this->user,
+                                                                'stats' => $this->get_stats($queries, $worktypes),
+                                                                'worktypes' => $worktypes,
+                                                                'params' => $params
+                                                              ]);
+  }
+
+  public function get_stats(array $queries, array $worktypes){
+    foreach($worktypes as $worktype){
+      $types[$worktype->get_name()] = 0;
+    }
+
+    $res['stat']['open'] = 0;
+    $res['stat']['working'] = 0;
+    $res['stat']['close'] = 0;
+    $res['stat']['reopen'] = 0;
+    $res['departments'] = [];
+    foreach($queries as $query){
+      $res['stat'][$query->get_status()] ++;
+      $department = $query->get_department()->get_name();
+      $house = $query->get_house()->get_full_name();
+      $type = $query->get_work_type()->get_name();
+      if(!isset($res['departments'][$department]['stat'])){
+        $res['departments'][$department]['stat']['open'] = 0;
+        $res['departments'][$department]['stat']['working'] = 0;
+        $res['departments'][$department]['stat']['close'] = 0;
+        $res['departments'][$department]['stat']['reopen'] = 0;
+      }
+      $res['departments'][$department]['stat'][$query->get_status()] ++;
+      if(!isset($res['departments'][$department]['houses'][$house]['stat'])){
+        $res['departments'][$department]['houses'][$house]['stat']['open'] = 0;
+        $res['departments'][$department]['houses'][$house]['stat']['working'] = 0;
+        $res['departments'][$department]['houses'][$house]['stat']['close'] = 0;
+        $res['departments'][$department]['houses'][$house]['stat']['reopen'] = 0;
+      }
+      $res['departments'][$department]['houses'][$house]['stat'][$query->get_status()] ++;
+      if(!isset($res['departments'][$department]['houses'][$house]['types'])){
+        $res['departments'][$department]['houses'][$house]['types'] = $types;
+      }
+      $res['departments'][$department]['houses'][$house]['types'][$type] ++;
+      if(!isset($res['departments'][$department]['types'])){
+        $res['departments'][$department]['types'] = $types;
+      }
+      $res['departments'][$department]['types'][$type] ++;
+    }
+
+    $res['stat']['sum'] = $res['stat']['open'] + $res['stat']['working'] + $res['stat']['close'] + $res['stat']['reopen'];
+    return $res;
   }
 
   public function report1_xls(){

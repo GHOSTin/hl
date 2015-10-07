@@ -24,9 +24,7 @@ $(document).ready(function(){
   <caption>Отчет в разрезе участков</caption>
   <thead>
     <th>Участок</th>
-    <th>Незакрытые</th>
-    <th>Закрытые</th>
-    <th>Всего заявок</th>
+    <th>Заявки</th>
     {% for wtype in worktypes %}
     <th>{{ wtype.get_name() }}</th>
     {% endfor %}
@@ -36,8 +34,6 @@ $(document).ready(function(){
     <tr>
       <td>{{ department }}</td>
       <td>{{ inf.stat.open + inf.stat.working + inf.stat.reopen }}</td>
-      <td>{{ inf.stat.close }}</td>
-      <td>{{ inf.stat.open + inf.stat.working + inf.stat.close + inf.stat.reopen }}</td>
     {% for wtype in worktypes %}
       <td>{{ inf.types[wtype.get_name()] }}</td>
     {% endfor %}
@@ -51,21 +47,24 @@ $(document).ready(function(){
   <thead>
     <th>Дом</th>
     <th>Участок</th>
+    <th>Заявки</th>
     {% for wtype in worktypes %}
     <th>{{ wtype.get_name() }}</th>
     {% endfor %}
   </thead>
   <tbody>
 {% for department, inf in stats.departments %}
-  {% for house, house_inf in inf.houses %}
-    <tr>
-      <td>{{ house }}</td>
-      <td>{{ department }}</td>
-    {% for wtype in worktypes %}
-      <td>{{ house_inf.types[wtype.get_name()] }}</td>
+    {% for house, house_inf in inf.houses %}
+      <tr>
+        <td>{{ house }}</td>
+        <td>{{ department }}</td>
+        <td>{{ house_inf.stat.open + house_inf.stat.working + house_inf.stat.reopen }}</td>
+      {% for wtype in worktypes %}
+        <td>{{ house_inf.types[wtype.get_name()] }}</td>
+      {% endfor %}
+      </tr>
     {% endfor %}
-    </tr>
-  {% endfor %}
+
 {% endfor %}
       </tbody>
     </table>
