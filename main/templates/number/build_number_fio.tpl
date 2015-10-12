@@ -13,6 +13,9 @@
             <li>
               <a href="/number/query_of_number?id={{ number.get_id() }}" target="_blank">Заявки ({{ number.get_queries().count() }})</a>
             </li>
+            <li>
+              <a href="/numbers/{{ number.get_id() }}/meterages/" target="_blank">Показания</a>
+            </li>
         </ul>
     </div>
     <div class="col-md-5">

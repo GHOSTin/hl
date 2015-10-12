@@ -206,6 +206,26 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $model->history());
   }
 
+  public function test_meterages(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\meterages.tpl', [
+                                              'number' => $this->number,
+                                              'user' => $this->user
+                                            ])
+               ->willReturn('render_template');
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->meterages());
+  }
+
   public function test_update_contacts_1(){
     $this->setExpectedException('RuntimeException');
     $this->user->expects($this->exactly(2))
