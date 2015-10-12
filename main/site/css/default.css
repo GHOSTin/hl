@@ -1,8 +1,8 @@
 @CHARSET "UTF-8";
 html,body{
 	height: 100%;
-    background-color: rgb(246,246,246);
-    font-family: "Open sans", Arial,sans-serif;
+  background-color: rgb(246,246,246);
+  font-family: "Open sans", Arial,sans-serif;
 }
 
 .main{margin-top: 60px}

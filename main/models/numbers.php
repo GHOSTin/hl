@@ -46,21 +46,15 @@ class numbers{
   }
 
   public function get_street_content(street $model){
-    $res['workspace'] = $this->twig->render('number\build_houses_titles.tpl',
-                                          [
-                                           'houses' => $model->get_houses()
-                                          ]);
-    $res['path'] = $this->twig->render('number\get_street_content.tpl',
-                                          [
-                                           'street' => $model->get_street()
-                                          ]);
+    $res['workspace'] = $this->twig->render('number\build_houses_titles.tpl', ['houses' => $model->get_houses()]);
+    $res['path'] = $this->twig->render('number\get_street_content.tpl', ['street' => $model->get_street()]);
     return $res;
   }
 
   public function get_house_content($id){
     $house = $this->em->find('domain\house', $id);
     $res['workspace'] = $this->twig->render('number/build_house_content.tpl', ['house' => $house]);
-    $res['path'] = $this->twig->render('number\get_house_content.tpl', ['house' => $house]);
+    $res['path'] = $this->twig->render('number/get_house_content.tpl', ['house' => $house]);
     return $res;
   }
 
@@ -71,12 +65,12 @@ class numbers{
                                  'number' => $number,
                                  'user' => $this->user
                                 ]);
-    $res['path'] = $this->twig->render('number\get_number_content.tpl', ['number' => $number]);
+    $res['path'] = $this->twig->render('number/get_number_content.tpl', ['number' => $number]);
     return $res;
   }
 
   public function streets(){
-    $res['workspace'] =  $this->twig->render('number\build_street_titles.tpl', ['streets' => $this->get_streets()]);
+    $res['workspace'] =  $this->twig->render('number/build_street_titles.tpl', ['streets' => $this->get_streets()]);
     return $res;
   }
 

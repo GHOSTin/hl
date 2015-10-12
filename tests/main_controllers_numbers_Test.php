@@ -147,32 +147,27 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_street_content(){
-    // $model = $this->getMockBuilder('main\models\numbers')
-    //               ->disableOriginalConstructor()
-    //               ->getMock();
-    // $model->expects($this->once())
-    //       ->method('get_street_content')
-    //       ->with(125)
-    //       ->will($this->returnValue('house_array'));
-    // $factory = $this->getMockBuilder('main\models\factory')
-    //               ->disableOriginalConstructor()
-    //               ->getMock();
-    // $factory->expects($this->once())
-    //         ->method('get_street_model')
-    //         ->with(125)
-    //         ->willReturn($model);
-    // $this->app['main\models\factory'] = $factory;
-    // $this->app['main\models\numbers'] = $model;
-    // $this->app['twig']->expects($this->once())
-    //                   ->method('render')
-    //                   ->with('number\get_street_content.tpl',
-    //                          [
-    //                           'houses' => 'house_array',
-    //                           'street_id' => 125
-    //                          ])
-    //                   ->will($this->returnValue('render_template'));
-    // $response = $this->controller->get_street_content($this->app, 125);
-    // $this->assertEquals('render_template', $response);
+    $model = $this->getMockBuilder('main\models\numbers')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_street_content')
+          ->with($this->isInstanceOf('main\models\street'))
+          ->will($this->returnValue(['house_array']));
+    $street_model = $this->getMockBuilder('main\models\street')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $factory = $this->getMockBuilder('main\models\factory')
+                    ->disableOriginalConstructor()
+                    ->getMock();
+    $factory->expects($this->once())
+            ->method('get_street_model')
+            ->with(125)
+            ->willReturn($street_model);
+    $this->app['main\models\factory'] = $factory;
+    $this->app['main\models\numbers'] = $model;
+    $response = $this->controller->get_street_content($this->app, 125);
+    $this->assertEquals($this->app->json(['house_array']), $response);
   }
 
   public function test_get_dialog_edit_department(){
@@ -202,15 +197,6 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_house_content(){
-    // $this->app['em']->expects($this->once())
-    //                 ->method('find')
-    //                 ->with('\domain\house', 125)
-    //                 ->will($this->returnValue('house_object'));
-    // $this->app['twig']->expects($this->once())
-    //                   ->method('render')
-    //                   ->with('number\get_house_content.tpl',
-    //                          ['house' => 'house_object'])
-    //                   ->will($this->returnValue('render_template'));
     $model = $this->getMockBuilder('main\models\numbers')
                   ->disableOriginalConstructor()
                   ->getMock();
@@ -227,7 +213,7 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
     $this->app['user'] = 'user_object';
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\house', 125)
+                    ->with('domain\house', 125)
                     ->will($this->returnValue('house_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
@@ -244,7 +230,7 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
     $this->app['user'] = 'user_object';
     $this->app['em']->expects($this->once())
                     ->method('find')
-                    ->with('\domain\number', 125)
+                    ->with('domain\number', 125)
                     ->will($this->returnValue('number_object'));
     $this->app['twig']->expects($this->once())
                       ->method('render')
@@ -257,20 +243,6 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_number_content(){
-    // $this->request->query->set('id', 125);
-    // $this->app['em']->expects($this->once())
-    //                 ->method('find')
-    //                 ->with('\domain\number', 125)
-    //                 ->will($this->returnValue('number_object'));
-    // $this->app['user'] = 'user_object';
-    // $this->app['twig']->expects($this->once())
-    //                   ->method('render')
-    //                   ->with('number\get_number_content.tpl',
-    //                          [
-    //                           'number' => 'number_object',
-    //                           'user' => 'user_object'
-    //                          ])
-    //                   ->will($this->returnValue('render_template'));
     $model = $this->getMockBuilder('main\models\numbers')
                   ->disableOriginalConstructor()
                   ->getMock();

@@ -69,7 +69,7 @@ class numbers{
   }
 
   public function get_streets(Application $app){
-    $response =$app['main\models\numbers']->streets();
+    $response = $app['main\models\numbers']->streets();
     return $app->json($response);
   }
 
@@ -126,7 +126,7 @@ class numbers{
   }
 
   public function query_of_house(Application $app, $id){
-    $house = $app['em']->find('\domain\house', $id);
+    $house = $app['em']->find('domain\house', $id);
     return $app['twig']->render('number\query_of_house.tpl',
                                 [
                                  'user' => $app['user'],
@@ -135,7 +135,7 @@ class numbers{
   }
 
   public function query_of_number(Request $request, Application $app){
-    $number = $app['em']->find('\domain\number', $request->get('id'));
+    $number = $app['em']->find('domain\number', $request->get('id'));
     return $app['twig']->render('number\query_of_number.tpl',
                                 [
                                  'user' => $app['user'],
