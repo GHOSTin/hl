@@ -8,9 +8,9 @@
             event: {{ n2e.get_id() }},
             date: {{ n2e.get_time() }}
         },function(r){
-          $('.number[number="{{ n2e.get_number().get_id() }}"] .number-content').remove();
-          init_content(r);
           $('.dialog').modal('hide');
+          $('.workspace').html(r);
+          $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
         });
     });
 {% endblock %}

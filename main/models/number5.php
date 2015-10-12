@@ -82,7 +82,7 @@ class number5{
                                     implode('', $email_matches[0])
                                   );
     $this->em->flush();
-    return $this->twig->render('number\update_number_fio.tpl',
+    return $this->twig->render('number/build_number_fio.tpl',
                                 [
                                  'number' => $this->number,
                                  'user' => $this->user

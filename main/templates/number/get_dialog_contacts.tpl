@@ -34,7 +34,8 @@
       email: $('.dialog-input-email').val()
 		},function(r){
 			$('.dialog').modal('hide');
-			init_content(r);
+			$('.workspace').html(r);
+      $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
 		});
 	});
   $('.dialog-input-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});

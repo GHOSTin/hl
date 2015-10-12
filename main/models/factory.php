@@ -17,4 +17,8 @@ class factory{
   public function get_query_type_model($id){
     return new query_type($this->app['em'], $this->app['user'], $id);
   }
+
+  public function get_street_model($id){
+    return new street($this->app['em'], $this->app['user'], $id);
+  }
 }

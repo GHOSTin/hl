@@ -1,13 +1,9 @@
-{% extends "ajax.tpl" %}
-
-{% block js %}
-  $('.house[house = {{ house.get_id() }}]').append(get_hidden_content())
-{% endblock %}
-
-{% block html %}
-<div class="house-content">
-  <div class="house-content-content">
-  {% include 'number/build_house_content.tpl'%}
-  </div>
-</div>
-{% endblock %}
+<ol class="breadcrumb">
+  <li class="get_streets">
+    <a>Город</a>
+  </li>
+  <li class="get_street_content" street="{{ house.get_street().get_id() }}">
+    <a>{{ house.get_street().get_name() }}</a>
+  </li>
+  <li class="active">дом №{{ house.get_number() }}</li>
+</ol>

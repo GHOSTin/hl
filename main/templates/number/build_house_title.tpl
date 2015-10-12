@@ -1,1 +1,0 @@
-<li class="house" house="{{ house.get_id() }}"><a class="get_house_content">дом №{{ house.get_number() }}</a></li>

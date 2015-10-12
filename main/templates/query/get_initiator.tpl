@@ -65,7 +65,7 @@
         <div>
         {{ number.get_flat().get_house().get_street().get_name() }}, дом №{{ number.get_flat().get_house().get_number() }}, кв.{{ number.get_flat().get_number() }}, {{ number.get_fio() }}(л/с №{{ number.get_number() }})
   				<ul>
-            <li>Задолженость: {{ number.get_debt() }} руб.</li>
+            <li>Задолженость: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</li>
   				</ul>
         </div>
 		{% else %}

@@ -59,7 +59,7 @@
 	{% if query.get_initiator() == 'number' %}
 		<li>Владелец: {{ number.get_fio() }}</li>
 		<li>Лицевой счет: №{{ number.get_number() }}</li>
-    <li>Задолженость: <strong>{{ number.get_debt()}} руб.</strong></li>
+    <li>Задолженость: <strong>{{ number.get_debt()|number_format(2, '.', ' ') }} руб.</strong></li>
 	{% endif %}
 		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
