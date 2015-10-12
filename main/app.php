@@ -316,6 +316,7 @@ $app->get('/numbers/{id}/generate_password/', 'main\controllers\number::generate
 $app->get('/numbers/{id}/contacts/', 'main\controllers\number::get_dialog_contacts')->before($security);
 $app->post('/numbers/{id}/contacts/', 'main\controllers\number::update_contacts')->before($security);
 $app->get('/numbers/{id}/contacts/history/', 'main\controllers\number::history')->before($security);
+$app->get('/numbers/{id}/meterages/', 'main\controllers\number::meterages')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);

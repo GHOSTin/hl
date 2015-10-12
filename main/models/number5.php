@@ -65,6 +65,13 @@ class number5{
                                                       ]);
   }
 
+  public function meterages(){
+    return $this->twig->render('number\meterages.tpl', [
+                                                        'number' => $this->number,
+                                                        'user' => $this->user
+                                                       ]);
+  }
+
   public function update_contacts($fio, $tellphone, $cellphone, $email){
     if(!$this->user->check_access('numbers/contacts'))
       throw new RuntimeException();
