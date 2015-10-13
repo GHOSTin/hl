@@ -13,6 +13,15 @@ $(document).ready(function(){
       function(r){
         $('.workspace').html(r['workspace']);
         $('.workspace-path').empty();
+        $('.nav > li').removeClass('active');
+        $('.get_streets').addClass('active');
+      });
+    }).on('click', '.get_outages', function(){
+      $.getJSON('/numbers/outages/',
+      function(r){
+        $('.workspace').html(r['workspace']);
+        $('.nav > li').removeClass('active');
+        $('.get_outages').addClass('active');
       });
 
     }).on('click', '.get_house_content', function(){

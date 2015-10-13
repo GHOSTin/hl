@@ -110,6 +110,10 @@ $app['main\models\numbers'] = function($app){
   return new models\numbers($app['twig'], $app['em'], $app['user']);
 };
 
+$app['main\models\outages'] = function($app){
+  return new models\outages($app['twig'], $app['em'], $app['user']);
+};
+
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
@@ -281,6 +285,7 @@ $app->get('/metrics/archive/', 'main\controllers\metrics::archive')->before($sec
 $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->before($security);
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
 
+$app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);
 # number
 $app->get('/number/', 'main\controllers\numbers::default_page')->before($security);
 $app->get('/numbers/streets/', 'main\controllers\numbers::get_streets')->before($security);
