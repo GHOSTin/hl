@@ -1,6 +1,10 @@
 {% extends "default.tpl" %}
 
 {% block component %}
+<ul class="nav nav-pills">
+  <li role="presentation" class="active get_streets"><a href="#">Улицы</a></li>
+  <li role="presentation" class="get_outages"><a href="#">Отключения</a></li>
+</ul>
 <div class="row">
   <div class="col-md-12 workspace-path"></div>
 </div>
