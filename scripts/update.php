@@ -19,39 +19,28 @@ $dbParams = array(
 );
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
-$houses = $em->getRepository('domain\house')->findBy([], []);
-foreach($houses as $house){
-  print($house->get_street()->get_name().', №'.$house->get_number().PHP_EOL);
-  foreach($house->get_numbers() as $number){
-    $queries = $number->get_queries();
-    foreach($queries as $query){
-      if($query->get_initiator() == 'number'){
-        if(empty($number->get_telephone()))
-         update_telephone($number, $query->get_contact_telephone());
-       if(empty($number->get_cellphone()))
-         update_cellphone($number, $query->get_contact_cellphone());
-      }
-    }
-  }
-  $em->flush();
-}
+$pdo = $em->getConnection();
 
-function update_telephone(number $number, $telephone){
-  preg_match_all('/[0-9]/', $telephone, $tellphone_matches);
-  $telephone = implode('', $tellphone_matches[0]);
-  if(strlen($telephone) === 6){
-    $number->set_telephone($telephone);
-    print $number->get_number()." update telephone ".$telephone.PHP_EOL;
-  }
-}
+$queries[] = 'CREATE TABLE outage(
+                id INT UNSIGNED NOT NULL,
+                begin INT UNSIGNED NOT NULL,
+                target INT UNSIGNED NOT NULL,
+                category_id INT UNSIGNED NOT NULL,
+                user_id INT UNSIGNED NOT NULL,
+                description VARCHAR(255) NOT NULL,
+                PRIMARY KEY (id)
+              )';
 
-function update_cellphone(number $number, $cellphone){
-  preg_match_all('/[0-9]/', $cellphone, $matches);
-  $cellphone = implode('', $matches[0]);
-  if(preg_match('|^[78]|', $cellphone))
-    $cellphone = substr($cellphone, 1, 10);
-  if(strlen($cellphone) === 10){
-    $number->set_cellphone($cellphone);
-    print $number->get_number()." update cellphone ".$cellphone.PHP_EOL;
-  }
-}
+$queries[] = 'CREATE TABLE outage2house(
+                outage_id INT UNSIGNED NOT NULL,
+                house_id INT UNSIGNED NOT NULL,
+                PRIMARY KEY(outage_id, house_id)
+              )';
+
+$queries[] = 'CREATE TABLE outage2performer(
+                outage_id INT UNSIGNED NOT NULL,
+                user_id INT UNSIGNED NOT NULL,
+                PRIMARY KEY(outage_id, user_id)
+              )';
+foreach($queries as $query)
+  $pdo->exec($query);

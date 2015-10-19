@@ -16,6 +16,7 @@ $(document).ready(function(){
         $('.nav > li').removeClass('active');
         $('.get_streets').addClass('active');
       });
+
     }).on('click', '.get_outages', function(){
       $.getJSON('/numbers/outages/',
       function(r){
@@ -23,6 +24,12 @@ $(document).ready(function(){
         $('.nav > li').removeClass('active');
         $('.get_outages').addClass('active');
       });
+
+    }).on('click', '.get_dialog_create_outage', function(){
+      $.get('/numbers/outages/dialogs/create/',
+        function(r){
+          init_content(r);
+        });
 
     }).on('click', '.get_house_content', function(){
       var id = $(this).attr('house');

@@ -52,10 +52,17 @@ class house implements JsonSerializable{
   */
   private $queries;
 
+  /**
+  * @ManyToMany(targetEntity="domain\outage", mappedBy="houses")
+  */
+  private $outages;
+
+
   public function __construct(){
     $this->numbers = new ArrayCollection();
     $this->flats = new ArrayCollection();
     $this->queries = new ArrayCollection();
+    $this->outages = new ArrayCollection();
     $this->status = 'true';
   }
 
@@ -148,5 +155,9 @@ class house implements JsonSerializable{
     if(!preg_match('|^[0-9]{1,3}[/]{0,1}[А-Яа-я0-9]{0,2}$|u', $number))
       throw new DomainException('Номер дома "'.$number.'" задан не верно.');
     $this->number = $number;
+  }
+
+  public function get_address(){
+    return $this->street->get_name().', дом №'.$this->number;
   }
 }

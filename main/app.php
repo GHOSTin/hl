@@ -286,6 +286,11 @@ $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->be
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
 
 $app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);
+$app->get('/numbers/outages/dialogs/create/', 'main\controllers\outages::dialog_create')->before($security);
+$app->get('/numbers/outages/streets/{id}/houses/', 'main\controllers\outages::houses')->before($security);
+$app->get('/numbers/outages/groups/{id}/users/', 'main\controllers\outages::users')->before($security);
+$app->post('/numbers/outages/', 'main\controllers\outages::create')->before($security);
+
 # number
 $app->get('/number/', 'main\controllers\numbers::default_page')->before($security);
 $app->get('/numbers/streets/', 'main\controllers\numbers::get_streets')->before($security);

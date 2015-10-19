@@ -2,6 +2,7 @@
 
 use Silex\Application;
 use main\controllers\outages as controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
 
@@ -11,7 +12,32 @@ class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
                         ->getMock();
     $this->app = new Application();
     $this->controller = new controller();
+    $this->request = new Request();
     $this->app['main\models\outages'] = $this->model;
+  }
+
+  public function test_create(){
+    $this->request->request->set('begin', '21.12.1984');
+    $this->request->request->set('target', '21.12.1984');
+    $this->request->request->set('type', 126);
+    $this->request->request->set('houses', [1, 6]);
+    $this->request->request->set('performers', [2, 3]);
+    $this->request->request->set('description', 'привет');
+    $this->model->expects($this->once())
+                ->method('create')
+                ->with(
+                        472460400,
+                        472460400,
+                        126,
+                        [1, 6],
+                        [2, 3],
+                        'привет'
+                      );
+    $this->model->expects($this->once())
+                ->method('default_page')
+                ->willReturn(['render_template']);
+    $response = $this->controller->create($this->app, $this->request);
+    $this->assertEquals($this->app->json(['render_template']), $response);
   }
 
   public function test_default_page(){
@@ -20,5 +46,31 @@ class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
                 ->willReturn(['render_template']);
     $response = $this->controller->default_page($this->app);
     $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
+  public function test_dialog_create(){
+    $this->model->expects($this->once())
+                ->method('dialog_create')
+                ->willReturn('render_template');
+    $response = $this->controller->dialog_create($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_houses(){
+    $this->model->expects($this->once())
+                ->method('houses')
+                ->with(125)
+                ->willReturn('render_template');
+    $response = $this->controller->houses($this->app, 125);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_users(){
+    $this->model->expects($this->once())
+                ->method('users')
+                ->with(125)
+                ->willReturn('render_template');
+    $response = $this->controller->users($this->app, 125);
+    $this->assertEquals('render_template', $response);
   }
 }
