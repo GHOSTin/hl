@@ -296,6 +296,7 @@ $app->get('/number/', 'main\controllers\numbers::default_page')->before($securit
 $app->get('/numbers/streets/', 'main\controllers\numbers::get_streets')->before($security);
 $app->get('/numbers/streets/{id}/', 'main\controllers\numbers::get_street_content')->before($security);
 $app->get('/numbers/houses/{id}/', 'main\controllers\numbers::get_house_content')->before($security);
+$app->get('/numbers/houses/{id}/outages/', 'main\controllers\numbers::outages')->before($security);
 $app->get('/numbers/{id}/', 'main\controllers\numbers::get_number_content')->before($security);
 $app->get('/number/get_dialog_edit_number_fio', 'main\controllers\numbers::get_dialog_edit_number_fio')->before($security);
 $app->get('/number/update_number_fio', 'main\controllers\numbers::update_number_fio')->before($security);

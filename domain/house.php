@@ -54,9 +54,9 @@ class house implements JsonSerializable{
 
   /**
   * @ManyToMany(targetEntity="domain\outage", mappedBy="houses")
+  * @OrderBy({"begin" = "DESC"})
   */
   private $outages;
-
 
   public function __construct(){
     $this->numbers = new ArrayCollection();
@@ -101,6 +101,10 @@ class house implements JsonSerializable{
 
   public function get_id(){
     return $this->id;
+  }
+
+  public function get_outages(){
+    return $this->outages;
   }
 
   public function get_number(){

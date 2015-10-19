@@ -118,6 +118,27 @@ class main_model_numbers_Test extends PHPUnit_Framework_TestCase{
                       );
   }
 
+  public function test_get_outages(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\house', 125)
+             ->willReturn('house_object');
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number/outages.tpl',
+                          [
+                            'house' => 'house_object',
+                            'user' => $this->user
+                          ])
+               ->willReturn('render_template');
+    $model = new model($this->twig, $this->em, $this->user);
+    $this->assertEquals('render_template', $model->get_outages(125));
+  }
+
   public function test_get_number_content(){
     $this->user->expects($this->once())
                ->method('check_access')
