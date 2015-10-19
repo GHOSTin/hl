@@ -32,10 +32,11 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn(true);
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
-                       ->setMethods(['findAll'])
+                       ->setMethods(['findBy'])
                        ->getMock();
     $repository->expects($this->once())
-               ->method('findAll')
+               ->method('findBy')
+               ->with([], ['begin' => 'DESC'])
                ->willReturn('outages_array');
     $this->em->expects($this->once())
                ->method('getRepository')

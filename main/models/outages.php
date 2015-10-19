@@ -31,7 +31,7 @@ class outages{
   }
 
   public function default_page(){
-    $outages = $this->em->getRepository('domain\outage')->findAll();
+    $outages = $this->em->getRepository('domain\outage')->findBy([], ['begin' => 'DESC']);
     return [
             'workspace' => $this->twig->render('outages/default_page.tpl', ['outages' => $outages])
            ];

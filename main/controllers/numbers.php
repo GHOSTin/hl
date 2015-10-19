@@ -119,6 +119,10 @@ class numbers{
     return $app->json($response);
   }
 
+  public function outages(Application $app, $id){
+    return $app['main\models\numbers']->get_outages($id);
+  }
+
   public function get_street_content(Application $app, $id){
     $street_model = $app['main\models\factory']->get_street_model($id);
     $response = $app['main\models\numbers']->get_street_content($street_model);

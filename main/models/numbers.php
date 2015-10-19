@@ -58,6 +58,14 @@ class numbers{
     return $res;
   }
 
+  public function get_outages($id){
+    $house = $this->em->find('domain\house', $id);
+    return $this->twig->render('number/outages.tpl', [
+                                                      'house' => $house,
+                                                      'user' => $this->user
+                                                      ]);
+  }
+
   public function get_number_content($id){
     $number = $this->em->find('domain\number', $id);
     $res['workspace'] = $this->twig->render('number/build_number_fio.tpl',

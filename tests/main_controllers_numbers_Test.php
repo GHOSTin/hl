@@ -209,6 +209,32 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals($this->app->json(['render_template']), $response);
   }
 
+  public function test_get_outages(){
+    $model = $this->getMockBuilder('main\models\numbers')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_outages')
+          ->with(125)
+          ->willReturn('render_template');
+    $this->app['main\models\numbers'] = $model;
+    $response = $this->controller->outages($this->app, 125);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_outages(){
+    $model = $this->getMockBuilder('main\models\numbers')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_outages')
+          ->with(125)
+          ->willReturn('render_template');
+    $this->app['main\models\numbers'] = $model;
+    $response = $this->controller->outages($this->app, 125);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_query_of_house(){
     $this->app['user'] = 'user_object';
     $this->app['em']->expects($this->once())
