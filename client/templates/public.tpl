@@ -12,10 +12,12 @@
     {% block css %}{% endblock css %}
   </head>
   <body class="public">
-    <div class="container wrap">
-      <div class="row">{% block content %}{% endblock content %}</div>
+    <div class="wrap">
+      <div class="container">
+        <div class="row">{% block content %}{% endblock content %}</div>
+      </div>
     </div>
-    <footer>
+    <footer class="container-fluid">
       <div class="col-md-6">
         <small style="line-height: 40px">2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru">"Основные локальные сервисы."</a></small>
       </div>
