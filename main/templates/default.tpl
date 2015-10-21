@@ -29,7 +29,7 @@
   </div>
   <footer>
     <div class="container">
-      <p class="col-xs-12 muted credit">Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a></p>
+      <p class="col-xs-12 muted credit text-right">Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a></p>
     </div>
   </footer>
   <div id="modal" class="modal fade"></div>
