@@ -1,6 +1,11 @@
 {% extends "default.tpl" %}
 
 {% block component %}
+<!-- scroller -->
+  <div class="scroll-to-top">
+    <i class="fa fa-angle-up"></i>
+  </div>
+<!-- /scroller -->
 <!-- left block -->
 <div class="col-sm-3 col-lg-3">
   <div class="row">
