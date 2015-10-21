@@ -65,6 +65,38 @@ class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_today(){
+    $this->model->expects($this->once())
+                ->method('today')
+                ->willReturn(['render_template']);
+    $response = $this->controller->today($this->app);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
+  public function test_yesterday(){
+    $this->model->expects($this->once())
+                ->method('yesterday')
+                ->willReturn(['render_template']);
+    $response = $this->controller->yesterday($this->app);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
+  public function test_week(){
+    $this->model->expects($this->once())
+                ->method('week')
+                ->willReturn(['render_template']);
+    $response = $this->controller->week($this->app);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
+  public function test_lastweek(){
+    $this->model->expects($this->once())
+                ->method('lastweek')
+                ->willReturn(['render_template']);
+    $response = $this->controller->lastweek($this->app);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
   public function test_users(){
     $this->model->expects($this->once())
                 ->method('users')
