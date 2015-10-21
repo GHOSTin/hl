@@ -330,16 +330,19 @@ div[class^=chat-col-]{
     background: rgb(99,99,99);
 }
 
-
-@media (min-width: 48em){
-    .modal{
-        min-width: 560px;
-    }
+@media (min-width: 32em){
     .scroll-to-top {
         opacity: 1;
     }
     .credit {
         margin-left: 40px;
+    }
+}
+
+
+@media (min-width: 48em){
+    .modal{
+        min-width: 560px;
     }
 }
 
