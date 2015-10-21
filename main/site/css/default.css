@@ -5,6 +5,10 @@ html,body{
   font-family: "Open sans", Arial,sans-serif;
 }
 
+a {
+    cursor: pointer;
+}
+
 .main{margin-top: 60px}
 
 .navbar .btn-navbar.pull-left {
@@ -331,18 +335,19 @@ div[class^=chat-col-]{
 }
 
 @media (min-width: 32em){
-    .scroll-to-top {
-        opacity: 1;
-    }
-    .credit {
-        margin-left: 40px;
-    }
+
 }
 
 
 @media (min-width: 48em){
     .modal{
         min-width: 560px;
+    }
+    .scroll-to-top {
+        opacity: 1;
+    }
+    .credit {
+        margin-left: 40px;
     }
 }
 
