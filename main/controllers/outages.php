@@ -32,6 +32,26 @@ class outages{
     return $app['main\models\outages']->houses($id);
   }
 
+  public function today(Application $app){
+    $response = $app['main\models\outages']->today();
+    return $app->json($response);
+  }
+
+  public function yesterday(Application $app){
+    $response = $app['main\models\outages']->yesterday();
+    return $app->json($response);
+  }
+
+  public function week(Application $app){
+    $response = $app['main\models\outages']->week();
+    return $app->json($response);
+  }
+
+  public function lastweek(Application $app){
+    $response = $app['main\models\outages']->lastweek();
+    return $app->json($response);
+  }
+
   public function users(Application $app, $id){
     return $app['main\models\outages']->users($id);
   }
