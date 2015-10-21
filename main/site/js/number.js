@@ -25,6 +25,30 @@ $(document).ready(function(){
         $('.get_outages').addClass('active');
       });
 
+    }).on('click', '.get_today_outages', function(){
+        $.getJSON('/numbers/outages/today/',
+        function(r){
+          $('.outages').html(r['outages']);
+        });
+
+    }).on('click', '.get_yesterday_outages', function(){
+        $.getJSON('/numbers/outages/yesterday/',
+        function(r){
+          $('.outages').html(r['outages']);
+        });
+
+    }).on('click', '.get_week_outages', function(){
+        $.getJSON('/numbers/outages/week/',
+        function(r){
+          $('.outages').html(r['outages']);
+        });
+
+    }).on('click', '.get_last_week_outages', function(){
+        $.getJSON('/numbers/outages/lastweek/',
+        function(r){
+          $('.outages').html(r['outages']);
+        });
+
     }).on('click', '.get_dialog_create_outage', function(){
       $.get('/numbers/outages/dialogs/create/',
         function(r){

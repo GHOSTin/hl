@@ -53,6 +53,34 @@ class outages{
     return $this->twig->render('outages/houses.tpl', ['street' => $street]);
   }
 
+  public function today(){
+    $outages = $this->em->getRepository('domain\outage')->today();
+    return [
+            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+           ];
+  }
+
+  public function yesterday(){
+    $outages = $this->em->getRepository('domain\outage')->yesterday();
+    return [
+            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+           ];
+  }
+
+  public function week(){
+    $outages = $this->em->getRepository('domain\outage')->week();
+    return [
+            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+           ];
+  }
+
+  public function lastweek(){
+    $outages = $this->em->getRepository('domain\outage')->lastweek();
+    return [
+            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+           ];
+  }
+
   public function users($id){
     $group = $this->em->getRepository('domain\group')->findOneById($id);
     return $this->twig->render('outages/users.tpl', ['group' => $group]);

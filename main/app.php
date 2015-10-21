@@ -290,6 +290,10 @@ $app->get('/numbers/outages/dialogs/create/', 'main\controllers\outages::dialog_
 $app->get('/numbers/outages/streets/{id}/houses/', 'main\controllers\outages::houses')->before($security);
 $app->get('/numbers/outages/groups/{id}/users/', 'main\controllers\outages::users')->before($security);
 $app->post('/numbers/outages/', 'main\controllers\outages::create')->before($security);
+$app->get('/numbers/outages/today/', 'main\controllers\outages::today')->before($security);
+$app->get('/numbers/outages/yesterday/', 'main\controllers\outages::yesterday')->before($security);
+$app->get('/numbers/outages/week/', 'main\controllers\outages::week')->before($security);
+$app->get('/numbers/outages/lastweek/', 'main\controllers\outages::lastweek')->before($security);
 
 # number
 $app->get('/number/', 'main\controllers\numbers::default_page')->before($security);

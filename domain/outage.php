@@ -7,7 +7,7 @@ use domain\user;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
-* @Entity
+* @Entity(repositoryClass="domain\repositories\outage")
 */
 class outage{
 
