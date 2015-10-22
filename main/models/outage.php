@@ -3,11 +3,7 @@
 use RuntimeException;
 use Twig_Environment;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\HttpFoundation\Response;
 use domain\user;
-use domain\number;
-use Swift_Message;
-use Swift_Mailer;
 
 class outage{
 
