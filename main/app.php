@@ -285,11 +285,14 @@ $app->get('/metrics/archive/', 'main\controllers\metrics::archive')->before($sec
 $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->before($security);
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
 
+# outages
 $app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);
 $app->get('/numbers/outages/dialogs/create/', 'main\controllers\outages::dialog_create')->before($security);
 $app->get('/numbers/outages/streets/{id}/houses/', 'main\controllers\outages::houses')->before($security);
 $app->get('/numbers/outages/groups/{id}/users/', 'main\controllers\outages::users')->before($security);
 $app->post('/numbers/outages/', 'main\controllers\outages::create')->before($security);
+$app->get('/numbers/outages/{id}/edit/', 'main\controllers\outages::edit')->before($security);
+$app->post('/numbers/outages/{id}/', 'main\controllers\outages::update')->before($security);
 $app->get('/numbers/outages/today/', 'main\controllers\outages::today')->before($security);
 $app->get('/numbers/outages/yesterday/', 'main\controllers\outages::yesterday')->before($security);
 $app->get('/numbers/outages/week/', 'main\controllers\outages::week')->before($security);

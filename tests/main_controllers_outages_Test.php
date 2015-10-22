@@ -56,6 +56,58 @@ class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_edit(){
+    $model = $this->getMockBuilder('main\models\outage')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_edit_dialog')
+          ->willReturn('render_template');
+    $factory = $this->getMockBuilder('main\models\factory')
+                    ->disableOriginalConstructor()
+                    ->getMock();
+    $factory->expects($this->once())
+            ->method('get_outage_model')
+            ->with('125')
+            ->willReturn($model);
+    $this->app['main\models\factory'] = $factory;
+    $response = $this->controller->edit($this->app, 125);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_update(){
+    $this->request->request->set('begin', '21.12.1984');
+    $this->request->request->set('target', '21.12.1984');
+    $this->request->request->set('type', 126);
+    $this->request->request->set('houses', [1, 6]);
+    $this->request->request->set('performers', [2, 3]);
+    $this->request->request->set('description', 'привет');
+    $model = $this->getMockBuilder('main\models\outage')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('update')
+          ->with(
+                  472460400,
+                  472460400,
+                  126,
+                  [1, 6],
+                  [2, 3],
+                  'привет'
+                )
+          ->willReturn(['render_template']);
+    $factory = $this->getMockBuilder('main\models\factory')
+                    ->disableOriginalConstructor()
+                    ->getMock();
+    $factory->expects($this->once())
+            ->method('get_outage_model')
+            ->with('125')
+            ->willReturn($model);
+    $this->app['main\models\factory'] = $factory;
+    $response = $this->controller->update($this->app, $this->request, 125);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
   public function test_houses(){
     $this->model->expects($this->once())
                 ->method('houses')
