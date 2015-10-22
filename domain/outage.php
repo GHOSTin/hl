@@ -105,6 +105,8 @@ class outage{
     $this->category = $category;
     $this->user = $user;
     $this->description = $description;
+    $this->houses->clear();
+    $this->performers->clear();
     foreach($houses as $house)
       $this->add_house($house);
     foreach($performers as $performer)

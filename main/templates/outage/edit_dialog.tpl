@@ -36,7 +36,7 @@
     </div>
     <ul class="houses">
     {% for house in outage.get_houses() %}
-      <li>{{ house.get_address() }}</li>
+      <li value="{{ house.get_id() }}">{{ house.get_address() }} <i class="fa fa-close remove_element"></i></li>
     {% endfor %}
     </ul>
   </div>
@@ -62,7 +62,7 @@
     </div>
     <ul class="performers">
     {% for performer in outage.get_performers() %}
-      <li>{{ performer.get_fio() }}</li>
+      <li value="{{ performer.get_id() }}">{{ performer.get_fio() }} <i class="fa fa-close remove_element"></i></li>
     {% endfor %}
     </ul>
   </div>
@@ -82,7 +82,7 @@
 {% endblock dialog %}
 
 {% block buttons %}
-	<div class="btn btn-primary update_outage">Создать</div>
+	<div class="btn btn-primary update_outage">Сохранить</div>
 {% endblock buttons %}
 
 {% block script %}
@@ -150,7 +150,7 @@
     var number = $('.dialog-select-house :selected').text();
     var street = $('.dialog-select-street :selected').text();
     if(id > 0){
-      $('.houses').append('<li value="' + id + '">' + street + ', ' + number + '</li>');
+      $('.houses').append('<li value="' + id + '">' + street + ', ' + number + ' <i class="fa fa-close remove_element"></i></li>');
       $('.add_house_content').hide();
       $('.add_house').show();
       $('.add_house_cancel').hide();
@@ -169,7 +169,7 @@
     var id = $('.dialog-select-user :selected').val();
     var user = $('.dialog-select-user :selected').text();
     if(id > 0){
-      $('.performers').append('<li value="' + id + '">' + user + '</li>');
+      $('.performers').append('<li value="' + id + '">' + user + ' <i class="fa fa-close remove_element"></i></li>');
       $('.add_performer_content').hide();
       $('.add_performer').show();
       $('.add_performer_cancel').hide();
