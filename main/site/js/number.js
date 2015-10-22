@@ -123,5 +123,8 @@ $(document).ready(function(){
           ,function(r){
               init_content(r);
           });
+    }).on('click', '.remove_element',  function(){
+      $(this).parent().remove();
     });
+
 });

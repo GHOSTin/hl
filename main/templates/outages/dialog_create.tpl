@@ -145,7 +145,7 @@
     var number = $('.dialog-select-house :selected').text();
     var street = $('.dialog-select-street :selected').text();
     if(id > 0){
-      $('.houses').append('<li value="' + id + '">' + street + ', ' + number + '</li>');
+      $('.houses').append('<li value="' + id + '">' + street + ', ' + number + ' <i class="fa fa-close remove_element"></i></li>');
       $('.add_house_content').hide();
       $('.add_house').show();
       $('.add_house_cancel').hide();
@@ -164,7 +164,7 @@
     var id = $('.dialog-select-user :selected').val();
     var user = $('.dialog-select-user :selected').text();
     if(id > 0){
-      $('.performers').append('<li value="' + id + '">' + user + '</li>');
+      $('.performers').append('<li value="' + id + '">' + user + ' <i class="fa fa-close remove_element"></i></li>');
       $('.add_performer_content').hide();
       $('.add_performer').show();
       $('.add_performer_cancel').hide();
