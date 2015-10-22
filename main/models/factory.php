@@ -21,4 +21,8 @@ class factory{
   public function get_street_model($id){
     return new street($this->app['em'], $this->app['user'], $id);
   }
+
+  public function get_outage_model($id){
+    return new outage($this->app['twig'], $this->app['em'], $this->app['user'], $id);
+  }
 }

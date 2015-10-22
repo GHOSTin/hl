@@ -55,6 +55,13 @@ $(document).ready(function(){
           init_content(r);
         });
 
+    }).on('click', '.edit_outage', function(){
+      var id = $(this).attr('outage');
+      $.get('/numbers/outages/' + id + '/edit/',
+        function(r){
+          init_content(r);
+        });
+
     }).on('click', '.get_house_content', function(){
       var id = $(this).attr('house');
       $.getJSON('/numbers/houses/' + id + '/',

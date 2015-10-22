@@ -28,6 +28,24 @@ class outages{
     return $app['main\models\outages']->dialog_create();
   }
 
+  public function edit(Application $app, $id){
+    $model = $app['main\models\factory']->get_outage_model($id);
+    return $model->get_edit_dialog();
+  }
+
+  public function update(Application $app, Request $request, $id){
+    $model = $app['main\models\factory']->get_outage_model($id);
+    $response = $model->update(
+                                strtotime('12:00 '. $request->get('begin')),
+                                strtotime('12:00 '. $request->get('target')),
+                                $request->get('type'),
+                                $request->get('houses'),
+                                $request->get('performers'),
+                                $request->get('description')
+                                );
+    return $app->json($response);
+  }
+
   public function houses(Application $app, $id){
     return $app['main\models\outages']->houses($id);
   }

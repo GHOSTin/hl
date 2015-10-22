@@ -59,6 +59,10 @@ class outage{
     $this->performers = new ArrayCollection();
   }
 
+  public function get_id(){
+    return $this->id;
+  }
+
   public function get_target(){
     return $this->target;
   }
@@ -93,6 +97,18 @@ class outage{
 
   public function add_performer(user $user){
     $this->performers->add($user);
+  }
+
+  public function update($begin, $target, workgroup $category, user $user, array $houses, array $performers, $description){
+    $this->begin = $begin;
+    $this->target = $target;
+    $this->category = $category;
+    $this->user = $user;
+    $this->description = $description;
+    foreach($houses as $house)
+      $this->add_house($house);
+    foreach($performers as $performer)
+      $this->add_performer($performer);
   }
 
   public static function new_instance($begin, $target, workgroup $category, user $user, array $houses, array $performers, $description){
