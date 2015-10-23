@@ -88,61 +88,64 @@
 
 {% block script %}
 $(document).ready(function() {
-  $('#createOutage')
-  .formValidation({
-    framework: 'bootstrap',
-    excluded: ':disabled',
-    icon: {
-      valid: 'fa fa-check',
-      invalid: 'fa fa-times',
-      validating: 'fa fa-refresh'
-    },
-    fields: {
-      workgroup: {
-        validators: {
-          notEmpty: {
-            message: 'Выберите тип услуги'
+  $('.dialog')
+    .on('shown.bs.modal', function() {
+      $('#createOutage')
+      .formValidation({
+        framework: 'bootstrap',
+        excluded: ':disabled',
+        icon: {
+          valid: 'fa fa-check',
+          invalid: 'fa fa-times',
+          validating: 'fa fa-refresh'
+        },
+        fields: {
+          workgroup: {
+            validators: {
+              notEmpty: {
+                message: 'Выберите тип услуги'
+              }
+            }
+          },
+          description: {
+            validators: {
+              notEmpty: {
+                message: 'Введите описание отключения'
+              }
+            }
           }
         }
-      },
-      description: {
-        validators: {
-          notEmpty: {
-            message: 'Введите описание отключения'
-          }
-        }
-      }
-    }
-  })
-  .on('success.form.fv', function(e) {
-  // Prevent form submission
-    e.preventDefault();
+      })
+      .on('success.form.fv', function(e) {
+      // Prevent form submission
+        e.preventDefault();
 
-    var $form      = $(e.target),
-        fv         = $(e.target).data('formValidation'),
-        houses     = [],
-        performers = [],
-        begin      = $form.find('.dialog-begin').val(),
-        target     = $form.find('.dialog-target').val();
-    $('.houses > li').each(function(){
-      houses.push($(this).attr('value'));
-    });
-    $('.performers > li').each(function(){
-      performers.push($(this).attr('value'));
-    });
-    $.post('/numbers/outages/',{
-        description: $form.find('.dialog-description').val(),
-        type: $form.find('.dialog-type').val(),
-        houses: houses,
-        performers: performers,
-        begin: begin,
-        target: target
-      },function(response){
-        $('.dialog').modal('hide');
-        $('.workspace').html(response['workspace']);
-      },
-    "json");
-  });
+        var $form      = $(e.target),
+            fv         = $(e.target).data('formValidation'),
+            houses     = [],
+            performers = [],
+            begin      = $form.find('.dialog-begin').val(),
+            target     = $form.find('.dialog-target').val();
+        $('.houses > li').each(function(){
+          houses.push($(this).attr('value'));
+        });
+        $('.performers > li').each(function(){
+          performers.push($(this).attr('value'));
+        });
+        $.post('/numbers/outages/',{
+            description: $form.find('.dialog-description').val(),
+            type: $form.find('.dialog-type').val(),
+            houses: houses,
+            performers: performers,
+            begin: begin,
+            target: target
+          },function(response){
+            $('.dialog').modal('hide');
+            $('.workspace').html(response['workspace']);
+          },
+        "json");
+      });
+    })
   $('.add_house').click(function(){
     $('.add_house_content').show();
     $('.add_house_cancel').show();
