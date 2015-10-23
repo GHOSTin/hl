@@ -40,6 +40,8 @@
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/twig.js"></script>
   <script src="/js/jBootValidator.js"></script>
+  <script src="/js/formValidation.min.js"></script>
+  <script src="/js/framework/bootstrap.min.js"></script>
 {% if user is not empty %}
   <script src="/js/socket.io.js"></script>
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>

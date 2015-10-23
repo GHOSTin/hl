@@ -3,108 +3,161 @@
 {% block title %}Диалог создания отключения{% endblock title %}
 
 {% block dialog %}
-<div class="row">
-  <div class="form-group col-md-6">
-    <label>Начальная дата</label>
-    <input type="text" class="form-control dialog-begin" value="{{ "now"|date("d.m.Y") }}">
-  </div>
-  <div class="form-group col-md-6">
-    <label>Планируемая дата</label>
-    <input type="text" class="form-control dialog-target" value="{{ "now"|date("d.m.Y") }}">
-  </div>
-</div>
-<div class="row">
-  <div class="add_house_dialog col-md-6">
-    <a class="add_house"><i class="fa fa-plus"></i> Добавить дом</a>
-    <a class="add_house_cancel" style="display:none"><i class="fa fa-close"></i> Отменить</a>
-    <div class="add_house_content" style="display:none">
-      <div class="form-group">
-        <label>Улицы</label>
-        <select class="form-control dialog-select-street">
-          <option value="0">Выберите улицу</option>
-        {% for street in streets %}
-          <option value="{{ street.get_id() }}">{{ street.get_name() }}</option>
-        {% endfor %}
-        </select>
+<form id="createOutage">
+  <div class="form-group">
+    <div class="row">
+      <div class="col-md-6">
+        <label class="control-label">Начальная дата</label>
+        <input type="text" class="form-control dialog-begin" value="{{ "now"|date("d.m.Y") }}">
       </div>
-      <div class="form-group">
-        <label>Дома</label>
-        <select class="form-control dialog-select-house" disabled>
-          <option value="0">Ожидание...</option>
-      </select>
+      <div class="col-md-6">
+        <label class="control-label">Планируемая дата</label>
+        <input type="text" class="form-control dialog-target" value="{{ "now"|date("d.m.Y") }}">
       </div>
     </div>
-    <ul class="houses">
-    </ul>
   </div>
-  <div class="add_performer_dialog col-md-6">
-    <a class="add_performer"><i class="fa fa-plus"></i> Добавить исполнителя</a>
-    <a class="add_performer_cancel" style="display:none"><i class="fa fa-close"></i> Отменить</a>
-    <div class="add_performer_content" style="display:none">
-      <div class="form-group">
-        <label>Группы</label>
-        <select class="form-control dialog-select-group">
-          <option value="0">Выберите группу</option>
-        {% for group in groups %}
-          <option value="{{ group.get_id() }}">{{ group.get_name() }}</option>
-        {% endfor %}
-        </select>
+  <div class="form-group">
+    <div class="row">
+      <div class="add_house_dialog col-md-6">
+        <a class="add_house"><i class="fa fa-plus"></i> Добавить дом</a>
+        <a class="add_house_cancel" style="display:none"><i class="fa fa-close"></i> Отменить</a>
+        <div class="add_house_content" style="display:none">
+          <div class="form-group">
+            <label>Улицы</label>
+            <select class="form-control dialog-select-street">
+              <option value="0">Выберите улицу</option>
+            {% for street in streets %}
+              <option value="{{ street.get_id() }}">{{ street.get_name() }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Дома</label>
+            <select class="form-control dialog-select-house" disabled>
+              <option value="0">Ожидание...</option>
+          </select>
+          </div>
+        </div>
+        <ul class="houses">
+        </ul>
       </div>
-      <div class="form-group">
-        <label>Пользователи</label>
-        <select class="form-control dialog-select-user" disabled>
-          <option value="0">Ожидание...</option>
-      </select>
+      <div class="add_performer_dialog col-md-6">
+        <a class="add_performer"><i class="fa fa-plus"></i> Добавить исполнителя</a>
+        <a class="add_performer_cancel" style="display:none"><i class="fa fa-close"></i> Отменить</a>
+        <div class="add_performer_content" style="display:none">
+          <div class="form-group">
+            <label>Группы</label>
+            <select class="form-control dialog-select-group">
+              <option value="0">Выберите группу</option>
+            {% for group in groups %}
+              <option value="{{ group.get_id() }}">{{ group.get_name() }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Пользователи</label>
+            <select class="form-control dialog-select-user" disabled>
+              <option value="0">Ожидание...</option>
+          </select>
+          </div>
+        </div>
+        <ul class="performers">
+        </ul>
       </div>
     </div>
-    <ul class="performers">
-    </ul>
   </div>
-</div>
-<div class="form-group">
-  <label>Тип услуги</label>
-  <select class="form-control dialog-type">
-    <option value="0">Выберите тип услуги</option>
-  {% for workgroup in workgroups %}
-    <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
-  {% endfor %}
-  </select>
-</div>
-<div class="form-group">
-  <label>Описание</label>
-  <textarea class="form-control dialog-description" rows="3" autofocus required></textarea>
-</div>
+  <div class="form-group">
+    <label class="control-label">Тип услуги</label>
+    <select class="form-control dialog-type" name="workgroup" title="Выберите тип услуги">
+      <option value="">Выберите тип услуги</option>
+    {% for workgroup in workgroups %}
+      <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
+    {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label class="control-label">Описание</label>
+    <textarea class="form-control dialog-description" rows="3" autofocus name="description"></textarea>
+  </div>
+</form>
 {% endblock dialog %}
 
 {% block buttons %}
-	<div class="btn btn-primary create_outage">Создать</div>
+	<button type="submit" name="submitButton" class="btn btn-primary create_outage" form="createOutage">Создать</button>
 {% endblock buttons %}
 
 {% block script %}
-	$('.create_outage').click(function(){
-    var houses = [];
-    $('.houses > li').each(function(){
-      houses.push($(this).attr('value'));
+$(document).ready(function() {
+  $('.dialog')
+    .on('shown.bs.modal', function() {
+      $('#createOutage')
+      .formValidation({
+        framework: 'bootstrap',
+        excluded: ':disabled',
+        icon: {
+          valid: null,
+          invalid: null,
+          validating: null
+        },
+        fields: {
+          workgroup: {
+            validators: {
+              notEmpty: {
+                message: 'Выберите тип услуги'
+              }
+            }
+          },
+          description: {
+            validators: {
+              notEmpty: {
+                message: 'Введите описание отключения'
+              }
+            }
+          }
+        }
+      })
+      .on('err.form.fv', function(e) {
+        $('.create_outage').addClass('disabled').prop('disabled', true);
+      })
+      .on('success.field.fv', function(e, data) {
+        if (data.fv.getInvalidFields().length > 0) {    // There is invalid field
+          $('.create_outage').addClass('disabled').prop('disabled', true);
+        } else {
+          $('.create_outage').removeClass('disabled').prop('disabled', false);
+        }
+      })
+      .on('success.form.fv', function(e) {
+        $('.create_outage').removeClass('disabled').prop('disabled', false);
+        // Prevent form submission
+        e.preventDefault();
+
+        var $form      = $(e.target),
+            fv         = $(e.target).data('formValidation'),
+            houses     = [],
+            performers = [],
+            begin      = $form.find('.dialog-begin').val(),
+            target     = $form.find('.dialog-target').val();
+        $('.houses > li').each(function(){
+          houses.push($(this).attr('value'));
+        });
+        $('.performers > li').each(function(){
+          performers.push($(this).attr('value'));
+        });
+        $.post('/numbers/outages/',{
+            description: $form.find('.dialog-description').val(),
+            type: $form.find('.dialog-type').val(),
+            houses: houses,
+            performers: performers,
+            begin: begin,
+            target: target
+          },function(response){
+            $('.dialog').modal('hide');
+            $('.workspace').html(response['workspace']);
+          },
+        "json");
+      });
     });
-    var performers = [];
-    $('.performers > li').each(function(){
-      performers.push($(this).attr('value'));
-    });
-    var begin = $('.dialog-begin').val();
-    var target = $('.dialog-target').val();
-		$.post('/numbers/outages/',{
-			description: $('.dialog-description').val(),
-      type: $('.dialog-type').val(),
-      houses: houses,
-      performers: performers,
-      begin: begin,
-      target: target
-		},function(response){
-			$('.dialog').modal('hide');
-      $('.workspace').html(response['workspace']);
-		},
-    "json");
-	});
+  $('#createOutage')
   $('.add_house').click(function(){
     $('.add_house_content').show();
     $('.add_house_cancel').show();
@@ -170,4 +223,5 @@
       $('.add_performer_cancel').hide();
     }
   });
+});
 {% endblock script %}
