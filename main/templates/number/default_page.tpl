@@ -20,7 +20,8 @@
 
 {% block javascript %}
 <script src="/js/number.js"></script>
-<script src="/js/bootstrap-datepicker.js"></script>
+<script src="/js/moment-with-locales.min.js"></script>
+<script src="/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/js/typeahead.min.js"></script>
 <script src="/js/inputmask.js" type="text/javascript"></script>
 <script src="/js/jquery.inputmask.js" type="text/javascript"></script>
@@ -28,5 +29,5 @@
 
 {% block css %}
 <link rel="stylesheet" href="/css/number.css" >
-<link rel="stylesheet" href="/css/datepicker.css" >
+<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
 {% endblock css %}

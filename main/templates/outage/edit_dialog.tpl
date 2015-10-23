@@ -8,11 +8,11 @@
     <div class="row">
       <div class="col-md-6">
         <label class="control-label">Начальная дата</label>
-        <input type="text" class="form-control dialog-begin" value="{{ outage.get_begin()|date("H:i d.m.Y") }}">
+        <input type="text" class="form-control dialog-begin" value="{{ outage.get_begin()|date("d.m.Y H:i") }}">
       </div>
       <div class="col-md-6">
         <label class="control-label">Планируемая дата</label>
-        <input type="text" class="form-control dialog-target" value="{{ outage.get_target()|date("H:i d.m.Y") }}">
+        <input type="text" class="form-control dialog-target" value="{{ outage.get_target()|date("d.m.Y H:i") }}">
       </div>
     </div>
   </div>
@@ -181,12 +181,8 @@
     $('.add_performer').show();
     $('.add_performer_cancel').hide();
   });
-  $('.dialog-begin').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-    $('.dialog-begin').datepicker('hide');
-  });
-  $('.dialog-target').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-    $('.dialog-target').datepicker('hide');
-  })
+  $('.dialog-begin').datetimepicker({format: 'DD.MM.YYYY HH:mm', locale: moment.locale('ru'), stepping: 5, sideBySide: true});
+  $('.dialog-target').datetimepicker({format: 'DD.MM.YYYY HH:mm', locale: moment.locale('ru'), stepping: 5, sideBySide: true});
   $('.dialog-select-street').change(function(){
     var id = $('.dialog-select-street :selected').val();
     if(id > 0){
