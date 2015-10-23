@@ -13,8 +13,8 @@ class outages{
 
   public function create(Application $app, Request $request){
     $app['main\models\outages']->create(
-                                        strtotime('12:00 '. $request->get('begin')),
-                                        strtotime('12:00 '. $request->get('target')),
+                                        strtotime($request->get('begin')),
+                                        strtotime($request->get('target')),
                                         $request->get('type'),
                                         $request->get('houses'),
                                         $request->get('performers'),
@@ -41,8 +41,8 @@ class outages{
   public function update(Application $app, Request $request, $id){
     $model = $app['main\models\factory']->get_outage_model($id);
     $response = $model->update(
-                                strtotime('12:00 '. $request->get('begin')),
-                                strtotime('12:00 '. $request->get('target')),
+                                strtotime($request->get('begin')),
+                                strtotime($request->get('target')),
                                 $request->get('type'),
                                 $request->get('houses'),
                                 $request->get('performers'),

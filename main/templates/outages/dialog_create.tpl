@@ -8,11 +8,11 @@
     <div class="row">
       <div class="col-md-6">
         <label class="control-label">Начальная дата</label>
-        <input type="text" class="form-control dialog-begin" value="{{ "now"|date("d.m.Y") }}">
+        <input type="text" class="form-control dialog-begin" value="{{ "now"|date("H:i d.m.Y") }}">
       </div>
       <div class="col-md-6">
         <label class="control-label">Планируемая дата</label>
-        <input type="text" class="form-control dialog-target" value="{{ "now"|date("d.m.Y") }}">
+        <input type="text" class="form-control dialog-target" value="{{ "now"|date("H:i d.m.Y") }}">
       </div>
     </div>
   </div>
