@@ -1,6 +1,7 @@
 /.idea/
 /cache/
 /vendor/
+/bower_components/
 /builds/
 /files/
 config/general.php
