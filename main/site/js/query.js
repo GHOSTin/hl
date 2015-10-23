@@ -6,7 +6,7 @@ $(document).ready(function($){
 				init_content(r);
 			});
 	});
-	$(document).on('click', '.get_query_content', function(){
+	$(document).on('click touchstart', '.get_query_content', function(){
 		$.get('get_query_content',{
 			 id: $(this).attr('query_id')
 			},function(r){
@@ -351,13 +351,22 @@ $(document).ready(function($){
   function(r){
     $('.requests').html(r);
   });
-  $(document).on('click', '.get_requests', function(){
+  $.getJSON('/queries/outages/',
+  function(r){
+    $('.outages').html(r['outages']);
+  });
+  $(document).on('click', '.get_outages', function(){
+    $(this).hide();
+    $('.outages .well').show();
+  }).on('click', '.outages .well .close', function(){
+    $('.outages .get_outages').show();
+    $('.outages .well').hide();
+  }).on('click', '.get_requests', function(){
     $.get('/queries/requests/',
       function(r){
         $('.requests').html(r);
       });
-  });
-  $(document).on('click', '.close_request_view', function(){
+  }).on('click', '.close_request_view', function(){
     $.get('/queries/requests/count/',
     function(r){
       $('.requests').html(r);

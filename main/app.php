@@ -297,6 +297,7 @@ $app->get('/numbers/outages/today/', 'main\controllers\outages::today')->before(
 $app->get('/numbers/outages/yesterday/', 'main\controllers\outages::yesterday')->before($security);
 $app->get('/numbers/outages/week/', 'main\controllers\outages::week')->before($security);
 $app->get('/numbers/outages/lastweek/', 'main\controllers\outages::lastweek')->before($security);
+$app->get('/numbers/outages/active/', 'main\controllers\outages::active')->before($security);
 
 # number
 $app->get('/number/', 'main\controllers\numbers::default_page')->before($security);
@@ -413,6 +414,7 @@ $app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\querie
 $app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
 $app->get('/queries/requests/count/', 'main\controllers\queries::count')->before($security);
 $app->get('/queries/requests/', 'main\controllers\queries::requests')->before($security);
+$app->get('/queries/outages/', 'main\controllers\queries::outages')->before($security);
 $app->get('/queries/day/stats/', 'main\controllers\queries::stats')->before($security);
 $app->get('/queries/selections/', 'main\controllers\queries::selections')->before($security);
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);

@@ -63,8 +63,8 @@
                   {%- endfor -%}
                 {%- endif -%}
                 </Data></Cell>
-                <Cell><Data ss:Type="String">{{ query.get_time_open()|date("h.i d.m.Y") }}</Data></Cell>
-                <Cell><Data ss:Type="String">{% if query.get_status() == 'close' or query.get_status() == 'reclose' %}{{ query.get_time_close()|date("h.i d.m.Y") }}{% endif %}</Data></Cell>
+                <Cell><Data ss:Type="String">{{ query.get_time_open()|date("H:i d.m.Y") }}</Data></Cell>
+                <Cell><Data ss:Type="String">{% if query.get_status() == 'close' or query.get_status() == 'reclose' %}{{ query.get_time_close()|date("H:i d.m.Y") }}{% endif %}</Data></Cell>
                 <Cell><Data ss:Type="String">{{ query.get_description() }}</Data></Cell>
                 <Cell><Data ss:Type="String">{{ query.get_close_reason() }}</Data></Cell>
                 <Cell><Data ss:Type="String">

@@ -2,6 +2,17 @@
 
 class outage extends \Doctrine\ORM\EntityRepository {
 
+  public function active(){
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('m')
+      ->from('domain\outage', 'm')
+      ->where($qb->expr()->gte("m.target", ':target'))
+      ->orderBy('m.begin', 'DESC')
+      ->setParameter('target', strtotime('today'));;
+    return $qb->getQuery()->getResult();
+  }
+
+
   public function yesterday(){
     $qb = $this->_em->createQueryBuilder();
     $qb->select('m')

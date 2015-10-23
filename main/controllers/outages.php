@@ -6,6 +6,11 @@ use DateTime;
 
 class outages{
 
+  public function active(Application $app){
+    $response = $app['main\models\outages']->active();
+    return $app->json($response);
+  }
+
   public function create(Application $app, Request $request){
     $app['main\models\outages']->create(
                                         strtotime('12:00 '. $request->get('begin')),

@@ -330,6 +330,26 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
                   ->getMock();
   }
 
+  public function test_outages(){
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['active'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('active')
+               ->willReturn('outages_array');
+    $this->em->expects($this->once())
+               ->method('getRepository')
+               ->with('domain\outage')
+               ->willReturn($repository);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('query/outages.tpl', ['outages' => 'outages_array'])
+               ->willReturn('render_template');
+    $model = new model($this->em, $this->session, $this->user, $this->twig);
+    $this->assertEquals(['outages' => 'render_template'], $model->outages());
+  }
+
   public function test_get_day_stats(){
     $this->session->expects($this->exactly(2))
                   ->method('get')

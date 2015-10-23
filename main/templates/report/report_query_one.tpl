@@ -57,8 +57,8 @@
                 {% endfor %}
             {% endif %}
         </td>
-        <td>{{ query.get_time_open()|date("h.i d.m.Y") }}</td>
-        <td>{% if query.get_status() == 'close' or query.get_status() == 'reclose' %}{{ query.get_time_close()|date("h.i d.m.Y") }}{% endif %}</td>
+        <td>{{ query.get_time_open()|date("H:i d.m.Y") }}</td>
+        <td>{% if query.get_status() == 'close' or query.get_status() == 'reclose' %}{{ query.get_time_close()|date("H:i d.m.Y") }}{% endif %}</td>
         <td>{{ query.get_description() }}</td>
         <td>{{ query.get_close_reason() }}</td>
         <td>

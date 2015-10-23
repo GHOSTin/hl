@@ -23,7 +23,14 @@ $(document).ready(function(){
         $('.workspace').html(r['workspace']);
         $('.nav > li').removeClass('active');
         $('.get_outages').addClass('active');
+        $('.workspace-path').empty();
       });
+
+    }).on('click', '.get_active_outages', function(){
+        $.getJSON('/numbers/outages/active/',
+        function(r){
+          $('.outages').html(r['outages']);
+        });
 
     }).on('click', '.get_today_outages', function(){
         $.getJSON('/numbers/outages/today/',
