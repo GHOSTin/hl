@@ -32,11 +32,10 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn(true);
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
-                       ->setMethods(['findBy'])
+                       ->setMethods(['active'])
                        ->getMock();
     $repository->expects($this->once())
-               ->method('findBy')
-               ->with([], ['begin' => 'DESC'])
+               ->method('active')
                ->willReturn('outages_array');
     $this->em->expects($this->once())
                ->method('getRepository')
@@ -97,6 +96,30 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals('render_template', $model->houses(250));
+  }
+
+  public function test_active(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['active'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('active')
+               ->willReturn('outages_array');
+    $this->em->expects($this->once())
+               ->method('getRepository')
+               ->with('domain\outage')
+               ->willReturn($repository);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('outages/outages.tpl', ['outages' => 'outages_array'])
+               ->willReturn('render_template');
+    $model = new model($this->twig, $this->em, $this->user);
+    $this->assertEquals(['outages' => 'render_template'], $model->active());
   }
 
   public function test_today(){

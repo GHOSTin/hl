@@ -33,6 +33,11 @@
     <div class="col-md-12 requests"></div>
   </div>
   <!-- /requests -->
+  <!-- outages -->
+  <div class="row">
+    <div class="col-md-12 outages"></div>
+  </div>
+  <!-- /outages -->
   <div class="row">
     <div class="day_stats col-md-5"></div>
   </div>

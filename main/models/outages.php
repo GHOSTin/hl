@@ -21,6 +21,13 @@ class outages{
     $this->user = $user;
   }
 
+  public function active(){
+    $outages = $this->em->getRepository('domain\outage')->active();
+    return [
+            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+           ];
+  }
+
   public function create($begin, $target, $type, $houses = [], $performers = [], $description){
     $houses = $this->em->getRepository('domain\house')->findById($houses);
     $performers = $this->em->getRepository('domain\user')->findById($performers);
@@ -31,7 +38,7 @@ class outages{
   }
 
   public function default_page(){
-    $outages = $this->em->getRepository('domain\outage')->findBy([], ['begin' => 'DESC']);
+    $outages = $this->em->getRepository('domain\outage')->active();
     return [
             'workspace' => $this->twig->render('outages/default_page.tpl', ['outages' => $outages])
            ];

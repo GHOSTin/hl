@@ -2,6 +2,9 @@
   <div class="col-md-2">
     <ul>
       <li>
+        <a class="get_active_outages">Активные</a>
+      </li>
+      <li>
         <a class="get_today_outages">За сегодня</a>
       </li>
       <li>

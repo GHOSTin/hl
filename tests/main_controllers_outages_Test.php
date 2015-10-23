@@ -117,6 +117,14 @@ class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_active(){
+    $this->model->expects($this->once())
+                ->method('active')
+                ->willReturn(['render_template']);
+    $response = $this->controller->active($this->app);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
   public function test_today(){
     $this->model->expects($this->once())
                 ->method('today')
