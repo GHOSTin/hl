@@ -95,9 +95,9 @@ $(document).ready(function() {
         framework: 'bootstrap',
         excluded: ':disabled',
         icon: {
-          valid: 'fa fa-check',
-          invalid: 'fa fa-times',
-          validating: 'fa fa-refresh'
+          valid: null,
+          invalid: null,
+          validating: null
         },
         fields: {
           workgroup: {
