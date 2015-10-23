@@ -63,6 +63,10 @@ $app['main\models\queries'] = function($app){
 $app['main\models\report_event'] = function($app){
   return new \main\models\report_event($app['em'], $app['session']);
 };
+
+$app['main\models\report_outages'] = function($app){
+  return new models\report_outages($app['em'], $app['twig'], $app['user'], $app['session']);
+};
 $app['main\models\import_numbers'] = function($app){
   return new \main\models\import_numbers($app['em'], $app['session']);
 };
@@ -438,6 +442,10 @@ $app->get('/reports/event/set_time_begin', 'main\controllers\report_event::set_t
 $app->get('/reports/event/set_time_end', 'main\controllers\report_event::set_time_end')->before($security);
 $app->get('/reports/event/html/', 'main\controllers\report_event::html')->before($security);
 $app->get('/reports/event/clear/', 'main\controllers\report_event::clear')->before($security);
+$app->get('/reports/outages/', 'main\controllers\report_outages::default_page')->before($security);
+$app->get('/reports/outages/html/', 'main\controllers\report_outages::html')->before($security);
+$app->post('/reports/outages/filters/begin/start/', 'main\controllers\report_outages::start')->before($security);
+$app->post('/reports/outages/filters/begin/end/', 'main\controllers\report_outages::end')->before($security);
 
 # tasks
 $app->get('/task/', 'main\controllers\task::default_page')->before($security);

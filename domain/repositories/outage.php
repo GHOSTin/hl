@@ -1,5 +1,7 @@
 <?php namespace domain\repositories;
 
+use DateTime;
+
 class outage extends \Doctrine\ORM\EntityRepository {
 
   public function active(){
@@ -12,6 +14,19 @@ class outage extends \Doctrine\ORM\EntityRepository {
     return $qb->getQuery()->getResult();
   }
 
+  public function findByParams(array $params){
+    $qb = $this->_em->createQueryBuilder();
+    $qb->select('m')
+      ->from('domain\outage', 'm')
+      ->where($qb->expr()->andX(
+          $qb->expr()->gte("m.begin", ':begin_start'),
+          $qb->expr()->lt("m.begin", ':begin_end')
+      ))
+      ->orderBy('m.begin', 'DESC')
+      ->setParameter('begin_start', $params['start'])
+      ->setParameter('begin_end', $params['end']);
+    return $qb->getQuery()->getResult();
+  }
 
   public function yesterday(){
     $qb = $this->_em->createQueryBuilder();
