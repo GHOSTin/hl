@@ -12,4 +12,12 @@ class report_outages{
   public function html(Application $app){
     return $app['main\models\report_outages']->html();
   }
+
+  public function start(Application $app, Request $request){
+    return $app['main\models\report_outages']->start($request->get('time'));
+  }
+
+  public function end(Application $app, Request $request){
+    return $app['main\models\report_outages']->end($request->get('time'));
+  }
 }

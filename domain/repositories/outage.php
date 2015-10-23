@@ -14,9 +14,7 @@ class outage extends \Doctrine\ORM\EntityRepository {
     return $qb->getQuery()->getResult();
   }
 
-  public function findByBeginTimeRange($start, $end){
-    $start = DateTime::createFromFormat('H:i d.m.Y', $start);
-    $end = DateTime::createFromFormat('H:i d.m.Y', $end);
+  public function findByParams(array $params){
     $qb = $this->_em->createQueryBuilder();
     $qb->select('m')
       ->from('domain\outage', 'm')
@@ -25,11 +23,10 @@ class outage extends \Doctrine\ORM\EntityRepository {
           $qb->expr()->lt("m.begin", ':begin_end')
       ))
       ->orderBy('m.begin', 'DESC')
-      ->setParameter('begin_start', $start->getTimestamp())
-      ->setParameter('begin_end', $end->getTimestamp());
+      ->setParameter('begin_start', $params['start'])
+      ->setParameter('begin_end', $params['end']);
     return $qb->getQuery()->getResult();
   }
-
 
   public function yesterday(){
     $qb = $this->_em->createQueryBuilder();
