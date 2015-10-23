@@ -116,8 +116,19 @@ $(document).ready(function() {
           }
         }
       })
+      .on('err.form.fv', function(e) {
+        $('.create_outage').addClass('disabled').prop('disabled', true);
+      })
+      .on('success.field.fv', function(e, data) {
+        if (data.fv.getInvalidFields().length > 0) {    // There is invalid field
+          $('.create_outage').addClass('disabled').prop('disabled', true);
+        } else {
+          $('.create_outage').removeClass('disabled').prop('disabled', false);
+        }
+      })
       .on('success.form.fv', function(e) {
-      // Prevent form submission
+        $('.create_outage').removeClass('disabled').prop('disabled', false);
+        // Prevent form submission
         e.preventDefault();
 
         var $form      = $(e.target),
@@ -145,7 +156,8 @@ $(document).ready(function() {
           },
         "json");
       });
-    })
+    });
+  $('#createOutage')
   $('.add_house').click(function(){
     $('.add_house_content').show();
     $('.add_house_cancel').show();
