@@ -17,8 +17,8 @@ class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_create(){
-    $this->request->request->set('begin', '21.12.1984');
-    $this->request->request->set('target', '21.12.1984');
+    $this->request->request->set('begin', '12:00 21.12.1984');
+    $this->request->request->set('target', '12:00 21.12.1984');
     $this->request->request->set('type', 126);
     $this->request->request->set('houses', [1, 6]);
     $this->request->request->set('performers', [2, 3]);
@@ -76,8 +76,8 @@ class main_controllers_outages_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_update(){
-    $this->request->request->set('begin', '21.12.1984');
-    $this->request->request->set('target', '21.12.1984');
+    $this->request->request->set('begin', '12:00 21.12.1984');
+    $this->request->request->set('target', '12:00 21.12.1984');
     $this->request->request->set('type', 126);
     $this->request->request->set('houses', [1, 6]);
     $this->request->request->set('performers', [2, 3]);
