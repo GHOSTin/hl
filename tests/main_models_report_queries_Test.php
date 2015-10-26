@@ -196,20 +196,29 @@ class main_models_report_queries_Test extends PHPUnit_Framework_TestCase{
   public function test_report1(){
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
-                       ->setMethods(['findByParams'])
+                       ->setMethods(['findByParams', 'findBy'])
                        ->getMock();
     $repository->expects($this->once())
                ->method('findByParams')
                ->with($this->default_params)
-               ->willReturn('queries_array');
-    $this->em->expects($this->once())
+               ->willReturn(['queries_array']);
+    $repository->expects($this->once())
+               ->method('findBy')
+               ->willReturn(['workgroups_array']);
+
+    $this->em->expects($this->exactly(2))
              ->method('getRepository')
-             ->with('domain\query')
+             ->withConsecutive(['domain\query'], ['domain\workgroup'])
              ->will($this->returnValue($repository));
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('report\report_query_one.tpl', ['queries' => 'queries_array']);
-    $model = new model($this->twig, $this->em, $this->user, $this->session);
+               ->with('report\report_query_one.tpl');
+    $model = $this->getMockBuilder('main\models\report_queries')
+                  ->setConstructorArgs([$this->twig, $this->em, $this->user, $this->session])
+                  ->setMethods(['get_stats'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('get_stats');
     $model->report1();
   }
 
