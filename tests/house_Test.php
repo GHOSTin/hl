@@ -99,4 +99,9 @@ class house_Test extends PHPUnit_Framework_TestCase{
     $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
                             $this->house->get_queries());
   }
+
+  public function test_get_outages(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection',
+                            $this->house->get_outages());
+  }
 }

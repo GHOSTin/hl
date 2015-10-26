@@ -57,6 +57,12 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->controller->history($this->app, 125);
   }
 
+  public function test_meterages(){
+    $this->model->expects($this->once())
+                ->method('meterages');
+    $this->controller->meterages($this->app, 125);
+  }
+
   public function test_update_contacts(){
     $this->request->request->set('fio', 'Некрасов Евгений Валерьевич');
     $this->request->request->set('telephone', '647957');

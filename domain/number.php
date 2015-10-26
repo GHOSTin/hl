@@ -301,4 +301,8 @@ class number{
   public function get_relevance(){
     return $this->relevance;
   }
+
+  public function get_address(){
+    return $this->house->get_street()->get_name().', дом №'.$this->house->get_number().', кв. №'.$this->flat->get_number();
+  }
 }

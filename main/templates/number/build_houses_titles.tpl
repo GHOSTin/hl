@@ -1,5 +1,7 @@
-<ul class="houses nav nav-tabs nav-stacked">
+<ul class="list-unstyled">
 {% for house in houses %}
-  {% include 'number/build_house_title.tpl' %}
+  <li class="house">
+    <a class="get_house_content" house="{{ house.get_id() }}">дом №{{ house.get_number() }}</a>
+  </li>
 {% endfor %}
 </ul>

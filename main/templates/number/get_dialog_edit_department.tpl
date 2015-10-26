@@ -25,7 +25,7 @@ $('.edit_department').click(function(){
 		department_id: $('.dialog-select-department').val(),
 	},function(response){
 		$('.dialog').modal('hide');
-		$('.house[house = {{ house.get_id() }}] .house-content-content').html(response)
+		$('.workspace').html(response)
 	});
 });
 {% endblock %}

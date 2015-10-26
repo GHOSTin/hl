@@ -26,6 +26,18 @@ class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
     $this->app['em'] = $em;
   }
 
+  public function test_outages(){
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('outages')
+          ->willReturn(['render_template']);
+    $this->app['main\models\queries'] = $model;
+    $response = $this->controller->outages($this->app);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
   public function test_abort_query_from_request(){
     $this->request->query->set('description', 'Описание');
     $this->request->query->set('time', '1397562800');

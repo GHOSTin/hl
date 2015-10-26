@@ -26,11 +26,24 @@ $('body').on('click', '.close_dialog', function(){
 	$('.dialog').modal('hide');
 });
 
-$(document).ready(function(){
+$(document).ready(function($){
     setTimeout(function(){window.scrollTo( 0, 1 );}, 0);
     $.valHooks.textarea = {
         get: function(elem) {
             return elem.value.replace(/\r?\n/g, "\r\n");
         }
     };
+    $(window).scroll(function () {
+        if ($(this).scrollTop() > 1) {
+            $('.scroll-to-top').fadeIn();
+        } else {
+            $('.scroll-to-top').fadeOut();
+        }
+    });
+    $('.scroll-to-top').click(function () {
+        $('body,html').animate({
+            scrollTop: 0
+        }, 400);
+        return false;
+    });
 });

@@ -13,10 +13,10 @@
    margin-top: 20px;
 }
 
-.query_status_open {border-left:15px solid #ff0000;}
-.query_status_close {border-left:15px solid #cccccc;}
-.query_status_reopen {border-left:15px solid blue;}
-.query_status_working {border-left:15px solid black;}
+.query_status_open {border-left:5px solid #ff0000;}
+.query_status_close {border-left:5px solid #cccccc;}
+.query_status_reopen {border-left:5px solid blue;}
+.query_status_working {border-left:5px solid black;}
 
 .timeline .pagination{
     margin: 0;

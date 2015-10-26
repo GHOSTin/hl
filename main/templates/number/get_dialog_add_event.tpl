@@ -8,9 +8,9 @@
             event: $('.dialog-select-event').val(),
             date: $('.dialog-date').val()
         },function(r){
-          $('.number[number="{{ number.get_id() }}"] .number-content').remove();
-          init_content(r);
           $('.dialog').modal('hide');
+          $('.workspace').html(r);
+          $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
         });
     });
     $('.dialog-select-category').change(function(){

@@ -29,7 +29,7 @@
   </div>
   <footer>
     <div class="container">
-      <p class="col-xs-12 muted credit">Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a></p>
+      <p class="col-xs-12 muted credit text-right">Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a></p>
     </div>
   </footer>
   <div id="modal" class="modal fade"></div>
@@ -40,6 +40,8 @@
   <script src="/js/bootstrap.min.js"></script>
   <script src="/js/twig.js"></script>
   <script src="/js/jBootValidator.js"></script>
+  <script src="/js/formValidation.min.js"></script>
+  <script src="/js/framework/bootstrap.min.js"></script>
 {% if user is not empty %}
   <script src="/js/socket.io.js"></script>
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>

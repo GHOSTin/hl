@@ -10,8 +10,8 @@
     {% for numbers in debtors %}
       {% for number in numbers %}
       <tr>
-        <td>кв. №{{ number.get_flat().get_number() }}</td>
-        <td>{{ number.get_debt()|number_format(2, '.', ' ') }}</td>
+        <td class="hidden-xs hidden-sm">кв. №{{ number.get_flat().get_number() }}</td>
+        <td data-title="кв. №{{ number.get_flat().get_number() }}">{{ number.get_debt()|number_format(2, '.', ' ') }}</td>
       </tr>
       {% endfor %}
     {% endfor %}

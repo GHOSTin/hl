@@ -319,6 +319,13 @@ class queries{
     return $res;
   }
 
+  public function outages(){
+    $outages = $this->em->getRepository('domain\outage')->active();
+    return [
+              'outages' => $this->twig->render('query/outages.tpl', ['outages' => $outages]),
+            ];
+  }
+
   public function save_params(array $params){
     foreach($params as $param => $value)
       if(array_key_exists($param, $this->params))
