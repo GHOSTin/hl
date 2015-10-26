@@ -40,10 +40,13 @@ class main_model_outage_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_get_edit_dialog(){
-    $this->user->expects($this->once())
+    $this->user->expects($this->exactly(2))
                ->method('check_access')
-               ->with('numbers/general_access')
-               ->willReturn(true);
+               ->withConsecutive(
+                                  ['numbers/general_access'],
+                                  ['numbers/create_outage']
+                                )
+               ->will($this->onConsecutiveCalls(true, true));
     $this->em->expects($this->once())
              ->method('find')
              ->with('domain\outage', 125)
@@ -67,6 +70,23 @@ class main_model_outage_Test extends PHPUnit_Framework_TestCase{
                                                   'groups' => 'groups_array',
                                                   'outage' => $this->outage
                                                 ]);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $model->get_edit_dialog();
+  }
+
+  public function test_get_edit_dialog_2(){
+    $this->setExpectedException('RuntimeException');
+    $this->user->expects($this->exactly(2))
+               ->method('check_access')
+               ->withConsecutive(
+                                  ['numbers/general_access'],
+                                  ['numbers/create_outage']
+                                )
+               ->will($this->onConsecutiveCalls(true, false));
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\outage', 125)
+             ->willReturn($this->outage);
     $model = new model($this->twig, $this->em, $this->user, 125);
     $model->get_edit_dialog();
   }

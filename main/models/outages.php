@@ -24,11 +24,17 @@ class outages{
   public function active(){
     $outages = $this->em->getRepository('domain\outage')->active();
     return [
-            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+            'outages' => $this->twig->render('outages/outages.tpl',
+              [
+                'outages' => $outages,
+                'user' => $this->user
+              ])
            ];
   }
 
   public function create($begin, $target, $type, $houses = [], $performers = [], $description){
+    if(!$this->user->check_access('numbers/create_outage'))
+      throw new RuntimeException();
     $houses = $this->em->getRepository('domain\house')->findById($houses);
     $performers = $this->em->getRepository('domain\user')->findById($performers);
     $workgroup = $this->em->getRepository('domain\workgroup')->findOneById($type);
@@ -40,7 +46,11 @@ class outages{
   public function default_page(){
     $outages = $this->em->getRepository('domain\outage')->active();
     return [
-            'workspace' => $this->twig->render('outages/default_page.tpl', ['outages' => $outages])
+            'workspace' => $this->twig->render('outages/default_page.tpl',
+              [
+                'outages' => $outages,
+                'user' => $this->user
+              ])
            ];
   }
 
@@ -63,28 +73,44 @@ class outages{
   public function today(){
     $outages = $this->em->getRepository('domain\outage')->today();
     return [
-            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+            'outages' => $this->twig->render('outages/outages.tpl',
+              [
+                'outages' => $outages,
+                'user' => $this->user
+              ])
            ];
   }
 
   public function yesterday(){
     $outages = $this->em->getRepository('domain\outage')->yesterday();
     return [
-            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+            'outages' => $this->twig->render('outages/outages.tpl',
+              [
+                'outages' => $outages,
+                'user' => $this->user
+              ])
            ];
   }
 
   public function week(){
     $outages = $this->em->getRepository('domain\outage')->week();
     return [
-            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+            'outages' => $this->twig->render('outages/outages.tpl',
+              [
+                'outages' => $outages,
+                'user' => $this->user
+              ])
            ];
   }
 
   public function lastweek(){
     $outages = $this->em->getRepository('domain\outage')->lastweek();
     return [
-            'outages' => $this->twig->render('outages/outages.tpl', ['outages' => $outages])
+            'outages' => $this->twig->render('outages/outages.tpl',
+              [
+                'outages' => $outages,
+                'user' => $this->user
+              ])
            ];
   }
 

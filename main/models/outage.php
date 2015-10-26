@@ -24,6 +24,8 @@ class outage{
   }
 
   public function get_edit_dialog(){
+    if(!$this->user->check_access('numbers/create_outage'))
+      throw new RuntimeException();
     $workgroups = $this->em->getRepository('domain\workgroup')->findBy([], ['name' => 'ASC']);
     $streets = $this->em->getRepository('domain\street')->findBy([], ['name' => 'ASC']);
     $groups = $this->em->getRepository('domain\group')->findBy([], ['name' => 'ASC']);
@@ -36,6 +38,8 @@ class outage{
   }
 
   public function update($begin, $target, $type, $houses = [], $performers = [], $description){
+    if(!$this->user->check_access('numbers/create_outage'))
+      throw new RuntimeException();
     $houses = $this->em->getRepository('domain\house')->findById($houses);
     $performers = $this->em->getRepository('domain\user')->findById($performers);
     $workgroup = $this->em->getRepository('domain\workgroup')->findOneById($type);

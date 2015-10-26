@@ -21,6 +21,7 @@ $('.user[user = {{ user.get_id() }}] .user-information').html(get_hidden_content
       <li class="access" value="numbers/general_access"><input type="checkbox"{% if user.check_access('numbers/general_access') %}checked=""{% endif %}> Общий доступ</li>
       <li class="access" value="numbers/generate_password"><input type="checkbox"{% if user.check_access('numbers/generate_password') %}checked=""{% endif %}> Генерация пароля</li>
       <li class="access" value="numbers/contacts"><input type="checkbox"{% if user.check_access('numbers/contacts') %}checked=""{% endif %}> Изменение контактных данных</li>
+      <li class="access" value="numbers/create_outage"><input type="checkbox"{% if user.check_access('numbers/create_outage') %}checked=""{% endif %}> Создание отключений</li>
     </ul>
   </div>
   <div class="col-md-2">

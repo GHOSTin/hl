@@ -49,7 +49,18 @@
       <h5>Последние заявки на этот дом</h5>
        <ul class="list-unstyled old-queries">
           {% for query in queries  %}
-            <li class="query_status_{{ query.get_status() }}"><strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
+            <li class="query_status_{{ query.get_status() }}">
+            {% if query.get_initiator() == 'number' %}
+              <i class="glyphicon glyphicon-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
+            {% else %}
+              <i class="glyphicon glyphicon-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
+            {% endif %}
+            <strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
+            {% if query.get_initiator() == 'number' %}
+              {% for number in query.get_numbers() %}
+                <div> кв.{{ number.get_flat().get_number() }} {{ number.get_number() }} ({{ number.get_fio() }})</div>
+              {% endfor %}
+            {% endif %}
               {% if query.get_status() in ['close', 'reopen'] %}
               <p class="label label-default">{{ query.get_close_reason() }}</p>
               {% endif %}
