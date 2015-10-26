@@ -1,10 +1,11 @@
 {% extends "public.tpl" %}
 
 {% block content %}
-<div id="content" class="col-md-5 col-sm-6 col-lg-4">
+<div class="middle-box text-center animated fadeInDown">
   <div class="row">
-    <div class="col-md-12">
-      К лицевого счету №{{ number }} не привязан email. <a href="/">Вернуться на главную</a>.
+    <div class="col-md-12 error-desc">
+      К лицевого счету №{{ number }} не привязан email.
+      <a href="/" class="m-t btn btn-block btn-outline btn-primary">Вернуться на главную</a>.
     </div>
   </div>
 </div>
