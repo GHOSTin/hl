@@ -19,9 +19,11 @@
     </ul>
   </div>
   <div class="col-md-10">
+    {% if user.check_access('numbers/create_outage') %}
     <p>
       <a class="get_dialog_create_outage">Создать</a>
     </p>
+    {% endif %}
     <ol class="outages">{% include "outages/outages.tpl" %}</ol>
   </div>
 </div>

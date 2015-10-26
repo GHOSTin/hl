@@ -1,4 +1,4 @@
-<div><u>c {{ outage.get_begin()|date("H:i d.m.Y") }} по {{ outage.get_target()|date("H:i d.m.Y") }} {{ outage.get_category().get_name() }}</u> <a class="edit_outage" outage="{{ outage.get_id() }}">редактировать</a></div>
+<div><u>c {{ outage.get_begin()|date("H:i d.m.Y") }} по {{ outage.get_target()|date("H:i d.m.Y") }} {{ outage.get_category().get_name() }}</u>{% if user.check_access('numbers/create_outage') %} <a class="edit_outage" outage="{{ outage.get_id() }}">редактировать</a>{% endif %}</div>
 <p>{{ outage.get_description() }} </p>
 <div class="row">
   <div class="col-md-6">

@@ -49,6 +49,7 @@ class house implements JsonSerializable{
 
   /**
   * @OneToMany(targetEntity="domain\query", mappedBy="house")
+  * @OrderBy({"time_open" = "DESC"})
   */
   private $queries;
 

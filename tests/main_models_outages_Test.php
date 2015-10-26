@@ -43,7 +43,10 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn($repository);
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('outages/default_page.tpl', ['outages' => 'outages_array'])
+               ->with('outages/default_page.tpl', [
+                                                    'outages' => 'outages_array',
+                                                    'user' => $this->user
+                                                  ])
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals(['workspace' => 'render_template'], $model->default_page());
@@ -116,7 +119,10 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn($repository);
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('outages/outages.tpl', ['outages' => 'outages_array'])
+               ->with('outages/outages.tpl', [
+                                                'outages' => 'outages_array',
+                                                'user' => $this->user
+                                              ])
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals(['outages' => 'render_template'], $model->active());
@@ -140,7 +146,10 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn($repository);
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('outages/outages.tpl', ['outages' => 'outages_array'])
+               ->with('outages/outages.tpl', [
+                                                'outages' => 'outages_array',
+                                                'user' => $this->user
+                                              ])
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals(['outages' => 'render_template'], $model->today());
@@ -164,7 +173,10 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn($repository);
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('outages/outages.tpl', ['outages' => 'outages_array'])
+               ->with('outages/outages.tpl', [
+                                                'outages' => 'outages_array',
+                                                'user' => $this->user
+                                              ])
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals(['outages' => 'render_template'], $model->yesterday());
@@ -188,7 +200,10 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn($repository);
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('outages/outages.tpl', ['outages' => 'outages_array'])
+               ->with('outages/outages.tpl', [
+                                                'outages' => 'outages_array',
+                                                'user' => $this->user
+                                              ])
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals(['outages' => 'render_template'], $model->week());
@@ -212,7 +227,10 @@ class main_model_outages_Test extends PHPUnit_Framework_TestCase{
                ->willReturn($repository);
     $this->twig->expects($this->once())
                ->method('render')
-               ->with('outages/outages.tpl', ['outages' => 'outages_array'])
+               ->with('outages/outages.tpl', [
+                                                'outages' => 'outages_array',
+                                                'user' => $this->user
+                                              ])
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals(['outages' => 'render_template'], $model->lastweek());

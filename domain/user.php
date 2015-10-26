@@ -88,6 +88,7 @@ class user implements JsonSerializable{
     'numbers/general_access',
     'numbers/generate_password',
     'numbers/contacts',
+    'numbers/create_outage',
     'reports/general_access',
     'queries/general_access',
     'queries/create_query',
