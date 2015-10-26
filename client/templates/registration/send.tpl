@@ -2,7 +2,7 @@
 
 {% block content %}
   <h1>Письмо отправлено</h1>
-  <a href="/">Вернуться на главную</a>
+  <a class="btn btn-outline btn-primary" href="/">Вернуться на главную</a>
 {% endblock content %}
 
 {% block css %}
