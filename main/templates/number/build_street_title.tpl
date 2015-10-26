@@ -1,1 +1,0 @@
-<li class="street" street="{{ street.get_id() }}"><a class="get_street_content">{{ street.get_name() }}</a></li>

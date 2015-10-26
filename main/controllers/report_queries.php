@@ -17,6 +17,10 @@ class report_queries{
     return $app['main\models\report_queries']->report1();
   }
 
+  public function noclose(Application $app){
+    return $app['main\models\report_queries']->noclose();
+  }
+
   public function report1_xls(Application $app){
     return $app['main\models\report_queries']->report1_xls();
   }

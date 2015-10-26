@@ -25,6 +25,11 @@ class number{
                                       ->history();
   }
 
+  public function meterages(Application $app, $id){
+    return $app['main\models\factory']->get_number_model($id)
+                                      ->meterages();
+  }
+
   public function update_contacts(Application $app, Request $request, $id){
     return $app['main\models\factory']->get_number_model($id)
                                       ->update_contacts(

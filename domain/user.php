@@ -2,6 +2,7 @@
 
 use DomainException;
 use JsonSerializable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * @Entity
@@ -71,6 +72,11 @@ class user implements JsonSerializable{
   */
   private $hash;
 
+  /**
+  * @ManyToMany(targetEntity="domain\outage", mappedBy="performers")
+  */
+  private $outages;
+
   public static $statuses = ['true', 'false'];
   private static $restrictions_list = ['departments', 'categories'];
 
@@ -82,6 +88,7 @@ class user implements JsonSerializable{
     'numbers/general_access',
     'numbers/generate_password',
     'numbers/contacts',
+    'numbers/create_outage',
     'reports/general_access',
     'queries/general_access',
     'queries/create_query',
@@ -93,6 +100,10 @@ class user implements JsonSerializable{
     'system/general_access',
     'tasks/general_access'
   ];
+
+  public function __construct(){
+    $this->outages = new ArrayCollection();
+  }
 
   public function check_access($name){
     if(!in_array($name, self::$rules_list, true))

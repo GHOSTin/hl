@@ -49,13 +49,21 @@ class house implements JsonSerializable{
 
   /**
   * @OneToMany(targetEntity="domain\query", mappedBy="house")
+  * @OrderBy({"time_open" = "DESC"})
   */
   private $queries;
+
+  /**
+  * @ManyToMany(targetEntity="domain\outage", mappedBy="houses")
+  * @OrderBy({"begin" = "DESC"})
+  */
+  private $outages;
 
   public function __construct(){
     $this->numbers = new ArrayCollection();
     $this->flats = new ArrayCollection();
     $this->queries = new ArrayCollection();
+    $this->outages = new ArrayCollection();
     $this->status = 'true';
   }
 
@@ -84,6 +92,10 @@ class house implements JsonSerializable{
     return $numbers;
   }
 
+  public function get_full_name(){
+    return $this->get_street()->get_name().', дом. №'.$this->number;
+  }
+
   public function get_department(){
     return $this->department;
   }
@@ -96,8 +108,20 @@ class house implements JsonSerializable{
     return $this->id;
   }
 
+  public function get_outages(){
+    return $this->outages;
+  }
+
   public function get_number(){
     return $this->number;
+  }
+
+  public function get_debt(){
+    $debt = 0;
+    foreach($this->numbers as $number){
+      $debt = $debt + $number->get_debt();
+    }
+    return $debt;
   }
 
   public function get_numbers(){
@@ -140,5 +164,9 @@ class house implements JsonSerializable{
     if(!preg_match('|^[0-9]{1,3}[/]{0,1}[А-Яа-я0-9]{0,2}$|u', $number))
       throw new DomainException('Номер дома "'.$number.'" задан не верно.');
     $this->number = $number;
+  }
+
+  public function get_address(){
+    return $this->street->get_name().', дом №'.$this->number;
   }
 }

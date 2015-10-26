@@ -170,6 +170,7 @@
       <li>Отчет №1
         <div>
           <a class="btn btn-link" href="/reports/queries/report1/" target="_blank">Просмотреть</a>
+          <a class="btn btn-link" href="/reports/queries/report1/noclose/" target="_blank">Только не закрытые</a>
           <a class="btn btn-link" href="/reports/queries/report1/xls/" target="_blank">Выгрузить</a>
         </div>
       </li>

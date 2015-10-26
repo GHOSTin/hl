@@ -1,6 +1,11 @@
 {% extends "default.tpl" %}
 
 {% block component %}
+<!-- scroller -->
+  <div class="scroll-to-top">
+    <i class="fa fa-angle-up"></i>
+  </div>
+<!-- /scroller -->
 <!-- left block -->
 <div class="col-sm-3 col-lg-3">
   <div class="row">
@@ -28,6 +33,11 @@
     <div class="col-md-12 requests"></div>
   </div>
   <!-- /requests -->
+  <!-- outages -->
+  <div class="row">
+    <div class="col-md-12 outages"></div>
+  </div>
+  <!-- /outages -->
   <div class="row">
     <div class="day_stats col-md-5"></div>
   </div>

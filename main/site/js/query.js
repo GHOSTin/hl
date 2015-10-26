@@ -1,19 +1,19 @@
-$(document).ready(function(){
-	$('body').on('click', '.get_documents', function(){
+$(document).ready(function($){
+	$(document).on('click', '.get_documents', function(){
 		$.get('get_documents',{
 			 id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_query_content', function(){
+	$(document).on('click touchstart', '.get_query_content', function(){
 		$.get('get_query_content',{
 			 id: $(this).attr('query_id')
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_query_title', function(){
+	$(document).on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
 			 id: get_query_id($(this))
 			},function(r){
@@ -21,7 +21,7 @@ $(document).ready(function(){
 			});
 	});
 	// выводит лицевые счета заявки
-	$('body').on('click', '.query-numbers > h5', function(){
+	$(document).on('click', '.query-numbers > h5', function(){
 		if($(this).siblings().is('.query-numbers-content')){
 			$(this).siblings('.query-numbers-content').remove();
 			$(this).siblings('.query-numbers-menu').remove();
@@ -33,7 +33,7 @@ $(document).ready(function(){
 				});
 	});
 	// выводит пользователей заявки
-	$('body').on('click', '.query-users > h5', function(){
+	$(document).on('click', '.query-users > h5', function(){
 		if($(this).siblings().is('.query-sub'))
 			$(this).siblings('.query-sub').remove();
 		else
@@ -44,7 +44,7 @@ $(document).ready(function(){
 				});
 	});
 	// выводит работы заявки
-	$('body').on('click', '.query-works > h5', function(){
+	$(document).on('click', '.query-works > h5', function(){
 		if($(this).siblings().is('.query-sub'))
 			$(this).siblings('.query-sub').remove();
 		else
@@ -55,7 +55,7 @@ $(document).ready(function(){
 				});
 	});
 		// выводит комментарии заявки
-	$('body').on('click', '.query-comments > h5', function(){
+	$(document).on('click', '.query-comments > h5', function(){
 		if($(this).siblings().is('.query-sub'))
 			$(this).siblings('.query-sub').remove();
 		else
@@ -65,25 +65,25 @@ $(document).ready(function(){
 					init_content(r);
 				});
 	});
-  $('body').on('click', '.query-files > h5', function(){
+  $(document).on('click', '.query-files > h5', function(){
     if($(this).siblings().is('.query-sub'))
       $(this).siblings('.query-sub').remove();
     else{
-      id = get_query_id($(this));
+      var id = get_query_id($(this));
       $.get('/queries/' + id +'/files/',
         function(r){
           init_content(r);
         });
     }
   });
-	$('body').on('click', '.get_query_title', function(){
+	$(document).on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
 			 id: get_query_id($(this))
 			},function(r){
 				show_content(r);
 			});
 	});
-	$('body').on('click', '.timeline-day', function(){
+	$(document).on('click', '.timeline-day', function(){
 		var self = $(this);
 		$.get('get_day',{
 			 time: $(this).attr('time')
@@ -94,20 +94,20 @@ $(document).ready(function(){
         get_day_stats();
 			});
 	});
-	$('body').on('click', '.get_search', function(){
+	$(document).on('click', '.get_search', function(){
 		$.get('get_search',{
 			},function(r){
 				$('.queries').html(r);
 			});
 	});
-  $('body').on('click', '.selections', function(){
+  $(document).on('click', '.selections', function(){
     $.get('/queries/selections/',{
       },function(r){
         $('.queries').html(r);
         $('.day_stats').empty();
       });
   });
-  $('body').on('click', '.selection_noclose', function(){
+  $(document).on('click', '.selection_noclose', function(){
     blank();
     $.getJSON('/queries/selections/noclose/',{
       time: $(this).attr('time')
@@ -119,14 +119,14 @@ $(document).ready(function(){
         var myNewChart = new Chart(ctx).Pie(r.stats.chart.data, r.stats.chart.options);
       });
   });
-	$('body').on('click', '.get_search_result', function(){
+	$(document).on('click', '.get_search_result', function(){
 		$.get('get_search_result',{
 			param: $('.search_parameters').val()
 			},function(r){
 				$('.queries').html(r);
 			});
 	});
-	$('body').on('click', '.clear_filters', function(){
+	$(document).on('click', '.clear_filters', function(){
 		$.get('clear_filters',{
 			},function(r){
 				init_content(r);
@@ -175,13 +175,13 @@ $(document).ready(function(){
 				$('.queries').html(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_create_query', function(){
+	$(document).on('click', '.get_dialog_create_query', function(){
 		$.get('get_dialog_create_query',{
 			},function(r){
 				show_content(r);
 			});
 	});
-  $('body').on('click', '.get_dialog_create_query_from_request', function(){
+  $(document).on('click', '.get_dialog_create_query_from_request', function(){
     $.get('/queries/dialogs/create_query_from_request/',{
         time: $(this).parent().attr('time'),
         number: $(this).parent().attr('number')
@@ -190,7 +190,7 @@ $(document).ready(function(){
       });
   });
 
-  $('body').on('click', '.get_dialog_abort_query_from_request', function(){
+  $(document).on('click', '.get_dialog_abort_query_from_request', function(){
     $.get('/queries/dialogs/abort_query_from_request/',{
         time: $(this).parent().attr('time'),
         number: $(this).parent().attr('number')
@@ -198,49 +198,49 @@ $(document).ready(function(){
         init_content(r);
       });
   });
-	$('body').on('click', '.get_dialog_edit_description', function(){
+	$(document).on('click', '.get_dialog_edit_description', function(){
 		$.get('get_dialog_edit_description',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_edit_reason', function(){
+	$(document).on('click', '.get_dialog_edit_reason', function(){
 		$.get('get_dialog_edit_reason',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_edit_contact_information', function(){
+	$(document).on('click', '.get_dialog_edit_contact_information', function(){
 		$.get('get_dialog_edit_contact_information',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_change_query_type', function(){
+	$(document).on('click', '.get_dialog_change_query_type', function(){
 		$.get('get_dialog_change_query_type',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_edit_work_type', function(){
+	$(document).on('click', '.get_dialog_edit_work_type', function(){
 		$.get('get_dialog_edit_work_type',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_add_comment', function(){
+	$(document).on('click', '.get_dialog_add_comment', function(){
 		$.get('get_dialog_add_comment',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	});
-	$('body').on('click', '.get_dialog_add_user', function(){
+	$(document).on('click', '.get_dialog_add_user', function(){
 		$.get('get_dialog_add_user',{
 			id: get_query_id($(this)),
 			type: $(this).attr('type')
@@ -248,7 +248,7 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	})
-  $('body').on('click', '.get_dialog_delete_file', function(){
+  $(document).on('click', '.get_dialog_delete_file', function(){
     id = get_query_id($(this));
     path = $(this).parent().attr('path');
     $.get('/queries/' + id +'/files/' + path + '/get_dialog_delete_file',
@@ -256,7 +256,7 @@ $(document).ready(function(){
         init_content(r);
       });
   })
-	$('body').on('click', '.get_dialog_remove_user', function(){
+	$(document).on('click', '.get_dialog_remove_user', function(){
 		$.get('get_dialog_remove_user',{
 			id: get_query_id($(this)),
 			user_id: $(this).parent().attr('user'),
@@ -265,14 +265,14 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	})
-	$('body').on('click', '.get_dialog_add_work', function(){
+	$(document).on('click', '.get_dialog_add_work', function(){
 		$.get('get_dialog_add_work',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	})
-	$('body').on('click', '.get_dialog_remove_work', function(){
+	$(document).on('click', '.get_dialog_remove_work', function(){
 		$.get('get_dialog_remove_work',{
 			id: get_query_id($(this)),
 			work_id: $(this).parent().attr('work')
@@ -280,7 +280,7 @@ $(document).ready(function(){
 				init_content(r);
 			});
 	})
-	$('body').on('click', '.get_dialog_close_query', function(){
+	$(document).on('click', '.get_dialog_close_query', function(){
 		$.get('get_dialog_close_query',{
 			id: get_query_id($(this))
 			},function(r){
@@ -288,7 +288,7 @@ $(document).ready(function(){
 			});
 	})
 
-	$('body').on('click', '.get_dialog_reopen_query', function(){
+	$(document).on('click', '.get_dialog_reopen_query', function(){
 		$.get('get_dialog_reopen_query',{
 			id: get_query_id($(this))
 			},function(r){
@@ -296,7 +296,7 @@ $(document).ready(function(){
 			});
 	})
 
-	$('body').on('click', '.get_dialog_change_initiator', function(){
+	$(document).on('click', '.get_dialog_change_initiator', function(){
 		$.get('get_dialog_change_initiator',{
 			id: get_query_id($(this))
 			},function(r){
@@ -304,7 +304,7 @@ $(document).ready(function(){
 			});
 	})
 
-	$('body').on('click', '.get_dialog_reclose_query', function(){
+	$(document).on('click', '.get_dialog_reclose_query', function(){
 		$.get('get_dialog_reclose_query',{
 			id: get_query_id($(this))
 			},function(r){
@@ -312,7 +312,7 @@ $(document).ready(function(){
 			});
 	})
 
-	$('body').on('click', '.get_dialog_cancel_client_query', function(){
+	$(document).on('click', '.get_dialog_cancel_client_query', function(){
 		$.get('get_dialog_cancel_client_query',{
 			number_id: $(this).parent().parent().attr('number_id'),
 			time: $(this).parent().parent().attr('time')
@@ -321,7 +321,7 @@ $(document).ready(function(){
 			});
 	})
 
-	$('body').on('click', '.get_dialog_accept_client_query', function(){
+	$(document).on('click', '.get_dialog_accept_client_query', function(){
 		$.get('get_dialog_accept_client_query',{
 			number_id: $(this).parent().parent().attr('number_id'),
 			time: $(this).parent().parent().attr('time')
@@ -331,14 +331,14 @@ $(document).ready(function(){
 	})
 
 
-	$('body').on('click', '.get_dialog_to_working_query', function(){
+	$(document).on('click', '.get_dialog_to_working_query', function(){
 		$.get('get_dialog_to_working_query',{
 			id: get_query_id($(this))
 			},function(r){
 				init_content(r);
 			});
 	})
-	$('body').on('click', '.get_timeline', function(){
+	$(document).on('click', '.get_timeline', function(){
 		$.get('get_timeline',{
 			act: $(this).attr('act'),
 			time: $('.timeline-month').attr('time')
@@ -351,13 +351,22 @@ $(document).ready(function(){
   function(r){
     $('.requests').html(r);
   });
-  $('body').on('click', '.get_requests', function(){
+  $.getJSON('/queries/outages/',
+  function(r){
+    $('.outages').html(r['outages']);
+  });
+  $(document).on('click', '.get_outages', function(){
+    $(this).hide();
+    $('.outages .well').show();
+  }).on('click', '.outages .well .close', function(){
+    $('.outages .get_outages').show();
+    $('.outages .well').hide();
+  }).on('click', '.get_requests', function(){
     $.get('/queries/requests/',
       function(r){
         $('.requests').html(r);
       });
-  });
-  $('body').on('click', '.close_request_view', function(){
+  }).on('click', '.close_request_view', function(){
     $.get('/queries/requests/count/',
     function(r){
       $('.requests').html(r);

@@ -28,7 +28,7 @@
       <div class="col-sm-9 col-md-10" id="main-content">{% block content %}{% endblock %}</div>
     </div>
   </div>
-  <footer>
+  <footer class="container-fluid">
     <div class="col-md-6">
       <small style="line-height: 40px;">2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru">"Основные локальные сервисы."</a></small>
     </div>

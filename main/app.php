@@ -63,6 +63,10 @@ $app['main\models\queries'] = function($app){
 $app['main\models\report_event'] = function($app){
   return new \main\models\report_event($app['em'], $app['session']);
 };
+
+$app['main\models\report_outages'] = function($app){
+  return new models\report_outages($app['em'], $app['twig'], $app['user'], $app['session']);
+};
 $app['main\models\import_numbers'] = function($app){
   return new \main\models\import_numbers($app['em'], $app['session']);
 };
@@ -104,6 +108,14 @@ $app['main\models\logs'] = function($app){
 };
 $app['main\models\factory'] = function($app){
   return new models\factory($app);
+};
+
+$app['main\models\numbers'] = function($app){
+  return new models\numbers($app['twig'], $app['em'], $app['user']);
+};
+
+$app['main\models\outages'] = function($app){
+  return new models\outages($app['twig'], $app['em'], $app['user']);
 };
 
 $app['\domain\query2comment'] = $app->factory(function($app){
@@ -277,11 +289,27 @@ $app->get('/metrics/archive/', 'main\controllers\metrics::archive')->before($sec
 $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->before($security);
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
 
+# outages
+$app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);
+$app->get('/numbers/outages/dialogs/create/', 'main\controllers\outages::dialog_create')->before($security);
+$app->get('/numbers/outages/streets/{id}/houses/', 'main\controllers\outages::houses')->before($security);
+$app->get('/numbers/outages/groups/{id}/users/', 'main\controllers\outages::users')->before($security);
+$app->post('/numbers/outages/', 'main\controllers\outages::create')->before($security);
+$app->get('/numbers/outages/{id}/edit/', 'main\controllers\outages::edit')->before($security);
+$app->post('/numbers/outages/{id}/', 'main\controllers\outages::update')->before($security);
+$app->get('/numbers/outages/today/', 'main\controllers\outages::today')->before($security);
+$app->get('/numbers/outages/yesterday/', 'main\controllers\outages::yesterday')->before($security);
+$app->get('/numbers/outages/week/', 'main\controllers\outages::week')->before($security);
+$app->get('/numbers/outages/lastweek/', 'main\controllers\outages::lastweek')->before($security);
+$app->get('/numbers/outages/active/', 'main\controllers\outages::active')->before($security);
+
 # number
 $app->get('/number/', 'main\controllers\numbers::default_page')->before($security);
-$app->get('/number/get_street_content', 'main\controllers\numbers::get_street_content')->before($security);
-$app->get('/number/get_house_content', 'main\controllers\numbers::get_house_content')->before($security);
-$app->get('/number/get_number_content', 'main\controllers\numbers::get_number_content')->before($security);
+$app->get('/numbers/streets/', 'main\controllers\numbers::get_streets')->before($security);
+$app->get('/numbers/streets/{id}/', 'main\controllers\numbers::get_street_content')->before($security);
+$app->get('/numbers/houses/{id}/', 'main\controllers\numbers::get_house_content')->before($security);
+$app->get('/numbers/houses/{id}/outages/', 'main\controllers\numbers::outages')->before($security);
+$app->get('/numbers/{id}/', 'main\controllers\numbers::get_number_content')->before($security);
 $app->get('/number/get_dialog_edit_number_fio', 'main\controllers\numbers::get_dialog_edit_number_fio')->before($security);
 $app->get('/number/update_number_fio', 'main\controllers\numbers::update_number_fio')->before($security);
 $app->get('/number/get_dialog_edit_number', 'main\controllers\numbers::get_dialog_edit_number')->before($security);
@@ -295,7 +323,7 @@ $app->get('/number/get_dialog_edit_number_email', 'main\controllers\numbers::get
 $app->get('/number/update_number_email', 'main\controllers\numbers::update_number_email')->before($security);
 $app->get('/number/get_dialog_edit_department', 'main\controllers\numbers::get_dialog_edit_department')->before($security);
 $app->get('/number/edit_department', 'main\controllers\numbers::edit_department')->before($security);
-$app->get('/number/query_of_house', 'main\controllers\numbers::query_of_house')->before($security);
+$app->get('/number/houses/{id}/queries/', 'main\controllers\numbers::query_of_house')->before($security);
 $app->get('/number/query_of_number', 'main\controllers\numbers::query_of_number')->before($security);
 $app->get('/number/accruals', 'main\controllers\numbers::accruals')->before($security);
 $app->get('/number/contact_info', 'main\controllers\numbers::contact_info')->before($security);
@@ -311,6 +339,7 @@ $app->get('/numbers/{id}/generate_password/', 'main\controllers\number::generate
 $app->get('/numbers/{id}/contacts/', 'main\controllers\number::get_dialog_contacts')->before($security);
 $app->post('/numbers/{id}/contacts/', 'main\controllers\number::update_contacts')->before($security);
 $app->get('/numbers/{id}/contacts/history/', 'main\controllers\number::history')->before($security);
+$app->get('/numbers/{id}/meterages/', 'main\controllers\number::meterages')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);
@@ -389,6 +418,7 @@ $app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\querie
 $app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
 $app->get('/queries/requests/count/', 'main\controllers\queries::count')->before($security);
 $app->get('/queries/requests/', 'main\controllers\queries::requests')->before($security);
+$app->get('/queries/outages/', 'main\controllers\queries::outages')->before($security);
 $app->get('/queries/day/stats/', 'main\controllers\queries::stats')->before($security);
 $app->get('/queries/selections/', 'main\controllers\queries::selections')->before($security);
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
@@ -406,12 +436,17 @@ $app->get('/reports/queries/set_query_type/', 'main\controllers\report_queries::
 $app->get('/reports/queries/set_street/', 'main\controllers\report_queries::set_street')->before($security);
 $app->get('/reports/queries/set_house/', 'main\controllers\report_queries::set_house')->before($security);
 $app->get('/reports/queries/report1/', 'main\controllers\report_queries::report1')->before($security);
+$app->get('/reports/queries/report1/noclose/', 'main\controllers\report_queries::noclose')->before($security);
 $app->get('/reports/queries/report1/xls/', 'main\controllers\report_queries::report1_xls')->before($security);
 $app->get('/reports/event/', 'main\controllers\report_event::get_event_reports')->before($security);
 $app->get('/reports/event/set_time_begin', 'main\controllers\report_event::set_time_begin')->before($security);
 $app->get('/reports/event/set_time_end', 'main\controllers\report_event::set_time_end')->before($security);
 $app->get('/reports/event/html/', 'main\controllers\report_event::html')->before($security);
 $app->get('/reports/event/clear/', 'main\controllers\report_event::clear')->before($security);
+$app->get('/reports/outages/', 'main\controllers\report_outages::default_page')->before($security);
+$app->get('/reports/outages/html/', 'main\controllers\report_outages::html')->before($security);
+$app->post('/reports/outages/filters/begin/start/', 'main\controllers\report_outages::start')->before($security);
+$app->post('/reports/outages/filters/begin/end/', 'main\controllers\report_outages::end')->before($security);
 
 # tasks
 $app->get('/task/', 'main\controllers\task::default_page')->before($security);

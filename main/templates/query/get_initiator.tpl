@@ -1,5 +1,9 @@
 {% extends "ajax.tpl" %}
 
+{% if initiator == 'number' %}
+  {% set house = number.get_flat().get_house() %}
+{% endif %}
+
 {% block js %}
 	show_dialog(get_hidden_content());
   $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
@@ -45,7 +49,18 @@
       <h5>Последние заявки на этот дом</h5>
        <ul class="list-unstyled old-queries">
           {% for query in queries  %}
-            <li class="query_status_{{ query.get_status() }}"><strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
+            <li class="query_status_{{ query.get_status() }}">
+            {% if query.get_initiator() == 'number' %}
+              <i class="glyphicon glyphicon-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
+            {% else %}
+              <i class="glyphicon glyphicon-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
+            {% endif %}
+            <strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
+            {% if query.get_initiator() == 'number' %}
+              {% for number in query.get_numbers() %}
+                <div> кв.{{ number.get_flat().get_number() }} {{ number.get_number() }} ({{ number.get_fio() }})</div>
+              {% endfor %}
+            {% endif %}
               {% if query.get_status() in ['close', 'reopen'] %}
               <p class="label label-default">{{ query.get_close_reason() }}</p>
               {% endif %}
@@ -63,37 +78,64 @@
       {% endif %}
 		{% if initiator == 'number' %}
         <div>
-        {{ number.get_flat().get_house().get_street().get_name() }}, дом №{{ number.get_flat().get_house().get_number() }}, кв.{{ number.get_flat().get_number() }}, {{ number.get_fio() }}(л/с №{{ number.get_number() }})
+        {{ number.get_address() }}, {{ number.get_fio() }}(л/с №{{ number.get_number() }})
   				<ul>
-            <li>Задолженость: {{ number.get_debt() }} руб.</li>
+            <li>Задолженость: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</li>
   				</ul>
         </div>
 		{% else %}
-				<div>
-					{{ house.get_street().get_name() }}, дом №{{ house.get_number() }}
-				</div>
+				<div>{{ house.get_address() }}</div>
 		{% endif %}
         <h4>Данные контактного лица по заявке</h4>
-        <div class="dialog-addinfo">
-            <div class="form-group">
-              <label class=" control-label">ФИО:</label>
-              <input type="text" class="form-control dialog-fio" value="{{ number.get_fio() }}">
-            </div>
-            <div class="form-group">
-              <label class="control-label">Телефон:</label>
-              <input type="text" class="form-control dialog-telephone" value="{{ number.get_telephone() }}">
-            </div>
-            <div class="form-group">
-              <label class="control-label">Сот. телефон:</label>
-              <input type="text" class="form-control dialog-cellphone" value="{{ number.get_cellphone() }}">
-            </div>
-            {% if user.check_access("queries/save_contacts") %}
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" class="dialog-checkbox-contacts"> Использовать контакты как основные
-              </label>
-            </div>
-            {% endif %}
+        <div class="row">
+        {% if initiator == 'number' %}
+        <div class="dialog-addinfo col-md-6">
+          <div class="form-group">
+            <label class=" control-label">ФИО:</label>
+            <input type="text" class="form-control dialog-fio" value="{{ number.get_fio() }}">
+          </div>
+          <div class="form-group">
+            <label class="control-label">Телефон:</label>
+            <input type="text" class="form-control dialog-telephone" value="{{ number.get_telephone() }}">
+          </div>
+          <div class="form-group">
+            <label class="control-label">Сот. телефон:</label>
+            <input type="text" class="form-control dialog-cellphone" value="{{ number.get_cellphone() }}">
+          </div>
+          {% if user.check_access("queries/save_contacts") %}
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" class="dialog-checkbox-contacts"> Использовать контакты как основные
+            </label>
+          </div>
+          {% endif %}
+        </div>
+        {% else %}
+        <div class="dialog-addinfo col-md-6">
+          <div class="form-group">
+            <label class=" control-label">ФИО:</label>
+            <input type="text" class="form-control dialog-fio">
+          </div>
+          <div class="form-group">
+            <label class="control-label">Телефон:</label>
+            <input type="text" class="form-control dialog-telephone">
+          </div>
+          <div class="form-group">
+            <label class="control-label">Сот. телефон:</label>
+            <input type="text" class="form-control dialog-cellphone">
+          </div>
+        </div>
+        {% endif %}
+        <div class="col-md-6">
+          <h4>Последние 5 отключений</h4>
+          <ul>
+            {% for outage in house.get_outages().slice(0, 5) %}
+            <li>
+              c {{ outage.get_begin()|date("d.m.Y") }} по {{ outage.get_target()|date("d.m.Y") }} {{ outage.get_category().get_name() }}: {{ outage.get_description() }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
         </div>
         <div class="row">
           <div class="col-md-6 form-group">

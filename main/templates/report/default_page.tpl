@@ -10,6 +10,9 @@
     <li>
       <a class="get_event_reports">Отчеты по событиям</a>
     </li>
+    <li>
+      <a class="get_outage_reports">Отчеты по отключениям</a>
+    </li>
   </ul>
 </div>
 <div class="col-xs-12 col-sm-10 col-lg-10 report-content"></div>

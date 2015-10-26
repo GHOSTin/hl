@@ -25,10 +25,6 @@
 #search-number{
     margin: 0;
 }
-.streets, .houses, .numbers{
-    list-style:none;
-    border: none;
-}
 
 .streets.nav>li>a,
 .houses.nav>li>a,
@@ -67,6 +63,19 @@ table caption h3 {
 
 .table th > input, .table td > input{
     margin: 0;
+}
+
+.get_street_content,
+.get_house_content,
+.get_number_content {
+    padding: 3px 0;
+    display: inline-block;
+}
+
+@media (min-width: 48em) {
+    .workspace {
+        margin-left: 40px;
+    }
 }
 
 @media (max-width: 979px) {
