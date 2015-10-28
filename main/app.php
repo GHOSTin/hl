@@ -246,6 +246,10 @@ $app->get('/works/add_event', 'main\controllers\works::add_event')->before($secu
 $app->get('/works/get_dialog_exclude_event', 'main\controllers\works::get_dialog_exclude_event')->before($security);
 $app->get('/works/exclude_event', 'main\controllers\works::exclude_event')->before($security);
 
+# phrase
+$app->get('/workgroups/{id}/phrases/create/', 'main\controllers\workgroup::create_phrase_dialog')->before($security);
+$app->post('/workgroups/{id}/phrases/', 'main\controllers\workgroup::create_phrase')->before($security);
+
 # user
 $app->get('/user/', 'main\controllers\users::default_page')->before($security);
 $app->get('/user/get_user_letter', 'main\controllers\users::get_user_letter')->before($security);

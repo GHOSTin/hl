@@ -1,9 +1,5 @@
 <?php namespace domain;
 
-use DomainException;
-use domain\workgroup;
-use domain\house;
-use domain\user;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
