@@ -1,4 +1,3 @@
-{% spaceless %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -20,11 +19,9 @@
         <div class="row">{% block content %}{% endblock content %}</div>
       </div>
     </div>
-    <footer class="container-fluid">
-      <div class="row">
-        <div class="col-md-6">
-          <small>2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru">"Основные локальные сервисы."</a></small>
-        </div>
+    <footer class="footer">
+      <div>
+        <small>2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru" class="text-primary">"Основные локальные сервисы."</a></small>
       </div>
     </footer>
     <script src="/js/jquery.min.js"></script>
@@ -35,4 +32,3 @@
     {% block js %}{% endblock js %}
   </body>
 </html>
-{% endspaceless %}
