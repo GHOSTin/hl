@@ -21,26 +21,12 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'CREATE TABLE outage(
+$queries[] = 'CREATE TABLE phrase(
                 id INT UNSIGNED NOT NULL,
-                begin INT UNSIGNED NOT NULL,
-                target INT UNSIGNED NOT NULL,
-                category_id INT UNSIGNED NOT NULL,
-                user_id INT UNSIGNED NOT NULL,
-                description VARCHAR(255) NOT NULL,
+                workgroup_id INT UNSIGNED NOT NULL,
+                text TEXT NOT NULL,
                 PRIMARY KEY (id)
               )';
 
-$queries[] = 'CREATE TABLE outage2house(
-                outage_id INT UNSIGNED NOT NULL,
-                house_id INT UNSIGNED NOT NULL,
-                PRIMARY KEY(outage_id, house_id)
-              )';
-
-$queries[] = 'CREATE TABLE outage2performer(
-                outage_id INT UNSIGNED NOT NULL,
-                user_id INT UNSIGNED NOT NULL,
-                PRIMARY KEY(outage_id, user_id)
-              )';
 foreach($queries as $query)
   $pdo->exec($query);

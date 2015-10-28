@@ -25,4 +25,8 @@ class factory{
   public function get_outage_model($id){
     return new outage($this->app['twig'], $this->app['em'], $this->app['user'], $id);
   }
+
+  public function get_workgroup_model($id){
+    return new workgroup($this->app['twig'], $this->app['em'], $this->app['user'], $id);
+  }
 }
