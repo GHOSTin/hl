@@ -30,8 +30,23 @@
 </li>
 
 <li id="settings">
-  <a href="/settings/">
+  <a href="#">
     <i class="fa fa-cog"></i>
     <span>Настройки</span>
+    <span class="fa arrow"></span>
   </a>
+  <ul class="nav nav-second-level collapse">
+    <li>
+      <a href="/settings/password/">Изменение пароля</a>
+    </li>
+    <li>
+      <a href="/settings/email/">Изменение email</a>
+    </li>
+    <li>
+      <a href="/settings/cellphone/">Изменение номера сотового телефона</a>
+    </li>
+    <li>
+      <a href="/settings/notification/">Изменение правил оповещения</a>
+    </li>
+  </ul>
 </li>
