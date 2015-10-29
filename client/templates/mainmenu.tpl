@@ -1,4 +1,4 @@
-<li id="home">
+<li id="home" class="active">
   <a href="/">
     <i class="fa fa-home"></i>
     <span>Главная</span>
@@ -16,7 +16,7 @@
     <span>Онлайн-оплата</span>
   </a>
 </li>
-<li id="accruals">
+<li id="metrics">
   <a href="/metrics/">
     <i class="fa fa-edit"></i>
     <span>Передача показаний</span>
