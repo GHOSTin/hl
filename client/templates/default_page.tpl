@@ -20,13 +20,13 @@
   <div class="col-md-4">
     <div class="ibox float-e-margins">
       <div class="ibox-title">
-        <span class="label label-warning pull-right">сегодня</span>
-        <h5>Задолженость</h5>
+        <h5>Текущая задолженость</h5>
       </div>
       <div class="ibox-content">
         <div class="row">
           <div class="col-lg-12">
             <h1 class="no-margins">{{ number.get_debt()|number_format(2, '.', ' ') }} руб.</h1>
+            <small class="m-t block">Информация о задолжености носит справочный характер.</small>
           </div>
         </div>
       </div>
