@@ -4,7 +4,6 @@ use RuntimeException;
 use Twig_Environment;
 use Doctrine\ORM\EntityManager;
 use domain\user;
-use domain\phrase;
 
 class workgroup{
 
@@ -29,7 +28,7 @@ class workgroup{
   }
 
   public function create_phrase($text){
-    $phrase = phrase::new_instance($this->workgroup, $text);
+    $phrase = \domain\phrase::new_instance($this->workgroup, $text);
     $this->em->persist($phrase);
     $this->em->flush();
   }
