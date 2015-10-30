@@ -28,7 +28,7 @@
   <h3>Фразы</h3>
   <ul class="phrases">
   {% for phrase in workgroup.get_phrases() %}
-    <li class="phrase" phrase="{{ phrase.get_id() }}">{{ phrase.get_text() }}</li>
+    <li class="phrase" phrase="{{ phrase.get_id() }}">{{ phrase.get_text() }} <i class="fa fa-close get_dialog_remove_phrase"></i></li>
   {% endfor %}
   </ul>
 </div>

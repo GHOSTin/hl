@@ -249,6 +249,8 @@ $app->get('/works/exclude_event', 'main\controllers\works::exclude_event')->befo
 # phrase
 $app->get('/workgroups/{id}/phrases/create/', 'main\controllers\workgroup::create_phrase_dialog')->before($security);
 $app->post('/workgroups/{id}/phrases/', 'main\controllers\workgroup::create_phrase')->before($security);
+$app->get('/workgroups/phrases/{id}/remove/', 'main\controllers\phrase::remove_dialog')->before($security);
+$app->delete('/workgroups/phrases/', 'main\controllers\phrase::remove')->before($security);
 
 # user
 $app->get('/user/', 'main\controllers\users::default_page')->before($security);
