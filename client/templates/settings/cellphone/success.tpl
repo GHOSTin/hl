@@ -1,9 +1,11 @@
 {% extends "private.tpl" %}
 
 {% block content %}
-<div class="content row">
+<div class="row">
   <div class="col-md-6">
-  Номер сотового телефона успешно изменен. <a href="/settings/cellphone/">Вернуться</a>
+    <div class="ibox-content">
+      <h2>Номер сотового телефона успешно изменен.</h2><a class="btn btn-primary" href="/settings/cellphone/">Вернуться</a>
+    </div>
   </div>
 </div>
 {% endblock %}

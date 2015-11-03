@@ -1,24 +1,37 @@
 {% set status = {'open': 'Открытая', 'close': 'Закрытая', 'working': 'В работе', 'reopen': 'Открытая'} %}
+{% set status_classes = {'open': 'label-primary', 'close': 'label-default', 'working': 'label-info', 'reopen': 'label-primary'} %}
 
-<div class="queries col-md-12">
 {% for query in queries %}
-  <div class="well">
-  {% if query.get_request() %}
-    <h4>Заявка №{{ query.get_number() }} от {{ query.get_time_open()|date('d.m.Y') }} на основании запроса от {{ query.get_request().get_time()|date('d.m.Y') }}</h4>
-  {% else %}
-    <h4>Заявка №{{ query.get_number() }} от {{ query.get_time_open()|date('d.m.Y') }}</h4>
-  {% endif %}
-    <ul class="list-unstyled">
+  <tr>
+    <td class="project-status">
+      <span class="label {{ status_classes[query.get_status()] }}">{{ status[query.get_status()] }}</span>
+    </td>
+    <td class="project-title" data-value="{{ query.get_number() }}">
+      {% if query.get_request() %}
+        <h3 class="no-margins">Заявка №{{ query.get_number() }}</h3>
+        <small>от {{ query.get_time_open()|date('d.m.Y') }} на основании запроса от {{ query.get_request().get_time()|date('d.m.Y') }}</small>
+      {% else %}
+        <h3 class="no-margins">Заявка №{{ query.get_number() }}</h3>
+        <small>от {{ query.get_time_open()|date('d.m.Y') }}</small>
+      {% endif %}
+    </td>
     {% if query.get_request() %}
-      <li>Запрос: {{ query.get_request().get_message() }}</li>
+    <td class="project-query">
+        {{ query.get_request().get_message() }}
+    </td>
+    {% else %}
+      <td class="project-query"></td>
     {% endif %}
-      <li>Описание: {{ query.get_description() }}</li>
-      <li>Статус: {{ status[query.get_status()] }}</li>
-      <li>Диспетчер: {{ query.get_creator().get_fio() }}</li>
-    {% if query.get_status() == 'close' %}
-      <li>Причина закрытия: {{ query.get_close_reason() }}</li>
-    {% endif %}
-    </ul>
-  </div>
+    <td class="project-description">
+      {{ query.get_description() }}
+    </td>
+    <td class="project-creator">
+      {{ query.get_creator().get_fio() }}
+    </td>
+    <td class="project-close_reason">
+      {% if query.get_status() == 'close' %}
+        {{ query.get_close_reason() }}
+      {% endif %}
+    </td>
+  </tr>
 {% endfor %}
-</div>

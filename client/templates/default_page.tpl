@@ -2,9 +2,35 @@
 
 {% block content %}
 <div class="content row">
-  <div class="col-md-6">
-  <p>{{ number.get_flat().get_house().get_street().get_name() }}, дом {{ number.get_flat().get_house().get_number() }}, кв. {{ number.get_flat().get_number() }}, {{ number.get_fio() }}</p>
-  Задолженость на сегодняшний день <strong>{{ number.get_debt()|number_format(2, '.', ' ') }} руб.</strong>
+  <div class="col-md-5">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>Общая информация</h5>
+      </div>
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-lg-12">
+            <h2 class="no-margins">{{ number.get_fio() }}</h2>
+            <h3>{{ number.get_flat().get_house().get_street().get_name() }}, дом {{ number.get_flat().get_house().get_number() }}, кв. {{ number.get_flat().get_number() }}</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="ibox float-e-margins">
+      <div class="ibox-title">
+        <h5>Текущая задолженость</h5>
+      </div>
+      <div class="ibox-content">
+        <div class="row">
+          <div class="col-lg-12">
+            <h1 class="no-margins">{{ number.get_debt()|number_format(2, '.', ' ') }} руб.</h1>
+            <small class="m-t block">Информация о задолжености носит справочный характер.</small>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock content %}

@@ -1,12 +1,12 @@
 {% extends "public.tpl" %}
 
 {% block content %}
-<div id="content" class="col-sm-12 full">
+<div id="content" class="col-sm-12 full m-t">
   <div class="row">
-    <div class="col-md-5">
+    <div class="passwordBox animated fadeInDown">
       Для того чтобы заявка была рассмотрена информация должна быть введена полностью и соответствовать действительности.
       <p>* - поля обязательные для заполнения.</p>
-      <form method="post">
+      <form method="post" class="ibox-content">
         <div class="form-group">
           <label>Адрес*</label>
           <input type="text"  class="form-control" name="address" autofocus required>
@@ -35,8 +35,8 @@
           <label>Сотовый</label>
           <input type="tel"  class="form-control" name="cellphone">
         </div>
-        <button type="submit" class="btn btn-default">Отправить</button>
-        <a href="/" class="btn btn-default">Отменить</a>
+        <button type="submit" class="btn btn-primary btn-block full-width m-b">Отправить</button>
+        <button onclick="window.location='/';" class="btn btn-white btn-block full-width m-b" type="button">Отменить</button>
       </form>
     </div>
   </div>
