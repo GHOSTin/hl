@@ -47,9 +47,15 @@ class workgroup{
   */
   private $queries;
 
+  /**
+  * @OneToMany(targetEntity="domain\phrase", mappedBy="workgroup")
+  */
+  private $phrases;
+
   public function __construct(){
     $this->works = new ArrayCollection();
     $this->events = new ArrayCollection();
+    $this->phrases = new ArrayCollection();
     $this->status = 'active';
   }
 
@@ -79,6 +85,10 @@ class workgroup{
 
   public function get_works(){
     return $this->works;
+  }
+
+  public function get_phrases(){
+    return $this->phrases;
   }
 
   public function get_id(){

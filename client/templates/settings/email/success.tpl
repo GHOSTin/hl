@@ -1,9 +1,11 @@
 {% extends "private.tpl" %}
 
 {% block content %}
-<div class="content row">
+<div class="row">
   <div class="col-md-6">
-  Email успешно изменен. <a href="/settings/email/">Вернуться</a>
+    <div class="ibox-content">
+      <h2>Email успешно изменен.</h2><a class="btn btn-primary" href="/settings/email/">Вернуться</a>
+    </div>
   </div>
 </div>
 {% endblock %}

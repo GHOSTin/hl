@@ -1,5 +1,7 @@
 {% extends "ajax.tpl" %}
 
+{% set w = null %}
+
 {% if initiator == 'number' %}
   {% set house = number.get_flat().get_house() %}
 {% endif %}
@@ -8,6 +10,16 @@
 	show_dialog(get_hidden_content());
   $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
   $('.dialog-telephone').inputmask("mask", {"mask": "99-99-99"});
+  $('.dialog-phrase').change(function(){
+    $('.dialog-description').text($('.dialog-phrase').val());
+  });
+  $('.dialog-worktype').change(function(){
+    var id = $('.dialog-worktype :selected').val();
+    $.get('/queries/workgroups/' + id + '/phrases/'
+      ,function(r){
+        $('.dialog-phrase').html(r);
+      });
+  });
 	$('.create_query').click(function(){
 		$.get('create_query',{
 			initiator: '{{ initiator }}',
@@ -141,11 +153,12 @@
           <div class="col-md-6 form-group">
             <label>Тип работ</label>
             <select class="form-control dialog-worktype">
-            {% if query_work_types != false %}
               {% for workgroup in query_work_types %}
+              {% if loop.first %}
+                {% set w = workgroup %}
+              {% endif%}
                 <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
               {% endfor %}
-            {% endif %}
             </select>
           </div>
           <div class="col-md-6 form-group">
@@ -154,6 +167,17 @@
             {% for query_type in query_types %}
               <option value="{{ query_type.get_id() }}">{{ query_type.get_name()}}</option>
             {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 form-group">
+            <label>Типовые фразы</label>
+            <select class="form-control dialog-phrase">
+              <option></option>
+              {% for phrase in w.get_phrases() %}
+                <option>{{ phrase.get_text() }}</option>
+              {% endfor %}
             </select>
           </div>
         </div>

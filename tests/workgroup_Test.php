@@ -63,6 +63,10 @@ class workgroup_Test extends PHPUnit_Framework_TestCase{
     $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->workgroup->get_works());
   }
 
+  public function test_get_phrases(){
+    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->workgroup->get_phrases());
+  }
+
   public function test_new_instance(){
     $workgroup = workgroup::new_instance('Привет');
     $reflection = new ReflectionClass('domain\workgroup');

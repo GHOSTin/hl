@@ -246,6 +246,14 @@ $app->get('/works/add_event', 'main\controllers\works::add_event')->before($secu
 $app->get('/works/get_dialog_exclude_event', 'main\controllers\works::get_dialog_exclude_event')->before($security);
 $app->get('/works/exclude_event', 'main\controllers\works::exclude_event')->before($security);
 
+# phrase
+$app->get('/workgroups/{id}/phrases/create/', 'main\controllers\workgroup::create_phrase_dialog')->before($security);
+$app->post('/workgroups/{id}/phrases/', 'main\controllers\workgroup::create_phrase')->before($security);
+$app->get('/workgroups/phrases/{id}/remove/', 'main\controllers\phrase::remove_dialog')->before($security);
+$app->delete('/workgroups/phrases/', 'main\controllers\phrase::remove')->before($security);
+$app->get('/workgroups/phrases/{id}/edit/', 'main\controllers\phrase::edit_dialog')->before($security);
+$app->put('/workgroups/phrases/{id}/', 'main\controllers\phrase::edit')->before($security);
+
 # user
 $app->get('/user/', 'main\controllers\users::default_page')->before($security);
 $app->get('/user/get_user_letter', 'main\controllers\users::get_user_letter')->before($security);
@@ -422,6 +430,7 @@ $app->get('/queries/outages/', 'main\controllers\queries::outages')->before($sec
 $app->get('/queries/day/stats/', 'main\controllers\queries::stats')->before($security);
 $app->get('/queries/selections/', 'main\controllers\queries::selections')->before($security);
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
+$app->get('/queries/workgroups/{id}/phrases/', 'main\controllers\queries::phrases')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);

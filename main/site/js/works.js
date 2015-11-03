@@ -18,6 +18,28 @@ $(document).ready(function(){
     },function(r){
       init_content(r);
     });
+
+  }).on('click', '.get_dialog_add_phrase', function(){
+    var id = get_workgroup_id($(this));
+    $.get('/workgroups/' + id + '/phrases/create/',
+    function(r){
+      init_content(r);
+    });
+
+  }).on('click', '.get_dialog_edit_phrase', function(){
+    var id = $(this).parent().attr('phrase');
+    $.get('/workgroups/phrases/' + id + '/edit/',
+    function(r){
+      init_content(r);
+    });
+
+  }).on('click', '.get_dialog_remove_phrase', function(){
+    var id = $(this).parent().attr('phrase');
+    $.get('/workgroups/phrases/' + id + '/remove/',
+    function(r){
+      init_content(r);
+    });
+
   }).on('click', '.get_dialog_add_work', function(){
     $.get('get_dialog_add_work',{
       id: get_workgroup_id($(this))

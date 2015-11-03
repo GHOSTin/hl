@@ -193,7 +193,7 @@ class report_queries{
     foreach($queries as $query){
       $res['stat'][$query->get_status()] ++;
       $department = $query->get_department()->get_name();
-      $house = $query->get_house()->get_full_name();
+      $house = $query->get_house()->get_address();
       $type = $query->get_work_type()->get_name();
       if(!isset($res['departments'][$department]['stat'])){
         $res['departments'][$department]['stat']['open'] = 0;

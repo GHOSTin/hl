@@ -24,7 +24,7 @@
   <div class="flat"></div>
   <div class="top"></div>
   <p>
-    <a href="/">Вернуться на главную</a>
+    <a href="/" class="m-t btn btn-primary">Вернуться на главную</a>
   </p>
 </div>
 {% endblock %}
