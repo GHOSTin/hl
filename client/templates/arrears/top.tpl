@@ -1,5 +1,5 @@
 {% if debtors is not empty %}
-<div class="table-responsive well">
+<div class="table-responsive ibox-content">
   <h4>Злостные неплательщики</h4>
   <table class="table table-striped table-condensed">
     <thead>
@@ -10,8 +10,8 @@
     {% for numbers in debtors %}
       {% for number in numbers %}
       <tr>
-        <td class="hidden-xs hidden-sm">кв. №{{ number.get_flat().get_number() }}</td>
-        <td data-title="кв. №{{ number.get_flat().get_number() }}">{{ number.get_debt()|number_format(2, '.', ' ') }}</td>
+        <td>кв. №{{ number.get_flat().get_number() }}</td>
+        <td>{{ number.get_debt()|number_format(2, '.', ' ') }}</td>
       </tr>
       {% endfor %}
     {% endfor %}

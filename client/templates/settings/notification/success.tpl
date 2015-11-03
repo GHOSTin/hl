@@ -1,9 +1,11 @@
 {% extends "private.tpl" %}
 
 {% block content %}
-<div class="content row">
+<div class="row">
   <div class="col-md-6">
-  Правила оповещения успешно изменены. <a href="/settings/notification/">Вернуться</a>
+    <div class="ibox-content">
+      <h2>Правила оповещения успешно изменены. </h2><a class="btn btn-primary" href="/settings/notification/">Вернуться</a>
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-function show_dialog(result){
+function show_dialog(result) {
   $('.dialog').modal('hide');
   $('.dialog').remove();
   $('body').append('<div class="dialog modal fade" style="display:none">' + result + '</div>');
@@ -41,4 +41,15 @@ $("#menu-toggler").click(function (e) {
 });
 $(window).resize(function() {
     $(this).width() > 769 && $("body.menu").removeClass("menu")
-})
+});
+
+$(function() {
+    if (location.pathname !== '/') {
+        $('#side-menu')
+            .find('li')
+            .removeClass('active')
+            .find('a[href^="/' + location.pathname.split("/")[1] + '"]')
+            .parent()
+            .addClass('active');
+    }
+});
