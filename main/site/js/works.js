@@ -26,6 +26,13 @@ $(document).ready(function(){
       init_content(r);
     });
 
+  }).on('click', '.get_dialog_edit_phrase', function(){
+    var id = $(this).parent().attr('phrase');
+    $.get('/workgroups/phrases/' + id + '/edit/',
+    function(r){
+      init_content(r);
+    });
+
   }).on('click', '.get_dialog_remove_phrase', function(){
     var id = $(this).parent().attr('phrase');
     $.get('/workgroups/phrases/' + id + '/remove/',

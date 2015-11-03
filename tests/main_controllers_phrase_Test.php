@@ -20,6 +20,32 @@ class main_controllers_phrase_Test extends PHPUnit_Framework_TestCase{
     $this->app['main\models\phrase'] = $this->model;
   }
 
+  public function test_edit_dialog(){
+    $this->factory->expects($this->once())
+                  ->method('get_phrase_model')
+                  ->with('125')
+                  ->willReturn($this->model);
+    $this->model->expects($this->once())
+                ->method('edit_phrase_dialog')
+                ->willReturn('render_template');
+    $response = $this->controller->edit_dialog($this->app, '125');
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_edit(){
+    $this->request->request->set('text', 'Привет');
+    $this->factory->expects($this->once())
+                  ->method('get_phrase_model')
+                  ->with('125')
+                  ->willReturn($this->model);
+    $this->model->expects($this->once())
+                ->method('edit')
+                ->with('Привет')
+                ->willReturn('render_template');
+    $response = $this->controller->edit($this->app, $this->request, '125');
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_remove_dialog(){
     $this->factory->expects($this->once())
                   ->method('get_phrase_model')
@@ -32,7 +58,7 @@ class main_controllers_phrase_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_create_phrase(){
+  public function test_remove(){
     $this->request->request->set('id', '125');
     $this->factory->expects($this->once())
                   ->method('get_phrase_model')
@@ -41,7 +67,7 @@ class main_controllers_phrase_Test extends PHPUnit_Framework_TestCase{
     $this->model->expects($this->once())
           ->method('remove')
           ->willReturn('render_template');
-    $response = $this->controller->remove($this->app, $this->request, '125');
+    $response = $this->controller->remove($this->app, $this->request);
     $this->assertEquals('render_template', $response);
   }
 }

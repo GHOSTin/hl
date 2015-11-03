@@ -24,6 +24,16 @@ class phrase{
       throw new RuntimeException();
   }
 
+  public function edit($text){
+    $this->phrase->set_text($text);
+    $this->em->flush();
+    return new Response();
+  }
+
+  public function edit_phrase_dialog(){
+    return $this->twig->render('phrase\edit_phrase_dialog.tpl', ['phrase' => $this->phrase]);
+  }
+
   public function remove_phrase_dialog(){
     return $this->twig->render('phrase\remove_phrase_dialog.tpl', ['phrase' => $this->phrase]);
   }

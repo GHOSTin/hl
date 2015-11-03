@@ -29,12 +29,16 @@ class phrase{
     return $this->id;
   }
 
-   public function get_workgroup(){
+  public function get_workgroup(){
     return $this->workgroup;
   }
 
-   public function get_text(){
+  public function get_text(){
     return $this->text;
+  }
+
+  public function set_text($text){
+    $this->text = $text;
   }
 
   public static function new_instance(workgroup $workgroup, $text){

@@ -251,6 +251,8 @@ $app->get('/workgroups/{id}/phrases/create/', 'main\controllers\workgroup::creat
 $app->post('/workgroups/{id}/phrases/', 'main\controllers\workgroup::create_phrase')->before($security);
 $app->get('/workgroups/phrases/{id}/remove/', 'main\controllers\phrase::remove_dialog')->before($security);
 $app->delete('/workgroups/phrases/', 'main\controllers\phrase::remove')->before($security);
+$app->get('/workgroups/phrases/{id}/edit/', 'main\controllers\phrase::edit_dialog')->before($security);
+$app->put('/workgroups/phrases/{id}/', 'main\controllers\phrase::edit')->before($security);
 
 # user
 $app->get('/user/', 'main\controllers\users::default_page')->before($security);
