@@ -524,6 +524,10 @@ class queries{
     return $app->json($response);
   }
 
+  public function phrases(Application $app, $id){
+    return $app['main\models\queries']->phrases($id);
+  }
+
   public function remove_user(Request $request, Application $app){
     $u = $app['em']->find('\domain\user', $request->get('user_id'));
     $query = $app['em']->find('\domain\query', $request->get('id'));
