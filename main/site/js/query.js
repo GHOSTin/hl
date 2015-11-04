@@ -138,6 +138,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-status :selected').val()
 			},function(r){
 				init_content(r);
+        get_day_stats();
 			});
 	});
 	$('.filter-content-select-street').change(function(){
@@ -145,6 +146,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-street :selected').val()
 			},function(r){
 				init_content(r);
+        get_day_stats();
 			});
 	});
 	$('.filter-content-select-department').change(function(){
@@ -152,6 +154,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-department :selected').val()
 			},function(r){
 				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
 	$('.filter-content-select-work_type').change(function(){
@@ -159,6 +162,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-work_type :selected').val()
 			},function(r){
 				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
   $('.filter-content-select-query_type').change(function(){
@@ -166,6 +170,7 @@ $(document).ready(function($){
       value: $('.filter-content-select-query_type :selected').val()
       },function(r){
         $('.queries').html(r);
+        get_day_stats();
       });
   });
 	$('.filter-content-select-house').change(function(){
@@ -173,6 +178,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-house :selected').val()
 			},function(r){
 				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
 	$(document).on('click', '.get_dialog_create_query', function(){
