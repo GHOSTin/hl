@@ -1,4 +1,3 @@
-{% spaceless %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -6,32 +5,73 @@
   <meta name="viewport" content="width=device-width, maximum-scale = 1, minimum-scale = 1">
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <link rel="stylesheet" href="/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="/css/font-awesome.min.css">
+  <link href="/css/animate.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/default.css" >
   <title>Система управления предприятием ЖКХ</title>
   <link rel="stylesheet" href="/css/libs.css" >
-  <link rel="stylesheet" href="/css/font-awesome.min.css">
-  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300italic,300,400italic,600,600italic,700,700italic,800,800italic&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
   {% block css %}{% endblock %}
+  <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
-  <div id="wrap">
+<body {% if user is empty %} class="gray-bg" {% endif %}>
+  <div id="wrapper">
     {% if user is not empty %}
-      <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
-      {% include 'menu.tpl' %}
-      </header>
+    <nav class="navbar-default navbar-static-side" role="navigation">
+      <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu">
+          <li class="nav-header">
+            <div class="dropdown profile-element">
+              <span>
+                <img alt="image" class="img-circle" src="/images/profile_small.png" />
+              </span>
+              <span class="clear">
+                <span class="block m-t-xs">
+                  <strong class="font-bold">{{ user.get_fio() }}</strong>
+                </span>
+              </span>
+            </div>
+            <div class="logo-element">
+              АДС
+            </div>
+          </li>
+          {% include 'menu.tpl' %}
+        </ul>
+      </div>
+    </nav>
     {% endif %}
-    <div class="container">
-      <section class="row">
-        <section class="main col-xs-12">{% block component %}{% endblock %}</section>
-      </section>
-      <section id="push"></section>
+    {% if user is not empty %}
+    <div id="page-wrapper" class="gray-bg">
+      <div class="row border-bottom">
+        <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+          <div class="navbar-header">
+            <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
+          </div>
+          <ul class="nav navbar-top-links navbar-right">
+            <li>
+              <a href="/logout/">
+                <i class="fa fa-sign-out"></i> Выход
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      {% endif %}
+      <div class="wrapper wrapper-content">
+        <div class="row">
+          <div class="col-lg-12">
+            {% block component %}{% endblock %}
+          </div>
+        </div>
+      </div>
+      <div class="footer {% if user is not empty %} fixed {% endif %}">
+        <div>
+          <small>&copy; 2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru" class="text-primary">"Основные локальные сервисы."</a></small>
+        </div>
+      </div>
+    {% if user is not empty %}
     </div>
+    {% endif %}
   </div>
-  <footer>
-    <div class="container">
-      <p class="col-xs-12 muted credit text-right">Разработка компании <a href="http://mlsco.ru">"Основные локальные сервисы"</a></p>
-    </div>
-  </footer>
   <div id="modal" class="modal fade"></div>
   <script src="/js/jquery.min.js"></script>
   <script src="/js/underscore.js"></script>
@@ -52,4 +92,3 @@
   {% block javascript %}{% endblock %}
 </body>
 </html>
-{% endspaceless %}
