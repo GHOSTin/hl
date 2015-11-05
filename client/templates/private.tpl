@@ -72,19 +72,12 @@
   </div>
 </div>
 <script src="/js/jquery.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
 <!--[if lt IE 9]>
   <script src="/js/respond.src.js"></script>
 <![endif]-->
-<script src="/js/plugins/metisMenu/jquery.metisMenu.js"></script>
-<script src="/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
 <!-- Custom and plugin javascript -->
+<script src="/js/vendor/vendor.js"></script>
 <script src="/js/inspinia.js"></script>
-<script src="/js/plugins/pace/pace.min.js"></script>
-
-<!-- jQuery UI -->
-<script src="/js/plugins/jquery-ui/jquery-ui.min.js"></script>
 
 <script src="/js/default.js"></script>
 {% block js %}{% endblock %}

@@ -2,6 +2,9 @@
 /cache/
 /vendor/
 /bower_components/
+/node_modules/
+/client/components/
+/main/components/
 /builds/
 /files/
 config/general.php

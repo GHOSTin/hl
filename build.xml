@@ -53,6 +53,17 @@
           <arg value="update"/>
       </exec>
   </target>
+  <target name="npm">
+      <exec executable="npm">
+          <arg value="update"/>
+          <arg value="--save"/>
+      </exec>
+  </target>
+  <target name="gulp">
+      <exec executable="gulp" failonerror="true">
+
+      </exec>
+  </target>
   <target name="phpunit">
     <exec executable="vendor/bin/phpunit" failonerror="true">
         <arg value="--bootstrap"/>
