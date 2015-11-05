@@ -26,7 +26,9 @@
               </span>
               <span class="clear">
                 <span class="block m-t-xs">
-                  <strong class="font-bold">{{ user.get_fio() }}</strong>
+                  <strong class="font-bold">
+                    <a href="/profile/" class="current_user" user_id="{{ user.get_id() }}">{{ user.get_firstname() }} {{ user.get_lastname() }}</a>
+                  </strong>
                 </span>
               </span>
             </div>
@@ -87,6 +89,8 @@
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/js/notification-center.js"></script>
   <script src="/js/chat.js"></script>
+  <script src="/js/vendor/vendor.js"></script>
+  <script src="/js/inspinia.js"></script>
 {% endif %}
   <script src="/js/default.js"></script>
   {% block javascript %}{% endblock %}

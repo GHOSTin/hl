@@ -47,3 +47,14 @@ $(document).ready(function($){
         return false;
     });
 });
+
+$(function() {
+    if (location.pathname !== '/') {
+        $('#side-menu')
+            .find('li')
+            .removeClass('active')
+            .find('a[href^="/' + location.pathname.split("/")[1] + '"]')
+            .parent()
+            .addClass('active');
+    }
+});
