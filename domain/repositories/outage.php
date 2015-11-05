@@ -10,7 +10,7 @@ class outage extends \Doctrine\ORM\EntityRepository {
       ->from('domain\outage', 'm')
       ->where($qb->expr()->gte("m.target", ':target'))
       ->orderBy('m.begin', 'DESC')
-      ->setParameter('target', strtotime('today'));;
+      ->setParameter('target', time());;
     return $qb->getQuery()->getResult();
   }
 
