@@ -1,0 +1,36 @@
+{
+  "name": "mshc",
+  "version": "2.0.0",
+  "description": "",
+  "main": "Gulpfile.js",
+  "directories": {
+    "test": "tests"
+  },
+  "dependencies": {
+    "gulp-filter": "~3.0.1",
+    "gulp-order": "^1.1.1",
+    "gulp-uglify": "~1.4.2",
+    "gulp-concat": "~2.6.0",
+    "main-bower-files": "~2.9.0",
+    "gulp": "~3.9.0",
+    "gulp-bower": "0.0.10"
+  },
+  "devDependencies": {
+    "gulp-filter": "~3.0.1",
+    "gulp-order": "^1.1.1",
+    "gulp-uglify": "~1.4.2",
+    "gulp-concat": "~2.6.0",
+    "main-bower-files": "~2.9.0",
+    "gulp": "~3.9.0",
+    "gulp-bower": "0.0.10"
+  },
+  "scripts": {
+    "test": ""
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@stash.mlsco.ru:7999/mshc/mshc.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
