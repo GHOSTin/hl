@@ -96,11 +96,20 @@ notify_center.on('message', function(event){
             }
             break;
         case 'unread_count_messages':
+            Tinycon.setOptions({
+                width: 7,
+                height: 9,
+                font: '10px arial',
+                colour: '#ffffff',
+                background: '#549A2F',
+                fallback: true
+            });
             if(message.data>0){
-                $(document).attr('title', message.data+' новых сообщений');
+                Tinycon.setBubble(message.data);
+                $('.count-info').find('.label').text(message.data);
             } else {
-                $(document).attr('title', global_title);
-                $('.notification-center-icon').removeClass('icon-white');
+                Tinycon.reset();
+                $('.count-info').find('.label').text('');
             }
             break;
         default:
@@ -146,13 +155,19 @@ $(document).on('click', '.chat-users li a', function (e) {
     }
     user.markAllAsRead();
     $("textarea").val("");
-    $('.chat.active .chat-feed').mCustomScrollbar("update");
-    $('.chat.active .chat-feed').mCustomScrollbar("scrollTo", "bottom");
+});
+$('#message-window')
+    .on('shown.bs.dropdown', function(){
+        $('.chat-users').mCustomScrollbar("update");
+    })
+    .on('shown.bs.tab', function(){
+        $('.chat.active .chat-feed').mCustomScrollbar("update");
+        $('.chat.active .chat-feed').mCustomScrollbar("scrollTo", "bottom");
 });
 /**
  * произведена отправка формы
  */
-$(document).on('submit', 'form.message', function (e) {
+$(document).on('submit', 'form.text-message', function (e) {
     var form = $(e.target);
     var files = [];
     $('.attachments li').each(function(){
@@ -173,7 +188,7 @@ $(document).on('keypress', '.chat.active textarea',function (event) {
     var keyCode = (event.which ? event.which : event.keyCode);
 
     if (keyCode === 10 || keyCode == 13 && event.ctrlKey) {
-        $('.chat.active').find('form.message').submit();
+        $('.chat.active').find('form.text-message').submit();
     }
 });
 /**
@@ -230,14 +245,17 @@ $('#nt-center').on('click', function(e){
             $('.chat.active').removeClass('active');
         });
     } else {
-        /** подгрузить контент */
-        $.get('/notification_center/get_content/',{
-        },function(r){
-            /** создать блок с полученным контентом */
-            create_notification_center($('#nt-center').parent(), r);
-            build_chat_window();
-        });
     }
+});
+
+$(document).ready(function(){
+    /** подгрузить контент */
+    $.get('/notification_center/get_content/',{
+    },function(res){
+        /** создать блок с полученным контентом */
+        $('.chat-users').html(res);
+        build_chat_window();
+    });
 });
 
 var build_chat_window = function(){
@@ -252,7 +270,7 @@ var build_chat_window = function(){
     /** запрос на получение кол-ва непрочитанных сообщений */
     chat.json.send({'type':'get_unread_messages'});
     /** подключение custom скролла */
-    $('.chat-user-list').mCustomScrollbar({
+    $('.chat-users').mCustomScrollbar({
         scrollButtons:{
             enable: true
         },

@@ -46,6 +46,12 @@ $(document).ready(function($){
         }, 400);
         return false;
     });
+    $('#message-window').find('.dropdown-toggle').on('click', function(){
+        $(this).parent().toggleClass('keep-open');
+    }).end().on('hide.bs.dropdown', function(ev){
+        var target = $(ev.target);
+        return !(target.hasClass("keep-open") || target.parents(".keep-open").length);
+    });
 });
 
 $(function() {

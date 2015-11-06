@@ -7,11 +7,11 @@
   <link rel="stylesheet" href="/css/bootstrap.min.css" >
   <link rel="stylesheet" href="/css/font-awesome.min.css">
   <link href="/css/animate.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/default.css" >
   <title>Система управления предприятием ЖКХ</title>
   <link rel="stylesheet" href="/css/libs.css" >
   {% block css %}{% endblock %}
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/default.css" >
 </head>
 <body {% if user is empty %} class="gray-bg" {% endif %}>
   <div id="wrapper">
@@ -49,6 +49,22 @@
             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
           </div>
           <ul class="nav navbar-top-links navbar-right">
+            <li id="message-window" class="dropdown">
+              <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#" aria-expanded="false">
+                <i class="fa fa-envelope"></i>  <span class="label label-warning"></span>
+              </a>
+              <ul class="dropdown-menu dropdown-messages">
+                <li>
+                  <div class="row">
+                    <div class="col-md-9 tab-content" id="main"></div>
+                    <div class="col-md-3">
+                      <div class="chat-users">
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </li>
             <li>
               <a href="/logout/">
                 <i class="fa fa-sign-out"></i> Выход
@@ -79,19 +95,19 @@
   <script src="/js/underscore.js"></script>
   <script src="/js/backbone.js"></script>
   <script src="/js/backbone.marionette.js"></script>
-  <script src="/js/bootstrap.min.js"></script>
   <script src="/js/twig.js"></script>
-  <script src="/js/jBootValidator.js"></script>
-  <script src="/js/formValidation.min.js"></script>
-  <script src="/js/framework/bootstrap.min.js"></script>
 {% if user is not empty %}
   <script src="/js/socket.io.js"></script>
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/js/notification-center.js"></script>
+  <script src="/js/sockjs.js"></script>
   <script src="/js/chat.js"></script>
   <script src="/js/vendor/vendor.js"></script>
   <script src="/js/inspinia.js"></script>
 {% endif %}
+  <script src="/js/jBootValidator.js"></script>
+  <script src="/js/formValidation.min.js"></script>
+  <script src="/js/framework/bootstrap.min.js"></script>
   <script src="/js/default.js"></script>
   {% block javascript %}{% endblock %}
 </body>
