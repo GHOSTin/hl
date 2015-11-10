@@ -196,6 +196,12 @@ class number{
     return $this->queries;
   }
 
+  public function get_queries_for_lk(){
+    return $this->queries->filter(function($element){
+      return $element->get_initiator() == 'number' AND $element->is_visible() OR $element->get_request();
+    });
+  }
+
   public function get_telephone(){
     return $this->telephone;
   }

@@ -72,6 +72,11 @@ class query{
   */
 	private $contact_fio;
 
+  /**
+  * @Column(type="boolean")
+  */
+  private $visible;
+
 	/**
   * @Column(type="string")
   */
@@ -185,6 +190,14 @@ class query{
     $this->status = 'close';
     $this->set_time_close($time);
     $this->set_close_reason($reason);
+  }
+
+  public function is_visible(){
+    return $this->visible;
+  }
+
+  public function update_visible(){
+    return $this->visible = !$this->visible;
   }
 
   public function delete_file(query2file $file){

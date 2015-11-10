@@ -21,12 +21,7 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'CREATE TABLE phrase(
-                id INT UNSIGNED NOT NULL,
-                workgroup_id INT UNSIGNED NOT NULL,
-                text TEXT NOT NULL,
-                PRIMARY KEY (id)
-              )';
+$queries[] = 'ALTER TABLE queries ADD COLUMN visible TINYINT(1) UNSIGNED NOT NULL DEFAULT 0';
 
 foreach($queries as $query)
   $pdo->exec($query);

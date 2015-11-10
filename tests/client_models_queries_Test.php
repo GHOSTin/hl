@@ -29,10 +29,10 @@ class client_models_queries_Test extends PHPUnit_Framework_TestCase{
                ->will($this->returnValue('render_template'));
     $model = $this->getMockBuilder('client\models\queries')
                   ->setConstructorArgs([$this->twig, $this->em, $this->number])
-                  ->setMethods(['get_queries', 'get_number_request', 'count_24_hours_number_request'])
+                  ->setMethods(['get_number_request', 'count_24_hours_number_request'])
                   ->getMock();
-    $model->expects($this->once())
-         ->method('get_queries')
+    $this->number->expects($this->once())
+         ->method('get_queries_for_lk')
          ->willReturn('array_queries');
     $model->expects($this->once())
           ->method('get_number_request')
@@ -61,18 +61,6 @@ class client_models_queries_Test extends PHPUnit_Framework_TestCase{
                ->willReturn($repository);
     $model = new model($this->twig, $this->em, $this->number);
     $this->assertEquals('array_number_request', $model->get_number_request());
-  }
-
-  public function test_get_queries(){
-    $query = new query();
-    $query->set_initiator('number');
-    $collection = new ArrayCollection();
-    $collection->add($query);
-    $this->number->expects($this->once())
-                 ->method('get_queries')
-                 ->willReturn($collection);
-    $model = new model($this->twig, $this->em, $this->number);
-    $this->assertEquals($collection, $model->get_queries());
   }
 
   public function test_request_1(){

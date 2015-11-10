@@ -231,6 +231,18 @@ class queries{
     return $app['twig']->render('query\get_dialog_add_comment.tpl', ['query' => $query]);
   }
 
+  public function edit_visible_dialog(Application $app, $id){
+    $query = $app['em']->find('domain\query', $id);
+    return $app['twig']->render('query\edit_visible_dialog.tpl', ['query' => $query]);
+  }
+
+  public function update_visible(Application $app, $id){
+    $query = $app['em']->find('domain\query', $id);
+    $query->update_visible();
+    $app['em']->flush();
+    return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
+  }
+
   public function get_dialog_add_user(Request $request, Application $app){
     $query  = $app['em']->find('\domain\query', $request->get('id'));
     $groups = $app['em']->getRepository('\domain\group')->findAll();

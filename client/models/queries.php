@@ -36,7 +36,7 @@ class queries{
   public function default_page(){
     return $this->twig->render('queries/default_page.tpl', [
                                                               'number' => $this->number,
-                                                              'queries' => $this->get_queries(),
+                                                              'queries' => $this->number->get_queries_for_lk(),
                                                               'requests' => $this->get_number_request(),
                                                               'count' => $this->count_24_hours_number_request()
                                                             ]);
@@ -51,12 +51,6 @@ class queries{
                               ],
                               ['time' => 'DESC']
                             );
-  }
-
-  public function get_queries(){
-    return $this->number->get_queries()->filter(function($element){
-      return $element->get_initiator() == 'number';
-    });
   }
 
   public function request(){

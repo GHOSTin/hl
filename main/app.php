@@ -423,6 +423,8 @@ $app->get('/queries/{id}/files/{date}/{name}/delete/', 'main\controllers\queries
 $app->get('/queries/dialogs/create_query_from_request/', 'main\controllers\queries::create_query_from_request_dialog')->before($security);
 $app->get('/queries/create_query_from_request/', 'main\controllers\queries::create_query_from_request')->before($security);
 $app->get('/queries/dialogs/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request_dialog')->before($security);
+$app->get('/queries/{id}/dialogs/edit_visible/', 'main\controllers\queries::edit_visible_dialog')->before($security);
+$app->get('/queries/{id}/visible/', 'main\controllers\queries::update_visible')->before($security);
 $app->get('/queries/abort_query_from_request/', 'main\controllers\queries::abort_query_from_request')->before($security);
 $app->get('/queries/requests/count/', 'main\controllers\queries::count')->before($security);
 $app->get('/queries/requests/', 'main\controllers\queries::requests')->before($security);

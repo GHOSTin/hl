@@ -25,9 +25,6 @@
     <td class="project-description">
       {{ query.get_description() }}
     </td>
-    <td class="project-creator">
-      {{ query.get_creator().get_fio() }}
-    </td>
     <td class="project-close_reason">
       {% if query.get_status() == 'close' %}
         {{ query.get_close_reason() }}
