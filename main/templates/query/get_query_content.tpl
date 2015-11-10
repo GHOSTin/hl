@@ -71,6 +71,12 @@
 			<a class="get_dialog_change_query_type"> изменить</a>
 			{% endif %}
 		</li>
+    <li>Видимость:
+      <span class="query-general">{% if query.is_visible() %}<i class="glyphicon glyphicon-eye-open notification-center-icon" style="font-size:12px" alt="Заявка из личного кабинета"></i> Видима{% else %}Скрыта{% endif %}</span>
+      {% if query.get_status() in ['open', 'working', 'reopen'] %}
+      <a class="get_dialog_edit_visible"> изменить</a></li>
+      {% endif %}
+    </li>
 		<li>
 			Диспетчер: {{ creator.get_lastname() }} {{ creator.get_firstname() }} {{ creator.get_middlename() }}
 		</li>
