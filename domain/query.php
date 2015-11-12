@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 */
 class query{
 
+  use traits\cellphone;
+
 	/**
   * @Id
   * @Column(type="integer")
@@ -394,11 +396,7 @@ class query{
 	}
 
 	public function set_contact_cellphone($cellphone){
-    preg_match_all('/[0-9]/', $cellphone, $matches);
-    $cellphone = implode('', $matches[0]);
-    if(preg_match('|^[78]|', $cellphone))
-      $cellphone = substr($cellphone, 1, 10);
-		$this->contact_cellphone = $cellphone;
+		$this->contact_cellphone = $this->prepare_cellphone($cellphone);
 	}
 
 	public function set_contact_fio($fio){
