@@ -59,18 +59,14 @@ class number_Test extends PHPUnit_Framework_TestCase{
   public function test_set_cellphone_1(){
     $this->number->set_cellphone('9222944742');
     $this->assertEquals('9222944742', $this->number->get_cellphone());
-    $this->number->set_cellphone('');
-    $this->assertEquals('', $this->number->get_cellphone());
-  }
-
-  public function test_set_cellphone_2(){
-    $this->setExpectedException('DomainException');
     $this->number->set_cellphone('+79222944742');
-  }
-
-  public function test_set_cellphone_3(){
-    $this->setExpectedException('DomainException');
+    $this->assertEquals('9222944742', $this->number->get_cellphone());
+    $this->number->set_cellphone('89222944742');
+    $this->assertEquals('9222944742', $this->number->get_cellphone());
+    $this->number->set_cellphone('');
+    $this->assertEquals(null, $this->number->get_cellphone());
     $this->number->set_cellphone('222944742');
+    $this->assertEquals(null, $this->number->get_cellphone());
   }
 
   public function test_set_telephone_1(){

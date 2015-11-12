@@ -10,6 +10,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 */
 class user implements JsonSerializable{
 
+  use traits\cellphone;
+
   /**
   * @Column(type="json_array")
   */
@@ -165,9 +167,7 @@ class user implements JsonSerializable{
   }
 
   public function set_cellphone($cellphone){
-    if(!preg_match('/^[0-9+]{0,11}$/', $cellphone))
-      throw new DomainException('Wrong user cellphone '.$cellphone);
-    $this->cellphone = $cellphone;
+    $this->cellphone = $this->prepare_cellphone($cellphone);
   }
 
   public function set_id($id){
