@@ -433,6 +433,7 @@ $app->get('/queries/day/stats/', 'main\controllers\queries::stats')->before($sec
 $app->get('/queries/selections/', 'main\controllers\queries::selections')->before($security);
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
 $app->get('/queries/workgroups/{id}/phrases/', 'main\controllers\queries::phrases')->before($security);
+$app->get('/queries/{id}/history/', 'main\controllers\queries::history')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);

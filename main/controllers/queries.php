@@ -134,9 +134,16 @@ class queries{
     $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    $query->close(time(), implode('', $matches[0]));
+    $query->close($app['user'], time(), implode('', $matches[0]));
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
+  }
+
+  public function history(Application $app, $id){
+    $query = $app['em']->find('domain\query', $id);
+    if(is_null($query))
+      throw new RuntimeException();
+    return $app['twig']->render('query\history.tpl', ['query' => $query, 'user' => $app['user']]);
   }
 
   public function create_query(Request $request, Application $app){
@@ -509,7 +516,7 @@ class queries{
     $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    $query->reclose();
+    $query->reclose($app['user']);
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
@@ -518,7 +525,7 @@ class queries{
     $query = $app['em']->find('domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    $query->reopen();
+    $query->reopen($app['user']);
     $app['em']->flush();
     return $app['twig']->render('query\get_query_content.tpl', ['query' => $query]);
   }
@@ -647,6 +654,10 @@ class queries{
     if(is_null($query))
       throw new RuntimeException();
     $query->set_description(implode('', $matches[0]));
+    $context = [
+      'Описание' => implode('', $matches[0])
+    ];
+    $query->add_history_event($app['user'], 'Изменение описания заявки', $context);
     $app['em']->flush();
     return $app['twig']->render('query\update_description.tpl', ['query' => $query]);
   }
@@ -657,6 +668,10 @@ class queries{
     if(is_null($query))
       throw new RuntimeException();
     $query->set_close_reason(implode('', $matches[0]));
+    $context = [
+      'Причина закрытия' => implode('', $matches[0])
+    ];
+    $query->add_history_event($app['user'], 'Изменение причины закрытия', $context);
     $app['em']->flush();
     return $app['twig']->render('query\update_reason.tpl', ['query' => $query]);
   }

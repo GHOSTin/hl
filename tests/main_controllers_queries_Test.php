@@ -289,9 +289,10 @@ class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
     $this->request->query->set('id', 125);
     $this->request->query->set('reason', 'Привет');
     $query = $this->getMock('\domain\query');
+    $this->app['user'] = new user();
     $query->expects($this->once())
           ->method('close')
-          ->with($this->anything(), 'Привет');
+          ->with($this->app['user'], $this->anything(), 'Привет');
     $this->app['em']->expects($this->once())
                     ->method('find')
                     ->with('domain\query', 125)
@@ -675,6 +676,7 @@ class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
                       ->method('render')
                       ->with('query\get_query_content.tpl', ['query' => $query])
                       ->will($this->returnValue('render_template'));
+    $this->app['user'] = new user();
     $response = $this->controller->reclose_query($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
@@ -704,6 +706,7 @@ class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
                       ->method('render')
                       ->with('query\get_query_content.tpl', ['query' => $query])
                       ->will($this->returnValue('render_template'));
+    $this->app['user'] = new user();
     $response = $this->controller->reopen_query($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
