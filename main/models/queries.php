@@ -47,7 +47,7 @@ class queries{
     $query = query::new_instance_from_request($request, $args);
     $query->set_creator($this->user);
     $query->add_manager($this->user);
-    $query->close($query->get_time_open(), $description);
+    $query->close($this->user, $query->get_time_open(), $description);
     $this->em->persist($query);
     $this->em->flush();
     return $this->twig->render('query\query_titles.tpl', ['queries' => $this->get_today_queries()]);

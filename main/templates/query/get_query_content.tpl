@@ -49,6 +49,9 @@
 			<a class="get_dialog_reopen_query">Переоткрыть</a>
 		</li>
 	{% endif %}
+  <li>
+    <a href="/queries/{{ query.get_id() }}/history/" target="_blank">История</a>
+  </li>
 	</ul>
 	<ul class="query-general">
 		<li>Время открытия: {{ query.get_time_open()|date('H:i d.m.Y') }}</li>

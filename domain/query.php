@@ -75,7 +75,7 @@ class query{
   /**
   * @Column(type="boolean")
   */
-  private $visible;
+  private $visible = false;
 
 	/**
   * @Column(type="string")
@@ -133,6 +133,11 @@ class query{
   */
 	private $comments;
 
+  /**
+  * @Column(type="json_array")
+  */
+  private $history = [];
+
 	public static $initiator_list = ['number', 'house'];
 	public static $status_list = ['open', 'close', 'working', 'reopen'];
 
@@ -184,12 +189,29 @@ class query{
 		$this->works->add($work);
 	}
 
-  public function close($time, $reason){
+  public function close(user $user, $time, $reason){
     if(!in_array($this->status, ['working', 'open'], true))
       throw new DomainException('Заявка не может быть закрыта.');
     $this->status = 'close';
     $this->set_time_close($time);
     $this->set_close_reason($reason);
+    $context = [
+                'Причина закрытия' => $reason
+                ];
+    $this->add_history_event($user, 'Закрытие заявки', $context);
+  }
+
+  public function add_history_event(user $user, $message, array $context = []){
+    $this->history[] = [
+                        'time' => time(),
+                        'message' => $message,
+                        'user' => $user->get_log_name(),
+                        'context' => $context
+                       ];
+  }
+
+  public function get_history(){
+    return $this->history;
   }
 
   public function is_visible(){
@@ -215,16 +237,18 @@ class query{
 				}
 	}
 
-  public function reclose(){
+  public function reclose(user $user){
     if($this->status !== 'reopen')
       throw new DomainException();
     $this->status = 'close';
+    $this->add_history_event($user, 'Перезакрытие заявки');
   }
 
-  public function reopen(){
+  public function reopen(user $user){
     if($this->status !== 'close')
       throw new DomainException();
     $this->status = 'reopen';
+    $this->add_history_event($user, 'Переоткрытие заявки');
   }
 
   public function to_work($time){

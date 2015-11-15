@@ -21,7 +21,7 @@ $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
 $pdo = $em->getConnection();
 
-$queries[] = 'ALTER TABLE queries ADD COLUMN visible TINYINT(1) UNSIGNED NOT NULL DEFAULT 0';
+$queries[] = 'ALTER TABLE queries ADD COLUMN history TEXT';
 
 foreach($queries as $query)
   $pdo->exec($query);
