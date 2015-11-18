@@ -32,16 +32,20 @@ class numbers{
   public function get_streets(){
     $args = [];
     $streets = [];
-    if(!empty($this->user->get_restriction('departments')))
+    if(!empty($this->user->get_restriction('departments'))){
       $args['department'] = $this->user->get_restriction('departments');
-    $houses = $this->em->getRepository('domain\house')
-                       ->findBy($args);
-    foreach($houses as $house){
-      $street = $house->get_street();
-      if(!isset($streets[$street->get_id()]))
-        $streets[$street->get_id()] = $street;
+      $houses = $this->em->getRepository('domain\house')
+                         ->findBy($args);
+      foreach($houses as $house){
+        $street = $house->get_street();
+        if(!isset($streets[$street->get_id()]))
+          $streets[$street->get_id()] = $street;
+      }
+      natsort($streets);
+    }else{
+      $streets = $this->em->getRepository('domain\street')
+                          ->findBy([], ['name' => 'ASC']);
     }
-    natsort($streets);
     return $streets;
   }
 

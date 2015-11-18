@@ -4,24 +4,17 @@ use BadMethodCallException;
 
 /**
 * @Entity
-* @Table(name="query2work")
 */
 class query2work{
 
   /**
   * @Id
-  * @Column(name="query_id", type="integer")
   */
-  private $query_id;
+  private $query;
 
   /**
   * @Id
-  * @Column(name="work_id", type="integer")
-  */
-  private $work_id;
-
-  /**
-  * @ManyToOne(targetEntity="\domain\work")
+  * @ManyToOne(targetEntity="domain\work")
   */
   private $work;
 
@@ -48,9 +41,7 @@ class query2work{
 
   public function __construct(query $query, work $work){
     $this->query = $query;
-    $this->query_id = $query->get_id();
     $this->work = $work;
-    $this->work_id = $work->get_id();
   }
 
   public function set_time_open($time){

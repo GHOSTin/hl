@@ -18,7 +18,7 @@ class number{
   private $accruals;
 
   /**
-  * @Column(type="string")
+  * @Column(type="string", nullable=true)
   */
   private $cellphone;
 
@@ -65,12 +65,12 @@ class number{
   private $status;
 
   /**
-  * @Column(type="string")
+  * @Column(type="string", nullable=true)
   */
   private $telephone;
 
   /**
-  * @Column(type="string")
+  * @Column(type="string", nullable=true)
   */
   private $email;
 

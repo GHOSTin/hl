@@ -108,10 +108,7 @@ class query{
 	private $numbers;
 
 	/**
-   * @ManyToMany(targetEntity="domain\query2work")
-   * @JoinTable(name="query2work",
-   * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
-   * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
+   * @ManyToMany(targetEntity="domain\query2work", mappedBy="query")
    */
 	private $works;
 
