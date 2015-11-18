@@ -653,10 +653,11 @@ class queries{
     $query = $app['em']->find('\domain\query', $request->get('id'));
     if(is_null($query))
       throw new RuntimeException();
-    $query->set_description(implode('', $matches[0]));
     $context = [
-      'Описание' => implode('', $matches[0])
+      'Старое описание' => $query->get_description(),
+      'Новое описание' => implode('', $matches[0])
     ];
+    $query->set_description(implode('', $matches[0]));
     $query->add_history_event($app['user'], 'Изменение описания заявки', $context);
     $app['em']->flush();
     return $app['twig']->render('query\update_description.tpl', ['query' => $query]);
