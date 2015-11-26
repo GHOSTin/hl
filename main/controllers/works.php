@@ -67,7 +67,7 @@ class works{
   }
 
   public function default_page(Request $request, Application $app){
-    $groups = $app['em']->getRepository('domain\workgroup')->findAll();
+    $groups = $app['em']->getRepository('domain\workgroup')->findBy([], ['name' => 'ASC']);
     $works = $app['em']->getRepository('domain\work')->findAll();
     $events = $app['em']->getRepository('domain\event')->findAll();
     return $app['twig']->render('works\default_page.tpl',

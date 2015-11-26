@@ -39,7 +39,7 @@ class query_type{
   }
 
   public static function new_instance($name){
-    $query_type = new query_type();
+    $query_type = new self();
     $query_type->set_name($name);
     return $query_type;
   }

@@ -55,32 +55,32 @@ class query{
   private $request;
 
 	/**
-  * @Column(name="opentime", type="string")
+  * @Column(name="opentime")
   */
 	private $time_open;
 
 	/**
-  * @Column(name="worktime", type="string")
+  * @Column(name="worktime")
   */
 	private $time_work;
 
 	/**
-  * @Column(name="closetime", type="string")
+  * @Column(name="closetime", nullable=true)
   */
 	private $time_close;
 
 	/**
-  * @Column(type="string")
+  * @Column(type="string", nullable=true)
   */
 	private $contact_fio;
 
 	/**
-  * @Column(type="string")
+  * @Column(type="string", nullable=true)
   */
 	private $contact_telephone;
 
 	/**
-  * @Column(type="string")
+  * @Column(type="string", nullable=true)
   */
 	private $contact_cellphone;
 
@@ -90,12 +90,12 @@ class query{
 	private $description;
 
 	/**
-  * @Column(name="reason", type="string")
+  * @Column(name="reason", nullable=true)
   */
 	private $close_reason;
 
 	/**
-  * @Column(name="querynumber", type="string")
+  * @Column(name="querynumber")
   */
 	private $number;
 

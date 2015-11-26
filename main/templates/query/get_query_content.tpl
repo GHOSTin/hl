@@ -121,7 +121,7 @@
 			<h5>Участники <span class="label label-success">{{ query.get_users().count() }}</span></h5>
 		</li>
 		<li class="query-works">
-			<h5>Работы <span class="label label-success">{{ query.get_works().count() }}</span></h5>
+			<h5>Работы <span class="label label-success"></span></h5>
 		</li>
     <li class="query-files">
       <h5>Файлы <span class="label label-success">{{ query.get_files().count() }}</span></h5>
