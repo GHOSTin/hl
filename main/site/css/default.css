@@ -162,7 +162,7 @@ a {
 .scroll-to-top {
     opacity: 0;
     position: fixed;
-    bottom: 1em;
+    bottom: 2em;
     height: 32px;
     width: 32px;
     cursor: pointer;

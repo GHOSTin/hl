@@ -119,9 +119,9 @@
                 {% for query in queries  %}
                   <li class="query_status_{{ query.get_status() }}">
                     {% if query.get_initiator() == 'number' %}
-                      <i class="glyphicon glyphicon-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
+                      <i class="fa fa-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
                     {% else %}
-                      <i class="glyphicon glyphicon-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
+                      <i class="fa fa-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
                     {% endif %}
                     <strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
                     {% if query.get_initiator() == 'number' %}
