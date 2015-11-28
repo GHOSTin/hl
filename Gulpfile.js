@@ -26,13 +26,27 @@ gulp.task('client:scripts:vendor', ['client:bower'], function () {
         .pipe(filter('**.js'))
         .pipe(order(vendors))
         .pipe(concat('vendor.js'))
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('client/site/js/vendor/'))
         ;
 });
 
 gulp.task('main:scripts:vendor', ['main:bower'], function () {
-    var vendors = mainBowerFiles({ paths: 'main/' });
+    var vendors = mainBowerFiles({
+        paths: 'main/',
+        overrides: {
+            tinycon: {
+                main: [
+                    './tinycon.js'
+                ]
+            },
+            slimScroll: {
+                main: [
+                    './jquery.slimscroll.js'
+                ]
+            }
+        }
+    });
 
     return gulp.src(vendors)
         .pipe(filter('**.js'))
@@ -44,3 +58,5 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
 });
 
 gulp.task('default', ['client:scripts:vendor', 'main:scripts:vendor']);
+
+gulp.watch('main/bower.json', ['main:scripts:vendor']);
