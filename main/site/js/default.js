@@ -1,9 +1,11 @@
 function show_dialog(result){
-	$('.dialog').modal('hide');
-	$('.dialog').remove();
     $('.modal-backdrop').remove();
-	$('body').append('<div class="dialog modal fade" style="display:none"><div class="modal-dialog">' + result + '</div></div>');
-	$('.dialog').modal({keyboard: false});
+	$('.dialog')
+        .modal('hide')
+        .empty()
+        .append(result)
+        .modal({keyboard: false})
+        .modal('show');
 }
 function init_content(result){
     $('._hidden_content').remove();

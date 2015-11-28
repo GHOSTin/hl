@@ -1,53 +1,59 @@
 {% extends "default.tpl" %}
 
 {% block component %}
-<!-- scroller -->
-  <div class="scroll-to-top">
-    <i class="fa fa-angle-up"></i>
-  </div>
-<!-- /scroller -->
-<!-- left block -->
-<div class="col-sm-3 col-lg-3">
-  <div class="row">
-    <div class="btn-group col-xs-12 query_controls">
-      {% if user.check_access('queries/create_query') %}
-      <div class="get_dialog_create_query btn btn-default col-xs-8">Создать заявку</div>
-      {% endif %}
-      <div class="get_search btn btn-default col-xs-4">Поиск</div>
+<div class="row">
+  <!-- scroller -->
+    <div class="scroll-to-top">
+      <i class="fa fa-angle-up"></i>
     </div>
-    <div  class="page-header col-xs-12 col-lg-10 col-lg-push-1">
-      <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
-      </h4><a class="pull-right cm clear_filters absolute_hide">сбросить</a>
+  <!-- /scroller -->
+  <!-- left block -->
+  <div class="col-sm-3 col-lg-3">
+    <div class="ibox float-e-margins">
+      <div class="ibox-content mailbox-content">
+        <div class="file-manager">
+          <div class="btn-group query_controls">
+            {% if user.check_access('queries/create_query') %}
+            <a class="get_dialog_create_query btn btn-white compose-mail">Создать заявку</a>
+            {% endif %}
+            <a class="get_search btn btn-white compose-mail"><i class="fa fa-search"></i></a>
+          </div>
+          <div  class="page-header">
+            <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
+            </h4><a class="cm clear_filters absolute_hide">сбросить</a>
+          </div>
+          {% include 'query/filters.tpl' %}
+        </div>
+      </div>
     </div>
-    {% include 'query/filters.tpl' %}
   </div>
+  <!-- /left block-->
+  <!-- right block -->
+  <div class="col-sm-9 col-lg-9 query-container">
+    <!-- begin timeline -->
+    <nav class="timeline row">{% include 'query/timeline.tpl' %}</nav>
+    <!-- /timeline -->
+    <!-- requests -->
+    <!-- outages -->
+    <div class="row m-t m-b">
+      <span class="requests"></span>
+      <span class="outages"></span>
+    </div>
+    <!-- /requests -->
+    <!-- /outages -->
+    {% if queries is not empty  %}
+    <div class="row">
+      <div class="day_stats col-md-5 col-xs-12"></div>
+    </div>
+    {% endif %}
+    <!-- queries -->
+    <div class="row">
+      <ul class="queries connectList agile-list no-padding">{% include 'query/query_titles.tpl' %}</ul>
+    </div>
+    <!-- /queries -->
+  </div>
+  <!-- /right block -->
 </div>
-<!-- /left block-->
-<!-- right block -->
-<div class="col-sm-9 col-lg-9">
-  <!-- begin timeline -->
-  <nav class="timeline row">{% include 'query/timeline.tpl' %}</nav>
-  <!-- /timeline -->
-  <!-- requests -->
-  <div class="row">
-    <div class="col-md-12 requests"></div>
-  </div>
-  <!-- /requests -->
-  <!-- outages -->
-  <div class="row">
-    <div class="col-md-12 outages"></div>
-  </div>
-  <!-- /outages -->
-  <div class="row">
-    <div class="day_stats col-md-5"></div>
-  </div>
-  <!-- queries -->
-  <div class="row">
-    <div class="queries col-md-12">{% include 'query/query_titles.tpl' %}</div>
-  </div>
-  <!-- /queries -->
-</div>
-<!-- /right block -->
 {% endblock component %}
 
 {% block javascript %}
@@ -113,4 +119,5 @@
 {% block css %}
   <link rel="stylesheet" href="/css/query.css" >
   <link rel="stylesheet" href="/css/datepicker.css" >
+  <link rel="stylesheet" href="/css/plugins/iCheck/custom.css" >
 {% endblock css %}

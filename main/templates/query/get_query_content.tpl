@@ -12,123 +12,153 @@
 {% endblock %}
 
 {% block html %}
-<div class="query-wrap query_status_{{ query.get_status() }}">
+<div class="query-wrap animated fadeInDown">
 	<h4>
 		{% if query.get_initiator() == 'number' %}
-			<i class="glyphicon glyphicon-user notification-center-icon" style="color:#AADDAF; font-size:12px" alt="Заявка на личевой счет"></i>
+			<i class="fa fa-user notification-center-icon" style="color:#AADDAF; font-size:12px" alt="Заявка на личевой счет"></i>
 		{% else %}
-			<i class="glyphicon glyphicon-home notification-center-icon" style="color:#C8D5C8; font-size:12px" alt="Заявка на дом"></i>
+			<i class="fa fa-home notification-center-icon" style="color:#C8D5C8; font-size:12px" alt="Заявка на дом"></i>
 		{% endif %}
     {% if query.get_request %}
-     <i class="glyphicon glyphicon-eye-open notification-center-icon" style="font-size:12px" alt="Заявка из личного кабинета"></i>
+     <i class="fa fa-eye-open notification-center-icon" style="font-size:12px" alt="Заявка из личного кабинета"></i>
     {% endif %}
 		Заявка №{{ query.get_number() }} ({{ statuses[query.get_status()] }})
 		<button class="close get_query_title">&times;</button>
 	</h4>
-	<ul class="nav nav-pills">
-		<li>
-			<a class="get_documents">Документы</a>
-		</li>
-	{% if query.get_status() in ['open', 'working'] %}
-		<li>
-			<a class="get_dialog_close_query">Закрыть заявку</a>
-		</li>
-	{% endif %}
-	{% if query.get_status() == 'reopen' %}
-		<li>
-			<a class="get_dialog_reclose_query">Перезакрыть заявку</a>
-		</li>
-	{% endif %}
-	{% if query.get_status() == 'open' %}
-		<li>
-			<a class="get_dialog_to_working_query">Передать в работу</a>
-		</li>
-	{% endif %}
-	{% if query.get_status() == 'close' %}
-		<li>
-			<a class="get_dialog_reopen_query">Переоткрыть</a>
-		</li>
-	{% endif %}
-	</ul>
-	<ul class="query-general">
-		<li>Время открытия: {{ query.get_time_open()|date('H:i d.m.Y') }}</li>
+  <div class="m-b">
+    <a class="btn btn-outline btn-default btn-w-m get_documents">Документы</a>
+  {% if query.get_status() in ['open', 'working'] %}
+    <a class="btn btn-outline btn-default btn-w-m get_dialog_close_query">Закрыть заявку</a>
+  {% endif %}
+  {% if query.get_status() == 'reopen' %}
+    <a class="btn btn-outline btn-default btn-w-m get_dialog_reclose_query">Перезакрыть заявку</a>
+  {% endif %}
+  {% if query.get_status() == 'open' %}
+    <a class="btn btn-outline btn-default btn-w-m get_dialog_to_working_query">Передать в работу</a>
+  {% endif %}
+  {% if query.get_status() == 'close' %}
+    <a class="btn btn-outline btn-default btn-w-m get_dialog_reopen_query">Переоткрыть</a>
+  {% endif %}
+  </div>
+	<dl class="query-general dl-horizontal m-b-xs">
+		<dt>Время открытия:</dt><dd> {{ query.get_time_open()|date('d.m.Y H:i') }}</dd>
     {% if query.get_status() in ['close', 'reopen'] %}
-    <li>Время закрытия: {{ query.get_time_close()|date('H:i d.m.Y') }}</li>
+    <dt>Время закрытия: </dt><dd> {{ query.get_time_close()|date('d.m.Y H:i') }}</dd>
     {% endif %}
-		<li>Адрес: {{ query.get_house().get_street().get_name() }}, дом №{{ query.get_house().get_number() }}{% if query.get_initiator() == 'number' %}, кв. {{ number.get_flat().get_number() }}{% endif %}
+		<dt>Адрес:</dt><dd> {{ query.get_house().get_street().get_name() }}, дом №{{ query.get_house().get_number() }}{% if query.get_initiator() == 'number' %}, кв. {{ number.get_flat().get_number() }}{% endif %}</dd>
 	{% if query.get_initiator() == 'number' %}
-		<li>Владелец: {{ number.get_fio() }}</li>
-		<li>Лицевой счет: №{{ number.get_number() }}</li>
-    <li>Задолженость: <strong>{{ number.get_debt()|number_format(2, '.', ' ') }} руб.</strong></li>
+		<dt>Владелец:</dt><dd> {{ number.get_fio() }}</dd>
+		<dt>Лицевой счет:</dt><dd> №{{ number.get_number() }}</dd>
+    <dt>Задолженость:</dt><dd> <strong>{{ number.get_debt()|number_format(2, '.', ' ') }} руб.</strong></dd>
 	{% endif %}
-		<li>Тип работ: <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>
+		<dt>Тип работ:</dt><dd> <span class="query-general-work_type">{{ query.get_work_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a class="get_dialog_edit_work_type"> изменить</a></li>
+			<a class="text-navy get_dialog_edit_work_type"> изменить</a></dd>
 			{% endif %}
-		<li>Тип заявки:
+		<dt>Тип заявки:</dt><dd>
 			<span class="query-general-query_type">{{ query.get_query_type().get_name() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a class="get_dialog_change_query_type"> изменить</a>
+			<a class="text-navy get_dialog_change_query_type"> изменить</a>
 			{% endif %}
-		</li>
-		<li>
-			Диспетчер: {{ creator.get_lastname() }} {{ creator.get_firstname() }} {{ creator.get_middlename() }}
-		</li>
-		<li>Описание: <span class="query-general-description">{{ query.get_description() }}</span>
+		</dd>
+		<dt>Диспетчер: </dt><dd>{{ creator.get_lastname() }} {{ creator.get_firstname() }} {{ creator.get_middlename() }}</dd>
+		<dt>Описание:</dt><dd> <span class="query-general-description">{{ query.get_description() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-			<a class="get_dialog_edit_description"> изменить</a>
+			<a class="text-navy get_dialog_edit_description"> изменить</a>
 			{% endif %}
-		</li>
+		</dd>
 	{% if query.get_status() in ['close', 'reopen'] %}
-		<li>Причина закрытия: <span class="query-general-reason">{{ query.get_close_reason() }}</span>
+		<dt>Причина закрытия:</dt><dd> <span class="query-general-reason">{{ query.get_close_reason() }}</span>
 		{% if query.get_status() == 'reopen' %}
-			<a class="get_dialog_edit_reason"> изменить</a>
+			<a class="text-navy get_dialog_edit_reason"> изменить</a>
 		{% endif %}
-		</li>
+		</dd>
 	{% endif %}
-		<li>
-      <div class="row">
-        <div class="col-md-6">
-    			<div>Контактная информация
-    			{% if query.get_status() in ['open', 'working', 'reopen'] %}
-    				<a class="get_dialog_edit_contact_information">изменить</a>
-    			{% endif %}
-    			</div>
-    			<ul class="query-general-contacts">
-    				<li>ФИО: {{ query.get_contact_fio() }}</li>
-    				<li>Телефон: {{ query.get_contact_telephone() }}</li>
-    				<li>Сотовый: {{ query.get_contact_cellphone() }}</li>
-    			</ul>
-        </div>
-        {% if query.get_initiator() == 'number' and number.get_events() is not empty %}
-        <div class="col-md-6">
-          <h5>Последние события</h5>
-          <ul class="list-unstyled">
-          {% for event in number.get_events()|slice(0,5) %}
-            <li><strong>{{ event.get_time()|date("d.m.Y") }}</strong> {{ event.get_name() }}</li>
-          {% endfor %}
-          </ul>
-        </div>
+	</dl>
+  <div class="row">
+    <div class="col-md-6">
+      <div>
+        {% if query.get_status() in ['open', 'working', 'reopen'] %}
+          <a class="pull-right text-navy get_dialog_edit_contact_information">изменить</a>
         {% endif %}
+        <h3>Контактная информация</h3>
       </div>
-		</li>
-	</ul>
-	<ul>
-		<li class="query-numbers">
-			<h5>Лицевые счета <span class="label label-success">{{ query.get_numbers().count() }}</span></h5>
-		</li>
-		<li class="query-users">
-			<h5>Участники <span class="label label-success">{{ query.get_users().count() }}</span></h5>
-		</li>
-		<li class="query-works">
-			<h5>Работы <span class="label label-success">{{ query.get_works().count() }}</span></h5>
-		</li>
-    <li class="query-files">
-      <h5>Файлы <span class="label label-success">{{ query.get_files().count() }}</span></h5>
-    </li>
-		<li class="query-comments">
-			<h5>Служебные комментарии <span class="label label-success">{{ query.get_comments().count() }}</span></h5>
-		</li>
-	</ul>
+      <dl class="query-general-contacts dl-horizontal">
+        <dt>ФИО:</dt><dd> {{ query.get_contact_fio() }}</dd>
+        <dt>Телефон:</dt><dd> {{ query.get_contact_telephone() }}</dd>
+        <dt>Сотовый:</dt><dd> {{ query.get_contact_cellphone() }}</dd>
+      </dl>
+    </div>
+    {% if query.get_initiator() == 'number' and number.get_events() is not empty %}
+      <div class="col-md-6">
+        <h3>Последние события</h3>
+        <dl class="dl-horizontal">
+          {% for event in number.get_events()|slice(0,5) %}
+            <dt>{{ event.get_time()|date("d.m.Y") }}</dt><dd>{{ event.get_name() }}</dd>
+          {% endfor %}
+        </dl>
+      </div>
+    {% endif %}
+  </div>
+  <div class="ibox collapsed m-b-sm query-numbers">
+    <div class="ibox-title">
+      <h5>Лицевые счета</h5>
+      <div class="ibox-tools">
+        <span class="label label-success">{{ query.get_numbers().count() }}</span>
+        <a class="collapse-link">
+          <i class="fa fa-chevron-up"></i>
+        </a>
+      </div>
+    </div>
+    <div class="ibox-content no-padding"></div>
+  </div>
+  <div class="ibox collapsed m-b-sm query-users">
+    <div class="ibox-title">
+      <h5>Участники</h5>
+      <div class="ibox-tools">
+        <span class="label label-success">{{ query.get_users().count() }}</span>
+        <a class="collapse-link">
+          <i class="fa fa-chevron-up"></i>
+        </a>
+      </div>
+    </div>
+    <div class="ibox-content no-padding"></div>
+  </div>
+  <div class="ibox collapsed m-b-sm query-works">
+    <div class="ibox-title">
+      <h5>Работы</h5>
+      <div class="ibox-tools">
+        <span class="label label-success">{{ query.get_works().count() }}</span>
+        <a class="collapse-link">
+          <i class="fa fa-chevron-up"></i>
+        </a>
+      </div>
+    </div>
+    <div class="ibox-content no-padding"></div>
+  </div>
+  <div class="ibox collapsed m-b-sm query-files">
+    <div class="ibox-title">
+      <h5>Файлы</h5>
+      <div class="ibox-tools">
+        <span class="label label-success">{{ query.get_files().count() }}</span>
+        <a class="collapse-link">
+          <i class="fa fa-chevron-up"></i>
+        </a>
+      </div>
+    </div>
+    <div class="ibox-content no-padding"></div>
+  </div>
+  <div class="ibox collapsed m-b-sm query-comments">
+    <div class="ibox-title">
+      <h5>Служебные комментарии</h5>
+      <div class="ibox-tools">
+        <span class="label label-success">{{ query.get_comments().count() }}</span>
+        <a class="collapse-link">
+          <i class="fa fa-chevron-up"></i>
+        </a>
+      </div>
+    </div>
+    <div class="ibox-content no-padding"></div>
+  </div>
 </div>
 {% endblock html %}

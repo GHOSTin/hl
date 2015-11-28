@@ -16,16 +16,18 @@
 {% endblock js %}
 
 {% block html %}
-<div class="modal-content">
-    <div class="modal-header">
-        <h3>Удаление пользователя</h3>
+<div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+          <h3>Удаление пользователя</h3>
+      </div>
+    <div class="modal-body">
+      Удалить из заявки пользователя "{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}"?
     </div>
-	<div class="modal-body">
-		Удалить из заявки пользователя "{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}"?
-	</div>
-	<div class="modal-footer">
-		<div class="btn btn-primary remove_user">Сохранить</div>
-		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>
+    <div class="modal-footer">
+      <div class="btn btn-primary remove_user">Сохранить</div>
+      <div class="btn btn-default close_dialog">Отмена</div>
+    </div>
+  </div>
 </div>
 {% endblock html %}

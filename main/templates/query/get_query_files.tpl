@@ -1,7 +1,7 @@
 {% extends "ajax.tpl" %}
 
 {% block js %}
-$('.query[query_id = {{ query.get_id() }}] .query-files').append(get_hidden_content());
+$('.query[query_id = {{ query.get_id() }}]').find('.query-files .ibox-content').append(get_hidden_content());
 $('#fileupload{{ query.get_id() }}').fileupload({
     dataType: 'html',
     type: 'POST',
@@ -13,7 +13,7 @@ $('#fileupload{{ query.get_id() }}').fileupload({
 {% endblock %}
 
 {% block html %}
-<ul class="query-sub">
+<ul class="list-unstyled">
 {% if query.get_status() in ['open', 'working', 'reopen'] %}
   <li>
     <input id="fileupload{{ query.get_id() }}" type="file" name="file">

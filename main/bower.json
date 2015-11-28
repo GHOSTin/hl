@@ -16,6 +16,7 @@
     "toastr": "~2.1.2",
     "PACE": "pace#~1.0.2",
     "bootstrap": "~3.3.5",
-    "tinycon": "~0.6.3"
+    "tinycon": "~0.6.3",
+    "iCheck": "icheck#~1.0.2"
   }
 }

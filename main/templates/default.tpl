@@ -9,9 +9,9 @@
   <link href="/css/animate.css" rel="stylesheet">
   <title>Система управления предприятием ЖКХ</title>
   <link rel="stylesheet" href="/css/libs.css" >
-  {% block css %}{% endblock %}
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/default.css" >
+  {% block css %}{% endblock %}
 </head>
 <body {% if user is empty %} class="gray-bg" {% endif %}>
   <div id="wrapper">
@@ -90,7 +90,8 @@
     </div>
     {% endif %}
   </div>
-  <div id="modal" class="modal fade"></div>
+  <div id="modal" class="modal inmodal"></div>
+  <div id="dialog" class="modal dialog inmodal"></div>
   <script src="/js/jquery.min.js"></script>
   <script src="/js/underscore.js"></script>
   <script src="/js/backbone.js"></script>
