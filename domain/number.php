@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 */
 class number{
 
+  use traits\cellphone;
+
   /**
   * @OneToMany(targetEntity="domain\accrual", mappedBy="number")
   * @OrderBy({"time" = "DESC"})
@@ -214,10 +216,7 @@ class number{
   }
 
   public function set_cellphone($cellphone){
-    if(!empty($cellphone))
-      if(!preg_match('/^[0-9]{10}$/', $cellphone))
-        throw new DomainException('Номер сотового телефона задан не верно '. $cellphone);
-  	$this->cellphone = $cellphone;
+  	$this->cellphone = $this->prepare_cellphone($cellphone);
   }
 
   public function set_email($email){

@@ -9,7 +9,7 @@ use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Silex\Provider\SessionServiceProvider;
 use Twig_SimpleFilter;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Adapter\Local as Adapter;
@@ -154,6 +154,12 @@ $app['swiftmailer.options'] = array(
     'encryption' => 'ssl',
     'auth_mode' => null
 );
+$app->register(new SessionServiceProvider);
+
+$app['session.storage.options'] = [
+  'cookie_lifetime' => 86400 * 30
+];
+
 $app->register(new TwigServiceProvider(), $twig_conf);
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
@@ -176,8 +182,6 @@ $app['auth_log'] = function($app) use ($root, $DS){
 };
 
 $app->before(function (Request $request, Application $app) {
-  $app['session'] = new Session();
-  $app['session']->start();
   if($app['session']->get('user')){
     $app['user'] = $app['em']->find('domain\user', $app['session']->get('user'));
   }
