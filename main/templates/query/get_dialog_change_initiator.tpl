@@ -9,7 +9,7 @@
 			<option value="house"{% if query.get_initiator() == 'house' %} selected{% endif %}>Заявка на дом</option>
 		</select>
 	</div>
-	<div>
+	<div class="form-group">
 		<select class="dialog-select-street form-control">
 			<option value="">Выберите улицу...</option>
 			{% for street in streets %}

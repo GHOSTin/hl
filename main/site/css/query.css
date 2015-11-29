@@ -1,7 +1,21 @@
-.query{
-	background-color: #fff;
-	margin: 3px;
-  box-shadow: 0 1px 2px #c4c4c4;
+.agile-list .query {
+    padding: 0;
+}
+
+.agile-list > li {
+    background: #FAFAFB;
+    border: 1px solid #e7eaec;
+    margin: 0px 0 10px 0;
+    padding: 10px;
+    border-radius: 2px;
+}
+
+.query-container {
+    max-width: 810px;
+}
+
+.query-wrap {
+    padding: 10px;
 }
 
 .old-queries li{
@@ -10,19 +24,21 @@
 }
 
 .query_controls{
-   margin-top: 20px;
+   margin-top: 5px;
 }
 
-.query_status_open {border-left:5px solid #ff0000;}
-.query_status_close {border-left:5px solid #cccccc;}
-.query_status_reopen {border-left:5px solid blue;}
-.query_status_working {border-left:5px solid black;}
+.agile-list .query_status_open {border-left:3px solid #ff0000;}
+.agile-list .query_status_close {border-left:3px solid #cccccc;}
+.agile-list .query_status_reopen {border-left:3px solid blue;}
+.agile-list .query_status_working {border-left:3px solid black;}
 
 .timeline .pagination{
     margin: 0;
 }
 .timeline .btn-group{
     white-space: normal;
+    display: flex;
+    flex-wrap: wrap;
 }
 .timeline-control, .timeline-day {
     cursor: pointer;
@@ -37,9 +53,6 @@
     font-size:10px;
     color: black;
     font-weight: normal;
-}
-.timeline-month{
-    text-align:center;
 }
 ul.query-sub, ul.query-general{
     list-style:none;

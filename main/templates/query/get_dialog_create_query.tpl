@@ -12,15 +12,17 @@
 {% endblock %}
 
 {% block html %}
-<div class="modal-content">
-  <div class="modal-header">
-    <h3>Форма создания заявки</h3>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Форма создания заявки</h3>
+    </div>
+    <div class="modal-body">
+      Выберите: <a class="get_dialog_initiator" param="number">заявка на лицевой счет</a> или <a class="get_dialog_initiator" param="house">заявка на дом</a>
+    </div>
+    <div class="modal-footer">
+      <div class="btn btn-default close_dialog">Отмена</div>
+    </div>
   </div>
-	<div class="modal-body">
-		Выберите: <a class="get_dialog_initiator" param="number">заявка на лицевой счет</a> или <a class="get_dialog_initiator" param="house">заявка на дом</a>
-	</div>
-	<div class="modal-footer">
-		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>
 </div>
 {% endblock %}

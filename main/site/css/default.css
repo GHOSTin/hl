@@ -1,9 +1,4 @@
 @CHARSET "UTF-8";
-html,body{
-	height: 100%;
-  background-color: rgb(246,246,246);
-  font-family: "Open sans", Arial,sans-serif;
-}
 
 a {
     cursor: pointer;
@@ -15,15 +10,6 @@ a {
     float: none;
 }
 
-#wrap{
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    margin: 0 auto -60px;
-}
-footer, #push{
-    height: 60px;
-}
 .credit {
     padding-top: 1em;
     font-size: .95em;
@@ -92,196 +78,54 @@ footer, #push{
     z-index: 1050;
 }
 
-#_hidden_notification_center{
-	position:absolute;
-	top:50px;
-	right:0px;
-	z-index:101;
-	width:600px;
-    height: 500px;
-	background:white;
-	border: 1px solid rgba(0,0,0,.2);
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-
-div[class^=chat-col-]{
-    position: relative;
-    height: 100%;
-    display: inline-block;
-    vertical-align: top;
-    padding: 10px;
-}
-
-.chat-col-left{
-    border-right: 1px solid rgba(0,0,0,.1);
-}
-
-#chat-user-filter{
-    padding-right: 24px;
-}
-
-#chat-user-filter::-ms-clear {
-    display: none;
-}
-
-#chat-user-filter-clear {
-    float: none;
-    position: absolute;
-    right: 14px;
-    top: 18px;
-}
-
-.chat-user-list{
-    overflow: auto;
-    height: 450px;
-}
-
-.chat-users{
-    margin: 0;
+.user-list,
+#chat-dates,
+#chat-history {
     padding: 0;
 }
-
-.chat-users li{
-    list-style: none;
-    margin: 5px 0;
+.chat-users {
+    height: 520px;
+    overflow: auto;
 }
-
-.chat-users li a{
-    padding: 5px;
-    margin-left: 15px;
+.chat-user {
+    padding: 8px;
 }
-
-.chat-users li a:before{
-    content: "\2022";
-    font-size: 2.2em;
-    height: 21px;
-    position: absolute;
-    left: 0;
-    margin-top: -12px;
+.navbar-top-links .dropdown-menu .chat-users a,
+.navbar-top-links .dropdown-menu .chat-discussion a {
+    padding: 0;
 }
-
-.chat-users li.offline a:before{
-    color: palevioletred;
-}
-
-.chat-users li.online a:before{
-    color: greenyellow;
-}
-
-.chat-users li.offline a{
+.chat-user.offline a{
     color: #ccc;
 }
 
-.chat-users li.active a{
-    border-radius: 5px;
-    background-color: #e8e8e8 !important;
-    color: #08c !important;
-    font-weight: bold;
+.chat-discussion {
+    height: auto;
+}
+.chat-feed {
+    height: 310px;
+    overflow: auto;
 }
 
-.chat-users li.active.offline a{
-    border-radius: 5px;
-    background-color: #e8e8e8 !important;
-    color: #7c7d7e !important;
+.message-avatar {
+    height: 40px;
+    width: 40px;
 }
 
+.message-content {
+    font-size: 13px;
+}
 
-.chat-users .status {
-    font-size: 2.2em;
-    vertical-align: middle;
-    margin: 0 3px;
+.chat-discussion .chat-message.left .message {
+    margin-left: 50px;
+}
 
+.chat-discussion .chat-message.right .message {
+    margin-right: 50px;
 }
 
 .mCSB_container.mCS_no_scrollbar{
     margin-right: 20px !important;
 }
-
-.chat {
-    max-height: 480px;
-    margin: 0;
-    margin-bottom: 126px;
-}
-
-.chat h4 {
-    position: relative;
-    text-align: center;
-    background: #dedede;
-    border-radius: 4px 4px 0 0;
-    margin: 0;
-}
-
-.chat .chat-history{
-    margin: 0;
-    position: absolute;
-    right: 2px;
-    top: 2px;
-}
-
-.chat-feed{
-    height: 310px;
-    overflow: auto;
-}
-
-.chat-feed ul {
-    margin: 0;
-    padding: 0;
-}
-
-.chat-feed header{
-    text-align: center;
-    font-weight: bold;
-    display: block;
-    padding: 5px 0;
-    border-radius: 3px;
-    margin: 1px 0;
-    border: 1px solid #e1e9ec;
-}
-
-.chat-feed header .caret{
-    margin-top: 8px;
-    margin-right: 8px;
-}
-
-.chat-feed blockquote{
-    position: relative;
-    padding: 0;
-}
-
-.chat-feed blockquote.pull-left{
-    padding-right: 35px;
-}
-
-.chat-feed blockquote.pull-right{
-    padding-left: 35px;
-}
-
-.chat-feed blockquote p {
-    word-wrap: break-word;
-    max-width: 300px;
-}
-
-.chat-feed blockquote small {
-    display: inline-block;
-    margin-top: -20px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    font-size: 70%;
-}
-
-.chat-feed blockquote.pull-right small{
-    right: auto;
-    left: 0;
-}
-
-.chat-feed blockquote.pull-right small:after,
-.chat-feed blockquote small:before {
-    content: '';
-}
-
-
 .scroller {
     height: 100%;
     overflow-y: scroll;
@@ -318,7 +162,7 @@ div[class^=chat-col-]{
 .scroll-to-top {
     opacity: 0;
     position: fixed;
-    bottom: 1em;
+    bottom: 2em;
     height: 32px;
     width: 32px;
     cursor: pointer;
@@ -348,6 +192,9 @@ div[class^=chat-col-]{
     }
     .credit {
         margin-left: 40px;
+    }
+    .navbar-top-links .dropdown-messages {
+        width: 610px;
     }
 }
 

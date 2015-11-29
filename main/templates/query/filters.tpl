@@ -1,6 +1,6 @@
 {% set statuses = {'open' : 'Открытые заявки', 'close' : 'Закрытые заявки', 'reopen' : 'В работе', 'reopen' : 'Переоткрытые', 'working' : 'В работе'} %}
 <!-- begin filters -->
-<div class="filters col-xs-12">
+<div class="filters">
   <!-- begin filter status -->
   <div class="filter">
     <label>по статусу заявки</label>

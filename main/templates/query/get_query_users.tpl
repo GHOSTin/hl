@@ -1,11 +1,9 @@
 {% extends "ajax.tpl" %}
 
 {% block js %}
-	$('.query[query_id = {{ query.get_id() }}] .query-users').append(get_hidden_content())
+	$('.query[query_id = {{ query.get_id() }}]').find('.query-users .ibox-content').append(get_hidden_content())
 {% endblock js %}
 
 {% block html %}
-	<ul class="query-sub">
-		{% include 'query/query_users.tpl' %}
-	<ul>
+  {% include 'query/query_users.tpl' %}
 {% endblock html %}

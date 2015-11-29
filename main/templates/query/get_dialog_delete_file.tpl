@@ -14,16 +14,18 @@
 {% endblock %}
 
 {% block html %}
-<div class="modal-content">
-    <div class="modal-header">
-      <h3>Удаление файла</h3>
+<div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+        <h3>Удаление файла</h3>
+      </div>
+    <div class="modal-body">
+      Удалить файл <strong>{{ file.get_name() }}</strong>?
     </div>
-	<div class="modal-body">
-		Удалить файл <strong>{{ file.get_name() }}</strong>?
-	</div>
-	<div class="modal-footer">
-		<div class="btn btn-primary delete_file">Удалить</div>
-		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>
+    <div class="modal-footer">
+      <div class="btn btn-primary delete_file">Удалить</div>
+      <div class="btn btn-default close_dialog">Отмена</div>
+    </div>
+  </div>
 </div>
 {% endblock %}
