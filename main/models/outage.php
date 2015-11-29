@@ -46,7 +46,11 @@ class outage{
     $this->outage->update($begin, $target, $workgroup, $this->user, $houses, $performers, $description);
     $this->em->flush();
     return [
-              'outage' => $this->twig->render('outage\outage.tpl', ['outage' => $this->outage])
+              'outage' => $this->twig->render('outage\outage.tpl',
+                                              [
+                                                'outage' => $this->outage,
+                                                'user' => $this->user
+                                              ])
             ];
   }
 }

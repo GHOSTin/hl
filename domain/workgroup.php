@@ -17,12 +17,12 @@ class workgroup{
   private $id;
 
   /**
-  * @Column(name="name", type="string")
+  * @Column
   */
   private $name;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
 	private $status;
 

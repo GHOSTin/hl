@@ -16,12 +16,12 @@ class work{
   private $id;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
   private $name;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
   private $status;
 

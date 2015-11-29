@@ -30,12 +30,12 @@ class query2comment{
   private $message;
 
   /**
-  * @ManyToOne(targetEntity="\domain\query")
+  * @ManyToOne(targetEntity="domain\query")
   */
   private $query;
 
   /**
-  * @ManyToOne(targetEntity="\domain\user")
+  * @ManyToOne(targetEntity="domain\user")
   */
   private $user;
 

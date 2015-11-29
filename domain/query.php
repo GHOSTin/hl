@@ -19,12 +19,12 @@ class query{
 	private $id;
 
 	/**
-  * @Column(type="string")
+  * @Column
   */
 	private $status;
 
 	/**
-  * @Column(type="string")
+  * @Column
   */
 	private $initiator;
 
@@ -70,22 +70,22 @@ class query{
 	private $time_close;
 
 	/**
-  * @Column(type="string", nullable=true)
+  * @Column(nullable=true)
   */
 	private $contact_fio;
 
 	/**
-  * @Column(type="string", nullable=true)
+  * @Column(nullable=true)
   */
 	private $contact_telephone;
 
 	/**
-  * @Column(type="string", nullable=true)
+  * @Column(nullable=true)
   */
 	private $contact_cellphone;
 
 	/**
-  * @Column(type="string")
+  * @Column
   */
 	private $description;
 

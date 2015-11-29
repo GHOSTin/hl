@@ -50,6 +50,8 @@ class outage{
   */
   private $category;
 
+  private static $i = 1000;
+
   public function __construct(){
     $this->houses = new ArrayCollection();
     $this->performers = new ArrayCollection();
@@ -111,7 +113,7 @@ class outage{
 
   public static function new_instance($begin, $target, workgroup $category, user $user, array $houses, array $performers, $description){
     $outage = new self();
-    $outage->id = time();
+    $outage->id = time() + self::$i++;
     $outage->begin = $begin;
     $outage->target = $target;
     $outage->category = $category;

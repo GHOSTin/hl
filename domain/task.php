@@ -11,37 +11,37 @@ class task {
 
   /**
    * @Id()
-   * @Column(name="id", type="decimal")
+   * @Column
    * @var string
    */
   private $id;
   /**
-   * @Column(name="title", type="string")
+   * @Column
    * @var string
    */
   private $title;
   /**
-   * @Column(name="description", type="string")
+   * @Column
    * @var string
    */
   private $description;
   /**
-   * @Column(name="time_open", type="integer")
+   * @Column(type="integer")
    * @var int
    */
   private $time_open;
   /**
-   * @Column(name="time_close", type="integer")
+   * @Column(type="integer")
    * @var int
    */
   private $time_close; //время выполнеия
   /**
-   * @Column(name="time_target", type="integer")
+   * @Column(type="integer")
    * @var int
    */
   private $time_target; //дата до которой нужно выполнить задачу
   /**
-   * @Column(name="rating", type="integer")
+   * @Column(type="integer")
    * @var int
    */
   private $rating = 0;
@@ -56,12 +56,12 @@ class task {
    */
   private $comments = [];
   /**
-   * @Column(name="reason", type="string")
+   * @Column
    * @var string
    */
   private $reason;
   /**
-   * @Column(name="status", type="string")
+   * @Column
    * @var string
    */
   private $status;

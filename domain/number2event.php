@@ -2,7 +2,6 @@
 
 /**
 * @Entity(repositoryClass="domain\repositories\number2event")
-* @Table(name="number2event")
 */
 class number2event{
 
