@@ -126,6 +126,10 @@ class user implements JsonSerializable{
     return $this->lastname.' '.$this->firstname.' '.$this->middlename;
   }
 
+  public function get_log_name(){
+    return $this->lastname.' '.$this->firstname.' '.$this->middlename.' ('.$this->id.')';
+  }
+
   public function get_firstname(){
     return $this->firstname;
   }

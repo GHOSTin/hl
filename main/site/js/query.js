@@ -272,6 +272,13 @@ $(document).ready(function($){
 				init_content(r);
 			});
 	});
+  $(document).on('click', '.get_dialog_edit_visible', function(){
+    var id = get_query_id($(this));
+    $.get('/queries/' + id + '/dialogs/edit_visible/'
+      ,function(r){
+        init_content(r);
+      });
+  });
 	$(document).on('click', '.get_dialog_add_user', function(){
 		$.get('get_dialog_add_user',{
 			id: get_query_id($(this)),

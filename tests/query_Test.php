@@ -35,7 +35,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
 
   public function test_add_file_1(){
     $this->setExpectedException('DomainException');
-    $this->query->close(time(), 'Причина');
+    $this->query->close($this->user, time(), 'Причина');
     $file = new file($this->user, $this->path, $this->time, $this->name);
     $this->query->add_file($file);
   }
@@ -63,7 +63,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
 
   public function test_delete_file_1(){
     $this->setExpectedException('DomainException');
-    $this->query->close(time(), 'Причина');
+    $this->query->close($this->user,  time(), 'Причина');
     $file = new file($this->user, $this->path, $this->time, $this->name);
     $this->query->add_file($file);
     $q2f = $this->query->get_files()[0];
@@ -178,7 +178,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'reopen');
-    $this->query->close(1397562800, 'Причина закрытия');
+    $this->query->close($this->user, 1397562800, 'Причина закрытия');
   }
 
   public function test_close_query_2(){
@@ -187,7 +187,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'close');
-    $this->query->close(1397562800, 'Причина закрытия');
+    $this->query->close($this->user, 1397562800, 'Причина закрытия');
   }
 
   public function test_close_query_3(){
@@ -196,7 +196,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status->setAccessible(true);
     $status->setValue($this->query, 'open');
     $time = time();
-    $this->query->close($time, 'Причина закрытия');
+    $this->query->close($this->user, $time, 'Причина закрытия');
     $this->assertEquals($time, $this->query->get_time_close());
     $this->assertEquals('Причина закрытия', $this->query->get_close_reason());
     $this->assertEquals('close', $this->query->get_status());
@@ -208,7 +208,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'open');
-    $this->query->reclose();
+    $this->query->reclose($this->user);
   }
 
   public function test_reclose_2(){
@@ -217,7 +217,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'close');
-    $this->query->reclose();
+    $this->query->reclose($this->user);
   }
 
   public function test_reclose_3(){
@@ -226,7 +226,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'working');
-    $this->query->reclose();
+    $this->query->reclose($this->user);
   }
 
   public function test_reclose_4(){
@@ -234,7 +234,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'reopen');
-    $this->query->reclose();
+    $this->query->reclose($this->user);
     $this->assertEquals('close', $this->query->get_status());
   }
 
@@ -244,7 +244,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'open');
-    $this->query->reopen();
+    $this->query->reopen($this->user);
   }
 
   public function test_reopen_2(){
@@ -253,7 +253,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'working');
-    $this->query->reopen();
+    $this->query->reopen($this->user);
   }
 
   public function test_reopen_3(){
@@ -262,7 +262,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'reopen');
-    $this->query->reopen();
+    $this->query->reopen($this->user);
   }
 
   public function test_reopen_4(){
@@ -270,7 +270,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
     $status = $reflection->getProperty('status');
     $status->setAccessible(true);
     $status->setValue($this->query, 'close');
-    $this->query->reopen();
+    $this->query->reopen($this->user);
     $this->assertEquals('reopen', $this->query->get_status());
   }
 

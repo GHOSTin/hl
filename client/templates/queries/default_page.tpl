@@ -23,7 +23,6 @@
             <th>Заявка</th>
             <th data-hide="all">Запрос</th>
             <th>Описание</th>
-            <th data-hide="all">Диспетчер</th>
             <th data-hide="all">Причина закрытия</th>
           </tr>
         </thead>

@@ -101,7 +101,6 @@
   <script src="/js/socket.io.js"></script>
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/js/notification-center.js"></script>
-  <script src="/js/sockjs.js"></script>
   <script src="/js/chat.js"></script>
   <script src="/js/vendor/vendor.js"></script>
   <script src="/js/inspinia.js"></script>

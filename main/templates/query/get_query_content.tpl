@@ -39,6 +39,7 @@
   {% if query.get_status() == 'close' %}
     <a class="btn btn-outline btn-default btn-w-m get_dialog_reopen_query">Переоткрыть</a>
   {% endif %}
+    <a class="btn btn-outline btn-default btn-w-m" href="/queries/{{ query.get_id() }}/history/" target="_blank">История</a>
   </div>
 	<dl class="query-general dl-horizontal m-b-xs">
 		<dt>Время открытия:</dt><dd> {{ query.get_time_open()|date('d.m.Y H:i') }}</dd>
@@ -61,6 +62,12 @@
 			<a class="text-navy get_dialog_change_query_type"> изменить</a>
 			{% endif %}
 		</dd>
+    <dt>Видимость:</dt><dd>
+      <span class="query-general">{% if query.is_visible() %}<i class="fa fa-eye notification-center-icon" style="font-size:12px" alt="Заявка из личного кабинета"></i> Видима{% else %}Скрыта{% endif %}</span>
+      {% if query.get_status() in ['open', 'working', 'reopen'] %}
+      <a class="get_dialog_edit_visible text-navy"> изменить</a></li>
+      {% endif %}
+    </dd>
 		<dt>Диспетчер: </dt><dd>{{ creator.get_lastname() }} {{ creator.get_firstname() }} {{ creator.get_middlename() }}</dd>
 		<dt>Описание:</dt><dd> <span class="query-general-description">{{ query.get_description() }}</span>
 			{% if query.get_status() in ['open', 'working', 'reopen'] %}
@@ -128,7 +135,7 @@
     <div class="ibox-title">
       <h5>Работы</h5>
       <div class="ibox-tools">
-        <span class="label label-success">{{ query.get_works().count() }}</span>
+        <span class="label label-success"></span>
         <a class="collapse-link">
           <i class="fa fa-chevron-up"></i>
         </a>

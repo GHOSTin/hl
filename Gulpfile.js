@@ -58,5 +58,3 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
 });
 
 gulp.task('default', ['client:scripts:vendor', 'main:scripts:vendor']);
-
-gulp.watch('main/bower.json', ['main:scripts:vendor']);
