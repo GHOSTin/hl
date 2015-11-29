@@ -24,9 +24,6 @@
         });
       }
     });
-    $('.dialog-date').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-    $('.dialog-date').datepicker('hide');
-  });
 {% endblock %}
 
 {% block html %}

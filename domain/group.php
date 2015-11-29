@@ -11,32 +11,31 @@ class group{
 
   /**
   * @Id
-  * @Column(name="id", type="integer")
+  * @Column(type="integer")
   * @GeneratedValue
   */
   private $id;
 
   /**
-  * @Column(name="name", type="string")
+  * @Column
   */
   private $name;
 
   /**
-  * @Column(name="status", type="string")
+  * @Column
   */
   private $status;
 
   /**
-   * @ManyToMany(targetEntity="\domain\user")
-   * @JoinTable(name="group2user",
-   * joinColumns={@JoinColumn(name="group_id", referencedColumnName="id")},
-   * inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")})
-   */
+  * @ManyToMany(targetEntity="domain\user")
+  * @JoinTable(name="group2user")
+  */
   private $users;
 
   private static $statuses = ['false', 'true'];
 
   public function __construct(){
+    $this->status = 'true';
     $this->users = new ArrayCollection();
   }
 
@@ -68,21 +67,15 @@ class group{
     return $this->users;
   }
 
-  public function set_id($id){
-    if($id > 65535 OR $id < 1)
-      throw new DomainException('Идентификатор группы задан не верно.');
-    $this->id = $id;
-  }
-
   public function set_name($name){
     if(!preg_match('/^[0-9а-яА-Я -]{1,50}$/u', $name))
       throw new DomainException('Название группы задано не верно.');
     $this->name = $name;
   }
 
-  public function set_status($status){
-    if(!in_array($status, self::$statuses))
-      throw new DomainException('Статус группы задан не верно.');
-    $this->status = (string) $status;
+  public static function new_instance($name){
+    $group = new self();
+    $group->set_name($name);
+    return $group;
   }
 }

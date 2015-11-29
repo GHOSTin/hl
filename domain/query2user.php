@@ -3,7 +3,6 @@
 use BadMethodCallException;
 /**
 * @Entity
-* @Table(name="query2user")
 */
 class query2user{
 

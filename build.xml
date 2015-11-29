@@ -71,6 +71,30 @@
         <arg value="tests/"/>
     </exec>
   </target>
+  <target name="orm_drop_database">
+    <exec executable="vendor/bin/doctrine" failonerror="true">
+        <arg value="orm:schema-tool:drop"/>
+        <arg value="--force"/>
+    </exec>
+  </target>
+  <target name="orm_update">
+    <exec executable="vendor/bin/doctrine" failonerror="true">
+        <arg value="orm:schema-tool:update"/>
+        <arg value="--force"/>
+    </exec>
+  </target>
+  <target name="orm_generate_proxies">
+    <exec executable="vendor/bin/doctrine" failonerror="true">
+        <arg value="orm:generate-proxies"/>
+    </exec>
+  </target>
+  <target name="fake">
+    <exec executable="php" failonerror="true">
+        <arg value="fake.php"/>
+    </exec>
+  </target>
+  <target name="dev"  depends="orm_drop_database, orm_update, fake">
+  </target>
   <target name="cover">
     <exec executable="vendor/bin/phpunit" failonerror="true">
         <arg value="--bootstrap"/>

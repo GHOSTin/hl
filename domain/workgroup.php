@@ -17,12 +17,12 @@ class workgroup{
   private $id;
 
   /**
-  * @Column(name="name", type="string")
+  * @Column
   */
   private $name;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
 	private $status;
 
@@ -100,7 +100,7 @@ class workgroup{
   }
 
   public static function new_instance($name){
-    $workgroup = new workgroup();
+    $workgroup = new self();
     $workgroup->set_name($name);
     return $workgroup;
   }

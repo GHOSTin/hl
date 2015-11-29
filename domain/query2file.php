@@ -2,7 +2,6 @@
 
 /**
 * @Entity
-* @Table(name="query2file")
 */
 class query2file implements interfaces\file{
 

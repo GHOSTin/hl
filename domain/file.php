@@ -14,13 +14,13 @@ class file implements interfaces\file{
   private $time;
 
   /**
-  * @Column(type="string", length=255)
+  * @Column(length=255)
   */
   private $name;
 
   /**
   * @Id
-  * @Column(type="string", length=255, unique=true)
+  * @Column(length=255, unique=true)
   */
   private $path;
 

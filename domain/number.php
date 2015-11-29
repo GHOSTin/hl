@@ -18,7 +18,7 @@ class number{
   private $accruals;
 
   /**
-  * @Column(type="string")
+  * @Column(nullable=true)
   */
   private $cellphone;
 
@@ -28,7 +28,7 @@ class number{
   private $debt = 0;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
   private $fio;
 
@@ -55,22 +55,22 @@ class number{
   private $id;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
   private $number;
 
   /**
-  * @Column(type="string")
+  * @Column
   */
   private $status;
 
   /**
-  * @Column(type="string")
+  * @Column(nullable=true)
   */
   private $telephone;
 
   /**
-  * @Column(type="string")
+  * @Column(nullable=true)
   */
   private $email;
 
