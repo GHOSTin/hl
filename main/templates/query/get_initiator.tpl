@@ -68,6 +68,7 @@
       </div>
       <div class="modal-body">
         <div class="row">
+          <div class="col-sm-6">
             {% if initiator == 'number' %}
               <div class="dialog-addinfo col-md-6">
                 <h4>Данные контактного лица по заявке</h4>
@@ -90,6 +91,7 @@
                     </label>
                   </div>
                 {% endif %}
+              {% endif %}
                 <div class="form-group">
                   <label>Тип работ</label>
                   <select class="form-control dialog-worktype">
@@ -110,8 +112,6 @@
                   </select>
                 </div>
               </div>
-            {% else %}
-            {% endif %}
           <div class="col-sm-6">
             {% if queries is not empty %}
               <h4>Последние заявки на этот дом</h4>

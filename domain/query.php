@@ -112,6 +112,9 @@ class query{
    */
 	private $numbers;
 
+  /**
+  * @OneToMany(targetEntity="domain\query2work", mappedBy="query")
+  */
 	private $works;
 
 	/**

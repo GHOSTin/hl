@@ -135,7 +135,7 @@
     <div class="ibox-title">
       <h5>Работы</h5>
       <div class="ibox-tools">
-        <span class="label label-success"></span>
+        <span class="label label-success">{{ query.get_works().count() }}</span>
         <a class="collapse-link">
           <i class="fa fa-chevron-up"></i>
         </a>

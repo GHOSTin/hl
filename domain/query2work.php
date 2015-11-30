@@ -9,6 +9,7 @@ class query2work{
 
   /**
   * @Id
+  * @ManyToOne(targetEntity="domain\query", inversedBy="works")
   */
   private $query;
 
@@ -29,7 +30,7 @@ class query2work{
   private $time_close;
 
   /**
-  * @Column(name="value", type="string")
+  * @Column(nullable=true)
   */
   private $value;
 

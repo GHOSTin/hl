@@ -397,7 +397,7 @@ $(document).ready(function($){
   $(document).on('click', '.get_outages', function(){
     $(this).hide();
     $('.outages .outages-content').show();
-  }).on('click', '.outages .well .close', function(){
+  }).on('click', '.outages .close', function(){
     $('.outages .get_outages').show();
     $('.outages .outages-content').hide();
   }).on('click', '.get_requests', function(){
