@@ -18,6 +18,7 @@
 {% endblock %}
 
 {% block html %}
+    <div class="modal-dialog">
 <div class="modal-content">
     <div class="modal-header">
       <h3>Отклонение заявки</h3>
@@ -83,5 +84,6 @@
 		<div class="btn btn-primary create_query">Отклонить запрос</div>
 		<div class="btn btn-default close_dialog" data-dismiss="modal">Отмена</div>
 	</div>
+</div>
 </div>
 {% endblock html %}

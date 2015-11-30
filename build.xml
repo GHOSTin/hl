@@ -49,42 +49,64 @@
     </apply>
    </target>
   <target name="composer">
-      <exec executable="composer">
+      <exec executable="composer.bat" osfamily="windows">
+          <arg value="update"/>
+      </exec>
+      <exec executable="composer" osfamily="unix">
           <arg value="update"/>
       </exec>
   </target>
   <target name="npm">
-      <exec executable="npm">
+      <exec executable="npm.cmd" osfamily="windows">
           <arg value="update"/>
           <arg value="--save"/>
       </exec>
-  </target>
-  <target name="gulp">
-      <exec executable="gulp" failonerror="true">
-
+      <exec executable="npm" osfamily="unix">
+        <arg value="update"/>
+        <arg value="--save"/>
       </exec>
   </target>
+  <target name="gulp">
+      <exec executable="gulp.cmd" failonerror="true" osfamily="windows"></exec>
+      <exec executable="gulp" failonerror="true" osfamily="unix"></exec>
+  </target>
   <target name="phpunit">
-    <exec executable="vendor/bin/phpunit" failonerror="true">
+    <exec executable="vendor/bin/phpunit.bat" failonerror="true" osfamily="windows">
+        <arg value="--bootstrap"/>
+        <arg value="./tests/autoload.php"/>
+        <arg value="tests/"/>
+    </exec>
+    <exec executable="vendor/bin/phpunit" failonerror="true" osfamily="unix">
         <arg value="--bootstrap"/>
         <arg value="./tests/autoload.php"/>
         <arg value="tests/"/>
     </exec>
   </target>
   <target name="orm_drop_database">
-    <exec executable="vendor/bin/doctrine" failonerror="true">
+    <exec executable="vendor/bin/doctrine.bat" failonerror="true" osfamily="windows">
+        <arg value="orm:schema-tool:drop"/>
+        <arg value="--force"/>
+    </exec>
+    <exec executable="vendor/bin/doctrine" failonerror="true" osfamily="unix">
         <arg value="orm:schema-tool:drop"/>
         <arg value="--force"/>
     </exec>
   </target>
   <target name="orm_update">
-    <exec executable="vendor/bin/doctrine" failonerror="true">
+    <exec executable="vendor/bin/doctrine.bat" failonerror="true" osfamily="windows">
+        <arg value="orm:schema-tool:update"/>
+        <arg value="--force"/>
+    </exec>
+    <exec executable="vendor/bin/doctrine" failonerror="true" osfamily="unix">
         <arg value="orm:schema-tool:update"/>
         <arg value="--force"/>
     </exec>
   </target>
   <target name="orm_generate_proxies">
-    <exec executable="vendor/bin/doctrine" failonerror="true">
+    <exec executable="vendor/bin/doctrine.bat" failonerror="true" osfamily="windows">
+        <arg value="orm:generate-proxies"/>
+    </exec>
+    <exec executable="vendor/bin/doctrine" failonerror="true" osfamily="unix">
         <arg value="orm:generate-proxies"/>
     </exec>
   </target>

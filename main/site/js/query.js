@@ -156,7 +156,7 @@ $(document).ready(function($){
 		$.get('clear_filters',{
 			},function(r){
 				init_content(r);
-        get_day_stats();
+        		get_day_stats();
 			});
 	});
 	$('.filter-content-select-status').change(function(){

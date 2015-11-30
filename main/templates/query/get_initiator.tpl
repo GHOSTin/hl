@@ -70,7 +70,7 @@
         <div class="row">
           <div class="col-sm-6">
             {% if initiator == 'number' %}
-              <div class="dialog-addinfo col-md-6">
+              <div class="dialog-addinfo">
                 <h4>Данные контактного лица по заявке</h4>
                 <div class="form-group">
                   <label class=" control-label">ФИО:</label>
@@ -91,7 +91,24 @@
                     </label>
                   </div>
                 {% endif %}
-              {% endif %}
+              </div>
+            {% else %}
+              <div class="dialog-addinfo">
+                <h4>Данные контактного лица по заявке</h4>
+                <div class="form-group">
+                  <label class=" control-label">ФИО:</label>
+                  <input type="text" class="form-control dialog-fio" value="">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Телефон:</label>
+                  <input type="text" class="form-control dialog-telephone" value="">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Сот. телефон:</label>
+                  <input type="text" class="form-control dialog-cellphone" value="">
+                </div>
+              </div>
+            {% endif %}
                 <div class="form-group">
                   <label>Тип работ</label>
                   <select class="form-control dialog-worktype">

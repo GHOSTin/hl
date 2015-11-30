@@ -24,34 +24,39 @@
         });
       }
     });
+    $('.dialog-date').datetimepicker({
+      format: 'DD.MM.YYYY', locale: moment.locale('ru')
+    });
 {% endblock %}
 
 {% block html %}
-<div class="modal-content">
-  <div class="modal-header">
-    <h3>Добавление события</h3>
-  </div>
-  <div class="modal-body">
-    <div class="form-group">
-      <select class="form-control dialog-select-category" autofocus>
-        <option value="0">Выберите категорию</option>
-      {% for workgroup in workgroups %}
-        <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
-      {% endfor %}
-      </select>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Добавление события</h3>
     </div>
-    <div class="form-group">
-      <select class="form-control dialog-select-event" disabled>
-        <option>Ожидание...</option>
-      </select>
+    <div class="modal-body">
+      <div class="form-group">
+        <select class="form-control dialog-select-category" autofocus>
+          <option value="0">Выберите категорию</option>
+        {% for workgroup in workgroups %}
+          <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
+        {% endfor %}
+        </select>
+      </div>
+      <div class="form-group">
+        <select class="form-control dialog-select-event" disabled>
+          <option>Ожидание...</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control dialog-date" value="{{ "now"|date("d.m.Y") }}">
+      </div>
     </div>
-    <div class="form-group">
-      <input type="text" class="form-control dialog-date" value="{{ "now"|date("d.m.Y") }}">
+    <div class="modal-footer">
+      <div class="btn btn-primary add_event ">Сохранить</div>
+      <div class="btn btn-default close_dialog">Отмена</div>
     </div>
-  </div>
-  <div class="modal-footer">
-    <div class="btn btn-primary add_event ">Сохранить</div>
-    <div class="btn btn-default close_dialog">Отмена</div>
   </div>
 </div>
 {% endblock %}

@@ -3,5 +3,5 @@
     {% include 'query/build_query_title.tpl' %}
   </li>
 {% else %}
-  Нет заявок
+  <li>Нет заявок</li>
 {% endfor %}

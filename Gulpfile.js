@@ -20,7 +20,20 @@ gulp.task('main:bower', function() {
 });
 
 gulp.task('client:scripts:vendor', ['client:bower'], function () {
-    var vendors = mainBowerFiles({ paths: 'client/' });
+    var vendors = mainBowerFiles({
+        paths: 'client/',
+        overrides: {
+            tinycon: {
+                main: [
+                    './tinycon.js'
+                ]
+            },
+            slimScroll: {
+                main: [
+                    './jquery.slimscroll.js'
+                ]
+            }
+        } });
 
     return gulp.src(vendors)
         .pipe(filter('**.js'))

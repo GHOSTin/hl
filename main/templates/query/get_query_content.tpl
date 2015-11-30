@@ -8,11 +8,11 @@
 {% endif %}
 
 {% block js %}
-	$('.query[query_id = {{ query.get_id() }}]').html(get_hidden_content()).removeClass('get_query_content');
+	$('.query[query_id ="{{ query.get_id() }}"]').html(get_hidden_content()).removeClass('get_query_content');
 {% endblock %}
 
 {% block html %}
-<div class="query-wrap animated fadeInDown">
+<div class="query-wrap">
 	<h4>
 		{% if query.get_initiator() == 'number' %}
 			<i class="fa fa-user notification-center-icon" style="color:#AADDAF; font-size:12px" alt="Заявка на личевой счет"></i>
