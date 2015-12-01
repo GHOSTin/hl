@@ -163,7 +163,7 @@ $(document).ready(function($){
 		$.get('set_status',{
 			value: $('.filter-content-select-status :selected').val()
 			},function(r){
-				init_content(r);
+				$('.queries').html(r);
         get_day_stats();
 			});
 	});

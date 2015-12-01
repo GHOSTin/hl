@@ -592,7 +592,7 @@ class queries{
     $model = $app['main\models\queries'];
     $model->set_status($request->get('value'));
     $queries = $model->get_queries();
-    return $app['twig']->render('query\set_status.tpl', ['queries' => $queries]);
+    return $app['twig']->render('query\query_titles.tpl', ['queries' => $queries]);
   }
 
   public function set_street(Request $request, Application $app){

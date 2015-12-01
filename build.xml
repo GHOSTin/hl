@@ -7,13 +7,14 @@
     <exclude name="builds/**"/>
     <exclude name="tests/**"/>
     <exclude name="files/**"/>
+    <exclude name="node_modules/**"/>
     <exclude name="cache/**"/>
     <exclude name=".idea/**"/>
     <exclude name="composer.json"/>
   </fileset>
   <target name="build" depends="clean, tar">
   </target>
-  <target name="main"  depends="composer, phplint, phpunit, clean, tar">
+  <target name="main"  depends="npm, gulp, composer, phplint, phpunit, clean, tar">
   </target>
   <target name="phplint">
     <apply executable="php" failonerror="true">
@@ -87,6 +88,8 @@
         <arg value="orm:schema-tool:drop"/>
         <arg value="--force"/>
     </exec>
+  </target>
+   <target name="orm_init_db"  depends="orm_drop_database, orm_update">
   </target>
   <target name="orm_update">
     <exec executable="vendor/bin/doctrine.bat" failonerror="true" osfamily="windows">
