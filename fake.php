@@ -2,12 +2,10 @@
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use config\general as conf;
-use domain\query;
-use domain\number;
+use domain\user;
+use domain\fake;
 
-$DS = DIRECTORY_SEPARATOR;
-$root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'scripts'))).$DS;
-require_once($root."vendor/autoload.php");
+require_once("vendor/autoload.php");
 
 $dbParams = array(
   'driver'   => 'pdo_mysql',
@@ -19,9 +17,19 @@ $dbParams = array(
 );
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
-$pdo = $em->getConnection();
+$fake = new fake(conf::authSalt);
 
-$queries[] = 'ALTER TABLE queries ADD COLUMN history TEXT';
+$users = $fake->get_users();
 
-foreach($queries as $query)
-  $pdo->exec($query);
+foreach($users as $user){
+  $user->unblock();
+}
+
+foreach(user::get_rules_list() as $rule){
+  $users[0]->update_access($rule);
+}
+
+foreach($fake->get_entities() as $ent){
+  $em->persist($ent);
+}
+$em->flush();

@@ -15,21 +15,23 @@
 {% endblock js %}
 
 {% block html %}
-<div class="modal-content">
-    <div class="modal-header">
-        <h3>Документы</h3>
+<div class="modal-dialog">
+  <div class="modal-content">
+      <div class="modal-header">
+          <h3>Документы</h3>
+      </div>
+    <div class="modal-body">
+      <a href="/query/print_query?id={{ query.get_id() }}" target="_blank" class="
+      {% if query.get_status() == 'open' %}
+        print_query
+      {% else %}
+        close_dialog
+      {% endif %}
+      ">Напечатать наряд-заявку</a>
     </div>
-	<div class="modal-body">
-		<a href="/query/print_query?id={{ query.get_id() }}" target="_blank" class="
-		{% if query.get_status() == 'open' %}
-			print_query
-		{% else %}
-			close_dialog
-		{% endif %}
-		">Напечатать наряд-заявку</a>
-	</div>
-	<div class="modal-footer">
-		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>
+    <div class="modal-footer">
+      <div class="btn btn-default close_dialog">Отмена</div>
+    </div>
+  </div>
 </div>
 {% endblock html %}

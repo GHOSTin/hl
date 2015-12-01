@@ -1,4 +1,5 @@
 $(document).ready(function($){
+
 	$(document).on('click', '.get_documents', function(){
 		$.get('get_documents',{
 			 id: get_query_id($(this))
@@ -21,60 +22,85 @@ $(document).ready(function($){
 			});
 	});
 	// выводит лицевые счета заявки
-	$(document).on('click', '.query-numbers > h5', function(){
-		if($(this).siblings().is('.query-numbers-content')){
-			$(this).siblings('.query-numbers-content').remove();
-			$(this).siblings('.query-numbers-menu').remove();
-		}else
-			$.get('get_query_numbers',{
-				 id: get_query_id($(this))
-				},function(r){
-					init_content(r);
-				});
+	$(document).on('click', '.query-numbers > .ibox-title', function(){
+        var $this = $(this);
+		if(!$this.parent().hasClass('collapsed')){
+			$this.siblings('.ibox-content').empty();
+            $this.parent().addClass('collapsed');
+		} else
+			$.get(
+                'get_query_numbers',
+                {
+				 id: get_query_id($this)
+				}
+            ).done(function(res){
+                $this.parent().removeClass('collapsed');
+                init_content(res);
+            });
 	});
 	// выводит пользователей заявки
-	$(document).on('click', '.query-users > h5', function(){
-		if($(this).siblings().is('.query-sub'))
-			$(this).siblings('.query-sub').remove();
-		else
-			$.get('get_query_users',{
-				 id: get_query_id($(this))
-				},function(r){
-					init_content(r);
-				});
+	$(document).on('click', '.query-users > .ibox-title', function(){
+        var $this = $(this);
+        if(!$this.parent().hasClass('collapsed')) {
+            $this.siblings('.ibox-content').empty();
+            $this.parent().addClass('collapsed');
+        } else
+			$.get(
+                'get_query_users',
+                {
+				 id: get_query_id($this)
+				})
+                .done(function(res){
+                    $this.parent().removeClass('collapsed');
+                    init_content(res);
+                });
 	});
 	// выводит работы заявки
-	$(document).on('click', '.query-works > h5', function(){
-		if($(this).siblings().is('.query-sub'))
-			$(this).siblings('.query-sub').remove();
-		else
-			$.get('get_query_works',{
-				 id: get_query_id($(this))
-				},function(r){
-					init_content(r);
-				});
+	$(document).on('click', '.query-works > .ibox-title', function(){
+        var $this = $(this);
+        if(!$this.parent().hasClass('collapsed')) {
+            $this.siblings('.ibox-content').empty();
+            $this.parent().addClass('collapsed');
+        } else
+			$.get(
+                'get_query_works',
+                {
+                    id: get_query_id($(this))
+				})
+                .done(function(res){
+                    $this.parent().removeClass('collapsed');
+                    init_content(res);
+                });
 	});
 		// выводит комментарии заявки
-	$(document).on('click', '.query-comments > h5', function(){
-		if($(this).siblings().is('.query-sub'))
-			$(this).siblings('.query-sub').remove();
-		else
-			$.get('get_query_comments',{
-				 id: get_query_id($(this))
-				},function(r){
-					init_content(r);
-				});
+	$(document).on('click', '.query-comments > .ibox-title', function(){
+        var $this = $(this);
+        if(!$this.parent().hasClass('collapsed')) {
+            $this.siblings('.ibox-content').empty();
+            $this.parent().addClass('collapsed');
+        } else
+			$.get(
+                'get_query_comments',
+                {
+                    id: get_query_id($(this))
+            }).done(function(res){
+                $this.parent().removeClass('collapsed');
+                init_content(res);
+            });
 	});
-  $(document).on('click', '.query-files > h5', function(){
-    if($(this).siblings().is('.query-sub'))
-      $(this).siblings('.query-sub').remove();
-    else{
+  $(document).on('click', '.query-files > .ibox-title', function(){
+      var $this = $(this);
+      if(!$this.parent().hasClass('collapsed')) {
+          $this.siblings('.ibox-content').empty();
+          $this.parent().addClass('collapsed');
+      } else {
       var id = get_query_id($(this));
-      $.get('/queries/' + id +'/files/',
-        function(r){
-          init_content(r);
-        });
-    }
+      $.get('/queries/' + id +'/files/')
+          .done(function(res){
+              $this.parent().removeClass('collapsed');
+              init_content(res);
+          });
+      }
   });
 	$(document).on('click', '.get_query_title', function(){
 		$.get('get_query_title',{
@@ -130,14 +156,15 @@ $(document).ready(function($){
 		$.get('clear_filters',{
 			},function(r){
 				init_content(r);
-        get_day_stats();
+        		get_day_stats();
 			});
 	});
 	$('.filter-content-select-status').change(function(){
 		$.get('set_status',{
 			value: $('.filter-content-select-status :selected').val()
 			},function(r){
-				init_content(r);
+				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
 	$('.filter-content-select-street').change(function(){
@@ -145,6 +172,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-street :selected').val()
 			},function(r){
 				init_content(r);
+        get_day_stats();
 			});
 	});
 	$('.filter-content-select-department').change(function(){
@@ -152,6 +180,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-department :selected').val()
 			},function(r){
 				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
 	$('.filter-content-select-work_type').change(function(){
@@ -159,6 +188,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-work_type :selected').val()
 			},function(r){
 				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
   $('.filter-content-select-query_type').change(function(){
@@ -166,6 +196,7 @@ $(document).ready(function($){
       value: $('.filter-content-select-query_type :selected').val()
       },function(r){
         $('.queries').html(r);
+        get_day_stats();
       });
   });
 	$('.filter-content-select-house').change(function(){
@@ -173,6 +204,7 @@ $(document).ready(function($){
 			value: $('.filter-content-select-house :selected').val()
 			},function(r){
 				$('.queries').html(r);
+        get_day_stats();
 			});
 	});
 	$(document).on('click', '.get_dialog_create_query', function(){
@@ -364,10 +396,10 @@ $(document).ready(function($){
   });
   $(document).on('click', '.get_outages', function(){
     $(this).hide();
-    $('.outages .well').show();
-  }).on('click', '.outages .well .close', function(){
+    $('.outages .outages-content').show();
+  }).on('click', '.outages .close', function(){
     $('.outages .get_outages').show();
-    $('.outages .well').hide();
+    $('.outages .outages-content').hide();
   }).on('click', '.get_requests', function(){
     $.get('/queries/requests/',
       function(r){

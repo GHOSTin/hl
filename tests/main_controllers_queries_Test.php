@@ -827,7 +827,7 @@ class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
     $this->app['main\models\queries'] = $model;
     $this->app['twig']->expects($this->once())
                       ->method('render')
-                      ->with('query\set_status.tpl', ['queries' => 'queries_array'])
+                      ->with('query\query_titles.tpl', ['queries' => 'queries_array'])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->set_status($this->request, $this->app);
     $this->assertEquals('render_template', $response);

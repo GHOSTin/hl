@@ -231,9 +231,13 @@ class controller_works_Test extends PHPUnit_Framework_TestCase{
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
                        ->getMock();
-    $repository->expects($this->exactly(3))
+   $repository->expects($this->once())
+              ->method('findBy')
+              ->with([], ['name' => 'ASC'])
+              ->willReturn('wokgroup_array');
+    $repository->expects($this->exactly(2))
                ->method('findAll')
-               ->will($this->onConsecutiveCalls('wokgroup_array', 'work_array', 'event_array'));
+               ->will($this->onConsecutiveCalls('work_array', 'event_array'));
     $this->app['em']->expects($this->exactly(3))
                     ->method('getRepository')
                     ->withConsecutive(['domain\workgroup'], ['domain\work'], ['domain\event'])

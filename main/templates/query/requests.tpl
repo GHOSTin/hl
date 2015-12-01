@@ -1,5 +1,5 @@
 {% if user.check_access('queries/analize_request') %}
-<div class="well">
+<div class="ibox-content m-b">
   <button type="button" class="close close_request_view" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <h4>Запросы из личного кабинета</h4>
   {% if number_requests is not empty %}

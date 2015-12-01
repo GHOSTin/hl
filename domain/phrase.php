@@ -21,8 +21,11 @@ class phrase{
   */
   private $workgroup;
 
+  private static $i = 1000;
+
   public function __construct(){
-    $this->id = time();
+    $this->id = time() + self::$i;
+    self::$i++;
   }
 
   public function get_id(){

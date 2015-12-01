@@ -9,26 +9,6 @@ class group_Test extends PHPUnit_Framework_TestCase{
     $this->group = new group();
   }
 
-  public function test_set_id_1(){
-    $this->group->set_id(125);
-    $this->assertEquals(125, $this->group->get_id());
-  }
-
-  public function test_set_id_2(){
-    $this->setExpectedException('DomainException');
-    $this->group->set_id(0);
-  }
-
-  public function test_set_id_3(){
-    $this->setExpectedException('DomainException');
-    $this->group->set_id(65536);
-  }
-
-  public function test_set_id_4(){
-    $this->setExpectedException('DomainException');
-    $this->group->set_id(-125);
-  }
-
   public function test_set_name_1(){
     $this->group->set_name('Диспетчера');
     $this->assertEquals('Диспетчера', $this->group->get_name());
@@ -40,21 +20,10 @@ class group_Test extends PHPUnit_Framework_TestCase{
     $this->setExpectedException('DomainException');
     $this->group->set_name('English');
   }
+
   public function test_set_name_3(){
     $this->setExpectedException('DomainException');
     $this->group->set_name(str_repeat('Д', 51));
-  }
-
-  public function test_set_status_1(){
-    $this->group->set_status('false');
-    $this->assertEquals('false', $this->group->get_status());
-    $this->group->set_status('true');
-    $this->assertEquals('true', $this->group->get_status());
-  }
-
-  public function test_set_status_2(){
-    $this->setExpectedException('DomainException');
-    $this->group->set_status('truefalse');
   }
 
   public function test_add_user_1(){

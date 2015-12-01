@@ -1,9 +1,11 @@
 function show_dialog(result){
-	$('.dialog').modal('hide');
-	$('.dialog').remove();
     $('.modal-backdrop').remove();
-	$('body').append('<div class="dialog modal fade" style="display:none"><div class="modal-dialog">' + result + '</div></div>');
-	$('.dialog').modal({keyboard: false});
+	$('.dialog')
+        .modal('hide')
+        .empty()
+        .append(result)
+        .modal({keyboard: false})
+        .modal('show');
 }
 function init_content(result){
     $('._hidden_content').remove();
@@ -46,4 +48,21 @@ $(document).ready(function($){
         }, 400);
         return false;
     });
+    $('#message-window').find('.dropdown-toggle').on('click', function(){
+        $(this).parent().toggleClass('keep-open');
+    }).end().on('hide.bs.dropdown', function(ev){
+        var target = $(ev.target);
+        return !(target.hasClass("keep-open") || target.parents(".keep-open").length);
+    });
+});
+
+$(function() {
+    if (location.pathname !== '/') {
+        $('#side-menu')
+            .find('li')
+            .removeClass('active')
+            .find('a[href^="/' + location.pathname.split("/")[1] + '"]')
+            .parent()
+            .addClass('active');
+    }
 });

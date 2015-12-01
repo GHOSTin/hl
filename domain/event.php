@@ -28,10 +28,10 @@ class event{
     return $this->name;
   }
 
-  public function set_id($id){
-    if($id > 65535 OR $id < 1)
-      throw new DomainException('Идентификатор события задан не верно.');
-    $this->id = $id;
+  public static function new_instance($name){
+    $event = new self();
+    $event->set_name($name);
+    return $event;
   }
 
   public function set_name($name){

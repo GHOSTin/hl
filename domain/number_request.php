@@ -9,7 +9,7 @@ use DomainException;
 class number_request{
 
   /**
-  * @Column(type="string")
+  * @Column
   */
   private $message;
 

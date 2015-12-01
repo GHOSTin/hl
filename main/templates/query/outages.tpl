@@ -1,11 +1,11 @@
 <span class="label label-warning get_outages">Активных отключений: {{ outages|length }} <a>подробнее...</a></span>
-<div class="well" style="display:none">
+<div class="ibox-content m-t outages-content" style="display:none">
   <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
   <h4>Активные отключения</h4>
   <ol>
   {% for outage in outages %}
   <li style="padding-top: 20px">
-    <div><u>c {{ outage.get_begin()|date("d.m.Y") }} по {{ outage.get_target()|date("d.m.Y") }} {{ outage.get_category().get_name() }}</u></div>
+    <div><cite>c {{ outage.get_begin()|date("d.m.Y") }} по {{ outage.get_target()|date("d.m.Y") }} {{ outage.get_category().get_name() }}</cite></div>
     <p>{{ outage.get_description() }} </p>
     <div class="row">
       <div class="col-md-6">

@@ -4,10 +4,10 @@
 {% set day = timeline|date_modify("noon first day of this month") %}
 {% set wdays = ['вс', 'пн', 'вт', 'ср', 'чт', 'пт', 'сб'] %}
 {% set months = ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] %}
-<div class="timeline-month" time="{{ timeline|date('U') }}">{{ months[m-1] }} {{ y }}</div>
+<div class="timeline-month text-center" time="{{ timeline|date('U') }}">{{ months[m-1] }} {{ y }}</div>
 <div class="btn-group" data-toggle="buttons">
   <a class="timeline-control btn btn-primary get_timeline" act="previous">
-    <i class="glyphicon glyphicon-chevron-left"></i>
+    <i class="fa fa-angle-left"></i>
   </a>
 {% for i in range(1, timeline|date('t')) %}
   <a class="timeline-day btn btn-primary
@@ -28,6 +28,6 @@
   {% set day = day|date_modify('noon next day') %}
 {% endfor %}
   <a class="timeline-control btn btn-primary get_timeline" act="next">
-    <i class="glyphicon glyphicon-chevron-right"></i>
+    <i class="fa fa-angle-right"></i>
   </a>
 </div>

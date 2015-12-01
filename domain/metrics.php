@@ -8,33 +8,33 @@ class metrics {
 
   /**
   * @Id
-  * @Column(name="id", type="string")
+  * @Column
   */
   private $id;
 
   /**
-  * @Column(name="address", type="string")
+  * @Column
   */
   private $address;
 
   /**
-  * @Column(name="metrics", type="string")
+  * @Column
   */
   private $metrics;
   /**
-   * @Column(name="date", type="bigint")
-   * @var
-   */
+  * @Column(name="date", type="bigint")
+  * @var
+  */
   private $time;
   /**
-   * @Column(name="status", type="string")
-   * @var
-   */
+  * @Column
+  * @var
+  */
   private $status;
 
   /**
-   * @return mixed
-   */
+  * @return mixed
+  */
   public function get_status()
   {
     return $this->status;
@@ -108,5 +108,15 @@ class metrics {
   public function get_metrics()
   {
     return $this->metrics;
+  }
+
+  public static function new_instance($id, $time, $address, $message){
+    $metrics = new self();
+    $metrics->set_id($id);
+    $metrics->set_time($time);
+    $metrics->set_address($address);
+    $metrics->set_metrics($message);
+    $metrics->set_status('actual');
+    return $metrics;
   }
 }

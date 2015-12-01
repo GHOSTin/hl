@@ -7,7 +7,7 @@ use Silex\Provider\TwigServiceProvider;
 use Silex\Provider\SwiftmailerServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Silex\Provider\SessionServiceProvider;
 use domain\metrics;
 use Swift_Message;
 use Twig_SimpleFilter;
@@ -88,6 +88,12 @@ $app['client\models\recovery'] = function($app){
   return new models\recovery($app['twig'], $app['em'], $app['auth_log']);
 };
 
+$app->register(new SessionServiceProvider);
+
+$app['session.storage.options'] = [
+  'cookie_lifetime' => 86400 * 30
+];
+
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
   return $array;
@@ -109,8 +115,6 @@ $app['auth_log'] = function($app) use ($root, $DS){
 };
 
 $app->before(function (Request $request, Application $app) {
-  $app['session'] = new Session();
-  $app['session']->start();
   if($app['session']->get('number')){
     $app['number'] = $app['em']->find('\domain\number', $app['session']->get('number'));
   }

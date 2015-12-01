@@ -36,8 +36,6 @@
 {% endblock %}
 
 {% block js %}
-<script src="/js/plugins/footable/footable.all.min.js"></script>
-<script src="/js/plugins/toastr/toastr.min.js"></script>
 <script src="/js/queries.js"></script>
 {% endblock js %}
 

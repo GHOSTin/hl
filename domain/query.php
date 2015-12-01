@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 */
 class query{
 
+  use traits\cellphone;
+
 	/**
   * @Id
   * @Column(type="integer")
@@ -17,12 +19,12 @@ class query{
 	private $id;
 
 	/**
-  * @Column(type="string")
+  * @Column
   */
 	private $status;
 
 	/**
-  * @Column(type="string")
+  * @Column
   */
 	private $initiator;
 
@@ -53,22 +55,22 @@ class query{
   private $request;
 
 	/**
-  * @Column(name="opentime", type="string")
+  * @Column(name="opentime")
   */
 	private $time_open;
 
 	/**
-  * @Column(name="worktime", type="string")
+  * @Column(name="worktime")
   */
 	private $time_work;
 
 	/**
-  * @Column(name="closetime", type="string")
+  * @Column(name="closetime", nullable=true)
   */
 	private $time_close;
 
 	/**
-  * @Column(type="string")
+  * @Column(nullable=true)
   */
 	private $contact_fio;
 
@@ -78,27 +80,27 @@ class query{
   private $visible = false;
 
 	/**
-  * @Column(type="string")
+  * @Column(nullable=true)
   */
 	private $contact_telephone;
 
 	/**
-  * @Column(type="string")
+  * @Column(nullable=true)
   */
 	private $contact_cellphone;
 
 	/**
-  * @Column(type="string")
+  * @Column
   */
 	private $description;
 
 	/**
-  * @Column(name="reason", type="string")
+  * @Column(name="reason", nullable=true)
   */
 	private $close_reason;
 
 	/**
-  * @Column(name="querynumber", type="string")
+  * @Column(name="querynumber")
   */
 	private $number;
 
@@ -110,12 +112,9 @@ class query{
    */
 	private $numbers;
 
-	/**
-   * @ManyToMany(targetEntity="domain\query2work")
-   * @JoinTable(name="query2work",
-   * joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
-   * inverseJoinColumns={@JoinColumn(name="query_id", referencedColumnName="query_id")})
-   */
+  /**
+  * @OneToMany(targetEntity="domain\query2work", mappedBy="query")
+  */
 	private $works;
 
 	/**
@@ -431,11 +430,7 @@ class query{
 	}
 
 	public function set_contact_cellphone($cellphone){
-    preg_match_all('/[0-9]/', $cellphone, $matches);
-    $cellphone = implode('', $matches[0]);
-    if(preg_match('|^[78]|', $cellphone))
-      $cellphone = substr($cellphone, 1, 10);
-		$this->contact_cellphone = $cellphone;
+		$this->contact_cellphone = $this->prepare_cellphone($cellphone);
 	}
 
 	public function set_contact_fio($fio){

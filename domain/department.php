@@ -11,6 +11,7 @@ class department{
   /**
   * @Id
   * @Column(type="integer")
+  * @GeneratedValue
   */
   private $id;
 
@@ -24,7 +25,9 @@ class department{
   */
   private $status;
 
-  private static $statuses = ['active', 'deactive'];
+  public function __construct(){
+    $this->status = 'active';
+  }
 
   public function get_id(){
     return $this->id;
@@ -38,21 +41,11 @@ class department{
     return $this->status;
   }
 
-  public function set_id($id){
-    if($id > 255 OR $id < 1)
-      throw new DomainException('Идентификатор участка задан не верно.');
-    $this->id = $id;
-  }
-
-  public function set_name($name){
+  public static function create($name){
+    $department = new self();
     if(!preg_match('/^[0-9а-яА-Я №]{3,19}$/u', $name))
-      throw new DomainException('Название участка задано не верно.');
-    $this->name = $name;
-  }
-
-  public function set_status($status){
-    if(!in_array($status, self::$statuses))
-      throw new DomainException('Статус участка задан не верно.');
-    $this->status = (string) $status;
+      throw new DomainException('Название участка задано не верно '.$name);
+    $department->name = $name;
+    return $department;
   }
 }

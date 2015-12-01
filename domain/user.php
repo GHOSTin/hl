@@ -10,13 +10,15 @@ use Doctrine\Common\Collections\ArrayCollection;
 */
 class user implements JsonSerializable{
 
+  use traits\cellphone;
+
   /**
   * @Column(type="json_array")
   */
   private $access = [];
 
   /**
-  * @Column
+  * @Column(nullable=true)
   */
 	private $cellphone;
 
@@ -58,7 +60,7 @@ class user implements JsonSerializable{
 	private $status;
 
   /**
-  * @Column
+  * @Column(nullable=true)
   */
 	private $telephone;
 
@@ -101,8 +103,13 @@ class user implements JsonSerializable{
     'tasks/general_access'
   ];
 
+  public static function get_rules_list(){
+    return self::$rules_list;
+  }
+
   public function __construct(){
     $this->outages = new ArrayCollection();
+    $this->status = 'false';
   }
 
   public function check_access($name){
@@ -169,9 +176,7 @@ class user implements JsonSerializable{
   }
 
   public function set_cellphone($cellphone){
-    if(!preg_match('/^[0-9+]{0,11}$/', $cellphone))
-      throw new DomainException('Wrong user cellphone '.$cellphone);
-    $this->cellphone = $cellphone;
+    $this->cellphone = $this->prepare_cellphone($cellphone);
   }
 
   public function set_id($id){
@@ -214,6 +219,10 @@ class user implements JsonSerializable{
     $this->status = $status;
   }
 
+  public function unblock(){
+    $this->status = 'true';
+  }
+
   public function set_telephone($telephone){
     if(!preg_match('/^[0-9]{0,11}$/', $telephone))
       throw new DomainException('Wrong user telephone '.$telephone);
@@ -247,5 +256,15 @@ class user implements JsonSerializable{
     else
       unset($restriction[$pos]);
     $this->restrictions[$type] = array_values($restriction);
+  }
+
+  public static function create($lastname, $firstname, $middlename, $login, $hash){
+    $user = new self();
+    $user->set_lastname($lastname);
+    $user->set_firstname($firstname);
+    $user->set_middlename($middlename);
+    $user->set_login($login);
+    $user->set_hash($hash);
+    return $user;
   }
 }

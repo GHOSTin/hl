@@ -7,30 +7,30 @@
 class task2comment {
 
   /**
-   * @\Doctrine\ORM\Mapping\Id()
-   * @\Doctrine\ORM\Mapping\GeneratedValue(strategy="AUTO")
-   * @\Doctrine\ORM\Mapping\Column(name="id")
+   * @Id()
+   * @GeneratedValue(strategy="AUTO")
+   * @Column(name="id")
    * @var
    */
   private $id;
   /**
-   * @\Doctrine\ORM\Mapping\ManyToOne(targetEntity="\domain\task", inversedBy="comments")
-   * @\Doctrine\ORM\Mapping\JoinColumn(name="task_id", referencedColumnName="id")
+   * @ManyToOne(targetEntity="\domain\task", inversedBy="comments")
+   * @JoinColumn(name="task_id", referencedColumnName="id")
    */
   private $task;
   /**
-   * @\Doctrine\ORM\Mapping\Column(name="message", type="string")
+   * @Column
    * @var string
    */
   private $message;
   /**
-   * @\Doctrine\ORM\Mapping\Column(name="time", type="integer")
+   * @Column(type="integer")
    * @var int
    */
   private $time;
   /**
-   * @\Doctrine\ORM\Mapping\OneToOne(targetEntity="\domain\user")
-   * @\Doctrine\ORM\Mapping\JoinColumn(name="user_id", referencedColumnName="id")
+   * @OneToOne(targetEntity="\domain\user")
+   * @JoinColumn(name="user_id", referencedColumnName="id")
    */
   private $user;
 

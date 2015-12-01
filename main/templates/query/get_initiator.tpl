@@ -10,6 +10,10 @@
 	show_dialog(get_hidden_content());
   $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
   $('.dialog-telephone').inputmask("mask", {"mask": "99-99-99"});
+  $('.i-checks').iCheck({
+    checkboxClass: 'icheckbox_square-green',
+    radioClass: 'iradio_square-green',
+  });
   $('.dialog-phrase').change(function(){
     $('.dialog-description').text($('.dialog-phrase').val());
   });
@@ -52,122 +56,119 @@
 {% endblock %}
 
 {% block html %}
-<div class="modal-content">
-    <div class="modal-header">
-      <h3>Создание заявки</h3>
-    </div>
-    <div class="modal-body">
-      {% if queries is not empty %}
-      <h5>Последние заявки на этот дом</h5>
-       <ul class="list-unstyled old-queries">
-          {% for query in queries  %}
-            <li class="query_status_{{ query.get_status() }}">
-            {% if query.get_initiator() == 'number' %}
-              <i class="glyphicon glyphicon-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
-            {% else %}
-              <i class="glyphicon glyphicon-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
-            {% endif %}
-            <strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
-            {% if query.get_initiator() == 'number' %}
-              {% for number in query.get_numbers() %}
-                <div> кв.{{ number.get_flat().get_number() }} {{ number.get_number() }} ({{ number.get_fio() }})</div>
-              {% endfor %}
-            {% endif %}
-              {% if query.get_status() in ['close', 'reopen'] %}
-              <p class="label label-default">{{ query.get_close_reason() }}</p>
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-      {% if initiator == 'number' and number.get_events() is not empty %}
-        <h5>Последние события</h5>
-        <ul class="list-unstyled">
-        {% for event in number.get_events()|slice(0,5) %}
-          <li><strong>{{ event.get_time()|date("d.m.Y") }}</strong> {{ event.get_name() }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-		{% if initiator == 'number' %}
-        <div>
-        {{ number.get_address() }}, {{ number.get_fio() }}(л/с №{{ number.get_number() }})
-  				<ul>
-            <li>Задолженость: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</li>
-  				</ul>
-        </div>
-		{% else %}
-				<div>{{ house.get_address() }}</div>
-		{% endif %}
-        <h4>Данные контактного лица по заявке</h4>
-        <div class="row">
-        {% if initiator == 'number' %}
-        <div class="dialog-addinfo col-md-6">
-          <div class="form-group">
-            <label class=" control-label">ФИО:</label>
-            <input type="text" class="form-control dialog-fio" value="{{ number.get_fio() }}">
-          </div>
-          <div class="form-group">
-            <label class="control-label">Телефон:</label>
-            <input type="text" class="form-control dialog-telephone" value="{{ number.get_telephone() }}">
-          </div>
-          <div class="form-group">
-            <label class="control-label">Сот. телефон:</label>
-            <input type="text" class="form-control dialog-cellphone" value="{{ number.get_cellphone() }}">
-          </div>
-          {% if user.check_access("queries/save_contacts") %}
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" class="dialog-checkbox-contacts"> Использовать контакты как основные
-            </label>
-          </div>
+<div class="modal-dialog modal-lg">
+  <div class="modal-content animated fadeIn">
+      <div class="modal-header">
+          {% if initiator == 'number' %}
+              <h2 class="m-t-xs">{{ number.get_address() }}, {{ number.get_fio() }} (л/с №{{ number.get_number() }})</h2>
+              <h3>Задолженость: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
+          {% else %}
+            <h2>{{ house.get_address() }}</h2>
           {% endif %}
-        </div>
-        {% else %}
-        <div class="dialog-addinfo col-md-6">
-          <div class="form-group">
-            <label class=" control-label">ФИО:</label>
-            <input type="text" class="form-control dialog-fio">
-          </div>
-          <div class="form-group">
-            <label class="control-label">Телефон:</label>
-            <input type="text" class="form-control dialog-telephone">
-          </div>
-          <div class="form-group">
-            <label class="control-label">Сот. телефон:</label>
-            <input type="text" class="form-control dialog-cellphone">
-          </div>
-        </div>
-        {% endif %}
-        <div class="col-md-6">
-          <h4>Последние 5 отключений</h4>
-          <ul>
-            {% for outage in house.get_outages().slice(0, 5) %}
-            <li>
-              c {{ outage.get_begin()|date("d.m.Y") }} по {{ outage.get_target()|date("d.m.Y") }} {{ outage.get_category().get_name() }}: {{ outage.get_description() }}
-            </li>
-            {% endfor %}
-          </ul>
-        </div>
-        </div>
+      </div>
+      <div class="modal-body">
         <div class="row">
-          <div class="col-md-6 form-group">
-            <label>Тип работ</label>
-            <select class="form-control dialog-worktype">
-              {% for workgroup in query_work_types %}
-              {% if loop.first %}
-                {% set w = workgroup %}
-              {% endif%}
-                <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
+          <div class="col-sm-6">
+            {% if initiator == 'number' %}
+              <div class="dialog-addinfo">
+                <h4>Данные контактного лица по заявке</h4>
+                <div class="form-group">
+                  <label class=" control-label">ФИО:</label>
+                  <input type="text" class="form-control dialog-fio" value="{{ number.get_fio() }}">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Телефон:</label>
+                  <input type="text" class="form-control dialog-telephone" value="{{ number.get_telephone() }}">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Сот. телефон:</label>
+                  <input type="text" class="form-control dialog-cellphone" value="{{ number.get_cellphone() }}">
+                </div>
+                {% if user.check_access("queries/save_contacts") %}
+                  <div class="i-checks m-b-sm">
+                    <label>
+                      <input type="checkbox" class="dialog-checkbox-contacts" value=""> <i></i> Использовать контакты как основные
+                    </label>
+                  </div>
+                {% endif %}
+              </div>
+            {% else %}
+              <div class="dialog-addinfo">
+                <h4>Данные контактного лица по заявке</h4>
+                <div class="form-group">
+                  <label class=" control-label">ФИО:</label>
+                  <input type="text" class="form-control dialog-fio" value="">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Телефон:</label>
+                  <input type="text" class="form-control dialog-telephone" value="">
+                </div>
+                <div class="form-group">
+                  <label class="control-label">Сот. телефон:</label>
+                  <input type="text" class="form-control dialog-cellphone" value="">
+                </div>
+              </div>
+            {% endif %}
+                <div class="form-group">
+                  <label>Тип работ</label>
+                  <select class="form-control dialog-worktype">
+                    {% for workgroup in query_work_types %}
+                      {% if loop.first %}
+                        {% set w = workgroup %}
+                      {% endif%}
+                      <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Тип заявки</label>
+                  <select class="form-control dialog-query_type">
+                    {% for query_type in query_types %}
+                      <option value="{{ query_type.get_id() }}">{{ query_type.get_name()}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+          <div class="col-sm-6">
+            {% if queries is not empty %}
+              <h4>Последние заявки на этот дом</h4>
+              <ul class="list-unstyled old-queries">
+                {% for query in queries  %}
+                  <li class="query_status_{{ query.get_status() }}">
+                    {% if query.get_initiator() == 'number' %}
+                      <i class="fa fa-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
+                    {% else %}
+                      <i class="fa fa-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
+                    {% endif %}
+                    <strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
+                    {% if query.get_initiator() == 'number' %}
+                      {% for number in query.get_numbers() %}
+                        <div> кв.{{ number.get_flat().get_number() }} {{ number.get_number() }} ({{ number.get_fio() }})</div>
+                      {% endfor %}
+                    {% endif %}
+                    {% if query.get_status() in ['close', 'reopen'] %}
+                      <p class="label label-default">{{ query.get_close_reason() }}</p>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            {% if initiator == 'number' and number.get_events() is not empty %}
+              <h4>Последние события</h4>
+              <ul class="list-unstyled">
+                {% for event in number.get_events()|slice(0,5) %}
+                  <li><strong>{{ event.get_time()|date("d.m.Y") }}</strong> {{ event.get_name() }}</li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            <h4>Последние 5 отключений</h4>
+            <ul>
+              {% for outage in house.get_outages().slice(0, 5) %}
+                <li>
+                  c {{ outage.get_begin()|date("d.m.Y") }} по {{ outage.get_target()|date("d.m.Y") }} {{ outage.get_category().get_name() }}: {{ outage.get_description() }}
+                </li>
               {% endfor %}
-            </select>
-          </div>
-          <div class="col-md-6 form-group">
-            <label>Тип заявки</label>
-            <select class="form-control dialog-query_type">
-            {% for query_type in query_types %}
-              <option value="{{ query_type.get_id() }}">{{ query_type.get_name()}}</option>
-            {% endfor %}
-            </select>
+            </ul>
           </div>
         </div>
         <div class="row">
@@ -181,14 +182,15 @@
             </select>
           </div>
         </div>
-		<div class="form-group dialog-trouble">
-      <label>Описание</label>
-			<textarea class="form-control dialog-description" rows="5"></textarea>
-		</div>
-	</div>
-	<div class="modal-footer">
-		<div class="btn btn-primary create_query">Создать</div>
-		<div class="btn btn-default close_dialog" data-dismiss="modal">Отмена</div>
-	</div>
+      <div class="form-group dialog-trouble">
+        <label>Описание</label>
+        <textarea class="form-control dialog-description" rows="5"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="btn btn-primary create_query">Создать</div>
+      <div class="btn btn-default close_dialog" data-dismiss="modal">Отмена</div>
+    </div>
+  </div>
 </div>
 {% endblock html %}

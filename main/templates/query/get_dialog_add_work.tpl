@@ -29,51 +29,53 @@
 {% endblock js %}
 
 {% block html %}
-<div class="modal-content">
-  <div class="modal-header">
-      <h3>Диалог добавления работы</h3>
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+        <h3>Диалог добавления работы</h3>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <select class="dialog-select-work form-control">
+          <option value="0">Выберите работу</option>
+          {% for work in query.get_work_type().get_works() %}
+          <option value="{{ work.get_id() }}">{{ work.get_name() }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group form-inline">
+        <label class="control-label col-2">Дата начала</label>
+        <select class="dialog-begin_hours form-control" style="width: 75px;">
+        {% for i in 1..24 %}
+            <option value="{{i}}">{{i}}</option>
+        {% endfor %}
+        </select>
+        <select class="dialog-begin_minutes form-control" style="width: 75px;">
+        {% for i in range(0, 55, 5) %}
+            <option value="{{i}}">{{i}}</option>
+        {% endfor %}
+        </select>
+        <input type="text" class="dialog-begin_date form-control" value="{{'now'|date('d.m.Y')}}" style="width: 120px;">
+      </div>
+      <div  class="form-group form-inline">
+        <label class="control-label col-2">Дата конца</label>
+        <select class="dialog-end_hours form-control" style="width:75px">
+        {% for i in 1..24 %}
+          <option value="{{i}}">{{i}}</option>
+        {% endfor %}
+        </select>
+        <select class="dialog-end_minutes form-control" style="width:75px">
+        {% for i in range(0, 55, 5) %}
+          <option value="{{i}}">{{i}}</option>
+        {% endfor %}
+        </select>
+        <input type="text" class="dialog-end_date form-control" value="{{'now'|date('d.m.Y')}}" style="width:120px" />
+      </div>
+    </div>
+    <div class="modal-footer">
+      <div class="btn btn-primary add_work">Сохранить</div>
+      <div class="btn btn-default close_dialog">Отмена</div>
+    </div>
   </div>
-	<div class="modal-body">
-		<div class="form-group">
-			<select class="dialog-select-work form-control">
-				<option value="0">Выберите работу</option>
-				{% for work in query.get_work_type().get_works() %}
-				<option value="{{ work.get_id() }}">{{ work.get_name() }}</option>
-				{% endfor %}
-			</select>
-		</div>
-		<div class="form-group form-inline">
-			<label class="control-label col-2">Дата начала</label>
-      <select class="dialog-begin_hours form-control" style="width: 75px;">
-      {% for i in 1..24 %}
-          <option value="{{i}}">{{i}}</option>
-      {% endfor %}
-      </select>
-      <select class="dialog-begin_minutes form-control" style="width: 75px;">
-      {% for i in range(0, 55, 5) %}
-          <option value="{{i}}">{{i}}</option>
-      {% endfor %}
-      </select>
-      <input type="text" class="dialog-begin_date form-control" value="{{'now'|date('d.m.Y')}}" style="width: 120px;">
-		</div>
-		<div  class="form-group form-inline">
-			<label class="control-label col-2">Дата конца</label>
-			<select class="dialog-end_hours form-control" style="width:75px">
-			{% for i in 1..24 %}
-				<option value="{{i}}">{{i}}</option>
-			{% endfor %}
-			</select>
-			<select class="dialog-end_minutes form-control" style="width:75px">
-			{% for i in range(0, 55, 5) %}
-				<option value="{{i}}">{{i}}</option>
-			{% endfor %}
-			</select>
-			<input type="text" class="dialog-end_date form-control" value="{{'now'|date('d.m.Y')}}" style="width:120px" />
-		</div>
-	</div>
-	<div class="modal-footer">
-		<div class="btn btn-primary add_work">Сохранить</div>
-		<div class="btn btn-default close_dialog">Отмена</div>
-	</div>
 </div>
 {% endblock html %}

@@ -21,13 +21,16 @@ class user_Test extends PHPUnit_Framework_TestCase{
   }
 
   public function test_set_cellphone_1(){
+    $this->user->set_cellphone('9222944742');
+    $this->assertEquals('9222944742', $this->user->get_cellphone());
     $this->user->set_cellphone('89222944742');
-    $this->assertEquals('89222944742', $this->user->get_cellphone());
-  }
-
-  public function test_set_cellphone_2(){
-    $this->setExpectedException('DomainException');
-    $this->user->set_cellphone('8922294474201');
+    $this->assertEquals('9222944742', $this->user->get_cellphone());
+    $this->user->set_cellphone('+79222944742');
+    $this->assertEquals('9222944742', $this->user->get_cellphone());
+    $this->user->set_cellphone('');
+    $this->assertEquals(null, $this->user->get_cellphone());
+    $this->user->set_cellphone('+7922294474201');
+    $this->assertEquals(null, $this->user->get_cellphone());
   }
 
   public function test_set_id_1(){

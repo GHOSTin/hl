@@ -15,11 +15,7 @@ $('.filter-content-select-query_type').val('all');
 
 {% block html %}
 <div class="_queries">
-{% for query in queries %}
-  <div class="query get_query_content" query_id="{{ query.get_id() }}">{% include 'query/build_query_title.tpl' %}</div>
-{% else %}
-  Нет заявок
-{% endfor %}
+	{% include 'query/query_titles.tpl' %}
 </div>
 <div class="_timeline">{% include 'query/timeline.tpl' %}</div>
 {% endblock %}
