@@ -52,7 +52,22 @@ $(document).ready(function($){
         $(this).parent().toggleClass('keep-open');
     }).end().on('hide.bs.dropdown', function(ev){
         var target = $(ev.target);
+        if(!(target.hasClass("keep-open") || target.parents(".keep-open").length)) {
+            target
+                .find('.chat-user.active')
+                .removeClass('active')
+                .end()
+                .find('.chat-discussion.active')
+                .removeClass('active');
+        }
         return !(target.hasClass("keep-open") || target.parents(".keep-open").length);
+    });
+    $('.navbar-minimalize').click(function () {
+        if($("body").hasClass("mini-navbar")) {
+            localStorage.setItem("collapse_menu", "on");
+        } else {
+            localStorage.setItem("collapse_menu", "off");
+        }
     });
 });
 
