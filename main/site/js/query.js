@@ -7,7 +7,7 @@ $(document).ready(function($){
 				init_content(r);
 			});
 	});
-	$(document).on('click touchstart', '.get_query_content', function(){
+	$(document).on('click tap', '.get_query_content', function(){
 		$.get('get_query_content',{
 			 id: $(this).attr('query_id')
 			},function(r){
