@@ -36,25 +36,3 @@
     </ul>
   </div>
 </div>
-<div class="panel panel-default m-b-sm">
-  <div class="panel-heading">
-    Наблюдатели
-  </div>
-  <div class="panel-body">
-    <ul class="query-users-performer list-group">
-      {% for user in query.get_observers() %}
-        <li class="list-group-item" user="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
-<div class="panel panel-default m-b-sm">
-  <div class="panel-heading">
-    Диспетчер
-  </div>
-  <div class="panel-body">
-    <ul class="query-users-performer list-group">
-        <li class="list-group-item" user="{{ query.get_creator().get_id() }}">{{ query.get_creator().get_lastname() }} {{ query.get_creator().get_firstname() }} {{ query.get_creator().get_middlename() }}</li>
-    </ul>
-  </div>
-</div>
