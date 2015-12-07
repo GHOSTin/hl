@@ -54,7 +54,7 @@
 </li>
 {% endif %}
 <li class="divider"></li>
-<li class="special_link">
+<li>
   <a tabindex="-1" href="/about/">
     <i class="fa fa-info-circle"></i>
     <span>О программе</span>
