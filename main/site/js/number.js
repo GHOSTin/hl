@@ -13,7 +13,7 @@ $(document).ready(function(){
       function(r){
         $('.workspace').html(r['workspace']);
         $('.workspace-path').empty();
-        $('.nav > li').removeClass('active');
+        $('.nav:not(#side-menu) > li').removeClass('active');
         $('.get_streets').addClass('active');
       });
 
@@ -21,7 +21,7 @@ $(document).ready(function(){
       $.getJSON('/numbers/outages/',
       function(r){
         $('.workspace').html(r['workspace']);
-        $('.nav > li').removeClass('active');
+        $('.nav:not(#side-menu) > li').removeClass('active');
         $('.get_outages').addClass('active');
         $('.workspace-path').empty();
       });
