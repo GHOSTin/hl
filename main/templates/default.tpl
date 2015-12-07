@@ -33,7 +33,7 @@
               </span>
             </div>
             <div class="logo-element">
-              АДС
+              <i class="fa fa-users"></i>
             </div>
           </li>
           {% include 'menu.tpl' %}
