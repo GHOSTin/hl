@@ -15,11 +15,25 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                     ->getMock();
     $factory->expects($this->once())
             ->method('get_number_model')
+            ->with(125)
             ->willReturn($this->model);
     $this->app = new Application();
     $this->controller = new controller();
     $this->request = new Request();
     $this->app['main\models\factory'] = $factory;
+  }
+
+
+  public function test_add_event(){
+    $this->request->request->set('event', 250);
+    $this->request->request->set('date', '21.12.1984');
+    $this->request->request->set('comment', 'Привет');
+    $this->model->expects($this->once())
+                ->method('add_event')
+                ->with(250, '21.12.1984', 'Привет')
+                ->willReturn('render_template');
+    $response = $this->controller->add_event($this->request, $this->app, 125);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_generate_password(){
@@ -35,32 +49,68 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->app['email_for_reply'] = 'email';
     $this->model->expects($this->once())
                 ->method('generate_password')
-                ->with('salt', 'email', $message, $mailer);
-    $this->controller->generate_password($this->app, 125);
+                ->with('salt', 'email', $message, $mailer)
+                ->willReturn('render_template');
+    $response = $this->controller->generate_password($this->app, 125);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_dialog_add_event(){
+    $this->model->expects($this->once())
+                ->method('get_dialog_add_event')
+                ->willReturn('render_template');
+    $response = $this->controller->get_dialog_add_event($this->app, 125);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_dialog_exclude_event(){
+    $this->model->expects($this->once())
+                ->method('get_dialog_exclude_event')
+                ->with(250, 1396332000)
+                ->willReturn('render_template');
+    $response = $this->controller->get_dialog_exclude_event($this->app, 125, 250, 1396332000);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_exclude_event(){
+    $this->model->expects($this->once())
+                ->method('exclude_event')
+                ->with(250, 1396332000)
+                ->willReturn('render_template');
+    $response = $this->controller->exclude_event($this->app, 125, 250, 1396332000);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_get_dialog_contacts(){
     $this->model->expects($this->once())
-                ->method('get_dialog_contacts');
-    $this->controller->get_dialog_contacts($this->app, 125);
+                ->method('get_dialog_contacts')
+                ->willReturn('render_template');
+    $response = $this->controller->get_dialog_contacts($this->app, 125);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_get_dialog_generate_password(){
     $this->model->expects($this->once())
-                ->method('get_dialog_generate_password');
-    $this->controller->get_dialog_generate_password($this->app, 125);
+                ->method('get_dialog_generate_password')
+                ->willReturn('render_template');
+    $response = $this->controller->get_dialog_generate_password($this->app, 125);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_history(){
     $this->model->expects($this->once())
-                ->method('history');
-    $this->controller->history($this->app, 125);
+                ->method('history')
+                ->willReturn('render_template');
+    $response = $this->controller->history($this->app, 125);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_meterages(){
     $this->model->expects($this->once())
-                ->method('meterages');
-    $this->controller->meterages($this->app, 125);
+                ->method('meterages')
+                ->willReturn('render_template');
+    $response = $this->controller->meterages($this->app, 125);
+    $this->assertEquals('render_template', $response);
   }
 
   public function test_update_contacts(){
@@ -75,7 +125,9 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                         '647957',
                         '+79222944742',
                         'nekrasov@mlsco.ru'
-                      );
-    $this->controller->update_contacts($this->app, $this->request, 125);
+                      )
+                ->willReturn('render_template');
+    $response = $this->controller->update_contacts($this->app, $this->request, 125);
+    $this->assertEquals('render_template', $response);
   }
 }

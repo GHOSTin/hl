@@ -109,20 +109,18 @@ $(document).ready(function(){
         });
 
     }).on('click', '.get_dialog_add_event', function(){
-        $.get('get_dialog_add_event',{
-            id: $(this).attr('number')
-            },function(r){
-                init_content(r);
-            });
+      var id = $(this).attr('number');
+        $.get('/numbers/' + id + '/events/dialog_add/',
+        function(r){
+          init_content(r);
+        });
 
     }).on('click', '.get_dialog_exclude_event', function(){
-        $.get('get_dialog_exclude_event',{
-            id: $(this).attr('number'),
-            event_id: $(this).parent().attr('event_id'),
-            time: $(this).parent().attr('time')
-            },function(r){
-                init_content(r);
-            });
+      var id = $(this).attr('event_id').split('-');
+      $.get('/numbers/' + id[0]+ '/events/' + id[1] + '/' + id[2] + '/dialog_exclude/',
+      function(r){
+          init_content(r);
+      });
 
     }).on('click', '.get_dialog_contacts', function(){
         var id = $(this).attr('number');

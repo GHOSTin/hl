@@ -113,10 +113,11 @@ class number{
     $this->status = 'true';
   }
 
-  public function add_event(number2event $event){
-    if($this->events->contains($event))
+  public function add_event(event $event, $date, $comment){
+    $n2e = new number2event($this, $event, $date, $comment);
+    if($this->events->contains($n2e))
       throw new DomainException('Событие уже добавлено');
-    $this->events->add($event);
+    $this->events->add($n2e);
   }
 
   public function exclude_event(number2event $event){

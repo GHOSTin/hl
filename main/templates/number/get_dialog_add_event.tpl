@@ -3,10 +3,10 @@
 {% block js %}
     show_dialog(get_hidden_content());
     $('.add_event').click(function(){
-        $.get('add_event',{
-            id: {{ number.get_id() }},
+        $.post('/numbers/{{ number.get_id() }}/events/',{
             event: $('.dialog-select-event').val(),
-            date: $('.dialog-date').val()
+            date: $('.dialog-date').val(),
+            comment: $('.dialog-com').val()
         },function(r){
           $('.dialog').modal('hide');
           $('.workspace').html(r);
@@ -51,6 +51,10 @@
       </div>
       <div class="form-group">
         <input type="text" class="form-control dialog-date" value="{{ "now"|date("d.m.Y") }}">
+      </div>
+      <div class="form-group">
+        <label>Комментарий</label>
+        <textarea class="dialog-com form-control" rows="5"></textarea>
       </div>
     </div>
     <div class="modal-footer">
