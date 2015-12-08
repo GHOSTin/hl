@@ -339,11 +339,7 @@ $app->get('/number/houses/{id}/queries/', 'main\controllers\numbers::query_of_ho
 $app->get('/number/query_of_number', 'main\controllers\numbers::query_of_number')->before($security);
 $app->get('/number/accruals', 'main\controllers\numbers::accruals')->before($security);
 $app->get('/number/contact_info', 'main\controllers\numbers::contact_info')->before($security);
-$app->get('/number/get_dialog_add_event', 'main\controllers\numbers::get_dialog_add_event')->before($security);
 $app->get('/number/get_events', 'main\controllers\numbers::get_events')->before($security);
-$app->get('/number/add_event', 'main\controllers\numbers::add_event')->before($security);
-$app->get('/number/get_dialog_exclude_event', 'main\controllers\numbers::get_dialog_exclude_event')->before($security);
-$app->get('/number/exclude_event', 'main\controllers\numbers::exclude_event')->before($security);
 
 # numbers
 $app->get('/numbers/{id}/get_dialog_generate_password/', 'main\controllers\number::get_dialog_generate_password')->before($security);
@@ -352,6 +348,12 @@ $app->get('/numbers/{id}/contacts/', 'main\controllers\number::get_dialog_contac
 $app->post('/numbers/{id}/contacts/', 'main\controllers\number::update_contacts')->before($security);
 $app->get('/numbers/{id}/contacts/history/', 'main\controllers\number::history')->before($security);
 $app->get('/numbers/{id}/meterages/', 'main\controllers\number::meterages')->before($security);
+
+# number2event
+$app->get('/numbers/{number_id}/events/dialog_add/', 'main\controllers\number::get_dialog_add_event')->before($security);
+$app->post('/numbers/{number_id}/events/', 'main\controllers\number::add_event')->before($security);
+$app->get('/numbers/{number_id}/events/{event_id}/{time}/dialog_exclude/', 'main\controllers\number::get_dialog_exclude_event')->before($security);
+$app->delete('/numbers/{number_id}/events/{event_id}/{time}/', 'main\controllers\number::exclude_event')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);

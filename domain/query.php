@@ -100,7 +100,7 @@ class query{
 	private $close_reason;
 
 	/**
-  * @Column(name="querynumber")
+  * @Column(name="querynumber", type="integer")
   */
 	private $number;
 
