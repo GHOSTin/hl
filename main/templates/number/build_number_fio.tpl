@@ -20,7 +20,7 @@
     </div>
     <div class="col-md-5">
         <h3>Контактная информаци {% if user.check_access('numbers/contacts') %} <a class="get_dialog_contacts" number="{{ number.get_id() }}">изменить</a>{% endif %}</h3>
-        <a href="/numbers/{{ number.get_id() }}/contacts/history/" target="_blank">История изменения контактных данных</a>
+        <a href="/numbers/{{ number.get_id() }}/contacts/history/" target="_blank">История изменения контактных данных{% if number.get_relevance_time %} на {{ number.get_relevance_time()|date("d.m.Y") }}{% endif %}</a>
         <ul class="list-unstyled">
             <li>Владелец: {{ number.get_fio() }}</li>
             <li>Стационарный телефон: {{ number.get_telephone() }}</li>
