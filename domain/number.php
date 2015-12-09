@@ -304,6 +304,11 @@ class number{
     $this->relevance = array_slice($this->relevance, -10);
   }
 
+  public function get_relevance_time(){
+    if(count($this->relevance) > 0)
+      return array_reverse($this->relevance)[0]['time'];
+  }
+
   public function get_relevance(){
     return $this->relevance;
   }
