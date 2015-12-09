@@ -57,6 +57,11 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
                 main: [
                     './jquery.slimscroll.js'
                 ]
+            },
+            moment: {
+                main: [
+                    './min/moment-with-locales.js'
+                ]
             }
         }
     });
@@ -68,6 +73,11 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
         .pipe(uglify())
         .pipe(gulp.dest('main/site/js/vendor/'))
         ;
+});
+
+gulp.task('watch', function(){
+    gulp.watch('main/bower.json', ['main:scripts:vendor']);
+    gulp.watch('client/bower.json', ['client:scripts:vendor']);
 });
 
 gulp.task('default', ['client:scripts:vendor', 'main:scripts:vendor']);
