@@ -440,6 +440,7 @@ $app->get('/queries/selections/', 'main\controllers\queries::selections')->befor
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
 $app->get('/queries/workgroups/{id}/phrases/', 'main\controllers\queries::phrases')->before($security);
 $app->get('/queries/{id}/history/', 'main\controllers\queries::history')->before($security);
+$app->get('/queries/stats/all/noslose/', 'main\controllers\queries::all_noclose')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);

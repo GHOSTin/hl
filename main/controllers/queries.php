@@ -507,6 +507,10 @@ class queries{
     return $app['main\models\queries']->noclose($request->get('time'));
   }
 
+  public function all_noclose(Application $app){
+    return $app['main\models\queries']->all_noclose();
+  }
+
   public function print_query(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\print_query.tpl', ['query' => $query]);

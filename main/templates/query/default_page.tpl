@@ -38,14 +38,13 @@
     <div class="row m-t m-b">
       <span class="requests"></span>
       <span class="outages"></span>
+      <span class="all_noclose"></span>
     </div>
     <!-- /requests -->
     <!-- /outages -->
-    {% if queries is not empty  %}
     <div class="row">
       <div class="day_stats col-md-5 col-xs-12"></div>
     </div>
-    {% endif %}
     <!-- queries -->
     <div class="row">
       <ul class="queries connectList agile-list no-padding">{% include 'query/query_titles.tpl' %}</ul>
