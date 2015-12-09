@@ -288,6 +288,21 @@ class queries{
     return json_encode($json);
   }
 
+  public function all_noclose(){
+    if(!$this->session->get('query_count')){
+      $this->params['time_begin'] = 0;
+      $this->params['time_end'] = time();
+      $this->params['status'] = ['open', 'working', 'reopen'];
+      $this->params['query_types'] = [];
+      $this->params['streets'] = [];
+      $this->params['houses'] = [];
+      $queries = $this->em->getRepository('domain\query')
+                          ->findByParams($this->params);
+      $this->session->set('query_count', count($queries));
+    }
+    return $this->session->get('query_count');
+  }
+
   public function phrases($id){
     $workgroup = $this->em->find('domain\workgroup', $id);
     return $this->twig->render('query\phrases.tpl', ['workgroup' => $workgroup]);
