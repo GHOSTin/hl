@@ -8,4 +8,9 @@ class events{
     $response = $app['main\models\events']->default_page();
     return $app->json($response);
   }
+
+  public function get_day_events(Application $app, $date){
+    $response = $app['main\models\events']->get_day_events($date);
+    return $app->json($response);
+  }
 }
