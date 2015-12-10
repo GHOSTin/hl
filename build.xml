@@ -79,7 +79,7 @@
         <arg value="tests/"/>
     </exec>
   </target>
-  <target name="orm_drop_database">
+  <target name="orm_drop_tables">
     <exec executable="vendor/bin/doctrine.bat" failonerror="true" osfamily="windows">
         <arg value="orm:schema-tool:drop"/>
         <arg value="--force"/>
@@ -89,7 +89,7 @@
         <arg value="--force"/>
     </exec>
   </target>
-   <target name="orm_init_db"  depends="orm_drop_database, orm_update">
+  <target name="orm_null_database"  depends="orm_drop_tables, orm_update">
   </target>
   <target name="orm_update">
     <exec executable="vendor/bin/doctrine.bat" failonerror="true" osfamily="windows">
@@ -114,7 +114,7 @@
         <arg value="fake.php"/>
     </exec>
   </target>
-  <target name="dev"  depends="orm_drop_database, orm_update, fake">
+  <target name="dev"  depends="orm_drop_tables, orm_update, fake">
   </target>
   <target name="cover">
     <exec executable="vendor/bin/phpunit" failonerror="true">
