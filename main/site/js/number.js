@@ -26,6 +26,15 @@ $(document).ready(function(){
         $('.workspace-path').empty();
       });
 
+    }).on('click', '.get_events', function(){
+      $.getJSON('/numbers/events/',
+      function(r){
+        $('.workspace').html(r['workspace']);
+        $('.nav:not(#side-menu) > li').removeClass('active');
+        $('.get_events').addClass('active');
+        $('.workspace-path').empty();
+      });
+
     }).on('click', '.get_active_outages', function(){
         $.getJSON('/numbers/outages/active/',
         function(r){

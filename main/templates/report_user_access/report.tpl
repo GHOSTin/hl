@@ -39,6 +39,7 @@
         {% if user.check_access('numbers/generate_password') %}<li>Генерация пароля</li>{% endif %}
         {% if user.check_access('numbers/contacts') %}<li>Изменение контактных данных</li>{% endif %}
         {% if user.check_access('numbers/create_outage') %}<li>Создание отключений</li>{% endif %}
+        {% if user.check_access('numbers/create_event') %}<li>Создание события</li>{% endif %}
       </ul>
     </td>
     <td>

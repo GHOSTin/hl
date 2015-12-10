@@ -118,6 +118,10 @@ $app['main\models\outages'] = function($app){
   return new models\outages($app['twig'], $app['em'], $app['user']);
 };
 
+$app['main\models\events'] = function($app){
+  return new models\events($app['twig'], $app['em'], $app['user']);
+};
+
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
@@ -300,6 +304,9 @@ $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($securi
 $app->get('/metrics/archive/', 'main\controllers\metrics::archive')->before($security);
 $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->before($security);
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
+
+# events
+$app->get('/numbers/events/', 'main\controllers\events::default_page')->before($security);
 
 # outages
 $app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);
