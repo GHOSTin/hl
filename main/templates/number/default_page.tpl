@@ -8,6 +8,7 @@
 <!-- /scroller -->
 <ul class="nav nav-pills">
   <li role="presentation" class="active get_streets"><a href="#">Улицы</a></li>
+  <li role="presentation" class="get_events"><a href="#">События</a></li>
   <li role="presentation" class="get_outages"><a href="#">Отключения</a></li>
 </ul>
 <div class="row">
