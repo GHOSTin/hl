@@ -32,9 +32,11 @@ class main_model_events_Test extends PHPUnit_Framework_TestCase{
                ->willReturn(true);
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
+                       ->setMethods(['findByTime'])
                        ->getMock();
     $repository->expects($this->once())
-               ->method('findAll')
+               ->method('findByTime')
+               ->with(strtotime('12:00'))
                ->willReturn('events_array');
     $this->em->expects($this->once())
                ->method('getRepository')
@@ -49,5 +51,26 @@ class main_model_events_Test extends PHPUnit_Framework_TestCase{
                ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
     $this->assertEquals(['workspace' => 'render_template'], $model->default_page());
+  }
+
+  public function test_get_day_events(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                       ->disableOriginalConstructor()
+                       ->setMethods(['findByTime'])
+                       ->getMock();
+    $repository->expects($this->once())
+               ->method('findByTime')
+               ->with(472460400)
+               ->willReturn('events_array');
+    $this->em->expects($this->once())
+               ->method('getRepository')
+               ->with('domain\number2event')
+               ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user);
+    $this->assertEquals('events_array', $model->get_day_events('21-12-1984'));
   }
 }
