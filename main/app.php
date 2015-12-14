@@ -307,6 +307,7 @@ $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics'
 
 # events
 $app->get('/numbers/events/', 'main\controllers\events::default_page')->before($security);
+$app->get('/numbers/events/days/{date}/', 'main\controllers\events::get_day_events')->before($security);
 
 # outages
 $app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);

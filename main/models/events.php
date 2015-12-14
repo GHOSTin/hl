@@ -4,6 +4,7 @@ use RuntimeException;
 use Twig_Environment;
 use Doctrine\ORM\EntityManager;
 use domain\user;
+use DateTime;
 
 class events{
 
@@ -20,7 +21,8 @@ class events{
   }
 
   public function default_page(){
-    $events = $this->em->getRepository('domain\number2event')->findAll();
+    $events = $this->em->getRepository('domain\number2event')
+                       ->findByTime(strtotime('12:00'));
     return [
             'workspace' => $this->twig->render('events/default_page.tpl',
               [
@@ -28,5 +30,12 @@ class events{
                 'user' => $this->user
               ])
            ];
+  }
+
+  public function get_day_events($date){
+    $time = DateTime::createFromFormat('H:i d-m-Y', '12:00 '.$date);
+    $events = $this->em->getRepository('domain\number2event')
+                       ->findByTime($time->getTimeStamp());
+    return $events;
   }
 }

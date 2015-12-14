@@ -1,11 +1,12 @@
 <?php namespace domain;
 
 use DateTime;
+use JsonSerializable;
 
 /**
 * @Entity(repositoryClass="domain\repositories\number2event")
 */
-class number2event{
+class number2event implements JsonSerializable{
 
   /**
   * @Id
@@ -62,4 +63,19 @@ class number2event{
     $this->description = $description;
   }
 
+  public function JsonSerialize(){
+    return [
+             'id' => $this->id,
+             'time' => $this->time,
+             'event' => [
+                          'id' => $this->event->get_id(),
+                          'name' => $this->event->get_name()
+                        ],
+              'number' => [
+                            'id' => $this->number->get_id(),
+                            'number' => $this->number->get_number()
+                          ],
+             'description' => $this->description
+           ];
+  }
 }

@@ -21,4 +21,13 @@ class main_controllers_events_Test extends PHPUnit_Framework_TestCase{
     $response = $this->controller->default_page($this->app);
     $this->assertEquals($this->app->json(['render_template']), $response);
   }
+
+  public function test_get_day_events(){
+    $this->model->expects($this->once())
+                ->method('get_day_events')
+                ->with('21-12-1984')
+                ->willReturn(['render_template']);
+    $response = $this->controller->get_day_events($this->app, '21-12-1984');
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
 }
