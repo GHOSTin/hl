@@ -68,7 +68,7 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
     return gulp.src(vendors)
         .pipe(filter('**.js'))
         .pipe(concat('vendor.js'))
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(gulp.dest('main/site/js/vendor/'))
         ;
 });
