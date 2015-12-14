@@ -63,12 +63,31 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_dialog_edit_event(){
+    $this->model->expects($this->once())
+                ->method('get_dialog_edit_event')
+                ->with(250, 1396332000)
+                ->willReturn('render_template');
+    $response = $this->controller->get_dialog_edit_event($this->app, 125, 250, 1396332000);
+    $this->assertEquals('render_template', $response);
+  }
+
   public function test_get_dialog_exclude_event(){
     $this->model->expects($this->once())
                 ->method('get_dialog_exclude_event')
                 ->with(250, 1396332000)
                 ->willReturn('render_template');
     $response = $this->controller->get_dialog_exclude_event($this->app, 125, 250, 1396332000);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_edit_event(){
+    $this->request->request->set('description', 'Привет');
+    $this->model->expects($this->once())
+                ->method('edit_event')
+                ->with(250, 1396332000, 'Привет')
+                ->willReturn('render_template');
+    $response = $this->controller->edit_event($this->app, $this->request, 125, 250, 1396332000);
     $this->assertEquals('render_template', $response);
   }
 

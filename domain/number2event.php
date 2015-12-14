@@ -57,4 +57,9 @@ class number2event{
   public function get_id(){
     return $this->id;
   }
+
+  public function set_description($description){
+    $this->description = $description;
+  }
+
 }

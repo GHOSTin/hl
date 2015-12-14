@@ -182,6 +182,33 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $model->get_dialog_add_event());
   }
 
+  public function test_get_dialog_edit_event(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\get_dialog_edit_event.tpl')
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                      ->disableOriginalConstructor()
+                      ->setMethods(['findByIndex'])
+                      ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\number2event')
+             ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->get_dialog_edit_event(250, 1396332000));
+  }
+
   public function test_get_dialog_exclude_event(){
     $this->user->expects($this->once())
                ->method('check_access')
@@ -282,6 +309,46 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->willReturn($repository);
     $model = new model($this->twig, $this->em, $this->user, 125);
     $this->assertEquals('render_template', $model->exclude_event(250, 1396332000));
+  }
+
+  public function test_edit_event(){
+    $n2e = $this->getMockBuilder('domain\number2event')
+                ->disableOriginalConstructor()
+                ->getMock();
+    $n2e->expects($this->once())
+        ->method('set_description')
+        ->with('Описание');
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\build_number_fio.tpl',
+                [
+                  'number' => $this->number,
+                  'user' => $this->user
+                ])
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                      ->disableOriginalConstructor()
+                      ->setMethods(['findByIndex'])
+                      ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex')
+               ->willReturn([$n2e]);
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\number2event')
+             ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->edit_event(250, 1396332000, 'Описание'));
   }
 
   public function test_get_dialog_generate_password_1(){
