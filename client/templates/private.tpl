@@ -32,7 +32,7 @@
             </span>
           </div>
           <div class="logo-element">
-            <i class="fa fa-users"></i>
+            <i class="fa fa-user"></i>
           </div>
         </li>
         {% include 'mainmenu.tpl' %}

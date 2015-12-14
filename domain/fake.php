@@ -1,5 +1,7 @@
 <?php namespace domain;
 
+use Doctrine\ORM\EntityManager;
+
 class fake{
 
   private static $lastnames = [
@@ -102,26 +104,32 @@ class fake{
   private $departments = [];
   private $numbers = [];
 
-  public function __construct($salt){
+  public function __construct(EntityManager $em, $salt){
     $this->salt = $salt;
+    $this->em = $em;
     $this->generate_entities();
   }
 
   public function generate_entities(){
     $this->generate_users();
+    $this->generate_works();
+    $this->generate_events();
     $this->generate_departments();
     $this->generate_streets();
     $this->generate_houses();
     $this->generate_flats();
     $this->generate_numbers();
-    $this->generate_works();
-    $this->generate_events();
     $this->generate_workgroups();
     $this->generate_query_types();
     $this->generate_groups();
     $this->generate_metrics();
     $this->generate_outages();
     $this->generate_api_keys();
+    foreach($this->get_entities() as $ent){
+      $this->em->persist($ent);
+    }
+    $this->em->flush();
+    $this->generate_number2event();
   }
 
   public function generate_departments(){
@@ -138,7 +146,11 @@ class fake{
 
   public function generate_users(){
     foreach(self::get_user_instance($this->salt) as $user){
+      $user->unblock();
       $this->users[] = $user;
+    }
+    foreach(user::get_rules_list() as $rule){
+      $this->users[0]->update_access($rule);
     }
   }
 
@@ -157,6 +169,16 @@ class fake{
       $this->numbers[] = $number;
       $this->meterages[] = $meterage;
     }
+  }
+
+  public function generate_number2event(){
+    print 'Генерация событий лицевого счета'.PHP_EOL;
+    foreach($this->numbers as $number){
+      foreach($this->get_random_events() as $event){
+        $number->add_event($event, rand(10, 25).date('.m.Y'), 'Привет');
+      }
+    }
+    $this->em->flush();
   }
 
   public function generate_flats(){

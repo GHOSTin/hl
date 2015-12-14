@@ -17,19 +17,4 @@ $dbParams = array(
 );
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
-$fake = new fake(conf::authSalt);
-
-$users = $fake->get_users();
-
-foreach($users as $user){
-  $user->unblock();
-}
-
-foreach(user::get_rules_list() as $rule){
-  $users[0]->update_access($rule);
-}
-
-foreach($fake->get_entities() as $ent){
-  $em->persist($ent);
-}
-$em->flush();
+$fake = new fake($em, conf::authSalt);
