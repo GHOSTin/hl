@@ -2,16 +2,34 @@
 
 {% block js %}
     show_dialog(get_hidden_content());
-    $('.add_event').click(function(){
-        $.post('/numbers/{{ number.get_id() }}/events/',{
-            event: $('.dialog-select-event').val(),
-            date: $('.dialog-date').val(),
-            comment: $('.dialog-com').val()
+    var $dropZone = $("#my-awesome-dropzone").dropzone({
+      url: '/files',
+      autoProcessQueue: false,
+      uploadMultiple: true,
+      parallelUploads: 100,
+      maxFiles: 100,
+      addRemoveLinks: true,
+      dictDefaultMessage: '<div class="btn btn-primary">Прикрепить файлы</div>',
+      previewTemplate: $('#preview-template').html(),
+      dictRemoveFile: 'Открепить'
+    });
+    $('.add_event').click(function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      $dropZone[0].dropzone.processQueue()
+    });
+    $dropZone[0].dropzone.on('successmultiple', function(files, res) {
+      $.post('/numbers/{{ number.get_id() }}/events/',{
+        event: $('.dialog-select-event').val(),
+        date: $('.dialog-date').val(),
+        comment: $('.dialog-com').val(),
+        files: res
         },function(r){
           $('.dialog').modal('hide');
           $('.workspace').html(r);
           $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
-        });
+        }
+      );
     });
     $('.dialog-select-category').change(function(){
       var category_id = $(this).val();
@@ -56,6 +74,9 @@
         <label>Комментарий</label>
         <textarea class="dialog-com form-control" rows="5"></textarea>
       </div>
+      <form id="my-awesome-dropzone" class="dropzone" action="#">
+        <div class="dropzone-previews"></div>
+      </form>
     </div>
     <div class="modal-footer">
       <div class="btn btn-primary add_event ">Сохранить</div>

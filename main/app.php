@@ -521,6 +521,14 @@ $app->get('/system/logs/main/', 'main\controllers\logs::main')->before($security
 $app->get('/system/search/number/', 'main\controllers\system::search_number_form')->before($security);
 $app->post('/system/search/number/', 'main\controllers\system::search_number')->before($security);
 
+#files
+$app->post('/files', function (Application $app) {
+  return $app->json(array(
+      ['date'=>time(), 'url'=> '/files/asd1232sadas45sdfsdf'],
+      ['date'=>time(), 'url'=> '/files/asd1232asdasdasdasdd']
+  ));
+});
+
 $app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
 });
