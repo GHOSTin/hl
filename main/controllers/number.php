@@ -18,9 +18,15 @@ class number{
     return $app['main\models\factory']->get_number_model($id)
                                       ->generate_password($app['salt'], $app['email_for_reply'], $app['Swift_Message'], $app['mailer']);
   }
+
   public function get_dialog_add_event(Application $app, $number_id){
     return $app['main\models\factory']->get_number_model($number_id)
                                       ->get_dialog_add_event();
+  }
+
+  public function edit_event(Application $app, Request $request, $number_id, $event_id, $time){
+    return $app['main\models\factory']->get_number_model($number_id)
+                                      ->edit_event($event_id, $time, $request->get('description'));
   }
 
   public function get_dialog_contacts(Application $app, $id){
@@ -36,6 +42,11 @@ class number{
   public function get_dialog_exclude_event(Application $app, $number_id, $event_id, $time){
     return $app['main\models\factory']->get_number_model($number_id)
                                       ->get_dialog_exclude_event($event_id, $time);
+  }
+
+  public function get_dialog_edit_event(Application $app, $number_id, $event_id, $time){
+    return $app['main\models\factory']->get_number_model($number_id)
+                                      ->get_dialog_edit_event($event_id, $time);
   }
 
   public function history(Application $app, $id){
