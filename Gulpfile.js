@@ -37,7 +37,6 @@ gulp.task('client:scripts:vendor', ['client:bower'], function () {
 
     return gulp.src(vendors)
         .pipe(filter('**.js'))
-        .pipe(order(vendors))
         .pipe(concat('vendor.js'))
         .pipe(uglify())
         .pipe(gulp.dest('client/site/js/vendor/'))
@@ -68,9 +67,8 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
 
     return gulp.src(vendors)
         .pipe(filter('**.js'))
-        .pipe(order(vendors))
         .pipe(concat('vendor.js'))
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(gulp.dest('main/site/js/vendor/'))
         ;
 });

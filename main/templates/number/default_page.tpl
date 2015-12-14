@@ -20,8 +20,6 @@
 {% endblock component %}
 
 {% block javascript %}
-<script src="/js/number.js"></script>
-<script src="/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/js/typeahead.min.js"></script>
 <script src="/js/inputmask.js" type="text/javascript"></script>
 <script src="/js/jquery.inputmask.js" type="text/javascript"></script>
@@ -40,6 +38,7 @@
       <div class="dz-error-message"><span data-dz-errormessage></span></div>
     </div>
   </div>
+<script src="/js/number.js"></script>
 {% endblock javascript %}
 
 {% block css %}
