@@ -354,6 +354,8 @@ $app->get('/numbers/{number_id}/events/dialog_add/', 'main\controllers\number::g
 $app->post('/numbers/{number_id}/events/', 'main\controllers\number::add_event')->before($security);
 $app->get('/numbers/{number_id}/events/{event_id}/{time}/dialog_exclude/', 'main\controllers\number::get_dialog_exclude_event')->before($security);
 $app->delete('/numbers/{number_id}/events/{event_id}/{time}/', 'main\controllers\number::exclude_event')->before($security);
+$app->get('/numbers/{number_id}/events/{event_id}/{time}/dialog_edit/', 'main\controllers\number::get_dialog_edit_event')->before($security);
+$app->put('/numbers/{number_id}/events/{event_id}/{time}/', 'main\controllers\number::edit_event')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);

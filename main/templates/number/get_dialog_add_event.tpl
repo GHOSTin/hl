@@ -53,7 +53,7 @@
         <input type="text" class="form-control dialog-date" value="{{ "now"|date("d.m.Y") }}">
       </div>
       <div class="form-group">
-        <label>Комментарий</label>
+        <label>Примечание</label>
         <textarea class="dialog-com form-control" rows="5"></textarea>
       </div>
     </div>
