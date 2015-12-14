@@ -43,7 +43,7 @@
     <!-- /requests -->
     <!-- /outages -->
     <div class="row">
-      <div class="day_stats col-md-5 col-xs-12"></div>
+      <div class="day_stats col-md-6 col-xs-12"></div>
     </div>
     <!-- queries -->
     <div class="row">
@@ -73,11 +73,11 @@
       </div>
       <div class="col-md-7">
         <ul class="list-unstyled">
-          <li>Открытых заявок: <%= open %></li>
-          <li>Заявок в работе: <%= working %></li>
-          <li>Закрытых заявок: <%= close %></li>
-          <li>Переоткрытых заявок: <%= reopen %></li>
-          <li>Всех заявок: <%= sum %></li>
+          <li class="queries_legend queries_open">Открытых заявок: <%= open %></li>
+          <li class="queries_legend queries_working">Заявок в работе: <%= working %></li>
+          <li class="queries_legend queries_close">Закрытых заявок: <%= close %></li>
+          <li class="queries_legend queries_reopen">Переоткрытых заявок: <%= reopen %></li>
+          <li class="queries_legend">Всех заявок: <%= sum %></li>
         </ul>
       </div>
     </div>
