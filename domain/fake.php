@@ -175,7 +175,7 @@ class fake{
     print 'Генерация событий лицевого счета'.PHP_EOL;
     foreach($this->numbers as $number){
       foreach($this->get_random_events() as $event){
-        $number->add_event($event, date('d.m.Y'), 'Привет');
+        $number->add_event($event, rand(10, 25).date('.m.Y'), 'Привет');
       }
     }
     $this->em->flush();
