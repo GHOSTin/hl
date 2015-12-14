@@ -32,9 +32,11 @@ class main_model_events_Test extends PHPUnit_Framework_TestCase{
                ->willReturn(true);
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                        ->disableOriginalConstructor()
+                       ->setMethods(['findByTime'])
                        ->getMock();
     $repository->expects($this->once())
-               ->method('findAll')
+               ->method('findByTime')
+               ->with(strtotime('12:00'))
                ->willReturn('events_array');
     $this->em->expects($this->once())
                ->method('getRepository')

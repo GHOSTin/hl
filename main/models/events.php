@@ -21,7 +21,8 @@ class events{
   }
 
   public function default_page(){
-    $events = $this->em->getRepository('domain\number2event')->findAll();
+    $events = $this->em->getRepository('domain\number2event')
+                       ->findByTime(strtotime('12:00'));
     return [
             'workspace' => $this->twig->render('events/default_page.tpl',
               [
