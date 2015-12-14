@@ -122,6 +122,13 @@ $(document).ready(function(){
           init_content(r);
       });
 
+    }).on('click', '.get_dialog_edit_event', function(){
+      var id = $(this).attr('event_id').split('-');
+      $.get('/numbers/' + id[0]+ '/events/' + id[1] + '/' + id[2] + '/dialog_edit/',
+      function(r){
+          init_content(r);
+      });
+
     }).on('click', '.get_dialog_contacts', function(){
         var id = $(this).attr('number');
         $.get('/numbers/' + id + '/contacts/'

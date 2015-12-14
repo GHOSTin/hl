@@ -53,6 +53,24 @@ class number5{
     return $this->twig->render('number\get_dialog_exclude_event.tpl', ['n2e' => $n2e]);
   }
 
+  public function get_dialog_edit_event($event_id, $time){
+    $n2e = $this->em->getRepository('domain\number2event')
+                    ->find($this->number->get_id().'-'.$event_id.'-'.$time);
+    return $this->twig->render('number\get_dialog_edit_event.tpl', ['n2e' => $n2e]);
+  }
+
+  public function edit_event($event_id, $time, $description){
+    $n2e = $this->em->getRepository('domain\number2event')
+                    ->findByIndex($time, $this->number->get_id(), $event_id)[0];
+    $n2e->set_description($description);
+    $this->em->flush();
+    return $this->twig->render('number\build_number_fio.tpl',
+                                [
+                                 'number' => $this->number,
+                                 'user' => $this->user
+                                ]);
+  }
+
   public function exclude_event($event_id, $time){
     $n2e = $this->em->getRepository('domain\number2event')
                     ->findByIndex($time, $this->number->get_id(), $event_id)[0];
