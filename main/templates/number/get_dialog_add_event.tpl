@@ -3,7 +3,7 @@
 {% block js %}
     show_dialog(get_hidden_content());
     var $dropZone = $("#my-awesome-dropzone").dropzone({
-      url: '/files',
+      url: '/files/',
       autoProcessQueue: false,
       uploadMultiple: true,
       parallelUploads: 100,
