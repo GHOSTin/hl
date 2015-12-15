@@ -16,7 +16,9 @@
     $('.add_event').click(function(e){
       e.preventDefault();
       e.stopPropagation();
-      if(!$dropZone[0].dropzone.processQueue()) {
+      if($dropZone[0].dropzone.getQueuedFiles().length > 0) {
+        $dropZone[0].dropzone.processQueue();
+      } else {
         $.post('/numbers/{{ number.get_id() }}/events/',{
           event: $('.dialog-select-event').val(),
           date: $('.dialog-date').val(),
@@ -30,7 +32,7 @@
         );
       }
     });
-    $dropZone[0].dropzone.on('queuecomplete', function(files, res) {
+    $dropZone[0].dropzone.on('successmultiple', function(files, res) {
       $.post('/numbers/{{ number.get_id() }}/events/',{
         event: $('.dialog-select-event').val(),
         date: $('.dialog-date').val(),
