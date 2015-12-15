@@ -32,10 +32,10 @@ class files{
         $this->save_file($file->getRealPath(), $path);
         $file = new file($this->user, $path, $time, $file->getClientOriginalName());
         $f[] = $file;
-        // $this->em->persist($file);
+        $this->em->persist($file);
       }
     }
-    // $this->em->flush();
+    $this->em->flush();
     return $f;
   }
 

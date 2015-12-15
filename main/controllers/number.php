@@ -10,7 +10,8 @@ class number{
                                       ->add_event(
                                                           $request->get('event'),
                                                           $request->get('date'),
-                                                          $request->get('comment')
+                                                          $request->get('comment'),
+                                                          $request->get('files')
                                                         );
   }
 

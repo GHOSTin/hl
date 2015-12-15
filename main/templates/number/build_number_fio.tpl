@@ -38,6 +38,15 @@
         <li class="well">
           <p>{{ event.get_time()|date("d.m.Y") }} {{ event.get_name() }} <a class="get_dialog_edit_event" event_id="{{ event.get_id() }}"><i class="fa fa-pencil"></i></a> <a class="get_dialog_exclude_event" event_id="{{ event.get_id() }}"><i class="fa fa-minus"></i></a></p>
           <p>{{ event.get_description() }}</p>
+          <ul>
+          {% for file in event.get_files() %}
+            <li>
+              <a href="/files/{{ file.get_path() }}">
+                <i class="fa fa-file"></i>{{ file.get_name() }}
+              </a>
+            </li>
+          {%endfor %}
+          </ul>
         </li>
       {% else %}
         <li>Нет ни одного события</li>

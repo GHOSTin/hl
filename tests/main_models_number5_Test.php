@@ -265,7 +265,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
     $this->em->expects($this->once())
              ->method('flush');
     $model = new model($this->twig, $this->em, $this->user, 125);
-    $this->assertEquals('render_template', $model->add_event(250, '21.12.1984', 'Привет'));
+    $this->assertEquals('render_template', $model->add_event(250, '21.12.1984', 'Привет', []));
   }
 
   public function test_exclude_event(){

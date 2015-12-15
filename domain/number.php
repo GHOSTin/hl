@@ -118,6 +118,7 @@ class number{
     if($this->events->contains($n2e))
       throw new DomainException('Событие уже добавлено');
     $this->events->add($n2e);
+    return $n2e;
   }
 
   public function exclude_event(number2event $event){
