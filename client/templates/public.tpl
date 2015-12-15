@@ -18,12 +18,12 @@
       <div class="container">
         <div class="row">{% block content %}{% endblock content %}</div>
       </div>
+      <footer class="footer">
+        <div>
+          <small>2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru" class="text-primary">"Основные локальные сервисы."</a></small>
+        </div>
+      </footer>
     </div>
-    <footer class="footer">
-      <div>
-        <small>2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru" class="text-primary">"Основные локальные сервисы."</a></small>
-      </div>
-    </footer>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <!--[if lt IE 9]>

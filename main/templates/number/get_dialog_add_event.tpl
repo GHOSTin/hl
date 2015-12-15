@@ -3,7 +3,7 @@
 {% block js %}
     show_dialog(get_hidden_content());
     var $dropZone = $("#my-awesome-dropzone").dropzone({
-      url: '/files',
+      url: '/files/',
       autoProcessQueue: false,
       uploadMultiple: true,
       parallelUploads: 100,
@@ -16,9 +16,21 @@
     $('.add_event').click(function(e){
       e.preventDefault();
       e.stopPropagation();
-      $dropZone[0].dropzone.processQueue()
+      if(!$dropZone[0].dropzone.processQueue()) {
+        $.post('/numbers/{{ number.get_id() }}/events/',{
+          event: $('.dialog-select-event').val(),
+          date: $('.dialog-date').val(),
+          comment: $('.dialog-com').val(),
+          files: null
+          },function(r){
+            $('.dialog').modal('hide');
+            $('.workspace').html(r);
+            $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
+          }
+        );
+      }
     });
-    $dropZone[0].dropzone.on('successmultiple', function(files, res) {
+    $dropZone[0].dropzone.on('queuecomplete', function(files, res) {
       $.post('/numbers/{{ number.get_id() }}/events/',{
         event: $('.dialog-select-event').val(),
         date: $('.dialog-date').val(),

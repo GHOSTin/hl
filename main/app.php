@@ -126,6 +126,11 @@ $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
 
+$app['main\models\files'] = function($app){
+  return new models\files($app['twig'], $app['em'], $app['user'], $app['filesystem'], $app['session']);
+};
+
+
 $app['config_reflection'] = function($app){
   return new ReflectionClass('config\general');
 };
@@ -207,6 +212,7 @@ $security = function(Request $request, Application $app){
 # default_pages
 $app->get('/', 'main\controllers\default_page::default_page');
 $app->get('/about/', 'main\controllers\default_page::about')->before($security);
+$app->post('/files/', 'main\controllers\files::load')->before($security);
 
 # auth
 $app->get('/enter/', 'main\controllers\auth::login_form');
@@ -523,14 +529,6 @@ $app->get('/system/logs/main/', 'main\controllers\logs::main')->before($security
 # search
 $app->get('/system/search/number/', 'main\controllers\system::search_number_form')->before($security);
 $app->post('/system/search/number/', 'main\controllers\system::search_number')->before($security);
-
-#files
-$app->post('/files', function (Application $app) {
-  return $app->json(array(
-      ['date'=>time(), 'url'=> '/files/asd1232sadas45sdfsdf'],
-      ['date'=>time(), 'url'=> '/files/asd1232asdasdasdasdd']
-  ));
-});
 
 $app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);

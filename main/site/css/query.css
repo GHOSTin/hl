@@ -26,11 +26,12 @@
 .query_controls{
    margin-top: 5px;
 }
-
-.agile-list .query_status_open {border-left:3px solid #ff0000;}
-.agile-list .query_status_close {border-left:3px solid #cccccc;}
-.agile-list .query_status_reopen {border-left:3px solid blue;}
-.agile-list .query_status_working {border-left:3px solid black;}
+.queries_legend {border-left:20px solid transparent; margin: 2px 0; padding: 0 5px;}
+.agile-list .query {border: none; border-left:3px solid transparent;}
+.queries_open, .agile-list .query_status_open {border-color: #ff0000;}
+.queries_close, .agile-list .query_status_close {border-color: #cccccc;}
+.queries_reopen, .agile-list .query_status_reopen {border-color: blue;}
+.queries_working, .agile-list .query_status_working {border-color: black;}
 
 .timeline .pagination{
     margin: 0;
