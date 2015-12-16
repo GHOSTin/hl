@@ -149,6 +149,208 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $model->get_dialog_contacts());
   }
 
+  public function test_get_dialog_add_event(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\get_dialog_add_event.tpl',
+                      [
+                        'number' => $this->number,
+                        'workgroups' => 'workgroups_array'
+                      ]
+                    )
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                      ->disableOriginalConstructor()
+                      ->getMock();
+    $repository->expects($this->once())
+              ->method('findBy')
+              ->with([], ['name' => 'ASC'])
+              ->willReturn('workgroups_array');
+    $this->em->expects($this->once())
+              ->method('getRepository')
+              ->with('domain\workgroup')
+              ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->get_dialog_add_event());
+  }
+
+  public function test_get_dialog_edit_event(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\get_dialog_edit_event.tpl')
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                      ->disableOriginalConstructor()
+                      ->setMethods(['findByIndex'])
+                      ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\number2event')
+             ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->get_dialog_edit_event(250, 1396332000));
+  }
+
+  public function test_get_dialog_exclude_event(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\get_dialog_exclude_event.tpl')
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                      ->disableOriginalConstructor()
+                      ->setMethods(['findByIndex'])
+                      ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\number2event')
+             ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->get_dialog_exclude_event(250, 1396332000));
+  }
+
+  public function test_add_event(){
+    $event = $this->getMockBuilder('domain\event')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->exactly(2))
+             ->method('find')
+             ->withConsecutive(
+                                ['domain\number', 125],
+                                ['domain\event', 250]
+                              )
+             ->will($this->onConsecutiveCalls($this->number, $event));
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\build_number_fio.tpl',
+                [
+                  'number' => $this->number,
+                  'user' => $this->user
+                ])
+               ->will($this->returnValue('render_template'));
+    $this->number->expects($this->once())
+                 ->method('add_event')
+                 ->with($event, '21.12.1984', 'Привет');
+    $this->em->expects($this->once())
+             ->method('flush');
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->add_event(250, '21.12.1984', 'Привет', []));
+  }
+
+  public function test_exclude_event(){
+    $n2e = $this->getMockBuilder('domain\number2event')
+                ->disableOriginalConstructor()
+                ->getMock();
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\build_number_fio.tpl',
+                [
+                  'number' => $this->number,
+                  'user' => $this->user
+                ])
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                      ->disableOriginalConstructor()
+                      ->setMethods(['findByIndex'])
+                      ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex')
+               ->willReturn([$n2e]);
+    $this->number->expects($this->once())
+                 ->method('exclude_event')
+                 ->with($n2e);
+    $this->em->expects($this->once())
+             ->method('remove')
+             ->with($n2e);
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\number2event')
+             ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->exclude_event(250, 1396332000));
+  }
+
+  public function test_edit_event(){
+    $n2e = $this->getMockBuilder('domain\number2event')
+                ->disableOriginalConstructor()
+                ->getMock();
+    $n2e->expects($this->once())
+        ->method('set_description')
+        ->with('Описание');
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('number\build_number_fio.tpl',
+                [
+                  'number' => $this->number,
+                  'user' => $this->user
+                ])
+               ->will($this->returnValue('render_template'));
+    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
+                      ->disableOriginalConstructor()
+                      ->setMethods(['findByIndex'])
+                      ->getMock();
+    $repository->expects($this->once())
+               ->method('findByIndex')
+               ->willReturn([$n2e]);
+    $this->em->expects($this->once())
+             ->method('flush');
+    $this->em->expects($this->once())
+             ->method('getRepository')
+             ->with('domain\number2event')
+             ->willReturn($repository);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals('render_template', $model->edit_event(250, 1396332000, 'Описание'));
+  }
+
   public function test_get_dialog_generate_password_1(){
     $this->setExpectedException('RuntimeException');
     $this->user->expects($this->exactly(2))

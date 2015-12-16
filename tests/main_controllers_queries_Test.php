@@ -737,6 +737,18 @@ class main_controllers_queries_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $this->controller->noclose($this->request, $this->app));
   }
 
+  public function test_all_noclose(){
+    $model = $this->getMockBuilder('main\models\queries')
+                  ->disableOriginalConstructor()
+                  ->setMethods(['all_noclose'])
+                  ->getMock();
+    $model->expects($this->once())
+          ->method('all_noclose')
+          ->willReturn('render_template');
+    $this->app['main\models\queries'] = $model;
+    $this->assertEquals('render_template', $this->controller->all_noclose($this->app));
+  }
+
   public function test_selections(){
     $model = $this->getMockBuilder('main\models\queries')
                   ->disableOriginalConstructor()

@@ -118,9 +118,18 @@ $app['main\models\outages'] = function($app){
   return new models\outages($app['twig'], $app['em'], $app['user']);
 };
 
+$app['main\models\events'] = function($app){
+  return new models\events($app['twig'], $app['em'], $app['user']);
+};
+
 $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
+
+$app['main\models\files'] = function($app){
+  return new models\files($app['twig'], $app['em'], $app['user'], $app['filesystem'], $app['session'], $app['files']);
+};
+
 
 $app['config_reflection'] = function($app){
   return new ReflectionClass('config\general');
@@ -203,6 +212,10 @@ $security = function(Request $request, Application $app){
 # default_pages
 $app->get('/', 'main\controllers\default_page::default_page');
 $app->get('/about/', 'main\controllers\default_page::about')->before($security);
+
+# files
+$app->post('/files/', 'main\controllers\files::load')->before($security);
+$app->get('/files/{date}/{name}', 'main\controllers\files::get_file')->before($security);
 
 # auth
 $app->get('/enter/', 'main\controllers\auth::login_form');
@@ -301,6 +314,14 @@ $app->get('/metrics/archive/', 'main\controllers\metrics::archive')->before($sec
 $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->before($security);
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
 
+# events
+$app->get('/numbers/events/', 'main\controllers\events::default_page')->before($security);
+$app->get('/numbers/events/days/{date}/', 'main\controllers\events::get_day_events')->before($security);
+$app->get('/numbers/events/dialogs/create/', 'main\controllers\events::get_dialog_create_event')->before($security);
+$app->get('/numbers/events/streets/{id}/houses/', 'main\controllers\events::houses')->before($security);
+$app->get('/numbers/events/houses/{id}/numbers/', 'main\controllers\events::numbers')->before($security);
+$app->post('/numbers/events/', 'main\controllers\events::create_event')->before($security);
+
 # outages
 $app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);
 $app->get('/numbers/outages/dialogs/create/', 'main\controllers\outages::dialog_create')->before($security);
@@ -339,11 +360,7 @@ $app->get('/number/houses/{id}/queries/', 'main\controllers\numbers::query_of_ho
 $app->get('/number/query_of_number', 'main\controllers\numbers::query_of_number')->before($security);
 $app->get('/number/accruals', 'main\controllers\numbers::accruals')->before($security);
 $app->get('/number/contact_info', 'main\controllers\numbers::contact_info')->before($security);
-$app->get('/number/get_dialog_add_event', 'main\controllers\numbers::get_dialog_add_event')->before($security);
 $app->get('/number/get_events', 'main\controllers\numbers::get_events')->before($security);
-$app->get('/number/add_event', 'main\controllers\numbers::add_event')->before($security);
-$app->get('/number/get_dialog_exclude_event', 'main\controllers\numbers::get_dialog_exclude_event')->before($security);
-$app->get('/number/exclude_event', 'main\controllers\numbers::exclude_event')->before($security);
 
 # numbers
 $app->get('/numbers/{id}/get_dialog_generate_password/', 'main\controllers\number::get_dialog_generate_password')->before($security);
@@ -352,6 +369,14 @@ $app->get('/numbers/{id}/contacts/', 'main\controllers\number::get_dialog_contac
 $app->post('/numbers/{id}/contacts/', 'main\controllers\number::update_contacts')->before($security);
 $app->get('/numbers/{id}/contacts/history/', 'main\controllers\number::history')->before($security);
 $app->get('/numbers/{id}/meterages/', 'main\controllers\number::meterages')->before($security);
+
+# number2event
+$app->get('/numbers/{number_id}/events/dialog_add/', 'main\controllers\number::get_dialog_add_event')->before($security);
+$app->post('/numbers/{number_id}/events/', 'main\controllers\number::add_event')->before($security);
+$app->get('/numbers/{number_id}/events/{event_id}/{time}/dialog_exclude/', 'main\controllers\number::get_dialog_exclude_event')->before($security);
+$app->delete('/numbers/{number_id}/events/{event_id}/{time}/', 'main\controllers\number::exclude_event')->before($security);
+$app->get('/numbers/{number_id}/events/{event_id}/{time}/dialog_edit/', 'main\controllers\number::get_dialog_edit_event')->before($security);
+$app->put('/numbers/{number_id}/events/{event_id}/{time}/', 'main\controllers\number::edit_event')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);
@@ -438,6 +463,7 @@ $app->get('/queries/selections/', 'main\controllers\queries::selections')->befor
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
 $app->get('/queries/workgroups/{id}/phrases/', 'main\controllers\queries::phrases')->before($security);
 $app->get('/queries/{id}/history/', 'main\controllers\queries::history')->before($security);
+$app->get('/queries/stats/all/noslose/', 'main\controllers\queries::all_noclose')->before($security);
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);

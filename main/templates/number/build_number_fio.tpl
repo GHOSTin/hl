@@ -19,8 +19,8 @@
         </ul>
     </div>
     <div class="col-md-5">
-        <h3>Контактная информаци {% if user.check_access('numbers/contacts') %}<small><a class="get_dialog_contacts" number="{{ number.get_id() }}">изменить</a></small>{% endif %}</h3>
-        <a href="/numbers/{{ number.get_id() }}/contacts/history/" target="_blank">История изменения контактных данных</a>
+        <h3>Контактная информаци {% if user.check_access('numbers/contacts') %} <a class="get_dialog_contacts" number="{{ number.get_id() }}">изменить</a>{% endif %}</h3>
+        <a href="/numbers/{{ number.get_id() }}/contacts/history/" target="_blank">История изменения контактных данных{% if number.get_relevance_time %} на {{ number.get_relevance_time()|date("d.m.Y") }}{% endif %}</a>
         <ul class="list-unstyled">
             <li>Владелец: {{ number.get_fio() }}</li>
             <li>Стационарный телефон: {{ number.get_telephone() }}</li>
@@ -32,15 +32,22 @@
 </div>
 <div class="row">
     <div class="col-md-5">
-      <h3>События</h3>
+      <h3>События <a class="get_dialog_add_event" number="{{ number.get_id() }}"><i class="fa fa-plus"></i></a></h3>
       <ul class="list-unstyled">
-        <li>
-          <a class="get_dialog_add_event" number="{{ number.get_id() }}">Добавить</a>
-        </li>
-      </ul>
-      <ul class="events">
       {% for event in number.get_events() %}
-        <li event_id="{{ event.get_id() }}" time="{{ event.get_time() }}">{{ event.get_time()|date("d.m.Y") }} {{ event.get_name() }} <a class="get_dialog_exclude_event" number="{{ number.get_id() }}">исключить</a></li>
+        <li class="well">
+          <p>{{ event.get_time()|date("d.m.Y") }} {{ event.get_name() }} <a class="get_dialog_edit_event" event_id="{{ event.get_id() }}"><i class="fa fa-pencil"></i></a> <a class="get_dialog_exclude_event" event_id="{{ event.get_id() }}"><i class="fa fa-minus"></i></a></p>
+          <p>{{ event.get_description() }}</p>
+          <ul>
+          {% for file in event.get_files() %}
+            <li>
+              <a href="/files/{{ file.get_path() }}">
+                <i class="fa fa-file"></i>{{ file.get_name() }}
+              </a>
+            </li>
+          {%endfor %}
+          </ul>
+        </li>
       {% else %}
         <li>Нет ни одного события</li>
       {% endfor %}

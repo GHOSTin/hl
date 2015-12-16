@@ -1,12 +1,13 @@
 <?php namespace domain;
 
 use DomainException;
+use JsonSerializable;
 
 /**
 * @Entity
 * @Table(name="files")
 */
-class file implements interfaces\file{
+class file implements interfaces\file, JsonSerializable{
 
   /**
   * @Column(type="integer")
@@ -66,5 +67,13 @@ class file implements interfaces\file{
 
   public function set_time($time){
     $this->time = $time;
+  }
+
+  public function JsonSerialize(){
+    return [
+             'date' => $this->time,
+             'url' => $this->path,
+             'name' => $this->name,
+           ];
   }
 }

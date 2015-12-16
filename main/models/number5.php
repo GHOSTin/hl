@@ -26,6 +26,71 @@ class number5{
       throw new RuntimeException();
   }
 
+  public function add_event($event_id, $date, $comment, $files){
+    $event = $this->em->find('domain\event', $event_id);
+    $n2e = $this->number->add_event($event, $date, $comment);
+    if(!empty($files)){
+      foreach($files as $fr){
+        $file = $this->em->find('domain\file', $fr['url']);
+        if($file)
+          $n2e->add_file($file);
+      }
+    }
+    $this->em->flush();
+    return $this->twig->render('number\build_number_fio.tpl', [
+                                                                'number' => $this->number,
+                                                                'user' => $this->user
+                                                               ]);
+
+  }
+
+  public function get_dialog_add_event(){
+    $workgroups = $this->em->getRepository('domain\workgroup')
+                           ->findBy([], ['name' => 'ASC']);
+    return $this->twig->render('number\get_dialog_add_event.tpl',
+                                [
+                                 'number' => $this->number,
+                                 'workgroups' => $workgroups
+                                ]);
+  }
+
+  public function get_dialog_exclude_event($event_id, $time){
+    $n2e = $this->em->getRepository('domain\number2event')
+                    ->findByIndex($time, $this->number->get_id(), $event_id)[0];
+    return $this->twig->render('number\get_dialog_exclude_event.tpl', ['n2e' => $n2e]);
+  }
+
+  public function get_dialog_edit_event($event_id, $time){
+    $n2e = $this->em->getRepository('domain\number2event')
+                    ->findByIndex($time, $this->number->get_id(), $event_id)[0];
+    return $this->twig->render('number\get_dialog_edit_event.tpl', ['n2e' => $n2e]);
+  }
+
+  public function edit_event($event_id, $time, $description){
+    $n2e = $this->em->getRepository('domain\number2event')
+                    ->findByIndex($time, $this->number->get_id(), $event_id)[0];
+    $n2e->set_description($description);
+    $this->em->flush();
+    return $this->twig->render('number\build_number_fio.tpl',
+                                [
+                                 'number' => $this->number,
+                                 'user' => $this->user
+                                ]);
+  }
+
+  public function exclude_event($event_id, $time){
+    $n2e = $this->em->getRepository('domain\number2event')
+                    ->findByIndex($time, $this->number->get_id(), $event_id)[0];
+    $this->number->exclude_event($n2e);
+    $this->em->remove($n2e);
+    $this->em->flush();
+    return $this->twig->render('number\build_number_fio.tpl',
+                                [
+                                 'number' => $this->number,
+                                 'user' => $this->user
+                                ]);
+  }
+
   public function generate_password($salt, $email, Swift_Message $message, Swift_Mailer $mailer){
     if(!$this->user->check_access('numbers/generate_password'))
       throw new RuntimeException();

@@ -113,10 +113,12 @@ class number{
     $this->status = 'true';
   }
 
-  public function add_event(number2event $event){
-    if($this->events->contains($event))
+  public function add_event(event $event, $date, $comment){
+    $n2e = new number2event($this, $event, $date, $comment);
+    if($this->events->contains($n2e))
       throw new DomainException('Событие уже добавлено');
-    $this->events->add($event);
+    $this->events->add($n2e);
+    return $n2e;
   }
 
   public function exclude_event(number2event $event){
@@ -303,8 +305,17 @@ class number{
     $this->relevance = array_slice($this->relevance, -10);
   }
 
+  public function get_relevance_time(){
+    if(count($this->relevance) > 0)
+      return array_reverse($this->relevance)[0]['time'];
+  }
+
   public function get_relevance(){
     return $this->relevance;
+  }
+
+  public function get_full_number(){
+    return 'кв. №'.$this->flat->get_number().' '.$this->fio.' (л/с №'.$this->number.')' ;
   }
 
   public function get_address(){

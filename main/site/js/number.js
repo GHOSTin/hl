@@ -13,7 +13,7 @@ $(document).ready(function(){
       function(r){
         $('.workspace').html(r['workspace']);
         $('.workspace-path').empty();
-        $('.nav > li').removeClass('active');
+        $('.nav:not(#side-menu) > li').removeClass('active');
         $('.get_streets').addClass('active');
       });
 
@@ -21,9 +21,29 @@ $(document).ready(function(){
       $.getJSON('/numbers/outages/',
       function(r){
         $('.workspace').html(r['workspace']);
-        $('.nav > li').removeClass('active');
+        $('.nav:not(#side-menu) > li').removeClass('active');
         $('.get_outages').addClass('active');
         $('.workspace-path').empty();
+      });
+
+    }).on('click', '.get_events', function(){
+      $.getJSON('/numbers/events/',
+      function(r){
+        $('.workspace').html(r['workspace']);
+        $('.nav:not(#side-menu) > li').removeClass('active');
+        $('.get_events').addClass('active');
+        $('.workspace-path').empty();
+          /*Events Calendar*/
+          $('#events-datetimepicker').datetimepicker({
+              inline: true,
+              format: 'DD.MM.YYYY',
+              locale: moment.locale('ru')
+          }).on("dp.change", function(e) {
+              $.get('/numbers/events/days/' + e.date.format('DD-MM-YYYY') + '/')
+                  .done(function(res){
+                      $('.workspace').find('.events').html(res['workspace'])
+                  })
+          });
       });
 
     }).on('click', '.get_active_outages', function(){
@@ -109,20 +129,31 @@ $(document).ready(function(){
         });
 
     }).on('click', '.get_dialog_add_event', function(){
-        $.get('get_dialog_add_event',{
-            id: $(this).attr('number')
-            },function(r){
-                init_content(r);
-            });
+      var id = $(this).attr('number');
+        $.get('/numbers/' + id + '/events/dialog_add/',
+        function(r){
+          init_content(r);
+        });
+    }).on('click', '.get_dialog_create_event', function(){
+      var id = $(this).attr('number');
+        $.get('/numbers/events/dialogs/create/',
+        function(r){
+          init_content(r);
+        });
 
     }).on('click', '.get_dialog_exclude_event', function(){
-        $.get('get_dialog_exclude_event',{
-            id: $(this).attr('number'),
-            event_id: $(this).parent().attr('event_id'),
-            time: $(this).parent().attr('time')
-            },function(r){
-                init_content(r);
-            });
+      var id = $(this).attr('event_id').split('-');
+      $.get('/numbers/' + id[0]+ '/events/' + id[1] + '/' + id[2] + '/dialog_exclude/',
+      function(r){
+          init_content(r);
+      });
+
+    }).on('click', '.get_dialog_edit_event', function(){
+      var id = $(this).attr('event_id').split('-');
+      $.get('/numbers/' + id[0]+ '/events/' + id[1] + '/' + id[2] + '/dialog_edit/',
+      function(r){
+          init_content(r);
+      });
 
     }).on('click', '.get_dialog_contacts', function(){
         var id = $(this).attr('number');

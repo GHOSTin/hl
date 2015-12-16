@@ -135,12 +135,17 @@
               <ul class="list-unstyled old-queries">
                 {% for query in queries  %}
                   <li class="query_status_{{ query.get_status() }}">
-                    {% if query.get_initiator() == 'number' %}
-                      <i class="fa fa-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
-                    {% else %}
-                      <i class="fa fa-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
-                    {% endif %}
-                    <strong>{{ query.get_time_open()|date('d.m.Y') }} №{{ query.get_number() }}</strong> {{ query.get_description() }}
+                    <h5>
+                      {% if query.get_initiator() == 'number' %}
+                        <i class="fa fa-user notification-center-icon" style="font-size:12px" alt="Заявка на личевой счет"></i>
+                      {% else %}
+                        <i class="fa fa-home notification-center-icon" style="font-size:12px" alt="Заявка на дом"></i>
+                      {% endif %}
+                      <strong> №{{ query.get_number() }}</strong>
+                      <time datetime="{{ query.get_time_open()|date('d.m.Y') }}" id="query_time_{{ query.get_id() }}" class="pull-right">
+                        <script>moment.locale('ru'); $("#query_time_{{ query.get_id() }}").text(moment.unix({{ query.get_time_open() }}).local().fromNow());</script>
+                      </time>
+                    </h5> {{ query.get_description() }}
                     {% if query.get_initiator() == 'number' %}
                       {% for number in query.get_numbers() %}
                         <div> кв.{{ number.get_flat().get_number() }} {{ number.get_number() }} ({{ number.get_fio() }})</div>

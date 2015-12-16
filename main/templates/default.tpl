@@ -33,7 +33,7 @@
               </span>
             </div>
             <div class="logo-element">
-              АДС
+              <i class="fa fa-user"></i>
             </div>
           </li>
           {% include 'menu.tpl' %}
@@ -100,8 +100,6 @@
 {% if user is not empty %}
   <script src="/js/socket.io.js"></script>
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
-  <script src="/js/notification-center.js"></script>
-  <script src="/js/chat.js"></script>
   <script src="/js/vendor/vendor.js"></script>
   <script src="/js/inspinia.js"></script>
 {% endif %}
@@ -110,5 +108,7 @@
   <script src="/js/framework/bootstrap.min.js"></script>
   <script src="/js/default.js"></script>
   {% block javascript %}{% endblock %}
+  <script src="/js/notification-center.js"></script>
+  <script src="/js/chat.js"></script>
 </body>
 </html>

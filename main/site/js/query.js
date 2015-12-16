@@ -7,7 +7,7 @@ $(document).ready(function($){
 				init_content(r);
 			});
 	});
-	$(document).on('click touchstart', '.get_query_content', function(){
+	$(document).on('click tap', '.get_query_content', function(){
 		$.get('get_query_content',{
 			 id: $(this).attr('query_id')
 			},function(r){
@@ -412,6 +412,7 @@ $(document).ready(function($){
     });
   });
   get_day_stats();
+  get_all_noclose_queries();
 });
 function get_query_id(obj){
 	return obj.closest('.query').attr('query_id');
@@ -428,6 +429,13 @@ function get_day_stats(){
         animation: false
       };
       var myNewChart = new Chart(ctx).Pie(r.chart, options);
+    });
+}
+
+function get_all_noclose_queries(){
+  $.get('/queries/stats/all/noslose/',
+    function(r){
+      $('.all_noclose').html('<span class="label label-info">' + r +' незакрытых заявок за весь период</span>');
     });
 }
 
