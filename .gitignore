@@ -14,3 +14,4 @@ composer.lock
 cache.properties
 main/site/router.php
 *.orig
+*.iml
