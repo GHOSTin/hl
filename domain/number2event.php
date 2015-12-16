@@ -2,6 +2,7 @@
 
 use DateTime;
 use JsonSerializable;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
 * @Entity(repositoryClass="domain\repositories\number2event")
@@ -34,13 +35,27 @@ class number2event implements JsonSerializable{
   */
   private $description;
 
+  /**
+   * @ManyToMany(targetEntity="domain\file")
+   * @JoinTable(name="number2event2file",
+   *             joinColumns={@JoinColumn(name="number2event_id", referencedColumnName="id")},
+   *             inverseJoinColumns={@JoinColumn(name="path", referencedColumnName="path", unique=true)}
+   *           )
+   */
+  private $files;
+
   public function __construct(number $number, event $event, $date, $description = ''){
     $time = DateTime::createFromFormat('H:i d.m.Y', '12:00 '.$date);
     $this->time = $time->getTimeStamp();
+    $this->files = new ArrayCollection();
     $this->description = $description;
     $this->id = $number->get_id().'-'.$event->get_id().'-'.$this->time;
     $this->event = $event;
     $this->number = $number;
+  }
+
+  public function add_file(file $file){
+    $this->files->add($file);
   }
 
   public function get_time(){
@@ -59,8 +74,8 @@ class number2event implements JsonSerializable{
     return $this->id;
   }
 
-  public function set_description($description){
-    $this->description = $description;
+  public function get_files(){
+    return $this->files;
   }
 
   public function JsonSerialize(){
@@ -78,4 +93,9 @@ class number2event implements JsonSerializable{
              'description' => $this->description
            ];
   }
+
+  public function set_description($description){
+    $this->description = $description;
+  }
+
 }

@@ -26,9 +26,16 @@ class number5{
       throw new RuntimeException();
   }
 
-  public function add_event($event_id, $date, $comment){
+  public function add_event($event_id, $date, $comment, $files){
     $event = $this->em->find('domain\event', $event_id);
-    $this->number->add_event($event, $date, $comment);
+    $n2e = $this->number->add_event($event, $date, $comment);
+    if(!empty($files)){
+      foreach($files as $fr){
+        $file = $this->em->find('domain\file', $fr['url']);
+        if($file)
+          $n2e->add_file($file);
+      }
+    }
     $this->em->flush();
     return $this->twig->render('number\build_number_fio.tpl', [
                                                                 'number' => $this->number,

@@ -33,6 +33,17 @@ $(document).ready(function(){
         $('.nav:not(#side-menu) > li').removeClass('active');
         $('.get_events').addClass('active');
         $('.workspace-path').empty();
+          /*Events Calendar*/
+          $('#events-datetimepicker').datetimepicker({
+              inline: true,
+              format: 'DD.MM.YYYY',
+              locale: moment.locale('ru')
+          }).on("dp.change", function(e) {
+              $.get('/numbers/events/days/' + e.date.format('DD-MM-YYYY') + '/')
+                  .done(function(res){
+                      $('.workspace').find('.events').html(res['workspace'])
+                  })
+          });
       });
 
     }).on('click', '.get_active_outages', function(){

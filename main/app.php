@@ -126,6 +126,11 @@ $app['\domain\query2comment'] = $app->factory(function($app){
   return new \domain\query2comment;
 });
 
+$app['main\models\files'] = function($app){
+  return new models\files($app['twig'], $app['em'], $app['user'], $app['filesystem'], $app['session'], $app['files']);
+};
+
+
 $app['config_reflection'] = function($app){
   return new ReflectionClass('config\general');
 };
@@ -207,6 +212,10 @@ $security = function(Request $request, Application $app){
 # default_pages
 $app->get('/', 'main\controllers\default_page::default_page');
 $app->get('/about/', 'main\controllers\default_page::about')->before($security);
+
+# files
+$app->post('/files/', 'main\controllers\files::load')->before($security);
+$app->get('/files/{date}/{name}', 'main\controllers\files::get_file')->before($security);
 
 # auth
 $app->get('/enter/', 'main\controllers\auth::login_form');

@@ -15,7 +15,7 @@ class notification_center{
 
   public function get_content(){
     $users = $this->em->getRepository('domain\user')
-                      ->findAll(['lastname' => 'DESC']);
+                      ->findBy([], ['lastname' => 'ASC']);
     return $this->twig->render('notification_center/get_content.tpl', ['users' => $users]);
   }
 }

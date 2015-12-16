@@ -16,7 +16,7 @@
 {% if user.check_access('queries/general_access') %}
 <li>
   <a tabindex="-1" href="/query/">
-    <i class="fa fa-exchange"></i>
+    <i class="fa fa-sticky-note"></i>
     <span>Заявки</span>
   </a>
 </li>
@@ -32,7 +32,7 @@
 {% if user.check_access('reports/general_access') %}
 <li>
   <a tabindex="-1" href="/reports/">
-    <i class="fa fa-sticky-note-o"></i>
+    <i class="fa fa-pie-chart"></i>
     <span>Отчеты</span>
   </a>
 </li>
