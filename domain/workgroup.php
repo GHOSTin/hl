@@ -49,6 +49,7 @@ class workgroup{
 
   /**
   * @OneToMany(targetEntity="domain\phrase", mappedBy="workgroup")
+  * @OrderBy({"text" = "ASC"})
   */
   private $phrases;
 
