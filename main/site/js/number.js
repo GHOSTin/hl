@@ -41,7 +41,7 @@ $(document).ready(function(){
           }).on("dp.change", function(e) {
               $.get('/numbers/events/days/' + e.date.format('DD-MM-YYYY') + '/')
                   .done(function(res){
-                      console.log(res);
+                      $('.workspace').find('.events').html(res['workspace'])
                   })
           });
       });
