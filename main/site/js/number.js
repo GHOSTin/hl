@@ -136,7 +136,7 @@ $(document).ready(function(){
         });
     }).on('click', '.get_dialog_create_event', function(){
       var id = $(this).attr('number');
-        $.get('/numbers/events/dialog_create/',
+        $.get('/numbers/events/dialogs/create/',
         function(r){
           init_content(r);
         });
