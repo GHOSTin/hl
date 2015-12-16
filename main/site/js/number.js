@@ -134,6 +134,12 @@ $(document).ready(function(){
         function(r){
           init_content(r);
         });
+    }).on('click', '.get_dialog_create_event', function(){
+      var id = $(this).attr('number');
+        $.get('/numbers/events/dialogs/create/',
+        function(r){
+          init_content(r);
+        });
 
     }).on('click', '.get_dialog_exclude_event', function(){
       var id = $(this).attr('event_id').split('-');

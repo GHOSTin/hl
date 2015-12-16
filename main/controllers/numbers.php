@@ -25,6 +25,7 @@ class numbers{
                                  'number' => $number
                                 ]);
   }
+
   public function edit_department(Request $request, Application $app){
     $house = $app['em']->find('\domain\house', $request->get('house_id'));
     $department = $app['em']->find('\domain\department', $request->get('department_id'));

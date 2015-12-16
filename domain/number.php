@@ -314,6 +314,10 @@ class number{
     return $this->relevance;
   }
 
+  public function get_full_number(){
+    return 'кв. №'.$this->flat->get_number().' '.$this->fio.' (л/с №'.$this->number.')' ;
+  }
+
   public function get_address(){
     return $this->house->get_street()->get_name().', дом №'.$this->house->get_number().', кв. №'.$this->flat->get_number();
   }

@@ -317,6 +317,10 @@ $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics'
 # events
 $app->get('/numbers/events/', 'main\controllers\events::default_page')->before($security);
 $app->get('/numbers/events/days/{date}/', 'main\controllers\events::get_day_events')->before($security);
+$app->get('/numbers/events/dialogs/create/', 'main\controllers\events::get_dialog_create_event')->before($security);
+$app->get('/numbers/events/streets/{id}/houses/', 'main\controllers\events::houses')->before($security);
+$app->get('/numbers/events/houses/{id}/numbers/', 'main\controllers\events::numbers')->before($security);
+$app->post('/numbers/events/', 'main\controllers\events::create_event')->before($security);
 
 # outages
 $app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);

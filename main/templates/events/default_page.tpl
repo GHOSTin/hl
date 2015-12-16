@@ -6,6 +6,11 @@
   </div>
 </nav>
 <div class="row">
+  <div class="col-md-2 m-b">
+    <a class="btn btn-primary btn-lg get_dialog_create_event"><i class="fa fa-plus"></i></a>
+  </div>
+</div>
+<div class="row">
   <div class="col-md-10">
     <ul class="events list-unstyled">{% include "events/events.tpl" %}</ul>
   </div>

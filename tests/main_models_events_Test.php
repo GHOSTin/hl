@@ -70,7 +70,14 @@ class main_model_events_Test extends PHPUnit_Framework_TestCase{
                ->method('getRepository')
                ->with('domain\number2event')
                ->willReturn($repository);
+    $this->twig->expects($this->once())
+               ->method('render')
+               ->with('events/events.tpl', [
+                                              'events' => 'events_array',
+                                              'user' => $this->user
+                                            ])
+               ->willReturn('render_template');
     $model = new model($this->twig, $this->em, $this->user);
-    $this->assertEquals('events_array', $model->get_day_events('21-12-1984'));
+    $this->assertEquals(['workspace' => 'render_template'], $model->get_day_events('21-12-1984'));
   }
 }
