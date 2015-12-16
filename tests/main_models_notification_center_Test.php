@@ -24,8 +24,8 @@ class main_model_notification_center_Test extends PHPUnit_Framework_TestCase{
                        ->disableOriginalConstructor()
                        ->getMock();
     $repository->expects($this->once())
-               ->method('findAll')
-               ->with(['lastname' => 'DESC'])
+               ->method('findBy')
+               ->with([], ['lastname' => 'ASC'])
                ->willReturn('users_array');
     $this->em->expects($this->once())
                ->method('getRepository')
