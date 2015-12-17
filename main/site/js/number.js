@@ -128,12 +128,6 @@ $(document).ready(function(){
           init_content(r);
         });
 
-    }).on('click', '.get_dialog_add_event', function(){
-      var id = $(this).attr('number');
-        $.get('/numbers/' + id + '/events/dialog_add/',
-        function(r){
-          init_content(r);
-        });
     }).on('click', '.get_dialog_create_event', function(){
       var id = $(this).attr('number');
         $.get('/numbers/events/dialogs/create/',
