@@ -303,11 +303,6 @@ class queries{
     return $this->session->get('query_count');
   }
 
-  public function phrases($id){
-    $workgroup = $this->em->find('domain\workgroup', $id);
-    return $this->twig->render('query\phrases.tpl', ['workgroup' => $workgroup]);
-  }
-
   public function get_noclose_stats(array $queries){
     $res['stat']['open'] = 0;
     $res['stat']['working'] = 0;

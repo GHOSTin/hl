@@ -20,6 +20,31 @@ class main_controllers_workgroup_Test extends PHPUnit_Framework_TestCase{
     $this->app['main\models\workgroup'] = $this->model;
   }
 
+
+  public function test_phrases(){
+    $model = $this->getMockBuilder('main\models\repository')
+                  ->disableOriginalConstructor()
+                  ->getMock();
+    $workgroup = $this->getMockBuilder('domain\workgroup')
+                      ->disableOriginalConstructor()
+                      ->getMock();
+    $collection = $this->getMockBuilder('Doctrine\Common\Collections\ArrayCollection')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+    $workgroup->expects($this->once())
+              ->method('get_phrases')
+              ->willReturn($collection);
+    $collection->expects($this->once())
+              ->method('toArray');
+    $model->expects($this->once())
+          ->method('get_workgroup')
+          ->with(125)
+          ->willReturn($workgroup);
+    $this->app['main\models\repository'] = $model;
+    $response = $this->controller->phrases($this->app, 125);
+    // $this->assertEquals('render_template', $response);
+  }
+
   public function test_create_phrase_dialog(){
     $this->factory->expects($this->once())
                   ->method('get_workgroup_model')
