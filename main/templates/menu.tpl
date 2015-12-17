@@ -55,7 +55,7 @@
 {% endif %}
 <li class="divider"></li>
 <li>
-  <a tabindex="-1" href="http://docs.mshc.mlsco.ru/">
+  <a tabindex="-1" href="http://docs.mshc.mlsco.ru/" target="_blank">
     <i class="fa fa-info-circle"></i>
     <span>О программе</span>
   </a>
