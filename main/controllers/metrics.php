@@ -12,7 +12,7 @@ class metrics{
 
   public function default_page(Application $app){
     $metrics = $app['em']->getRepository('\domain\metrics')
-                         ->findByStatus('actual');
+                         ->findByStatus('actual', ['time' => 'ASC']);
     return $app['twig']->render('\metrics\default_page.tpl',
                                 ['user' => $app['user'], 'metrics' => $metrics]);
   }
