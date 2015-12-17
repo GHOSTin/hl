@@ -5,24 +5,9 @@ use Symfony\Component\HttpFoundation\Request;
 
 class number{
 
-  public function add_event(Request $request, Application $app, $number_id){
-    return $app['main\models\factory']->get_number_model($number_id)
-                                      ->add_event(
-                                                          $request->get('event'),
-                                                          $request->get('date'),
-                                                          $request->get('comment'),
-                                                          $request->get('files')
-                                                        );
-  }
-
   public function generate_password(Application $app, $id){
     return $app['main\models\factory']->get_number_model($id)
                                       ->generate_password($app['salt'], $app['email_for_reply'], $app['Swift_Message'], $app['mailer']);
-  }
-
-  public function get_dialog_add_event(Application $app, $number_id){
-    return $app['main\models\factory']->get_number_model($number_id)
-                                      ->get_dialog_add_event();
   }
 
   public function edit_event(Application $app, Request $request, $number_id, $event_id, $time){

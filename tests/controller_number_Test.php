@@ -23,19 +23,6 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->app['main\models\factory'] = $factory;
   }
 
-
-  public function test_add_event(){
-    $this->request->request->set('event', 250);
-    $this->request->request->set('date', '21.12.1984');
-    $this->request->request->set('comment', 'Привет');
-    $this->model->expects($this->once())
-                ->method('add_event')
-                ->with(250, '21.12.1984', 'Привет')
-                ->willReturn('render_template');
-    $response = $this->controller->add_event($this->request, $this->app, 125);
-    $this->assertEquals('render_template', $response);
-  }
-
   public function test_generate_password(){
     $message = $this->getMockBuilder('Swift_Message')
                     ->disableOriginalConstructor()
@@ -52,14 +39,6 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                 ->with('salt', 'email', $message, $mailer)
                 ->willReturn('render_template');
     $response = $this->controller->generate_password($this->app, 125);
-    $this->assertEquals('render_template', $response);
-  }
-
-  public function test_get_dialog_add_event(){
-    $this->model->expects($this->once())
-                ->method('get_dialog_add_event')
-                ->willReturn('render_template');
-    $response = $this->controller->get_dialog_add_event($this->app, 125);
     $this->assertEquals('render_template', $response);
   }
 
