@@ -270,19 +270,6 @@ class model_queries_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_phrases(){
-    $this->em->expects($this->once())
-             ->method('find')
-             ->with('domain\workgroup', 125)
-             ->willReturn('workgroup_object');
-    $this->twig->expects($this->once())
-               ->method('render')
-               ->with('query\phrases.tpl', ['workgroup' => 'workgroup_object'])
-               ->will($this->returnValue('render_template'));
-    $model = new model($this->em, $this->session, $this->user, $this->twig);
-    $this->assertEquals('render_template', $model->phrases(125));
-  }
-
   public function test_get_categories_1(){
     $this->user->expects($this->once())
                ->method('get_restriction')

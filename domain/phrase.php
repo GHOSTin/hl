@@ -1,9 +1,11 @@
 <?php namespace domain;
 
+use JsonSerializable;
+
 /**
 * @Entity
 */
-class phrase{
+class phrase implements JsonSerializable{
 
   /**
   * @Id
@@ -49,5 +51,11 @@ class phrase{
     $phrase->workgroup = $workgroup;
     $phrase->text = $text;
     return $phrase;
+  }
+
+  public function JsonSerialize(){
+    return [
+             'text' => $this->text
+           ];
   }
 }

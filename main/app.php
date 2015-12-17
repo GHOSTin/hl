@@ -118,6 +118,10 @@ $app['main\models\outages'] = function($app){
   return new models\outages($app['twig'], $app['em'], $app['user']);
 };
 
+$app['main\models\repository'] = function($app){
+  return new models\repository($app['em'], $app['user']);
+};
+
 $app['main\models\events'] = function($app){
   return new models\events($app['twig'], $app['em'], $app['user']);
 };
@@ -264,6 +268,7 @@ $app->get('/works/get_dialog_exclude_event', 'main\controllers\works::get_dialog
 $app->get('/works/exclude_event', 'main\controllers\works::exclude_event')->before($security);
 
 # phrase
+$app->get('/api/workgroups/{id}/phrases/', 'main\controllers\workgroup::phrases')->before($security);
 $app->get('/workgroups/{id}/phrases/create/', 'main\controllers\workgroup::create_phrase_dialog')->before($security);
 $app->post('/workgroups/{id}/phrases/', 'main\controllers\workgroup::create_phrase')->before($security);
 $app->get('/workgroups/phrases/{id}/remove/', 'main\controllers\phrase::remove_dialog')->before($security);
@@ -461,7 +466,6 @@ $app->get('/queries/outages/', 'main\controllers\queries::outages')->before($sec
 $app->get('/queries/day/stats/', 'main\controllers\queries::stats')->before($security);
 $app->get('/queries/selections/', 'main\controllers\queries::selections')->before($security);
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
-$app->get('/queries/workgroups/{id}/phrases/', 'main\controllers\queries::phrases')->before($security);
 $app->get('/queries/{id}/history/', 'main\controllers\queries::history')->before($security);
 $app->get('/queries/stats/all/noslose/', 'main\controllers\queries::all_noclose')->before($security);
 
