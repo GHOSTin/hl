@@ -18,11 +18,18 @@
     $('.dialog-description').text($('.dialog-phrase').val());
   });
   $('.dialog-worktype').change(function(){
-    var id = $('.dialog-worktype :selected').val();
-    $.get('/queries/workgroups/' + id + '/phrases/'
-      ,function(r){
-        $('.dialog-phrase').html(r);
-      });
+    if(!_.isEmpty($(this).val())) {
+      var id = $(this).val();
+      var id = $('.dialog-worktype :selected').val();
+      $.get('/api/workgroups/' + id + '/phrases/')
+        .done(function(res){
+          var template = Twig.twig({
+            href: '/templates/query/phrases.tpl',
+            async: false
+          });
+          $('.dialog-phrase').html(template.render(res));
+        });
+    }
   });
 	$('.create_query').click(function(){
 		$.get('create_query',{
@@ -110,21 +117,22 @@
               </div>
             {% endif %}
                 <div class="form-group">
+                  <label>Тип заявки</label>
+                  <select class="form-control dialog-query_type">
+                    {% for query_type in query_types %}
+                      <option value="{{ query_type.get_id() }}">{{ query_type.get_name()}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="form-group">
                   <label>Тип работ</label>
                   <select class="form-control dialog-worktype">
+                    <option value=""></option>
                     {% for workgroup in query_work_types %}
                       {% if loop.first %}
                         {% set w = workgroup %}
                       {% endif%}
                       <option value="{{ workgroup.get_id() }}">{{ workgroup.get_name() }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-                <div class="form-group">
-                  <label>Тип заявки</label>
-                  <select class="form-control dialog-query_type">
-                    {% for query_type in query_types %}
-                      <option value="{{ query_type.get_id() }}">{{ query_type.get_name()}}</option>
                     {% endfor %}
                   </select>
                 </div>
@@ -181,9 +189,6 @@
             <label>Типовые фразы</label>
             <select class="form-control dialog-phrase">
               <option></option>
-              {% for phrase in w.get_phrases() %}
-                <option>{{ phrase.get_text() }}</option>
-              {% endfor %}
             </select>
           </div>
         </div>
