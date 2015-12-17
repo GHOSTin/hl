@@ -8,7 +8,7 @@
     </div>
   <!-- /scroller -->
   <!-- left block -->
-  <div class="col-sm-3 col-lg-3">
+  <div class="col-sm-4 col-md-4 col-lg-3">
     <div class="ibox float-e-margins">
       <div class="ibox-content mailbox-content">
         <div class="file-manager">
@@ -18,18 +18,20 @@
             {% endif %}
             <a class="get_search btn btn-white compose-mail"><i class="fa fa-search"></i></a>
           </div>
-          <div  class="page-header">
-            <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
-            </h4><a class="cm clear_filters absolute_hide">сбросить</a>
+          <div class="hidden-xs">
+            <div  class="page-header">
+              <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
+              </h4><a class="cm clear_filters absolute_hide">сбросить</a>
+            </div>
+            {% include 'query/filters.tpl' %}
           </div>
-          {% include 'query/filters.tpl' %}
         </div>
       </div>
     </div>
   </div>
   <!-- /left block-->
   <!-- right block -->
-  <div class="col-sm-9 col-lg-9 query-container">
+  <div class="col-sm-8 col-md-8 col-lg-9 query-container">
     <!-- begin timeline -->
     <nav class="timeline row">{% include 'query/timeline.tpl' %}</nav>
     <!-- /timeline -->
