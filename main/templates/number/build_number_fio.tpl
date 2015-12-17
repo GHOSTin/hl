@@ -32,11 +32,11 @@
 </div>
 <div class="row">
     <div class="col-md-5">
-      <h3>События <a class="get_dialog_add_event" number="{{ number.get_id() }}"><i class="fa fa-plus"></i></a></h3>
+      <h3>События</h3>
       <ul class="list-unstyled">
       {% for event in number.get_events() %}
         <li class="well">
-          <p>{{ event.get_time()|date("d.m.Y") }} {{ event.get_name() }} <a class="get_dialog_edit_event" event_id="{{ event.get_id() }}"><i class="fa fa-pencil"></i></a> <a class="get_dialog_exclude_event" event_id="{{ event.get_id() }}"><i class="fa fa-minus"></i></a></p>
+          <p>{{ event.get_time()|date("d.m.Y") }} {{ event.get_name() }}</p>
           <p>{{ event.get_description() }}</p>
           <ul>
           {% for file in event.get_files() %}
