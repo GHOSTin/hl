@@ -11,5 +11,6 @@ class phrase_Test extends PHPUnit_Framework_TestCase{
     $this->assertSame($workgroup, $phrase->get_workgroup());
     $this->assertEquals('Привет', $phrase->get_text());
     $this->assertGreaterThanOrEqual(time(), $phrase->get_id());
+    $this->assertEquals(json_encode(['text' => 'Привет']), json_encode($phrase));
   }
 }
