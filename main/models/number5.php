@@ -43,11 +43,7 @@ class number5{
                     ->findByIndex($time, $this->number->get_id(), $event_id)[0];
     $n2e->set_description($description);
     $this->em->flush();
-    return $this->twig->render('number\build_number_fio.tpl',
-                                [
-                                 'number' => $this->number,
-                                 'user' => $this->user
-                                ]);
+    return $n2e;
   }
 
   public function exclude_event($event_id, $time){
