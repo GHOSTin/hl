@@ -143,8 +143,8 @@ $(document).ready(function(){
       });
 
     }).on('click', '.get_dialog_edit_event', function(){
-      var id = $(this).attr('event_id').split('-');
-      $.get('/numbers/' + id[0]+ '/events/' + id[1] + '/' + id[2] + '/dialog_edit/',
+      var id = $(this).attr('event_id');
+      $.get('/numbers/events/' + id + '/dialog_edit/',
       function(r){
           init_content(r);
       });

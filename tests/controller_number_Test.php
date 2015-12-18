@@ -47,7 +47,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                 ->method('get_dialog_edit_event')
                 ->with(250, 1396332000)
                 ->willReturn('render_template');
-    $response = $this->controller->get_dialog_edit_event($this->app, 125, 250, 1396332000);
+    $response = $this->controller->get_dialog_edit_event($this->app, '125-250-1396332000');
     $this->assertEquals('render_template', $response);
   }
 
@@ -66,8 +66,8 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                 ->method('edit_event')
                 ->with(250, 1396332000, 'Привет')
                 ->willReturn('render_template');
-    $response = $this->controller->edit_event($this->app, $this->request, 125, 250, 1396332000);
-    $this->assertEquals('render_template', $response);
+    $response = $this->controller->edit_event($this->app, $this->request, '125-250-1396332000');
+    $this->assertEquals($this->app->json(['n2e' =>'render_template']), $response);
   }
 
   public function test_exclude_event(){
