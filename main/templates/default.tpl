@@ -33,7 +33,7 @@
               </span>
             </div>
             <div class="logo-element">
-              <i class="fa fa-user"></i>
+              <a href="/profile/" user_id="{{ user.get_id() }}"><i class="fa fa-user"></i></a>
             </div>
           </li>
           {% include 'menu.tpl' %}
