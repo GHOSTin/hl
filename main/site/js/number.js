@@ -41,7 +41,11 @@ $(document).ready(function(){
           }).on("dp.change", function(e) {
               $.get('/numbers/events/days/' + e.date.format('DD-MM-YYYY') + '/')
                   .done(function(res){
-                      $('.workspace').find('.events').html(res['workspace'])
+                      var template = Twig.twig({
+                          href: '/templates/numbers/events.tpl',
+                          async: false
+                      });
+                      $('.workspace').find('.events').html(template.render(res))
                   })
           });
       });

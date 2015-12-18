@@ -36,13 +36,7 @@ class events{
     $time = DateTime::createFromFormat('H:i d-m-Y', '12:00 '.$date);
     $events = $this->em->getRepository('domain\number2event')
                        ->findByTime($time->getTimeStamp());
-    return [
-        'workspace' => $this->twig->render('events/events.tpl',
-            [
-                'events' => $events,
-                'user' => $this->user
-            ])
-    ];
+    return $events;
   }
 
   public function get_dialog_create_event(){

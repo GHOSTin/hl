@@ -12,7 +12,7 @@ class events{
 
   public function get_day_events(Application $app, $date){
     $response = $app['main\models\events']->get_day_events($date);
-    return $app->json($response);
+    return $app->json(['events'=>$response]);
   }
 
   public function get_dialog_create_event(Application $app){
