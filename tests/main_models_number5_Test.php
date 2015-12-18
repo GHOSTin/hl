@@ -235,7 +235,9 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\number2event')
              ->willReturn($repository);
     $model = new model($this->twig, $this->em, $this->user, 125);
-    $model->exclude_event(250, 1396332000);
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $model->exclude_event(250, 1396332000));
+
+
   }
 
   public function test_edit_event(){
