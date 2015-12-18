@@ -1,15 +1,13 @@
 {% extends "ajax.tpl" %}
 
-{% set id =  n2e.get_id()|split('-') %}
-
 {% block js %}
 show_dialog(get_hidden_content());
 $('.exclude_event').click(function(){
-    $.ajax('/numbers/{{ id[0] }}/events/{{ id[1] }}/{{ id[2] }}/', {
+    $.ajax('/numbers/events/{{ n2e.get_id() }}/', {
       type: 'DELETE',
       success: function(response){
         $('.dialog').modal('hide');
-        $('.workspace').html(response);
+        $('.event[event_id = {{ n2e.get_id() }}]').remove();
       }
     });
 });

@@ -215,14 +215,6 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->method('find')
              ->with('domain\number', 125)
              ->willReturn($this->number);
-    $this->twig->expects($this->once())
-               ->method('render')
-               ->with('number\build_number_fio.tpl',
-                [
-                  'number' => $this->number,
-                  'user' => $this->user
-                ])
-               ->will($this->returnValue('render_template'));
     $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
                       ->disableOriginalConstructor()
                       ->setMethods(['findByIndex'])
@@ -243,7 +235,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\number2event')
              ->willReturn($repository);
     $model = new model($this->twig, $this->em, $this->user, 125);
-    $this->assertEquals('render_template', $model->exclude_event(250, 1396332000));
+    $model->exclude_event(250, 1396332000);
   }
 
   public function test_edit_event(){

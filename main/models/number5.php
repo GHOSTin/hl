@@ -52,11 +52,7 @@ class number5{
     $this->number->exclude_event($n2e);
     $this->em->remove($n2e);
     $this->em->flush();
-    return $this->twig->render('number\build_number_fio.tpl',
-                                [
-                                 'number' => $this->number,
-                                 'user' => $this->user
-                                ]);
+    return new Response();
   }
 
   public function generate_password($salt, $email, Swift_Message $message, Swift_Mailer $mailer){
