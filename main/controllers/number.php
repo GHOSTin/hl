@@ -48,7 +48,8 @@ class number{
                                       ->meterages();
   }
 
-  public function exclude_event(Application $app, $number_id, $event_id, $time){
+  public function exclude_event(Application $app, $id){
+    list($number_id, $event_id, $time) = explode('-', $id);
     return $app['main\models\factory']->get_number_model($number_id)
                                       ->exclude_event($event_id, $time);
   }

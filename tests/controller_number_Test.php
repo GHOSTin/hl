@@ -75,7 +75,7 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
                 ->method('exclude_event')
                 ->with(250, 1396332000)
                 ->willReturn('render_template');
-    $response = $this->controller->exclude_event($this->app, 125, 250, 1396332000);
+    $response = $this->controller->exclude_event($this->app, '125-250-1396332000');
     $this->assertEquals('render_template', $response);
   }
 
