@@ -12,6 +12,6 @@
 </div>
 <div class="row">
   <div class="col-md-10">
-    <ul class="events list-unstyled">{% include "events/events.tpl" %}</ul>
+    <ul class="events list-unstyled"></ul>
   </div>
 </div>

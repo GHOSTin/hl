@@ -81,6 +81,10 @@ $(document).ready(function() {
       previewTemplate: $('#preview-template').html(),
       dictRemoveFile: 'Открепить'
     });
+    var template = Twig.twig({
+        href: '/templates/numbers/event.tpl',
+        async: false
+    });
     $('.create_event').click(function(e){
       e.preventDefault();
       e.stopPropagation();
@@ -93,9 +97,9 @@ $(document).ready(function() {
           date: $('.dialog-date').val(),
           comment: $('.dialog-com').val(),
           files: null
-          },function(r){
+          },function(res){
             $('.dialog').modal('hide');
-            $('.workspace').find('.events').prepend(r);
+            $('.workspace').find('.events').prepend(template.render(res));
             $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
           }
         );
@@ -108,9 +112,9 @@ $(document).ready(function() {
         date: $('.dialog-date').val(),
         comment: $('.dialog-com').val(),
         files: res
-        },function(r){
+        },function(res){
           $('.dialog').modal('hide');
-          $('.workspace').find('.events').prepend(r);
+          $('.workspace').find('.events').prepend(template.render(res));
           $('.cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
         }
       );

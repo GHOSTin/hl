@@ -320,7 +320,6 @@ $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->be
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
 
 # events
-$app->get('/numbers/events/', 'main\controllers\events::default_page')->before($security);
 $app->get('/numbers/events/days/{date}/', 'main\controllers\events::get_day_events')->before($security);
 $app->get('/numbers/events/dialogs/create/', 'main\controllers\events::get_dialog_create_event')->before($security);
 $app->get('/numbers/events/streets/{id}/houses/', 'main\controllers\events::houses')->before($security);

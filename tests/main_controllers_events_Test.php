@@ -14,14 +14,6 @@ class main_controllers_events_Test extends PHPUnit_Framework_TestCase{
     $this->app['main\models\events'] = $this->model;
   }
 
-  public function test_default_page(){
-    $this->model->expects($this->once())
-                ->method('default_page')
-                ->willReturn(['render_template']);
-    $response = $this->controller->default_page($this->app);
-    $this->assertEquals($this->app->json(['render_template']), $response);
-  }
-
   public function test_get_day_events(){
     $this->model->expects($this->once())
                 ->method('get_day_events')

@@ -27,29 +27,31 @@ $(document).ready(function(){
       });
 
     }).on('click', '.get_events', function(){
-      $.getJSON('/numbers/events/',
-      function(r){
-        $('.workspace').html(r['workspace']);
+        var template = Twig.twig({
+            href: '/templates/events/default_page.tpl',
+            async: false
+        });
+        $('.workspace').html(template.render());
         $('.nav:not(#side-menu) > li').removeClass('active');
         $('.get_events').addClass('active');
         $('.workspace-path').empty();
-          /*Events Calendar*/
-          $('#events-datetimepicker').datetimepicker({
-              inline: true,
-              format: 'DD.MM.YYYY',
-              locale: moment.locale('ru')
-          }).on("dp.change", function(e) {
-              $.get('/numbers/events/days/' + e.date.format('DD-MM-YYYY') + '/')
-                  .done(function(res){
-                      var template = Twig.twig({
-                          href: '/templates/numbers/events.tpl',
-                          async: false
-                      });
-                      $('.workspace').find('.events').html(template.render(res))
-                  })
-          });
-      });
-
+        var events_date = localStorage.getItem('events_date');
+        var date = _.isEmpty(events_date)?moment():moment(events_date);
+        $('#events-datetimepicker').datetimepicker({
+            inline: true,
+            format: 'DD.MM.YYYY',
+            locale: moment.locale('ru')
+        }).on("dp.change", function(e) {
+            localStorage.setItem('events_date', e.date.toISOString());
+            $.get('/numbers/events/days/' + e.date.format('DD-MM-YYYY') + '/')
+                .done(function(res){
+                    var template = Twig.twig({
+                        href: '/templates/numbers/events.tpl',
+                        async: false
+                    });
+                    $('.workspace').find('.events').html(template.render(res))
+                })
+        }).data('DateTimePicker').date(date);
     }).on('click', '.get_active_outages', function(){
         $.getJSON('/numbers/outages/active/',
         function(r){
