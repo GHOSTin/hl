@@ -381,6 +381,7 @@ $app->get('/numbers/{number_id}/events/{event_id}/{time}/dialog_exclude/', 'main
 $app->delete('/numbers/events/{id}/', 'main\controllers\number::exclude_event')->before($security);
 $app->get('/numbers/events/{event_id}/dialog_edit/', 'main\controllers\number::get_dialog_edit_event')->before($security);
 $app->put('/numbers/events/{event_id}/', 'main\controllers\number::edit_event')->before($security);
+$app->get('/numbers/events/{id}/', 'main\controllers\number::get_event')->before($security);
 
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);
