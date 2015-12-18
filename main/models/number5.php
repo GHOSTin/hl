@@ -26,6 +26,11 @@ class number5{
       throw new RuntimeException();
   }
 
+  public function get_event($event_id, $time){
+    return $this->em->getRepository('domain\number2event')
+        ->findByIndex($time, $this->number->get_id(), $event_id)[0];
+  }
+
   public function get_dialog_exclude_event($event_id, $time){
     $n2e = $this->em->getRepository('domain\number2event')
                     ->findByIndex($time, $this->number->get_id(), $event_id)[0];

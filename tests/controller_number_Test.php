@@ -60,6 +60,15 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_event(){
+    $this->model->expects($this->once())
+                ->method('get_event')
+                ->with(250, 1396332000)
+                ->willReturn('event_object');
+    $response = $this->controller->get_event($this->app, '125-250-1396332000');
+    $this->assertEquals($this->app->json(['event' => 'event_object']), $response);
+  }
+
   public function test_edit_event(){
     $this->request->request->set('description', 'Привет');
     $this->model->expects($this->once())
