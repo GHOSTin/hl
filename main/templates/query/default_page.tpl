@@ -33,7 +33,15 @@
   <!-- right block -->
   <div class="col-sm-8 col-md-8 col-lg-9 query-container">
     <!-- begin timeline -->
-    <nav class="timeline row">{% include 'query/timeline.tpl' %}</nav>
+    <nav class="row">
+      <div class="calendar col-md-6 col-lg-4 col-xs-12 p-w-xs">
+        <div class="ibox-content m-t m-b">
+          <div id="queries-datetimepicker"></div>
+          <input value="{{ timeline }}" class="hidden default-date">
+        </div>
+      </div>
+      <div class="day_stats col-lg-8 col-md-6 col-xs-12"></div>
+    </nav>
     <!-- /timeline -->
     <!-- requests -->
     <!-- outages -->
@@ -44,9 +52,6 @@
     </div>
     <!-- /requests -->
     <!-- /outages -->
-    <div class="row">
-      <div class="day_stats col-md-6 col-xs-12"></div>
-    </div>
     <!-- queries -->
     <div class="row">
       <ul class="queries connectList agile-list no-padding">{% include 'query/query_titles.tpl' %}</ul>

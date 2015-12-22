@@ -109,17 +109,6 @@ $(document).ready(function($){
 				show_content(r);
 			});
 	});
-	$(document).on('click', '.timeline-day', function(){
-		var self = $(this);
-		$.get('get_day',{
-			 time: $(this).attr('time')
-			},function(r){
-				$('.timeline-day').removeClass('timeline-day-current');
-				self.addClass('timeline-day-current');
-				$('.queries').html(r);
-        get_day_stats();
-			});
-	});
 	$(document).on('click', '.get_search', function(){
 		$.get('get_search',{
 			},function(r){
@@ -377,14 +366,19 @@ $(document).ready(function($){
 				init_content(r);
 			});
 	})
-	$(document).on('click', '.get_timeline', function(){
-		$.get('get_timeline',{
-			act: $(this).attr('act'),
-			time: $('.timeline-month').attr('time')
-			},function(r){
-				init_content(r);
-        get_day_stats();
-			});
+    $('#queries-datetimepicker').datetimepicker({
+        inline: true,
+        format: 'DD.MM.YYYY',
+        locale: moment.locale('ru'),
+		defaultDate: moment.unix($('.calendar').find('.default-date').val())
+    }).on("dp.change", function(e) {
+		$.get('get_day', {
+			time: e.date.format('X')
+		})
+		.done(function(res){
+			$('.queries').html(res);
+			get_day_stats();
+		})
 	});
   $.get('/queries/requests/count/',
   function(r){
