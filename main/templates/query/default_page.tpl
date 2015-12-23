@@ -124,6 +124,6 @@
 
 {% block css %}
   <link rel="stylesheet" href="/css/query.css" >
-  <link rel="stylesheet" href="/css/datepicker.css" >
+  <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
   <link rel="stylesheet" href="/css/plugins/iCheck/custom.css" >
 {% endblock css %}
