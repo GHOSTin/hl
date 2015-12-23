@@ -21,9 +21,14 @@ class import{
     set_time_limit(0);
     $hndl = fopen($request->files->get('debt'), 'r');
     while($row = fgetcsv($hndl, 0, ';')){
-      $number = $app['em']->getRepository('domain\number')->findOneByNumber($row[0]);
+      $number = $app['em']->getRepository('domain\number')
+                          ->findOneByNumber($row[0]);
       if(!is_null($number))
         $number->set_debt($row[1]);
+      if(memory_get_usage() > 128*1024*1024){
+        $app['em']->flush();
+        $app['em']->clear();
+      }
     }
     $app['em']->flush();
     fclose($hndl);

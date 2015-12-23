@@ -55,7 +55,7 @@ class number{
   private $id;
 
   /**
-  * @Column
+  * @Column(unique=true)
   */
   private $number;
 
