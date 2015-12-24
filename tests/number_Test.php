@@ -160,10 +160,6 @@ class number_Test extends PHPUnit_Framework_TestCase{
     $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->number->get_queries());
   }
 
-  public function test_get_accruals(){
-    $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->number->get_accruals());
-  }
-
   public function test_get_events(){
     $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $this->number->get_events());
   }
