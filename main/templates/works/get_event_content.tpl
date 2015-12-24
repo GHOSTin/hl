@@ -1,7 +1,3 @@
 <div class="event-content">
-  <ul class="nav nav-pills">
-    <li>
-      <a class="get_dialog_rename_event">Переименовать</a>
-    </li>
-  </ul>
+  <a class="btn btn-sm btn-primary btn-outline m-t-xs m-b-xs get_dialog_rename_event">Переименовать</a>
 </div>

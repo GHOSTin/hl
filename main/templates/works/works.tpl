@@ -1,5 +1,5 @@
 {% for work in works %}
-<li class="work" work_id="{{ work.get_id() }}">
-  <div class="work-title">{{ work.get_name() }}</div>
+<li class="work list-group-item {% if loop.first %}fist-item{% endif %}" work_id="{{ work.get_id() }}">
+  <a href="#" class="client-link work-title">{{ work.get_name() }}</a>
 </li>
 {% endfor %}

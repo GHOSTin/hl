@@ -1,18 +1,5 @@
 <div class="workgroup-content">
-  <ul class="nav nav-pills">
-    <li>
-      <a class="get_dialog_add_work">Добавить работу</a>
-    </li>
-    <li>
-      <a class="get_dialog_add_event">Добавить событие</a>
-    </li>
-    <li>
-      <a class="get_dialog_add_phrase">Добавить фразу</a>
-    </li>
-    <li>
-      <a class="get_dialog_rename_workgroup">Переименовать</a>
-    </li>
-  </ul>
+  <a class="btn btn-sm btn-primary btn-outline m-t-xs m-b-xs get_dialog_rename_workgroup">Переименовать</a>
   <div class="tabs-container">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
@@ -24,25 +11,58 @@
     <!-- Tab panes -->
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="works">
-        <ul class="works list-unstyled panel-body">
-          {% for work in workgroup.get_works() %}
-            <li class="work" work_id="{{ work.get_id() }}">{{ work.get_name() }} <a class="get_dialog_exclude_work">исключить</a></li>
-          {% endfor %}
-        </ul>
+        <div class="panel-body">
+          <button type="button" class="btn btn-primary btn-xs m-b-sm get_dialog_add_work">Добавить работу</button>
+          <div class="no-padding">
+            <ul class="works list-group">
+              {% for work in workgroup.get_works() %}
+                <li class="work list-group-item {% if loop.first %}fist-item{% endif %}" work_id="{{ work.get_id() }}">
+                  <div class="pull-right">
+                    <a class="btn btn-xs btn-white get_dialog_exclude_work"><i class="fa fa-trash-o"></i></a>
+                  </div>
+                  {{ work.get_name() }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
       </div>
       <div role="tabpanel" class="tab-pane" id="events">
-        <ul class="events list-unstyled panel-body">
-          {% for event in workgroup.get_events() %}
-            <li class="event" event_id="{{ event.get_id() }}">{{ event.get_name() }} <a class="get_dialog_exclude_event">исключить</a></li>
-          {% endfor %}
-        </ul>
+        <div class="panel-body">
+          <button class="btn btn-primary btn-xs m-b-sm get_dialog_add_event">Добавить событие</button>
+          <div class="no-padding">
+            <ul class="events list-group">
+              {% for event in workgroup.get_events() %}
+                <li class="event list-group-item {% if loop.first %}fist-item{% endif %}" event_id="{{ event.get_id() }}">
+                  <div class="pull-right">
+                    <a class="btn btn-xs btn-white get_dialog_exclude_event"><i class="fa fa-trash-o"></i></a>
+                  </div>
+                  {{ event.get_name() }}
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
       </div>
       <div role="tabpanel" class="tab-pane" id="phrases">
-        <ul class="phrases list-unstyled panel-body">
-          {% for phrase in workgroup.get_phrases() %}
-            <li class="phrase" phrase="{{ phrase.get_id() }}">{{ phrase.get_text() }} <i class="fa fa-close get_dialog_remove_phrase"></i> <i class="fa fa-edit get_dialog_edit_phrase"></i></li>
-          {% endfor %}
-        </ul>
+        <div class="panel-body">
+          <button class="btn btn-primary btn-xs m-b-sm get_dialog_add_phrase">Добавить фразу</button>
+          <div class="no-padding">
+            <ul class="phrases list-group">
+              {% for phrase in workgroup.get_phrases() %}
+                <li class="phrase list-group-item {% if loop.first %}fist-item{% endif %}" data-phrase_id="{{ phrase.get_id() }}">
+                <div class="pull-right">
+                  <div class="btn-group">
+                    <a class="btn btn-xs btn-white get_dialog_edit_phrase"><i class="fa fa-edit"></i></a>
+                    <a class="btn btn-xs btn-white get_dialog_remove_phrase"><i class="fa fa-trash-o"></i></a>
+                  </div>
+                </div>
+                  {{ phrase.get_text() }}
+               </li>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
       </div>
     </div>
   </div>
