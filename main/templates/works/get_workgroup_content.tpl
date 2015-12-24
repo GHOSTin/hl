@@ -1,5 +1,5 @@
 <div class="workgroup-content">
-  <a class="btn btn-sm btn-primary btn-outline m-t-xs m-b-xs get_dialog_rename_workgroup">Переименовать</a>
+  <a class="btn btn-sm btn-primary btn-outline m-t-xs m-b-xs get_dialog_rename_workgroup"><i class="fa fa-pencil-square-o"></i> Переименовать</a>
   <div class="tabs-container">
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
@@ -12,7 +12,7 @@
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane active" id="works">
         <div class="panel-body">
-          <button type="button" class="btn btn-primary btn-xs m-b-sm get_dialog_add_work">Добавить работу</button>
+          <button type="button" class="btn btn-primary btn-xs m-b-sm get_dialog_add_work"><i class="fa fa-plus"></i> Добавить работу</button>
           <div class="no-padding">
             <ul class="works list-group">
               {% for work in workgroup.get_works() %}
@@ -29,7 +29,7 @@
       </div>
       <div role="tabpanel" class="tab-pane" id="events">
         <div class="panel-body">
-          <button class="btn btn-primary btn-xs m-b-sm get_dialog_add_event">Добавить событие</button>
+          <button class="btn btn-primary btn-xs m-b-sm get_dialog_add_event"><i class="fa fa-plus"></i> Добавить событие</button>
           <div class="no-padding">
             <ul class="events list-group">
               {% for event in workgroup.get_events() %}
@@ -46,7 +46,7 @@
       </div>
       <div role="tabpanel" class="tab-pane" id="phrases">
         <div class="panel-body">
-          <button class="btn btn-primary btn-xs m-b-sm get_dialog_add_phrase">Добавить фразу</button>
+          <button class="btn btn-primary btn-xs m-b-sm get_dialog_add_phrase"><i class="fa fa-plus"></i> Добавить фразу</button>
           <div class="no-padding">
             <ul class="phrases list-group">
               {% for phrase in workgroup.get_phrases() %}
