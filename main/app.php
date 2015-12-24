@@ -139,6 +139,10 @@ $app['config_reflection'] = function($app){
   return new ReflectionClass('config\general');
 };
 
+$app['accrual_columns'] = function($app){
+  return explode(';', conf::accrual_columns);
+};
+
 $app['filesystem'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'files'));
 };

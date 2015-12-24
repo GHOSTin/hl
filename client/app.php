@@ -88,6 +88,10 @@ $app['client\models\recovery'] = function($app){
   return new models\recovery($app['twig'], $app['em'], $app['auth_log']);
 };
 
+$app['accrual_columns'] = function($app){
+  return explode(';', conf::accrual_columns);
+};
+
 $app->register(new SessionServiceProvider);
 
 $app['session.storage.options'] = [
