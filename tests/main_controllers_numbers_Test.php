@@ -28,6 +28,7 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
   public function test_accruals(){
     $this->request->query->set('id', 125);
     $this->app['user'] = 'user_object';
+    $this->app['accrual_columns'] = 'accrual_columns_ya_ya';
     $this->app['em']->expects($this->once())
                     ->method('find')
                     ->with('\domain\number', 125)
@@ -37,7 +38,8 @@ class main_controllers_numbers_Test extends PHPUnit_Framework_TestCase{
                       ->with('number\accruals.tpl',
                              [
                               'number' => 'number_object',
-                              'user' => 'user_object'
+                              'user' => 'user_object',
+                              'columns' => 'accrual_columns_ya_ya'
                              ])
                       ->will($this->returnValue('render_template'));
     $response = $this->controller->accruals($this->request, $this->app);
