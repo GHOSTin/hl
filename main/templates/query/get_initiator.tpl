@@ -68,9 +68,10 @@
       <div class="modal-header">
           {% if initiator == 'number' %}
               <h2 class="m-t-xs">{{ number.get_address() }}, {{ number.get_fio() }} (л/с №{{ number.get_number() }})</h2>
-              <h3>Задолженость: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
+              <h3>Задолженость лицевого счета: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
           {% else %}
             <h2>{{ house.get_address() }}</h2>
+            <h3>Задолженость дома: {{ house.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
           {% endif %}
       </div>
       <div class="modal-body">
@@ -139,7 +140,7 @@
               </div>
           <div class="col-sm-6">
             {% if queries is not empty %}
-              <h4>Последние заявки на этот дом</h4>
+              <h4>Последние заявки на этот дом (<a target="_blank" href="/number/houses/{{ house.get_id() }}/queries/">подробнее</a>)</h4>
               <ul class="list-unstyled old-queries">
                 {% for query in queries  %}
                   <li class="query_status_{{ query.get_status() }}">
