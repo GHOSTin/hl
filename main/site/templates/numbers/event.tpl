@@ -4,6 +4,7 @@
   <p>{{ n2e.description }}</p>
   <div class="row">
     <div class="col-md-6">
+      <a class="btn btn-xs btn-white"><i class="fa fa-paperclip"></i> Добавить</a>
       <ul class="list-unstyled project-files">
       {% for file in n2e.files %}
         <li>
