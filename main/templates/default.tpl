@@ -97,6 +97,7 @@
   <script src="/js/backbone.js"></script>
   <script src="/js/backbone.marionette.js"></script>
   <script src="/js/twig.js"></script>
+  <script src="/js/app.js"></script>
 {% if user is not empty %}
   <script src="/js/socket.io.js"></script>
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>

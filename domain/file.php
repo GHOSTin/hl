@@ -72,7 +72,7 @@ class file implements interfaces\file, JsonSerializable{
   public function JsonSerialize(){
     return [
              'date' => $this->time,
-             'url' => $this->path,
+             'path' => $this->path,
              'name' => $this->name,
            ];
   }
