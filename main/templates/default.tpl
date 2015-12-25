@@ -81,11 +81,6 @@
           </div>
         </div>
       </div>
-      <div class="footer {% if user is not empty %} fixed {% endif %}">
-        <div>
-          <small>&copy; 2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru" class="text-primary">"Основные локальные сервисы."</a></small>
-        </div>
-      </div>
     {% if user is not empty %}
     </div>
     {% endif %}
@@ -103,7 +98,6 @@
   <script src="/js/vendor/vendor.js"></script>
   <script src="/js/inspinia.js"></script>
 {% endif %}
-  <script src="/js/jBootValidator.js"></script>
   <script src="/js/formValidation.min.js"></script>
   <script src="/js/framework/bootstrap.min.js"></script>
   <script src="/js/default.js"></script>
