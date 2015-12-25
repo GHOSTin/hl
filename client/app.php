@@ -34,6 +34,7 @@ $dbParams = array(
 
 $app = new Application();
 $app['salt'] = conf::authSalt;
+$app['site_url'] = conf::site_url;
 $app['debug'] = (conf::status === 'development')? true: false;
 $app['number'] = null;
 $app['email_for_reply'] = conf::email_for_reply;

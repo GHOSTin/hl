@@ -21,7 +21,8 @@ class recovery{
                                                     $app['Swift_Message'],
                                                     $app['mailer'],
                                                     $app['email_for_reply'],
-                                                    $context
+                                                    $context,
+                                                    $app['site_url']
                                                    );
   }
 }

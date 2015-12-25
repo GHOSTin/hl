@@ -59,7 +59,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
              ->with('domain\number', 125)
              ->willReturn($this->number);
     $model = new model($this->twig, $this->em, $this->user, 125);
-    $model->generate_password('salt', 'email',  $message, $mailer);
+    $model->generate_password('salt', 'email',  $message, $mailer, 'example.com');
   }
 
   public function test_generate_password_2(){
@@ -109,7 +109,7 @@ class main_model_number5_Test extends PHPUnit_Framework_TestCase{
                ->method('render')
                ->willReturn('body_text');
     $model = new model($this->twig, $this->em, $this->user, 125);
-    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $model->generate_password('salt', 'mail@example.com', $message, $mailer));
+    $this->assertInstanceOf('Symfony\Component\HttpFoundation\Response', $model->generate_password('salt', 'mail@example.com', $message, $mailer, 'example.com'));
   }
 
   public function test_get_dialog_contacts_1(){

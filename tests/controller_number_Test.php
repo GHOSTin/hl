@@ -34,9 +34,10 @@ class controller_number_Test extends PHPUnit_Framework_TestCase{
     $this->app['Swift_Message'] = $message;
     $this->app['mailer'] = $mailer;
     $this->app['email_for_reply'] = 'email';
+    $this->app['site_url'] = 'example.com';
     $this->model->expects($this->once())
                 ->method('generate_password')
-                ->with('salt', 'email', $message, $mailer)
+                ->with('salt', 'email', $message, $mailer, 'example.com')
                 ->willReturn('render_template');
     $response = $this->controller->generate_password($this->app, 125);
     $this->assertEquals('render_template', $response);

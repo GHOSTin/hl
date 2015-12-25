@@ -34,4 +34,5 @@ class default_config{
 
   const debt_limit = 10000;
   const accrual_columns = 'Услуга;Единица;Тариф;ИНД;ОДН;Сумма ИНД;Сумма ОДН;Начисленно;Перерасчет;Льготы;Итого';
+  const site_url = 'http://mlsco.ru';
 }

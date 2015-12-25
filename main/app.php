@@ -38,6 +38,7 @@ $dbParams = array(
 
 $app = new Application();
 $app['debug'] = (conf::status === 'development')? true: false;
+$app['site_url'] = conf::site_url;
 $app['user'] = null;
 $app['salt'] = conf::authSalt;
 $app['chat_host'] = conf::chat_host;

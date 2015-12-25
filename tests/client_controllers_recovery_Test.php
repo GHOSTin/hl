@@ -45,13 +45,15 @@ class client_controllers_recovery_Test extends PHPUnit_Framework_TestCase{
                     'ip' => '127.0.0.1',
                     'xff' => '8.8.8.8',
                     'agent' => 'firefox'
-                  ]
+                  ],
+                  'example.com'
                 )
           ->willReturn('render_template');
     $this->app['client\models\recovery'] = $model;
     $this->app['salt'] = 'salt';
     $this->app['Swift_Message'] = 'Swift_Message';
     $this->app['mailer'] = 'mailer';
+    $this->app['site_url'] = 'example.com';
     $this->app['email_for_reply'] = 'email_for_reply';
     $response = $this->controller->recovery_password($this->request, $this->app);
     $this->assertEquals('render_template', $response);

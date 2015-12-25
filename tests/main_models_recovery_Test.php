@@ -57,7 +57,8 @@ class client_model_recovery_Test extends PHPUnit_Framework_TestCase{
                                                                   'message',
                                                                   'mailer',
                                                                   'no_reply',
-                                                                  [1,2,3]
+                                                                  [1,2,3],
+                                                                  'site_url'
                                                                 ));
   }
 
@@ -91,7 +92,8 @@ class client_model_recovery_Test extends PHPUnit_Framework_TestCase{
                                                                   'message',
                                                                   'mailer',
                                                                   'no_reply',
-                                                                  [1,2,3]
+                                                                  [1,2,3],
+                                                                  'site_url'
                                                                 ));
   }
 
@@ -156,7 +158,8 @@ class client_model_recovery_Test extends PHPUnit_Framework_TestCase{
                                                                   $message,
                                                                   $mailer,
                                                                   'no_reply',
-                                                                  [1,2,3]
+                                                                  [1,2,3],
+                                                                  'site_url'
                                                                 ));
   }
 }

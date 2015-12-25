@@ -60,7 +60,7 @@ class number5{
     return new Response();
   }
 
-  public function generate_password($salt, $email, Swift_Message $message, Swift_Mailer $mailer){
+  public function generate_password($salt, $email, Swift_Message $message, Swift_Mailer $mailer, $site_url){
     if(!$this->user->check_access('numbers/generate_password'))
       throw new RuntimeException();
     $password = substr(sha1(time()), 0, 6);
@@ -70,7 +70,8 @@ class number5{
     $body = $this->twig->render('number\generate_password.tpl',
                                 [
                                  'number' => $this->number,
-                                 'password' => $password
+                                 'password' => $password,
+                                 'site_url' => $site_url
                                 ]);
     $message->setSubject('Пароль в личный кабинет')
             ->setFrom([$email])

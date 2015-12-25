@@ -7,7 +7,7 @@ class number{
 
   public function generate_password(Application $app, $id){
     return $app['main\models\factory']->get_number_model($id)
-                                      ->generate_password($app['salt'], $app['email_for_reply'], $app['Swift_Message'], $app['mailer']);
+                                      ->generate_password($app['salt'], $app['email_for_reply'], $app['Swift_Message'], $app['mailer'], $app['site_url']);
   }
 
   public function edit_event(Application $app, Request $request, $event_id){
