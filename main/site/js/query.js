@@ -126,12 +126,15 @@ $(document).ready(function($){
     blank();
     $.getJSON('/queries/selections/noclose/',{
       time: $(this).attr('time')
-      },function(r){
-        $('.queries').html(r.data);
-        var compiled = _.template($('#noclose_stats').html());
-        $('.day_stats').html(compiled(r.stats.stat));
+      },function(res){
+        $('.queries').html(res.data);
+		var compiled = Twig.twig({
+			href: '/templates/query/noclose_stats.tpl',
+			async: false
+		});
+		$('.day_stats').html(compiled.render({stat: res.stats.stat}));
         var ctx = $("#chart").get(0).getContext("2d");
-        var myNewChart = new Chart(ctx).Pie(r.stats.chart.data, r.stats.chart.options);
+        var myNewChart = new Chart(ctx).Pie(res.stats.chart.data, res.stats.chart.options);
       });
   });
 	$(document).on('click', '.get_search_result', function(){
@@ -414,15 +417,18 @@ function get_query_id(obj){
 
 function get_day_stats(){
   $.getJSON('/queries/day/stats/',
-    function(r){
-      var compiled = _.template($('#stats_template').html());
-      $('.day_stats').html(compiled(r.stat));
+    function(res){
+      var compiled = Twig.twig({
+		  href: '/templates/query/stats.tpl',
+		  async: false
+	  });
+      $('.day_stats').html(compiled.render({stat: res.stat}));
       var ctx = $("#chart").get(0).getContext("2d");
       var options = {
         segmentShowStroke : false,
         animation: false
       };
-      var myNewChart = new Chart(ctx).Pie(r.chart, options);
+      var myNewChart = new Chart(ctx).Pie(res.chart, options);
     });
 }
 
@@ -434,6 +440,9 @@ function get_all_noclose_queries(){
 }
 
 function blank(){
-  var compiled = _.template($('#blank').html());
-  $('.queries').html(compiled());
+  var compiled = Twig.twig({
+	  href: '/templates/spinner.tpl',
+	  async: false
+  });
+  $('.queries').html(compiled.render());
 }
