@@ -43,7 +43,7 @@ class query_Test extends PHPUnit_Framework_TestCase{
   public function test_add_file_2(){
     $file = new file($this->user, $this->path, $this->time, $this->name);
     $this->query->add_file($file);
-    $this->assertInstanceOf('domain\query2file', $this->query->get_files()[0]);
+    $this->assertSame($file, $this->query->get_files()[0]);
   }
 
   public function test_add_manager(){
