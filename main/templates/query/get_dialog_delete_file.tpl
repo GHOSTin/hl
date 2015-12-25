@@ -1,13 +1,11 @@
 {% extends "ajax.tpl" %}
 
-{% set query = file.get_query() %}
-
 {% block js %}
 	show_dialog(get_hidden_content());
 	$('.delete_file').click(function(){
-		$.get('/queries/{{ query.get_id() }}/files/{{ file.get_path() }}/delete/',
+		$.get('/queries/{{ query_id }}/files/{{ file.get_path() }}/delete/',
       function(r){
-        $('.query[query_id = {{ query.get_id() }}] .files').html(r);
+        $('.query[query_id = {{ query_id }}] .files').html(r);
 				$('.dialog').modal('hide');
 			});
 	});
