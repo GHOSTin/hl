@@ -103,7 +103,6 @@
   <script src="/js/vendor/vendor.js"></script>
   <script src="/js/inspinia.js"></script>
 {% endif %}
-  <script src="/js/jBootValidator.js"></script>
   <script src="/js/formValidation.min.js"></script>
   <script src="/js/framework/bootstrap.min.js"></script>
   <script src="/js/default.js"></script>
