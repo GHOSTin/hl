@@ -106,7 +106,6 @@
 {% endif %}
   <script src="/js/jBootValidator.js"></script>
   <script src="/js/formValidation.min.js"></script>
-  <script src="/js/framework/bootstrap.min.js"></script>
   <script src="/js/default.js"></script>
   {% block javascript %}{% endblock %}
   <script src="/js/notification-center.js"></script>

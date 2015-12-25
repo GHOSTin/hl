@@ -46,4 +46,6 @@
 <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
 <link href="/css/plugins/dropzone/basic.css" rel="stylesheet">
 <link href="/css/plugins/dropzone/dropzone.css" rel="stylesheet">
+<!-- Sweet Alert -->
+<link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 {% endblock css %}

@@ -14,6 +14,10 @@ a {
     float: none;
 }
 
+.ibox-tools a.text-primary {
+    color: inherit;
+}
+
 .credit {
     padding-top: 1em;
     font-size: .95em;
@@ -60,12 +64,6 @@ a {
 .modal-content .form-inline select,
 .modal-content .form-inline input {
     margin: 0 5px;
-}
-
-
-.cm{
-	color:#0088CC;
-    cursor: pointer;
 }
 
 #nt-center a,

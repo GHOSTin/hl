@@ -223,6 +223,38 @@ $(document).ready(function(){
                 var AddedFiles = new AddedFilesView({"model": res.event});
                 MyApp.modal.show(AddedFiles);
             });
+    })
+    .on('click', '.delete-file', function(){
+        var file = $(this).closest('li').attr('data-file');
+        var event_id = $(this).closest('.event').attr('event_id');
+        swal({
+            title: "Вы уверены?",
+            text: "Вы не сможете восстановить удаленный файл!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Удалить",
+            cancelButtonText: "Отмена",
+            closeOnConfirm: false
+        }, function () {
+            $.get('/numbers/events/' + event_id + '/')
+                .done(function(res){
+                    var model = res.event;
+                    model.files = _.without(model.files, _.findWhere(model.files, {path: file}));
+                    $.ajax({
+                        url: '/numbers/events/' + model.id + '/',
+                        method: 'PUT',
+                        data: model
+                    }).done(function(res){
+                        var template = Twig.twig({
+                            href: '/templates/numbers/event.tpl',
+                            async: false
+                        });
+                        $('.event[event_id = ' + model.id + ']').replaceWith(template.render({"n2e": model}));
+                        swal("Удалено!", "", "success");
+                    });
+                });
+        });
     });
 
 });
