@@ -2,12 +2,10 @@
 
 {% block component %}
   <div>
-    <p>
     <div class="btn-group" data-toggle="buttons">
       <label class="btn btn-default" id="get_active_tasks"><input type="radio" name="options" id="option1">Текущие задачи</label>
       <label class="btn btn-default" id="get_finished_tasks"><input type="radio" name="options" id="option2">Законченные задачи</label>
     </div>
-    </p>
   </div>
   <div class="row">
     <div id="task_container" class="col-xs-12 col-sm-5 col-lg-4"></div>
