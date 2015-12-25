@@ -7,7 +7,7 @@
       <div class="ibox-title">
         <h5>Группы работ</h5>
         <div class="ibox-tools">
-          <a class="btn btn-xs btn-default btn-outline get_dialog_create_workgroup"><i class="fa fa-plus"></i> Создать</a>
+          <a class="btn btn-xs btn-primary get_dialog_create_workgroup"><i class="fa fa-plus"></i></a>
         </div>
       </div>
       <div class="ibox-content">
@@ -22,7 +22,7 @@
       <div class="ibox-title">
         <h5>Работы</h5>
         <div class="ibox-tools">
-          <a class="btn btn-xs btn-default btn-outline get_dialog_create_work"><i class="fa fa-plus"></i> Создать</a>
+          <a class="btn btn-xs btn-primary get_dialog_create_work"><i class="fa fa-plus"></i></a>
         </div>
       </div>
       <div class="ibox-content">
@@ -39,7 +39,7 @@
       <div class="ibox-title">
         <h5>События</h5>
         <div class="ibox-tools">
-          <a class="btn btn-xs btn-default btn-outline get_dialog_create_event"><i class="fa fa-plus"></i> Создать</a>
+          <a class="btn btn-xs btn-primary get_dialog_create_event"><i class="fa fa-plus"></i></a>
         </div>
       </div>
       <div class="ibox-content">
