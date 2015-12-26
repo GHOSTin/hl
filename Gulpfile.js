@@ -47,19 +47,24 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
     var vendors = mainBowerFiles({
         paths: 'main/',
         overrides: {
-            tinycon: {
+            "tinycon": {
                 main: [
                     './tinycon.js'
                 ]
             },
-            slimScroll: {
+            "slimScroll": {
                 main: [
                     './jquery.slimscroll.js'
                 ]
             },
-            moment: {
+            "moment": {
                 main: [
                     './min/moment-with-locales.js'
+                ]
+            },
+            "jquery.inputmask": {
+                main: [
+                    './dist/jquery.inputmask.bundle.js'
                 ]
             }
         }

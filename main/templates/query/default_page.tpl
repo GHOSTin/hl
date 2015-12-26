@@ -68,8 +68,6 @@
   <script src="/js/jquery.iframe-transport.js"></script>
   <script src="/js/jquery.fileupload.js"></script>
   <script src="/js/chart.min.js"></script>
-  <script src="/js/inputmask.js" type="text/javascript"></script>
-  <script src="/js/jquery.inputmask.js" type="text/javascript"></script>
 {% endblock javascript %}
 
 {% block css %}
