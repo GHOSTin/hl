@@ -74,4 +74,6 @@
   <link rel="stylesheet" href="/css/query.css" >
   <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
   <link rel="stylesheet" href="/css/plugins/iCheck/custom.css" >
+  <!-- Sweet Alert -->
+  <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 {% endblock css %}

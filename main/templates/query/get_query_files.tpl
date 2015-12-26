@@ -20,7 +20,7 @@ $('#fileupload{{ query.get_id() }}').fileupload({
   </li>
 {% endif %}
   <li>
-    <ul class="files">{% include 'query/query_files.tpl'%}</ul>
+    <ul class="files list-unstyled project-files">{% include 'query/query_files.tpl'%}</ul>
   </li>
 </ul>
 {% endblock %}
