@@ -111,7 +111,7 @@ $(document).ready(function() {
       format: "DD.MM.YYYY",
       locale: 'ru',
       defaultDate: moment(),
-      minDate: moment(),
+      minDate: moment().subtract(1, 'seconds'),
       ignoreReadonly: true
     });
   });
