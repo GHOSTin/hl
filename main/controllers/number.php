@@ -13,7 +13,7 @@ class number{
   public function edit_event(Application $app, Request $request, $event_id){
     list($number_id, $event_id, $time) = explode('-', $event_id);
     $n2e = $app['main\models\factory']->get_number_model($number_id)
-                                      ->edit_event($event_id, $time, $request->get('description'));
+                                      ->edit_event($event_id, $time, $request->get('description'),  $request->get('files'));
     return $app->json(['n2e' => $n2e]);
   }
 

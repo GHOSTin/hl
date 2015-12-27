@@ -264,38 +264,6 @@ class number5_Test extends PHPUnit_Framework_TestCase{
 
   }
 
-  public function test_edit_event(){
-    $n2e = $this->getMockBuilder('domain\number2event')
-                ->disableOriginalConstructor()
-                ->getMock();
-    $n2e->expects($this->once())
-        ->method('set_description')
-        ->with('Описание');
-    $this->user->expects($this->once())
-               ->method('check_access')
-               ->with('numbers/general_access')
-               ->willReturn(true);
-    $this->em->expects($this->once())
-             ->method('find')
-             ->with('domain\number', 125)
-             ->willReturn($this->number);
-    $repository = $this->getMockBuilder('Doctrine\ORM\EntityRepository')
-                      ->disableOriginalConstructor()
-                      ->setMethods(['findByIndex'])
-                      ->getMock();
-    $repository->expects($this->once())
-               ->method('findByIndex')
-               ->willReturn([$n2e]);
-    $this->em->expects($this->once())
-             ->method('flush');
-    $this->em->expects($this->once())
-             ->method('getRepository')
-             ->with('domain\number2event')
-             ->willReturn($repository);
-    $model = new model($this->twig, $this->em, $this->user, 125);
-    $this->assertEquals($n2e, $model->edit_event(250, 1396332000, 'Описание'));
-  }
-
   public function test_get_dialog_generate_password_1(){
     $this->setExpectedException('RuntimeException');
     $this->user->expects($this->exactly(2))
