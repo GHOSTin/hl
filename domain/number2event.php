@@ -104,4 +104,10 @@ class number2event implements JsonSerializable{
     $this->description = $description;
   }
 
+  public function update($description, array $files){
+    $this->description = $description;
+    $this->files->clear();
+    foreach($files as $file)
+      $this->add_file($file);
+  }
 }

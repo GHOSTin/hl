@@ -43,10 +43,12 @@ class number5{
     return $this->twig->render('number\get_dialog_edit_event.tpl', ['n2e' => $n2e]);
   }
 
-  public function edit_event($event_id, $time, $description){
+  public function edit_event($event_id, $time, $description, $files = []){
     $n2e = $this->em->getRepository('domain\number2event')
                     ->findByIndex($time, $this->number->get_id(), $event_id)[0];
-    $n2e->set_description($description);
+    $files = $this->em->getRepository('domain\file')
+                      ->findByPath(array_column($files, 'path'));
+    $n2e->update($description, $files);
     $this->em->flush();
     return $n2e;
   }
