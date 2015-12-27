@@ -201,7 +201,7 @@ $(document).ready(function(){
       });
 
     }).on('click', '.get_dialog_edit_event', function(){
-      var id = $(this).attr('event_id');
+      var id = $(this).closest('.event').attr('event_id');
       $.get('/numbers/events/' + id + '/dialog_edit/',
       function(r){
           init_content(r);

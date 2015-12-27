@@ -2,7 +2,7 @@
   <div class="ibox-title">
     <h5>{{ n2e.event.name }}</h5>
     <div class="ibox-tools">
-      <a class="text-primary get_dialog_edit_event" event_id="{{ n2e.id }}"><i class="fa fa-pencil"></i></a>
+      <a class="text-primary get_dialog_edit_event"><i class="fa fa-pencil"></i></a>
       <a class="text-primary get_dialog_exclude_event" event_id="{{ n2e.id }}"><i class="fa fa-trash-o"></i></a>
     </div>
   </div>
