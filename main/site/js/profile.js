@@ -115,11 +115,14 @@ MyApp.ProfileApp = function(){
         render: function() {
             $(this.el).html(this.template.render({"user": this.model.toJSON()}));
         },
+        onShow: function() {
+            $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
+        },
         close_dialog: function(){
             MyApp.modal.hideModal();
         },
         update_cellphone: function(){
-            var cellphone = $('.dialog-cellphone').val();
+            var cellphone = $('.dialog-cellphone').inputmask('unmaskedvalue');
             this.model.save({
                 cellphone: cellphone.toString()},
                 {
@@ -150,11 +153,14 @@ MyApp.ProfileApp = function(){
         render: function() {
             $(this.el).html(this.template.render({"user": this.model.toJSON()}));
         },
+        onShow: function() {
+            $('.dialog-telephone').inputmask("mask", {"mask": "9{1,3}-99-99"});
+        },
         close_dialog: function(){
             MyApp.modal.hideModal();
         },
         update_telephone: function(){
-            var telephone = $('.dialog-telephone').val();
+            var telephone = $('.dialog-telephone').inputmask('unmaskedvalue');
             this.model.save({
                 telephone: telephone.toString()},
                 {

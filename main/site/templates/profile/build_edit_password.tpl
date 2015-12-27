@@ -14,5 +14,5 @@
 	</div>
 {% endblock dialog %}
 {% block buttons %}
-	<div class="btn btn-default update_password">Сохранить</div>
+	<div class="btn btn-primary update_password">Сохранить</div>
 {% endblock buttons %}

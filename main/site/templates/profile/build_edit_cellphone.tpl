@@ -4,5 +4,5 @@
 		<input type="text" value="{{ user.cellphone }}" class="dialog-cellphone form-control">
 {% endblock dialog %}
 {% block buttons %}
-		<div class="btn btn-default update_cellphone">Сохранить</div>
+		<div class="btn btn-primary update_cellphone">Сохранить</div>
 {% endblock buttons %}

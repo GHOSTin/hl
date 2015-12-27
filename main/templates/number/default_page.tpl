@@ -21,10 +21,6 @@
 
 {% block javascript %}
 <script src="/js/typeahead.min.js"></script>
-<script src="/js/inputmask.js" type="text/javascript"></script>
-<script src="/js/jquery.inputmask.js" type="text/javascript"></script>
-<!-- DROPZONE -->
-{#<script src="/js/plugins/dropzone/dropzone.js"></script>#}
   <div id="preview-template" hidden="hidden">
     <div class="dz-preview dz-file-preview">
       <div class="dz-details">
