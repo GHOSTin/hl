@@ -44,4 +44,5 @@
 <link href="/css/plugins/dropzone/dropzone.css" rel="stylesheet">
 <!-- Sweet Alert -->
 <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/plugins/iCheck/custom.css" >
 {% endblock css %}

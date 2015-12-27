@@ -21,6 +21,39 @@
         <option value="0">Ожидание...</option>
       </select>
     </div>
+    <div class="row dialog-addinfo hidden">
+      <div class="col-xs-12">
+        <div class="ibox collapsed">
+          <div class="ibox-title">
+            <h5>Данные контактного лица по заявке</h5>
+            <div class="ibox-tools">
+              <a class="collapse-link">
+                <i class="fa fa-chevron-up"></i>
+              </a>
+            </div>
+          </div>
+          <div class="ibox-content">
+            <div class="form-group">
+              <label class=" control-label">ФИО:</label>
+              <input type="text" class="form-control dialog-fio" value="">
+            </div>
+            <div class="form-group">
+              <label class="control-label">Телефон:</label>
+              <input type="text" class="form-control dialog-telephone" value="">
+            </div>
+            <div class="form-group">
+              <label class="control-label">Сот. телефон:</label>
+              <input type="text" class="form-control dialog-cellphone" value="">
+            </div>
+            <div class="i-checks m-b-sm">
+              <label>
+                <input type="checkbox" class="dialog-checkbox-contacts" value=""> <i></i> Использовать контакты как основные
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="form-group">
       <select class="form-control dialog-select-category">
         <option value="0">Выберите категорию</option>
@@ -52,6 +85,12 @@
 
 {% block script %}
 $(document).ready(function() {
+  $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
+  $('.dialog-telephone').inputmask("mask", {"mask": "99-99-99"});
+  $('.i-checks').iCheck({
+    checkboxClass: 'icheckbox_square-green',
+    radioClass: 'iradio_square-green',
+  });
   $('.dialog-streets').change(function(){
       var id = $('.dialog-streets :selected').val();
       if(id > 0){
@@ -69,6 +108,9 @@ $(document).ready(function() {
         $('.dialog-numbers').html(r).prop('disabled', false);
       });
     }
+  });
+  $('.dialog-numbers').change(function(){
+    $('.dialog-addinfo').removeClass('hidden');
   });
   var $dropZone = $("#my-awesome-dropzone").dropzone({
       url: '/files/',
@@ -96,6 +138,10 @@ $(document).ready(function() {
           event: $('.dialog-select-event').val(),
           date: $('.dialog-date').val(),
           comment: $('.dialog-com').val(),
+          fio: $('.dialog-fio').val(),
+          telephone: $('.dialog-telephone').val(),
+          cellphone: $('.dialog-cellphone').val(),
+          checkbox: $('.dialog-checkbox-contacts').prop("checked"),
           files: null
           },function(res){
             $('.dialog').modal('hide');
@@ -111,6 +157,10 @@ $(document).ready(function() {
         event: $('.dialog-select-event').val(),
         date: $('.dialog-date').val(),
         comment: $('.dialog-com').val(),
+        fio: $('.dialog-fio').val(),
+        telephone: $('.dialog-telephone').val(),
+        cellphone: $('.dialog-cellphone').val(),
+        checkbox: $('.dialog-checkbox-contacts').prop("checked"),
         files: res
         },function(res){
           $('.dialog').modal('hide');
