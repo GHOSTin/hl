@@ -4,22 +4,24 @@
 $('.report-content').html(get_hidden_content());
 
 // датапикер
-$('.event_time_begin').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-  $('.event_time_begin').datepicker('hide');
-  $.get('event/set_time_begin',{
-    time: $('.event_time_begin').val()
-  },function(r){
-    init_content(r);
-  });
+$('.event_time_begin').datetimepicker({
+  format: 'DD.MM.YYYY',
+  locale: 'ru',
+  defaultDate: moment.unix({{ filters.time_begin }})
+}).on('dp.change', function(e){
+    $.get('event/set_time_begin',{
+      time: e.date.format('DD.MM.YYYY')
+    });
 });
 
-$('.event_time_end').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-  $('.event_time_end').datepicker('hide');
-  $.get('event/set_time_end',{
-    time: $('.event_time_end').val()
-  }, function(r){
-    init_content(r);
-  });
+$('.event_time_end').datetimepicker({
+  format: 'DD.MM.YYYY',
+  locale: 'ru',
+  defaultDate: moment.unix({{ filters.time_end }})
+}).on('dp.change', function(e){
+    $.get('event/set_time_end',{
+      time: e.date.format('DD.MM.YYYY')
+    }) ;
 });
 
 // сбрасывает фильтры
@@ -44,13 +46,13 @@ $('.clear_filter_event').click(function(){
         <div class="row form-group">
           <label class="control-label col-xs-1">с</label>
           <div class="col-xs-10">
-            <input type="text" class="form-control event_time_begin" value="{{ filters.time_begin|date('d.m.Y') }}">
+            <input type="text" class="form-control event_time_begin">
           </div>
         </div>
         <div class="row form-group">
           <label class="control-label col-xs-1">по</label>
           <div class="col-xs-10">
-            <input type="text" class="form-control event_time_end" value="{{ filters.time_end|date('d.m.Y') }}">
+            <input type="text" class="form-control event_time_end">
           </div>
         </div>
       </li>
