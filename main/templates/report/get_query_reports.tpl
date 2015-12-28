@@ -6,22 +6,24 @@
     $('.report-content').html(get_hidden_content());
 
     // датапикер
-    $('.query_time_begin').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-        $('.query_time_begin').datepicker('hide');
+    $('.query_time_begin').datetimepicker({
+      format: 'DD.MM.YYYY',
+      locale: 'ru',
+      defaultDate: moment.unix({{ filters.time_open_begin }})
+    }).on('dp.change', function(e){
         $.get('/reports/queries/set_time_begin/',{
-            time: $('.query_time_begin').val()
-            },function(r){
-                init_content(r);
+            time: e.date.format('DD.MM.YYYY')
             });
     });
 
-    $('.query_time_end').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-        $('.query_time_end').datepicker('hide');
+    $('.query_time_end').datetimepicker({
+      format: 'DD.MM.YYYY',
+      locale: 'ru',
+      defaultDate: moment.unix({{ filters.time_open_end }})
+    }).on('dp.change', function(e){
         $.get('/reports/queries/set_time_end/',{
-            time: $('.query_time_end').val()
-            }, function(r){
-                init_content(r);
-            });
+          time: e.date.format('DD.MM.YYYY')
+        }) ;
     });
 
     // изменяет фильтр статуса
@@ -99,11 +101,11 @@
         <label>по дате</label>
         <div class="row form-group">
           <label class="control-label col-xs-1">с</label><div class="col-xs-10">
-          <input type="text" class="form-control query_time_begin" value="{{ filters.time_open_begin|date('d.m.Y') }}"></div>
+          <input type="text" class="form-control query_time_begin"></div>
         </div>
         <div class="row form-group">
           <label class="control-label col-xs-1">по</label><div class="col-xs-10">
-          <input type="text" class="form-control query_time_end" value="{{ filters.time_open_end|date('d.m.Y') }}"></div>
+          <input type="text" class="form-control query_time_end"></div>
         </div>
       </li>
       <li class="form-group">
