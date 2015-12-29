@@ -31,50 +31,92 @@
         });
     }
   });
-	$('.create_query').click(function(){
-		$.get('create_query',{
-			initiator: '{{ initiator }}',
-			{% if initiator == 'number' %}
-				id: {{ number.get_id() }},
-			{% else %}
-				id: {{ house.get_id() }},
-			{% endif %}
-			fio: $('.dialog-fio').val(),
-			work_type: $('.dialog-worktype').val(),
-      query_type: $('.dialog-query_type').val(),
-			telephone: $('.dialog-telephone').val(),
-			cellphone: $('.dialog-cellphone').val(),
-			description: $('.dialog-description').val(),
-      checkbox: $('.dialog-checkbox-contacts').prop("checked")
-			},function(r){
-				$('.queries').html(r);
-				$('.dialog').modal('hide');
-			});
+  $('#createQuery')
+    .formValidation({
+      framework: 'bootstrap',
+      excluded: ':disabled',
+      icon: {
+        valid: null,
+        invalid: null,
+        validating: null
+      },
+      fields: {
+        worktype: {
+          validators: {
+            notEmpty: {
+              message: 'Выберите тип работ'
+            }
+          }
+        },
+        description: {
+          validators: {
+            notEmpty: {
+              message: 'Введите описание заявки'
+            }
+          }
+        }
+      }
+    })
+    .on('err.form.fv', function(e) {
+      $('.create_query').addClass('disabled').prop('disabled', true);
+    })
+    .on('success.field.fv', function(e, data) {
+      if (data.fv.getInvalidFields().length > 0) {    // There is invalid field
+        $('.create_query').addClass('disabled').prop('disabled', true);
+      } else {
+        $('.create_query').removeClass('disabled').prop('disabled', false);
+      }
+    })
+    .on('success.form.fv', function(e) {
+      // Prevent form submission
+      e.preventDefault();
 
-    {% if initiator == 'number' and user.check_access("queries/save_contacts")%}
-      $.get('update_contacts',{
+      var $form      = $(e.target),
+          fv         = $(e.target).data('formValidation');
+
+      $.get('create_query',{
+        initiator: '{{ initiator }}',
+        {% if initiator == 'number' %}
           id: {{ number.get_id() }},
-          telephone: $('.dialog-telephone').val(),
-          cellphone: $('.dialog-cellphone').val(),
-          checked: $('.dialog-checkbox-contacts').prop("checked")
-          });
-    {% endif %}
-	});
+        {% else %}
+          id: {{ house.get_id() }},
+        {% endif %}
+        fio: $form.find('.dialog-fio').val(),
+        work_type: $form.find('.dialog-worktype').val(),
+        query_type: $form.find('.dialog-query_type').val(),
+        telephone: $form.find('.dialog-telephone').val(),
+        cellphone: $form.find('.dialog-cellphone').val(),
+        description: $form.find('.dialog-description').val(),
+        checkbox: $form.find('.dialog-checkbox-contacts').prop("checked")
+      },function(r){
+        $('.queries').html(r);
+        $('.dialog').modal('hide');
+      });
+      {% if initiator == 'number' and user.check_access("queries/save_contacts")%}
+      $.get('update_contacts',{
+        id: {{ number.get_id() }},
+        telephone: $('.dialog-telephone').val(),
+        cellphone: $('.dialog-cellphone').val(),
+        checked: $('.dialog-checkbox-contacts').prop("checked")
+      });
+      {% endif %}
+    });
 {% endblock %}
 
 {% block html %}
 <div class="modal-dialog modal-lg">
   <div class="modal-content animated fadeIn">
-      <div class="modal-header">
-          {% if initiator == 'number' %}
-              <h2 class="m-t-xs">{{ number.get_address() }}, {{ number.get_fio() }} (л/с №{{ number.get_number() }})</h2>
-              <h3>Задолженость лицевого счета: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
-          {% else %}
-            <h2>{{ house.get_address() }}</h2>
-            <h3>Задолженость дома: {{ house.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
-          {% endif %}
-      </div>
-      <div class="modal-body">
+    <div class="modal-header">
+      {% if initiator == 'number' %}
+          <h2 class="m-t-xs">{{ number.get_address() }}, {{ number.get_fio() }} (л/с №{{ number.get_number() }})</h2>
+          <h3>Задолженость лицевого счета: {{ number.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
+      {% else %}
+        <h2>{{ house.get_address() }}</h2>
+        <h3>Задолженость дома: {{ house.get_debt()|number_format(2, '.', ' ') }} руб.</h3>
+      {% endif %}
+    </div>
+    <div class="modal-body">
+      <form id="createQuery">
         <div class="row">
           <div class="col-sm-6">
             {% if initiator == 'number' %}
@@ -127,7 +169,7 @@
                 </div>
                 <div class="form-group">
                   <label>Тип работ</label>
-                  <select class="form-control dialog-worktype">
+                  <select class="form-control dialog-worktype" name="worktype">
                     <option value=""></option>
                     {% for workgroup in query_work_types %}
                       {% if loop.first %}
@@ -195,11 +237,12 @@
         </div>
       <div class="form-group dialog-trouble">
         <label>Описание</label>
-        <textarea class="form-control dialog-description" rows="5"></textarea>
+        <textarea class="form-control dialog-description" rows="5" name="description"></textarea>
       </div>
+    </form>
     </div>
     <div class="modal-footer">
-      <div class="btn btn-primary create_query">Создать</div>
+      <button type="submit" form="createQuery" name="submitButton" class="btn btn-primary create_query">Создать</button>
       <div class="btn btn-default close_dialog" data-dismiss="modal">Отмена</div>
     </div>
   </div>
