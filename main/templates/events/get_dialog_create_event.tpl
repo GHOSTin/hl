@@ -82,7 +82,7 @@
 {% block script %}
 $(document).ready(function() {
   var createEvent = function(res) {
-    res = _.isEmpty(res) ? res : null;
+    res = _.isEmpty(res) ? null: res;
     $.post('/numbers/events/',{
       number: $('.dialog-numbers :selected').val(),
       event: $('.dialog-select-event').val(),
