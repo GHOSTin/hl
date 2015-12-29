@@ -81,11 +81,6 @@
           </div>
         </div>
       </div>
-      <div class="footer {% if user is not empty %} fixed {% endif %}">
-        <div>
-          <small>&copy; 2012 - {{ "now"|date('Y') }} Разработано <a href="//mlsco.ru" class="text-primary">"Основные локальные сервисы."</a></small>
-        </div>
-      </div>
     {% if user is not empty %}
     </div>
     {% endif %}
@@ -97,15 +92,14 @@
   <script src="/js/backbone.js"></script>
   <script src="/js/backbone.marionette.js"></script>
   <script src="/js/twig.js"></script>
+  <script src="/js/app.js"></script>
 {% if user is not empty %}
   <script src="/js/socket.io.js"></script>
   <script src="/js/jquery.mCustomScrollbar.concat.min.js"></script>
   <script src="/js/vendor/vendor.js"></script>
   <script src="/js/inspinia.js"></script>
 {% endif %}
-  <script src="/js/jBootValidator.js"></script>
   <script src="/js/formValidation.min.js"></script>
-  <script src="/js/framework/bootstrap.min.js"></script>
   <script src="/js/default.js"></script>
   {% block javascript %}{% endblock %}
   <script src="/js/notification-center.js"></script>

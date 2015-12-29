@@ -372,6 +372,7 @@ $app->get('/number/contact_info', 'main\controllers\numbers::contact_info')->bef
 $app->get('/number/get_events', 'main\controllers\numbers::get_events')->before($security);
 
 # numbers
+$app->get('/number/{id}/', 'main\controllers\number::get_number_json')->before($security);
 $app->get('/numbers/{id}/get_dialog_generate_password/', 'main\controllers\number::get_dialog_generate_password')->before($security);
 $app->get('/numbers/{id}/generate_password/', 'main\controllers\number::generate_password')->before($security);
 $app->get('/numbers/{id}/contacts/', 'main\controllers\number::get_dialog_contacts')->before($security);

@@ -20,9 +20,8 @@
 
 {% block javascript %}
 <script src="/js/report.js"></script>
-<script src="/js/bootstrap-datepicker.js"></script>
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="/css/datepicker.css" >
+<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
 {% endblock %}

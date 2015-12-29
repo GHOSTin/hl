@@ -3,22 +3,21 @@
 {% block title %}Новая задача{% endblock title %}
 
 {% block dialog %}
-<form role="form">
+<form id="createTask">
   <div class="form-group">
     <label for="task-title">Тема</label>
     <input type="text" name="title" id="task-title" tabindex="1" autofocus
-              class="form-control" placeholder="Что нужно сделать" required>
+              class="form-control" placeholder="Что нужно сделать">
   </div>
   <div class="form-group">
     <label for="task-description">Задача</label>
-    <textarea type="text" name="description" id="task-description" tabindex="2"
-              class="form-control" placeholder="Что нужно сделать" rows="5" required>
-    </textarea>
+    <textarea name="description" id="task-description" tabindex="2"
+              class="form-control" placeholder="Что нужно сделать" rows="5"></textarea>
   </div>
   <div class="form-group">
     <label for="task-performers">Исполнители</label>
     <select data-placeholder="Выберите исполнителей" class="form-control chosen-select" aria-required="true"
-            multiple tabindex="3" id="task-performers" name="performers" required>
+            multiple tabindex="3" id="task-performers" name="performers">
       {% for user in users %}
         <option value="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }}</option>
       {% endfor %}
@@ -26,40 +25,94 @@
   </div>
   <div class="form-group">
     <label for="task-time_close">Крайний срок</label>
-    <div class="input-group date">
-      <input type="text" class="form-control" id="task-time_target" readonly="true" tabindex="4" required>
-      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+    <div class="input-group date" id="task-date">
+      <input type="text" name="time_target" class="form-control" id="task-time_target" readonly="readonly" tabindex="4">
+      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
     </div>
   </div>
 </form>
 {% endblock dialog %}
 
 {% block buttons %}
-  <div class="btn btn-default add_task">Поставить задачу</div>
+  <button form="createTask" type="submit" class="btn btn-primary create_task">Поставить задачу</button>
 {% endblock buttons %}
 
 {% block script %}
-  $(".chosen-select").chosen({width: '100%'});
-  $('.input-group.date').datepicker({
-    format: "dd.mm.yyyy",
-    startDate: "today",
-    weekStart: 1,
-    todayBtn: "linked",
-    language: "ru",
-    autoclose: true,
-    todayHighlight: true
-  });
-  $('form').jBootValidator({validateOnSubmit: true});
-  $('.add_task').click(function(){
-    if ($('form').find('.form-group.has-error').length == 0)
-      $.get('add_task',{
-        title: $('#task-title').val(),
-        description: $('#task-description').val(),
-        performers: $('#task-performers').val(),
-        time_target: $('.input-group.date').datepicker('getDate').getTime()/1000
-        },function(r){
-          init_content(r);
-          $('.dialog').modal('hide');
-      });
+$(document).ready(function() {
+    $('#createTask')
+      .formValidation({
+        framework: 'bootstrap',
+        excluded: ':disabled',
+        icon: {
+          valid: null,
+          invalid: null,
+          validating: null
+        },
+        fields: {
+          title: {
+            validators: {
+              notEmpty: {
+                message: 'Введите тему'
+              }
+            }
+          },
+          description: {
+            validators: {
+              notEmpty: {
+                message: 'Введите описание задачи'
+              }
+            }
+          },
+          performers: {
+            validators: {
+              notEmpty: {
+                message: 'Выберите исполнителей'
+              }
+            }
+          },
+          time_target: {
+            validators: {
+              notEmpty: {
+                message: 'Выберите конечный срок выполнения задачи'
+              }
+            }
+          }
+        }
+      })
+      .on('err.form.fv', function(e) {
+        $('.add_task').addClass('disabled').prop('disabled', true);
+      })
+      .on('success.field.fv', function(e, data) {
+        if (data.fv.getInvalidFields().length > 0) {    // There is invalid field
+          $('.create_task').addClass('disabled').prop('disabled', true);
+        } else {
+          $('.create_task').removeClass('disabled').prop('disabled', false);
+        }
+      })
+      .on('success.form.fv', function(e) {
+        $('.create_task').removeClass('disabled').prop('disabled', false);
+        // Prevent form submission
+        e.preventDefault();
+
+        var $form      = $(e.target),
+        fv         = $(e.target).data('formValidation');
+        $.get('add_task',{
+          title: $('#task-title').val(),
+          description: $('#task-description').val(),
+          performers: $('#task-performers').val(),
+          time_target: $('#task-date').data("DateTimePicker").date().format('X')
+          },function(res){
+            init_content(res);
+            $('.dialog').modal('hide');
+        });
+    });
+    $(".chosen-select").chosen({width: '100%'});
+    $('#task-date').datetimepicker({
+      format: "DD.MM.YYYY",
+      locale: 'ru',
+      defaultDate: moment(),
+      minDate: moment().subtract(1, 'seconds'),
+      ignoreReadonly: true
+    });
   });
 {% endblock script %}

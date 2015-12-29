@@ -280,12 +280,24 @@ $(document).ready(function($){
 			});
 	})
   $(document).on('click', '.get_dialog_delete_file', function(){
-    id = get_query_id($(this));
-    path = $(this).parent().attr('path');
-    $.get('/queries/' + id +'/files/' + path + '/get_dialog_delete_file',
-      function(r){
-        init_content(r);
-      });
+    var id = get_query_id($(this));
+    var path = $(this).parent().attr('path');
+  	swal({
+		title: "Вы уверены?",
+		text: "Вы не сможете восстановить удаленный файл!",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#DD6B55",
+		confirmButtonText: "Удалить",
+		cancelButtonText: "Отмена",
+		closeOnConfirm: false
+  	}, function () {
+		$.get('/queries/{{ query_id }}/files/' + path + '/delete/')
+			.done(function (res) {
+				$('.query[query_id = ' + id + ' ] .files').html(res);
+				swal("Удалено!", "", "success");
+			});
+	});
   })
 	$(document).on('click', '.get_dialog_remove_user', function(){
 		$.get('get_dialog_remove_user',{

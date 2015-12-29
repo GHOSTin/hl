@@ -4,7 +4,6 @@ use RuntimeException;
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use domain\workgroup;
 use domain\work;
 use domain\event;
 
@@ -60,7 +59,7 @@ class works{
                            ->findOneByName($name);
     if(!is_null($workgroup))
       throw new RuntimeException('Такая группа существует.');
-    $app['em']->persist(workgroup::new_instance($name));
+    $app['em']->persist(\domain\workgroup::new_instance($name));
     $app['em']->flush();
     $workgroups = $app['em']->getRepository('\domain\workgroup')->findAll();
     return $app['twig']->render('works\workgroups.tpl', ['workgroups' => $workgroups]);

@@ -1,3 +1,55 @@
+var AddedFilesView = Backbone.Marionette.ItemView.extend({
+    events: {
+        'click .close_dialog': 'close_dialog',
+        'click .added_files': 'add_files'
+    },
+    template: Twig.twig({
+        href: '/templates/events/build_added_files.tpl',
+        async: false
+    }),
+    className: 'modal-dialog add_files',
+    render: function() {
+        $(this.el).html(this.template.render());
+    },
+    onShow: function(){
+        var model = this.model;
+        this.dropZone = $("#events-files").dropzone({
+            url: '/files/',
+            autoProcessQueue: false,
+            uploadMultiple: true,
+            parallelUploads: 100,
+            maxFiles: 100,
+            addRemoveLinks: true,
+            dictDefaultMessage: '<div class="btn btn-primary">Прикрепить файлы</div>',
+            previewTemplate: $('#preview-template').html(),
+            dictRemoveFile: 'Открепить'
+        });
+        this.dropZone[0].dropzone.on('successmultiple', function(files, res) {
+            model.files = _.union(model.files, res);
+            $.ajax({
+                url: '/numbers/events/' + model.id + '/',
+                method: 'PUT',
+                data: model
+            }).done(function(res){
+                var template = Twig.twig({
+                    href: '/templates/numbers/event.tpl',
+                    async: false
+                });
+                $('.event[event_id = ' + model.id + ']').replaceWith(template.render({"n2e": model}));
+                MyApp.modal.hideModal();
+            });
+        });
+    },
+    close_dialog: function(){
+        MyApp.modal.hideModal();
+    },
+    add_files: function(){
+        if(this.dropZone[0].dropzone.getQueuedFiles().length > 0) {
+            this.dropZone[0].dropzone.processQueue();
+        }
+    }
+});
+
 $(document).ready(function(){
 
     $('body').on('click', '.get_street_content', function(){
@@ -149,7 +201,7 @@ $(document).ready(function(){
       });
 
     }).on('click', '.get_dialog_edit_event', function(){
-      var id = $(this).attr('event_id');
+      var id = $(this).closest('.event').attr('event_id');
       $.get('/numbers/events/' + id + '/dialog_edit/',
       function(r){
           init_content(r);
@@ -163,6 +215,46 @@ $(document).ready(function(){
           });
     }).on('click', '.remove_element',  function(){
       $(this).parent().remove();
+    })
+    .on('click', '.get_dialog_added_files', function(){
+        var event_id = $(this).closest('.event').attr('event_id');
+        $.get('/numbers/events/' + event_id + '/')
+            .done(function(res){
+                var AddedFiles = new AddedFilesView({"model": res.event});
+                MyApp.modal.show(AddedFiles);
+            });
+    })
+    .on('click', '.delete-file', function(){
+        var file = $(this).closest('li').attr('data-file');
+        var event_id = $(this).closest('.event').attr('event_id');
+        swal({
+            title: "Вы уверены?",
+            text: "Вы не сможете восстановить удаленный файл!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Удалить",
+            cancelButtonText: "Отмена",
+            closeOnConfirm: false
+        }, function () {
+            $.get('/numbers/events/' + event_id + '/')
+                .done(function(res){
+                    var model = res.event;
+                    model.files = _.without(model.files, _.findWhere(model.files, {path: file}));
+                    $.ajax({
+                        url: '/numbers/events/' + model.id + '/',
+                        method: 'PUT',
+                        data: model
+                    }).done(function(res){
+                        var template = Twig.twig({
+                            href: '/templates/numbers/event.tpl',
+                            async: false
+                        });
+                        $('.event[event_id = ' + model.id + ']').replaceWith(template.render({"n2e": model}));
+                        swal("Удалено!", "", "success");
+                    });
+                });
+        });
     });
 
 });

@@ -2,12 +2,13 @@
 
 use DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
+use JsonSerializable;
 
 /**
 * @Entity
 * @Table(name="numbers")
 */
-class number{
+class number implements JsonSerializable{
 
   use traits\cellphone;
 
@@ -320,5 +321,17 @@ class number{
 
   public function get_address(){
     return $this->house->get_street()->get_name().', дом №'.$this->house->get_number().', кв. №'.$this->flat->get_number();
+  }
+
+  public function JsonSerialize(){
+    return [
+             'id' => $this->id,
+             'number' => $this->number,
+             'fio' => $this->fio,
+             'telephone' => $this->telephone,
+             'cellphone' => $this->cellphone,
+             'email' => $this->email,
+             'debt' => $this->debt
+           ];
   }
 }

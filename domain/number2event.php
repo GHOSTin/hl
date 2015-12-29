@@ -83,18 +83,11 @@ class number2event implements JsonSerializable{
   }
 
   public function JsonSerialize(){
-    $files = [];
-    foreach($this->files as $file){
-      $files[] = [
-                  'name' => $file->get_name(),
-                  'path' => $file->get_path(),
-                  ];
-    }
     return [
              'id' => $this->id,
              'time' => $this->time,
              'description' => $this->description,
-             'files' => $files,
+             'files' => $this->files->toArray(),
              'event' => [
                           'id' => $this->event->get_id(),
                           'name' => $this->event->get_name()
@@ -111,4 +104,10 @@ class number2event implements JsonSerializable{
     $this->description = $description;
   }
 
+  public function update($description, array $files){
+    $this->description = $description;
+    $this->files->clear();
+    foreach($files as $file)
+      $this->add_file($file);
+  }
 }

@@ -17,18 +17,12 @@ $dbParams = array(
 );
 $config = Setup::createAnnotationMetadataConfiguration([__DIR__], true);
 $em = EntityManager::create($dbParams, $config);
-$pdo = $em->getConnection();
 
-$string = file_get_contents('number2event.json');
-$array = json_decode($string);
-$stm = $pdo->prepare('INSERT INTO number2event set id = :idn,  number_id = :number_id, event_id = :event_id, time = :time, description = :description');
-foreach($array as $a){
-  $id = $a->number_id.'-'.$a->event_id.'-'.$a->time;
-  $d = '';
-  $stm->bindParam(':idn', $id);
-  $stm->bindParam(':number_id', $a->number_id);
-  $stm->bindParam(':event_id', $a->event_id);
-  $stm->bindParam(':time', $a->time);
-  $stm->bindParam(':description', $d);
-  $stm->execute();
+$numbers = $em->getRepository('domain\number')->findById([30540, 30541, 30542]);
+$i = 2000000;
+foreach($numbers as $number){
+  $number->set_number($i);
+  $i = $i + 1;
 }
+$em->find('domain\number', 34398)->set_number(2000005);
+$em->flush();
