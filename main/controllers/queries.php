@@ -210,11 +210,8 @@ class queries{
 
   public function delete_file(Application $app, $id, $date, $name){
     $query = $app['em']->find('domain\query', $id);
-    $file = $app['em']->getRepository('domain\query2file')
-                      ->findOneBy([
-                                   'query' => $id,
-                                   'file' => $date.'/'.$name
-                                  ]);
+    $file = $app['em']->getRepository('domain\file')
+                      ->find($date.'/'.$name);
     $query->delete_file($file);
     $path = $file->get_path();
     $app['em']->flush();
@@ -283,12 +280,10 @@ class queries{
   }
 
   public function get_dialog_delete_file(Application $app, $id, $date, $name){
-    $file = $app['em']->getRepository('domain\query2file')
-                      ->findOneBy([
-                                   'query' => $id,
-                                   'file' => $date.'/'.$name
-                                  ]);
-    return $app['twig']->render('query\get_dialog_delete_file.tpl', ['file' => $file]);
+    $file = $app['em']->getRepository('domain\file')
+                      ->find($date.'/'.$name);
+    return $app['twig']->render('query\get_dialog_delete_file.tpl', ['file' => $file,
+                                                                      'query_id' => $id]);
   }
 
   public function get_dialog_edit_contact_information(Request $request, Application $app){
@@ -374,25 +369,6 @@ class queries{
   public function get_dialog_to_working_query(Request $request, Application $app){
     $query = $app['em']->find('\domain\query', $request->get('id'));
     return $app['twig']->render('query\get_dialog_to_working_query.tpl', ['query' => $query]);
-  }
-
-  public function get_file(Application $app, $id, $date, $name){
-    $file = $app['em']->getRepository('domain\query2file')
-                      ->findOneBy([
-                                   'query' => $id,
-                                   'file' => $date.'/'.$name
-                                  ]);
-    if($file && $app['filesystem']->has($file->get_path())){
-      $response = new BinaryFileResponse($app['files'].$file->get_path());
-      $disposition = $response->headers->makeDisposition(
-                                          ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                                          $file->get_name(),
-                                          iconv('UTF-8', 'ASCII//TRANSLIT', $file->get_name())
-                                         );
-      $response->headers->set('Content-Disposition', $disposition);
-      return $response;
-    }else
-      throw new NotFoundHttpException();
   }
 
   public function get_initiator(Request $request, Application $app){
@@ -545,10 +521,6 @@ class queries{
   public function outages(Application $app){
     $response = $app['main\models\queries']->outages();
     return $app->json($response);
-  }
-
-  public function phrases(Application $app, $id){
-    return $app['main\models\queries']->phrases($id);
   }
 
   public function remove_user(Request $request, Application $app){

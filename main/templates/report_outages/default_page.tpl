@@ -2,19 +2,25 @@
 
 {% block js %}
 $('.report-content').html(get_hidden_content());
-
-$('.begin_start').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-  $('.begin_start').datepicker('hide');
-  $.post('/reports/outages/filters/begin/start/',{
-    time: '00:00 ' + $('.begin_start').val()
-  });
+// датапикер
+$('.begin_start').datetimepicker({
+  format: 'DD.MM.YYYY',
+  locale: 'ru',
+  defaultDate: moment.unix({{ filters.start }})
+}).on('dp.change', function(e){
+    $.post('/reports/outages/filters/begin/start/',{
+      time: e.date.format('00:00 DD.MM.YYYY')
+    });
 });
 
-$('.begin_end').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-  $('.begin_end').datepicker('hide');
-  $.post('/reports/outages/filters/begin/end/',{
-    time: '00:00 ' + $('.begin_end').val()
-  });
+$('.begin_end').datetimepicker({
+  format: 'DD.MM.YYYY',
+  locale: 'ru',
+  defaultDate: moment.unix({{ filters.end }})
+}).on('dp.change', function(e){
+    $.post('/reports/outages/filters/begin/end/',{
+      time: e.date.format('00:00 DD.MM.YYYY')
+    }) ;
 });
 {% endblock %}
 
@@ -31,13 +37,13 @@ $('.begin_end').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDat
         <div class="row form-group">
           <label class="control-label col-xs-1">с</label>
           <div class="col-xs-10">
-            <input type="text" class="form-control begin_start" value="{{ filters.start|date('d.m.Y') }}">
+            <input type="text" class="form-control begin_start">
           </div>
         </div>
         <div class="row form-group">
           <label class="control-label col-xs-1">по</label>
           <div class="col-xs-10">
-            <input type="text" class="form-control begin_end" value="{{ filters.end|date('d.m.Y') }}">
+            <input type="text" class="form-control begin_end">
           </div>
         </div>
       </li>

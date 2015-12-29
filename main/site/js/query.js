@@ -109,17 +109,6 @@ $(document).ready(function($){
 				show_content(r);
 			});
 	});
-	$(document).on('click', '.timeline-day', function(){
-		var self = $(this);
-		$.get('get_day',{
-			 time: $(this).attr('time')
-			},function(r){
-				$('.timeline-day').removeClass('timeline-day-current');
-				self.addClass('timeline-day-current');
-				$('.queries').html(r);
-        get_day_stats();
-			});
-	});
 	$(document).on('click', '.get_search', function(){
 		$.get('get_search',{
 			},function(r){
@@ -137,12 +126,15 @@ $(document).ready(function($){
     blank();
     $.getJSON('/queries/selections/noclose/',{
       time: $(this).attr('time')
-      },function(r){
-        $('.queries').html(r.data);
-        var compiled = _.template($('#noclose_stats').html());
-        $('.day_stats').html(compiled(r.stats.stat));
+      },function(res){
+        $('.queries').html(res.data);
+		var compiled = Twig.twig({
+			href: '/templates/query/noclose_stats.tpl',
+			async: false
+		});
+		$('.day_stats').html(compiled.render({stat: res.stats.stat}));
         var ctx = $("#chart").get(0).getContext("2d");
-        var myNewChart = new Chart(ctx).Pie(r.stats.chart.data, r.stats.chart.options);
+        var myNewChart = new Chart(ctx).Pie(res.stats.chart.data, res.stats.chart.options);
       });
   });
 	$(document).on('click', '.get_search_result', function(){
@@ -288,12 +280,24 @@ $(document).ready(function($){
 			});
 	})
   $(document).on('click', '.get_dialog_delete_file', function(){
-    id = get_query_id($(this));
-    path = $(this).parent().attr('path');
-    $.get('/queries/' + id +'/files/' + path + '/get_dialog_delete_file',
-      function(r){
-        init_content(r);
-      });
+    var id = get_query_id($(this));
+    var path = $(this).parent().attr('path');
+  	swal({
+		title: "Вы уверены?",
+		text: "Вы не сможете восстановить удаленный файл!",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: "#DD6B55",
+		confirmButtonText: "Удалить",
+		cancelButtonText: "Отмена",
+		closeOnConfirm: false
+  	}, function () {
+		$.get('/queries/{{ query_id }}/files/' + path + '/delete/')
+			.done(function (res) {
+				$('.query[query_id = ' + id + ' ] .files').html(res);
+				swal("Удалено!", "", "success");
+			});
+	});
   })
 	$(document).on('click', '.get_dialog_remove_user', function(){
 		$.get('get_dialog_remove_user',{
@@ -377,14 +381,19 @@ $(document).ready(function($){
 				init_content(r);
 			});
 	})
-	$(document).on('click', '.get_timeline', function(){
-		$.get('get_timeline',{
-			act: $(this).attr('act'),
-			time: $('.timeline-month').attr('time')
-			},function(r){
-				init_content(r);
-        get_day_stats();
-			});
+    $('#queries-datetimepicker').datetimepicker({
+        inline: true,
+        format: 'DD.MM.YYYY',
+        locale: moment.locale('ru'),
+		defaultDate: moment.unix($('.calendar').find('.default-date').val())
+    }).on("dp.change", function(e) {
+		$.get('get_day', {
+			time: e.date.format('X')
+		})
+		.done(function(res){
+			$('.queries').html(res);
+			get_day_stats();
+		})
 	});
   $.get('/queries/requests/count/',
   function(r){
@@ -420,15 +429,18 @@ function get_query_id(obj){
 
 function get_day_stats(){
   $.getJSON('/queries/day/stats/',
-    function(r){
-      var compiled = _.template($('#stats_template').html());
-      $('.day_stats').html(compiled(r.stat));
+    function(res){
+      var compiled = Twig.twig({
+		  href: '/templates/query/stats.tpl',
+		  async: false
+	  });
+      $('.day_stats').html(compiled.render({stat: res.stat}));
       var ctx = $("#chart").get(0).getContext("2d");
       var options = {
         segmentShowStroke : false,
         animation: false
       };
-      var myNewChart = new Chart(ctx).Pie(r.chart, options);
+      var myNewChart = new Chart(ctx).Pie(res.chart, options);
     });
 }
 
@@ -440,6 +452,9 @@ function get_all_noclose_queries(){
 }
 
 function blank(){
-  var compiled = _.template($('#blank').html());
-  $('.queries').html(compiled());
+  var compiled = Twig.twig({
+	  href: '/templates/spinner.tpl',
+	  async: false
+  });
+  $('.queries').html(compiled.render());
 }

@@ -8,7 +8,7 @@
     </div>
   <!-- /scroller -->
   <!-- left block -->
-  <div class="col-sm-3 col-lg-3">
+  <div class="col-sm-4 col-md-4 col-lg-3">
     <div class="ibox float-e-margins">
       <div class="ibox-content mailbox-content">
         <div class="file-manager">
@@ -18,20 +18,30 @@
             {% endif %}
             <a class="get_search btn btn-white compose-mail"><i class="fa fa-search"></i></a>
           </div>
-          <div  class="page-header">
-            <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
-            </h4><a class="cm clear_filters absolute_hide">сбросить</a>
+          <div class="hidden-xs">
+            <div  class="page-header">
+              <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
+              </h4><a class="cm clear_filters absolute_hide">сбросить</a>
+            </div>
+            {% include 'query/filters.tpl' %}
           </div>
-          {% include 'query/filters.tpl' %}
         </div>
       </div>
     </div>
   </div>
   <!-- /left block-->
   <!-- right block -->
-  <div class="col-sm-9 col-lg-9 query-container">
+  <div class="col-sm-8 col-md-8 col-lg-9 query-container">
     <!-- begin timeline -->
-    <nav class="timeline row">{% include 'query/timeline.tpl' %}</nav>
+    <nav class="row">
+      <div class="calendar col-md-6 col-lg-4 col-xs-12 p-w-xs">
+        <div class="ibox-content m-t m-b">
+          <div id="queries-datetimepicker"></div>
+          <input value="{{ timeline }}" class="hidden default-date">
+        </div>
+      </div>
+      <div class="day_stats col-lg-8 col-md-6 col-xs-12"></div>
+    </nav>
     <!-- /timeline -->
     <!-- requests -->
     <!-- outages -->
@@ -42,9 +52,6 @@
     </div>
     <!-- /requests -->
     <!-- /outages -->
-    <div class="row">
-      <div class="day_stats col-md-6 col-xs-12"></div>
-    </div>
     <!-- queries -->
     <div class="row">
       <ul class="queries connectList agile-list no-padding">{% include 'query/query_titles.tpl' %}</ul>
@@ -57,66 +64,16 @@
 
 {% block javascript %}
   <script src="/js/query.js"></script>
-  <script src="/js/bootstrap-datepicker.js"></script>
   <script src="/js/jquery.ui.widget.js"></script>
   <script src="/js/jquery.iframe-transport.js"></script>
   <script src="/js/jquery.fileupload.js"></script>
   <script src="/js/chart.min.js"></script>
-  <script src="/js/underscore.js"></script>
-  <script src="/js/inputmask.js" type="text/javascript"></script>
-  <script src="/js/jquery.inputmask.js" type="text/javascript"></script>
-  <script id="stats_template" type="text/template">
-    <h4 class="text-center">Дневная статистика</h4>
-    <div class="row">
-      <div class="col-md-5">
-        <canvas id="chart" width="120px" height="120px"></canvas>
-      </div>
-      <div class="col-md-7">
-        <ul class="list-unstyled">
-          <li class="queries_legend queries_open">Открытых заявок: <%= open %></li>
-          <li class="queries_legend queries_working">Заявок в работе: <%= working %></li>
-          <li class="queries_legend queries_close">Закрытых заявок: <%= close %></li>
-          <li class="queries_legend queries_reopen">Переоткрытых заявок: <%= reopen %></li>
-          <li class="queries_legend">Всех заявок: <%= sum %></li>
-        </ul>
-      </div>
-    </div>
-  </script>
-  <script id="blank" type="text/template">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        <i class="fa fa-spinner fa-pulse"></i> загрузка
-      </div>
-    </div>
-  </script>
-
-  <script id="noclose_stats" type="text/template">
-    <h4 class="text-center">Статистика по выборке</h4>
-    <div class="row">
-      <div class="col-md-5">
-        <canvas id="chart" width="120px" height="120px"></canvas>
-      </div>
-      <div class="col-md-7">
-        <ul class="list-unstyled">
-          <li>Открытых заявок: <%= open %></li>
-          <li>Заявок в работе: <%= working %></li>
-          <li>Переоткрытых заявок: <%= reopen %></li>
-          <li>Итого заявок: <%= sum %></li>
-        </ul>
-      </div>
-    </div>
-  </script>
-  <script id="blank" type="text/template">
-    <div class="row">
-      <div class="col-md-12 text-center">
-        <i class="fa fa-spinner fa-pulse"></i> загрузка
-      </div>
-    </div>
-  </script>
 {% endblock javascript %}
 
 {% block css %}
   <link rel="stylesheet" href="/css/query.css" >
-  <link rel="stylesheet" href="/css/datepicker.css" >
+  <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
   <link rel="stylesheet" href="/css/plugins/iCheck/custom.css" >
+  <!-- Sweet Alert -->
+  <link href="/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
 {% endblock css %}

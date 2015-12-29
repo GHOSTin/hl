@@ -11,14 +11,13 @@ class import_accruals{
   private $em;
   private $rows = [];
 
-  const MEMORY_LIMIT = 8*1024*1024;
+  const MEMORY_LIMIT = 64*1024*1024;
 
   public function __construct(Twig_Environment $twig, EntityManager $em, user $user){
     $this->em = $em;
     $this->twig = $twig;
     $this->user = $user;
   }
-
 
   public function load_accruals($hndl, $date){
     $date = DateTime::createFromFormat('H:i d.m.Y', '12:00 01.'.$date);
@@ -27,19 +26,7 @@ class import_accruals{
       $number = $this->em->getRepository('domain\number')
                          ->findOneByNumber(trim($row[0]));
       if($number){
-        $accrual = accrual::new_instance($number, $time,
-                                        trim($row[1]),
-                                        trim($row[2]),
-                                        trim($row[3]),
-                                        trim($row[4]),
-                                        trim($row[5]),
-                                        trim($row[6]),
-                                        trim($row[7]),
-                                        trim($row[8]),
-                                        trim($row[9]),
-                                        trim($row[10]),
-                                        trim($row[11]));
-        $this->em->persist($accrual);
+        $number->add_accrual($time, array_slice($row, 1));
       }else
         $this->rows[] = $row;
       if(memory_get_usage() > self::MEMORY_LIMIT){

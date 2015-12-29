@@ -13,7 +13,8 @@ class numbers{
     return $app['twig']->render('number\accruals.tpl',
                                 [
                                   'user' => $app['user'],
-                                  'number' => $number
+                                  'number' => $number,
+                                  'columns' => $app['accrual_columns']
                                 ]);
   }
 

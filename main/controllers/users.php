@@ -23,7 +23,6 @@ class users{
       throw new RuntimeException('Группа с таким название уже существует.');
     $group = new group();
     $group->set_name($name);
-    $group->set_status('true');
     $app['em']->persist($group);
     $app['em']->flush();
     $letter = mb_substr($group->get_name(), 0 ,1, 'utf-8');

@@ -20,7 +20,7 @@ class recovery{
     return $this->twig->render('recovery/default_page.tpl');
   }
 
-  public function recovery($num, $salt, $message, $mailer, $reply, $context){
+  public function recovery($num, $salt, $message, $mailer, $reply, $context, $site_url){
     $number = $this->em->getRepository('domain\number')->findOneByNumber($num);
     if(is_null($number)){
       $this->logger->addWarning('Recovery number not exists', $context);
@@ -37,7 +37,8 @@ class recovery{
     $body = $this->twig->render('recovery\generate_password.tpl',
                                 [
                                  'number' => $number,
-                                 'password' => $password
+                                 'password' => $password,
+                                 'site_url' => $site_url
                                 ]);
     $message->setSubject('Востановление пароля')
             ->setFrom([$reply])

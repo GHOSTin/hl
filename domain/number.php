@@ -2,20 +2,20 @@
 
 use DomainException;
 use Doctrine\Common\Collections\ArrayCollection;
+use JsonSerializable;
 
 /**
 * @Entity
 * @Table(name="numbers")
 */
-class number{
+class number implements JsonSerializable{
 
   use traits\cellphone;
 
   /**
-  * @OneToMany(targetEntity="domain\accrual", mappedBy="number")
-  * @OrderBy({"time" = "DESC"})
+  * @Column(type="json_array")
   */
-  private $accruals;
+  private $accruals = [];
 
   /**
   * @Column(nullable=true)
@@ -55,7 +55,7 @@ class number{
   private $id;
 
   /**
-  * @Column
+  * @Column(unique=true)
   */
   private $number;
 
@@ -121,6 +121,14 @@ class number{
     return $n2e;
   }
 
+  public function add_accrual($time, array $row){
+    $func = function($n){
+      return mb_convert_encoding($n, 'UTF-8', 'Windows-1251');
+    };
+    $row = array_map($func, $row);
+    $this->accruals[$time][] = implode(';', $row);
+  }
+
   public function exclude_event(number2event $event){
     $this->events->removeElement($event);
   }
@@ -130,15 +138,8 @@ class number{
   }
 
   public function get_accruals(){
+    krsort($this->accruals);
     return $this->accruals;
-  }
-
-  public function get_sort_accruals(){
-    $month = [];
-    foreach($this->accruals as $accrual){
-      $month[$accrual->get_time()][] = $accrual;
-    }
-    return $month;
   }
 
   public function get_cellphone(){
@@ -320,5 +321,17 @@ class number{
 
   public function get_address(){
     return $this->house->get_street()->get_name().', дом №'.$this->house->get_number().', кв. №'.$this->flat->get_number();
+  }
+
+  public function JsonSerialize(){
+    return [
+             'id' => $this->id,
+             'number' => $this->number,
+             'fio' => $this->fio,
+             'telephone' => $this->telephone,
+             'cellphone' => $this->cellphone,
+             'email' => $this->email,
+             'debt' => $this->debt
+           ];
   }
 }

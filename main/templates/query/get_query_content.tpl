@@ -92,8 +92,23 @@
       </div>
       <dl class="query-general-contacts dl-horizontal">
         <dt>ФИО:</dt><dd> {{ query.get_contact_fio() }}</dd>
-        <dt>Телефон:</dt><dd> {{ query.get_contact_telephone() }}</dd>
-        <dt>Сотовый:</dt><dd> {{ query.get_contact_cellphone() }}</dd>
+	      {% set start = query.get_contact_telephone()|length - 4 %}
+        <dt>Телефон:</dt>
+	      <dd>
+		      {% if start > 0 %}
+			      {{ query.get_contact_telephone()|slice(0, start) }}-{{ query.get_contact_telephone()|slice(start,2) }}-{{ query.get_contact_telephone()|slice(start+2,2) }}
+		      {% else %}
+			      {{ query.get_contact_telephone() }}
+		      {% endif %}
+	      </dd>
+        <dt>Сотовый:</dt>
+	      <dd>
+				{% if query.get_contact_cellphone() > 0 %}
+		      ({{ query.get_contact_cellphone()|slice(0,3) }}) {{ query.get_contact_cellphone()|slice(3,3) }}-{{ query.get_contact_cellphone()|slice(6,2) }}-{{ query.get_contact_cellphone()|slice(8,2) }}
+				{% else %}
+					{{ query.get_contact_cellphone() }}
+				{% endif %}
+	      </dd>
       </dl>
     </div>
     {% if query.get_initiator() == 'number' and number.get_events() is not empty %}

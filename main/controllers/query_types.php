@@ -3,7 +3,6 @@
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
 use RuntimeException;
-use domain\query_type;
 
 class query_types{
 
@@ -12,7 +11,7 @@ class query_types{
     $query_type = $app['em']->getRepository('domain\query_type')->findOneByName($name);
     if(!is_null($query_type))
       throw new RuntimeException('Такое событие существует.');
-    $query_type = query_type::new_instance($name);
+    $query_type = \domain\query_type::new_instance($name);
     $app['em']->persist($query_type);
     $app['em']->flush();
     $query_types = $app['em']->getRepository('domain\query_type')->findAll();

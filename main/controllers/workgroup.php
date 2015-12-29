@@ -15,4 +15,9 @@ class workgroup{
     $model = $app['main\models\factory']->get_workgroup_model($id);
     return $model->create_phrase_dialog();
   }
+
+  public function phrases(Application $app, $id){
+    $workgroup = $app['main\models\repository']->get_workgroup($id);
+    return $app->json(['phrases' => $workgroup->get_phrases()->toArray()]);
+  }
 }

@@ -1,37 +1,5 @@
-_.templateSettings = {
-    interpolate : /\{\{(.+?)\}\}/g
-};
-
-MyApp = new Backbone.Marionette.Application();
-
-var ModalRegion = Backbone.Marionette.Region.extend({
-    el: "#modal",
-
-    constructor: function(){
-        _.bindAll(this);
-        Backbone.Marionette.Region.prototype.constructor.apply(this, arguments);
-        this.on("show", this.showModal, this);
-    },
-
-    getEl: function(selector){
-        var $el = $(selector);
-        $el.on("hidden", this.close);
-        return $el;
-    },
-
-    showModal: function(view){
-        view.on("close", this.hideModal, this);
-        this.$el.modal('show');
-    },
-
-    hideModal: function(){
-        this.$el.modal('hide');
-    }
-});
-
 MyApp.addRegions({
     content: '.profile-content',
-    modal: ModalRegion
 });
 
 MyApp.AlertView = Backbone.View.extend({
@@ -147,11 +115,14 @@ MyApp.ProfileApp = function(){
         render: function() {
             $(this.el).html(this.template.render({"user": this.model.toJSON()}));
         },
+        onShow: function() {
+            $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
+        },
         close_dialog: function(){
             MyApp.modal.hideModal();
         },
         update_cellphone: function(){
-            var cellphone = $('.dialog-cellphone').val();
+            var cellphone = $('.dialog-cellphone').inputmask('unmaskedvalue');
             this.model.save({
                 cellphone: cellphone.toString()},
                 {
@@ -182,11 +153,14 @@ MyApp.ProfileApp = function(){
         render: function() {
             $(this.el).html(this.template.render({"user": this.model.toJSON()}));
         },
+        onShow: function() {
+            $('.dialog-telephone').inputmask("mask", {"mask": "9{1,3}-99-99"});
+        },
         close_dialog: function(){
             MyApp.modal.hideModal();
         },
         update_telephone: function(){
-            var telephone = $('.dialog-telephone').val();
+            var telephone = $('.dialog-telephone').inputmask('unmaskedvalue');
             this.model.save({
                 telephone: telephone.toString()},
                 {
@@ -260,13 +234,3 @@ MyApp.ProfileApp = function(){
 
     return ProfileApp;
 }();
-
-MyApp.on("initialize:after", function(options){
-    if (Backbone.history){
-        Backbone.history.start();
-    }
-});
-
-$(document).ready(function(){
-    MyApp.start();
-});

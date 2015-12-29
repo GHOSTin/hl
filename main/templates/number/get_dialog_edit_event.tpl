@@ -1,17 +1,25 @@
 {% extends "ajax.tpl" %}
 
-{% set id =  n2e.get_id()|split('-') %}
-
 {% block js %}
 show_dialog(get_hidden_content());
 $('.edit_event').click(function(){
-    $.ajax('/numbers/{{ id[0] }}/events/{{ id[1] }}/{{ id[2] }}/', {
-      type: 'PUT',
-      data:{description: $('.dialog-com').val()},
-      success: function(response){
-        $('.dialog').modal('hide');
-        $('.workspace').html(response);
-      }
+  $.get('/numbers/events/{{ n2e.get_id() }}/')
+    .done(function(res){
+      var model = res.event;
+      model.description = $('.dialog-com').val();
+      $.ajax('/numbers/events/{{ n2e.get_id() }}/', {
+        type: 'PUT',
+        data: model,
+        dataType: 'json',
+        success: function (res) {
+          $('.dialog').modal('hide');
+          var template = Twig.twig({
+            href: '/templates/numbers/event.tpl',
+            async: false
+          });
+          $('.event[event_id = {{ n2e.get_id() }}]').replaceWith(template.render(res));
+        }
+      });
     });
 });
 {% endblock %}

@@ -20,10 +20,6 @@
           <input type="text"  class="form-control" name="fio" required>
         </div>
         <div class="form-group">
-          <label>Сумма начисления и месяц*</label>
-          <input type="text"  class="form-control" name="accruals" required>
-        </div>
-        <div class="form-group">
           <label>Email*</label>
           <input type="email"  class="form-control" name="email" required>
         </div>

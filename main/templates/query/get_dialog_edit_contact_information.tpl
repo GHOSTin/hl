@@ -2,6 +2,8 @@
 
 {% block js %}
 	show_dialog(get_hidden_content());
+    $('.dialog-telephone').inputmask("mask", {"mask": "9{1,3}-99-99"});
+    $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
 	$('.update_contact_information').click(function(){
 		$.get('update_contact_information',{
 			id: {{ query.get_id() }},
@@ -21,7 +23,8 @@
       <div class="modal-header">
           <h3>Контактная информация</h3>
       </div>
-    <div class="modal-body row">
+    <div class="modal-body">
+        <div class="row">
           <div class="col-lg-8">
               <div class="form-group">
                   <label  class="control-label">ФИО</label>
@@ -36,6 +39,7 @@
                   <input type="tel" value="{{query.get_contact_cellphone()}}" class="dialog-cellphone form-control">
               </div>
           </div>
+      </div>
     </div>
     <div class="modal-footer">
       <div class="btn btn-primary update_contact_information">Сохранить</div>

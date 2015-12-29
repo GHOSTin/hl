@@ -20,29 +20,11 @@ class events{
     $this->user = $user;
   }
 
-  public function default_page(){
-    $events = $this->em->getRepository('domain\number2event')
-                       ->findByTime(strtotime('12:00'));
-    return [
-            'workspace' => $this->twig->render('events/default_page.tpl',
-              [
-                'events' => $events,
-                'user' => $this->user
-              ])
-           ];
-  }
-
   public function get_day_events($date){
     $time = DateTime::createFromFormat('H:i d-m-Y', '12:00 '.$date);
     $events = $this->em->getRepository('domain\number2event')
                        ->findByTime($time->getTimeStamp());
-    return [
-        'workspace' => $this->twig->render('events/events.tpl',
-            [
-                'events' => $events,
-                'user' => $this->user
-            ])
-    ];
+    return $events;
   }
 
   public function get_dialog_create_event(){
@@ -75,7 +57,7 @@ class events{
       }
     }
     $this->em->flush();
-    return $this->twig->render('events\event.tpl', ['event' => $n2e]);
+    return $n2e;
 
   }
 }

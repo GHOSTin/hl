@@ -123,8 +123,12 @@ class query{
 	private $users;
 
   /**
-  * @OneToMany(targetEntity="domain\query2file", mappedBy="query", cascade="all", orphanRemoval=true)
-  */
+   * @ManyToMany(targetEntity="domain\file", cascade="all")
+   * @JoinTable(name="query2file",
+   *             joinColumns={@JoinColumn(name="query_id", referencedColumnName="id")},
+   *             inverseJoinColumns={@JoinColumn(name="path", referencedColumnName="path", unique=true)}
+   *           )
+   */
   private $files;
 
 	/**
@@ -174,8 +178,7 @@ class query{
   public function add_file(file $file){
     if(!in_array($this->status, ['open', 'reopen', 'working']))
       throw new DomainException();
-    $q2f = new query2file($this, $file);
-    $this->files->add($q2f);
+    $this->files->add($file);
   }
 
 	public function add_user(query2user $user){
@@ -221,7 +224,7 @@ class query{
     return $this->visible = !$this->visible;
   }
 
-  public function delete_file(query2file $file){
+  public function delete_file(file $file){
     if(!in_array($this->status, ['open', 'reopen', 'working']))
       throw new DomainException();
     $this->files->removeElement($file);
