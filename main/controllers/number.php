@@ -45,6 +45,12 @@ class number{
                                       ->get_dialog_edit_event($event_id, $time);
   }
 
+  public function get_number_json(Application $app, $id){
+    $response = $app['main\models\factory']->get_number_model($id)
+                                           ->get_number_json();
+    return $app->json($response);
+  }
+
   public function history(Application $app, $id){
     return $app['main\models\factory']->get_number_model($id)
                                       ->history();

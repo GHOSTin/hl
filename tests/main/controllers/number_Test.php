@@ -114,6 +114,14 @@ class number_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
+  public function test_get_number_json(){
+    $this->model->expects($this->once())
+                ->method('get_number_json')
+                ->willReturn(['render_template']);
+    $response = $this->controller->get_number_json($this->app, 125);
+    $this->assertEquals($this->app->json(['render_template']), $response);
+  }
+
   public function test_meterages(){
     $this->model->expects($this->once())
                 ->method('meterages')

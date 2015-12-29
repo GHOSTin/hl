@@ -321,6 +321,19 @@ class number5_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $model->history());
   }
 
+  public function test_get_number_json(){
+    $this->user->expects($this->once())
+               ->method('check_access')
+               ->with('numbers/general_access')
+               ->willReturn(true);
+    $this->em->expects($this->once())
+             ->method('find')
+             ->with('domain\number', 125)
+             ->willReturn($this->number);
+    $model = new model($this->twig, $this->em, $this->user, 125);
+    $this->assertEquals($this->number, $model->get_number_json());
+  }
+
   public function test_meterages(){
     $this->user->expects($this->once())
                ->method('check_access')
