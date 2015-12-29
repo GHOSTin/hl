@@ -6,7 +6,7 @@
 	<select class="dialog-select-user_id form-control">
 		<option value="">Выберите пользователя...</option>
 		{% for user in users %}
-		<option value="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_lastname() }}</option>
+		<option value="{{ user.get_id() }}">{{ user.get_lastname() }} {{ user.get_firstname() }} {{ user.get_middlename() }}</option>
 		{% endfor %}
 	</select>
 {% endblock dialog %}
