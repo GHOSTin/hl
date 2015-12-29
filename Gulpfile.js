@@ -66,6 +66,12 @@ gulp.task('main:scripts:vendor', ['main:bower'], function () {
                 main: [
                     './dist/jquery.inputmask.bundle.js'
                 ]
+            },
+            "form.validation": {
+                main: [
+                    './dist/js/formValidation.js',
+                    './dist/js/framework/bootstrap.js'
+                ]
             }
         }
     });
