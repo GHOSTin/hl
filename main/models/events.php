@@ -51,7 +51,7 @@ class events{
     $n2e = $number->add_event($event, $date, $comment);
     if(!empty($files)){
       foreach($files as $fr){
-        $file = $this->em->find('domain\file', $fr['url']);
+        $file = $this->em->find('domain\file', $fr['path']);
         if($file)
           $n2e->add_file($file);
       }
