@@ -34,10 +34,6 @@
           </div>
           <div class="ibox-content">
             <div class="form-group">
-              <label class=" control-label">ФИО:</label>
-              <input type="text" class="form-control dialog-fio" value="">
-            </div>
-            <div class="form-group">
               <label class="control-label">Телефон:</label>
               <input type="text" class="form-control dialog-telephone" value="">
             </div>
@@ -92,7 +88,6 @@ $(document).ready(function() {
       event: $('.dialog-select-event').val(),
       date: $('.dialog-date').val(),
       comment: $('.dialog-com').val(),
-      fio: $('.dialog-fio').val(),
       telephone: $('.dialog-telephone').val(),
       cellphone: $('.dialog-cellphone').val(),
       checkbox: $('.dialog-checkbox-contacts').prop("checked"),
@@ -110,7 +105,7 @@ $(document).ready(function() {
     });
   }
   $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
-  $('.dialog-telephone').inputmask("mask", {"mask": "99-99-99"});
+  $('.dialog-telephone').inputmask("mask", {"mask": "9{1,3}-99-99"});
   $('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green',
     radioClass: 'iradio_square-green',
@@ -134,7 +129,12 @@ $(document).ready(function() {
     }
   });
   $('.dialog-numbers').change(function(){
-    $('.dialog-addinfo').removeClass('hidden');
+      $.getJSON('/number/'+ $(this).val() + '/')
+              .done(function(res){
+                  $('.dialog-cellphone').val(res.cellphone);
+                  $('.dialog-telephone').val(res.telephone);
+                  $('.dialog-addinfo').removeClass('hidden');
+              });
   });
   var $dropZone = $("#my-awesome-dropzone").dropzone({
       url: '/files/',

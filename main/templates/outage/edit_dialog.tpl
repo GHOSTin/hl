@@ -93,74 +93,71 @@
 {% endblock buttons %}
 
 {% block script %}
-  $('.dialog')
-    .on('shown.bs.modal', function() {
-      $('#createOutage')
-        .formValidation({
-          framework: 'bootstrap',
-          excluded: ':disabled',
-          icon: {
-            valid: null,
-            invalid: null,
-            validating: null
-          },
-          fields: {
-            workgroup: {
-              validators: {
-                notEmpty: {
-                  message: 'Выберите тип услуги'
-                }
-              }
-            },
-            description: {
-              validators: {
-                notEmpty: {
-                  message: 'Введите описание отключения'
-                }
-              }
-            }
+$('#createOutage')
+  .formValidation({
+    framework: 'bootstrap',
+    excluded: ':disabled',
+    icon: {
+      valid: null,
+      invalid: null,
+      validating: null
+    },
+    fields: {
+      workgroup: {
+        validators: {
+          notEmpty: {
+            message: 'Выберите тип услуги'
           }
-        })
-        .on('err.form.fv', function(e) {
-          $('.update_outage').addClass('disabled').prop('disabled', true);
-        })
-        .on('success.field.fv', function(e, data) {
-          if (data.fv.getInvalidFields().length > 0) {    // There is invalid field
-            $('.update_outage').addClass('disabled').prop('disabled', true);
-          } else {
-            $('.update_outage').removeClass('disabled').prop('disabled', false);
+        }
+      },
+      description: {
+        validators: {
+          notEmpty: {
+            message: 'Введите описание отключения'
           }
-        })
-        .on('success.form.fv', function(e) {
-          // Prevent form submission
-          e.preventDefault();
+        }
+      }
+    }
+  })
+  .on('err.form.fv', function(e) {
+    $('.update_outage').addClass('disabled').prop('disabled', true);
+  })
+  .on('success.field.fv', function(e, data) {
+    if (data.fv.getInvalidFields().length > 0) {    // There is invalid field
+      $('.update_outage').addClass('disabled').prop('disabled', true);
+    } else {
+      $('.update_outage').removeClass('disabled').prop('disabled', false);
+    }
+  })
+  .on('success.form.fv', function(e) {
+    // Prevent form submission
+    e.preventDefault();
 
-          var $form      = $(e.target),
-          fv         = $(e.target).data('formValidation'),
-          houses     = [],
-          performers = [],
-          begin      = $form.find('.dialog-begin').val(),
-          target     = $form.find('.dialog-target').val();
-          $('.houses > li').each(function(){
-            houses.push($(this).attr('value'));
-          });
-          $('.performers > li').each(function(){
-            performers.push($(this).attr('value'));
-          });
-          $.post('/numbers/outages/{{ outage.get_id() }}/',{
-            description: $('.dialog-description').val(),
-            type: $('.dialog-type').val(),
-            houses: houses,
-            performers: performers,
-            begin: begin,
-            target: target
-            },function(response){
-              $('.dialog').modal('hide');
-              $('.outage[outage={{ outage.get_id() }}]').html(response['outage']);
-            },
-          "json");
-        });
+    var $form      = $(e.target),
+    fv         = $(e.target).data('formValidation'),
+    houses     = [],
+    performers = [],
+    begin      = $form.find('.dialog-begin').val(),
+    target     = $form.find('.dialog-target').val();
+    $('.houses > li').each(function(){
+      houses.push($(this).attr('value'));
     });
+    $('.performers > li').each(function(){
+      performers.push($(this).attr('value'));
+    });
+    $.post('/numbers/outages/{{ outage.get_id() }}/',{
+      description: $('.dialog-description').val(),
+      type: $('.dialog-type').val(),
+      houses: houses,
+      performers: performers,
+      begin: begin,
+      target: target
+      },function(response){
+        $('.dialog').modal('hide');
+        $('.outage[outage={{ outage.get_id() }}]').html(response['outage']);
+      },
+    "json");
+  });
   $('.add_house').click(function(){
     $('.add_house_content').show();
     $('.add_house_cancel').show();

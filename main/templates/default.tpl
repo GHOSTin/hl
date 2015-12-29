@@ -99,7 +99,6 @@
   <script src="/js/vendor/vendor.js"></script>
   <script src="/js/inspinia.js"></script>
 {% endif %}
-  <script src="/js/formValidation.min.js"></script>
   <script src="/js/default.js"></script>
   {% block javascript %}{% endblock %}
   <script src="/js/notification-center.js"></script>
