@@ -247,7 +247,7 @@ class number implements JsonSerializable{
   }
 
   public function set_fio($fio){
-    if(!preg_match('/^[А-ЯЁёа-я0-9\.,"№()* -<>]{1,255}$/u', $fio))
+    if(!preg_match('/^[А-ЯA-ZЁёа-я0-9\.,"№()* -<>]{1,255}$/u', $fio))
       throw new DomainException('Wrong number fio '.$fio);
   	$this->fio = $fio;
   }

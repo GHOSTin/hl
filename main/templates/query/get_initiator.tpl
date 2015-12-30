@@ -9,7 +9,7 @@
 {% block js %}
 	show_dialog(get_hidden_content());
   $('.dialog-cellphone').inputmask("mask", {"mask": "(999) 999-99-99"});
-  $('.dialog-telephone').inputmask("mask", {"mask": "99-99-99"});
+  $('.dialog-telephone').inputmask("mask", {"mask": "9{1,3}-99-99"});
   $('.i-checks').iCheck({
     checkboxClass: 'icheckbox_square-green',
     radioClass: 'iradio_square-green',
