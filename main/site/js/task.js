@@ -28,7 +28,7 @@ $(document).ready(function(){
         return true;
     });
     $(window).on('hashchange', function() {
-        var link = location.hash.replace('#', '');
+        var link = location.hash.replace('#', '').replace('/', '');
         if(link) {
             $('#task_container').addClass('hidden-xs');
             $('#task_content').addClass('show').removeClass('hidden-xs');

@@ -5,25 +5,18 @@ use \domain\user;
 class task extends \Doctrine\ORM\EntityRepository {
 
   public function findActiveTask(user $user){
-    $tasks = $this->findBy(array('status'=>array('open', 'reopen')));
-    $result = [];
-    foreach ($tasks as $task) {
-      if($task->isPerson($user)){
-        $result[] = $task;
-      }
-    }
-    return $result;
+    return $this->findBy([
+                            'status'=> ['open', 'reopen'],
+                            'creator' => $user
+                            ]);
   }
 
   public function findCloseTask(user $user){
-    $tasks = $this->findBy(array('status'=>array('close')));
-    $result = [];
-    foreach ($tasks as $task) {
-      if($task->isPerson($user)){
-        $result[] = $task;
-      }
-    }
-    return $result;
+    return $this->findBy([
+                          'status'=> ['close'],
+                          'creator' => $user
+                          ]);
+
   }
 
   public function getInsertId(){

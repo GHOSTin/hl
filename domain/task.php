@@ -1,6 +1,6 @@
 <?php namespace domain;
 
-use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Table(name="tasks")
@@ -10,28 +10,31 @@ class task {
 
 
   /**
-   * @Id()
-   * @Column
-   * @var string
-   */
+  * @Id()
+  * @Column
+  * @var string
+  */
   private $id;
+
   /**
-   * @Column
-   * @var string
-   */
+  * @Column
+  * @var string
+  */
   private $title;
+
   /**
-   * @Column
-   * @var string
-   */
+  * @Column
+  * @var string
+  */
   private $description;
+
   /**
    * @Column(type="integer")
    * @var int
    */
   private $time_open;
   /**
-   * @Column(type="integer")
+   * @Column(type="integer", nullable=true)
    * @var int
    */
   private $time_close; //время выполнеия
@@ -46,17 +49,22 @@ class task {
    */
   private $rating = 0;
   /**
-   * @OneToMany(targetEntity="\domain\task2user", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
-   * @var \Doctrine\Common\Collections\ArrayCollection
+  * @ManyToOne(targetEntity="domain\user")
+  */
+  private $creator;
+
+  /**
+   * @ManyToMany(targetEntity="domain\user")
+   * @JoinTable(name="task2performer")
    */
-  private $users = [];
+  private $performers = [];
   /**
    * @OneToMany(targetEntity="\domain\task2comment", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
    * @var \Doctrine\Common\Collections\ArrayCollection
    */
   private $comments = [];
   /**
-   * @Column
+   * @Column(nullable=true)
    * @var string
    */
   private $reason;
@@ -66,28 +74,15 @@ class task {
    */
   private $status;
 
-  /**
-   * @param \Doctrine\Common\Collections\ArrayCollection $users
-   */
-  public function set_users($users)
-  {
-    $this->users = $users;
-  }
-
-  /**
-   * @return \Doctrine\Common\Collections\ArrayCollection
-   */
-  public function get_users()
-  {
-    return $this->users;
-  }
-
-  /**
-   * @param mixed $title
-   */
-  public function set_title($title)
-  {
+  public function __construct($id, user $creator, $title, $description, $time_target, $time_open){
+    $this->status = 'open';
+    $this->id = $id;
+    $this->creator = $creator;
     $this->title = $title;
+    $this->description = $description;
+    $this->time_target = $time_target;
+    $this->time_open = $time_open;
+    $this->performers = new ArrayCollection();
   }
 
   /**
@@ -98,30 +93,12 @@ class task {
     return $this->title;
   }
 
-
-  /**
-   * @param Integer $id
-   */
-  public function set_id($id)
-  {
-    $this->id = $id;
-  }
-
   /**
    * @return Integer
    */
   public function get_id()
   {
     return $this->id;
-  }
-
-
-  /**
-   * @param mixed $comments
-   */
-  public function set_comments(array $comments)
-  {
-    $this->comments = $comments;
   }
 
   /**
@@ -132,48 +109,23 @@ class task {
     return $this->comments;
   }
 
-  /**
-   * @return mixed
-   */
-  public function get_creator()
-  {
-    $criteria = Criteria::create()
-        ->where(Criteria::expr()->eq("userType", "creator"));
-    return $this->users->matching($criteria)->first();
-  }
-
-  /**
-   * @param mixed $description
-   */
-  public function set_description($description)
-  {
-    $this->description = $description;
+  public function get_creator(){
+    return $this->creator;
   }
 
   /**
    * @return mixed
    */
-  public function get_description()
-  {
+  public function get_description(){
     return $this->description;
   }
 
-  /**
-   * @return mixed
-   */
-  public function get_performers()
-  {
-    $criteria = Criteria::create()
-        ->where(Criteria::expr()->eq("userType", "performer"));
-    return $this->users->matching($criteria);
+  public function add_performer($user){
+    $this->performers->add($user);
   }
 
-  /**
-   * @param mixed $rating
-   */
-  public function set_rating($rating)
-  {
-    $this->rating = $rating;
+  public function get_performers(){
+    return $this->performers;
   }
 
   /**
@@ -185,27 +137,11 @@ class task {
   }
 
   /**
-   * @param mixed $reason
-   */
-  public function set_reason($reason)
-  {
-    $this->reason = $reason;
-  }
-
-  /**
    * @return mixed
    */
   public function get_reason()
   {
     return $this->reason;
-  }
-
-  /**
-   * @param mixed $status
-   */
-  public function set_status($status)
-  {
-    $this->status = $status;
   }
 
   /**
@@ -217,27 +153,11 @@ class task {
   }
 
   /**
-   * @param mixed $time_close
-   */
-  public function set_time_close($time_close)
-  {
-    $this->time_close = $time_close;
-  }
-
-  /**
    * @return mixed
    */
   public function get_time_close()
   {
     return $this->time_close;
-  }
-
-  /**
-   * @param mixed $time_open
-   */
-  public function set_time_open($time_open)
-  {
-    $this->time_open = $time_open;
   }
 
   /**
@@ -249,27 +169,10 @@ class task {
   }
 
   /**
-   * @param mixed $time_target
-   */
-  public function set_time_target($time_target)
-  {
-    $this->time_target = $time_target;
-  }
-
-  /**
    * @return mixed
    */
   public function get_time_target()
   {
     return $this->time_target;
-  }
-
-
-  public function isPerson(user $user){
-    $users = [];
-    foreach (clone $this->users as $t2u) {
-      $users[] = $t2u->get_user();
-    }
-    return in_array($user, $users);
   }
 }

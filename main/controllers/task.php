@@ -5,34 +5,26 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \domain\task2comment;
-use \domain\task2user;
 
 class task{
 
   public function add_task(Request $request, Application $app){
-    $task = new \domain\task();
-    $task->set_id($app['em']->getRepository('\domain\task')->getInsertId());
-    $task->set_title($request->get('title'));
-    $task->set_description($request->get('description'));
-    $task->set_time_target($request->get('time_target'));
-    $task->set_time_open(time());
-    $task->set_status('open');
-    $users = new \Doctrine\Common\Collections\ArrayCollection();
-    $user = new task2user();
-    $user->set_userType('creator');
-    $user->set_task($task);
-    $user->set_user($app['user']);
-    $users->add($user);
-    foreach($request->get('performers') as $performer){
-      $user = new task2user();
-      $user->set_userType('performer');
-      $user->set_user($app['em']->find('\domain\user', $performer));
-      $user->set_task($task);
-      $users->add($user);
+    $id = $app['em']->getRepository('\domain\task')->getInsertId();
+    $task = new \domain\task($id,
+                             $app['user'],
+                             $request->get('title'),
+                             $request->get('description'),
+                             $request->get('time_target'),
+                             time()
+                            );
+    foreach($request->get('performers') as $user_id){
+      $user = $app['em']->find('domain\user', $user_id);
+      $task->add_performer($user);
     }
-    $task->set_users($users);
     $app['em']->persist($task);
     $app['em']->flush();
+    var_dump($task);
+    exit();
     $tasks = $app['em']->getRepository('\domain\task')
                        ->findActiveTask($app['user']);
     return $app['twig']->render('task\show_active_tasks.tpl',
@@ -79,7 +71,9 @@ class task{
   public function get_task_content(Request $request, Application $app){
     $task = $app['em']->find('\domain\task', $request->get('id'));
     return $app['twig']->render('task\get_task_content.tpl',
-                                ['user' => $app['user'], 'task' => $task]);
+                                [
+                                  'user' => $app['user'],
+                                 'task' => $task]);
   }
 
   public function save_task_content(Request $request, Application $app){
