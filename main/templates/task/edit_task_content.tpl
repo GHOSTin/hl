@@ -1,13 +1,10 @@
 {% extends "ajax.tpl" %}
 
-{% set creator = task.get_creator().get_user() %}
+{% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set target_date = task.get_time_target()|date('d.m.Y') %}
 {% set close_date = task.get_time_close()|date('d.m.Y') %}
-{% set performers = [] %}
-{% for performer in task.get_performers() %}
-  {% set performers = performers|merge([performer.get_user()]) %}
-{% endfor %}
+{% set performers = task.get_performers() %}
 
 {% block html %}
   <div class="row" id="task" data-id="{{ task.get_id() }}">
@@ -21,7 +18,7 @@
             </span>
           </p>
           <form class="navbar-form pull-left">
-            <input type="text" class="form-control task_time_target" value="{{ target_date }}" readonly="true">
+            <input type="text" class="form-control task_time_target" readonly="readonly">
           </form>
         </div>
         <form class="navbar-form text-center">
@@ -94,14 +91,12 @@
 
   $(".chosen-select").chosen({width: '100%'});
 
-  $('.task_time_target, .task_time_close').datepicker({
-  format: "dd.mm.yyyy",
-  startDate: "{{ open_date }}",
-  weekStart: 1,
-  todayBtn: "linked",
-  language: "ru",
-  autoclose: true,
-  todayHighlight: true
+  $('.task_time_target, .task_time_close').datetimepicker({
+    format: "DD.MM.YYYY",
+    defaultDate: moment("{{ target_date }}", "DD.MM.YYYY").add(1, 'seconds'),
+    minDate: moment("{{ open_date }}", "DD.MM.YYYY"),
+    locale: "ru",
+    ignoreReadonly: true
   });
   $(document).on('click', '#task_save', function(){
     var link = location.hash.replace('#', '');
@@ -111,12 +106,12 @@
           title: $('#task-title').val(),
           description: $('#task-description').val(),
           performers: $('#task-performers').val(),
-          time_target: $('.task_time_target').datepicker('getDate').getTime()/1000,
+          time_target: $('.task_time_target').data("DateTimePicker").date().format('X'),
           status: "{{ task.get_status() }}",
           {% if task.get_status() == 'close' %}
             reason: $('#task-reason').val(),
             rating: $('[name="task-rating"]:checked').attr('id'),
-            time_close: $('.task_time_close').datepicker('getDate').getTime()/1000,
+            time_close: $('.task_time_close').data("DateTimePicker").date().format('X'),
           {% endif %}
         },function(r) {
           init_content(r);
