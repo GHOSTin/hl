@@ -8,20 +8,29 @@ $(document).ready(function(){
                 }
             );
     });
-    $('#select-all').change(function() {
-        var checkboxes = $(this).closest('table').find('tbody :checkbox');
-        if($(this).is(':checked')) {
-            checkboxes.prop('checked', true);
+    var checkAll = $('input#select-all');
+    checkAll.on('ifChecked ifUnchecked', function(event) {
+        var checkboxes = $('input.check');
+        if (event.type == 'ifChecked') {
+            checkboxes.iCheck('check');
         } else {
-            checkboxes.prop('checked', false);
+            checkboxes.iCheck('uncheck');
         }
     });
-    $('.get_date_metrics').datepicker({format: 'dd.mm.yyyy', language: 'ru', todayHighlight: true}).on('changeDate', function(){
-        $('.get_date_metrics').datepicker('hide');
+    $('.get_date_metrics').datetimepicker({
+        format: 'DD.MM.YYYY',
+        locale: 'ru',
+        ignoreReadonly: true,
+        defaultDate: moment()
+    }).on('dp.change', function(e){
         $.get('set_date',{
-            time: $('.get_date_metrics').val()
+            time: e.date.format('X')
         },function(r){
             $('form#metrics').html(r);
         });
+    });
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green',
     });
 });
