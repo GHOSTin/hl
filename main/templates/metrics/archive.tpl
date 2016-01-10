@@ -3,11 +3,11 @@
 {% block component %}
   <div class="row">
     <div class="col-md-2">
-      <p><a href="/metrics/" class="btn btn-default">Перейти к показаниям</a></p>
+      <p><a href="/metrics/" class="btn btn-primary"><i class="fa fa-arrow-left fa-fw"></i> К показаниям</a></p>
     </div>
     <div class="col-md-10">
       <div class="row">
-        <div class="col-xs-2">
+        <div class="col-xs-6 col-sm-4 col-lg-2">
           <input class="form-control get_date_metrics" placeholder="Выберите дату" readonly>
         </div>
       </div>
@@ -20,7 +20,6 @@
 
 {% block javascript %}
   <script src="/js/metrics.js"></script>
-  <script src="/js/bootstrap-datepicker.js"></script>
 {% endblock%}
 
 {% block css %}
