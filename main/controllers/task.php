@@ -23,8 +23,6 @@ class task{
     }
     $app['em']->persist($task);
     $app['em']->flush();
-    var_dump($task);
-    exit();
     $tasks = $app['em']->getRepository('\domain\task')
                        ->findActiveTask($app['user']);
     return $app['twig']->render('task\show_active_tasks.tpl',
@@ -33,10 +31,7 @@ class task{
 
   public function close_task(Request $request, Application $app){
     $task = $app['em']->find('\domain\task', $request->get('id'));
-    $task->set_reason($request->get('reason'));
-    $task->set_rating(((int) substr($request->get('rating'), -1))+ 1);
-    $task->set_time_close((int) $request->get('time_close'));
-    $task->set_status('close');
+    $task->close_task($request->get('reason'), $request->get('time_close'), $request->get('rating'));
     $app['em']->flush($task);
     $tasks = $app['em']->getRepository('\domain\task')
                        ->findActiveTask($app['user']);

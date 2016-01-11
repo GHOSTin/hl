@@ -57,17 +57,20 @@ class task {
    * @ManyToMany(targetEntity="domain\user")
    * @JoinTable(name="task2performer")
    */
-  private $performers = [];
+  private $performers;
+
   /**
-   * @OneToMany(targetEntity="\domain\task2comment", mappedBy="task", cascade={"persist", "remove"}, orphanRemoval=true)
+   * @OneToMany(targetEntity="domain\task2comment", mappedBy="task", cascade={"persist", "remove"})
    * @var \Doctrine\Common\Collections\ArrayCollection
    */
-  private $comments = [];
+  private $comments;
+
   /**
    * @Column(nullable=true)
    * @var string
    */
   private $reason;
+
   /**
    * @Column
    * @var string
@@ -83,6 +86,14 @@ class task {
     $this->time_target = $time_target;
     $this->time_open = $time_open;
     $this->performers = new ArrayCollection();
+    $this->comments = new ArrayCollection();
+  }
+
+  public function close_task($reason, $time,  $rating){
+    $this->reason = $reason;
+    $this->rating = (int) substr($rating, -1) + 1;
+    $this->time_close = (int) $time;
+    $this->status = 'close';
   }
 
   /**

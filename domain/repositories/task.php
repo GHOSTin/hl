@@ -4,19 +4,21 @@ use \domain\user;
 
 class task extends \Doctrine\ORM\EntityRepository {
 
+  private static $active_task = "SELECT t FROM domain\\task t JOIN t.performers p WHERE t.status IN ('open', 'reopen') AND (p = :user OR t.creator = :user)";
+  private static $close_task = "SELECT t FROM domain\\task t JOIN t.performers p WHERE t.status = 'close' AND (p = :user OR t.creator = :user)";
+
   public function findActiveTask(user $user){
-    return $this->findBy([
-                            'status'=> ['open', 'reopen'],
-                            'creator' => $user
-                            ]);
+    $query = $this->_em->createQuery(self::$active_task);
+    $query->setParameter(':user', $user);
+    $tasks = $query->getResult();
+    return $tasks;
   }
 
   public function findCloseTask(user $user){
-    return $this->findBy([
-                          'status'=> ['close'],
-                          'creator' => $user
-                          ]);
-
+    $query = $this->_em->createQuery(self::$close_task);
+    $query->setParameter(':user', $user);
+    $tasks = $query->getResult();
+    return $tasks;
   }
 
   public function getInsertId(){

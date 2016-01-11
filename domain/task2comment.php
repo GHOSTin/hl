@@ -1,36 +1,37 @@
 <?php namespace domain;
 /**
- * Class \domain\task2comment
  * @Entity
- * @Table(name="task2comment")
  */
 class task2comment {
 
   /**
    * @Id()
-   * @GeneratedValue(strategy="AUTO")
-   * @Column(name="id")
-   * @var
+   * @Column(type="integer")
+   * @GeneratedValue
+   *
+   * @var int
    */
   private $id;
+
   /**
-   * @ManyToOne(targetEntity="\domain\task", inversedBy="comments")
-   * @JoinColumn(name="task_id", referencedColumnName="id")
+   * @ManyToOne(targetEntity="domain\task", inversedBy="comments")
    */
   private $task;
+
   /**
    * @Column
    * @var string
    */
   private $message;
+
   /**
    * @Column(type="integer")
    * @var int
    */
   private $time;
+
   /**
-   * @OneToOne(targetEntity="\domain\user")
-   * @JoinColumn(name="user_id", referencedColumnName="id")
+   * @ManyToOne(targetEntity="domain\user")
    */
   private $user;
 
@@ -97,5 +98,4 @@ class task2comment {
   {
     return $this->task;
   }
-
 }
