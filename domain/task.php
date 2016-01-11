@@ -10,21 +10,21 @@ class task {
 
 
   /**
-  * @Id()
-  * @Column
-  * @var string
+   * @Id()
+   * @Column
+   * @var integer
   */
   private $id;
 
   /**
-  * @Column
-  * @var string
+   * @Column
+   * @var string
   */
   private $title;
 
   /**
-  * @Column
-  * @var string
+   * @Column
+   * @var string
   */
   private $description;
 
@@ -94,6 +94,15 @@ class task {
     $this->rating = (int) substr($rating, -1) + 1;
     $this->time_close = (int) $time;
     $this->status = 'close';
+  }
+
+  public function update($title, $description, $reason,  $target_time, $time_close, $rating){
+    $this->title = $title;
+    $this->description = $description;
+    $this->reason = $reason;
+    $this->time_target = $target_time;
+    $this->time_close = $time_close;
+    $this->rating = (int) substr($rating, -1) + 1;;
   }
 
   /**

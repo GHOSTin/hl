@@ -40,7 +40,7 @@
       {% if task.get_status() == 'close' %}
         <p>
           <strong>Дата закрытия:</strong>
-          <input type="text" class="form-control task_time_close" value="{{ close_date }}" readonly="true">
+          <input type="text" class="form-control task_time_close" readonly="readonly">
         </p>
         <p>
           <strong>Причина закрытия:</strong>
@@ -91,9 +91,16 @@
 
   $(".chosen-select").chosen({width: '100%'});
 
-  $('.task_time_target, .task_time_close').datetimepicker({
+  $('.task_time_target').datetimepicker({
     format: "DD.MM.YYYY",
     defaultDate: moment("{{ target_date }}", "DD.MM.YYYY").add(1, 'seconds'),
+    minDate: moment("{{ open_date }}", "DD.MM.YYYY"),
+    locale: "ru",
+    ignoreReadonly: true
+  });
+  $('.task_time_close').datetimepicker({
+    format: "DD.MM.YYYY",
+    defaultDate: moment("{{ close_date }}", "DD.MM.YYYY").add(1, 'seconds'),
     minDate: moment("{{ open_date }}", "DD.MM.YYYY"),
     locale: "ru",
     ignoreReadonly: true

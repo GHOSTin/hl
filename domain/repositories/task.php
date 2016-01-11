@@ -1,6 +1,6 @@
 <?php namespace domain\repositories;
 
-use \domain\user;
+use domain\user;
 
 class task extends \Doctrine\ORM\EntityRepository {
 
