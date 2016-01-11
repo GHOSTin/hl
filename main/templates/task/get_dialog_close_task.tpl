@@ -59,7 +59,7 @@
         id: {{ task.get_id() }},
         reason: $('#task-reason').val(),
         rating: $('[name="task-rating"]:checked').attr('id'),
-        time_close: {{ task.get_time_open() + 64000 }}
+        time_close: $('.input-group.date').data("DateTimePicker").date().format('X')
         },function(r){
           init_content(r);
           $('.dialog').modal('hide');
