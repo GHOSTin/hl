@@ -147,10 +147,10 @@ class fake{
   public function generate_users(){
     foreach(self::get_user_instance($this->salt) as $user){
       $user->unblock();
+      foreach(user::get_rules_list() as $rule){
+        $user->update_access($rule);
+      }
       $this->users[] = $user;
-    }
-    foreach(user::get_rules_list() as $rule){
-      $this->users[0]->update_access($rule);
     }
   }
 
