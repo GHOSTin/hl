@@ -16,11 +16,10 @@
             {% if user.check_access('queries/create_query') %}
             <a class="get_dialog_create_query btn btn-white compose-mail">Создать заявку</a>
             {% endif %}
-            <a class="get_search btn btn-white compose-mail"><i class="fa fa-search"></i></a>
           </div>
           <div class="hidden-xs">
             <div  class="page-header">
-              <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a>
+              <h4 class="view-toggle-filters">Фильтры / <a class="selections">Выборки</a> / <a class="get_search compose-mail"><i class="fa fa-search"></i></a>
               </h4><a class="cm clear_filters absolute_hide">сбросить</a>
             </div>
             {% include 'query/filters.tpl' %}

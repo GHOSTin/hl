@@ -8,24 +8,28 @@
 			$.get('add_work',{
 				id: {{ query.get_id() }},
 				work_id: work_id,
-				begin_hours: $('.dialog-begin_hours :selected').val(),
-				begin_minutes: $('.dialog-begin_minutes :selected').val(),
-				begin_date: $('.dialog-begin_date').val(),
-				end_hours: $('.dialog-end_hours :selected').val(),
-				end_minutes: $('.dialog-end_minutes :selected').val(),
-				end_date: $('.dialog-end_date').val()
+				begin_date: $('.dialog-begin_date').data("DateTimePicker").date().format('X'),
+				end_date: $('.dialog-end_date').data("DateTimePicker").date().format('X')
 				},function(r){
 					init_content(r);
 					$('.dialog').modal('hide');
 				});
 		}
 	});
-	$('.dialog-begin_date').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-		$('.dialog-begin_date').datepicker('hide');
-	});
-	$('.dialog-end_date').datepicker({format: 'dd.mm.yyyy', language: 'ru'}).on('changeDate', function(){
-		$('.dialog-end_date').datepicker('hide');
-	});
+	$('.dialog-begin_date').datetimepicker({
+        format: 'DD.MM.YYYY H:m',
+        locale: 'ru',
+        defaultDate: moment(),
+        sideBySide: true,
+        stepping: 5
+    });
+	$('.dialog-end_date').datetimepicker({
+        format: 'DD.MM.YYYY H:m',
+        locale: 'ru',
+        defaultDate: moment(),
+        sideBySide: true,
+        stepping: 5
+    });
 {% endblock js %}
 
 {% block html %}
@@ -43,33 +47,13 @@
           {% endfor %}
         </select>
       </div>
-      <div class="form-group form-inline">
-        <label class="control-label col-2">Дата начала</label>
-        <select class="dialog-begin_hours form-control" style="width: 75px;">
-        {% for i in 1..24 %}
-            <option value="{{i}}">{{i}}</option>
-        {% endfor %}
-        </select>
-        <select class="dialog-begin_minutes form-control" style="width: 75px;">
-        {% for i in range(0, 55, 5) %}
-            <option value="{{i}}">{{i}}</option>
-        {% endfor %}
-        </select>
-        <input type="text" class="dialog-begin_date form-control" value="{{'now'|date('d.m.Y')}}" style="width: 120px;">
+      <div class="form-group">
+        <label class="control-label">Дата начала</label>
+        <input type="text" class="dialog-begin_date form-control">
       </div>
-      <div  class="form-group form-inline">
+      <div  class="form-group">
         <label class="control-label col-2">Дата конца</label>
-        <select class="dialog-end_hours form-control" style="width:75px">
-        {% for i in 1..24 %}
-          <option value="{{i}}">{{i}}</option>
-        {% endfor %}
-        </select>
-        <select class="dialog-end_minutes form-control" style="width:75px">
-        {% for i in range(0, 55, 5) %}
-          <option value="{{i}}">{{i}}</option>
-        {% endfor %}
-        </select>
-        <input type="text" class="dialog-end_date form-control" value="{{'now'|date('d.m.Y')}}" style="width:120px" />
+        <input type="text" class="dialog-end_date form-control">
       </div>
     </div>
     <div class="modal-footer">

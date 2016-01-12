@@ -44,7 +44,8 @@
         speed: 500,
         fade: true,
         cssEase: 'linear',
-        adaptiveHeight: true
+        adaptiveHeight: true,
+        autoplay: true
       });
     });
   </script>

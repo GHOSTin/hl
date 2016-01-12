@@ -25,7 +25,6 @@
 
 {% block javascript %}
 <script src="/js/query.js"></script>
-<script src="/js/bootstrap-datepicker.js"></script>
 <script src="/js/backbone.js"></script>
 <script src="/js/underscore.js"></script>
 <script src="/js/import.js"></script>
@@ -76,5 +75,5 @@
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="/css/datepicker.css" >
+<link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
 {% endblock %}

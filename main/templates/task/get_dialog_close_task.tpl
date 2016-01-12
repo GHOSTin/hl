@@ -32,11 +32,8 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="task-time_target">Дата закрытия</label>
-    <div class="input-group date">
-      <input type="text" class="form-control" id="task-time_close" readonly="readonly" tabindex="3" required>
-      <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-    </div>
+    <label for="task-time_close">Дата закрытия</label>
+    <input type="text" class="form-control" id="task-time_close" readonly="readonly" tabindex="3" required>
   </div>
 </form>
 {% endblock dialog %}
@@ -46,7 +43,7 @@
 {% endblock buttons %}
 
 {% block script %}
-  $('.input-group.date').datetimepicker({
+  $('#task-time_close').datetimepicker({
     format: "DD.MM.YYYY",
     minDate: moment("{{ task.get_time_open() }}", "X"),
     useCurrent: true,
@@ -59,7 +56,7 @@
         id: {{ task.get_id() }},
         reason: $('#task-reason').val(),
         rating: $('[name="task-rating"]:checked').attr('id'),
-        time_close: $('.input-group.date').data("DateTimePicker").date().format('X')
+        time_close: $('#task-time_close').data("DateTimePicker").date().format('X')
         },function(r){
           init_content(r);
           $('.dialog').modal('hide');

@@ -23,5 +23,5 @@
 {% endblock%}
 
 {% block css %}
-  <link rel="stylesheet" href="/css/datepicker.css" >
+  <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
 {% endblock css %}

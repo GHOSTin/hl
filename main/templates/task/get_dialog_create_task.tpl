@@ -24,11 +24,8 @@
     </select>
   </div>
   <div class="form-group">
-    <label for="task-time_close">Крайний срок</label>
-    <div class="input-group date" id="task-date">
-      <input type="text" name="time_target" class="form-control" id="task-time_target" readonly="readonly" tabindex="4">
-      <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-    </div>
+    <label for="task-time_target">Крайний срок</label>
+    <input type="text" name="time_target" class="form-control" id="task-time_target" readonly="readonly" tabindex="4">
   </div>
 </form>
 {% endblock dialog %}
@@ -100,14 +97,14 @@ $(document).ready(function() {
           title: $('#task-title').val(),
           description: $('#task-description').val(),
           performers: $('#task-performers').val(),
-          time_target: $('#task-date').data("DateTimePicker").date().format('X')
+          time_target: $('#task-time_target').data("DateTimePicker").date().format('X')
           },function(res){
             init_content(res);
             $('.dialog').modal('hide');
         });
     });
     $(".chosen-select").chosen({width: '100%'});
-    $('#task-date').datetimepicker({
+    $('#task-time_target').datetimepicker({
       format: "DD.MM.YYYY",
       locale: 'ru',
       defaultDate: moment(),
