@@ -96,13 +96,15 @@ class task {
     $this->status = 'close';
   }
 
-  public function update($title, $description, $reason,  $target_time, $time_close, $rating){
+  public function update($title, $description, $reason, $target_time, $time_close, $rating){
     $this->title = $title;
     $this->description = $description;
-    $this->reason = $reason;
     $this->time_target = $target_time;
-    $this->time_close = $time_close;
-    $this->rating = (int) substr($rating, -1) + 1;;
+    if($this->status === 'close'){
+      $this->reason = $reason;
+      $this->time_close = $time_close;
+      $this->rating = (int) substr($rating, -1) + 1;
+    }
   }
 
   /**

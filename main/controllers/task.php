@@ -74,22 +74,12 @@ class task{
 
   public function save_task_content(Request $request, Application $app){
     $task = $app['em']->find('domain\task', $request->get('id'));
-    if($task->get_status() !== 'close'){
-      $reason = null;
-      $time_close = null;
-      $rating = 0;
-      die('345');
-    }else{
-      $reason = $request->get('reason');
-      $time_close = $request->get('time_close');
-      $rating = $request->get('rating');
-    }
     $task->update($request->get('title'),
                   $request->get('description'),
-                  $reason,
+                  $request->get('reason'),
                   $request->get('time_target'),
-                  $time_close,
-                  $rating);
+                  $request->get('time_close'),
+                  $request->get('rating'));
     $task->get_performers()->clear();
     $users = $app['em']->getRepository('domain\user')
                        ->findById($request->get('performers'));
