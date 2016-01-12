@@ -11,7 +11,13 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th><input type="checkbox" id="select-all"></th>
+              <th>
+                <div class="i-checks">
+                  <label>
+                    <input type="checkbox" id="select-all">
+                  </label>
+                </div>
+              </th>
               <th>Дата</th>
               <th>Адрес</th>
               <th>Показания</th>
@@ -20,7 +26,11 @@
           <tbody>
           {% for metric in metrics %}
             <tr>
-              <td><input type="checkbox" name="metric[]" value="{{ metric.get_id() }}" id="{{ metric.get_id() }}"></td>
+              <td>
+                  <label>
+                    <input class="i-checks check" type="checkbox" name="metric[]" value="{{ metric.get_id() }}" id="{{ metric.get_id() }}">
+                  </label>
+              </td>
               <td>{{ metric.get_time()|date('Y.m.d H:i:s') }}</td>
               <td>{{ metric.get_address() }}</td>
               <td>{{ metric.get_metrics()|nl2br }}</td>
@@ -32,6 +42,11 @@
     </div>
   </div>
 {% endblock%}
+
+{% block css %}
+  <link rel="stylesheet" href="/css/bootstrap-datetimepicker.min.css" >
+  <link rel="stylesheet" href="/css/plugins/iCheck/custom.css" >
+{% endblock css %}
 
 {% block javascript %}
   <script src="/js/metrics.js"></script>

@@ -1,29 +1,24 @@
 <?php namespace domain\repositories;
 
-use \domain\user;
+use domain\user;
 
 class task extends \Doctrine\ORM\EntityRepository {
 
+  private static $active_task = "SELECT t FROM domain\\task t JOIN t.performers p WHERE t.status IN ('open', 'reopen') AND (p = :user OR t.creator = :user)";
+  private static $close_task = "SELECT t FROM domain\\task t JOIN t.performers p WHERE t.status = 'close' AND (p = :user OR t.creator = :user)";
+
   public function findActiveTask(user $user){
-    $tasks = $this->findBy(array('status'=>array('open', 'reopen')));
-    $result = [];
-    foreach ($tasks as $task) {
-      if($task->isPerson($user)){
-        $result[] = $task;
-      }
-    }
-    return $result;
+    $query = $this->_em->createQuery(self::$active_task);
+    $query->setParameter(':user', $user);
+    $tasks = $query->getResult();
+    return $tasks;
   }
 
   public function findCloseTask(user $user){
-    $tasks = $this->findBy(array('status'=>array('close')));
-    $result = [];
-    foreach ($tasks as $task) {
-      if($task->isPerson($user)){
-        $result[] = $task;
-      }
-    }
-    return $result;
+    $query = $this->_em->createQuery(self::$close_task);
+    $query->setParameter(':user', $user);
+    $tasks = $query->getResult();
+    return $tasks;
   }
 
   public function getInsertId(){

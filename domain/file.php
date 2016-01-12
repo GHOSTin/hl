@@ -7,7 +7,7 @@ use JsonSerializable;
 * @Entity
 * @Table(name="files")
 */
-class file implements interfaces\file, JsonSerializable{
+class file implements JsonSerializable{
 
   /**
   * @Column(type="integer")

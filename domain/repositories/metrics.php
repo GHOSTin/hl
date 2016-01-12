@@ -3,6 +3,7 @@
 class metrics extends \Doctrine\ORM\EntityRepository {
 
   public function findByStatusBetween($status, $time){
+    $time = date("Y-m-d", $time);
     $qb = $this->_em->createQueryBuilder();
     $qb->select('m')
       ->from('\domain\metrics', 'm')

@@ -34,7 +34,7 @@
   <div class="form-group">
     <label for="task-time_target">Дата закрытия</label>
     <div class="input-group date">
-      <input type="text" class="form-control" id="task-time_close" readonly="true" tabindex="3" required>
+      <input type="text" class="form-control" id="task-time_close" readonly="readonly" tabindex="3" required>
       <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
     </div>
   </div>
@@ -46,23 +46,20 @@
 {% endblock buttons %}
 
 {% block script %}
-  $('.input-group.date').datepicker({
-    format: "dd.mm.yyyy",
-    startDate: "{{ task.get_time_open()|date('d.m.Y') }}",
-    weekStart: 1,
-    todayBtn: "linked",
-    language: "ru",
-    autoclose: true,
-    todayHighlight: true
-  }).datepicker('update', new Date());
-  $('form').jBootValidator({validateOnSubmit: true});
+  $('.input-group.date').datetimepicker({
+    format: "DD.MM.YYYY",
+    minDate: moment("{{ task.get_time_open() }}", "X"),
+    useCurrent: true,
+    locale: "ru",
+    ignoreReadonly: true
+  });
   $('.close_task').click(function(){
     if ($('form').find('.form-group.has-error').length == 0)
       $.get('close_task',{
         id: {{ task.get_id() }},
         reason: $('#task-reason').val(),
         rating: $('[name="task-rating"]:checked').attr('id'),
-        time_close: $('.input-group.date').datepicker('getDate').getTime()/1000
+        time_close: $('.input-group.date').data("DateTimePicker").date().format('X')
         },function(r){
           init_content(r);
           $('.dialog').modal('hide');

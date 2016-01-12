@@ -1,4 +1,4 @@
-{% set creator = task.get_creator().get_user() %}
+{% set creator = task.get_creator() %}
 {% set open_date = task.get_time_open()|date('d.m.Y') %}
 {% set close_date = task.get_time_target()|date('d.m.Y') %}
 {% macro declension(number, forms) %}
@@ -11,21 +11,21 @@
       <div class="navbar-header col-sm-12 col-lg-7">
         <a class="btn btn-default navbar-btn pull-left visible-xs"
            style="margin: 10px 0 0 10px!important;">
-          <i class="glyphicon glyphicon-chevron-left"></i>
+          <i class="fa fa-chevron-left"></i>
         </a>
         <p class="navbar-text">
           <span class="visible-xs visible-sm text-center">{{ open_date }} - {{ close_date }}</span>
           <span class="hidden-xs hidden-sm">с {{ open_date }} по {{ close_date }}</span>
         </p>
       </div>
-      {% if task.get_creator().get_user() == user %}
+      {% if task.get_creator() == user %}
         <form class="navbar-form text-center">
           <button type="button" class="btn btn-default" id="task_edit">
-            <i class="glyphicon glyphicon-edit"></i> Редактировать
+            <i class="fa fa-edit"></i> Редактировать
           </button>
           {% if task.get_status() != 'close' %}
             <button type="button" class="btn btn-default" id="get_dialog_close_task">
-              <i class="glyphicon glyphicon-lock"> </i> Завершить
+              <i class="fa fa-lock"> </i> Завершить
             </button>
           {% endif %}
         </form>
@@ -54,7 +54,7 @@
       <li class="list-group-item list-group-item-info">
         Постановщик:
         <strong>
-          {{ creator.get_lastname()}} {{ creator.get_firstname()|first|upper }}.{{ creator.get_middlename()|first|upper }}.
+          {{ creator.get_fio()}}
         </strong>
       </li>
       <li class="list-group-item list-group-item-info">
@@ -62,7 +62,7 @@
         <strong>
           {% for performer in task.get_performers() %}
             <span class="task_performer">
-                {{ performer.get_user().get_lastname()}} {{ performer.get_user().get_firstname()|first|upper }}.{{ performer.get_user().get_middlename()|first|upper }}.{% if loop.revindex > 1 %}, {% endif%}
+                {{ performer.get_fio() }}{% if loop.revindex > 1 %}, {% endif%}
               </span>
           {% endfor %}
         </strong>

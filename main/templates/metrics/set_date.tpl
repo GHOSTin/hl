@@ -10,7 +10,7 @@
     <tbody>
     {% for metric in metrics %}
       <tr>
-        <td>{{ metric.get_time()|date('Y.m.d H:i:s') }}</td>
+        <td>{{ metric.get_time()|date('d.m.Y H:i:s') }}</td>
         <td>{{ metric.get_address() }}</td>
         <td>{{ metric.get_metrics()|nl2br }}</td>
       </tr>
