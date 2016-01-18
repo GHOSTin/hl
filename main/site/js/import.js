@@ -14,9 +14,7 @@ $(function(){
 
     import_accruals: function(){
       $('.import').html(this.import_accruals_form);
-      $('.date').datepicker({format: 'mm.yyyy', language: 'ru'}).on('changeDate', function(){
-        $('.date').datepicker('hide');
-      });
+      $('.date').datetimepicker({format: 'DD.MM.YYYY', locale: 'ru',  defaultDate: moment()});
     }
   });
 
@@ -65,9 +63,7 @@ $(function(){
 
     import_metrs: function(){
       $('.import').html(this.import_numbers_form);
-      $('.date').datepicker({format: 'mm.yyyy', language: 'ru'}).on('changeDate', function(){
-        $('.date').datepicker('hide');
-      });
+      $('.date').datetimepicker({format: 'DD.MM.YYYY', locale: 'ru',  defaultDate: moment()});
     }
   });
 
