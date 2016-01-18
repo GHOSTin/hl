@@ -99,14 +99,8 @@ class queries{
   }
 
   public function add_work(Request $request, Application $app){
-    $begin_hours = (int) $request->get('begin_hours');
-    $begin_minutes = (int) $request->get('begin_minutes');
-    $begin_date = (string) $request->get('begin_date');
-    $end_hours = (int) $request->get('end_hours');
-    $end_minutes = (int) $request->get('end_minutes');
-    $end_date = (string) $request->get('end_date');
-    $begin = strtotime($begin_hours.':'.$begin_minutes.' '.$begin_date);
-    $end = strtotime($end_hours.':'.$end_minutes.' '.$end_date);
+    $begin = $request->get('begin_date');
+    $end = $request->get('end_date');
     if($begin > $end)
       throw new RuntimeException('wrong time.');
     $query = $app['em']->find('\domain\query', $request->get('id'));
