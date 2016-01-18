@@ -175,7 +175,8 @@ $app['swiftmailer.options'] = array(
 $app->register(new SessionServiceProvider);
 
 $app['session.storage.options'] = [
-  'cookie_lifetime' => 86400 * 30
+  'cookie_lifetime' => 86400 * 30,
+  'gc_maxlifetime' => 86400 * 30
 ];
 
 $app->register(new TwigServiceProvider(), $twig_conf);
