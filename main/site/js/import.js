@@ -14,7 +14,7 @@ $(function(){
 
     import_accruals: function(){
       $('.import').html(this.import_accruals_form);
-      $('.date').datetimepicker({format: 'DD.MM.YYYY', locale: 'ru',  defaultDate: moment()});
+      $('.date').datetimepicker({format: 'MM.YYYY', locale: 'ru',  defaultDate: moment()});
     }
   });
 
@@ -63,7 +63,7 @@ $(function(){
 
     import_metrs: function(){
       $('.import').html(this.import_numbers_form);
-      $('.date').datetimepicker({format: 'DD.MM.YYYY', locale: 'ru',  defaultDate: moment()});
+      $('.date').datetimepicker({format: 'MM.YYYY', locale: 'ru',  defaultDate: moment()});
     }
   });
 

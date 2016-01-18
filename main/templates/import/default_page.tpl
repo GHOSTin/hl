@@ -14,7 +14,7 @@
         <a id="import_numbers">Импорт лицевых</a>
       </li>
       <li>
-        <a id="import_metrs">Импорт счетчиков</a>
+        <a id="import_metrs">Импорт показаний ПУ</a>
       </li>
     </ul>
 	</div>
