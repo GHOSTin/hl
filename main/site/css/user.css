@@ -1,15 +1,27 @@
-.letters{
-    margin:20px 0px 20px 0px;
+.workspace{
+  margin: 20px 0px 20px 0px;
 }
-.letters ul li{
-    display: inline-block;
-    margin: 0px 2px;
+
+
+
+/* begin users */
+.workspace > .users{
+  margin: 20px 0px 20px 0px;
 }
-.letters ul li div{
-    width:15px;
-    height:15px;
-    border: 1px solid grey;
+
+.workspace > .users{
+  margin: 20px 0px 20px 0px;
 }
-.letter-noempty{
-    background: grey;
+
+.workspace > .users .user-content{
+  margin: 20px 0px 20px 20px;
 }
+/* end users */
+
+
+
+/* begin groups */
+.workspace > .groups{
+  margin: 20px 0px 20px 0px;
+}
+/* end groups */

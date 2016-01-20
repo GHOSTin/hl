@@ -1,10 +1,8 @@
 $(document).ready(function(){
-    // возвращает содержимое буквы
-    $('body').on('click', '.get_user_letter', function(){
-        $.get('get_user_letter',{
-            letter: $(this).text()
-            },function(r){
-                init_content(r);
+
+    $('body').on('click', '.get_users', function(){
+        $.get('get_users', function(r){
+                $('.workspace').html(r);
             });
 
     // изменяет статус правила
@@ -25,14 +23,6 @@ $(document).ready(function(){
           function(r){
             init_content(r);
           });
-
-    // выводит соедржимое буквы группы
-    }).on('click', '.get_group_letter', function(){
-        $.get('get_group_letter',{
-            letter: $(this).text()
-            },function(r){
-                init_content(r);
-            });
 
     // выводит информацию об группе
     }).on('click', '.get_group_content', function(){
@@ -168,25 +158,13 @@ $(document).ready(function(){
             });
 
     // выводит буквы групп
-    }).on('click', '.get_group_letters', function(){
-        $.get('get_group_letters',{
+    }).on('click', '.get_groups', function(){
+        $.get('get_groups',{
             },function(r){
-                init_content(r);
+                $('.workspace').html(r);
             });
-
-    // выводит буквы пользователей
-    }).on('click', '.get_user_letters', function(){
-        $.get('get_user_letters',{
-            },function(r){
-                init_content(r);
-            });
-    //выводит диалог очистки логов
-    }).on('click', '.get_dialog_clear_logs', function(){
-        $.get('get_dialog_clear_logs', {
-            }, function(r){
-                init_content(r);
-        });
     });
+    $( ".get_users" ).trigger( "click" );
 });
 
 // возвращает идентификатор пользователя

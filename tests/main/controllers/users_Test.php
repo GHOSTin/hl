@@ -15,11 +15,15 @@ class users_Test extends PHPUnit_Framework_TestCase{
     $em = $this->getMockBuilder('Doctrine\ORM\EntityManager')
                ->disableOriginalConstructor()
                ->getMock();
+    $this->model = $this->getMockBuilder('main\models\users')
+                  ->disableOriginalConstructor()
+                  ->getMock();
     $this->request = new Request();
     $this->app = new Application();
     $this->controller = new controller();
     $this->app['twig'] = $twig;
     $this->app['em'] = $em;
+    $this->app['main\models\users'] = $this->model;
   }
 
   public function test_add_user(){
@@ -114,21 +118,27 @@ class users_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_get_dialog_create_group(){
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('user\get_dialog_create_group.tpl')
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_create_group($this->app);
+  public function test_get_dialog_create_user(){
+    $this->model->expects($this->once())
+                ->method('get_dialog_create_user')
+                ->willReturn('render_template');
+    $response = $this->controller->get_dialog_create_user($this->app);
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_get_dialog_create_user(){
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('user\get_dialog_create_user.tpl')
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->get_dialog_create_user($this->app);
+  public function test_default_page(){
+    $this->model->expects($this->once())
+                ->method('default_page')
+                ->willReturn('render_template');
+    $response = $this->controller->default_page($this->app);
+    $this->assertEquals('render_template', $response);
+  }
+
+  public function test_get_users(){
+    $this->model->expects($this->once())
+                ->method('get_users')
+                ->willReturn('render_template');
+    $response = $this->controller->get_users($this->app);
     $this->assertEquals('render_template', $response);
   }
 

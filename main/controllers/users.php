@@ -17,46 +17,8 @@ class users{
     return $app['twig']->render('user\add_user.tpl', ['group' => $group]);
   }
 
-  public function create_group(Request $request, Application $app){
-    $name = $request->get('name');
-    if(!is_null($app['em']->getRepository('\domain\group')->findOneByName($name)))
-      throw new RuntimeException('Группа с таким название уже существует.');
-    $group = new group();
-    $group->set_name($name);
-    $app['em']->persist($group);
-    $app['em']->flush();
-    $letter = mb_substr($group->get_name(), 0 ,1, 'utf-8');
-    $letter_group = mb_strtolower($letter, 'utf-8');
-    $letters = [];
-    $groups = $app['em']->getRepository('\domain\group')->findAll();
-    if(!empty($groups))
-      foreach($groups as $group){
-        $letter = mb_substr($group->get_name(), 0 ,1, 'utf-8');
-        $letter = mb_strtolower($letter, 'utf-8');
-        if($letter === $letter_group)
-          $letters[] = $group;
-      }
-    return $app['twig']->render('user/get_group_letter.tpl',
-                                ['groups' => $letters]);
-  }
-
   public function default_page(Application $app){
-    $letters = [];
-    $users = $app['em']->getRepository('\domain\user')->findAll();
-    if(!empty($users))
-      foreach($users as $user){
-        $letter = mb_substr($user->get_lastname(), 0 ,1, 'utf-8');
-        $letter = mb_strtolower($letter, 'utf-8');
-        if(isset($letters[$letter]))
-          $letters[$letter]++;
-        else
-          $letters[$letter] = 1;
-      }
-    return $app['twig']->render('user\default_page.tpl',
-                                [
-                                 'user' => $app['user'],
-                                 'letters' => $letters
-                                ]);
+    return $app['main\models\users']->default_page();
   }
 
   public function exclude_user(Request $request, Application $app){
@@ -77,70 +39,18 @@ class users{
     return $app['twig']->render('user\get_group_profile.tpl', ['group' => $group]);
   }
 
-  public function get_group_letter(Request $request, Application $app){
-    $letters = [];
-    $groups = $app['em']->getRepository('\domain\group')->findAll();
-    if(!empty($groups))
-      foreach($groups as $group){
-        $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
-        if($letter === $request->get('letter'))
-          $letters[] = $group;
-      }
-    return $app['twig']->render('user\get_group_letter.tpl', ['groups' => $letters]);
-  }
-
-  public function get_group_letters(Request $request, Application $app){
-    $letters = [];
-    $groups = $app['em']->getRepository('\domain\group')->findAll();
-    if(!empty($groups))
-      foreach($groups as $group){
-        $letter = mb_strtolower(mb_substr($group->get_name(), 0 ,1, 'utf-8'), 'utf-8');
-        if(isset($letters[$letter]))
-          $letters[$letter]++;
-        else
-          $letters[$letter] = 1;
-      }
-    return $app['twig']->render('user\get_group_letters.tpl', ['letters' => $letters]);
-  }
-
   public function get_group_users(Request $request, Application $app){
     $group = $app['em']->find('domain\group', $request->get('id'));
     return $app['twig']->render('user\get_group_users.tpl', ['group' => $group]);
   }
 
-  public function get_user_letter(Request $request, Application $app){
-    $letter_users = [];
-    $users = $app['em']->getRepository('\domain\user')->findAll();
-    if(!empty($users))
-      foreach($users as $user){
-        $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
-        if($letter === $request->get('letter'))
-          $letter_users[] = $user;
-      }
-    return $app['twig']->render('user\get_user_letter.tpl', ['users' => $letter_users]);
-  }
-
-  public function get_user_letters(Request $request, Application $app){
-    $letters = [];
-    $users = $app['em']->getRepository('\domain\user')->findAll();
-    if(!empty($users))
-      foreach($users as $user){
-        $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
-        if(isset($letters[$letter]))
-          $letters[$letter]++;
-        else
-          $letters[$letter] = 1;
-      }
-    return $app['twig']->render('user\get_user_letters.tpl', ['letters' => $letters]);
+  public function get_users(Application $app){
+    return $app['main\models\users']->get_users();
   }
 
   public function access(Application $app, $id){
     $user = $app['em']->find('domain\user', $id);
     return $app['twig']->render('user\access.tpl', ['user' => $user]);
-  }
-
-  public function get_dialog_create_group(Application $app){
-    return $app['twig']->render('user\get_dialog_create_group.tpl');
   }
 
   public function create_user(Request $request, Application $app){
@@ -151,27 +61,14 @@ class users{
       throw new RuntimeException('Пароль и подтверждение не идентичны.');
     if(!preg_match('/^[a-zA-Z0-9]{8,20}$/', $password))
       throw new RuntimeException('Пароль не удовлетворяет a-zA-Z0-9 или меньше 8 символов.');
-    if(!is_null($app['em']->getRepository('\domain\user')->findOneByLogin($login)))
-      throw new RuntimeException();
-    $user = new user();
-    $user->set_lastname($request->get('lastname'));
-    $user->set_firstname($request->get('firstname'));
-    $user->set_middlename($request->get('middlename'));
-    $user->set_login($login);
-    $user->set_hash(user::generate_hash($password, $app['salt']));
-    $user->set_status('true');
-    $app['em']->persist($user);
-    $app['em']->flush();
-    $letter_user = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
-    $letter_users = [];
-    $users = $app['em']->getRepository('domain\user')->findAll();
-    if(!empty($users))
-      foreach($users as $user){
-        $letter = mb_strtolower(mb_substr($user->get_lastname(), 0 ,1, 'utf-8'), 'utf-8');
-        if($letter === $letter_user)
-          $letter_users[] = $user;
-      }
-    return $app['twig']->render('user\get_user_letters.tpl', ['letters' => $letter_users]);
+    $app['main\models\users']->create_user(
+      $request->get('lastname'),
+      $request->get('firstname'),
+      $request->get('middlename'),
+      $login,
+      user::generate_hash($password, $app['salt'])
+    );
+    return $app['main\models\users']->get_users();
   }
 
   public function get_dialog_add_user(Request $request, Application $app){
@@ -186,7 +83,7 @@ class users{
   }
 
   public function get_dialog_create_user(Application $app){
-    return $app['twig']->render('user\get_dialog_create_user.tpl');
+    return $app['main\models\users']->get_dialog_create_user();
   }
 
   public function get_user_content(Request $request, Application $app){

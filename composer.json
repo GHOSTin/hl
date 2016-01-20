@@ -24,7 +24,7 @@
         "phploc/phploc": "*",
         "sebastian/phpcpd": "*",
         "sebastian/phpdcd": "*",
-        "twig/twig": "1.*",
+        "twig/twig": "~1.0",
         "doctrine/orm": "*",
         "silex/silex": "2.0.*@dev",
         "swiftmailer/swiftmailer": "@stable",
