@@ -1,54 +1,41 @@
 {% extends "dialog.tpl" %}
 
-{% block title %}Диалог создания нового пользователя{% endblock title %}
+{% block title %}Диалог создания нового пользователя{% endblock %}
 
 {% block dialog %}
-<table>
-	<tr>
-		<td>Фамилия</td>
-		<td>
-			<input type="text" class="dialog-input-lastname  form-control">
-		</td>
-	</tr>
-	<tr>
-		<td>Имя</td>
-		<td>
-			<input type="text" class="dialog-input-firstname  form-control">
-		</td>
-	</tr>
-	<tr>
-		<td>Отчество</td>
-		<td>
-			<input type="text" class="dialog-input-middlename  form-control">
-		</td>
-	</tr>
-	<tr>
-		<td>Логин</td>
-		<td>
-			<input type="text" class="dialog-input-login  form-control">
-		</td>
-	</tr>
-	<tr>
-		<td>Пароль</td>
-		<td>
-			<input type="text" class="dialog-input-password  form-control">
-		</td>
-	</tr>
-	<tr>
-		<td>Подтверждение</td>
-		<td>
-			<input type="text" class="dialog-input-confirm  form-control">
-		</td>
-	</tr>
-</table>
-{% endblock dialog %}
+<div>
+	<div class="form-group">
+		<label>Фамилия</label>
+		<input type="text" class="dialog-input-lastname form-control">
+	</div>
+	<div class="form-group">
+		<label>Имя</label>
+		<input type="text" class="dialog-input-firstname form-control">
+	</div>
+	<div class="form-group">
+		<label>Отчество</label>
+		<input type="text" class="dialog-input-middlename form-control">
+	</div>
+	<div class="form-group">
+		<label>Логин</label>
+		<input type="text" class="dialog-input-login form-control">
+	</div>
+	<div class="form-group">
+		<label>Пароль</label>
+		<input type="password" class="dialog-input-password form-control">
+	</div>
+	<div class="form-group">
+		<label>Подтверждение пароля</label>
+		<input type="password" class="dialog-input-confirm form-control">
+	</div>
+</div>
+{% endblock %}
 
 {% block buttons %}
 	<div class="btn btn-primary create_user">Создать</div>
-{% endblock buttons %}
+{% endblock %}
 
 {% block script %}
-	// Создает нового пользователя
 	$('.create_user').click(function(){
 		$.get('create_user',{
 			lastname: $('.dialog-input-lastname').val(),
@@ -57,9 +44,9 @@
 			login: $('.dialog-input-login').val(),
 			password: $('.dialog-input-password').val(),
 			confirm: $('.dialog-input-confirm').val()
-		},function(r){
+		},function(res){
+			$('.workspace').html(res);
 			$('.dialog').modal('hide');
-			init_content(r);
 		});
 	});
-{% endblock script %}
+{% endblock %}

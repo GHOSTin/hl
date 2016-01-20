@@ -77,6 +77,12 @@ $app['main\models\import_accruals'] = function($app){
 $app['main\models\import_meterages'] = function($app){
   return new models\import_meterages($app['twig'], $app['em'], $app['user']);
 };
+$app['main\models\users'] = function($app){
+  return new models\users($app['twig'], $app['em'], $app['user']);
+};
+$app['main\models\groups'] = function($app){
+  return new models\groups($app['twig'], $app['em'], $app['user']);
+};
 $app['main\models\profile'] = function($app){
   return new models\profile($app['twig'], $app['em'], $app['user']);
 };
@@ -282,9 +288,14 @@ $app->delete('/workgroups/phrases/', 'main\controllers\phrase::remove')->before(
 $app->get('/workgroups/phrases/{id}/edit/', 'main\controllers\phrase::edit_dialog')->before($security);
 $app->put('/workgroups/phrases/{id}/', 'main\controllers\phrase::edit')->before($security);
 
+# groups
+$app->get('/user/get_groups', 'main\controllers\groups::get_groups')->before($security);
+$app->get('/user/get_dialog_create_group', 'main\controllers\groups::get_dialog_create_group')->before($security);
+$app->get('/user/create_group', 'main\controllers\groups::create_group')->before($security);
+
 # user
 $app->get('/user/', 'main\controllers\users::default_page')->before($security);
-$app->get('/user/get_user_letter', 'main\controllers\users::get_user_letter')->before($security);
+$app->get('/user/get_users', 'main\controllers\users::get_users')->before($security);
 $app->get('/user/get_user_content', 'main\controllers\users::get_user_content')->before($security);
 $app->get('/user/get_user_information', 'main\controllers\users::get_user_information')->before($security);
 $app->get('/user/get_dialog_edit_fio', 'main\controllers\users::get_dialog_edit_fio')->before($security);
@@ -297,9 +308,6 @@ $app->get('/user/get_dialog_edit_password', 'main\controllers\users::get_dialog_
 $app->get('/user/update_password', 'main\controllers\users::update_password')->before($security);
 $app->get('/user/get_dialog_create_user', 'main\controllers\users::get_dialog_create_user')->before($security);
 $app->get('/user/create_user', 'main\controllers\users::create_user')->before($security);
-$app->get('/user/get_group_letters', 'main\controllers\users::get_group_letters')->before($security);
-$app->get('/user/get_user_letters', 'main\controllers\users::get_user_letters')->before($security);
-$app->get('/user/get_group_letter', 'main\controllers\users::get_group_letter')->before($security);
 $app->get('/user/get_group_content', 'main\controllers\users::get_group_content')->before($security);
 $app->get('/user/get_group_users', 'main\controllers\users::get_group_users')->before($security);
 $app->get('/user/get_dialog_edit_group_name', 'main\controllers\users::get_dialog_edit_group_name')->before($security);
@@ -309,8 +317,6 @@ $app->get('/user/get_dialog_add_user', 'main\controllers\users::get_dialog_add_u
 $app->get('/user/add_user', 'main\controllers\users::add_user')->before($security);
 $app->get('/user/get_dialog_exclude_user', 'main\controllers\users::get_dialog_exclude_user')->before($security);
 $app->get('/user/exclude_user', 'main\controllers\users::exclude_user')->before($security);
-$app->get('/user/get_dialog_create_group', 'main\controllers\users::get_dialog_create_group')->before($security);
-$app->get('/user/create_group', 'main\controllers\users::create_group')->before($security);
 
 # users
 $app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions')->before($security);

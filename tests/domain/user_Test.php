@@ -140,6 +140,11 @@ class user_Test extends PHPUnit_Framework_TestCase{
     $this->assertEquals('false', $this->user->get_status());
   }
 
+  public function test_unblock(){
+    $this->user->unblock();
+    $this->assertEquals('true', $this->user->get_status());
+  }
+
   public function test_set_status_2(){
     $this->setExpectedException('DomainException');
     $this->user->set_status('wrong');
