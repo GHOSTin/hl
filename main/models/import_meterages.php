@@ -11,7 +11,7 @@ class import_meterages{
   private $em;
   private $rows = [];
 
-  const MEMORY_LIMIT = 8*1024*1024;
+  const MEMORY_LIMIT = 64*1024*1024;
 
   public function __construct(Twig_Environment $twig, EntityManager $em, user $user){
     $this->em = $em;

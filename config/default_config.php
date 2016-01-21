@@ -18,6 +18,13 @@ class default_config{
   const status = 'production';
 
   /**
+   * Директория файлов для логов.
+   * Должна иметь абсолютный путь.
+   * Заканчиваться слешем.
+   */
+  const logs_directory = '/var/log/';
+
+  /**
   * Email, на который приходят заявки на доступ
   */
   const email_for_registration = 'mail@example.com';
