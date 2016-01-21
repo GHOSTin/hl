@@ -7,61 +7,43 @@ use PHPUnit_Framework_TestCase;
 
 class registration_Test extends PHPUnit_Framework_TestCase{
 
+  const email = 'target@example.com';
+  const number = '038464888';
+  const address = 'Ватутина 52 кв 19';
+  const fio = 'Некрасов Евгений Валерьевич';
+  const telephone = '65-78-96';
+  const cellphone = '+792229444742';
+
   public function setUp(){
-    $twig = $this->getMockBuilder('\Twig_Environment')
-                 ->disableOriginalConstructor()
-                 ->getMock();
     $this->app = new Application();
     $this->controller = new controller();
     $this->request = new Request();
-    $this->app['twig'] = $twig;
+    $this->model = $this->getMockBuilder('client\models\registration')
+                        ->disableOriginalConstructor()
+                        ->getMock();
+    $this->app['client\models\registration'] = $this->model;
   }
 
-  public function test_default_page(){
-    $this->app['number'] = 'number_object';
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('registration/default_page.tpl', ['number' => 'number_object'])
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->default_page($this->app);
+  public function test_registration_form(){
+    $this->model->expects($this->once())
+                ->method('registration_form')
+                ->willReturn('render_template');
+    $response = $this->controller->registration_form($this->app);
     $this->assertEquals('render_template', $response);
   }
 
-  public function test_send(){
-    $this->request->request->set('email', 'target@example.com');
-    $message = $this->getMockBuilder('Swift_Message')
-                    ->disableOriginalConstructor()
-                    ->getMock();
-    $message->expects($this->once())
-            ->method('setSubject')
-            ->with('Заявка на доступ')
-            ->will($this->returnValue($message));
-    $message->expects($this->once())
-            ->method('setFrom')
-            ->with(['noreply@example.com'])
-            ->will($this->returnValue($message));
-    $message->expects($this->once())
-            ->method('setTo')
-            ->with(['mail@example.com'])
-            ->will($this->returnValue($message));
-    $message->expects($this->once())
-            ->method('setBody');
-    $mailer = $this->getMockBuilder('Swift_Mailer')
-                   ->disableOriginalConstructor()
-                   ->getMock();
-    $mailer->expects($this->once())
-           ->method('send')
-           ->with($this->identicalTo($message));
-    $this->app['Swift_Message'] = $message;
-    $this->app['mailer'] = $mailer;
-    $this->app['number'] = 'number_object';
-    $this->app['email_for_registration'] = 'mail@example.com';
-    $this->app['email_for_reply'] = 'noreply@example.com';
-    $this->app['twig']->expects($this->once())
-                      ->method('render')
-                      ->with('registration/send.tpl', ['number' => 'number_object'])
-                      ->will($this->returnValue('render_template'));
-    $response = $this->controller->send($this->request, $this->app);
+  public function test_process_registration_form(){
+    $this->request->request->set('email', ' '.self::email.' ');
+    $this->request->request->set('number', ' '.self::number.' ');
+    $this->request->request->set('address', ' '.self::address.' ');
+    $this->request->request->set('fio', ' '.self::fio.' ');
+    $this->request->request->set('telephone', ' '.self::telephone.' ');
+    $this->request->request->set('cellphone', ' '.self::cellphone.' ');
+    $this->model->expects($this->once())
+                ->method('create_request')
+                ->with(self::number, self::fio, self::address, self::email, self::telephone, self::cellphone)
+                ->willReturn('render_template');
+    $response = $this->controller->process_registration_form($this->request, $this->app);
     $this->assertEquals('render_template', $response);
   }
 }

@@ -16,6 +16,7 @@ use Silex\Provider\MonologServiceProvider;
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 
 $DS = DIRECTORY_SEPARATOR;
 $root = substr(__DIR__, 0, (strlen(__DIR__) - strlen($DS.'client'))).$DS;
@@ -32,6 +33,9 @@ $dbParams = array(
   'charset' => 'utf8'
 );
 
+
+
+//*** начало секции конфигурирования параметров
 $app = new Application();
 $app['salt'] = conf::authSalt;
 $app['site_url'] = conf::site_url;
@@ -40,6 +44,13 @@ $app['number'] = null;
 $app['email_for_reply'] = conf::email_for_reply;
 $app['email_for_registration'] = conf::email_for_registration;
 $app['debt_limit'] = conf::debt_limit;
+$app['logs_directory'] = conf::logs_directory;
+$app['accrual_columns'] = function($app){
+  return explode(';', conf::accrual_columns);
+};
+//*** конец секции конфигурирования параметров
+
+
 
 $config = new Configuration();
 $driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
@@ -56,8 +67,10 @@ if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates',
                 'twig.options' => ['cache' => $cache]];
 }
-$app->register(new TwigServiceProvider(), $twig_conf);
 
+
+
+$app->register(new TwigServiceProvider(), $twig_conf);
 // Параметры swift должны идти всегда ниже того места где идет его регистрация
 // Иначе параметры обнуляются во время регистрации если были заданы выше
 $app->register(new SwiftmailerServiceProvider());
@@ -70,6 +83,8 @@ $app['swiftmailer.options'] = array(
     'auth_mode' => null
 );
 
+
+
 $app['Swift_Message'] = $app->factory(function($app){
   return Swift_Message::newInstance();
 });
@@ -77,6 +92,9 @@ $app['domain\metrics'] = $app->factory(function($app){
   return new metrics();
 });
 
+
+
+//*** начало секции моделей
 $app['client\models\queries'] = function($app){
   return new models\queries($app['twig'], $app['em'], $app['number']);
 };
@@ -89,9 +107,12 @@ $app['client\models\recovery'] = function($app){
   return new models\recovery($app['twig'], $app['em'], $app['auth_log']);
 };
 
-$app['accrual_columns'] = function($app){
-  return explode(';', conf::accrual_columns);
+$app['client\models\registration'] = function($app){
+  return new models\registration($app['twig'], $app['em'], $app['system_log']);
 };
+//*** конец секции моделей
+
+
 
 $app->register(new SessionServiceProvider);
 
@@ -99,17 +120,23 @@ $app['session.storage.options'] = [
   'cookie_lifetime' => 86400 * 30
 ];
 
+
+
 $filter = new Twig_SimpleFilter('natsort', function (array $array) {
   natsort($array);
   return $array;
 });
 $app['twig']->addFilter($filter);
 
+
+
+//*** начало секции конфигурирования логгирования
 $app->register(new MonologServiceProvider(), array(
   'monolog.logfile' => $root.'cache'.$DS.'client.log',
   'monolog.level' => Logger::WARNING
 ));
 
+// Логгер аутентификации
 $app['auth_log'] = function($app) use ($root, $DS){
   $formatter = new JsonFormatter();
   $logger = new Logger('auth');
@@ -118,6 +145,20 @@ $app['auth_log'] = function($app) use ($root, $DS){
   $logger->pushHandler($stream);
   return $logger;
 };
+
+// Логгер для системных событий.
+// Использую пока для того чтобы отделить логи фреймворка от логов системы
+$app['system_log'] = function($app) use ($root, $DS){
+  $formatter = new JsonFormatter();
+  $logger = new Logger('system');
+  $stream = new RotatingFileHandler($app['logs_directory'].'system_client.log', Logger::INFO);
+  $stream->setFormatter($formatter);
+  $logger->pushHandler($stream);
+  return $logger;
+};
+//*** конец секции конфигурирования логгирования
+
+
 
 $app->before(function (Request $request, Application $app) {
   if($app['session']->get('number')){
@@ -129,6 +170,10 @@ $security = function(Request $request, Application $app){
   if(is_null($app['number']))
     throw new NotFoundHttpException();
 };
+
+
+
+//*** начало секции маршрутов
 # default_page
 $app->get('/', 'client\controllers\default_page::default_page');
 $app->post('/login/', 'client\controllers\default_page::login');
@@ -164,8 +209,8 @@ $app->post('/metrics/', 'client\controllers\metrics::send')->before($security);
 $app->get('/metrics/history/', 'client\controllers\metrics::history')->before($security);
 
 # registration
-$app->get('/registration/', 'client\controllers\registration::default_page');
-$app->post('/registration/', 'client\controllers\registration::send');
+$app->get('/registration/', 'client\controllers\registration::registration_form');
+$app->post('/registration/', 'client\controllers\registration::process_registration_form');
 
 # arrears
 $app->get('/arrears/', 'client\controllers\arrears::default_page');
@@ -173,6 +218,9 @@ $app->get('/arrears/streets/{id}/houses/', 'client\controllers\arrears::houses')
 $app->get('/arrears/houses/{id}/flats/', 'client\controllers\arrears::flats');
 $app->get('/arrears/houses/{id}/top/', 'client\controllers\arrears::top');
 $app->get('/arrears/flats/{id}/', 'client\controllers\arrears::flat');
+//*** конец секции маршрутов
+
+
 
 $app->error(function (NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['number' => $app['number']]);
