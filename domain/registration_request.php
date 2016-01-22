@@ -1,6 +1,7 @@
 <?php namespace domain;
 
 use DomainException;
+use JsonSerializable;
 
 /**
  * Запрос на получение доступа к системе.
@@ -9,7 +10,7 @@ use DomainException;
  *
  * @Entity
  */
-class registration_request{
+class registration_request implements JsonSerializable{
 
   /**
    * Идентификатор запроса
@@ -53,7 +54,7 @@ class registration_request{
    *
    * @var string
    */
-  private $tellephone;
+  private $telephone;
 
   /**
    * @Column(nullable=true)
@@ -62,13 +63,13 @@ class registration_request{
    */
   private $cellphone;
 
-  public function __construct(number $number, $fio, $address, $email, $tellephone, $cellphone){
+  public function __construct(number $number, $fio, $address, $email, $telephone, $cellphone){
     $this->id = self::generate_id($number, $fio, $address, $email);
     $this->number = $number;
     $this->fio = $fio;
     $this->address = $address;
     $this->email = $email;
-    $this->tellephone = $tellephone;
+    $this->telephone = $telephone;
     $this->cellphone = $cellphone;
   }
 
@@ -92,11 +93,23 @@ class registration_request{
     return $this->email;
   }
 
-  public function get_tellephone(){
-    return $this->tellephone;
+  public function get_telephone(){
+    return $this->telephone;
   }
 
   public function get_cellphone(){
     return $this->cellphone;
+  }
+
+  public function JsonSerialize(){
+    return [
+             'id' => $this->id,
+             'number' => $this->number,
+             'address' => $this->address,
+             'fio' => $this->fio,
+             'email' => $this->email,
+             'telephone' => $this->telephone,
+             'cellphone' => $this->cellphone
+           ];
   }
 }

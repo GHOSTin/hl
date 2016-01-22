@@ -331,7 +331,8 @@ class number implements JsonSerializable{
              'telephone' => $this->telephone,
              'cellphone' => $this->cellphone,
              'email' => $this->email,
-             'debt' => $this->debt
+             'debt' => $this->debt,
+             'address' => $this->get_address()
            ];
   }
 }

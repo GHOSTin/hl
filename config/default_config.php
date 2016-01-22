@@ -25,11 +25,6 @@ class default_config{
   const logs_directory = '/var/log/';
 
   /**
-  * Email, на который приходят заявки на доступ
-  */
-  const email_for_registration = 'mail@example.com';
-
-  /**
   * Email, используемый для ответа
   */
   const email_for_reply = 'mail@example.com';

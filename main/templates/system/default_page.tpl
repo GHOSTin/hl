@@ -32,6 +32,9 @@
         <a href="/user/">Пользователи</a>
       </li>
       <li>
+        <a href="/system/registrations/">Регистрации в ЛК</a>
+      </li>
+      <li>
         <a href="/works/">Работы</a>
       </li>
     </ul>
