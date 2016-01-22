@@ -24,19 +24,11 @@ require_once($root."vendor/autoload.php");
 
 date_default_timezone_set(conf::php_timezone);
 
-$dbParams = array(
-  'driver' => 'pdo_mysql',
-  'host' => conf::db_host,
-  'user' => conf::db_user,
-  'password' => conf::db_password,
-  'dbname' => conf::db_name,
-  'charset' => 'utf8'
-);
+$app = new Application();
 
 
 
 //*** начало секции конфигурирования параметров
-$app = new Application();
 $app['salt'] = conf::authSalt;
 $app['site_url'] = conf::site_url;
 $app['debug'] = (conf::status === 'development')? true: false;
@@ -48,6 +40,14 @@ $app['logs_directory'] = conf::logs_directory;
 $app['accrual_columns'] = function($app){
   return explode(';', conf::accrual_columns);
 };
+$dbParams = array(
+  'driver' => 'pdo_mysql',
+  'host' => conf::db_host,
+  'user' => conf::db_user,
+  'password' => conf::db_password,
+  'dbname' => conf::db_name,
+  'charset' => 'utf8'
+);
 //*** конец секции конфигурирования параметров
 
 
@@ -57,8 +57,9 @@ $driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
 $config->setMetadataDriverImpl($driver);
 $config->setProxyDir($root.$DS.'cache'.$DS.'proxy');
 $config->setProxyNamespace('proxies');
-
 $app['em'] = EntityManager::create($dbParams, $config);
+
+
 
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates'];
@@ -98,15 +99,12 @@ $app['domain\metrics'] = $app->factory(function($app){
 $app['client\models\queries'] = function($app){
   return new models\queries($app['twig'], $app['em'], $app['number']);
 };
-
 $app['client\models\arrears'] = function($app){
   return new models\arrears($app['twig'], $app['em']);
 };
-
 $app['client\models\recovery'] = function($app){
   return new models\recovery($app['twig'], $app['em'], $app['auth_log']);
 };
-
 $app['client\models\registration'] = function($app){
   return new models\registration($app['twig'], $app['em'], $app['system_log']);
 };
@@ -179,9 +177,13 @@ $app->get('/', 'client\controllers\default_page::default_page');
 $app->post('/login/', 'client\controllers\default_page::login');
 $app->get('/logout/', 'client\controllers\default_page::logout')->before($security);
 
+
+
 # recovery
 $app->get('/recovery/', 'client\controllers\recovery::recovery_form');
 $app->post('/recovery/', 'client\controllers\recovery::recovery_password');
+
+
 
 # settings
 $app->get('/settings/', 'client\controllers\settings::default_page')->before($security);
@@ -194,23 +196,32 @@ $app->post('/settings/cellphone/', 'client\controllers\settings::change_cellphon
 $app->get('/settings/notification/', 'client\controllers\settings::notification_form')->before($security);
 $app->post('/settings/notification/', 'client\controllers\settings::change_notification')->before($security);
 
+
+
 # queries
 $app->get('/queries/', 'client\controllers\queries::default_page')->before($security);
 $app->get('/queries/request/', 'client\controllers\queries::request')->before($security);
 $app->post('/queries/request/', 'client\controllers\queries::send_request')->before($security);
 
 
+
 # accruals
 $app->get('/accruals/', 'client\controllers\accruals::default_page')->before($security);
+
+
 
 # metrics
 $app->get('/metrics/', 'client\controllers\metrics::default_page')->before($security);
 $app->post('/metrics/', 'client\controllers\metrics::send')->before($security);
 $app->get('/metrics/history/', 'client\controllers\metrics::history')->before($security);
 
+
+
 # registration
 $app->get('/registration/', 'client\controllers\registration::registration_form');
 $app->post('/registration/', 'client\controllers\registration::process_registration_form');
+
+
 
 # arrears
 $app->get('/arrears/', 'client\controllers\arrears::default_page');

@@ -8,11 +8,6 @@ class general extends default_config{
   const db_password = 'test';
 
   /**
-  * Email, на который приходят заявки на доступ
-  */
-  const email_for_registration = 'mail@example.com';
-
-  /**
   * Email, используемый для ответа
   */
   const email_for_reply = 'noreply@example.com';

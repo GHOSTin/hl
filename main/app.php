@@ -18,6 +18,7 @@ use Silex\Provider\MonologServiceProvider;
 use Monolog\Logger;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\StreamHandler;
+use Monolog\Handler\RotatingFileHandler;
 
 use config\general as conf;
 
@@ -27,16 +28,11 @@ require_once($root."vendor".$DS."autoload.php");
 
 date_default_timezone_set(conf::php_timezone);
 
-$dbParams = array(
-  'driver'   => 'pdo_mysql',
-  'host'     => conf::db_host,
-  'user'     => conf::db_user,
-  'password' => conf::db_password,
-  'dbname'   => conf::db_name,
-  'charset'  => 'utf8'
-);
-
 $app = new Application();
+
+
+
+//*** начало секции конфигурирования параметров
 $app['debug'] = (conf::status === 'development')? true: false;
 $app['site_url'] = conf::site_url;
 $app['user'] = null;
@@ -45,15 +41,29 @@ $app['chat_host'] = conf::chat_host;
 $app['chat_port'] = conf::chat_port;
 $app['email_for_reply'] = conf::email_for_reply;
 $app['files'] = $root.'files/';
+$app['logs_directory'] = conf::logs_directory;
+$dbParams = array(
+  'driver'   => 'pdo_mysql',
+  'host'     => conf::db_host,
+  'user'     => conf::db_user,
+  'password' => conf::db_password,
+  'dbname'   => conf::db_name,
+  'charset'  => 'utf8'
+);
+//*** конец секции конфигурирования параметров
+
+
 
 $config = new Configuration();
 $driver = $config->newDefaultAnnotationDriver($root.$DS.'domain');
 $config->setMetadataDriverImpl($driver);
 $config->setProxyDir($root.$DS.'cache'.$DS.'proxy');
 $config->setProxyNamespace('proxies');
-
 $app['em'] = EntityManager::create($dbParams, $config);
 
+
+
+//*** начало секции моделей
 $app['\main\models\number'] = function($app){
   return new \main\models\number($app['em'], $app['user']);
 };
@@ -110,6 +120,9 @@ $app['main\models\system'] = function($app){
 $app['main\models\system_search'] = function($app){
   return new models\system_search($app['twig'], $app['em'], $app['user']);
 };
+$app['main\models\registrations'] = function($app){
+  return new models\registrations($app['twig'], $app['em'], $app['user'], $app['system_log']);
+};
 $app['main\models\logs'] = function($app){
   return new models\logs($app['twig'], $app['user'], $app['logs']);
 };
@@ -133,15 +146,16 @@ $app['main\models\events'] = function($app){
   return new models\events($app['twig'], $app['em'], $app['user']);
 };
 
-$app['\domain\query2comment'] = $app->factory(function($app){
-  return new \domain\query2comment;
-});
-
 $app['main\models\files'] = function($app){
   return new models\files($app['twig'], $app['em'], $app['user'], $app['filesystem'], $app['session'], $app['files']);
 };
+//*** конец секции моделей
 
 
+
+$app['\domain\query2comment'] = $app->factory(function($app){
+  return new \domain\query2comment;
+});
 $app['config_reflection'] = function($app){
   return new ReflectionClass('config\general');
 };
@@ -157,6 +171,9 @@ $app['filesystem'] = function($app) use ($root){
 $app['logs'] = function($app) use ($root){
   return new Filesystem(new Adapter($root.'cache'));
 };
+
+
+
 if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates'];
 }else{
@@ -164,6 +181,9 @@ if($app['debug']){
   $twig_conf = ['twig.path' => __DIR__.$DS.'templates',
                 'twig.options' => ['cache' => $cache]];
 }
+
+
+
 $app['Swift_Message'] = $app->factory(function($app){
   return Swift_Message::newInstance();
 });
@@ -178,6 +198,9 @@ $app['swiftmailer.options'] = array(
     'encryption' => 'ssl',
     'auth_mode' => null
 );
+
+
+
 $app->register(new SessionServiceProvider);
 
 $app['session.storage.options'] = [
@@ -192,6 +215,9 @@ $filter = new Twig_SimpleFilter('natsort', function (array $array) {
 });
 $app['twig']->addFilter($filter);
 
+
+
+//*** начало секции конфигурирования логгирования
 $app->register(new MonologServiceProvider(), array(
   'monolog.logfile' => $root.'cache'.$DS.'main.log',
   'monolog.level' => Logger::WARNING
@@ -205,6 +231,20 @@ $app['auth_log'] = function($app) use ($root, $DS){
   $logger->pushHandler($stream);
   return $logger;
 };
+
+// Логгер для системных событий.
+// Использую пока для того чтобы отделить логи фреймворка от логов системы
+$app['system_log'] = function($app) use ($root, $DS){
+  $formatter = new JsonFormatter();
+  $logger = new Logger('system');
+  $stream = new RotatingFileHandler($app['logs_directory'].'system_client.log', Logger::INFO);
+  $stream->setFormatter($formatter);
+  $logger->pushHandler($stream);
+  return $logger;
+};
+//*** конец секции конфигурирования логгирования
+
+
 
 $app->before(function (Request $request, Application $app) {
   if($app['session']->get('user')){
@@ -225,18 +265,26 @@ $security = function(Request $request, Application $app){
     throw new NotFoundHttpException();
 };
 
+
+//*** начало секции маршрутов
 # default_pages
 $app->get('/', 'main\controllers\default_page::default_page');
 $app->get('/about/', 'main\controllers\default_page::about')->before($security);
+
+
 
 # files
 $app->post('/files/', 'main\controllers\files::load')->before($security);
 $app->get('/files/{date}/{name}', 'main\controllers\files::get_file')->before($security);
 
+
+
 # auth
 $app->get('/enter/', 'main\controllers\auth::login_form');
 $app->post('/enter/', 'main\controllers\auth::login');
 $app->get('/logout/', 'main\controllers\auth::logout')->before($security);
+
+
 
 # profile
 $app->get('/profile/', 'main\controllers\profile::default_page')->before($security);
@@ -245,13 +293,19 @@ $app->put('/profile/update_telephone', 'main\controllers\profile::update_telepho
 $app->put('/profile/update_cellphone', 'main\controllers\profile::update_cellphone')->before($security);
 $app->get('/profile/update_password', 'main\controllers\profile::update_password')->before($security);
 
+
+
 #notification_center
 $app->get('/notification_center/get_content/', 'main\controllers\notification_center::get_content')->before($security);
+
+
 
 # api
 $app->get('/api/get_chat_options', 'main\controllers\api::get_chat_options');
 $app->get('/api/get_users', 'main\controllers\api::get_users');
 $app->get('/api/get_user_by_login_and_password', 'main\controllers\api::get_user_by_login_and_password');
+
+
 
 # works
 $app->get('/works/', 'main\controllers\works::default_page')->before($security);
@@ -279,6 +333,8 @@ $app->get('/works/add_event', 'main\controllers\works::add_event')->before($secu
 $app->get('/works/get_dialog_exclude_event', 'main\controllers\works::get_dialog_exclude_event')->before($security);
 $app->get('/works/exclude_event', 'main\controllers\works::exclude_event')->before($security);
 
+
+
 # phrase
 $app->get('/api/workgroups/{id}/phrases/', 'main\controllers\workgroup::phrases')->before($security);
 $app->get('/workgroups/{id}/phrases/create/', 'main\controllers\workgroup::create_phrase_dialog')->before($security);
@@ -288,10 +344,14 @@ $app->delete('/workgroups/phrases/', 'main\controllers\phrase::remove')->before(
 $app->get('/workgroups/phrases/{id}/edit/', 'main\controllers\phrase::edit_dialog')->before($security);
 $app->put('/workgroups/phrases/{id}/', 'main\controllers\phrase::edit')->before($security);
 
+
+
 # groups
 $app->get('/user/get_groups', 'main\controllers\groups::get_groups')->before($security);
 $app->get('/user/get_dialog_create_group', 'main\controllers\groups::get_dialog_create_group')->before($security);
 $app->get('/user/create_group', 'main\controllers\groups::create_group')->before($security);
+
+
 
 # user
 $app->get('/user/', 'main\controllers\users::default_page')->before($security);
@@ -318,6 +378,8 @@ $app->get('/user/add_user', 'main\controllers\users::add_user')->before($securit
 $app->get('/user/get_dialog_exclude_user', 'main\controllers\users::get_dialog_exclude_user')->before($security);
 $app->get('/user/exclude_user', 'main\controllers\users::exclude_user')->before($security);
 
+
+
 # users
 $app->get('/users/{id}/restrictions/', 'main\controllers\users::get_restrictions')->before($security);
 $app->get('/users/{id}/restrictions/{profile}/{item}/', 'main\controllers\users::update_restriction')->before($security);
@@ -325,11 +387,15 @@ $app->get('/users/{id}/access/', 'main\controllers\users::access')->before($secu
 $app->get('/users/{id}/access/{profile}/{rule}/', 'main\controllers\users::update_access')->before($security);
 $app->get('/users/access/', 'main\controllers\report_user_access::report')->before($security);
 
+
+
 # metrics
 $app->get('/metrics/', 'main\controllers\metrics::default_page')->before($security);
 $app->get('/metrics/archive/', 'main\controllers\metrics::archive')->before($security);
 $app->get('/metrics/archive/set_date', 'main\controllers\metrics::set_date')->before($security);
 $app->post('/metrics/remove_metrics', 'main\controllers\metrics::remove_metrics')->before($security);
+
+
 
 # events
 $app->get('/numbers/events/days/{date}/', 'main\controllers\events::get_day_events')->before($security);
@@ -337,6 +403,8 @@ $app->get('/numbers/events/dialogs/create/', 'main\controllers\events::get_dialo
 $app->get('/numbers/events/streets/{id}/houses/', 'main\controllers\events::houses')->before($security);
 $app->get('/numbers/events/houses/{id}/numbers/', 'main\controllers\events::numbers')->before($security);
 $app->post('/numbers/events/', 'main\controllers\events::create_event')->before($security);
+
+
 
 # outages
 $app->get('/numbers/outages/', 'main\controllers\outages::default_page')->before($security);
@@ -351,6 +419,8 @@ $app->get('/numbers/outages/yesterday/', 'main\controllers\outages::yesterday')-
 $app->get('/numbers/outages/week/', 'main\controllers\outages::week')->before($security);
 $app->get('/numbers/outages/lastweek/', 'main\controllers\outages::lastweek')->before($security);
 $app->get('/numbers/outages/active/', 'main\controllers\outages::active')->before($security);
+
+
 
 # number
 $app->get('/number/', 'main\controllers\numbers::default_page')->before($security);
@@ -378,6 +448,8 @@ $app->get('/number/accruals', 'main\controllers\numbers::accruals')->before($sec
 $app->get('/number/contact_info', 'main\controllers\numbers::contact_info')->before($security);
 $app->get('/number/get_events', 'main\controllers\numbers::get_events')->before($security);
 
+
+
 # numbers
 $app->get('/number/{id}/', 'main\controllers\number::get_number_json')->before($security);
 $app->get('/numbers/{id}/get_dialog_generate_password/', 'main\controllers\number::get_dialog_generate_password')->before($security);
@@ -386,6 +458,8 @@ $app->get('/numbers/{id}/contacts/', 'main\controllers\number::get_dialog_contac
 $app->post('/numbers/{id}/contacts/', 'main\controllers\number::update_contacts')->before($security);
 $app->get('/numbers/{id}/contacts/history/', 'main\controllers\number::history')->before($security);
 $app->get('/numbers/{id}/meterages/', 'main\controllers\number::meterages')->before($security);
+
+
 
 # number2event
 $app->get('/numbers/{number_id}/events/dialog_add/', 'main\controllers\number::get_dialog_add_event')->before($security);
@@ -396,10 +470,14 @@ $app->get('/numbers/events/{event_id}/dialog_edit/', 'main\controllers\number::g
 $app->put('/numbers/events/{event_id}/', 'main\controllers\number::edit_event')->before($security);
 $app->get('/numbers/events/{id}/', 'main\controllers\number::get_event')->before($security);
 
+
+
 # export
 $app->get('/export/', 'main\controllers\export::default_page')->before($security);
 $app->get('/export/get_dialog_export_numbers', 'main\controllers\export::get_dialog_export_numbers')->before($security);
 $app->get('/export/export_numbers', 'main\controllers\export::export_numbers')->before($security);
+
+
 
 # query
 $app->get('/query/', 'main\controllers\queries::default_page')->before($security);
@@ -461,6 +539,8 @@ $app->get('/query/get_initiator', 'main\controllers\queries::get_initiator')->be
 $app->get('/query/create_query', 'main\controllers\queries::create_query')->before($security);
 $app->get('/query/update_contacts', 'main\controllers\queries::update_contacts')->before($security);
 
+
+
 # queries
 $app->get('/queries/{id}/files/', 'main\controllers\queries::get_query_files')->before($security);
 $app->post('/queries/{id}/files/', 'main\controllers\queries::add_file')->before($security);
@@ -481,6 +561,8 @@ $app->get('/queries/selections/', 'main\controllers\queries::selections')->befor
 $app->get('/queries/selections/noclose/', 'main\controllers\queries::noclose')->before($security);
 $app->get('/queries/{id}/history/', 'main\controllers\queries::history')->before($security);
 $app->get('/queries/stats/all/noslose/', 'main\controllers\queries::all_noclose')->before($security);
+
+
 
 # reports
 $app->get('/reports/', 'main\controllers\reports::default_page')->before($security);
@@ -507,6 +589,8 @@ $app->get('/reports/outages/html/', 'main\controllers\report_outages::html')->be
 $app->post('/reports/outages/filters/begin/start/', 'main\controllers\report_outages::start')->before($security);
 $app->post('/reports/outages/filters/begin/end/', 'main\controllers\report_outages::end')->before($security);
 
+
+
 # tasks
 $app->get('/task/', 'main\controllers\task::default_page')->before($security);
 $app->get('/task/show_active_tasks', 'main\controllers\task::show_active_tasks')->before($security);
@@ -520,6 +604,8 @@ $app->get('/task/add_task', 'main\controllers\task::add_task')->before($security
 $app->get('/task/get_dialog_close_task', 'main\controllers\task::get_dialog_close_task')->before($security);
 $app->get('/task/close_task', 'main\controllers\task::close_task')->before($security);
 
+
+
 # import
 $app->get('/import/', 'main\controllers\import::default_page')->before($security);
 $app->post('/import/load_accruals/', 'main\controllers\import::load_accruals')->before($security);
@@ -531,6 +617,8 @@ $app->post('/import/flats/', 'main\controllers\import::load_flats')->before($sec
 $app->post('/import/numbers/', 'main\controllers\import::load_numbers')->before($security);
 $app->post('/import/meterages/', 'main\controllers\import::load_meterages')->before($security);
 
+
+
 # system
 $app->get('/system/', 'main\controllers\system::default_page')->before($security);
 $app->get('/system/query_types/', 'main\controllers\query_types::default_page')->before($security);
@@ -538,21 +626,39 @@ $app->get('/system/query_types/get_dialog_create_query_type/', 'main\controllers
 $app->get('/system/query_types/create_query_type/', 'main\controllers\query_types::create_query_type')->before($security);
 $app->get('/system/query_types/{id}/color/', 'main\controllers\query_type::color')->before($security);
 
+
+
+# registrations
+$app->get('/system/registrations/', 'main\controllers\registrations::default_page')->before($security);
+$app->get('/system/registrations/requests/open/', 'main\controllers\registrations::open')->before($security);
+
+
+
 # api keys
 $app->get('/system/api/keys/', 'main\controllers\api_keys::default_page')->before($security);
 $app->get('/system/api/keys/create/dialog/', 'main\controllers\api_keys::create_dialog')->before($security);
 $app->get('/system/api/keys/create/', 'main\controllers\api_keys::create')->before($security);
 
+
+
 # conf
 $app->get('/system/config/', 'main\controllers\system::config')->before($security);
+
+
 
 # logs
 $app->get('/system/logs/', 'main\controllers\logs::default_page')->before($security);
 $app->get('/system/logs/client/', 'main\controllers\logs::client')->before($security);
 $app->get('/system/logs/main/', 'main\controllers\logs::main')->before($security);
+
+
+
 # search
 $app->get('/system/search/number/', 'main\controllers\system::search_number_form')->before($security);
 $app->post('/system/search/number/', 'main\controllers\system::search_number')->before($security);
+//*** конец секции маршрутов
+
+
 
 $app->error(function(NotFoundHttpException $e) use ($app){
   return $app['twig']->render('error404.tpl', ['user' => $app['user']]);
